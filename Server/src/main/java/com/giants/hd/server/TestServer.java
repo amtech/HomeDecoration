@@ -7,8 +7,9 @@ import com.giants3.hd.utils.TestUtils;
  */
 public class TestServer {
 
-    public static  final  void test()
+    public static final void test()
     {
+
         TestUtils.Test();
     }
 }
