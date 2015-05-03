@@ -1,0 +1,39 @@
+
+
+
+allprojects {
+    apply plugin: "idea"
+
+    version = '1.0'
+    ext {
+        appName = 'HomeDecoration'
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(":Utils") {
+    apply plugin: "java"
+
+
+    dependencies {
+
+
+    }
+}
+
+
+project(":Server") {
+    apply plugin: "java"
+    apply plugin: "war"
+
+
+    dependencies {
+        compile project(":Utils")
+
+    }
+}
