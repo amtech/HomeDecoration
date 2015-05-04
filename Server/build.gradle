@@ -11,9 +11,11 @@ repositories {
 dependencies {
 
          compile project(":Utils")
-        compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+
         compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.8.0.RELEASE'
         compile 'org.springframework:spring-webmvc:3.2.2.RELEASE'
         compile 'org.hibernate:hibernate-core:4.3.9.Final'
+
+
 
 }

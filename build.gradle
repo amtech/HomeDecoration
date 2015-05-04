@@ -9,7 +9,7 @@ allprojects {
 
     }
 }
-
+//helper project
 project(":Utils") {
     apply plugin: "java"
 
