@@ -8,5 +8,5 @@ repositories {
 }
 
 dependencies {
-
+    compile 'de.greenrobot:java-common:2.0.0'
 }
