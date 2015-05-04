@@ -16,7 +16,9 @@
       </component>
       <component id="27b6a" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
         <constraints/>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+        </properties>
       </component>
     </children>
   </grid>

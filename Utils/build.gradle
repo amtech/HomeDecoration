@@ -9,4 +9,5 @@ repositories {
 
 dependencies {
     compile 'de.greenrobot:java-common:2.0.0'
+    compile 'com.google.code.gson:gson:1.7.2'
 }
