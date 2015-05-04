@@ -1,4 +1,4 @@
-package com.giants.hd.server;
+package com.giants3.hd.server;
 
 import com.giants3.hd.utils.TestUtils;
 
