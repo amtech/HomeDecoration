@@ -15,6 +15,9 @@ dependencies {
         compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.8.0.RELEASE'
         compile 'org.springframework:spring-webmvc:3.2.2.RELEASE'
         compile 'org.hibernate:hibernate-core:4.3.9.Final'
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.1.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.6.10.Final'
+        compile files('libs/sqljdbc.jar')
 
 
 
