@@ -13,7 +13,11 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <jpa:repositories base-package="com.giants3.hd.server.repositories"/>
+
+
+    <jpa:repositories base-package="com.giants3.hd.server.repository"/>
+
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
     </bean>

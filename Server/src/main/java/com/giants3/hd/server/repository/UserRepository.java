@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repositories;
+package com.giants3.hd.server.repository;
 //
 
 import com.giants3.hd.server.entity.User;

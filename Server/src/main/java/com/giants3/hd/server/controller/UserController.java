@@ -1,7 +1,7 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.entity.User;
-import com.giants3.hd.server.repositories.UserRepository;
+import com.giants3.hd.server.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
