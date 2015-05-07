@@ -13,10 +13,11 @@
           <text value="欢迎使用系统"/>
         </properties>
       </component>
-      <component id="b286b" class="javax.swing.JCheckBox" binding="需啊中CheckBox" default-binding="true">
+      <component id="b286b" class="javax.swing.JCheckBox" binding="CheckBox">
         <constraints/>
         <properties>
           <text value="需啊中"/>
+          <toolTipText value="adfaf"/>
         </properties>
       </component>
       <tabbedpane id="20a1d" binding="tabbedPane1" default-binding="true">
@@ -47,4 +48,9 @@
       </component>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="buttonGroup2">
+      <member id="b286b"/>
+    </group>
+  </buttonGroups>
 </form>
