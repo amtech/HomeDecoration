@@ -23,12 +23,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String listUsers(ModelMap model)
     {
         model.addAttribute("user", new User());
         model.addAttribute("users", userRepository.findAll());
-        return "users";
+        return "hello";
     }
 
 
