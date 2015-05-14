@@ -1,15 +1,15 @@
 package com.giants3.hd.server;
 
 import com.giants3.hd.utils.TestUtils;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
- * Created by davidleen29 on 2015/5/3.
- */ 
+ *
+ */
 public class TestServer {
+    private String id;
+    private int name = 0;
 
-    public static final void test()
-    {
+    public static final void test() {
 
         TestUtils.Test();
     }

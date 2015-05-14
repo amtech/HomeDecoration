@@ -23,13 +23,13 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @RequestMapping(method = RequestMethod.GET)
-    public String listUsers(ModelMap model)
-    {
-        model.addAttribute("user", new User());
-        model.addAttribute("users", userRepository.findAll());
-        return "hello";
-    }
+//    @RequestMapping(method = RequestMethod.GET)
+//    public String listUsers(ModelMap model)
+//    {
+//        model.addAttribute("user", new User());
+//        model.addAttribute("users", userRepository.findAll());
+//        return "hello";
+//    }
 
 
     @RequestMapping("/delete/{userId}")
@@ -49,7 +49,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
+    @RequestMapping(  method = RequestMethod.GET)
     public
     @ResponseBody
     String listUsersJson(ModelMap model) {

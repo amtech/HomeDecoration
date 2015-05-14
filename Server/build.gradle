@@ -1,6 +1,7 @@
 apply plugin: 'war'
 apply plugin: 'java'
 
+
 version = '1.0'
 
 repositories {
@@ -10,27 +11,31 @@ repositories {
 
 dependencies {
 
-         compile project(":Utils")
+
+    compile project(":Utils")
 
     providedCompile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
     runtime group: 'jstl', name: 'jstl', version: '1.2'
 
 
 
-        compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.5.1.RELEASE'
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.5.1.RELEASE'
     compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.8.0.RELEASE'
 
-        compile group: 'org.springframework', name: 'spring-webmvc', version: '3.2.0.RELEASE'
-        compile group: 'org.springframework', name: 'spring-core', version: '3.2.0.RELEASE'
-        compile group: 'org.springframework', name: 'spring-web', version: '3.2.0.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '3.2.0.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '3.2.0.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '3.2.0.RELEASE'
 
 
 
-        compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.1.Final'
-        compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.6.10.Final'
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.1.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.6.10.Final'
 
 
-        compile files('libs/sqljdbc4.jar')
+    compile files('libs/sqljdbc4.jar')
+
+
+
 
 
 
