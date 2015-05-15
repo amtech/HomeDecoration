@@ -7,10 +7,13 @@
 
     <display-name>Spring MVC Application</display-name>
 
+
+
     <servlet>
         <servlet-name>mvc-dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+
     </servlet>
 
 
@@ -23,6 +26,7 @@
     <servlet-mapping>
         <servlet-name>mvc-dispatcher</servlet-name>
         <url-pattern>/api/*</url-pattern>
+
     </servlet-mapping>
 
     <servlet-mapping>

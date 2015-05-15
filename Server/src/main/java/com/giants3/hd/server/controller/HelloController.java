@@ -1,5 +1,6 @@
 package com.giants3.hd.server.controller;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,4 +14,9 @@ public class HelloController {
 		model.addAttribute("message", "Hello world!");
 		return "hello";
 	}
+
+
+//	 public static void main(String[] args) throws Exception {
+//		SpringApplication.run(HelloController.class, args);
+//	}
 }

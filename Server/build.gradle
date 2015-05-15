@@ -1,5 +1,7 @@
+
 apply plugin: 'war'
 apply plugin: 'java'
+
 
 
 version = '1.0'
@@ -14,7 +16,7 @@ dependencies {
 
     compile project(":Utils")
 
-    providedCompile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
     runtime group: 'jstl', name: 'jstl', version: '1.2'
 
 
@@ -33,6 +35,11 @@ dependencies {
 
 
     compile files('libs/sqljdbc4.jar')
+
+
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.13'
+
+
 
 
 

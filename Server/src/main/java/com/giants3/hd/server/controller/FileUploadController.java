@@ -21,7 +21,7 @@ public class FileUploadController {
 
 
 
-    @Value("${name}")
+    @Value("${filepath}")
     private String filePath;
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
@@ -59,8 +59,8 @@ public class FileUploadController {
     public FileSystemResource getFile(@PathVariable("file_name") String fileName) {
 
 
-        FileSystemResource resource= new FileSystemResource("E://photos/林太伟.jpg");
-
+       FileSystemResource resource= new FileSystemResource(filePath+fileName+".jpg");
+        //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
 
         return resource;
     }
