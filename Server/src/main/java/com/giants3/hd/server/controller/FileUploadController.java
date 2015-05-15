@@ -1,6 +1,8 @@
 package com.giants3.hd.server.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,10 @@ import java.io.FileOutputStream;
 @RequestMapping("/file")
 public class FileUploadController {
 
+
+
+    @Value("${name}")
+    private String filePath;
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public @ResponseBody
@@ -51,7 +57,12 @@ public class FileUploadController {
     @RequestMapping(value="/download/{file_name}", method=RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getFile(@PathVariable("file_name") String fileName) {
-        return new FileSystemResource("aaaa.jpg");
+
+
+        FileSystemResource resource= new FileSystemResource("E://photos/林太伟.jpg");
+
+
+        return resource;
     }
 
 
