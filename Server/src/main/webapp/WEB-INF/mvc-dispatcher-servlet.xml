@@ -17,9 +17,12 @@
     </bean>
 
     <mvc:annotation-driven>
-        <mvc:message-converters>
+        <mvc:message-converters register-defaults="true">
             <bean class="org.springframework.http.converter.ResourceHttpMessageConverter">
             </bean>
+
+            <bean class="com.giants3.hd.server.converter.GsonMessageConverter"
+                  ></bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 

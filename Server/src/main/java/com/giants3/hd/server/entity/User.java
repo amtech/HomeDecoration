@@ -1,7 +1,7 @@
 package com.giants3.hd.server.entity;
 
 /**
-* Created by Administrator on 2014/9/17.
+* Created by davidleen29
 */
 import javax.persistence.*;
 import java.io.Serializable;

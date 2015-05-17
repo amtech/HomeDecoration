@@ -32,15 +32,14 @@ public class Prdt1Controller {
     @RequestMapping( method = RequestMethod.GET)
     public
     @ResponseBody
-    String listPrdtJson(ModelMap model)   {
+    List<Prdt1> listPrdtJson(ModelMap model)   {
 
-        JsonArray array=new JsonArray();
 
-        for (Prdt1 prdt1 : prdt1Repository.findAll()) {
-            Gson gson=new Gson( );
-            array.add(  gson.toJsonTree(prdt1));
-        }
-        return array.toString();
+//        for (Prdt1 prdt1 : prdt1Repository.findAll()) {
+//            Gson gson=new Gson( );
+//            array.add(  gson.toJsonTree(prdt1));
+//        }
+        return prdt1Repository.findAll();
     }
 
     //   /api/prdts/2.209e%2B007     这个 。 请求中会出现错误    实际中  prd_no 得到的参数是2
