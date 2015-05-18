@@ -1,11 +1,11 @@
 package com.giants.hd.desktop.api;
 
 import com.giants.hd.desktop.exceptions.HdException;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Singleton;
 
-import com.ning.http.client.AsyncHandler;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.*;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 /**
  *  提供远程请求的客户端类
  */
-
+@Singleton
 public class Client {
 
     private static final String BASE_URL = "http://api.twitter.com/1/";
@@ -29,6 +29,26 @@ public class Client {
 
     public void put()
     {}
+
+
+
+    public String postWithStringReturned(String url,String body) throws HdException {
+
+
+       return post(url,body,     new AsyncCompletionHandler<String>()
+            {
+                @Override
+                public String onCompleted(Response response) throws Exception {
+
+                    return response.getResponseBody();
+
+                }
+            });
+
+
+
+
+    }
 
     public <T> T post(String url, String body, AsyncHandler<T> handler)throws HdException
     {

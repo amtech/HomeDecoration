@@ -1,6 +1,6 @@
 package com.giants.hd.desktop;
 
-import javafx.application.Application;
+import com.giants.hd.desktop.view.Panel_ProductList;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -75,20 +75,31 @@ public class Main extends  JFrame  {
         menuBar = new JMenuBar();
 
 //Build the first menu.
-        menu = new JMenu("A Menu");
+        menu = new JMenu("产品模块");
         menu.setMnemonic(KeyEvent.VK_A);
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
         menuBar.add(menu);
 
 //a group of JMenuItems
-        menuItem = new JMenuItem("A text-only menu item",
-                KeyEvent.VK_T);
+        menuItem = new JMenuItem("产品模块",
+                KeyEvent.VK_P);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
+                "产品信息的模块");
         menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Main.this.setContentPane(new Panel_ProductList().getRootPanel());
+
+
+            }
+        });
+
+
 
         menuItem = new JMenuItem("Both text and icon",
                 new ImageIcon("images/middle.gif"));

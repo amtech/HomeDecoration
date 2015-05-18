@@ -1,5 +1,5 @@
 
-package com.giants3.hd.server.entity;
+package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;

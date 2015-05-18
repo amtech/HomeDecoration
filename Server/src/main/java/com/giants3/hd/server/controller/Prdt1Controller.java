@@ -1,9 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.Prdt;
-import com.giants3.hd.server.entity.Prdt1;
-import com.giants3.hd.server.entity.PrdtResult;
+import com.giants3.hd.utils.entity.Prdt;
+import com.giants3.hd.utils.entity.Prdt1;
+import com.giants3.hd.utils.entity.PrdtResult;
 import com.giants3.hd.server.repository.Prdt1Repository;
 import com.giants3.hd.server.repository.PrdtRepository;
 import com.google.gson.Gson;

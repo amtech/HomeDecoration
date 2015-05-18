@@ -1,5 +1,6 @@
 apply plugin: 'java'
 
+
 sourceCompatibility = 1.5
 version = '1.0'
 
@@ -8,6 +9,12 @@ repositories {
 }
 
 dependencies {
+
+
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.1.Final'
     compile 'de.greenrobot:java-common:2.0.0'
     compile 'com.google.code.gson:gson:1.7.2'
+
+
+
 }

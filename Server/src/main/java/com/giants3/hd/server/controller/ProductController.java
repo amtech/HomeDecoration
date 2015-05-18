@@ -1,15 +1,21 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.*;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.server.repository.ProductRepository;
 
+import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.ProductDetail;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -40,7 +46,7 @@ public class ProductController {
     @RequestMapping(value = "/search/{prd_name}", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Product> listPrdtJson(@PathVariable String prd_name
+   String  listPrdtJson(@PathVariable String prd_name
     ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize
 
     )   {
@@ -49,8 +55,18 @@ public class ProductController {
         Pageable pageable=constructPageSpecification(pageIndex,pageSize);
           Page<Product> pageValue=  productRepository.findByPrd_noLike(prd_name, pageable);
 
+        List<Product> products=pageValue.getContent();
+        RemoteData<Product> productRemoteData=new RemoteData<>();
+        productRemoteData.datas.addAll(products);
+        productRemoteData.pageCount=pageValue.getTotalPages();
+        productRemoteData.pageIndex=pageIndex;
+        productRemoteData.pageSize=pageSize;
 
-        return pageValue.getContent() ;
+        Gson gson = new Gson();
+        Type generateType = new TypeToken<RemoteData<Product>>() {
+        }.getType();
+      String result = gson.toJson(productRemoteData, generateType);
+        return result ;
 
 
     }
@@ -59,10 +75,6 @@ public class ProductController {
     public
     @ResponseBody
     Product findProdcutById(@RequestParam("id") int productId)   {
-
-
-
-
         return productRepository.findByPrdId(productId);
     }
 
@@ -96,7 +108,7 @@ public class ProductController {
      * @return
      */
     private Pageable constructPageSpecification(int pageIndex) {
-        return constructPageSpecification(pageIndex,NUMBER_OF_PERSONS_PER_PAGE);
+        return constructPageSpecification(pageIndex, NUMBER_OF_PERSONS_PER_PAGE);
     }
     /**
      * Returns a new object which specifies the the wanted result page.

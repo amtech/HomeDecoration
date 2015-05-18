@@ -1,4 +1,4 @@
-package com.giants3.hd.server.entity;
+package com.giants3.hd.utils.entity;
 
 /**
 * Created by davidleen29

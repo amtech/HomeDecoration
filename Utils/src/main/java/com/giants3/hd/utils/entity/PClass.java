@@ -1,23 +1,26 @@
-package com.giants3.hd.server.entity;
+package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * 单位 数据  单位 表
+ * 产品类别比表
+ * 
+ * 产品类别细分
  */
 
 @Entity
-public class Unit implements Serializable{
+public class PClass  implements Serializable {
+
 
 	/**
-	 * 单位 id
+	 * 类别id
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public long id;
+	@GeneratedValue(strategy= GenerationType.AUTO)
+	public long id			;
 	/**
-	 * 单位 名称
+	 * 类别名称
 	 */
 	@Basic
 	public String name;
