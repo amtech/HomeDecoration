@@ -15,14 +15,42 @@ public class Main extends  JFrame  {
 
 
     public static void main(String[] args) {
+
+        try {
+//            // Set cross-platform Java L&F (also called "Metal")
+//            UIManager.setLookAndFeel(
+//                    UIManager.getCrossPlatformLookAndFeelClassName());
+//
+//
+//            // Set System L&F
+//            UIManager.setLookAndFeel(
+//                    UIManager.getSystemLookAndFeelClassName());
+
+            UIManager.setLookAndFeel( javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+
+
         Main frame = new Main();
-        frame.pack();
+
+
         frame.setSize(800, 600);
         frame.setBounds(200, 200, 800, 600);
         frame.setContentPane(frame.panel1);
 
         frame.generateMenu();
+        frame.pack();
         frame.setVisible(true);
+
 
 
     }
