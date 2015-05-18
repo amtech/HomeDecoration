@@ -17,7 +17,7 @@ import java.io.FileOutputStream;
  */
 @Controller
 @RequestMapping("/file")
-public class FileUploadController {
+public class FileController {
 
 
 

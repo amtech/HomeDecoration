@@ -2,17 +2,14 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.repository.Prdt1Repository;
-import com.giants3.hd.server.repository.PrdtRepository;
 import com.giants3.hd.server.repository.ProductRepository;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -22,6 +19,7 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+    private static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
     @Autowired
     private ProductRepository productRepository;
 
@@ -42,8 +40,19 @@ public class ProductController {
     @RequestMapping(value = "/search/{prd_name}", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Product> listPrdtJson(@PathVariable String prd_name)   {
-        return  productRepository.findByPrd_noLike(prd_name);
+    List<Product> listPrdtJson(@PathVariable String prd_name
+    ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize
+
+    )   {
+
+
+        Pageable pageable=constructPageSpecification(pageIndex,pageSize);
+          Page<Product> pageValue=  productRepository.findByPrd_noLike(prd_name, pageable);
+
+
+        return pageValue.getContent() ;
+
+
     }
 
     @RequestMapping( value = "/find", method = RequestMethod.GET)
@@ -81,6 +90,29 @@ public class ProductController {
     }
 
 
+    /**
+     * Returns a new object which specifies the the wanted result page.
+     * @param pageIndex The index of the wanted result page
+     * @return
+     */
+    private Pageable constructPageSpecification(int pageIndex) {
+        return constructPageSpecification(pageIndex,NUMBER_OF_PERSONS_PER_PAGE);
+    }
+    /**
+     * Returns a new object which specifies the the wanted result page.
+     * @param pageIndex The index of the wanted result page
+     * @return
+     */
+    private Pageable constructPageSpecification(int pageIndex,int pageSize) {
+        Pageable pageSpecification = new PageRequest(pageIndex, NUMBER_OF_PERSONS_PER_PAGE, sortByLastNameAsc());
+        return pageSpecification;
+    }
 
-
+    /**
+     * Returns a Sort object which sorts persons in ascending order by using the last name.
+     * @return
+     */
+    private Sort sortByLastNameAsc() {
+        return new Sort(Sort.Direction.ASC, "name");
+    }
 }
