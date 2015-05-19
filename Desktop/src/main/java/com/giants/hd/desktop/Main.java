@@ -40,7 +40,7 @@ public class Main extends  JFrame  {
 
 
 
-        Main frame = new Main();
+        final Main frame = new Main();
 
 
         frame.setSize(800, 600);
@@ -50,6 +50,24 @@ public class Main extends  JFrame  {
         frame.generateMenu();
         frame.pack();
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                //点击了退出系统按钮
+                int option = JOptionPane.showConfirmDialog(frame, "确定要退出吗？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+                if (JOptionPane.OK_OPTION == option) {
+                    //点击了确定按钮
+                    System.exit(0);
+                } else {
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
+
+
+
+
 
 
 

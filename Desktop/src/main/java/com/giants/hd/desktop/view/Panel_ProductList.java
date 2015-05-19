@@ -89,6 +89,15 @@ public class Panel_ProductList {
 
                 try {
                     RemoteData<Product> productRemoteData=get();
+
+
+
+
+
+
+
+
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
