@@ -48,6 +48,8 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         public GsonMessageConverter(boolean serializeNulls) {
             super(new MediaType("application", "json", DEFAULT_CHARSET));
             GsonBuilder builder=new GsonBuilder();
+            if(serializeNulls)
+                builder.serializeNulls();
             builder.registerTypeAdapter(List.class,new ListTypeAdapter());
             setGson(builder.create());
         }

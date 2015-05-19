@@ -38,24 +38,14 @@ public class ApiManager {
 
     public static final String TAG = ApiManager.class.getSimpleName();
 
-
     public RemoteData<Product>  readProductList(String productName,int pageIndex,int pageSize) throws HdException {
 
 
         String url=HttpUrl.readProductList(productName, pageIndex, pageSize);
         Logger.getLogger("TEST").info(url);
         String result=     client.postWithStringReturned(url, null);
-
-
-
-
-
-
         Type   generateType = new TypeToken<RemoteData<Product>>() {
         }.getType();
-
-
-
 
         RemoteData<Product> productRemoteData = gson.fromJson(result, generateType);
         return productRemoteData;
