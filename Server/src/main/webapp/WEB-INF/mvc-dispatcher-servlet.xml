@@ -22,7 +22,10 @@
             </bean>
 
             <bean class="com.giants3.hd.server.converter.GsonMessageConverter"
-                  ></bean>
+                  >
+
+
+            </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 

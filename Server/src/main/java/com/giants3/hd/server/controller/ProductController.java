@@ -2,20 +2,19 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.server.repository.ProductRepository;
 
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Type;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -30,6 +29,8 @@ public class ProductController {
     private ProductRepository productRepository;
 
 
+    Gson gson=new GsonBuilder().create();
+
 
 
 
@@ -43,30 +44,35 @@ public class ProductController {
     }
 
     //   /api/prdts/2.209e%2B007     这个 。 请求中会出现错误    实际中  prd_no 得到的参数是2
-    @RequestMapping(value = "/search/{prd_name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/{prd_name}", method = {RequestMethod.GET,RequestMethod.POST})
     public
     @ResponseBody
-   String  listPrdtJson(@PathVariable String prd_name
+    RemoteData<Product>   listPrdtJson(@PathVariable String prd_name
     ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize
 
-    )   {
+    ) throws UnsupportedEncodingException {
 
 
-        Pageable pageable=constructPageSpecification(pageIndex,pageSize);
+        Pageable pageable=constructPageSpecification(pageIndex, pageSize);
           Page<Product> pageValue=  productRepository.findByPrd_noLike(prd_name, pageable);
 
         List<Product> products=pageValue.getContent();
-        RemoteData<Product> productRemoteData=new RemoteData<>();
+
+        RemoteData<Product> productRemoteData=new  RemoteData<Product>();
         productRemoteData.datas.addAll(products);
         productRemoteData.pageCount=pageValue.getTotalPages();
         productRemoteData.pageIndex=pageIndex;
         productRemoteData.pageSize=pageSize;
+        return productRemoteData;
 
-        Gson gson = new Gson();
-        Type generateType = new TypeToken<RemoteData<Product>>() {
-        }.getType();
-      String result = gson.toJson(productRemoteData, generateType);
-        return result ;
+
+
+
+//        Type generateType = new TypeToken<RemoteData<Product>>() {
+//        }.getType();
+//        String result = gson.toJson(productRemoteData, generateType);
+//        return result;
+
 
 
     }

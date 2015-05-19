@@ -4,6 +4,7 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.exceptions.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -47,6 +48,7 @@ public class Panel_ProductList {
     public Panel_ProductList() {
         super();
 
+       Guice.createInjector().injectMembers(this);
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -76,7 +78,7 @@ public class Panel_ProductList {
             @Override
             protected RemoteData<Product> doInBackground() throws HdException {
 
-             return   apiManager.readProductList(productNameValue,1,100);
+             return   apiManager.readProductList(productNameValue,0,100);
 
 
             }

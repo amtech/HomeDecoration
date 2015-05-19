@@ -3,6 +3,7 @@ package com.giants.hd.desktop.api;
 import com.giants.hd.desktop.exceptions.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.ning.http.client.*;
@@ -16,10 +17,12 @@ import java.util.concurrent.ExecutionException;
 @Singleton
 public class Client {
 
+
+    public static final String BODY_ENCODING="UTF-8";
     private static final String BASE_URL = "http://api.twitter.com/1/";
     //客户端连接
     public AsyncHttpClient client;
-
+    @Inject
     public Client() {//设置链接参数   默认超时时间6秒
         client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectTimeout(3000).setRequestTimeout(3000).build());
 
@@ -40,7 +43,12 @@ public class Client {
                 @Override
                 public String onCompleted(Response response) throws Exception {
 
-                    return response.getResponseBody();
+                    String result= response.getResponseBody(BODY_ENCODING);
+                    //去除转义字符
+
+
+                    return result;
+
 
                 }
             });

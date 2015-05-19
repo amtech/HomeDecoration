@@ -4,6 +4,7 @@ package com.giants3.hd.server.converter;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import com.google.gson.*;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +36,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
          * {@link Gson#Gson() Gson}.
          */
         public GsonMessageConverter() {
-            this(new Gson());
+            this(false);
         }
 
         /**
@@ -45,20 +46,13 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
          *            true to generate json for null values
          */
         public GsonMessageConverter(boolean serializeNulls) {
-            this(serializeNulls ? new GsonBuilder().serializeNulls().create()
-                    : new Gson());
+            super(new MediaType("application", "json", DEFAULT_CHARSET));
+            GsonBuilder builder=new GsonBuilder();
+            builder.registerTypeAdapter(List.class,new ListTypeAdapter());
+            setGson(builder.create());
         }
 
-        /**
-         * Construct a new {@code GsonMessageConverter}.
-         *
-         * @param gson
-         *            a customized {@link Gson#Gson() Gson}
-         */
-        public GsonMessageConverter(Gson gson) {
-            super(new MediaType("application", "json", DEFAULT_CHARSET));
-            setGson(gson);
-        }
+
 
         /**
          * Sets the {@code Gson} for this view. If not set, a default
@@ -169,9 +163,13 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
                     writer.append("{} && ");
                 }
                 Type typeOfSrc = getType();
+
+
+
                 if (typeOfSrc != null) {
                     _gson.toJson(o, typeOfSrc, writer);
                 } else {
+
                     _gson.toJson(o, writer);
                 }
                 writer.close();
