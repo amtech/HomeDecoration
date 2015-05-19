@@ -44,7 +44,6 @@ public class Client {
                 public String onCompleted(Response response) throws Exception {
 
                     String result= response.getResponseBody(BODY_ENCODING);
-                    //去除转义字符
 
 
                     return result;

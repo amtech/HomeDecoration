@@ -1,7 +1,9 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ProgressDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.exceptions.HdException;
+import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Guice;
@@ -9,8 +11,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -18,7 +23,7 @@ import java.util.concurrent.ExecutionException;
  * 产品列表界面
  */
 @Singleton
-public class Panel_ProductList {
+public class Panel_ProductList  extends BasePanel {
 
     @Inject
     ApiManager apiManager;
@@ -40,6 +45,10 @@ public class Panel_ProductList {
     private JComboBox pageRows;
 
 
+
+    @Inject
+    ProductTableModel tableModel;
+
     public JPanel getRootPanel() {
         return panel1;
     }
@@ -48,7 +57,7 @@ public class Panel_ProductList {
     public Panel_ProductList() {
         super();
 
-       Guice.createInjector().injectMembers(this);
+
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -62,6 +71,39 @@ public class Panel_ProductList {
 
 
 
+
+
+        productTable.setModel(tableModel);
+        productTable.setRowHeight(50);
+
+        productTable.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                if(e.getClickCount() ==2)
+                {
+
+                int row=    productTable.getSelectedRow();
+                    Product product=tableModel.getItem(row);
+
+
+                    JDialog dialog=new JDialog();
+                    Panel_ProductDetail panel_productDetail=new Panel_ProductDetail(product);
+
+
+                    dialog.setContentPane(panel_productDetail.getPanel());
+                    dialog.pack();
+                    dialog.setVisible(true);
+
+
+
+                }
+
+            }
+        });
+
+
     }
 
 
@@ -70,6 +112,11 @@ public class Panel_ProductList {
 
         final String productNameValue=productName.getText().toString().trim();
 
+
+       final  ProgressDialog dialog = new ProgressDialog();
+        dialog.pack();
+        dialog.setModal(false);
+        dialog.setVisible(true);
 
 
         new  SwingWorker< RemoteData<Product>,String >(){
@@ -86,13 +133,15 @@ public class Panel_ProductList {
             @Override
             protected void done() {
                 super.done();
-
+                dialog.setVisible(false);
+                dialog.dispose();
                 try {
                     RemoteData<Product> productRemoteData=get();
 
 
 
 
+                    tableModel.setDatas(productRemoteData.datas);
 
 
 

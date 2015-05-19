@@ -1,50 +1,91 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.entity.Product;
+import com.google.inject.Inject;
 
-import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 import java.lang.reflect.Field;
 
 /**
- * ²úÆ·µÄ±í¸ñÄ£ĞÍÀà
+ * ï¿½ï¿½Æ·ï¿½Ä±ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½
  */
 
 public class ProductTableModel extends BaseTableModel<Product> {
-    public String[] column=new String[]{"Í¼Æ¬","»õºÅ","¹æ¸ñ","µ¥Î»","Àà±ğ","°ü×°"};
-    public String[] fieldName=new String[]{"photo","name","","pTypeName","pClassName",""};
-    Field[] fields;
+    public String[] columnNames =new String[]{"å›¾ç‰‡","è´§å·","è§„æ ¼","å•ä½","ç±»åˆ«","è·¯å¾„"};
+    public String[] fieldName=new String[]{"photo","name","spec","pTypeName","pClassName","url"};
+    public  Field[] fields;
 
+    public Class[]  classes=new Class[]{ImageIcon.class,Object.class,Object.class,Object.class,Object.class,Object.class};
+
+    @Inject
     public ProductTableModel( ) {
         super();
 
 
-        fields=Product.class.getFields();
+        int size=fieldName.length;
+
+        fields=new Field[size];
+        for (int i = 0; i < size; i++) {
+
+            try {
+                fields[i]=Product.class.getField(fieldName[i]);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+
 
     }
 
     @Override
     public int getColumnCount() {
-        return column.length;
+        return columnNames.length;
     }
 
 
+
+
+    @Override
+    public Class getColumnClass(int c) {
+
+
+
+        return classes[c];
+
+    }
 
 
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
+        if(fields[columnIndex]==null) return null;
+
+
+
         Product product=getItem(rowIndex);
 
-        for(String field:fieldName)
-        {
 
-//            if(fields[])
 
-        }
+            try {
+                return fields[columnIndex].get(product);
+            } catch (IllegalAccessException e) {
+               // e.printStackTrace();
+            }
+
 
 
 
         return null;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
     }
 }

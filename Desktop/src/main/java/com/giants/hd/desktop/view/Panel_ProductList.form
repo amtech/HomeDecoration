@@ -181,10 +181,20 @@
           </hspacer>
         </children>
       </grid>
-      <component id="97054" class="javax.swing.JTable" binding="productTable">
+      <scrollpane id="17f8e">
         <constraints border-constraint="Center"/>
         <properties/>
-      </component>
+        <border type="none"/>
+        <children>
+          <component id="97054" class="javax.swing.JTable" binding="productTable">
+            <constraints/>
+            <properties>
+              <enabled value="true"/>
+              <fillsViewportHeight value="true"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

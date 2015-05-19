@@ -12,6 +12,9 @@ public class Main extends  JFrame  {
     private JPanel panel1;
     private JTextPane textPane1;
     private JTextArea textArea1;
+    private JTextField tf_product;
+    private JLabel lable2;
+    private JLabel photo;
 
 
     public static void main(String[] args) {
@@ -199,4 +202,7 @@ public class Main extends  JFrame  {
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }

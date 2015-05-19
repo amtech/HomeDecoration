@@ -110,6 +110,14 @@ public class Product implements Serializable {
 	public String rDate;
 
 
+	/**
+	 * 规格描述
+	 * @return
+	 */
+	@Basic
+	public String spec;
+
+
 	public String getMemo() {
 		return memo;
 	}
@@ -268,5 +276,13 @@ public class Product implements Serializable {
 
 	public void setrDate(String rDate) {
 		this.rDate = rDate;
+	}
+
+	public String getSpec() {
+		return spec;
+	}
+
+	public void setSpec(String spec) {
+		this.spec = spec;
 	}
 }

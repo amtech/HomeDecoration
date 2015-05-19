@@ -38,7 +38,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     }
 
     public void setDatas(List<T> datas) {
-
+        this.datas.clear();
 
         this.datas.addAll(datas);
         fireTableDataChanged();

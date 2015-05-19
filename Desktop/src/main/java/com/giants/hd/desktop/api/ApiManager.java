@@ -39,6 +39,14 @@ public class ApiManager {
 
     public static final String TAG = ApiManager.class.getSimpleName();
 
+    /**
+     * 读取产品列表
+     * @param productName
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     * @throws HdException
+     */
     public RemoteData<Product>  readProductList(String productName,int pageIndex,int pageSize) throws HdException {
 
 
@@ -54,18 +62,37 @@ public class ApiManager {
 
     }
 
+    /**
+     * 读出材料列表
+     * @param materialName
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     * @throws HdException
+     */
     public RemoteData<Material>  readMaterialList(String materialName,int pageIndex,int pageSize) throws HdException {
 
 
         String url=HttpUrl.readProductList(materialName, pageIndex, pageSize);
         Logger.getLogger("TEST").info(url);
         String result=     client.postWithStringReturned(url, null);
+        Logger.getLogger("TEST").info(result);
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
 
         RemoteData<Material> productRemoteData = gson.fromJson(result, generateType);
+
         return productRemoteData;
 
 
+    }
+
+    /**
+     * 保存产品数据
+     * @param product
+     * @return
+     */
+    public RemoteData  saveProduct(Product product) {
+        return null;
     }
 }
