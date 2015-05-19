@@ -2,6 +2,7 @@ package com.giants.hd.desktop.api;
 
 import com.giants.hd.desktop.exceptions.HdException;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.Product;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,5 +54,18 @@ public class ApiManager {
 
     }
 
+    public RemoteData<Material>  readMaterialList(String materialName,int pageIndex,int pageSize) throws HdException {
 
+
+        String url=HttpUrl.readProductList(materialName, pageIndex, pageSize);
+        Logger.getLogger("TEST").info(url);
+        String result=     client.postWithStringReturned(url, null);
+        Type   generateType = new TypeToken<RemoteData<Material>>() {
+        }.getType();
+
+        RemoteData<Material> productRemoteData = gson.fromJson(result, generateType);
+        return productRemoteData;
+
+
+    }
 }

@@ -44,17 +44,17 @@ public class ProductController {
     }
 
     //   /api/prdts/2.209e%2B007     这个 。 请求中会出现错误    实际中  prd_no 得到的参数是2
-    @RequestMapping(value = "/search/{prd_name}", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/search", method = {RequestMethod.GET,RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Product>   listPrdtJson(@PathVariable String prd_name
+    RemoteData<Product>   listPrdtJson(@RequestParam(value = "proName",required = false,defaultValue ="") String prd_name
     ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
         Pageable pageable=constructPageSpecification(pageIndex, pageSize);
-          Page<Product> pageValue=  productRepository.findByPrd_noLike(prd_name, pageable);
+          Page<Product> pageValue=  productRepository.findByPrd_noLike("%"+prd_name+"%", pageable);
 
         List<Product> products=pageValue.getContent();
 
