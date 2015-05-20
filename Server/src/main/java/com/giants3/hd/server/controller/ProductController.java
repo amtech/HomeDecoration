@@ -107,18 +107,24 @@ public class ProductController {
      * @param productId
      * @return
      */
-    @RequestMapping( value = "/detail", method = RequestMethod.GET)
+    @RequestMapping( value = "/detail", method = {RequestMethod.GET,RequestMethod.POST})
     public
     @ResponseBody
-    ProductDetail findProductDetailById(@RequestParam("id") int productId)   {
+    RemoteData<ProductDetail> findProductDetailById(@RequestParam("id") long productId)   {
 
 
 
 
-        Product product= productRepository.findByPrdId(productId);
+        Product product= productRepository.findOne(productId);
         ProductDetail detail=new ProductDetail();
         detail.product=product;
-        return detail;
+
+        RemoteData<ProductDetail> remoteData=new RemoteData<>();
+        remoteData.pageIndex=0;
+        remoteData.pageCount=1;
+        remoteData.pageSize=20;
+        remoteData.datas.add(detail);
+        return remoteData;
     }
 
 

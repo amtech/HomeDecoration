@@ -16,10 +16,20 @@ public class HttpUrl {
     }
 
     /**
-     * 保存产品信息
+     * 淇濆瓨浜у搧淇℃伅
      * @return
      */
     public static String saveProduct() {
          return BaseUrl+"api/product/save";
+    }
+
+
+    /**
+     * 璇诲彇浜у搧璇︽儏
+     * @param id
+     * @return
+     */
+    public static String loadProductDetail(long id) {
+        return BaseUrl+"api/product/detail?id="+id;
     }
 }

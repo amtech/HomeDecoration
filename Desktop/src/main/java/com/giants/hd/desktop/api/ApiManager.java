@@ -21,7 +21,6 @@ public class ApiManager {
 
 
 
-
     @Inject
     public ApiManager()
     {}
@@ -69,9 +68,9 @@ public class ApiManager {
 
 
         String url=HttpUrl.readProductList(materialName, pageIndex, pageSize);
-        Logger.getLogger("TEST").info(url);
+        Logger.getLogger(TAG).info(url);
         String result=     client.postWithStringReturned(url, null);
-        Logger.getLogger("TEST").info(result);
+        Logger.getLogger(TAG).info(result);
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
 
@@ -91,9 +90,9 @@ public class ApiManager {
 
 
         String url=HttpUrl.saveProduct();
-        Logger.getLogger("TEST").info(url);
+        Logger.getLogger(TAG).info(url);
         String result=     client.postWithStringReturned(url, gson.toJson(productDetail));
-        Logger.getLogger("TEST").info(result);
+        Logger.getLogger(TAG).info(result);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
 
@@ -101,6 +100,27 @@ public class ApiManager {
 
         return productRemoteData;
 
+
+    }
+
+    /**
+     * 读取产品信息详情
+     * @param id
+     * @return
+     */
+    public RemoteData<ProductDetail> loadProductDetail(long id) throws HdException {
+
+
+        String url=HttpUrl.loadProductDetail(id);
+        Logger.getLogger(TAG).info(url);
+        String result=     client.postWithStringReturned(url,null);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
+        }.getType();
+
+        RemoteData<ProductDetail> productRemoteData = gson.fromJson(result, generateType);
+
+        return productRemoteData;
 
     }
 }

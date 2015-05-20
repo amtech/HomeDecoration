@@ -46,4 +46,13 @@ public class RemoteData<T> implements Serializable{
      * 请求失败状态码
      */
     public  static final int CODE_FAIL=-1;
+
+
+    /**
+     * 是否成功的调用
+     * @return
+     */
+    public boolean isSuccess() {
+        return code==CODE_SUCCESS;
+    }
 }

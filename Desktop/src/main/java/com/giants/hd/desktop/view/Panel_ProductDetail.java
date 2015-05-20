@@ -28,11 +28,18 @@ public class Panel_ProductDetail  extends BasePanel{
     private JLabel lable2;
     private JLabel title;
     private JButton bn_save;
-    private JTextField textField1;
+    private JTextField tf_date;
     private JLabel photo;
+    private JTabbedPane tabbedPane1;
+    private JTextField textField1;
+    private JComboBox cb_class;
+    private JTextField tf_ingredient;
+    private JTextField tf_cost;
+    private JTextArea ta_spec;
+    private JTextArea ta_memo;
 
 
-    private Product product;
+    private ProductDetail productDetail;
 
 
     public Panel_ProductDetail(Product product)
@@ -40,12 +47,12 @@ public class Panel_ProductDetail  extends BasePanel{
 
         super();
 
-        this.product=product;
-
-        updateView();
 
 
-        addListener();
+        loadProductDetail(product);
+
+
+
 
     }
 
@@ -65,7 +72,7 @@ public class Panel_ProductDetail  extends BasePanel{
             public void actionPerformed(ActionEvent e) {
 
 
-                saveData(product);
+                saveData(productDetail);
 
 
             }
@@ -88,7 +95,7 @@ public class Panel_ProductDetail  extends BasePanel{
 
             public void warn() {
 
-                product.setName(tf_product.getText().trim());
+                productDetail.product.setName(tf_product.getText().trim());
 
 
             }
@@ -102,6 +109,8 @@ public class Panel_ProductDetail  extends BasePanel{
     private void updateView()
     {
 
+
+        Product product=productDetail.product;
 
         tf_product.setText(product.getName());
 
@@ -121,7 +130,7 @@ public class Panel_ProductDetail  extends BasePanel{
     }
 
 
-    private void  saveData(final Product product)
+    private void  saveData(final ProductDetail product)
     {
 
 
@@ -132,9 +141,9 @@ public class Panel_ProductDetail  extends BasePanel{
             protected RemoteData<Product> doInBackground() throws HdException {
 
 
-                ProductDetail detail=new ProductDetail();
-                detail.product=product;
-                return   apiManager.saveProduct(detail);
+
+
+                return   apiManager.saveProduct(product);
 
 
             }
@@ -146,8 +155,60 @@ public class Panel_ProductDetail  extends BasePanel{
                 try {
                     RemoteData<Product> productRemoteData=get();
 
+                    if(productRemoteData.isSuccess())
+                    {
 
 
+                        //TODO 显示保存成功
+
+                        JOptionPane.showMessageDialog(panel1,"数据保存成功!");
+
+                    }
+
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+
+    /**
+     * 加载产品详情信息
+     */
+    private void loadProductDetail(final Product product)
+    {
+
+
+
+        new  SwingWorker< RemoteData<ProductDetail>,Long >(){
+
+
+            @Override
+            protected RemoteData<ProductDetail> doInBackground() throws HdException {
+
+
+
+                return   apiManager.loadProductDetail(product.id);
+
+
+            }
+
+            @Override
+            protected void done() {
+                super.done();
+
+                try {
+                    RemoteData<ProductDetail> productRemoteData=get();
+
+
+                    ProductDetail detail=productRemoteData.datas.get(0);
+
+
+                    initPanel(detail);
 
 
 
@@ -162,6 +223,20 @@ public class Panel_ProductDetail  extends BasePanel{
                 }
             }
         }.execute();
+
+
+    }
+
+    /**
+     * 数据初始化 产品详界面
+     * @param detail
+     */
+    private void initPanel(ProductDetail detail) {
+
+        this.productDetail=detail;
+        updateView();
+        addListener();
+
     }
 
 
