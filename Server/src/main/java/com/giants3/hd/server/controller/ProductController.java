@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -106,6 +107,86 @@ public class ProductController {
         detail.product=product;
         return detail;
     }
+
+
+    /**
+     * 产品完整信息的保存
+     *
+     *  @param productDetail 产品全部信息
+     * @return
+     */
+    @RequestMapping( value = "/save", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData findProductDetailById(@RequestBody ProductDetail productDetail)   {
+
+
+
+        long productId=productDetail.product.id;
+
+        //新增加的产品数据
+        Product newProduct=productDetail.product;
+
+        /**
+         * 未生成id 添加记录
+          */
+     if(productId<=0)
+     {
+
+
+
+
+
+
+     }else
+     {
+        //找出旧的记录
+         Product oldData=productRepository.findByPrdId(productId);
+
+         //如果产品名称修改  则修正缩略图
+         if(!oldData.name.equals(newProduct.name))
+         {
+
+
+         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     }
+
+
+        //更新图片数据库
+      if(!StringUtils.isEmpty(productDetail.product.name))
+      {
+
+
+
+      }
+
+
+
+
+
+
+
+
+
+    RemoteData data=new RemoteData();
+
+        return  data;
+    }
+
 
 
     /**

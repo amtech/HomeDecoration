@@ -1,22 +1,15 @@
 package com.giants.hd.desktop.api;
 
-import com.giants.hd.desktop.exceptions.HdException;
+import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.Product;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.ning.http.client.AsyncHandler;
-import com.ning.http.client.HttpResponseBodyPart;
-import com.ning.http.client.HttpResponseHeaders;
-import com.ning.http.client.HttpResponseStatus;
-import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**

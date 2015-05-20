@@ -1,14 +1,11 @@
 package com.giants.hd.desktop.api;
 
-import com.giants.hd.desktop.exceptions.HdException;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.ning.http.client.*;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
