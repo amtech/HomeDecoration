@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
@@ -105,7 +106,10 @@ public class Panel_ProductDetail  extends BasePanel{
             @Override
             protected RemoteData<Product> doInBackground() throws HdException {
 
-                return   apiManager.saveProduct(product);
+
+                ProductDetail detail=new ProductDetail();
+                detail.product=product;
+                return   apiManager.saveProduct(detail);
 
 
             }

@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 /**
 *  产品资源库
 */
-public interface ProductRepository extends JpaRepository<Product,String> {
+public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query(value = " SELECT a FROM Product a WHERE  a.id=:prd_no     ")
      Product  findByPrdId(@Param("prd_no") long prdt_no);

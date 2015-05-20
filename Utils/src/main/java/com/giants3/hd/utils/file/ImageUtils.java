@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * 图片处理的功能
@@ -15,8 +16,9 @@ import java.io.IOException;
 
 public class ImageUtils {
 
-    public static final int MAX_MINIATURE_WIDTH=100;
-    public static final int MAX_MINIATURE_HEIGHT=100;
+    public static final int MAX_MINIATURE_WIDTH=20;
+    public static final int MAX_MINIATURE_HEIGHT=20;
+
 
 
     public static final byte[] scale(String path) throws HdException {
@@ -30,7 +32,7 @@ public class ImageUtils {
 
     public static final byte[] scale(String path,int maxWidth, int maxHeight) throws HdException {
 
-       return scale(new File(path),maxWidth,maxHeight);
+       return scale(path,maxWidth,maxHeight,false);
 
 
 
@@ -40,16 +42,19 @@ public class ImageUtils {
 
     /**
      * 生成缩略图的字节流
-     * @param file
+     *
+     * 设定最高宽高， 等比例压缩
+     *
+     * @param filePath
      * @param maxWidth
      * @param maxHeight
      * @return
      * @throws HdException
      */
-    public static final byte[] scale(File file, int maxWidth, int maxHeight) throws HdException {
+    public static final byte[] scale(String filePath, int maxWidth, int maxHeight,boolean preserveAlpha) throws HdException {
 
         try {
-            BufferedImage img = ImageIO.read(file);
+            BufferedImage img = ImageIO.read(new File(filePath));
 
             int sourceWidth=img.getWidth();
             int sourceHeight=img.getHeight();
@@ -63,13 +68,27 @@ public class ImageUtils {
 
 
 
-            Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-            BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-            imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
+           Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+            int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+
+            BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, imageType);
+
+            Graphics2D g = imageBuff.createGraphics();
+            if(preserveAlpha)
+                g.setComposite(AlphaComposite.Src);
+
+          //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
+            g.drawImage(img, 0, 0, newWidth, newHeight, null);
+
+            g.dispose();
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            ImageIO.write(imageBuff, preserveAlpha ? "png" : "jpg", buffer);
 
-            ImageIO.write(imageBuff, "jpg", buffer);
+
+
+
 
             byte[] result= buffer.toByteArray();
             buffer.close();

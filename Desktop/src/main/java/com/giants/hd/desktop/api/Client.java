@@ -61,6 +61,8 @@ public class Client {
 
 
         builder = client.preparePost(url);
+        builder.addHeader("Content-Type","application/json");
+        builder.setBodyEncoding(BODY_ENCODING);
 
 
         if (null != body)
@@ -73,6 +75,7 @@ public class Client {
     private <T> T execute(AsyncHandler<T> handler, AsyncHttpClient.BoundRequestBuilder builder) throws HdException {
         try {
             T result = builder.execute(handler).get();
+
 
           //  Log.d(TAG, "接收数据 ：     " + result);
             return result

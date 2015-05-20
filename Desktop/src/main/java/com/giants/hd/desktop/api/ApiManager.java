@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.api;
 
+import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
  */
 @Singleton
 public class ApiManager {
+
 
 
 
@@ -82,10 +84,23 @@ public class ApiManager {
 
     /**
      * 保存产品数据
-     * @param product
+     * @param productDetail
      * @return
      */
-    public RemoteData  saveProduct(Product product) {
-        return null;
+    public RemoteData  saveProduct(ProductDetail productDetail) throws HdException {
+
+
+        String url=HttpUrl.saveProduct();
+        Logger.getLogger("TEST").info(url);
+        String result=     client.postWithStringReturned(url, gson.toJson(productDetail));
+        Logger.getLogger("TEST").info(result);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+
+        RemoteData<Void> productRemoteData = gson.fromJson(result, generateType);
+
+        return productRemoteData;
+
+
     }
 }

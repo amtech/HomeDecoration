@@ -6,16 +6,25 @@ import com.giants3.hd.server.repository.ProductRepository;
 
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.exception.HdServerException;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.List;
 
 /**
@@ -28,6 +37,10 @@ public class ProductController {
     private static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
     @Autowired
     private ProductRepository productRepository;
+
+
+    @Value("${filepath}")
+    private String filePath;
 
 
     Gson gson=new GsonBuilder().create();
@@ -130,59 +143,33 @@ public class ProductController {
         /**
          * 未生成id 添加记录
           */
-     if(productId<=0)
+     if(!productRepository.exists(productId))
      {
-
-
-
-
-
-
+         //更新缩略图
+           updateProductPhotoData(newProduct);
      }else
      {
         //找出旧的记录
-         Product oldData=productRepository.findByPrdId(productId);
-
+         Product oldData=productRepository.findOne(productId);
          //如果产品名称修改  则修正缩略图
          if(!oldData.name.equals(newProduct.name))
          {
-
-
+              updateProductPhotoData(newProduct);
          }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
      }
 
 
-        //更新图片数据库
-      if(!StringUtils.isEmpty(productDetail.product.name))
-      {
+     //更新图片更新字段 记录图片的最后更新时间
+       updateProductPhotoTime(newProduct);
 
 
-
-      }
-
-
+        //
+        productRepository.save(newProduct);
 
 
-
-
-
-
-
-    RemoteData data=new RemoteData();
+       RemoteData data=new RemoteData();
 
         return  data;
     }
@@ -214,4 +201,87 @@ public class ProductController {
     private Sort sortByLastNameAsc() {
         return new Sort(Sort.Direction.ASC, "name");
     }
+
+
+    /**
+     * 获取图片路径   根据规则  （第一个英文字母为）
+     * @param productName
+     * @return
+     */
+    private   final String getProductPicturePath(String productName)
+    {
+
+
+        //找到第一个英文单词。
+        int len=productName.length();
+        int firstCharIndex=-1;
+        for (int i = 0; i < len; i++) {
+            if(Character.isLetter(productName.charAt(i)))
+            {
+                firstCharIndex=i;
+                break;
+            }
+        }
+
+        String   fullFilePath=filePath+(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"")+File.separator+productName+".jpg";
+
+
+        return fullFilePath;
+
+
+    }
+
+
+    /**
+     * 更新产品的缩略图数据
+     * @param product
+     */
+    private final void updateProductPhotoData(Product product)
+    {
+
+
+        String filePath=getProductPicturePath(product.name);
+        try {
+            product.setPhoto(ImageUtils.scale(filePath));
+
+
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * 更新图片的最后一次修改的时间
+     */
+    private final void updateProductPhotoTime(Product product)
+    {
+
+
+        String filePath=getProductPicturePath(product.name);
+
+        BasicFileAttributes attributes =
+                null;
+        try {
+            attributes = Files.readAttributes(new File(filePath).toPath(), BasicFileAttributes.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+
+            if(null!=attributes)
+            {
+
+                FileTime lastModifiedTime = attributes.lastModifiedTime();
+                product.setLastPhotoUpdateTime(lastModifiedTime.toMillis());
+            }
+
+
+
+    }
+
+
 }

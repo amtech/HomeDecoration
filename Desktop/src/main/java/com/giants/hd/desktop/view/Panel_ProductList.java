@@ -86,6 +86,7 @@ public class Panel_ProductList  extends BasePanel {
 
 
                     JDialog dialog=new JDialog();
+                    dialog.setModal(true);
                     Panel_ProductDetail panel_productDetail=new Panel_ProductDetail(product);
 
 

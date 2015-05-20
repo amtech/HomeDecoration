@@ -18,7 +18,7 @@ public class Product implements Serializable {
 	/**
 	 * 图片，存放缩略图
 	 */
-	@Basic
+	@Lob  @Basic
 	public byte[] photo;
 	/**
 	 * 图片路径 大图片存放地址
@@ -116,6 +116,9 @@ public class Product implements Serializable {
 	 */
 	@Basic
 	public String spec;
+
+	@Basic
+	public long lastPhotoUpdateTime;
 
 
 	public String getMemo() {
@@ -284,5 +287,14 @@ public class Product implements Serializable {
 
 	public void setSpec(String spec) {
 		this.spec = spec;
+	}
+
+
+	public long getLastPhotoUpdateTime() {
+		return lastPhotoUpdateTime;
+	}
+
+	public void setLastPhotoUpdateTime(long lastPhotoUpdateTime) {
+		this.lastPhotoUpdateTime = lastPhotoUpdateTime;
 	}
 }
