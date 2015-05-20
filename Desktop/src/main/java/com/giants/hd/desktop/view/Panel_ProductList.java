@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.ProgressDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants3.hd.utils.exception.HdException;
@@ -72,6 +73,9 @@ public class Panel_ProductList  extends BasePanel {
 
         productTable.setModel(tableModel);
         productTable.setRowHeight(100);
+
+
+        JTableUtils.setJTableColumnsWidth(productTable,800,40,60,60,60,60,60);
 
 
         productTable.addMouseListener(new MouseInputAdapter() {
