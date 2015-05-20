@@ -4,10 +4,11 @@ import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Field;
 
 /**
- * ��Ʒ�ı��ģ����
+ * ��Ʒ�ı��ģ����?
  */
 
 public class ProductTableModel extends BaseTableModel<Product> {
@@ -70,7 +71,12 @@ public class ProductTableModel extends BaseTableModel<Product> {
 
         Product product=getItem(rowIndex);
 
+        if(columnIndex==0)
+        {
 
+          return new ImageIcon(  product.getPhoto());
+
+        }else
 
             try {
                 return fields[columnIndex].get(product);

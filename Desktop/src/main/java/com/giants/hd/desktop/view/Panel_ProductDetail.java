@@ -8,6 +8,8 @@ import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutionException;
@@ -64,6 +66,29 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
                 saveData(product);
+
+
+            }
+        });
+
+
+        tf_product.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+
+
+
+            }
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            public void warn() {
+
+                product.setName(tf_product.getText().trim());
 
 
             }

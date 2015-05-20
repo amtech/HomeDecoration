@@ -9,15 +9,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 
 /**
- * Í¼Æ¬´¦ÀíµÄ¹¦ÄÜ
+ * å›¾ç‰‡å¤„ç†çš„åŠŸèƒ½
  */
 
 public class ImageUtils {
 
-    public static final int MAX_MINIATURE_WIDTH=20;
-    public static final int MAX_MINIATURE_HEIGHT=20;
+    public static final String TAG="ImageUtils";
+
+    public static final int MAX_MINIATURE_WIDTH=160;
+    public static final int MAX_MINIATURE_HEIGHT=160;
 
 
 
@@ -41,9 +44,9 @@ public class ImageUtils {
 
 
     /**
-     * Éú³ÉËõÂÔÍ¼µÄ×Ö½ÚÁ÷
+     * ç”Ÿæˆç¼©ç•¥å›¾çš„å­—èŠ‚æµ
      *
-     * Éè¶¨×î¸ß¿í¸ß£¬ µÈ±ÈÀıÑ¹Ëõ
+     * è®¾å®šæœ€é«˜å®½é«˜ï¼Œ ç­‰æ¯”ä¾‹å‹ç¼©
      *
      * @param filePath
      * @param maxWidth
@@ -58,18 +61,16 @@ public class ImageUtils {
 
             int sourceWidth=img.getWidth();
             int sourceHeight=img.getHeight();
-            //¼ÆËãËõ·Å±ÈÀı
+            //è®¡ç®—ç¼©æ”¾æ¯”ä¾‹
             float ratio=Math.max((float)sourceWidth/maxWidth,(float)sourceHeight/maxHeight);
 
-            ratio=Math.min(ratio,1);
+            ratio=Math.max(ratio,1);
 
             int newWidth= (int) (sourceWidth/ratio);
             int newHeight= (int) (sourceHeight/ratio);
 
 
-
-           Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-
+            Logger.getLogger(TAG).info("scale Image----newWidth:"+newWidth+",newHeight:"+newHeight);
             int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 
             BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, imageType);
@@ -85,9 +86,6 @@ public class ImageUtils {
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             ImageIO.write(imageBuff, preserveAlpha ? "png" : "jpg", buffer);
-
-
-
 
 
             byte[] result= buffer.toByteArray();

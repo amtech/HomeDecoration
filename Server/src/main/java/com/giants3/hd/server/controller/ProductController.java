@@ -241,13 +241,23 @@ public class ProductController {
 
 
         String filePath=getProductPicturePath(product.name);
-        try {
-            product.setPhoto(ImageUtils.scale(filePath));
 
+        //如果tup图片文件不存在  则 设置photo为空。
+        if(!new File(filePath).exists())
+        {
+            product.setPhoto(null);
 
-        } catch (HdException e) {
-            e.printStackTrace();
+        }else
+        {
+            try {
+                product.setPhoto(ImageUtils.scale(filePath));
+            } catch (HdException e) {
+                e.printStackTrace();
+            }
         }
+
+
+
 
 
     }

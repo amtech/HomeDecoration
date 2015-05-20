@@ -71,7 +71,8 @@ public class Panel_ProductList  extends BasePanel {
 
 
         productTable.setModel(tableModel);
-        productTable.setRowHeight(50);
+        productTable.setRowHeight(100);
+
 
         productTable.addMouseListener(new MouseInputAdapter() {
             @Override
