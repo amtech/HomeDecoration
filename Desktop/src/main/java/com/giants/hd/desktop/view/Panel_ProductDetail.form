@@ -9,7 +9,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="3f5b2" layout-manager="FormLayout">
+      <grid id="3f5b2" binding="cellPanel" custom-create="true" layout-manager="FormLayout">
         <rowspec value="fill:31px:grow"/>
         <rowspec value="top:5dlu:noGrow"/>
         <rowspec value="fill:32px:grow"/>
@@ -51,7 +51,9 @@
         <colspec value="left:53px:grow"/>
         <colspec value="fill:100px:grow"/>
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <enabled value="true"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="d5227" class="javax.swing.JLabel">
@@ -78,14 +80,34 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="7e6a2" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+              <scrollpane id="f989f">
                 <constraints>
-                  <tabbedpane title="Untitled"/>
+                  <tabbedpane title="材料清单"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
-                <children/>
-              </grid>
+                <children>
+                  <component id="19b10" class="javax.swing.JTable" binding="productMaterialTable">
+                    <constraints/>
+                    <properties>
+                      <fillsViewportHeight value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <scrollpane id="6a7d4">
+                <constraints>
+                  <tabbedpane title="油漆清单"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="149a5" class="javax.swing.JTable" binding="productPaintTable">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </tabbedpane>
           <component id="f22e7" class="javax.swing.JLabel">

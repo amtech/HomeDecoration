@@ -99,6 +99,21 @@ public class ProductMaterial  implements Serializable {
 	public String memo;
 
 
+	/**
+	 * 物料编码
+	 */
+	@Basic
+	public String code;
+
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	public long getId() {
 		return id;
 	}

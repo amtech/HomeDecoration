@@ -1,30 +1,27 @@
 package com.giants.hd.desktop;
 
+import com.giants.hd.desktop.api.HttpUrl;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ImageViewDialog extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
-    private JButton buttonCancel;
+    private JLabel picture;
 
     public ImageViewDialog() {
+
+
         setContentPane(contentPane);
+
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
 
 // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -53,28 +50,72 @@ public class ImageViewDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        ImageViewDialog dialog = new ImageViewDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
 
-       new  SwingWorker<Void,Void>(){
-           @Override
-           protected Void doInBackground() throws Exception {
+        ImageViewDialog dialog=new ImageViewDialog();
+        dialog.loadImageAndShow(HttpUrl.loadProductPicture("10X1003"));
 
-               publish();
-               return null;
-           }
+    }
 
-           @Override
-           protected void process(List<Void> chunks) {
-               super.process(chunks);
-           }
 
-           @Override
-           protected void done() {
-               super.done();
-           }
-       }.execute();
+
+    public  void loadImageAndShow(final String url)
+    {
+
+
+
+
+
+
+
+
+        new SwingWorker<Image,String>()
+        {
+
+            @Override
+            protected void done() {
+                super.done();
+
+                Image image= null;
+                try {
+                    image = get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if(null!=image)
+                picture.setIcon(new ImageIcon(image));
+                ImageViewDialog.this.pack();
+
+
+            }
+
+            @Override
+            protected Image doInBackground() throws Exception {
+                return ImageIO.read(new URL(url));
+            }
+        }.execute();
+
+
+
+        setMinimumSize(new Dimension(800, 600));
+        setLocation(300, 200);
+        pack();
+        setVisible(true);
+
+    }
+
+    /**
+     * 显示图片显示框体框
+     * @param productName
+     */
+    public static void showDialog(String productName) {
+
+
+
+        String url=HttpUrl.loadProductPicture(productName);
+        ImageViewDialog dialog=new ImageViewDialog();
+        dialog.loadImageAndShow(url);
+
     }
 }

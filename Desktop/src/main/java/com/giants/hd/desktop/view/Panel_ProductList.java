@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.ProgressDialog;
 import com.giants.hd.desktop.api.ApiManager;
@@ -86,18 +87,40 @@ public class Panel_ProductList  extends BasePanel {
                 if(e.getClickCount() ==2)
                 {
 
-                int row=    productTable.getSelectedRow();
+
+                    int row=    productTable.getSelectedRow();
                     Product product=tableModel.getItem(row);
 
 
-                    JDialog dialog=new JDialog();
-                    dialog.setModal(true);
-                    Panel_ProductDetail panel_productDetail=new Panel_ProductDetail(product);
+                    int column=productTable.getSelectedColumn();
+                    //单击第一列 显示原图
+                    if(column==0)
+                    {
+                        ImageViewDialog.showDialog(product.getName());
+                    }
+                    else
+                    {
 
 
-                    dialog.setContentPane(panel_productDetail.getPanel());
-                    dialog.pack();
-                    dialog.setVisible(true);
+
+
+
+
+
+
+
+
+                        JDialog dialog=new JDialog();
+                        dialog.setModal(true);
+                        Panel_ProductDetail panel_productDetail=new Panel_ProductDetail(product);
+
+
+                        dialog.setContentPane(panel_productDetail.getPanel());
+                        dialog.pack();
+                        dialog.setVisible(true);
+
+
+                    }
 
 
 
@@ -159,4 +182,6 @@ public class Panel_ProductList  extends BasePanel {
         }.execute();
 
     }
+
+
 }

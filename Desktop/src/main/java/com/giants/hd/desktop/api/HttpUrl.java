@@ -32,4 +32,13 @@ public class HttpUrl {
     public static String loadProductDetail(long id) {
         return BaseUrl+"api/product/detail?id="+id;
     }
+
+    /**
+     * 生成读取产品图片的url
+     * @param productName
+     * @return
+     */
+    public static String loadProductPicture(String productName) {
+        return BaseUrl+"api/file/download/product/"+productName+".jpg";
+    }
 }

@@ -1,5 +1,6 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.convert.WritingConverter;
@@ -54,18 +55,18 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value="/download/{file_name}", method=RequestMethod.GET)
+
+
+    @RequestMapping(value="/download/product/{name}", method=RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getFile(@PathVariable("file_name") String fileName) {
+    public FileSystemResource getProductFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
 
-       FileSystemResource resource= new FileSystemResource(filePath+fileName+".jpg");
+        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(filePath,name,type));
         //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
 
         return resource;
     }
-
-
 
 
 }

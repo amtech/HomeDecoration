@@ -1,6 +1,9 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.model.ProductMaterialTableModel;
+import com.giants.hd.desktop.model.ProductPaintTableModel;
+import com.giants.hd.desktop.widget.APanel;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
@@ -37,9 +40,17 @@ public class Panel_ProductDetail  extends BasePanel{
     private JTextField tf_cost;
     private JTextArea ta_spec;
     private JTextArea ta_memo;
+    private JPanel cellPanel;
+    private JTable productMaterialTable;
+    private JTable productPaintTable;
 
 
     private ProductDetail productDetail;
+
+    @Inject
+    ProductMaterialTableModel productMaterialTableModel;
+    @Inject
+    ProductPaintTableModel productPaintModel;
 
 
     public Panel_ProductDetail(Product product)
@@ -47,7 +58,7 @@ public class Panel_ProductDetail  extends BasePanel{
 
         super();
 
-
+        initComponent();
 
         loadProductDetail(product);
 
@@ -84,11 +95,12 @@ public class Panel_ProductDetail  extends BasePanel{
                 warn();
 
 
-
             }
+
             public void removeUpdate(DocumentEvent e) {
                 warn();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 warn();
             }
@@ -240,4 +252,25 @@ public class Panel_ProductDetail  extends BasePanel{
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        cellPanel=new APanel();
+        //cellPanel.setGridColor(Color.GRAY);
+       // cellPanel.setPaintInBackground(false);
+    }
+
+
+
+
+
+    /**
+     * 初始化控件装配。
+     */
+    public void initComponent()
+    {
+
+       productMaterialTable.setModel(productMaterialTableModel);
+        productPaintTable.setModel(productPaintModel);
+
+    }
 }

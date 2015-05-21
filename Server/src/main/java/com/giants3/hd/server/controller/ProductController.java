@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.repository.ProductRepository;
 
@@ -40,7 +41,7 @@ public class ProductController {
 
 
     @Value("${filepath}")
-    private String filePath;
+    private String rootFilePath;
 
 
     Gson gson=new GsonBuilder().create();
@@ -209,33 +210,7 @@ public class ProductController {
     }
 
 
-    /**
-     * 获取图片路径   根据规则  （第一个英文字母为）
-     * @param productName
-     * @return
-     */
-    private   final String getProductPicturePath(String productName)
-    {
 
-
-        //找到第一个英文单词。
-        int len=productName.length();
-        int firstCharIndex=-1;
-        for (int i = 0; i < len; i++) {
-            if(Character.isLetter(productName.charAt(i)))
-            {
-                firstCharIndex=i;
-                break;
-            }
-        }
-
-        String   fullFilePath=filePath+(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"")+File.separator+productName+".jpg";
-
-
-        return fullFilePath;
-
-
-    }
 
 
     /**
@@ -246,7 +221,7 @@ public class ProductController {
     {
 
 
-        String filePath=getProductPicturePath(product.name);
+        String filePath= FileUtils.getProductPicturePath(rootFilePath, product.name);
 
         //如果tup图片文件不存在  则 设置photo为空。
         if(!new File(filePath).exists())
@@ -275,7 +250,7 @@ public class ProductController {
     {
 
 
-        String filePath=getProductPicturePath(product.name);
+        String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name);
 
         BasicFileAttributes attributes =
                 null;

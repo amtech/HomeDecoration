@@ -35,11 +35,31 @@ public class ProductPaint  implements Serializable {
 	 */
 	@Basic
 	public String materialName;
+
+
+	/**
+	 * 物料单位
+	 */
+	@Basic
+	public String unitName;
+
+
+
+
+	/**
+	 * 工序编码
+	 */
+	@Basic
+	public String processCode;
+
 	/**
 	 * 工序名称
 	 */
 	@Basic
 	public String processName;
+
+
+
 	/**
 	 * 材料单价
 	 */
@@ -189,5 +209,23 @@ public class ProductPaint  implements Serializable {
 
 	public void setIngredientQuantity(float ingredientQuantity) {
 		this.ingredientQuantity = ingredientQuantity;
+	}
+
+
+	public String getProcessCode() {
+		return processCode;
+	}
+
+	public void setProcessCode(String processCode) {
+		this.processCode = processCode;
+	}
+
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
 	}
 }
