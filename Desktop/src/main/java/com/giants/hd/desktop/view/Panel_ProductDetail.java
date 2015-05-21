@@ -1,20 +1,25 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.model.ProductMaterialTableModel;
 import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
 
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -60,7 +65,8 @@ public class Panel_ProductDetail  extends BasePanel{
 
         initComponent();
 
-        loadProductDetail(product);
+        if(product!=null)
+             loadProductDetail(product);
 
 
 
@@ -76,7 +82,7 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
         /**
-         *
+         * 保存功能
          */
         bn_save.addActionListener(new ActionListener() {
             @Override
@@ -86,6 +92,26 @@ public class Panel_ProductDetail  extends BasePanel{
                 saveData(productDetail);
 
 
+            }
+        });
+
+        photo.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(e.getClickCount()>=2)
+                {
+
+                    if(!StringUtils.isEmpty(productDetail.product.name)) {
+                        ImageViewDialog.showDialog(productDetail.product.name);
+                    }else
+                    {
+
+
+                        JOptionPane.showMessageDialog(photo,"请输入货号...");
+                    }
+
+                }
             }
         });
 

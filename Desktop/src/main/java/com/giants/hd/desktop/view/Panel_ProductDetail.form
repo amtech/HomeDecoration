@@ -10,7 +10,7 @@
     <border type="none"/>
     <children>
       <grid id="3f5b2" binding="cellPanel" custom-create="true" layout-manager="FormLayout">
-        <rowspec value="fill:31px:grow"/>
+        <rowspec value="fill:19px:grow"/>
         <rowspec value="top:5dlu:noGrow"/>
         <rowspec value="fill:32px:grow"/>
         <rowspec value="center:33px:grow"/>
@@ -260,7 +260,10 @@
               <forms/>
             </constraints>
             <properties>
-              <text value="Label"/>
+              <background color="-2430750"/>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="产品图片"/>
             </properties>
           </component>
           <component id="b71a9" class="javax.swing.JLabel">

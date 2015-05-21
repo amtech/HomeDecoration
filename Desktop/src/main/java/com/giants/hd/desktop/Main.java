@@ -1,8 +1,11 @@
 package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.view.Panel_ProductList;
+import com.sun.java.swing.SwingUtilities3;
+import javafx.embed.swing.SwingFXUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -17,6 +20,17 @@ public class Main extends  JFrame  {
     private JLabel photo;
 
 
+    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get (key);
+            if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+                UIManager.put (key, f);
+        }
+    }
+
+
     public static void main(String[] args) {
 
         try {
@@ -24,12 +38,17 @@ public class Main extends  JFrame  {
 //            UIManager.setLookAndFeel(
 //                    UIManager.getCrossPlatformLookAndFeelClassName());
 //
-//
+
 //            // Set System L&F
 //            UIManager.setLookAndFeel(
 //                    UIManager.getSystemLookAndFeelClassName());
 
+
+
             UIManager.setLookAndFeel( javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+
+
+            setUIFont (new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 12));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

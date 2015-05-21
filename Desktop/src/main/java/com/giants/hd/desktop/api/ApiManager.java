@@ -45,8 +45,9 @@ public class ApiManager {
 
 
         String url=HttpUrl.readProductList(productName, pageIndex, pageSize);
-        Logger.getLogger("TEST").info(url);
+        Logger.getLogger(TAG).info(url);
         String result=     client.postWithStringReturned(url, null);
+        Logger.getLogger(TAG).info(result);
         Type   generateType = new TypeToken<RemoteData<Product>>() {
         }.getType();
 

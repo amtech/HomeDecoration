@@ -65,9 +65,8 @@ public class ImageViewDialog extends JDialog {
 
 
 
-
-
-
+        picture.setText("正在加载图片....");
+        pack();
         new SwingWorker<Image,String>()
         {
 
@@ -83,8 +82,13 @@ public class ImageViewDialog extends JDialog {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                if(null!=image)
-                picture.setIcon(new ImageIcon(image));
+                if(null!=image) {
+                    picture.setText("");
+                    picture.setIcon(new ImageIcon(image));
+                }else
+                {
+                    picture.setText("图片加载失败");
+                }
                 ImageViewDialog.this.pack();
 
 

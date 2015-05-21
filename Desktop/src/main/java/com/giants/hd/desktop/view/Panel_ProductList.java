@@ -42,7 +42,7 @@ public class Panel_ProductList  extends BasePanel {
     private JTextField textField2;
     private JButton turnTo;
     private JComboBox pageRows;
-
+    private JButton bn_add;
 
 
     @Inject
@@ -76,7 +76,7 @@ public class Panel_ProductList  extends BasePanel {
         productTable.setRowHeight(100);
 
 
-        JTableUtils.setJTableColumnsWidth(productTable,800,40,60,60,60,60,60);
+        JTableUtils.setJTableColumnsWidth(productTable, 800, 40, 60, 60, 60, 60, 60);
 
 
         productTable.addMouseListener(new MouseInputAdapter() {
@@ -84,47 +84,51 @@ public class Panel_ProductList  extends BasePanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
 
-                if(e.getClickCount() ==2)
-                {
+                if (e.getClickCount() == 2) {
 
 
-                    int row=    productTable.getSelectedRow();
-                    Product product=tableModel.getItem(row);
+                    int row = productTable.getSelectedRow();
+                    Product product = tableModel.getItem(row);
 
 
-                    int column=productTable.getSelectedColumn();
+                    int column = productTable.getSelectedColumn();
                     //单击第一列 显示原图
-                    if(column==0)
-                    {
+                    if (column == 0) {
                         ImageViewDialog.showDialog(product.getName());
-                    }
-                    else
-                    {
+                    } else {
 
-
-
-
-
-
-
-
-
-
-                        JDialog dialog=new JDialog();
+                        JDialog dialog = new JDialog();
                         dialog.setModal(true);
-                        Panel_ProductDetail panel_productDetail=new Panel_ProductDetail(product);
+                        Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
 
 
                         dialog.setContentPane(panel_productDetail.getPanel());
                         dialog.pack();
                         dialog.setVisible(true);
 
-
                     }
 
 
-
                 }
+
+            }
+        });
+
+
+        //添加按钮事件
+        bn_add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
+                Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(null);
+                dialog.setContentPane(panel_productDetail.getPanel());
+                dialog.pack();
+                dialog.setVisible(true);
+
+
 
             }
         });
