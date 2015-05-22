@@ -28,6 +28,14 @@ public class ProductPack   implements Serializable {
 	 */
 	@Basic
 	public long packId;
+
+
+	/**
+	 * 包装名称
+	 */
+	@Basic
+	public String
+			packName;
 	/**
 	 * 出口价  即是FOB
 	 */
@@ -169,5 +177,14 @@ public class ProductPack   implements Serializable {
 
 	public void setPackMaterialCost(float packMaterialCost) {
 		this.packMaterialCost = packMaterialCost;
+	}
+
+
+	public String getPackName() {
+		return packName;
+	}
+
+	public void setPackName(String packName) {
+		this.packName = packName;
 	}
 }

@@ -48,7 +48,7 @@ public class Main extends  JFrame  {
             UIManager.setLookAndFeel( javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
 
 
-            setUIFont (new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 12));
+            setUIFont (new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -65,12 +65,13 @@ public class Main extends  JFrame  {
         final Main frame = new Main();
 
 
-        frame.setSize(800, 600);
-        frame.setBounds(200, 200, 800, 600);
-        frame.setContentPane(frame.panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+        frame.setContentPane(frame.panel1);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.generateMenu();
-        frame.pack();
+        //frame.pack();
         frame.setVisible(true);
 
         frame.addWindowListener(new WindowAdapter() {
@@ -81,8 +82,6 @@ public class Main extends  JFrame  {
                 if (JOptionPane.OK_OPTION == option) {
                     //点击了确定按钮
                     System.exit(0);
-                } else {
-                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 }
             }
         });

@@ -5,8 +5,10 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.model.ProductMaterialTableModel;
 import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
+import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.entity.ProductPack;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
@@ -40,7 +42,7 @@ public class Panel_ProductDetail  extends BasePanel{
     private JTextField tf_date;
     private JLabel photo;
     private JTabbedPane tabbedPane1;
-    private JTextField textField1;
+    private JTextField tf_unit;
     private JComboBox cb_class;
     private JTextField tf_ingredient;
     private JTextField tf_cost;
@@ -49,6 +51,15 @@ public class Panel_ProductDetail  extends BasePanel{
     private JPanel cellPanel;
     private JTable productMaterialTable;
     private JTable productPaintTable;
+    private JTextField tf_fob_2;
+    private JTextField tf_fob_1;
+    private JTextField tf_price_1;
+    private JTextField tf_cost_1;
+    private JTextField tf_price_2;
+    private JTextField tf_cost_2;
+    private JLabel lb_pack_1;
+    private JLabel lb_pack_2;
+    private JTextField tf_weight;
 
 
     private ProductDetail productDetail;
@@ -143,19 +154,18 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
     /**
-     * 更新界面方法
+     * 更新界面方法  负责数据的绑定
      */
-    private void updateView()
+    private void bindData()
     {
 
 
         Product product=productDetail.product;
 
-        tf_product.setText(product.getName());
 
-        if(product.photo!=null)
-            photo.setIcon(new ImageIcon(product.photo));
 
+
+        bindProductBaseInfo(product);
 
 
 
@@ -174,6 +184,70 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
     }
+
+
+    /**\
+     * 绑定产品的基本信息   基本信息+包装成本
+     * @param product
+     */
+    private void bindProductBaseInfo(Product product)
+    {
+
+
+
+            tf_product.setText(product==null?"":product.getName());
+
+
+                photo.setIcon(product.photo==null?null:new ImageIcon(product.photo));
+
+                photo.setText(product==null?"产品图片":"");
+
+
+            ta_spec.setText(product==null?"":product.getSpec());
+            ta_memo.setText(product==null?"":product.getMemo());
+            tf_date.setText(product==null?"":product.getrDate());
+            tf_unit.setText(product==null?"":product.pTypeName);
+              tf_unit.setText(product==null?"":product.pTypeName);
+             tf_weight.setText(product==null?"":String.valueOf(product.getWeight()));
+        //人工成本
+        tf_cost.setText(product==null?"":String.valueOf(product.getCost1()));
+
+
+
+
+        ProductPack pack1=null;
+        ProductPack pack2=null;
+
+        if(product!=null&&!ArrayUtils.isEmpty(product.packs ))
+        {
+              pack1=product.packs.get(0);
+              pack2=product.packs.size()>1?product.packs.get(1):null;
+
+        }else
+
+
+        //设置包装信息
+        lb_pack_1.setText(pack1==null?"普通包装":pack1.packName);
+        lb_pack_2.setText(pack2==null?"加强包装":pack2.packName);
+
+
+        tf_fob_1.setText(pack1==null?"":String.valueOf(pack1.fob));
+        tf_cost_1.setText(pack1==null?"":String.valueOf(pack1.cost));
+        tf_price_1.setText(pack1==null?"":String.valueOf(pack1.price));
+
+
+        tf_fob_2.setText(pack2==null?"":String.valueOf(pack2.fob));
+        tf_cost_2.setText(pack2==null?"":String.valueOf(pack2.cost));
+        tf_price_2.setText(pack2==null?"":String.valueOf(pack2.price));
+
+
+    }
+
+
+
+
+
+
 
     public JPanel getPanel()
     {
@@ -285,7 +359,7 @@ public class Panel_ProductDetail  extends BasePanel{
     private void initPanel(ProductDetail detail) {
 
         this.productDetail=detail;
-        updateView();
+        bindData();
         addListener();
 
     }

@@ -28,8 +28,8 @@
         <rowspec value="center:26px:grow"/>
         <rowspec value="top:22px:grow"/>
         <rowspec value="center:26px:grow"/>
-        <rowspec value="top:24px:grow"/>
-        <rowspec value="center:28px:grow"/>
+        <rowspec value="fill:24px:grow"/>
+        <rowspec value="fill:28px:grow"/>
         <rowspec value="fill:300px:grow(10.0)"/>
         <colspec value="fill:50px:grow"/>
         <colspec value="fill:141px:grow"/>
@@ -104,7 +104,9 @@
                 <children>
                   <component id="149a5" class="javax.swing.JTable" binding="productPaintTable">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <fillsViewportHeight value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
@@ -146,7 +148,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="306c1" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="306c1" class="javax.swing.JTextField" binding="tf_unit">
             <constraints>
               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -185,7 +187,7 @@
               <text value="净重（KG）"/>
             </properties>
           </component>
-          <component id="b489e" class="javax.swing.JTextField" default-binding="true">
+          <component id="b489e" class="javax.swing.JTextField" binding="tf_weight">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -266,7 +268,7 @@
               <text value="产品图片"/>
             </properties>
           </component>
-          <component id="b71a9" class="javax.swing.JLabel">
+          <component id="b71a9" class="javax.swing.JLabel" binding="lb_pack_1">
             <constraints>
               <grid row="14" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -276,7 +278,7 @@
               <text value="&lt;html&gt;&lt;HTML&gt;&lt;body &gt;普通 &lt;br&gt; 包装&lt;/body&gt;&lt;/html&gt;"/>
             </properties>
           </component>
-          <component id="9b266" class="javax.swing.JLabel">
+          <component id="9b266" class="javax.swing.JLabel" binding="lb_pack_2">
             <constraints>
               <grid row="17" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
@@ -351,6 +353,60 @@
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="19" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="b70fb" class="javax.swing.JTextField" binding="tf_fob_2">
+            <constraints>
+              <grid row="17" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="3ed88" class="javax.swing.JTextField" binding="tf_fob_1">
+            <constraints>
+              <grid row="14" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="84e6e" class="javax.swing.JTextField" binding="tf_price_1">
+            <constraints>
+              <grid row="15" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="8614c" class="javax.swing.JTextField" binding="tf_cost_1">
+            <constraints>
+              <grid row="16" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="6cd71" class="javax.swing.JTextField" binding="tf_price_2">
+            <constraints>
+              <grid row="18" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="54176" class="javax.swing.JTextField" binding="tf_cost_2">
+            <constraints>
+              <grid row="19" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties/>
           </component>
