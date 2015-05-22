@@ -130,7 +130,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             datas.add(newItem);
         }
         else
-            datas.add(index,newItem);
+            datas.add(index+1,newItem);
         fireTableDataChanged();
 
     }

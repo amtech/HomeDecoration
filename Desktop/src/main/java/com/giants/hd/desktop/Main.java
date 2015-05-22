@@ -4,6 +4,7 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants.hd.desktop.view.Panel_ProductList;
+import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.PClass;
 import com.giants3.hd.utils.entity.Product;
@@ -198,9 +199,18 @@ public class Main extends  JFrame {
                 KeyEvent.VK_2, ActionEvent.ALT_MASK));
         submenu.add(menuItem);
 
-        menuItem = new JMenuItem("Another item");
+        menuItem = new JMenuItem("打开材料搜索对话框");
         submenu.add(menuItem);
         menu.add(submenu);
+
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         //Build second menu in the menu bar.
         menu = new JMenu("功能测试");
@@ -228,6 +238,29 @@ public class Main extends  JFrame {
                 dialog.setVisible(true);
             }
         });
+
+
+
+        //
+        menuItem = new JMenuItem("打开搜索材料对话框",
+                KeyEvent.VK_U);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "This doesn't really do anything");
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"");
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+
 
         //System.exit(0);
         setJMenuBar(menuBar);

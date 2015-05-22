@@ -51,4 +51,11 @@ public class HttpUrl {
         return BaseUrl+"api/productClass/list";
 
     }
+
+    public static String loadMaterialByCodeOrName(String value,int pageIndex,int pageSize
+    ) {
+
+        return BaseUrl+"api/material/search?codeOrName="+value+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
+
+    }
 }

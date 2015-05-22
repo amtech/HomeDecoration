@@ -146,4 +146,22 @@ public class ApiManager {
 
 
     }
+
+    /**
+     * 根据物料编码与名称 模糊搜索材料
+     * @param value
+     * @return
+     */
+    public RemoteData<Material> loadMaterialByCodeOrName(String value,int pageIndex,int pageSize) throws HdException {
+
+        String url=HttpUrl.loadMaterialByCodeOrName(value, pageIndex, pageSize);
+        Logger.getLogger(TAG).info(url);
+        String result=     client.getWithStringReturned(url);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<Material>>() {
+        }.getType();
+        RemoteData<Material> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
+    }
 }

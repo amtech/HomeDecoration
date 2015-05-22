@@ -267,7 +267,42 @@ public class ProductMaterial  implements Serializable {
 	 * 设置新材料  更新各项数据
 	 * @param material
 	 */
-	public void setMaterial(Material material) {
+	public void updateMaterial(Material material) {
+
+		materialCode=material.code;
+		materialName=material.name;
+		materialId=material.id;
+
+		available=material.available;
+		memo=material.memo;
+		unitName=material.unitName;
+
+
+		calculateQuota();
+
+
+
+	}
+
+	/**
+	 * 更新用量
+	 * @param quantity
+	 */
+	public void updateQuantity(float quantity)
+	{
+		this.quantity=quantity;
+		calculateQuota();
+	}
+
+	/**
+	 * 计算定额
+	 */
+	public void calculateQuota()
+	{
+
+
+
+
 
 	}
 }

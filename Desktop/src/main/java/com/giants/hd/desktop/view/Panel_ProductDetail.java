@@ -8,21 +8,18 @@ import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.PClass;
-import com.giants3.hd.utils.entity.ProductDetail;
-import com.giants3.hd.utils.entity.ProductPack;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
 
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.*;
+import javax.swing.text.Document;
 import java.awt.event.*;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 /**
  *  产品详情界面
@@ -168,6 +165,89 @@ public class Panel_ProductDetail  extends BasePanel{
 
             }
         });
+
+
+
+        JTextField jtf=new JTextField();
+        jtf.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Document object= e.getDocument();
+                Logger.getLogger("TAG").info("insertUpdate"+object.toString());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                Document object= e.getDocument();
+                Logger.getLogger("TAG").info("removeUpdate"+object.toString());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+                Document object= e.getDocument();
+
+                Logger.getLogger("TAG").info("changedUpdate"+object.toString());
+
+            }
+        });
+
+
+        //回车键触发
+        jtf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                String text=((JTextField)e.getSource()).getText().trim();
+
+
+                SearchMaterialDialog dialog=new SearchMaterialDialog(getWindow(panel1),text);
+
+
+                dialog.pack();
+                dialog.setVisible(true);
+                Material material=dialog.getResult();
+
+                 int rowIndex=        productMaterialTable.convertRowIndexToModel( productMaterialTable.getSelectedRow());
+
+                productMaterialTableModel.setMaterial(material,rowIndex);
+
+
+
+
+
+            }
+        });
+
+        DefaultCellEditor editor=new DefaultCellEditor(jtf);
+
+
+        //
+        editor.addCellEditorListener(new CellEditorListener() {
+            @Override
+            public void editingStopped(ChangeEvent e) {
+
+                Object object= e.getSource();
+
+            }
+
+            @Override
+            public void editingCanceled(ChangeEvent e) {
+
+
+                Object object= e.getSource();
+
+
+            }
+        });
+
+
+        //productMaterialTable.setCellEditor(editor);
+        productMaterialTable.setDefaultEditor(Object.class,editor);
+
+
     }
 
 
@@ -227,8 +307,8 @@ public class Panel_ProductDetail  extends BasePanel{
             tf_unit.setText(product==null?"":product.pTypeName);
               tf_unit.setText(product==null?"":product.pTypeName);
              tf_weight.setText(product==null?"":String.valueOf(product.getWeight()));
-        //人工成本
-        tf_cost.setText(product==null?"":String.valueOf(product.getCost1()));
+           //人工成本
+          tf_cost.setText(product==null?"":String.valueOf(product.getCost1()));
 
 
 
@@ -426,6 +506,8 @@ public class Panel_ProductDetail  extends BasePanel{
 
        productMaterialTable.setModel(productMaterialTableModel);
         productPaintTable.setModel(productPaintModel);
+        productMaterialTable.setRowHeight(30);
+        productPaintTable.setRowHeight(30);
 
 
 
@@ -475,6 +557,9 @@ public class Panel_ProductDetail  extends BasePanel{
                         //  取得右键点击所在行
                         int row = evt.getY() / productMaterialTable.getRowHeight();
                         popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+
+
+
 
                     }
                 }
