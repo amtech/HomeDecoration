@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.api;
 
+import com.giants3.hd.utils.entity.PClass;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
@@ -44,7 +45,7 @@ public class ApiManager {
     public RemoteData<Product>  readProductList(String productName,int pageIndex,int pageSize) throws HdException {
 
 
-        String url=HttpUrl.readProductList(productName, pageIndex, pageSize);
+        String url=HttpUrl.loadProductList(productName, pageIndex, pageSize);
         Logger.getLogger(TAG).info(url);
         String result=     client.postWithStringReturned(url, null);
         Logger.getLogger(TAG).info(result);
@@ -68,7 +69,7 @@ public class ApiManager {
     public RemoteData<Material>  readMaterialList(String materialName,int pageIndex,int pageSize) throws HdException {
 
 
-        String url=HttpUrl.readProductList(materialName, pageIndex, pageSize);
+        String url=HttpUrl.loadProductList(materialName, pageIndex, pageSize);
         Logger.getLogger(TAG).info(url);
         String result=     client.postWithStringReturned(url, null);
         Logger.getLogger(TAG).info(result);
@@ -122,6 +123,27 @@ public class ApiManager {
         RemoteData<ProductDetail> productRemoteData = gson.fromJson(result, generateType);
 
         return productRemoteData;
+
+    }
+
+
+    /**
+     * \读取产品类别列表
+     * @return
+     */
+
+    public RemoteData<PClass> readProductClass() throws HdException {
+
+
+        String url=HttpUrl.loadProductClass();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.getWithStringReturned(url);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<PClass>>() {
+        }.getType();
+        RemoteData<PClass> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
 
     }
 }

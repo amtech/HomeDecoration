@@ -13,11 +13,10 @@ import org.springframework.data.repository.query.Param;
 */
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-    @Query(value = " SELECT a FROM Product a WHERE  a.id=:prd_no     ")
-     Product  findByPrdId(@Param("prd_no") long prdt_no);
 
-    @Query(value = " SELECT  a    FROM Product a WHERE  a.name like  :proName    " )
-    Page<Product> findByPrd_noLike(@Param("proName") String proName,Pageable pageable);
+
+
+    Page<Product> findByNameLike(  String proName,Pageable pageable);
 
 
 }

@@ -54,12 +54,41 @@ public class Client {
 
     }
 
+
+
+    public String getWithStringReturned(String url ) throws HdException {
+
+
+        return get(url, new AsyncCompletionHandler<String>() {
+            @Override
+            public String onCompleted(Response response) throws Exception {
+
+                String result = response.getResponseBody(BODY_ENCODING);
+                return result;
+
+
+            }
+        });
+
+
+
+
+    }
+
+
+    public <T> T get(String url,   AsyncHandler<T> handler)throws HdException
+    {
+
+        AsyncHttpClient.BoundRequestBuilder builder;
+        builder = client.prepareGet(url);
+        builder.addHeader("Content-Type","application/json");
+        return execute(handler, builder);
+    }
+
     public <T> T post(String url, String body, AsyncHandler<T> handler)throws HdException
     {
 
         AsyncHttpClient.BoundRequestBuilder builder;
-
-
         builder = client.preparePost(url);
         builder.addHeader("Content-Type","application/json");
         builder.setBodyEncoding(BODY_ENCODING);

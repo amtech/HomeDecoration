@@ -25,8 +25,7 @@ public class RemoteData<T> implements Serializable{
     public int pageCount=1;
     public int pageSize=1;
     public List<T> datas;
-
-
+    public int totalCount;
 
 
     public RemoteData()

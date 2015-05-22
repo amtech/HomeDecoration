@@ -2,19 +2,22 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.MaterialRepository;
-import com.giants3.hd.server.repository.PrdtRepository;
+
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.Prdt;
-import com.giants3.hd.utils.entity.Prdt1;
-import com.giants3.hd.utils.entity.PrdtResult;
-import com.google.gson.Gson;
+
+import com.giants3.hd.utils.entity.Product;
 import com.google.gson.JsonArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
+import javax.persistence.Basic;
+
 import java.util.List;
 
 /**
@@ -22,7 +25,7 @@ import java.util.List;
 */
 @Controller
 @RequestMapping("/material")
-public class MaterialController {
+public class MaterialController extends BaseController {
 
     @Autowired
     private MaterialRepository materialRepository;
@@ -31,26 +34,27 @@ public class MaterialController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Material> listPrdtJson(ModelMap model)   {
+    RemoteData<Material> listPrdtJson(ModelMap model)   {
 
 
-//        for (Prdt1 prdt1 : materialRepository.findAll()) {
-//            Gson gson=new Gson( );
-//            array.add(  gson.toJsonTree(prdt1));
-//        }
-        return materialRepository.findAll();
+
+        return wrapData(materialRepository.findAll());
     }
 
-    //   /api/prdts/2.209e%2B007     这个 。 请求中会出现错误    实际中  prd_no 得到的参数是2
-    @RequestMapping(value = "/{prd_no:.+}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Material> listPrdtJson(@PathVariable String prd_no)   {
+    RemoteData<Material> listPrdtJson(@RequestParam(value = "codeOrName",required = false,defaultValue ="") String codeOrName
+            ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize)   {
 
+        Pageable pageable=constructPageSpecification(pageIndex, pageSize,sortByParam(Sort.Direction.ASC,"code"));
+        String searchValue="%" + codeOrName.trim() + "%";
+        Page<Material>  pageValue=
+        materialRepository.findByCodeLikeOrNameLike(searchValue,searchValue, pageable);
 
-        return  materialRepository.findByCodeLike(prd_no);
-
-
+        List<Material> materials=pageValue.getContent();
+        return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),materials);
     }
 
 

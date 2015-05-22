@@ -10,7 +10,7 @@
     <border type="none"/>
     <children>
       <grid id="3f5b2" binding="cellPanel" custom-create="true" layout-manager="FormLayout">
-        <rowspec value="fill:19px:grow"/>
+        <rowspec value="fill:35px:grow"/>
         <rowspec value="top:5dlu:noGrow"/>
         <rowspec value="fill:32px:grow"/>
         <rowspec value="center:33px:grow"/>
@@ -157,7 +157,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="76191" class="javax.swing.JComboBox" binding="cb_class">
+          <component id="76191" class="javax.swing.JComboBox" binding="cb_class" custom-create="true">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
@@ -409,6 +409,72 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties/>
+          </component>
+          <component id="7cdef" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="14" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="毛利润"/>
+            </properties>
+          </component>
+          <component id="316ad" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="15" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="售价($):"/>
+            </properties>
+          </component>
+          <component id="1e7fd" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="16" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="箱体积(M3):&#9; "/>
+            </properties>
+          </component>
+          <component id="4eb10" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="17" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="毛利润"/>
+            </properties>
+          </component>
+          <component id="b126c" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="18" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="售价($):"/>
+            </properties>
+          </component>
+          <component id="b6a0f" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="19" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="箱体积(M3):&#9; "/>
+            </properties>
           </component>
         </children>
       </grid>

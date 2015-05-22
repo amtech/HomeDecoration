@@ -2,11 +2,13 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.model.ProductMaterialTableModel;
 import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.PClass;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.entity.ProductPack;
 import com.giants3.hd.utils.exception.HdException;
@@ -19,10 +21,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -43,7 +42,7 @@ public class Panel_ProductDetail  extends BasePanel{
     private JLabel photo;
     private JTabbedPane tabbedPane1;
     private JTextField tf_unit;
-    private JComboBox cb_class;
+    private JComboBox<PClass> cb_class;
     private JTextField tf_ingredient;
     private JTextField tf_cost;
     private JTextArea ta_spec;
@@ -150,6 +149,25 @@ public class Panel_ProductDetail  extends BasePanel{
 
             }
         });
+
+
+
+        //分类挑选
+        cb_class.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+                if(e.getStateChange()==ItemEvent.SELECTED)
+                {
+                    PClass pClass= (PClass) e.getItem();
+                    productDetail.product.pClassId=pClass.id;
+                    productDetail.product.pClassName=pClass.name;
+                }
+
+
+
+            }
+        });
     }
 
 
@@ -211,6 +229,24 @@ public class Panel_ProductDetail  extends BasePanel{
              tf_weight.setText(product==null?"":String.valueOf(product.getWeight()));
         //人工成本
         tf_cost.setText(product==null?"":String.valueOf(product.getCost1()));
+
+
+
+            //设置产品分类
+            int selectClassIndex=-1;
+            if(product!=null)
+            for(int i=0,count=cb_class.getItemCount();i<count;i++)
+            {
+
+                if(cb_class.getItemAt(i).id==product.pClassId)
+                {
+
+                    selectClassIndex=i;
+                    break;
+                }
+
+            }
+        cb_class.setSelectedIndex(selectClassIndex);
 
 
 
@@ -370,6 +406,12 @@ public class Panel_ProductDetail  extends BasePanel{
         cellPanel=new APanel();
         //cellPanel.setGridColor(Color.GRAY);
        // cellPanel.setPaintInBackground(false);
+       cb_class=new JComboBox<PClass>();
+        for(PClass pClass:BufferData.pClasses)
+        {cb_class.addItem(pClass);
+        }
+
+
     }
 
 

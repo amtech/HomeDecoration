@@ -11,7 +11,7 @@ public class HttpUrl {
 
     public static final String BaseUrl="http://localhost:8080/";
 
-    public static String readProductList(String productName, int pageIndex, int pageSize) {
+    public static String loadProductList(String productName, int pageIndex, int pageSize) {
         return BaseUrl+"api/product/search?proName="+productName+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
     }
 
@@ -40,5 +40,15 @@ public class HttpUrl {
      */
     public static String loadProductPicture(String productName) {
         return BaseUrl+"api/file/download/product/"+productName+".jpg";
+    }
+
+    /**
+     * 读取产品类型
+     * @return
+     */
+    public static String loadProductClass() {
+
+        return BaseUrl+"api/productClass/list";
+
     }
 }

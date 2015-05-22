@@ -37,9 +37,9 @@ import java.util.List;
 */
 @Controller
 @RequestMapping("/product")
-public class ProductController {
+public class ProductController  extends BaseController{
 
-    private static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -56,18 +56,16 @@ public class ProductController {
     private String rootFilePath;
 
 
-    Gson gson=new GsonBuilder().create();
-
 
 
 
     @RequestMapping(value="/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Product> listPrdtJson(ModelMap model)   {
+    RemoteData<Product> listPrdtJson()   {
 
 
-        return productRepository.findAll();
+        return wrapData(productRepository.findAll());
     }
 
 
@@ -81,7 +79,7 @@ public class ProductController {
 
 
         Pageable pageable=constructPageSpecification(pageIndex, pageSize);
-          Page<Product> pageValue=  productRepository.findByPrd_noLike("%"+prd_name+"%", pageable);
+          Page<Product> pageValue=  productRepository.findByNameLike("%" + prd_name + "%", pageable);
 
         List<Product> products=pageValue.getContent();
 
@@ -100,20 +98,13 @@ public class ProductController {
 
 
 
-        RemoteData<Product> productRemoteData=new  RemoteData<Product>();
-        productRemoteData.datas.addAll(products);
-        productRemoteData.pageCount=pageValue.getTotalPages();
-        productRemoteData.pageIndex=pageIndex;
-        productRemoteData.pageSize=pageSize;
-        return productRemoteData;
+        return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),products);
 
 
 
 
-//        Type generateType = new TypeToken<RemoteData<Product>>() {
-//        }.getType();
-//        String result = gson.toJson(productRemoteData, generateType);
-//        return result;
+
+
 
 
 
@@ -122,9 +113,9 @@ public class ProductController {
     @RequestMapping( value = "/find", method = RequestMethod.GET)
     public
     @ResponseBody
-    Product findProdcutById(@RequestParam("id") int productId)   {
+    Product findProdcutById(@RequestParam("id") long productId)   {
 
-        Product product= productRepository.findByPrdId(productId);
+        Product product= productRepository.findOne(productId);
         List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
         product.packs=packs;
         return product;
@@ -206,7 +197,7 @@ public class ProductController {
     @RequestMapping( value = "/save", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData findProductDetailById(@RequestBody ProductDetail productDetail)   {
+    RemoteData<ProductDetail> findProductDetailById(@RequestBody ProductDetail productDetail)   {
 
 
 
@@ -251,29 +242,13 @@ public class ProductController {
 
 
 
-    /**
-     * Returns a new object which specifies the the wanted result page.
-     * @param pageIndex The index of the wanted result page
-     * @return
-     */
-    private Pageable constructPageSpecification(int pageIndex) {
-        return constructPageSpecification(pageIndex, NUMBER_OF_PERSONS_PER_PAGE);
-    }
-    /**
-     * Returns a new object which specifies the the wanted result page.
-     * @param pageIndex The index of the wanted result page
-     * @return
-     */
-    private Pageable constructPageSpecification(int pageIndex,int pageSize) {
-        Pageable pageSpecification = new PageRequest(pageIndex, NUMBER_OF_PERSONS_PER_PAGE, sortByLastNameAsc());
-        return pageSpecification;
-    }
+
 
     /**
      * Returns a Sort object which sorts persons in ascending order by using the last name.
      * @return
      */
-    private Sort sortByLastNameAsc() {
+    protected Sort sortByLastNameAsc() {
         return new Sort(Sort.Direction.ASC, "name");
     }
 

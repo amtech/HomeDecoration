@@ -1,17 +1,27 @@
 package com.giants.hd.desktop;
 
+import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.local.BufferData;
+import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants.hd.desktop.view.Panel_ProductList;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.PClass;
+import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.exception.HdException;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.sun.java.swing.SwingUtilities3;
 import javafx.embed.swing.SwingFXUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by davidleen29 on 2015/5/6.
  */
-public class Main extends  JFrame  {
+public class Main extends  JFrame {
     private JPanel panel1;
     private JTextPane textPane1;
     private JTextArea textArea1;
@@ -20,16 +30,28 @@ public class Main extends  JFrame  {
     private JLabel photo;
 
 
-    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+
+    @Inject
+    ApiManager apiManager;
+
+    public static void setUIFont(javax.swing.plaf.FontUIResource f) {
         java.util.Enumeration keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
-            Object value = UIManager.get (key);
+            Object value = UIManager.get(key);
             if (value != null && value instanceof javax.swing.plaf.FontUIResource)
-                UIManager.put (key, f);
+                UIManager.put(key, f);
         }
     }
 
+
+    public Main()
+    {
+        super()
+        ;
+
+        Guice.createInjector().injectMembers(this);
+    }
 
     public static void main(String[] args) {
 
@@ -44,11 +66,10 @@ public class Main extends  JFrame  {
 //                    UIManager.getSystemLookAndFeelClassName());
 
 
+            UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
 
-            UIManager.setLookAndFeel( javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
 
-
-            setUIFont (new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
+            setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -59,7 +80,6 @@ public class Main extends  JFrame  {
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-
 
 
         final Main frame = new Main();
@@ -87,9 +107,7 @@ public class Main extends  JFrame  {
         });
 
 
-
-
-
+        frame.preLoadData();
 
 
     }
@@ -98,9 +116,7 @@ public class Main extends  JFrame  {
     /**
      * 生成菜单
      */
-    public void generateMenu()
-    {
-
+    public void generateMenu() {
 
 
         //Where the GUI is created:
@@ -137,7 +153,6 @@ public class Main extends  JFrame  {
 
             }
         });
-
 
 
         menuItem = new JMenuItem("Both text and icon",
@@ -188,11 +203,11 @@ public class Main extends  JFrame  {
         menu.add(submenu);
 
         //Build second menu in the menu bar.
-                menu = new JMenu("功能测试");
-                menu.setMnemonic(KeyEvent.VK_N);
-                menu.getAccessibleContext().setAccessibleDescription(
-                        "This menu does nothing");
-                menuBar.add(menu);
+        menu = new JMenu("功能测试");
+        menu.setMnemonic(KeyEvent.VK_N);
+        menu.getAccessibleContext().setAccessibleDescription(
+                "This menu does nothing");
+        menuBar.add(menu);
 
 
         //
@@ -217,10 +232,68 @@ public class Main extends  JFrame  {
         //System.exit(0);
         setJMenuBar(menuBar);
 
+
+
+
+
     }
 
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+
+    /**
+     * 预先加载数据
+     */
+    private void preLoadData()
+    {
+
+
+
+
+
+        final LoadingDialog dialog = new LoadingDialog(this         ,"数据预加载处理 请稍后。。。", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+
+
+        new  SwingWorker<RemoteData<PClass>,String >(){
+
+
+            @Override
+            protected RemoteData<PClass> doInBackground() throws HdException {
+
+                return   apiManager.readProductClass();
+
+
+            }
+
+            @Override
+            protected void done() {
+                super.done();
+                dialog.setVisible(false);
+                dialog.dispose();
+                try {
+                    RemoteData<PClass> productRemoteData=get();
+
+
+                    BufferData.set(productRemoteData.datas);
+
+
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+        dialog.setVisible(true);
     }
 }
