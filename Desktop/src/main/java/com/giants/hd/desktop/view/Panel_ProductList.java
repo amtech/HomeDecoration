@@ -2,7 +2,6 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
-import com.giants.hd.desktop.ProgressDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants.hd.desktop.model.ProductTableModel;
@@ -94,7 +93,7 @@ public class Panel_ProductList  extends BasePanel {
                     int column = productTable.getSelectedColumn();
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showDialog(product.getName());
+                        ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName());
                     } else {
 
                         JDialog dialog = new JDialog();
@@ -143,10 +142,13 @@ public class Panel_ProductList  extends BasePanel {
         final String productNameValue=productName.getText().toString().trim();
 
 
-       final  ProgressDialog dialog = new ProgressDialog();
-        dialog.pack();
-        dialog.setModal(false);
-        dialog.setVisible(true);
+       final  LoadingDialog dialog = new LoadingDialog(getWindow(getRootPanel()), new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+
+           }
+       });
+
 
 
         new  SwingWorker< RemoteData<Product>,String >(){
@@ -184,6 +186,7 @@ public class Panel_ProductList  extends BasePanel {
                 }
             }
         }.execute();
+        dialog.setVisible(true);
 
     }
 

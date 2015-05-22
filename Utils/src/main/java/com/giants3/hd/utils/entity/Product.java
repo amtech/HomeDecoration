@@ -3,6 +3,7 @@ package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 产品表
@@ -119,6 +120,11 @@ public class Product implements Serializable {
 
 	@Basic
 	public long lastPhotoUpdateTime;
+
+
+
+	@Transient
+	public List<ProductPack> packs;
 
 
 	public String getMemo() {

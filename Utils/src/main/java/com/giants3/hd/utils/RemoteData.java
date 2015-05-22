@@ -21,9 +21,9 @@ public class RemoteData<T> implements Serializable{
      */
     public String message;
 
-    public int pageIndex;
-    public int pageCount;
-    public int pageSize;
+    public int pageIndex=0;
+    public int pageCount=1;
+    public int pageSize=1;
     public List<T> datas;
 
 

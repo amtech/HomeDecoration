@@ -14,9 +14,9 @@ public class ImageViewDialog extends JDialog {
     private JPanel contentPane;
     private JLabel picture;
 
-    public ImageViewDialog() {
+    public ImageViewDialog(Window frame) {
 
-
+        super(frame);
         setContentPane(contentPane);
 
         setModal(true);
@@ -51,7 +51,7 @@ public class ImageViewDialog extends JDialog {
 
     public static void main(String[] args) {
 
-        ImageViewDialog dialog=new ImageViewDialog();
+        ImageViewDialog dialog=new ImageViewDialog(null);
         dialog.loadImageAndShow(HttpUrl.loadProductPicture("10X1003"));
 
     }
@@ -103,7 +103,7 @@ public class ImageViewDialog extends JDialog {
 
 
         setMinimumSize(new Dimension(800, 600));
-        setLocation(300, 200);
+
         pack();
         setVisible(true);
 
@@ -113,12 +113,12 @@ public class ImageViewDialog extends JDialog {
      * 显示图片显示框体框
      * @param productName
      */
-    public static void showDialog(String productName) {
+    public static void showDialog(Window frame,String productName) {
 
 
 
         String url=HttpUrl.loadProductPicture(productName);
-        ImageViewDialog dialog=new ImageViewDialog();
+        ImageViewDialog dialog=new ImageViewDialog(frame);
         dialog.loadImageAndShow(url);
 
     }

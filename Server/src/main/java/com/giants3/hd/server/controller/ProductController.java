@@ -1,12 +1,16 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.repository.ProductMaterialRepository;
+import com.giants3.hd.server.repository.ProductPackRepository;
+import com.giants3.hd.server.repository.ProductPaintRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.repository.ProductRepository;
 
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.entity.ProductPack;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.exception.HdServerException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -40,6 +44,14 @@ public class ProductController {
     private ProductRepository productRepository;
 
 
+
+    @Autowired
+    private ProductPackRepository productPackRepository;
+    @Autowired
+    private ProductMaterialRepository productMaterialRepository;
+
+    @Autowired
+    private ProductPaintRepository productPaintRepository;
     @Value("${filepath}")
     private String rootFilePath;
 
@@ -58,7 +70,7 @@ public class ProductController {
         return productRepository.findAll();
     }
 
-    //   /api/prdts/2.209e%2B007     这个 。 请求中会出现错误    实际中  prd_no 得到的参数是2
+
     @RequestMapping(value = "/search", method = {RequestMethod.GET,RequestMethod.POST})
     public
     @ResponseBody
@@ -72,6 +84,21 @@ public class ProductController {
           Page<Product> pageValue=  productRepository.findByPrd_noLike("%"+prd_name+"%", pageable);
 
         List<Product> products=pageValue.getContent();
+
+        //读取包装信息
+        for(Product product:products)
+        {
+
+            List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
+            product.packs=packs;
+        }
+
+
+
+
+
+
+
 
         RemoteData<Product> productRemoteData=new  RemoteData<Product>();
         productRemoteData.datas.addAll(products);
@@ -96,7 +123,11 @@ public class ProductController {
     public
     @ResponseBody
     Product findProdcutById(@RequestParam("id") int productId)   {
-        return productRepository.findByPrdId(productId);
+
+        Product product= productRepository.findByPrdId(productId);
+        List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
+        product.packs=packs;
+        return product;
     }
 
 
@@ -116,14 +147,51 @@ public class ProductController {
 
 
 
-        Product product= productRepository.findOne(productId);
-        ProductDetail detail=new ProductDetail();
-        detail.product=product;
 
         RemoteData<ProductDetail> remoteData=new RemoteData<>();
-        remoteData.pageIndex=0;
-        remoteData.pageCount=1;
-        remoteData.pageSize=20;
+
+        //读取产品信息
+        Product product= productRepository.findOne(productId);
+        if(product==null)
+        {
+
+                remoteData.code=RemoteData.CODE_FAIL;
+            remoteData.message="未能根据id找到产品";
+            return
+                    remoteData;
+
+        }
+
+        ProductDetail detail=new ProductDetail();
+
+
+        detail.product=product;
+
+        //读取包装信息
+        List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
+        product.packs=packs;
+
+
+        //读取材料列表信息
+
+      detail.materials=  productMaterialRepository.findByProductIdEquals(productId);
+
+
+
+        //读取油漆列表信息
+        detail.paints=  productPaintRepository.findByProductIdEquals(productId);
+
+
+
+
+
+
+
+
+
+
+
+
         remoteData.datas.add(detail);
         return remoteData;
     }

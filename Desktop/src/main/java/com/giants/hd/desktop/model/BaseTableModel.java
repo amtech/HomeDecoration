@@ -20,6 +20,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     public Field[] fields;
     public Class[] classes ;
     List<T> datas;
+    public Class<T> itemClass;
 
     public BaseTableModel( String[] columnNames, String[] fieldName,Class[] classes ,Class<T> itemClass)
     {
@@ -28,8 +29,10 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         this.classes=classes;
         this.fieldName=fieldName;
         this.columnNames=columnNames;
+        this.itemClass=itemClass;
         int size = fieldName.length;
         fields = new Field[size];
+
         for (int i = 0; i < size; i++) {
 
             try {
@@ -70,9 +73,13 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     }
 
     public void setDatas(List<T> datas) {
+
+
+
         this.datas.clear();
 
-        this.datas.addAll(datas);
+        if(datas!=null)
+             this.datas.addAll(datas);
         fireTableDataChanged();
     }
 
@@ -103,4 +110,45 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         return null;
     }
 
+    /**\
+     * 添加新行
+     * @param index
+     */
+    public  void addNewRow(int index)   {
+
+        T newItem= null;
+        try {
+            newItem = itemClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if(null==newItem) return;
+        if(index<0||index>=getRowCount())
+        {
+            datas.add(newItem);
+        }
+        else
+            datas.add(index,newItem);
+        fireTableDataChanged();
+
+    }
+
+    /**
+     * 删除行
+     * @param rowIndex
+     */
+    public   void deleteRow(int rowIndex)
+    {
+        if(rowIndex>=0&&rowIndex<getRowCount())
+        {
+
+
+            datas.remove(rowIndex);
+            fireTableDataChanged();
+        }
+
+
+    }
 }

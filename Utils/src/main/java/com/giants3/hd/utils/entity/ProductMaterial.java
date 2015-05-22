@@ -27,6 +27,13 @@ public class ProductMaterial  implements Serializable {
 	 */
 	@Basic
 	public long materialId;
+
+	/**
+	 * 材料编码
+	 */
+	@Basic
+	public String materialCode;
+
 	/**
 	 * 材料名称
 	 */
@@ -99,20 +106,9 @@ public class ProductMaterial  implements Serializable {
 	public String memo;
 
 
-	/**
-	 * 物料编码
-	 */
-	@Basic
-	public String code;
 
 
-	public String getCode() {
-		return code;
-	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 	public long getId() {
 		return id;
@@ -256,5 +252,22 @@ public class ProductMaterial  implements Serializable {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public String getMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
+	}
+
+
+	/**
+	 * 设置新材料  更新各项数据
+	 * @param material
+	 */
+	public void setMaterial(Material material) {
+
 	}
 }

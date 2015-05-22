@@ -19,8 +19,8 @@ public class ImageUtils {
 
     public static final String TAG="ImageUtils";
 
-    public static final int MAX_MINIATURE_WIDTH=160;
-    public static final int MAX_MINIATURE_HEIGHT=160;
+    public static final int MAX_MINIATURE_WIDTH=100;
+    public static final int MAX_MINIATURE_HEIGHT=100;
 
 
 

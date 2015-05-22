@@ -19,6 +19,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.ExecutionException;
 
@@ -103,7 +104,7 @@ public class Panel_ProductDetail  extends BasePanel{
                 {
 
                     if(!StringUtils.isEmpty(productDetail.product.name)) {
-                        ImageViewDialog.showDialog(productDetail.product.name);
+                        ImageViewDialog.showDialog(getWindow(getPanel()),productDetail.product.name);
                     }else
                     {
 
@@ -154,6 +155,18 @@ public class Panel_ProductDetail  extends BasePanel{
 
         if(product.photo!=null)
             photo.setIcon(new ImageIcon(product.photo));
+
+
+
+
+
+
+
+
+
+        productMaterialTableModel.setDatas(productDetail.materials);
+
+        productPaintModel.setDatas(productDetail.paints);
 
 
 
@@ -297,6 +310,60 @@ public class Panel_ProductDetail  extends BasePanel{
 
        productMaterialTable.setModel(productMaterialTableModel);
         productPaintTable.setModel(productPaintModel);
+
+
+
+
+        //设置表格弹出菜单
+        productMaterialTable.addMouseListener(new MouseAdapter() {
+
+            public void mouseReleased(MouseEvent evt) {
+                if (evt.getButton() == MouseEvent.BUTTON3) {
+                    if (evt.isPopupTrigger()) {
+
+                        JPopupMenu     popupMenu = new JPopupMenu();
+
+                        JMenuItem insertItem = new JMenuItem("添加行");
+                        JMenuItem deleteItem = new JMenuItem("删除行");
+
+
+
+                        popupMenu.add(insertItem);
+
+                        popupMenu.add(deleteItem);
+
+
+                        insertItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+
+
+                         int rowIndex=      productMaterialTable.getSelectedRow();
+
+                                    productMaterialTableModel.addNewRow(rowIndex);
+
+                            }
+                        });
+
+                        deleteItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int rowIndex=      productMaterialTable.getSelectedRow();
+
+                                    productMaterialTableModel.deleteRow(rowIndex);
+
+                            }
+                        });
+
+
+                        //  取得右键点击所在行
+                        int row = evt.getY() / productMaterialTable.getRowHeight();
+                        popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+
+                    }
+                }
+            }
+        });
 
     }
 }

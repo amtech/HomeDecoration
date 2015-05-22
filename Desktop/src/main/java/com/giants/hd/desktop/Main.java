@@ -209,7 +209,7 @@ public class Main extends  JFrame  {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageViewDialog dialog = new ImageViewDialog();
+                ImageViewDialog dialog = new ImageViewDialog(Main.this);
                 dialog.pack();
                 dialog.setVisible(true);
             }
