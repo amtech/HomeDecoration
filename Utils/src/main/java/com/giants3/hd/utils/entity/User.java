@@ -6,7 +6,7 @@ package com.giants3.hd.utils.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name="account")
+@Entity(name="T_Account")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 单位 数据  单位 表
  */
 
-@Entity
+@Entity(name="T_Unit")
 public class Unit implements Serializable{
 
 	/**

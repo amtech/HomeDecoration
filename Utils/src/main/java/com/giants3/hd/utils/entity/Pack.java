@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 
  * 特殊包装
  */
-@Entity
+@Entity(name="T_Pack")
 public class Pack  implements Serializable {
 
 	/**

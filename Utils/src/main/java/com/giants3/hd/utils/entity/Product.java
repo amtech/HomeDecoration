@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 产品表
  */
-@Entity(name="Product")
+@Entity(name="T_Product")
 public class Product implements Serializable {
 
 	/**

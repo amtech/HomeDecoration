@@ -30,7 +30,9 @@ public class Panel_ProductDetail  extends BasePanel{
     @Inject
     ApiManager apiManager;
 
-    private JPanel panel1;
+
+
+
     private JTextField tf_product;
     private JLabel lable2;
     private JLabel title;
@@ -56,6 +58,12 @@ public class Panel_ProductDetail  extends BasePanel{
     private JLabel lb_pack_1;
     private JLabel lb_pack_2;
     private JTextField tf_weight;
+    private JTextField tf_version;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JScrollPane contentPane;
 
 
     private ProductDetail productDetail;
@@ -203,10 +211,11 @@ public class Panel_ProductDetail  extends BasePanel{
                 String text=((JTextField)e.getSource()).getText().trim();
 
 
-                SearchMaterialDialog dialog=new SearchMaterialDialog(getWindow(panel1),text);
+                SearchMaterialDialog dialog=new SearchMaterialDialog(getWindow(contentPane),text);
 
 
                 dialog.pack();
+                dialog.setLocationRelativeTo(productMaterialTable);
                 dialog.setVisible(true);
                 Material material=dialog.getResult();
 
@@ -365,9 +374,9 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
 
-    public JPanel getPanel()
+    public JComponent getPanel()
     {
-        return panel1;
+        return contentPane ;
     }
 
 
@@ -402,7 +411,7 @@ public class Panel_ProductDetail  extends BasePanel{
 
                         //TODO 显示保存成功
 
-                        JOptionPane.showMessageDialog(panel1,"数据保存成功!");
+                        JOptionPane.showMessageDialog(contentPane,"数据保存成功!");
 
                     }
 
@@ -426,8 +435,6 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
         new  SwingWorker< RemoteData<ProductDetail>,Long >(){
-
-
             @Override
             protected RemoteData<ProductDetail> doInBackground() throws HdException {
 

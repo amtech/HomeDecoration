@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 产品类别细分
  */
 
-@Entity
+@Entity(name="T_PClass")
 public class PClass  implements Serializable {
 
 

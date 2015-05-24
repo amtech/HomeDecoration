@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 
 
-@Entity
+@Entity(name="T_ProductPaint")
 public class ProductPaint  implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

@@ -62,9 +62,6 @@ public class ImageViewDialog extends JDialog {
     {
 
 
-
-
-
         picture.setText("正在加载图片....");
         pack();
         new SwingWorker<Image,String>()

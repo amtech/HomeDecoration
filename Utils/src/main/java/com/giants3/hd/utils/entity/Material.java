@@ -4,7 +4,7 @@ package com.giants3.hd.utils.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity(name="T_Material")
 public class Material  implements Serializable {
 
 	/**

@@ -70,7 +70,7 @@ public class Main extends  JFrame {
             UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
 
 
-            setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
+         // setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

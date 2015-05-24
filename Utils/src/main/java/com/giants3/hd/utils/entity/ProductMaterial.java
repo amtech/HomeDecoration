@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 产品材料列表
  */
-@Entity
+@Entity(name="T_ProductMaterial")
 public class ProductMaterial  implements Serializable {
 
 	@Id

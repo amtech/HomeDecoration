@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 
  * 含产品fob 成本 包装规格  装箱数  等参数u
  */
-@Entity
+@Entity(name="T_ProductPack")
 public class ProductPack   implements Serializable {
 
 	/**

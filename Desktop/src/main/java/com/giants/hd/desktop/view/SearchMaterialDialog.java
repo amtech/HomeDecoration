@@ -75,6 +75,7 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
 
     public static void main(String[] args) {
         SearchMaterialDialog dialog = new SearchMaterialDialog(null,null);
+        dialog.setMinimumSize(new Dimension(800,600));
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);

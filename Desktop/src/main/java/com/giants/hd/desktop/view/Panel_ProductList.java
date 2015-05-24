@@ -96,7 +96,7 @@ public class Panel_ProductList  extends BasePanel {
                         ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName());
                     } else {
 
-                        JDialog dialog = new JDialog();
+                        JDialog dialog = new JDialog(getWindow(getRootPanel()));
                         dialog.setModal(true);
                         Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
 
@@ -120,10 +120,11 @@ public class Panel_ProductList  extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                JDialog dialog = new JDialog();
+                JDialog dialog = new JDialog(getWindow(getRootPanel()));
                 dialog.setModal(true);
                 Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(null);
                 dialog.setContentPane(panel_productDetail.getPanel());
+
                 dialog.pack();
                 dialog.setVisible(true);
 
