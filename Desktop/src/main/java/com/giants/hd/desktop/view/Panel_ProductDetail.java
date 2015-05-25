@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
+import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.ProductMaterialTableModel;
 import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
@@ -42,7 +43,7 @@ public class Panel_ProductDetail  extends BasePanel{
     private JTabbedPane tabbedPane1;
     private JTextField tf_unit;
     private JComboBox<PClass> cb_class;
-    private JTextField tf_ingredient;
+    private JTextField tf_constitute;
     private JTextField tf_cost;
     private JTextArea ta_spec;
     private JTextArea ta_memo;
@@ -64,6 +65,10 @@ public class Panel_ProductDetail  extends BasePanel{
     private JTextField textField3;
     private JTextField textField4;
     private JScrollPane contentPane;
+    private JTabbedPane tabbedPane2;
+    private JTable tb_pack_material;
+    private JTable tb_pack_wage;
+    private JTable tb_product_paint;
 
 
     private ProductDetail productDetail;
@@ -83,10 +88,13 @@ public class Panel_ProductDetail  extends BasePanel{
 
         if(product!=null)
              loadProductDetail(product);
+        else {
+            productDetail = new ProductDetail();
+            productDetail.product = new Product();
+        }
 
 
-
-
+        addListener();
     }
 
 
@@ -105,6 +113,17 @@ public class Panel_ProductDetail  extends BasePanel{
             public void actionPerformed(ActionEvent e) {
 
 
+
+                try {
+
+                    collectionData()
+                    ;
+                }catch (HdUIException exception)
+                {
+                    JOptionPane.showMessageDialog(exception.component, exception.message);
+                    exception.component.requestFocus();
+                }
+
                 saveData(productDetail);
 
 
@@ -115,16 +134,14 @@ public class Panel_ProductDetail  extends BasePanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(e.getClickCount()>=2)
-                {
+                if (e.getClickCount() >= 2) {
 
-                    if(!StringUtils.isEmpty(productDetail.product.name)) {
-                        ImageViewDialog.showDialog(getWindow(getPanel()),productDetail.product.name);
-                    }else
-                    {
+                    if (!StringUtils.isEmpty(productDetail.product.name)) {
+                        ImageViewDialog.showDialog(getWindow(getPanel()), productDetail.product.name);
+                    } else {
 
 
-                        JOptionPane.showMessageDialog(photo,"请输入货号...");
+                        JOptionPane.showMessageDialog(photo, "请输入货号...");
                     }
 
                 }
@@ -132,11 +149,11 @@ public class Panel_ProductDetail  extends BasePanel{
         });
 
 
+
+        //产品名称修改
         tf_product.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 warn();
-
-
             }
 
             public void removeUpdate(DocumentEvent e) {
@@ -162,19 +179,22 @@ public class Panel_ProductDetail  extends BasePanel{
             @Override
             public void itemStateChanged(ItemEvent e) {
 
-                if(e.getStateChange()==ItemEvent.SELECTED)
-                {
-                    PClass pClass= (PClass) e.getItem();
-                    productDetail.product.pClassId=pClass.id;
-                    productDetail.product.pClassName=pClass.name;
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    PClass pClass = (PClass) e.getItem();
+                    productDetail.product.pClassId = pClass.id;
+                    productDetail.product.pClassName = pClass.name;
                 }
-
 
 
             }
         });
 
 
+
+
+
+
+        //定制表格的编辑功能 弹出物料选择单
 
         JTextField jtf=new JTextField();
         jtf.getDocument().addDocumentListener(new DocumentListener() {
@@ -205,28 +225,16 @@ public class Panel_ProductDetail  extends BasePanel{
         jtf.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-
-                String text=((JTextField)e.getSource()).getText().trim();
-
-
-                SearchMaterialDialog dialog=new SearchMaterialDialog(getWindow(contentPane),text);
-
-
+                String text = ((JTextField) e.getSource()).getText().trim();
+                SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text);
                 dialog.pack();
                 dialog.setLocationRelativeTo(productMaterialTable);
                 dialog.setVisible(true);
-                Material material=dialog.getResult();
+                Material material = dialog.getResult();
 
-                 int rowIndex=        productMaterialTable.convertRowIndexToModel( productMaterialTable.getSelectedRow());
+                int rowIndex = productMaterialTable.convertRowIndexToModel(productMaterialTable.getSelectedRow());
 
-                productMaterialTableModel.setMaterial(material,rowIndex);
-
-
-
-
-
+                productMaterialTableModel.setMaterial(material, rowIndex);
             }
         });
 
@@ -238,7 +246,7 @@ public class Panel_ProductDetail  extends BasePanel{
             @Override
             public void editingStopped(ChangeEvent e) {
 
-                Object object= e.getSource();
+                Object object = e.getSource();
 
             }
 
@@ -246,7 +254,7 @@ public class Panel_ProductDetail  extends BasePanel{
             public void editingCanceled(ChangeEvent e) {
 
 
-                Object object= e.getSource();
+                Object object = e.getSource();
 
 
             }
@@ -255,6 +263,98 @@ public class Panel_ProductDetail  extends BasePanel{
 
         //productMaterialTable.setCellEditor(editor);
         productMaterialTable.setDefaultEditor(Object.class,editor);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+    /**
+     * 收集数据   将各当前数据 存入数据中
+     * @see
+     */
+    private void collectionData()throws HdUIException {
+
+
+        Product product =productDetail.product;
+
+        //货号
+        String productName=tf_product.getText().trim();
+        //检验输入
+
+
+        if(StringUtils.isEmpty(productName))
+        {
+            throw   HdUIException.create(tf_product,"请输入货号。。。");
+        }
+
+        product.setName(productName);
+
+        //规格
+        String ta_spcValue=ta_spec.getText().trim();
+        product.setSpec(ta_spcValue);
+
+
+        //备注
+        String ta_memoValue=ta_memo.getText().trim();
+        product.setMemo(ta_memoValue);
+
+        //产品分类
+        PClass pClassData= (PClass) cb_class.getSelectedItem();
+        if(pClassData==null)
+        {
+            throw   HdUIException.create(cb_class,"请选择产品类别。。。");
+        }
+        product.setpClassId(pClassData.id);
+        product.setpClassName(pClassData.name);
+
+        //产品版本号
+        String tf_versionValue=tf_version.getText().trim();
+        product.setpVersion(tf_versionValue);
+
+        //产品的材料构成  文字描述
+        String tf_constituteValue= tf_constitute.getText().trim();
+        product.setConstitute(tf_constituteValue);
+
+        //产品单位
+
+        String tf_unitValue=tf_unit.getText().trim();
+        product.setpPUnitName(tf_unitValue);
+
+
+        //产品净重
+
+        try {
+            float tf_weightValue =Float.valueOf(tf_weight.getText().trim());
+            product.setWeight(tf_weightValue);
+        }catch (Throwable t)
+        {
+            t.printStackTrace();
+
+            throw   HdUIException.create(tf_weight,"输入产品净重，数值型数据");
+        }
+
+
+        //日期
+        String tf_dateValue=tf_date.getText().trim();
+        //日期格式验证
+        product.setrDate(tf_dateValue);
+
+
+
+
+
 
 
     }
@@ -269,14 +369,7 @@ public class Panel_ProductDetail  extends BasePanel{
 
         Product product=productDetail.product;
 
-
-
-
         bindProductBaseInfo(product);
-
-
-
-
 
 
 
@@ -313,9 +406,11 @@ public class Panel_ProductDetail  extends BasePanel{
             ta_spec.setText(product==null?"":product.getSpec());
             ta_memo.setText(product==null?"":product.getMemo());
             tf_date.setText(product==null?"":product.getrDate());
-            tf_unit.setText(product==null?"":product.pTypeName);
-              tf_unit.setText(product==null?"":product.pTypeName);
+            tf_unit.setText(product==null?"":product.pUnitName);
              tf_weight.setText(product==null?"":String.valueOf(product.getWeight()));
+
+        tf_constitute.setText(product==null?"":product.getConstitute());
+        tf_version.setText(product==null?"":product.getpVersion());
            //人工成本
           tf_cost.setText(product==null?"":String.valueOf(product.getCost1()));
 
@@ -340,6 +435,9 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
 
+
+
+        //绑定包装汇总信息
         ProductPack pack1=null;
         ProductPack pack2=null;
 
@@ -348,23 +446,23 @@ public class Panel_ProductDetail  extends BasePanel{
               pack1=product.packs.get(0);
               pack2=product.packs.size()>1?product.packs.get(1):null;
 
-        }else
+        }
 
 
-        //设置包装信息
-        lb_pack_1.setText(pack1==null?"普通包装":pack1.packName);
-        lb_pack_2.setText(pack2==null?"加强包装":pack2.packName);
+
+            //设置包装信息
+            lb_pack_1.setText(pack1 == null ? "普通包装" : pack1.packName);
+            lb_pack_2.setText(pack2 == null ? "加强包装" : pack2.packName);
 
 
-        tf_fob_1.setText(pack1==null?"":String.valueOf(pack1.fob));
-        tf_cost_1.setText(pack1==null?"":String.valueOf(pack1.cost));
-        tf_price_1.setText(pack1==null?"":String.valueOf(pack1.price));
+            tf_fob_1.setText(pack1 == null ? "" : String.valueOf(pack1.fob));
+            tf_cost_1.setText(pack1 == null ? "" : String.valueOf(pack1.cost));
+            tf_price_1.setText(pack1 == null ? "" : String.valueOf(pack1.price));
 
 
-        tf_fob_2.setText(pack2==null?"":String.valueOf(pack2.fob));
-        tf_cost_2.setText(pack2==null?"":String.valueOf(pack2.cost));
-        tf_price_2.setText(pack2==null?"":String.valueOf(pack2.price));
-
+            tf_fob_2.setText(pack2 == null ? "" : String.valueOf(pack2.fob));
+            tf_cost_2.setText(pack2 == null ? "" : String.valueOf(pack2.cost));
+            tf_price_2.setText(pack2 == null ? "" : String.valueOf(pack2.price));
 
     }
 
@@ -379,9 +477,18 @@ public class Panel_ProductDetail  extends BasePanel{
         return contentPane ;
     }
 
+    /**
+     * 执行数据保存
+     * @param product
+     */
 
     private void  saveData(final ProductDetail product)
     {
+
+
+
+
+
 
 
         new  SwingWorker< RemoteData<Product>,String >(){
@@ -483,13 +590,13 @@ public class Panel_ProductDetail  extends BasePanel{
 
         this.productDetail=detail;
         bindData();
-        addListener();
+        //addListener();
 
     }
 
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
+
         cellPanel=new APanel();
         //cellPanel.setGridColor(Color.GRAY);
        // cellPanel.setPaintInBackground(false);
@@ -511,8 +618,9 @@ public class Panel_ProductDetail  extends BasePanel{
     public void initComponent()
     {
 
-       productMaterialTable.setModel(productMaterialTableModel);
+        productMaterialTable.setModel(productMaterialTableModel);
         productPaintTable.setModel(productPaintModel);
+        tb_product_paint.setModel(productPaintModel);
         productMaterialTable.setRowHeight(30);
         productPaintTable.setRowHeight(30);
 

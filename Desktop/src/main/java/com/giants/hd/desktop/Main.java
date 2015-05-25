@@ -7,15 +7,11 @@ import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.PClass;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.sun.java.swing.SwingUtilities3;
-import javafx.embed.swing.SwingFXUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.ExecutionException;
 
@@ -316,7 +312,7 @@ public class Main extends  JFrame {
                     RemoteData<PClass> productRemoteData=get();
 
 
-                    BufferData.set(productRemoteData.datas);
+                    BufferData.setPClasses(productRemoteData.datas);
 
 
 

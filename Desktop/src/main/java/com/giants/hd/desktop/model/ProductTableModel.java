@@ -12,8 +12,8 @@ import java.lang.reflect.Field;
  */
 
 public class ProductTableModel extends BaseTableModel<Product> {
-    public static String[] columnNames = new String[]{"图片", "货号", "规格", "单位", "类别", "路径"};
-    public static String[] fieldName = new String[]{"photo", "name", "spec", "pTypeName", "pClassName", "url"};
+    public static String[] columnNames = new String[]{"图片", "货号", "规格", "单位", "类别", "日期"};
+    public static String[] fieldName = new String[]{"photo", "name", "spec", "pUnitName", "pClassName", "rDate"};
 
     public  static Class[] classes = new Class[]{ImageIcon.class, Object.class, Object.class, Object.class, Object.class, Object.class};
 

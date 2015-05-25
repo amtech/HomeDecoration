@@ -40,12 +40,12 @@ public class Product implements Serializable {
 	 * 产品单位id
 	 */
 	@Basic
-	public String pTypeId;
+	public String pUnitId;
 	/**
 	 * 产品单位名称
 	 */
 	@Basic
-	public String pTypeName;
+	public String pUnitName;
 	/**
 	 * 净重
 	 */
@@ -118,8 +118,26 @@ public class Product implements Serializable {
 	@Basic
 	public String spec;
 
+
+
+	/**
+	 * 版本号     手动录入 规格目前不限定
+	 * @return
+	 */
+	@Basic
+	public String pVersion;
+
 	@Basic
 	public long lastPhotoUpdateTime;
+
+
+
+	/**
+	 * 材料构成 成分
+	 * @return
+	 */
+	@Basic
+	public String constitute;
 
 
 
@@ -167,20 +185,20 @@ public class Product implements Serializable {
 		this.pClassName = pClassName;
 	}
 
-	public String getpTypeId() {
-		return pTypeId;
+	public String getpPUnitId() {
+		return pUnitId;
 	}
 
-	public void setpTypeId(String pTypeId) {
-		this.pTypeId = pTypeId;
+	public void setpPUnitId(String pTypeId) {
+		this.pUnitId = pTypeId;
 	}
 
-	public String getpTypeName() {
-		return pTypeName;
+	public String getpPUnitName() {
+		return pUnitName;
 	}
 
-	public void setpTypeName(String pTypeName) {
-		this.pTypeName = pTypeName;
+	public void setpPUnitName(String pTypeName) {
+		this.pUnitName = pTypeName;
 	}
 
 	public float getWeight() {
@@ -302,5 +320,23 @@ public class Product implements Serializable {
 
 	public void setLastPhotoUpdateTime(long lastPhotoUpdateTime) {
 		this.lastPhotoUpdateTime = lastPhotoUpdateTime;
+	}
+
+
+	public String getpVersion() {
+		return pVersion;
+	}
+
+	public void setpVersion(String pVersion) {
+		this.pVersion = pVersion;
+	}
+
+
+	public String getConstitute() {
+		return constitute;
+	}
+
+	public void setConstitute(String constitute) {
+		this.constitute = constitute;
 	}
 }

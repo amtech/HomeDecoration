@@ -22,4 +22,13 @@ public class HdException extends  Exception {
         hdException.errorCode=errorCode;
         return hdException;
     }
+
+    public static HdException create(String message
+    )
+    {
+        HdException hdException= new HdException();
+        hdException.errorCode=-1;
+        hdException.message=message;
+        return hdException;
+    }
 }
