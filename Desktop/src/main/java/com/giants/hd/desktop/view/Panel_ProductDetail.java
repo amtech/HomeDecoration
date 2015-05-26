@@ -7,6 +7,7 @@ import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.ProductMaterialTableModel;
 import com.giants.hd.desktop.model.ProductPaintTableModel;
 import com.giants.hd.desktop.widget.APanel;
+import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.Document;
 import java.awt.event.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -49,7 +51,7 @@ public class Panel_ProductDetail  extends BasePanel{
     private JTextArea ta_memo;
     private JPanel cellPanel;
     private JTable productMaterialTable;
-    private JTable productPaintTable;
+    private JTable productPackTable;
     private JTextField tf_fob_2;
     private JTextField tf_fob_1;
     private JTextField tf_price_1;
@@ -239,10 +241,12 @@ public class Panel_ProductDetail  extends BasePanel{
                 dialog.setLocationRelativeTo(productMaterialTable);
                 dialog.setVisible(true);
                 Material material = dialog.getResult();
+                if(material!=null) {
 
-                int rowIndex = productMaterialTable.convertRowIndexToModel(productMaterialTable.getSelectedRow());
+                    int rowIndex = productMaterialTable.convertRowIndexToModel(productMaterialTable.getSelectedRow());
 
-                productMaterialTableModel.setMaterial(material, rowIndex);
+                    productMaterialTableModel.setMaterial(material, rowIndex);
+                }
             }
         });
 
@@ -362,6 +366,27 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
 
+        //产品油漆数据
+
+      List<ProductPaint> paints= productPaintModel.getDatas();
+      //数据检验
+        int size = paints.size();
+        for (int i = 0; i < size; i++) {
+
+            ProductPaint paint=paints.get(i);
+
+
+           int rowIndex=      tb_product_paint.convertRowIndexToView(i);
+
+
+            if(StringUtils.isEmpty(paint.processName) )
+            throw   HdUIException.create(tb_product_paint,"第"+(rowIndex+1)+"行数据有误，工序名称为必须");
+
+        }
+
+
+
+        productDetail.paints=paints;
 
 
 
@@ -630,67 +655,56 @@ public class Panel_ProductDetail  extends BasePanel{
     {
 
         productMaterialTable.setModel(productMaterialTableModel);
-        productPaintTable.setModel(productPaintModel);
+
         tb_product_paint.setModel(productPaintModel);
         productMaterialTable.setRowHeight(30);
-        productPaintTable.setRowHeight(30);
+        productPackTable.setRowHeight(30);
+
+
+        //监听器， 监听表格右键点击功能
+        MouseAdapter adapter=new MouseAdapter() {
+
+
+            @Override
+               public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+
+                showMenu(e);
+
+            }
 
 
 
 
-        //设置表格弹出菜单
-        productMaterialTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mouseReleased(e);
 
-            public void mouseReleased(MouseEvent evt) {
-                if (evt.getButton() == MouseEvent.BUTTON3) {
-                    if (evt.isPopupTrigger()) {
+                showMenu(e);
 
-                        JPopupMenu     popupMenu = new JPopupMenu();
-
-                        JMenuItem insertItem = new JMenuItem("添加行");
-                        JMenuItem deleteItem = new JMenuItem("删除行");
+            }
 
 
+            private void showMenu(MouseEvent e)
+            {
+                if (e.isPopupTrigger()) {
+                JTable source = (JTable) e.getSource();
+                JPopupMenu menu = new TablePopMenu(source);
+                //  取得右键点击所在行
+                int row = e.getY() / productMaterialTable.getRowHeight();
+                menu.show(e.getComponent(), e.getX(), e.getY());
 
-                        popupMenu.add(insertItem);
-
-                        popupMenu.add(deleteItem);
-
-
-                        insertItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-
-
-                         int rowIndex=      productMaterialTable.getSelectedRow();
-
-                                    productMaterialTableModel.addNewRow(rowIndex);
-
-                            }
-                        });
-
-                        deleteItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                int rowIndex=      productMaterialTable.getSelectedRow();
-
-                                    productMaterialTableModel.deleteRow(rowIndex);
-
-                            }
-                        });
-
-
-                        //  取得右键点击所在行
-                        int row = evt.getY() / productMaterialTable.getRowHeight();
-                        popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-
-
-
-
-                    }
                 }
             }
-        });
+        };
+
+
+
+        //设置表格点击监听
+        productMaterialTable.addMouseListener(adapter);
+         productPackTable.addMouseListener(adapter);
+        tb_product_paint.addMouseListener(adapter);
+
 
     }
 }

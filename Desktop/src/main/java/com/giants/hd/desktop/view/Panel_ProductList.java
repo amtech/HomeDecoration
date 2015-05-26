@@ -103,6 +103,7 @@ public class Panel_ProductList  extends BasePanel {
 
                         dialog.setContentPane(panel_productDetail.getPanel());
                         dialog.pack();
+                        dialog.setLocationRelativeTo(getRootPanel());
                         dialog.setVisible(true);
 
                     }

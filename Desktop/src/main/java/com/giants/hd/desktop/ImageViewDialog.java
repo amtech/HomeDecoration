@@ -100,7 +100,7 @@ public class ImageViewDialog extends JDialog {
 
 
         setMinimumSize(new Dimension(800, 600));
-
+        setLocationRelativeTo(getParent());
         pack();
         setVisible(true);
 

@@ -103,7 +103,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="149a5" class="javax.swing.JTable" binding="productPaintTable">
+                  <component id="149a5" class="javax.swing.JTable" binding="productPackTable">
                     <constraints/>
                     <properties>
                       <fillsViewportHeight value="true"/>
