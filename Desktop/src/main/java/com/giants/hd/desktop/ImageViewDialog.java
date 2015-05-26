@@ -52,7 +52,7 @@ public class ImageViewDialog extends JDialog {
     public static void main(String[] args) {
 
         ImageViewDialog dialog=new ImageViewDialog(null);
-        dialog.loadImageAndShow(HttpUrl.loadProductPicture("10X1003"));
+        dialog.loadImageAndShow(HttpUrl.loadProductPicture("10X1003",null));
 
     }
 
@@ -110,11 +110,11 @@ public class ImageViewDialog extends JDialog {
      * 显示图片显示框体框
      * @param productName
      */
-    public static void showDialog(Window frame,String productName) {
+    public static void showDialog(Window frame,String productName,String version) {
 
 
 
-        String url=HttpUrl.loadProductPicture(productName);
+        String url=HttpUrl.loadProductPicture(productName,version);
         ImageViewDialog dialog=new ImageViewDialog(frame);
         dialog.loadImageAndShow(url);
 

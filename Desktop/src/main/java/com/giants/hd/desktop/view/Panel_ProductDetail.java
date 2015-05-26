@@ -116,19 +116,24 @@ public class Panel_ProductDetail  extends BasePanel{
 
                 try {
 
-                    collectionData()
-                    ;
+                    collectionData();
+                    saveData(productDetail);
                 }catch (HdUIException exception)
                 {
                     JOptionPane.showMessageDialog(exception.component, exception.message);
                     exception.component.requestFocus();
                 }
 
-                saveData(productDetail);
+
+
+
 
 
             }
         });
+
+
+
 
         photo.addMouseListener(new MouseInputAdapter() {
             @Override
@@ -136,8 +141,10 @@ public class Panel_ProductDetail  extends BasePanel{
                 super.mouseClicked(e);
                 if (e.getClickCount() >= 2) {
 
-                    if (!StringUtils.isEmpty(productDetail.product.name)) {
-                        ImageViewDialog.showDialog(getWindow(getPanel()), productDetail.product.name);
+
+
+                    if (!StringUtils.isEmpty(tf_product.getText().trim())) {
+                        ImageViewDialog.showDialog(getWindow(getPanel()), tf_product.getText().trim(),tf_version.getText().trim());
                     } else {
 
 
@@ -150,44 +157,45 @@ public class Panel_ProductDetail  extends BasePanel{
 
 
 
-        //产品名称修改
-        tf_product.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                warn();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                warn();
-            }
-
-            public void insertUpdate(DocumentEvent e) {
-                warn();
-            }
-
-            public void warn() {
-
-                productDetail.product.setName(tf_product.getText().trim());
-
-
-            }
-        });
 
 
 
-        //分类挑选
-        cb_class.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
+//        //产品名称修改
+//        tf_product.getDocument().addDocumentListener(new DocumentListener() {
+//            public void changedUpdate(DocumentEvent e) {
+//                warn();
+//            }
+//
+//            public void removeUpdate(DocumentEvent e) {
+//                warn();
+//            }
+//
+//            public void insertUpdate(DocumentEvent e) {
+//                warn();
+//            }
+//
+//            public void warn() {
+//
+//                productDetail.product.setName(tf_product.getText().trim());
+//
+//
+//            }
+//        });
 
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    PClass pClass = (PClass) e.getItem();
-                    productDetail.product.pClassId = pClass.id;
-                    productDetail.product.pClassName = pClass.name;
-                }
 
 
-            }
-        });
+//        //分类挑选
+//        cb_class.addItemListener(new ItemListener() {
+//            @Override
+//            public void itemStateChanged(ItemEvent e) {
+//
+//                if (e.getStateChange() == ItemEvent.SELECTED) {
+//                    PClass pClass = (PClass) e.getItem();
+//                    productDetail.product.pClassId = pClass.id;
+//                    productDetail.product.pClassName = pClass.name;
+//                }
+//            }
+//        });
 
 
 
@@ -350,6 +358,9 @@ public class Panel_ProductDetail  extends BasePanel{
         String tf_dateValue=tf_date.getText().trim();
         //日期格式验证
         product.setrDate(tf_dateValue);
+
+
+
 
 
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.rmi.Remote;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,26 @@ import java.util.List;
 public class BaseController {
 
     protected static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
+
+
+
+    /**
+     * 封装正常的返回结果。
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public <T>        RemoteData<T> wrapData(T data)
+    {
+
+            List<T> datas=new ArrayList<>();
+        datas.add(data);
+
+        return wrapData(0,datas.size(),1,datas.size(),datas);
+
+
+    }
+
     /**
      * 封装正常的返回结果。
      * @param datas

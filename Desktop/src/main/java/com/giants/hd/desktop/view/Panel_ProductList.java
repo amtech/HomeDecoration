@@ -93,7 +93,7 @@ public class Panel_ProductList  extends BasePanel {
                     int column = productTable.getSelectedColumn();
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName());
+                        ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName(),product.getpVersion());
                     } else {
 
                         JDialog dialog = new JDialog(getWindow(getRootPanel()));

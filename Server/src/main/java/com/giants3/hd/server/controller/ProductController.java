@@ -11,6 +11,7 @@ import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.entity.ProductPack;
+import com.giants3.hd.utils.entity.ProductPaint;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.exception.HdServerException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -195,9 +198,7 @@ public class ProductController  extends BaseController{
      * @return
      */
     @RequestMapping( value = "/save", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RemoteData<ProductDetail> findProductDetailById(@RequestBody ProductDetail productDetail)   {
+    public    @ResponseBody     RemoteData<ProductDetail> saveProductDetail(@RequestBody ProductDetail productDetail)   {
 
 
 
@@ -231,13 +232,61 @@ public class ProductController  extends BaseController{
        updateProductPhotoTime(newProduct);
 
 
-        //
-        productRepository.save(newProduct);
+        //最新product 数据
+      Product product=     productRepository.save(newProduct);
+
+
+
+
+
+
+
+
+        if(productDetail.paints!=null) {
+            //保存油漆数据
+            List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(product.id);
+            //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
+            for (ProductPaint oldPaint : oldPaints) {
+                boolean exist=false;
+                for (ProductPaint newPaint:productDetail.paints)
+                {
+
+                    if(oldPaint.getId()==newPaint.id)
+                    {
+                        exist=true;
+                        break;
+                    }
+                }
+                if(!exist)
+                {
+                    //不存在新纪录中 删除
+                    productPaintRepository.delete(oldPaint.id);
+                }
+
+            }
+
+            //添加或者修改记录
+            for (ProductPaint newPaint:productDetail.paints)
+            {
+                newPaint.setProductId(product.id);
+                newPaint.setProductName(product.name);
+                productPaintRepository.save(newPaint);
+            }
+
+
+
+
+        }
+
+
+
 
 
        RemoteData data=new RemoteData();
 
-        return  data;
+
+
+        return data;
     }
 
 
@@ -264,7 +313,7 @@ public class ProductController  extends BaseController{
     {
 
 
-        String filePath= FileUtils.getProductPicturePath(rootFilePath, product.name);
+        String filePath= FileUtils.getProductPicturePath(rootFilePath, product.name,product.pVersion);
 
         //如果tup图片文件不存在  则 设置photo为空。
         if(!new File(filePath).exists())
@@ -293,7 +342,7 @@ public class ProductController  extends BaseController{
     {
 
 
-        String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name);
+        String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
 
         BasicFileAttributes attributes =
                 null;

@@ -1,5 +1,7 @@
 package com.giants.hd.desktop.api;
 
+import com.giants3.hd.utils.StringUtils;
+
 /**
  *wangl
  */
@@ -38,8 +40,13 @@ public class HttpUrl {
      * @param productName
      * @return
      */
-    public static String loadProductPicture(String productName) {
-        return BaseUrl+"api/file/download/product/"+productName+".jpg";
+    public static String loadProductPicture(String productName,String version) {
+        String url= BaseUrl+"api/file/download/product/"+productName;
+
+        if(!StringUtils.isEmpty(version))
+            url+="_"+version.trim();
+        url+=  ".jpg";
+        return  url;
     }
 
     /**

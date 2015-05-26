@@ -62,7 +62,7 @@ public class FileController {
     public FileSystemResource getProductFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
 
-        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(filePath,name,type));
+        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(filePath,name,"",type));
         //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
 
         return resource;

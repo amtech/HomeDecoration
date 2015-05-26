@@ -1,5 +1,7 @@
 package com.giants3.hd.server.utils;
 
+import com.giants3.hd.utils.StringUtils;
+
 import java.io.File;
 
 /**
@@ -15,10 +17,10 @@ public class FileUtils {
      * @param productName     产品名称
      * @return
      */
-    public static  final String getProductPicturePath(String filePath,String productName)
+    public static  final String getProductPicturePath(String filePath,String productName,String pVersion)
     {
 
-        return getProductPicturePath(filePath,productName,"jpg");
+        return getProductPicturePath(filePath,productName,pVersion,"jpg");
 
     }
 
@@ -29,7 +31,7 @@ public class FileUtils {
      * @param type   文件类型
      * @return
      */
-    public static  final String getProductPicturePath(String filePath,String productName,String type)
+    public static  final String getProductPicturePath(String filePath,String productName,String pVersion,String type)
     {
 
 
@@ -44,7 +46,10 @@ public class FileUtils {
             }
         }
 
-        String   fullFilePath=filePath+(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"")+ File.separator+productName+"."+type;
+
+
+
+        String   fullFilePath=filePath+(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"")+ File.separator+productName+( StringUtils.isEmpty(pVersion)?"":"_"+pVersion) +"."+type;
 
 
         return fullFilePath;
