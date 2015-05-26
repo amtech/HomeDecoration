@@ -250,6 +250,7 @@ public class ProductPaint  implements Serializable {
 		this.materialName=material.name;
 		this.materialId=material.id;
 		this.materialPrice=material.price;
+		this.unitName=material.unitName;
 
 
 		//
