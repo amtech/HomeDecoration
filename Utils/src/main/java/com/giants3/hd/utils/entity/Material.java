@@ -25,7 +25,7 @@ public class Material  implements Serializable {
 	 * 材料单价
 	 */
 	@Basic
-	public String price;
+	public float price;
 	/**
 	 * 材料单位id
 	 */
@@ -94,11 +94,11 @@ public class Material  implements Serializable {
 		this.name = name;
 	}
 
-	public String getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 

@@ -25,7 +25,7 @@
             <property name="hibernate.connection.url" value="jdbc:sqlserver://localhost:1433;databaseName=TEST" />
             <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
             <property name="hibernate.connection.username" value="sa" />
-            <property name="hibernate.connection.password" value="sa" />
+            <property name="hibernate.connection.password" value="11111111" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.show_sql" value="true"/>
         </properties>

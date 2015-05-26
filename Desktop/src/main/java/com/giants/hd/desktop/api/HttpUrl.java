@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.api;
 
 import com.giants3.hd.utils.StringUtils;
+import com.ning.http.util.UTF8UrlEncoder;
 
 /**
  *wangl
@@ -62,7 +63,7 @@ public class HttpUrl {
     public static String loadMaterialByCodeOrName(String value,int pageIndex,int pageSize
     ) {
 
-        return BaseUrl+"api/material/search?codeOrName="+value+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return BaseUrl+"api/material/search?codeOrName="+ UTF8UrlEncoder.encode(value)+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
 
     }
 }

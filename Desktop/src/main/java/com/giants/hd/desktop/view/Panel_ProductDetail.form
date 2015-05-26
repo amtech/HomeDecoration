@@ -17,7 +17,7 @@
         <rowspec value="top:17px:grow"/>
         <rowspec value="top:20px:grow"/>
         <rowspec value="center:20px:grow"/>
-        <rowspec value="top:10px:grow"/>
+        <rowspec value="top:30px:grow"/>
         <rowspec value="center:21px:grow"/>
         <rowspec value="top:17px:grow"/>
         <rowspec value="fill:19px:grow"/>
@@ -939,7 +939,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="木油漆 "/>
+              <text value="油漆工资"/>
             </properties>
           </component>
           <component id="73780" class="javax.swing.JLabel">
@@ -1049,7 +1049,7 @@
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
-          <component id="f4a71" class="javax.swing.JTextField">
+          <component id="f4a71" class="javax.swing.JTextField" binding="jtf_paint_cost">
             <constraints>
               <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -1082,7 +1082,7 @@
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
-          <component id="a591e" class="javax.swing.JTextField">
+          <component id="a591e" class="javax.swing.JTextField" binding="jtf_paint_wage">
             <constraints>
               <grid row="9" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -1132,7 +1132,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="铁油漆"/>
+              <text value="油漆材料"/>
             </properties>
           </component>
           <component id="4ef78" class="javax.swing.JLabel">

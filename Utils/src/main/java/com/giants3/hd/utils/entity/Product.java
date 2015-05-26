@@ -145,6 +145,26 @@ public class Product implements Serializable {
 	public List<ProductPack> packs;
 
 
+	/**
+	 * 油漆材料成本
+	 */
+	@Basic
+	public
+	float paintCost;
+	/**
+	 * 油漆工资成本
+	 */
+	@Basic
+	public float paintWage;
+
+
+	/**
+	 * 产品成本 不含包装。 裸品
+	 */
+	@Basic
+	public float productCost;
+
+
 	public String getMemo() {
 		return memo;
 	}
@@ -338,5 +358,46 @@ public class Product implements Serializable {
 
 	public void setConstitute(String constitute) {
 		this.constitute = constitute;
+	}
+
+	public void setPaintCost(float paintCost) {
+		this.paintCost = paintCost;
+	}
+
+	public float getPaintCost() {
+		return paintCost;
+	}
+
+
+	public void setPaintWage(float paintWage) {
+		this.paintWage = paintWage;
+	}
+
+	public float getPaintWage() {
+		return paintWage;
+	}
+
+
+	/**
+	 * 更新油漆的汇总信息
+	 * @param paintCost
+	 * @param paintWage
+	 */
+	public void updatePaintData(float paintCost, float paintWage) {
+
+		this.paintCost=paintCost;
+		this.paintWage=paintWage;
+		calculateTotalCost();
+	}
+
+
+	/**
+	 * 计算总成本
+	 */
+	private void calculateTotalCost()
+	{
+
+		//TODO  目前紧紧累加 油漆数据
+		productCost=paintCost+paintWage;
 	}
 }

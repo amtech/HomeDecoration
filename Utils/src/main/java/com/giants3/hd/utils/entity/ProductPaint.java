@@ -30,6 +30,13 @@ public class ProductPaint  implements Serializable {
 	 */
 	@Basic
 	private String productName;
+
+
+	/**
+	 * 物料编码
+	 */
+	@Basic
+	public String materialCode;
 	/**
 	 * 物料名称
 	 */
@@ -227,5 +234,44 @@ public class ProductPaint  implements Serializable {
 
 	public void setUnitName(String unitName) {
 		this.unitName = unitName;
+	}
+
+
+	/**
+	 * 更新材料数据
+	 * @param material
+	 */
+	public void updateMaterial(Material material) {
+
+
+
+
+		this.materialCode=material.code;
+		this.materialName=material.name;
+		this.materialId=material.id;
+		this.materialPrice=material.price;
+
+
+		//
+
+		updateMaterialAndIngredientCost();
+
+
+
+
+
+	}
+
+
+	/**
+	 * 更新材料费用与配料费用
+	 */
+	public  void updateMaterialAndIngredientCost()
+	{
+		materialCost=materialQuantity*materialPrice;
+		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio));
+		ingredientCost=ingredientQuantity*1.2f;
+
+
 	}
 }
