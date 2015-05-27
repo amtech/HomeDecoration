@@ -31,6 +31,28 @@ public class ProductPaint  implements Serializable {
 	@Basic
 	private String productName;
 
+	/**
+	 * 流程id
+	 */
+	@Basic
+	public long flowId;
+
+
+	public long getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(long flowId) {
+		this.flowId = flowId;
+	}
+
+	public String getMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
+	}
 
 	/**
 	 * 物料编码

@@ -4,9 +4,8 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdUIException;
-import com.giants.hd.desktop.model.Materialable;
-import com.giants.hd.desktop.model.ProductMaterialTableModel;
-import com.giants.hd.desktop.model.ProductPaintTableModel;
+import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.module.ProductDetailTableModule;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.ArrayUtils;
@@ -76,14 +75,35 @@ public class Panel_ProductDetail extends BasePanel {
     private JTabbedPane tabbedPane4;
     private JTable tb_assemble_cost;
     private JTable tb_assemble_wage;
+    private JTextField jtf_conceptus_wage;
+    private JTextField jtf_conceptus_cost;
+    private JTextField jtf_assemble_wage;
+    private JTextField jtf_assemble_cost;
 
 
     private ProductDetail productDetail;
 
+
+
+
     @Inject
-    ProductMaterialTableModel productMaterialTableModel;
+    ProductMaterialTableModel conceptusMaterialTableModel;
+
+    @Inject
+    ProductMaterialTableModel assembleMaterialTableModel;
+
+
+    @Inject
+    ProductWageTableModel conceptusWageTableModel;
+    @Inject
+    ProductWageTableModel assembleWageTableModel;
+
+
     @Inject
     ProductPaintTableModel productPaintModel;
+
+
+    ProductDetailTableModule module;
 
 
     /**
@@ -95,6 +115,9 @@ public class Panel_ProductDetail extends BasePanel {
     public Panel_ProductDetail(Product product) {
 
         super();
+
+        module=new ProductDetailTableModule(this);
+
 
         initComponent();
 
@@ -196,12 +219,12 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+        //定义表格模型数据改变监听对象
         productPaintModelListener=new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-
                 //数据改变  更新统计数据
-
+                //汇总计算油漆工资与材料费用
                 float paintWage=0;
                 float paintCost=0;
                 for(ProductPaint paint:productPaintModel.getDatas())
@@ -210,15 +233,55 @@ public class Panel_ProductDetail extends BasePanel {
                     paintCost+=paint.materialCost+paint.ingredientCost;
 
                 }
-
                 productDetail.product.updatePaintData(paintCost, paintWage);
+                //汇总计算组装工资
+                float assembleWage=0;
+                for(ProductWage wage:assembleWageTableModel.getDatas())
+                {
+                    assembleWage+=wage.getAmount();
+                }
+                productDetail.product.assembleWage=assembleWage;
+                //汇总计算组装材料
+                float assembleCost=0;
+                for(ProductMaterial material:assembleMaterialTableModel.getDatas())
+                {
+                    assembleCost+=material.getAmount();
+                }
+                productDetail.product.assembleCost=assembleCost;
 
 
-                bindPaintMessage(productDetail.product);
+
+                //汇总计算组装工资
+                float conceptusWage=0;
+                for(ProductWage wage:conceptusWageTableModel.getDatas())
+                {
+                    conceptusWage+=wage.getAmount();
+                }
+                productDetail.product.conceptusWage=conceptusWage;
+                //汇总计算组装材料
+                float conceptusCost=0;
+                for(ProductMaterial material:conceptusMaterialTableModel.getDatas())
+                {
+                    conceptusCost+=material.getAmount();
+                }
+                productDetail.product.conceptusCost=conceptusCost;
+                /**
+                 * 重新计算总成本
+                 */
+                productDetail.product.calculateTotalCost();
+
+
+                bindStatisticsValue(productDetail.product);
 
             }
         };
+
+        //注册表模型的监听
         productPaintModel.addTableModelListener(productPaintModelListener);
+        assembleMaterialTableModel.addTableModelListener(productPaintModelListener);
+        assembleWageTableModel.addTableModelListener(productPaintModelListener);
+        conceptusMaterialTableModel.addTableModelListener(productPaintModelListener);
+        conceptusWageTableModel.addTableModelListener(productPaintModelListener);
 
 
 
@@ -324,6 +387,42 @@ public class Panel_ProductDetail extends BasePanel {
         productDetail.paints = paints;
 
 
+
+        List<ProductMaterial> conceptusMaterial= conceptusMaterialTableModel.getDatas();
+        //TODO  白胚材料的 数据检验
+
+
+        productDetail.conceptusMaterials=conceptusMaterial;
+
+
+
+
+        List<ProductMaterial> assembleMaterials=assembleMaterialTableModel.getDatas();
+        //TODO  组装材料的 数据检验
+
+
+        productDetail.assembleMaterials=assembleMaterials;
+
+
+
+        List<ProductWage> assembleWages=assembleWageTableModel.getDatas();
+        //TODO  组装工资的 数据检验
+
+
+        productDetail.assembleWages=assembleWages;
+
+
+        List<ProductWage> conceptusWages=conceptusWageTableModel.getDatas();
+        //TODO  白胚工资的 数据检验
+
+
+        productDetail.conceptusWages=conceptusWages;
+
+
+
+
+
+
     }
 
 
@@ -336,19 +435,41 @@ public class Panel_ProductDetail extends BasePanel {
         Product product = productDetail.product;
 
         bindProductBaseInfo(product);
-        bindPaintMessage(product);
-
-        productMaterialTableModel.setDatas(productDetail.materials);
+        bindStatisticsValue(product);
 
 
 
 
+
+
+        bindTableDatas(assembleMaterialTableModel, productDetail.assembleMaterials);
+        bindTableDatas(assembleWageTableModel,productDetail.assembleWages);
+
+        bindTableDatas(conceptusMaterialTableModel, productDetail.conceptusMaterials);
+        bindTableDatas(conceptusWageTableModel,productDetail.conceptusWages);
+
+        bindTableDatas(productPaintModel,productDetail.paints);
+    }
+
+
+    /**
+     * 重新表格绑定数据
+     * @param model
+     * @param datas
+     * @param <T>
+     */
+    private <T> void  bindTableDatas(BaseTableModel<T> model, List<T> datas)
+    {
         //为了避免触发监听，先移除后添加
-        productPaintModel.removeTableModelListener(productPaintModelListener);
-        productPaintModel.setDatas(productDetail.paints);
-        productPaintModel.addTableModelListener(productPaintModelListener);
+        model.removeTableModelListener(productPaintModelListener);
+        model.setDatas(datas);
+        model.addTableModelListener(productPaintModelListener);
 
     }
+
+
+
+
 
 
     /**
@@ -549,11 +670,30 @@ public class Panel_ProductDetail extends BasePanel {
      */
     public void initComponent() {
 
-        tb_conceptus_cost.setModel(productMaterialTableModel);
+
+        module.initComponent();
+
+        tb_conceptus_cost.setModel(conceptusMaterialTableModel);
+
+        tb_assemble_cost.setModel(assembleMaterialTableModel);
 
         tb_product_paint.setModel(productPaintModel);
+
+
+
+        tb_conceptus_wage.setModel(conceptusWageTableModel);
+
+        tb_assemble_wage.setModel(assembleWageTableModel);
+
+
+
+
+
         tb_conceptus_cost.setRowHeight(30);
+        tb_assemble_cost.setRowHeight(30);
         tb_pack_cost.setRowHeight(30);
+        tb_conceptus_wage.setRowHeight(30);
+        tb_assemble_wage.setRowHeight(30);
 
 
         //监听器， 监听表格右键点击功能
@@ -592,11 +732,7 @@ public class Panel_ProductDetail extends BasePanel {
 
         tb_assemble_cost.addMouseListener(adapter);
         tb_assemble_wage.addMouseListener(adapter);
-
-
         tb_product_paint.addMouseListener(adapter);
-
-
         tb_pack_cost.addMouseListener(adapter);
 
 
@@ -607,13 +743,22 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     /**
-     * 绑定油漆汇总数据
+     * 绑定汇总数据
      */
-    private void bindPaintMessage(Product product)
+    private void bindStatisticsValue(Product product)
     {
         jtf_paint_cost.setText(String.valueOf(product.paintCost));
         jtf_paint_wage.setText(String.valueOf(product.paintWage));
+
+        jtf_assemble_cost.setText(String.valueOf(product.assembleCost));
+        jtf_assemble_wage.setText(String.valueOf(product.assembleWage));
+
+        jtf_conceptus_cost.setText(String.valueOf(product.conceptusCost));
+        jtf_conceptus_wage.setText(String.valueOf(product.conceptusWage));
+
         tf_cost.setText(String.valueOf(product.productCost));
+
+
 
     }
 

@@ -1,12 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.ProductMaterialRepository;
-import com.giants3.hd.server.repository.ProductPackRepository;
-import com.giants3.hd.server.repository.ProductPaintRepository;
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.repository.ProductRepository;
 
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
@@ -15,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -27,91 +25,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* 产品信息
-*/
+ * 产品信息
+ */
 @Controller
 @RequestMapping("/product")
-public class ProductController  extends BaseController{
+public class ProductController extends BaseController {
 
 
     @Autowired
     private ProductRepository productRepository;
 
 
-
     @Autowired
     private ProductPackRepository productPackRepository;
     @Autowired
     private ProductMaterialRepository productMaterialRepository;
-
+    @Autowired
+    private ProductWageRepository productWageRepository;
     @Autowired
     private ProductPaintRepository productPaintRepository;
     @Value("${filepath}")
     private String rootFilePath;
 
 
-
-
-
-    @RequestMapping(value="/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Product> listPrdtJson()   {
+    RemoteData<Product> listPrdtJson() {
 
 
         return wrapData(productRepository.findAll());
     }
 
 
-    @RequestMapping(value = "/search", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Product>   listPrdtJson(@RequestParam(value = "proName",required = false,defaultValue ="") String prd_name
-    ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize
+    RemoteData<Product> listPrdtJson(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
+            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
-        Pageable pageable=constructPageSpecification(pageIndex, pageSize);
-          Page<Product> pageValue=  productRepository.findByNameLike("%" + prd_name + "%", pageable);
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        Page<Product> pageValue = productRepository.findByNameLike("%" + prd_name + "%", pageable);
 
-        List<Product> products=pageValue.getContent();
+        List<Product> products = pageValue.getContent();
 
         //读取包装信息
-        for(Product product:products)
-        {
+        for (Product product : products) {
 
-            List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
-            product.packs=packs;
+            List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
+            product.packs = packs;
         }
 
 
-
-
-
-
-
-
-        return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),products);
-
-
-
-
-
-
-
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 
 
     }
 
-    @RequestMapping( value = "/find", method = RequestMethod.GET)
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
     public
     @ResponseBody
-    Product findProdcutById(@RequestParam("id") long productId)   {
+    Product findProdcutById(@RequestParam("id") long productId) {
 
-        Product product= productRepository.findOne(productId);
-        List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
-        product.packs=packs;
+        Product product = productRepository.findOne(productId);
+        List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
+        product.packs = packs;
         return product;
     }
 
@@ -119,89 +100,106 @@ public class ProductController  extends BaseController{
     /**
      * 查询产品的详细信息
      * 包括 包装信息
-     *      物料清单（胚体，油漆，包装）
+     * 物料清单（胚体，油漆，包装）
      *
      * @param productId
      * @return
      */
-    @RequestMapping( value = "/detail", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/detail", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<ProductDetail> findProductDetailById(@RequestParam("id") long productId)   {
+    RemoteData<ProductDetail> findProductDetailById(@RequestParam("id") long productId) {
 
 
-
-
-
-        RemoteData<ProductDetail> remoteData=new RemoteData<>();
+        RemoteData<ProductDetail> remoteData = new RemoteData<>();
 
         //读取产品信息
-        Product product= productRepository.findOne(productId);
-        if(product==null)
-        {
+        Product product = productRepository.findOne(productId);
+        if (product == null) {
 
-                remoteData.code=RemoteData.CODE_FAIL;
-            remoteData.message="未能根据id找到产品";
+            remoteData.code = RemoteData.CODE_FAIL;
+            remoteData.message = "未能根据id找到产品";
             return
                     remoteData;
 
         }
 
-        ProductDetail detail=new ProductDetail();
+        ProductDetail detail = new ProductDetail();
 
 
-        detail.product=product;
+        detail.product = product;
 
         //读取包装信息
-        List<ProductPack> packs=productPackRepository.findByProductIdEquals(product.id);
-        product.packs=packs;
+        List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
+        product.packs = packs;
 
 
         //读取材料列表信息
+        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEquals(productId);
 
-      List<ProductMaterial> productMaterials=  productMaterialRepository.findByProductIdEquals(productId);
-    List<ProductMaterial> conceptus=new ArrayList<>();
-        List<ProductMaterial> assembles=new ArrayList<>();
-    for(ProductMaterial productMaterial:productMaterials)
-    {
+        List<ProductMaterial> conceptusCost = new ArrayList<>();
+        List<ProductMaterial> assemblesCost = new ArrayList<>();
 
-        switch ((int)productMaterial.flowId)
-        {
-            case Flow.FLOW_CONCEPTUS:
-                conceptus.add(productMaterial);
-                break;
 
-            case Flow.FLOW_PAINT:
-                assembles.add(productMaterial);
-                break;
+        for (ProductMaterial productMaterial : productMaterials) {
 
-            case Flow.FLOW_ASSEMBLE:
-                break;
+            switch ((int) productMaterial.flowId) {
+                case Flow.FLOW_CONCEPTUS:
+                    conceptusCost.add(productMaterial);
+                    break;
 
-            case Flow.FLOW_PACK:
-               // assembles.add(productMaterial);
-                break;
+                case Flow.FLOW_PAINT:
+
+                    break;
+
+                case Flow.FLOW_ASSEMBLE:
+                    assemblesCost.add(productMaterial);
+                    break;
+
+                case Flow.FLOW_PACK:
+                    // assembles.add(productMaterial);
+                    break;
+            }
+
+        }
+        detail.conceptusMaterials = conceptusCost;
+        detail.assembleMaterials = assemblesCost;
+
+
+
+
+        //读取工资数据
+        List<ProductWage> productWages = productWageRepository.findByProductIdEquals(productId);
+        List<ProductWage> conceptusWage = new ArrayList<>();
+        List<ProductWage> assemblesWage = new ArrayList<>();
+        for (ProductWage productWage : productWages) {
+
+            switch ((int) productWage.flowId) {
+                case Flow.FLOW_CONCEPTUS:
+                    conceptusWage.add(productWage);
+                    break;
+
+                case Flow.FLOW_PAINT:
+
+                    break;
+
+                case Flow.FLOW_ASSEMBLE:
+                    assemblesWage.add(productWage);
+                    break;
+
+                case Flow.FLOW_PACK:
+                    // assembles.add(productMaterial);
+                    break;
+            }
+
         }
 
-    }
 
-       detail.conceptusMaterials=conceptus;
-        detail.assembleMaterials=assembles;
-
-
+        detail.conceptusWages = conceptusWage;
+        detail.assembleWages = assemblesWage;
 
         //读取油漆列表信息
-        detail.paints=  productPaintRepository.findByProductIdEquals(productId);
-
-
-
-
-
-
-
-
-
-
+        detail.paints = productPaintRepository.findByProductIdEquals(productId);
 
 
         remoteData.datas.add(detail);
@@ -212,71 +210,62 @@ public class ProductController  extends BaseController{
     /**
      * 产品完整信息的保存
      *
-     *  @param productDetail 产品全部信息
+     * @param productDetail 产品全部信息
      * @return
      */
-    @RequestMapping( value = "/save", method = RequestMethod.POST)
-    public    @ResponseBody     RemoteData<ProductDetail> saveProductDetail(@RequestBody ProductDetail productDetail)   {
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<ProductDetail> saveProductDetail(@RequestBody ProductDetail productDetail) {
 
 
-
-        long productId=productDetail.product.id;
+        long productId = productDetail.product.id;
 
         //新增加的产品数据
-        Product newProduct=productDetail.product;
+        Product newProduct = productDetail.product;
 
         /**
          * 未生成id 添加记录
-          */
-     if(!productRepository.exists(productId))
-     {
-         //更新缩略图
-           updateProductPhotoData(newProduct);
-     }else
-     {
-        //找出旧的记录
-         Product oldData=productRepository.findOne(productId);
-         //如果产品名称修改  则修正缩略图
-         if(!oldData.name.equals(newProduct.name))
-         {
-              updateProductPhotoData(newProduct);
-         }
+         */
+        if (!productRepository.exists(productId)) {
+            //更新缩略图
+            updateProductPhotoData(newProduct);
+        } else {
+            //找出旧的记录
+            Product oldData = productRepository.findOne(productId);
+            //如果产品名称修改  则修正缩略图
+            if (!oldData.name.equals(newProduct.name)) {
+                updateProductPhotoData(newProduct);
+            }
+        }
 
 
-     }
-
-
-     //更新图片更新字段 记录图片的最后更新时间
-       updateProductPhotoTime(newProduct);
+        //更新图片更新字段 记录图片的最后更新时间
+        updateProductPhotoTime(newProduct);
 
 
         //最新product 数据
-      Product product=     productRepository.save(newProduct);
+        Product product = productRepository.save(newProduct);
 
 
+        productId = product.id;
 
 
-
-
-
-
-        if(productDetail.paints!=null) {
+        if (productDetail.paints != null) {
             //保存油漆数据
-            List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(product.id);
+            List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(productId);
             //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
             for (ProductPaint oldPaint : oldPaints) {
-                boolean exist=false;
-                for (ProductPaint newPaint:productDetail.paints)
-                {
+                boolean exist = false;
+                for (ProductPaint newPaint : productDetail.paints) {
 
-                    if(oldPaint.getId()==newPaint.id)
-                    {
-                        exist=true;
+                    if (oldPaint.getId() == newPaint.id) {
+                        exist = true;
                         break;
                     }
                 }
-                if(!exist)
-                {
+                if (!exist) {
                     //不存在新纪录中 删除
                     productPaintRepository.delete(oldPaint.id);
                 }
@@ -284,35 +273,125 @@ public class ProductController  extends BaseController{
             }
 
             //添加或者修改记录
-            for (ProductPaint newPaint:productDetail.paints)
-            {
+            for (ProductPaint newPaint : productDetail.paints) {
                 newPaint.setProductId(product.id);
                 newPaint.setProductName(product.name);
+                newPaint.setFlowId(Flow.FLOW_PAINT);
                 productPaintRepository.save(newPaint);
             }
 
 
+        }
 
+        //保存白胚数据
+        if (productDetail.conceptusMaterials != null) {
 
+            saveProductMaterial(productDetail.conceptusMaterials, productId, Flow.FLOW_CONCEPTUS);
+        }
+
+        //保存组装数据
+        if (productDetail.assembleMaterials != null) {
+
+            saveProductMaterial(productDetail.assembleMaterials, productId, Flow.FLOW_ASSEMBLE);
         }
 
 
+        if (productDetail.assembleWages != null)
+            saveProductWage(productDetail.assembleWages, productId, Flow.FLOW_ASSEMBLE);
+
+        if (productDetail.conceptusWages != null)
+            saveProductWage(productDetail.conceptusWages, productId, Flow.FLOW_CONCEPTUS);
 
 
-
-       RemoteData data=new RemoteData();
-
+        RemoteData data = new RemoteData();
 
 
         return data;
     }
 
 
+    /**
+     * 更新产品的工资信息
+     *
+     * @param wages
+     * @param flowId
+     */
+    private void saveProductWage(List<ProductWage> wages, long productId, long flowId) {
 
+        //保存油漆数据
+        List<ProductWage> oldDatas = productWageRepository.findByProductIdEqualsAndFlowIdEquals(productId, flowId);
+        //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
+        for (ProductWage oldData : oldDatas) {
+            boolean exist = false;
+            for (ProductWage newData : wages) {
+
+                if (oldData.getId() == newData.id) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                //不存在新纪录中 删除
+                productWageRepository.delete(oldData.id);
+            }
+
+        }
+
+        //添加或者修改记录
+        for (ProductWage newData
+                : wages) {
+            newData.setProductId(productId);
+            newData.setFlowId(flowId);
+            productWageRepository.save(newData);
+        }
+
+
+    }
+
+
+    /**
+     * 更新产品的材料数据， 不同流程 不同处理。
+     *
+     * @param materials
+     * @param productId
+     * @param flowId
+     */
+    private void saveProductMaterial(List<ProductMaterial> materials, long productId, long flowId) {
+
+        //保存油漆数据
+        List<ProductMaterial> oldDatas = productMaterialRepository.findByProductIdEqualsAndFlowIdEquals(productId, flowId);
+        //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
+        for (ProductMaterial oldData : oldDatas) {
+            boolean exist = false;
+            for (ProductMaterial newData : materials) {
+
+                if (oldData.getId() == newData.id) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                //不存在新纪录中 删除
+                productMaterialRepository.delete(oldData.id);
+            }
+
+        }
+
+        //添加或者修改记录
+        for (ProductMaterial newData
+                : materials) {
+            newData.setProductId(productId);
+            newData.setFlowId(flowId);
+            productMaterialRepository.save(newData);
+        }
+
+
+    }
 
 
     /**
      * Returns a Sort object which sorts persons in ascending order by using the last name.
+     *
      * @return
      */
     protected Sort sortByLastNameAsc() {
@@ -320,26 +399,21 @@ public class ProductController  extends BaseController{
     }
 
 
-
-
-
     /**
      * 更新产品的缩略图数据
+     *
      * @param product
      */
-    private final void updateProductPhotoData(Product product)
-    {
+    private final void updateProductPhotoData(Product product) {
 
 
-        String filePath= FileUtils.getProductPicturePath(rootFilePath, product.name,product.pVersion);
+        String filePath = FileUtils.getProductPicturePath(rootFilePath, product.name, product.pVersion);
 
         //如果tup图片文件不存在  则 设置photo为空。
-        if(!new File(filePath).exists())
-        {
+        if (!new File(filePath).exists()) {
             product.setPhoto(null);
 
-        }else
-        {
+        } else {
             try {
                 product.setPhoto(ImageUtils.scaleProduct(filePath));
             } catch (HdException e) {
@@ -348,19 +422,15 @@ public class ProductController  extends BaseController{
         }
 
 
-
-
-
     }
 
     /**
      * 更新图片的最后一次修改的时间
      */
-    private final void updateProductPhotoTime(Product product)
-    {
+    private final void updateProductPhotoTime(Product product) {
 
 
-        String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
+        String filePath = FileUtils.getProductPicturePath(rootFilePath, product.name, product.pVersion);
 
         BasicFileAttributes attributes =
                 null;
@@ -373,13 +443,11 @@ public class ProductController  extends BaseController{
         }
 
 
-            if(null!=attributes)
-            {
+        if (null != attributes) {
 
-                FileTime lastModifiedTime = attributes.lastModifiedTime();
-                product.setLastPhotoUpdateTime(lastModifiedTime.toMillis());
-            }
-
+            FileTime lastModifiedTime = attributes.lastModifiedTime();
+            product.setLastPhotoUpdateTime(lastModifiedTime.toMillis());
+        }
 
 
     }

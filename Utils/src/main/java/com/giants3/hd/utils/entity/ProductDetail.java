@@ -14,6 +14,7 @@ public class ProductDetail  {
     public  List<ProductPaint> paints;
 
 
+    public List<ProductWage> conceptusWages;
 
-
+    public List<ProductWage> assembleWages;
 }

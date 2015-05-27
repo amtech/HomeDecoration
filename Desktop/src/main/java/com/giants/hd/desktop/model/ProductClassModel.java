@@ -5,8 +5,9 @@ import com.giants3.hd.utils.entity.PClass;
 import javax.swing.*;
 
 /**
- * Created by davidleen29 on 2015/5/22.
+ * 产品类型选择模型    与jcombox 适配使用
  */
+@Deprecated
 public class ProductClassModel<PClass> extends AbstractListModel  implements ComboBoxModel{
     @Override
     public void setSelectedItem(Object anItem) {

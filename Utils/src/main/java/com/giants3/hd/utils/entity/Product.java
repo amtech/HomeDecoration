@@ -164,6 +164,69 @@ public class Product implements Serializable {
 	@Basic
 	public float productCost;
 
+	/**
+	 * 组装工资汇总
+	 */
+	@Basic
+	public float assembleWage;
+
+	/**
+	 * 组装材料汇总
+	 */
+	@Basic
+	public float assembleCost;
+
+	/**
+	 * 胚体材料汇总
+	 */
+	@Basic
+	public float conceptusCost;
+	/**
+	 * 胚体工资汇总
+	 */
+	@Basic
+	public float conceptusWage;
+
+
+	public String getpUnitId() {
+		return pUnitId;
+	}
+
+	public void setpUnitId(String pUnitId) {
+		this.pUnitId = pUnitId;
+	}
+
+	public String getpUnitName() {
+		return pUnitName;
+	}
+
+	public void setpUnitName(String pUnitName) {
+		this.pUnitName = pUnitName;
+	}
+
+	public float getProductCost() {
+		return productCost;
+	}
+
+	public void setProductCost(float productCost) {
+		this.productCost = productCost;
+	}
+
+	public float getAssembleWage() {
+		return assembleWage;
+	}
+
+	public void setAssembleWage(float assembleWage) {
+		this.assembleWage = assembleWage;
+	}
+
+	public float getAssembleCost() {
+		return assembleCost;
+	}
+
+	public void setAssembleCost(float assembleCost) {
+		this.assembleCost = assembleCost;
+	}
 
 	public String getMemo() {
 		return memo;
@@ -378,6 +441,22 @@ public class Product implements Serializable {
 	}
 
 
+	public float getConceptusCost() {
+		return conceptusCost;
+	}
+
+	public void setConceptusCost(float conceptusCost) {
+		this.conceptusCost = conceptusCost;
+	}
+
+	public float getConceptusWage() {
+		return conceptusWage;
+	}
+
+	public void setConceptusWage(float conceptusWage) {
+		this.conceptusWage = conceptusWage;
+	}
+
 	/**
 	 * 更新油漆的汇总信息
 	 * @param paintCost
@@ -394,10 +473,10 @@ public class Product implements Serializable {
 	/**
 	 * 计算总成本
 	 */
-	private void calculateTotalCost()
+	public void calculateTotalCost()
 	{
 
 		//TODO  目前紧紧累加 油漆数据
-		productCost=paintCost+paintWage;
+		productCost=paintCost+paintWage+assembleCost+assembleWage;
 	}
 }
