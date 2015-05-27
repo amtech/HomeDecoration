@@ -2,6 +2,7 @@ package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 产品材料列表
@@ -59,6 +60,24 @@ public class ProductMaterial  implements Serializable {
 	 */
 	@Basic
 	public float mHeight;
+
+
+
+	/**
+	 * 产品规格长
+	 */
+	@Basic
+	public float pLong;
+	/**
+	 * 产品规格 宽
+	 */
+	@Basic
+	public float pWidth;
+	/**
+	 * 产品规格 高
+	 */
+	@Basic
+	public float pHeight;
 	/**
 	 * 毛料长度
 	 */
@@ -302,32 +321,105 @@ public class ProductMaterial  implements Serializable {
 		materialName=material.name;
 		materialId=material.id;
 
+		price=new BigDecimal(material.price).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
 		available=material.available;
 		memo=material.memo;
 		unitName=material.unitName;
+		type=material.typeId;
+
+		mWidth=material.wWidth;
+		mHeight=material.wHeight;
+		mLong =material.wLong;
+		update();
 
 
-		calculateQuota();
+
 
 
 
 	}
 
-	/**
-	 * 更新用量
-	 * @param quantity
-	 */
-	public void updateQuantity(float quantity)
-	{
-		this.quantity=quantity;
-		calculateQuota();
+	public float getpLong() {
+		return pLong;
+	}
+
+	public void setpLong(float pLong) {
+		this.pLong = pLong;
+	}
+
+	public float getpWidth() {
+		return pWidth;
+	}
+
+	public void setpWidth(float pWidth) {
+		this.pWidth = pWidth;
+	}
+
+	public float getpHeight() {
+		return pHeight;
+	}
+
+	public void setpHeight(float pHeight) {
+		this.pHeight = pHeight;
 	}
 
 	/**
-	 * 计算定额
+	 * 更新材料相关数据
 	 */
-	public void calculateQuota()
+	public void update()
 	{
+
+
+
+
+		wLong=mLong+pLong;
+		wHeight=mHeight+pHeight;
+		wWidth=mWidth+pWidth;
+
+		//计算定额
+		float newQuota=0;
+		if(materialId<=0)
+			newQuota=0;
+		else
+			if(type==1&&pHeight<=0)
+			{
+
+				newQuota=0;
+
+			}else
+			if(type==15&&pWidth<=0&&pHeight<=0)
+			{
+				newQuota=quantity*wLong/100/available;   //TODO  R15 未确定值
+
+			}
+			else
+			if(pWidth<=0&&pLong<=0&&pHeight<=0)
+			{
+				newQuota=quantity/available;
+			}else
+			if(
+				pHeight<=0&&pWidth<=0
+					)
+			{
+				newQuota=quantity*wLong/100/available;
+
+			}else
+			if(pHeight<=0){
+
+
+				newQuota=quantity*wLong*wWidth/10000/available;
+			}else
+			{
+				newQuota=quantity*wLong*wWidth*wHeight/1000000/available;
+			}
+
+
+		quota = new BigDecimal(newQuota).setScale(5,BigDecimal.ROUND_HALF_UP).floatValue();
+
+
+		   amount=new BigDecimal(quota*price).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+
+
 
 
 

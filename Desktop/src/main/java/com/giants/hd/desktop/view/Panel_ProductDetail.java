@@ -435,6 +435,9 @@ public class Panel_ProductDetail extends BasePanel {
         Product product = productDetail.product;
 
         bindProductBaseInfo(product);
+
+
+
         bindStatisticsValue(product);
 
 

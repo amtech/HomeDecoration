@@ -87,7 +87,6 @@ public class ImageUtils {
             float ratio=Math.max((float)sourceWidth/maxWidth,(float)sourceHeight/maxHeight);
 
             ratio=Math.max(ratio,1);
-
             int newWidth= (int) (sourceWidth/ratio);
             int newHeight= (int) (sourceHeight/ratio);
 
