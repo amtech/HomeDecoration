@@ -9,7 +9,11 @@ public class ProductDetail  {
 
 
     public Product product;
-    public List<ProductMaterial> materials;
+    public List<ProductMaterial> conceptusMaterials;
+    public List<ProductMaterial> assembleMaterials;
     public  List<ProductPaint> paints;
+
+
+
 
 }

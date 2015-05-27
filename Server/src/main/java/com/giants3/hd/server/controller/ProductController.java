@@ -8,22 +8,13 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.repository.ProductRepository;
 
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductDetail;
-import com.giants3.hd.utils.entity.ProductPack;
-import com.giants3.hd.utils.entity.ProductPaint;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.exception.HdServerException;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -168,7 +159,34 @@ public class ProductController  extends BaseController{
 
         //读取材料列表信息
 
-      detail.materials=  productMaterialRepository.findByProductIdEquals(productId);
+      List<ProductMaterial> productMaterials=  productMaterialRepository.findByProductIdEquals(productId);
+    List<ProductMaterial> conceptus=new ArrayList<>();
+        List<ProductMaterial> assembles=new ArrayList<>();
+    for(ProductMaterial productMaterial:productMaterials)
+    {
+
+        switch ((int)productMaterial.flowId)
+        {
+            case Flow.FLOW_CONCEPTUS:
+                conceptus.add(productMaterial);
+                break;
+
+            case Flow.FLOW_PAINT:
+                assembles.add(productMaterial);
+                break;
+
+            case Flow.FLOW_ASSEMBLE:
+                break;
+
+            case Flow.FLOW_PACK:
+               // assembles.add(productMaterial);
+                break;
+        }
+
+    }
+
+       detail.conceptusMaterials=conceptus;
+        detail.assembleMaterials=assembles;
 
 
 
@@ -323,7 +341,7 @@ public class ProductController  extends BaseController{
         }else
         {
             try {
-                product.setPhoto(ImageUtils.scale(filePath));
+                product.setPhoto(ImageUtils.scaleProduct(filePath));
             } catch (HdException e) {
                 e.printStackTrace();
             }

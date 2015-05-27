@@ -23,7 +23,6 @@ import javax.swing.text.Document;
 import java.awt.event.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 /**
  * 产品详情界面
@@ -49,8 +48,8 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextArea ta_spec;
     private JTextArea ta_memo;
     private JPanel cellPanel;
-    private JTable productMaterialTable;
-    private JTable productPackTable;
+    private JTable tb_conceptus_cost;
+
     private JTextField tf_fob_2;
     private JTextField tf_fob_1;
     private JTextField tf_price_1;
@@ -67,11 +66,16 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField textField4;
     private JScrollPane contentPane;
     private JTabbedPane tabbedPane2;
-    private JTable tb_pack_material;
+    private JTable tb_pack_cost;
     private JTable tb_pack_wage;
     private JTable tb_product_paint;
     private JTextField jtf_paint_wage;
     private JTextField jtf_paint_cost;
+    private JTabbedPane tabbedPane3;
+    private JTable tb_conceptus_wage;
+    private JTabbedPane tabbedPane4;
+    private JTable tb_assemble_cost;
+    private JTable tb_assemble_wage;
 
 
     private ProductDetail productDetail;
@@ -217,8 +221,12 @@ public class Panel_ProductDetail extends BasePanel {
         productPaintModel.addTableModelListener(productPaintModelListener);
 
 
-        configTableCellEditor(productMaterialTable);
+
+        //配置表格的自定义编辑输入
+        configTableCellEditor(tb_conceptus_cost);
+        configTableCellEditor(tb_assemble_cost);
         configTableCellEditor(tb_product_paint);
+
 
 
     }
@@ -541,11 +549,11 @@ public class Panel_ProductDetail extends BasePanel {
      */
     public void initComponent() {
 
-        productMaterialTable.setModel(productMaterialTableModel);
+        tb_conceptus_cost.setModel(productMaterialTableModel);
 
         tb_product_paint.setModel(productPaintModel);
-        productMaterialTable.setRowHeight(30);
-        productPackTable.setRowHeight(30);
+        tb_conceptus_cost.setRowHeight(30);
+        tb_pack_cost.setRowHeight(30);
 
 
         //监听器， 监听表格右键点击功能
@@ -571,7 +579,7 @@ public class Panel_ProductDetail extends BasePanel {
                     JTable source = (JTable) e.getSource();
                     JPopupMenu menu = new TablePopMenu(source);
                     //  取得右键点击所在行
-                    int row = e.getY() / productMaterialTable.getRowHeight();
+                    int row = e.getY() / tb_conceptus_cost.getRowHeight();
                     menu.show(e.getComponent(), e.getX(), e.getY());
 
                 }
@@ -579,9 +587,17 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
         //设置表格点击监听
-        productMaterialTable.addMouseListener(adapter);
-        productPackTable.addMouseListener(adapter);
+        tb_conceptus_cost.addMouseListener(adapter);
+        tb_conceptus_wage.addMouseListener(adapter);
+
+        tb_assemble_cost.addMouseListener(adapter);
+        tb_assemble_wage.addMouseListener(adapter);
+
+
         tb_product_paint.addMouseListener(adapter);
+
+
+        tb_pack_cost.addMouseListener(adapter);
 
 
 

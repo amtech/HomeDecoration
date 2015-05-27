@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.logging.Logger;
 
 /**
@@ -19,25 +18,48 @@ public class ImageUtils {
 
     public static final String TAG="ImageUtils";
 
-    public static final int MAX_MINIATURE_WIDTH=100;
-    public static final int MAX_MINIATURE_HEIGHT=100;
+    //产品微缩图尺寸
+    public static final int MAX_PRODUCT_MINIATURE_WIDTH =100;
+    public static final int MAX_PRODUCT_MINIATURE_HEIGHT =100;
 
+    //材料微缩图尺寸
+    public static final int MAX_MATERIAL_MINIATURE_WIDTH =50;
+    public static final int MAX_MATERIAL_MINIATURE_HEIGHT =50;
 
+    /**
+     * 微缩产品图片
+     * @param path
+     * @return
+     * @throws HdException
+     */
+    public static final byte[] scaleProduct(String path) throws HdException {
 
-    public static final byte[] scale(String path) throws HdException {
-
-        return scale(path,MAX_MINIATURE_WIDTH,MAX_MINIATURE_HEIGHT);
+        return scale(path, MAX_PRODUCT_MINIATURE_WIDTH, MAX_PRODUCT_MINIATURE_HEIGHT);
 
 
 
 
     }
 
-    public static final byte[] scale(String path,int maxWidth, int maxHeight) throws HdException {
 
-       return scale(path,maxWidth,maxHeight,false);
+    /**
+     * 微缩材料图片
+     * @param path
+     * @return
+     * @throws HdException
+     */
+    public static final byte[] scaleMaterial(String path) throws HdException {
+
+        return scale(path, MAX_PRODUCT_MINIATURE_WIDTH, MAX_PRODUCT_MINIATURE_HEIGHT);
 
 
+
+
+    }
+
+    public static final byte[] scale(String path, int maxWidth, int maxHeight) throws HdException {
+
+       return scale(path, maxWidth, maxHeight, false);
 
 
     }
@@ -54,7 +76,7 @@ public class ImageUtils {
      * @return
      * @throws HdException
      */
-    public static final byte[] scale(String filePath, int maxWidth, int maxHeight,boolean preserveAlpha) throws HdException {
+    public static final byte[] scale(String filePath, int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
 
         try {
             BufferedImage img = ImageIO.read(new File(filePath));
@@ -70,7 +92,7 @@ public class ImageUtils {
             int newHeight= (int) (sourceHeight/ratio);
 
 
-            Logger.getLogger(TAG).info("scale Image----newWidth:"+newWidth+",newHeight:"+newHeight);
+            Logger.getLogger(TAG).info("scaleProduct Image----newWidth:"+newWidth+",newHeight:"+newHeight);
             int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 
             BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, imageType);

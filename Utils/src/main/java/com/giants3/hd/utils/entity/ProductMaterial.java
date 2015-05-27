@@ -106,6 +106,19 @@ public class ProductMaterial  implements Serializable {
 	public String memo;
 
 
+	/**
+	 * 流程id
+	 */
+	@Basic
+	public  long flowId;
+
+	/**
+	 * 流程名称
+	 */
+	@Basic
+	public String flowName;
+
+
 
 
 
@@ -262,6 +275,22 @@ public class ProductMaterial  implements Serializable {
 		this.materialCode = materialCode;
 	}
 
+
+	public long getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(long flowId) {
+		this.flowId = flowId;
+	}
+
+	public String getFlowName() {
+		return flowName;
+	}
+
+	public void setFlowName(String flowName) {
+		this.flowName = flowName;
+	}
 
 	/**
 	 * 设置新材料  更新各项数据

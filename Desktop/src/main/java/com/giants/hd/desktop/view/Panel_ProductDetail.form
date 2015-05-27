@@ -79,38 +79,84 @@
             </properties>
             <border type="none"/>
             <children>
-              <scrollpane id="f989f">
+              <tabbedpane id="7f753" binding="tabbedPane3" default-binding="true">
                 <constraints>
-                  <tabbedpane title="    白胚   "/>
-                </constraints>
-                <properties>
-                  <font/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="19b10" class="javax.swing.JTable" binding="productMaterialTable">
-                    <constraints/>
-                    <properties>
-                      <fillsViewportHeight value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-              <scrollpane id="6a7d4">
-                <constraints>
-                  <tabbedpane title="   组装   "/>
+                  <tabbedpane title="白胚"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="149a5" class="javax.swing.JTable" binding="productPackTable">
-                    <constraints/>
-                    <properties>
-                      <fillsViewportHeight value="true"/>
-                    </properties>
-                  </component>
+                  <scrollpane id="cf5b8">
+                    <constraints>
+                      <tabbedpane title="材料"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="bb708" class="javax.swing.JTable" binding="tb_conceptus_cost">
+                        <constraints/>
+                        <properties>
+                          <fillsViewportHeight value="true"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="19eb0">
+                    <constraints>
+                      <tabbedpane title="工资"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="b02fd" class="javax.swing.JTable" binding="tb_conceptus_wage">
+                        <constraints/>
+                        <properties>
+                          <fillsViewportHeight value="true"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
-              </scrollpane>
+              </tabbedpane>
+              <tabbedpane id="20d1f" binding="tabbedPane4" default-binding="true">
+                <constraints>
+                  <tabbedpane title="组装"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="a9c21">
+                    <constraints>
+                      <tabbedpane title="材料"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="c970c" class="javax.swing.JTable" binding="tb_assemble_cost">
+                        <constraints/>
+                        <properties>
+                          <fillsViewportHeight value="true"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="aa88f">
+                    <constraints>
+                      <tabbedpane title="工资"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="47659" class="javax.swing.JTable" binding="tb_assemble_wage">
+                        <constraints/>
+                        <properties>
+                          <fillsViewportHeight value="true"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                </children>
+              </tabbedpane>
               <scrollpane id="16eaa">
                 <constraints>
                   <tabbedpane title="   油漆   "/>
@@ -147,7 +193,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="770bc" class="javax.swing.JTable" binding="tb_pack_material">
+                          <component id="770bc" class="javax.swing.JTable" binding="tb_pack_cost">
                             <constraints/>
                             <properties>
                               <fillsViewportHeight value="true"/>
@@ -258,7 +304,8 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
-              <toolTipText value="成本数值（不可输入）"/>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不含包装）"/>
             </properties>
           </component>
           <component id="67202" class="javax.swing.JLabel">
@@ -929,7 +976,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="木工资 "/>
+              <text value="白胚工资"/>
             </properties>
           </component>
           <component id="bfbc6" class="javax.swing.JLabel">
@@ -1057,6 +1104,7 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <editable value="false"/>
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
@@ -1068,6 +1116,7 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <editable value="false"/>
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
@@ -1090,6 +1139,7 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <editable value="false"/>
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
@@ -1101,6 +1151,7 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <editable value="false"/>
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
@@ -1142,7 +1193,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="铁工资"/>
+              <text value="白胚材料"/>
             </properties>
           </component>
           <component id="828d5" class="javax.swing.JLabel">
