@@ -234,13 +234,26 @@ public class Panel_ProductDetail extends BasePanel {
 
                 }
                 productDetail.product.updatePaintData(paintCost, paintWage);
-                //汇总计算组装工资
-                float assembleWage=0;
-                for(ProductWage wage:assembleWageTableModel.getDatas())
+
+
+
+                //汇总计算白胚材料
+                float conceptusCost=0;
+                for(ProductMaterial material:conceptusMaterialTableModel.getDatas())
                 {
-                    assembleWage+=wage.getAmount();
+                    conceptusCost+=material.getAmount();
                 }
-                productDetail.product.assembleWage=assembleWage;
+                productDetail.product.conceptusCost=conceptusCost;
+                //汇总计算组白胚工资
+                float conceptusWage=0;
+                for(ProductWage wage:conceptusWageTableModel.getDatas())
+                {
+                    conceptusWage+=wage.getAmount();
+                }
+                productDetail.product.conceptusWage=conceptusWage;
+
+
+
                 //汇总计算组装材料
                 float assembleCost=0;
                 for(ProductMaterial material:assembleMaterialTableModel.getDatas())
@@ -249,22 +262,18 @@ public class Panel_ProductDetail extends BasePanel {
                 }
                 productDetail.product.assembleCost=assembleCost;
 
-
-
                 //汇总计算组装工资
-                float conceptusWage=0;
-                for(ProductWage wage:conceptusWageTableModel.getDatas())
+                float assembleWage=0;
+                for(ProductWage wage:assembleWageTableModel.getDatas())
                 {
-                    conceptusWage+=wage.getAmount();
+                    assembleWage+=wage.getAmount();
                 }
-                productDetail.product.conceptusWage=conceptusWage;
-                //汇总计算组装材料
-                float conceptusCost=0;
-                for(ProductMaterial material:conceptusMaterialTableModel.getDatas())
-                {
-                    conceptusCost+=material.getAmount();
-                }
-                productDetail.product.conceptusCost=conceptusCost;
+                productDetail.product.assembleWage=assembleWage;
+
+
+
+
+
                 /**
                  * 重新计算总成本
                  */

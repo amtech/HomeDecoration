@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -21,6 +22,7 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
     private JTextField tf_value;
     private JButton bn_search;
     private JTable table;
+    private Panel_Page pagePanel;
 
 
     @Inject
@@ -71,6 +73,18 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
         });
 
 
+        pagePanel.setListener(new PageListener() {
+            @Override
+            public void onPageChanged(int pageIndex, int pageSize) {
+
+
+                search(tf_value.getText().toString().trim(),pageIndex,pageSize);
+
+
+            }
+        });
+
+
     }
 
     public static void main(String[] args) {
@@ -87,7 +101,12 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
      *
      * @param value
      */
-    public void search(final String value)
+
+    public void search(final String value )
+    {
+        search(value,0,20);
+    }
+    public void search(final String value,final int pageIndex, final int pageSize)
     {
 
 
@@ -100,7 +119,7 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
 
 
 
-                return   apiManager.loadMaterialByCodeOrName(value,0,100);
+                return   apiManager.loadMaterialByCodeOrName(value,pageIndex,pageSize);
 
 
             }
@@ -112,8 +131,9 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
                 try {
                     RemoteData<Material> remoteData=get();
 
-
+                    pagePanel.bindRemoteData(remoteData);
                     materialTableModel.setDatas(remoteData.datas);
+
 
 
 
@@ -136,7 +156,6 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
 
 
     }
-
 
 
 

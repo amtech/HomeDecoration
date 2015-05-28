@@ -78,6 +78,65 @@ public class Material  implements Serializable {
 	public String  code;
 
 
+	/**
+	 * 损耗率
+	 */
+	@Basic
+	public float discount;
+
+
+	/**
+	 * 类别
+	 */
+	@Basic
+	public  String className;
+
+	/**
+	 * 类别
+	 */
+	@Basic
+	public  String spec;
+
+
+	/**
+	 * 缓存数据
+	 */
+	@Basic
+	public String buffer;
+
+
+	public String getBuffer() {
+		return buffer;
+	}
+
+	public void setBuffer(String buffer) {
+		this.buffer = buffer;
+	}
+
+	public String getSpec() {
+		return spec;
+	}
+
+	public void setSpec(String spec) {
+		this.spec = spec;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
+		this.discount = discount;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	public long getId() {
 		return id;
 	}

@@ -77,8 +77,6 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
         }
 
 
-
-
         fireTableRowsUpdated(rowIndex,rowIndex);
 
 

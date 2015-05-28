@@ -477,6 +477,6 @@ public class Product implements Serializable {
 	{
 
 		//TODO  目前紧紧累加 油漆数据
-		productCost=paintCost+paintWage+assembleCost+assembleWage;
+		productCost=paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage;
 	}
 }

@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.interf.PageListener;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
@@ -33,15 +34,8 @@ public class Panel_ProductList  extends BasePanel {
     private JLabel product_title;
     private JTextField productName;
     private JTable productTable;
-    private JLabel message;
-    private JButton first;
-    private JButton previous;
-    private JButton next;
-    private JButton last;
-    private JTextField textField2;
-    private JButton turnTo;
-    private JComboBox pageRows;
     private JButton bn_add;
+    private Panel_Page pagePanel;
 
 
     @Inject
@@ -61,7 +55,7 @@ public class Panel_ProductList  extends BasePanel {
         btn_search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchProduct();
+                searchProduct(productName.getText().toString().trim());
 
 
             }
@@ -90,7 +84,7 @@ public class Panel_ProductList  extends BasePanel {
                     Product product = tableModel.getItem(row);
 
 
-                    int column = productTable.getSelectedColumn();
+                    int column = productTable.convertColumnIndexToModel(productTable.getSelectedColumn());
                     //单击第一列 显示原图
                     if (column == 0) {
                         ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName(),product.getpVersion());
@@ -135,13 +129,33 @@ public class Panel_ProductList  extends BasePanel {
         });
 
 
+
+
+        pagePanel.setListener(new PageListener() {
+            @Override
+            public void onPageChanged(int pageIndex, int pageSize) {
+                searchProduct(productName.getText().toString().trim(),pageIndex,pageSize);
+            }
+        });
+
     }
 
 
-    private  void searchProduct()
+    private  void searchProduct(String productNameValue)
     {
 
-        final String productNameValue=productName.getText().toString().trim();
+
+
+
+
+        searchProduct(productNameValue,0,pagePanel.getPageSize());
+
+    }
+
+    private  void searchProduct(final String productNameValue,final int pageIndex,final int pageSize)
+    {
+
+
 
 
        final  LoadingDialog dialog = new LoadingDialog(getWindow(getRootPanel()), new ActionListener() {
@@ -159,7 +173,7 @@ public class Panel_ProductList  extends BasePanel {
             @Override
             protected RemoteData<Product> doInBackground() throws HdException {
 
-             return   apiManager.readProductList(productNameValue,0,100);
+             return   apiManager.readProductList(productNameValue,pageIndex,pageSize);
 
 
             }
@@ -172,7 +186,7 @@ public class Panel_ProductList  extends BasePanel {
                 try {
                     RemoteData<Product> productRemoteData=get();
 
-
+                    pagePanel.bindRemoteData(productRemoteData);
 
 
                     tableModel.setDatas(productRemoteData.datas);
