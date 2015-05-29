@@ -37,7 +37,7 @@ import java.util.List;
 @RequestMapping("/productClass")
 public class ProductClassController extends BaseController{
 
-    private static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
+
     @Autowired
     private ProductClassRepository productClassRepository;
 

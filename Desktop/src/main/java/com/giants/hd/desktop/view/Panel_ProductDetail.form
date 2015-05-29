@@ -231,15 +231,6 @@
               <text value="日期"/>
             </properties>
           </component>
-          <component id="e96d7" class="javax.swing.JTextField" binding="tf_date">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
           <component id="1fb93" class="javax.swing.JLabel" binding="lable2">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -1240,6 +1231,13 @@
               <horizontalAlignment value="0"/>
               <text value="组装材料"/>
             </properties>
+          </component>
+          <component id="74999" class="net.sourceforge.jdatepicker.impl.JDatePickerImpl" binding="date" custom-create="true">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>

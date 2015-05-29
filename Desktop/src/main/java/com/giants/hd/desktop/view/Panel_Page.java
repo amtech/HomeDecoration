@@ -116,7 +116,7 @@ public class Panel_Page<T>   {
 
 
 
-                    listener.onPageChanged(remoteData.pageCount-1 ,Integer.valueOf(pageRows.getSelectedItem().toString()));
+                    listener.onPageChanged(Math.max(remoteData.pageCount-1,0) ,Integer.valueOf(pageRows.getSelectedItem().toString()));
 
                 }
 
@@ -133,7 +133,7 @@ public class Panel_Page<T>   {
 
 
 
-                    listener.onPageChanged(remoteData.pageIndex-1 ,Integer.valueOf(pageRows.getSelectedItem().toString()));
+                    listener.onPageChanged(Math.max(remoteData.pageIndex-1,0) ,Integer.valueOf(pageRows.getSelectedItem().toString()));
 
                 }
 

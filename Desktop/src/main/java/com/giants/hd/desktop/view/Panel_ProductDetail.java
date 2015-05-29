@@ -3,23 +3,31 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
+import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.module.ProductDetailTableModule;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.google.inject.Inject;
 
+import net.sourceforge.jdatepicker.impl.DateComponentFormatter;
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.Document;
 import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -37,7 +45,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JLabel lable2;
     private JLabel title;
     private JButton bn_save;
-    private JTextField tf_date;
+
     private JLabel photo;
     private JTabbedPane tabbedPane1;
     private JTextField tf_unit;
@@ -80,6 +88,8 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField jtf_assemble_wage;
     private JTextField jtf_assemble_cost;
 
+    private JDatePickerImpl date;
+
 
     private ProductDetail productDetail;
 
@@ -103,20 +113,20 @@ public class Panel_ProductDetail extends BasePanel {
     ProductPaintTableModel productPaintModel;
 
 
-    ProductDetailTableModule module;
+   // ProductDetailTableModule module;
 
 
     /**
      * 油漆表格监听对象
      */
-    TableModelListener productPaintModelListener;
+    TableModelListener allTableModelListener;
 
 
     public Panel_ProductDetail(Product product) {
 
         super();
 
-        module=new ProductDetailTableModule(this);
+        //module=new ProductDetailTableModule(this);
 
 
         initComponent();
@@ -169,7 +179,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                     if (!StringUtils.isEmpty(tf_product.getText().trim())) {
-                        ImageViewDialog.showDialog(getWindow(getPanel()), tf_product.getText().trim(), tf_version.getText().trim());
+                        ImageViewDialog.showDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim());
                     } else {
 
 
@@ -220,7 +230,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         //定义表格模型数据改变监听对象
-        productPaintModelListener=new TableModelListener() {
+        allTableModelListener =new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 //数据改变  更新统计数据
@@ -243,14 +253,14 @@ public class Panel_ProductDetail extends BasePanel {
                 {
                     conceptusCost+=material.getAmount();
                 }
-                productDetail.product.conceptusCost=conceptusCost;
+                productDetail.product.conceptusCost= FloatHelper.scale(conceptusCost);
                 //汇总计算组白胚工资
                 float conceptusWage=0;
                 for(ProductWage wage:conceptusWageTableModel.getDatas())
                 {
                     conceptusWage+=wage.getAmount();
                 }
-                productDetail.product.conceptusWage=conceptusWage;
+                productDetail.product.conceptusWage= FloatHelper.scale(conceptusWage);
 
 
 
@@ -260,7 +270,7 @@ public class Panel_ProductDetail extends BasePanel {
                 {
                     assembleCost+=material.getAmount();
                 }
-                productDetail.product.assembleCost=assembleCost;
+                productDetail.product.assembleCost= FloatHelper.scale(assembleCost);
 
                 //汇总计算组装工资
                 float assembleWage=0;
@@ -268,7 +278,7 @@ public class Panel_ProductDetail extends BasePanel {
                 {
                     assembleWage+=wage.getAmount();
                 }
-                productDetail.product.assembleWage=assembleWage;
+                productDetail.product.assembleWage=FloatHelper.scale(assembleWage);
 
 
 
@@ -286,11 +296,11 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
         //注册表模型的监听
-        productPaintModel.addTableModelListener(productPaintModelListener);
-        assembleMaterialTableModel.addTableModelListener(productPaintModelListener);
-        assembleWageTableModel.addTableModelListener(productPaintModelListener);
-        conceptusMaterialTableModel.addTableModelListener(productPaintModelListener);
-        conceptusWageTableModel.addTableModelListener(productPaintModelListener);
+        productPaintModel.addTableModelListener(allTableModelListener);
+        assembleMaterialTableModel.addTableModelListener(allTableModelListener);
+        assembleWageTableModel.addTableModelListener(allTableModelListener);
+        conceptusMaterialTableModel.addTableModelListener(allTableModelListener);
+        conceptusWageTableModel.addTableModelListener(allTableModelListener);
 
 
 
@@ -368,8 +378,17 @@ public class Panel_ProductDetail extends BasePanel {
         }
 
 
+        date.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
         //日期
-        String tf_dateValue = tf_date.getText().trim();
+        String tf_dateValue = date.getJFormattedTextField().getText().toString();
+
+
         //日期格式验证
         product.setrDate(tf_dateValue);
 
@@ -473,9 +492,9 @@ public class Panel_ProductDetail extends BasePanel {
     private <T> void  bindTableDatas(BaseTableModel<T> model, List<T> datas)
     {
         //为了避免触发监听，先移除后添加
-        model.removeTableModelListener(productPaintModelListener);
+        model.removeTableModelListener(allTableModelListener);
         model.setDatas(datas);
-        model.addTableModelListener(productPaintModelListener);
+        model.addTableModelListener(allTableModelListener);
 
     }
 
@@ -503,7 +522,7 @@ public class Panel_ProductDetail extends BasePanel {
 
         ta_spec.setText(product == null ? "" : product.getSpec());
         ta_memo.setText(product == null ? "" : product.getMemo());
-        tf_date.setText(product == null ? "" : product.getrDate());
+        date.getJFormattedTextField().setText( product == null ? "" : product.getrDate());
         tf_unit.setText(product == null ? "" : product.pUnitName);
         tf_weight.setText(product == null ? "" : String.valueOf(product.getWeight()));
 
@@ -556,9 +575,7 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-    public JComponent getPanel() {
-        return contentPane;
-    }
+
 
     /**
      * 执行数据保存
@@ -673,6 +690,9 @@ public class Panel_ProductDetail extends BasePanel {
             cb_class.addItem(pClass);
         }
 
+        JDatePanelImpl  picker=new JDatePanelImpl(null);
+        date =new JDatePickerImpl(picker, new HdDateComponentFormatter()  );
+
 
     }
 
@@ -683,7 +703,7 @@ public class Panel_ProductDetail extends BasePanel {
     public void initComponent() {
 
 
-        module.initComponent();
+        //module.initComponent();
 
         tb_conceptus_cost.setModel(conceptusMaterialTableModel);
 
@@ -858,5 +878,10 @@ public class Panel_ProductDetail extends BasePanel {
 
         table.setDefaultEditor(Material.class, editor);
 
+    }
+
+    @Override
+    public JComponent getRoot() {
+        return contentPane;
     }
 }

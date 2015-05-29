@@ -116,25 +116,44 @@ public class Main extends  JFrame {
     public void generateMenu() {
 
 
-        //Where the GUI is created:
-        JMenuBar menuBar;
-        JMenu menu, submenu;
-        JMenuItem menuItem;
-        JRadioButtonMenuItem rbMenuItem;
-        JCheckBoxMenuItem cbMenuItem;
 
-//Create the menu bar.
+        JMenuBar menuBar;
+
+
+        //Create the menu bar.
         menuBar = new JMenuBar();
 
+
+        menuBar.add(createProduct());
+
+        menuBar.add(createReport());
+
+        menuBar.add(createTest());
+
+
+        //System.exit(0);
+        setJMenuBar(menuBar);
+
+
+
+
+
+    }
+
+
+
+    public JMenu createProduct()
+    {
+
 //Build the first menu.
-        menu = new JMenu("产品模块");
+        JMenu     menu = new JMenu("产品模块");
         menu.setMnemonic(KeyEvent.VK_A);
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
-        menuBar.add(menu);
+
 
 //a group of JMenuItems
-        menuItem = new JMenuItem("产品模块",
+        JMenuItem   menuItem = new JMenuItem("产品列表",
                 KeyEvent.VK_P);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_1, ActionEvent.ALT_MASK));
@@ -145,7 +164,7 @@ public class Main extends  JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                Main.this.setContentPane(new Panel_ProductList().getRootPanel());
+                Main.this.setContentPane(new Panel_ProductList().getRoot());
 
 
             }
@@ -164,7 +183,7 @@ public class Main extends  JFrame {
 //a group of radio button menu items
         menu.addSeparator();
         ButtonGroup group = new ButtonGroup();
-        rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
+        JRadioButtonMenuItem   rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
         rbMenuItem.setSelected(true);
         rbMenuItem.setMnemonic(KeyEvent.VK_R);
         group.add(rbMenuItem);
@@ -177,7 +196,7 @@ public class Main extends  JFrame {
 
 //a group of check box menu items
         menu.addSeparator();
-        cbMenuItem = new JCheckBoxMenuItem("A check box menu item");
+        JCheckBoxMenuItem      cbMenuItem = new JCheckBoxMenuItem("A check box menu item");
         cbMenuItem.setMnemonic(KeyEvent.VK_C);
         menu.add(cbMenuItem);
 
@@ -187,7 +206,7 @@ public class Main extends  JFrame {
 
 //a submenu
         menu.addSeparator();
-        submenu = new JMenu("A submenu");
+        JMenu  submenu = new JMenu("A submenu");
         submenu.setMnemonic(KeyEvent.VK_S);
 
         menuItem = new JMenuItem("An item in the submenu");
@@ -208,16 +227,61 @@ public class Main extends  JFrame {
             }
         });
 
+        return menu;
+
+    }
+
+
+
+
+    private JMenu createReport()
+    {
+
+
         //Build second menu in the menu bar.
-        menu = new JMenu("功能测试");
+        JMenu    menu = new JMenu("报价管理");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
                 "This menu does nothing");
-        menuBar.add(menu);
+
 
 
         //
-        menuItem = new JMenuItem("上传图片",
+        JMenuItem  menuItem = new JMenuItem("报价列表",
+                KeyEvent.VK_U);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "This doesn't really do anything");
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+
+
+        return menu;
+
+
+    }
+
+    private JMenu createTest()
+    {
+        //Build second menu in the menu bar.
+        JMenu  menu = new JMenu("功能测试");
+        menu.setMnemonic(KeyEvent.VK_N);
+        menu.getAccessibleContext().setAccessibleDescription(
+                "This menu does nothing");
+
+
+
+        //
+        JMenuItem  menuItem = new JMenuItem("上传图片",
                 KeyEvent.VK_U);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_1, ActionEvent.ALT_MASK));
@@ -257,20 +321,10 @@ public class Main extends  JFrame {
         });
 
 
-
-        //System.exit(0);
-        setJMenuBar(menuBar);
-
-
-
-
-
+        return menu;
     }
 
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
 
 
     /**

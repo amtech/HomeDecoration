@@ -104,7 +104,7 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
 
     public void search(final String value )
     {
-        search(value,0,20);
+        search(value,0,pagePanel.getPageSize());
     }
     public void search(final String value,final int pageIndex, final int pageSize)
     {

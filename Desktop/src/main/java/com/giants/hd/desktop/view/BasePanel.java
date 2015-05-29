@@ -31,4 +31,12 @@ public  abstract  class BasePanel {
             component=component.getParent();
         return (Window)component;
     }
+
+
+    /**
+     * 获取实际控件
+     * @return
+     */
+    public abstract JComponent getRoot();
+
 }

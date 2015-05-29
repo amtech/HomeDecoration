@@ -41,9 +41,6 @@ public class Panel_ProductList  extends BasePanel {
     @Inject
     ProductTableModel tableModel;
 
-    public JPanel getRootPanel() {
-        return panel1;
-    }
 
 
     public Panel_ProductList() {
@@ -87,17 +84,17 @@ public class Panel_ProductList  extends BasePanel {
                     int column = productTable.convertColumnIndexToModel(productTable.getSelectedColumn());
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showDialog(getWindow(getRootPanel()),product.getName(),product.getpVersion());
+                        ImageViewDialog.showDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
                     } else {
 
-                        JDialog dialog = new JDialog(getWindow(getRootPanel()));
+                        JDialog dialog = new JDialog(getWindow(getRoot()));
                         dialog.setModal(true);
                         Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
 
 
-                        dialog.setContentPane(panel_productDetail.getPanel());
+                        dialog.setContentPane(panel_productDetail.getRoot());
                         dialog.pack();
-                        dialog.setLocationRelativeTo(getRootPanel());
+                        dialog.setLocationRelativeTo(getRoot());
                         dialog.setVisible(true);
 
                     }
@@ -115,10 +112,10 @@ public class Panel_ProductList  extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                JDialog dialog = new JDialog(getWindow(getRootPanel()));
+                JDialog dialog = new JDialog(getWindow(getRoot()));
                 dialog.setModal(true);
                 Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(null);
-                dialog.setContentPane(panel_productDetail.getPanel());
+                dialog.setContentPane(panel_productDetail.getRoot());
 
                 dialog.pack();
                 dialog.setVisible(true);
@@ -158,7 +155,7 @@ public class Panel_ProductList  extends BasePanel {
 
 
 
-       final  LoadingDialog dialog = new LoadingDialog(getWindow(getRootPanel()), new ActionListener() {
+       final  LoadingDialog dialog = new LoadingDialog(getWindow(getRoot()), new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
 
@@ -207,4 +204,8 @@ public class Panel_ProductList  extends BasePanel {
     }
 
 
+    @Override
+    public JComponent getRoot() {
+        return panel1;
+    }
 }
