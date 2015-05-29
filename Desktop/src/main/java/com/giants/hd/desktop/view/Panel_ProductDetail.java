@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
+import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.APanel;
@@ -89,6 +90,8 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField jtf_assemble_cost;
 
     private JDatePickerImpl date;
+    private JCheckBox cb_xiankang;
+    private Panel_XK panel_xiankang;
 
 
     private ProductDetail productDetail;
@@ -187,6 +190,15 @@ public class Panel_ProductDetail extends BasePanel {
                     }
 
                 }
+            }
+        });
+
+
+        cb_xiankang.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+             panel_xiankang.setVisible(cb_xiankang.isSelected());
             }
         });
 
@@ -366,6 +378,19 @@ public class Panel_ProductDetail extends BasePanel {
         product.setpPUnitName(tf_unitValue);
 
 
+
+        //是否咸康数据
+
+        boolean isXiangkang = cb_xiankang.isSelected();
+        if(isXiangkang) {
+            Xiankang xiankang = new Xiankang();
+            panel_xiankang.getData(xiankang);
+            product.xiankang = xiankang;
+        }
+
+
+
+
         //产品净重
 
         try {
@@ -522,7 +547,7 @@ public class Panel_ProductDetail extends BasePanel {
 
         ta_spec.setText(product == null ? "" : product.getSpec());
         ta_memo.setText(product == null ? "" : product.getMemo());
-        date.getJFormattedTextField().setText( product == null ? "" : product.getrDate());
+        date.getJFormattedTextField().setText(product == null ? "" : product.getrDate());
         tf_unit.setText(product == null ? "" : product.pUnitName);
         tf_weight.setText(product == null ? "" : String.valueOf(product.getWeight()));
 
@@ -545,6 +570,23 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         cb_class.setSelectedIndex(selectClassIndex);
+
+
+
+
+
+
+        boolean isXiangkang=product!=null&&product.xiankang!=null;
+
+
+         cb_xiankang.setSelected(isXiangkang);
+        panel_xiankang.setVisible(isXiangkang);
+        if(isXiangkang)
+         panel_xiankang.setData(product.xiankang);
+
+
+
+
 
 
         //绑定包装汇总信息
@@ -572,6 +614,9 @@ public class Panel_ProductDetail extends BasePanel {
         tf_cost_2.setText(pack2 == null ? "" : String.valueOf(pack2.cost));
         tf_price_2.setText(pack2 == null ? "" : String.valueOf(pack2.price));
 
+
+
+
     }
 
 
@@ -586,42 +631,35 @@ public class Panel_ProductDetail extends BasePanel {
     private void saveData(final ProductDetail product) {
 
 
-        new SwingWorker<RemoteData<Product>, String>() {
 
 
+
+
+        new HdSwingWorker<Product,Object>(getWindow(getRoot())){
             @Override
-            protected RemoteData<Product> doInBackground() throws HdException {
-
+            protected RemoteData<Product> doInBackground() throws Exception {
 
                 return apiManager.saveProduct(product);
 
 
+
             }
 
             @Override
-            protected void done() {
-                super.done();
+            public void onResult(RemoteData<Product> data) {
 
-                try {
-                    RemoteData<Product> productRemoteData = get();
-
-                    if (productRemoteData.isSuccess()) {
+                if (data.isSuccess()) {
 
 
-                        //TODO 显示保存成功
+                    //TODO 显示保存成功
 
-                        JOptionPane.showMessageDialog(contentPane, "数据保存成功!");
+                    JOptionPane.showMessageDialog(contentPane, "数据保存成功!");
 
-                    }
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
                 }
             }
-        }.execute();
+        }.go();
+
+
     }
 
 
@@ -631,37 +669,26 @@ public class Panel_ProductDetail extends BasePanel {
     private void loadProductDetail(final Product product) {
 
 
-        new SwingWorker<RemoteData<ProductDetail>, Long>() {
+
+        new HdSwingWorker<ProductDetail, Long>(getWindow(getRoot()))
+        {
             @Override
-            protected RemoteData<ProductDetail> doInBackground() throws HdException {
-
-
+            protected RemoteData<ProductDetail> doInBackground() throws Exception {
                 return apiManager.loadProductDetail(product.id);
-
-
             }
 
             @Override
-            protected void done() {
-                super.done();
+            public void onResult(RemoteData<ProductDetail> data) {
 
-                try {
-                    RemoteData<ProductDetail> productRemoteData = get();
+                ProductDetail detail = data.datas.get(0);
 
 
-                    ProductDetail detail = productRemoteData.datas.get(0);
-
-
-                    initPanel(detail);
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                initPanel(detail);
             }
-        }.execute();
+        }.go();
+
+
+
 
 
     }

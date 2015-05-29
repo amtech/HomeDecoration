@@ -190,6 +190,11 @@ public class Product implements Serializable {
 	public float conceptusWage;
 
 
+
+	@OneToOne(cascade={CascadeType.ALL})
+	public Xiankang xiankang;
+
+
 	public String getpUnitId() {
 		return pUnitId;
 	}

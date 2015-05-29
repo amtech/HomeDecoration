@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
@@ -87,15 +88,11 @@ public class Panel_ProductList  extends BasePanel {
                         ImageViewDialog.showDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
                     } else {
 
-                        JDialog dialog = new JDialog(getWindow(getRoot()));
-                        dialog.setModal(true);
-                        Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
 
 
-                        dialog.setContentPane(panel_productDetail.getRoot());
-                        dialog.pack();
-                        dialog.setLocationRelativeTo(getRoot());
-                        dialog.setVisible(true);
+                        showDetailPanel(product);
+
+
 
                     }
 
@@ -112,14 +109,7 @@ public class Panel_ProductList  extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                JDialog dialog = new JDialog(getWindow(getRoot()));
-                dialog.setModal(true);
-                Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(null);
-                dialog.setContentPane(panel_productDetail.getRoot());
-
-                dialog.pack();
-                dialog.setVisible(true);
-
+                showDetailPanel(null);
 
 
             }
@@ -138,6 +128,24 @@ public class Panel_ProductList  extends BasePanel {
     }
 
 
+    /**
+     * 显示产品详情
+     * @param product
+     */
+    private void showDetailPanel(Product product)
+    {
+
+        JDialog dialog = new JDialog(getWindow(getRoot()));
+        dialog.setModal(true);
+        Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
+        dialog.setContentPane(panel_productDetail.getRoot());
+        dialog.pack();
+        dialog.setLocationByPlatform(true);
+        dialog.setVisible(true);
+
+
+    }
+
     private  void searchProduct(String productNameValue)
     {
 
@@ -155,51 +163,32 @@ public class Panel_ProductList  extends BasePanel {
 
 
 
-       final  LoadingDialog dialog = new LoadingDialog(getWindow(getRoot()), new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
 
-           }
-       });
-
-
-
-        new  SwingWorker< RemoteData<Product>,String >(){
-
-
+        new HdSwingWorker<Product,Object>(getWindow(getRoot()))
+        {
             @Override
-            protected RemoteData<Product> doInBackground() throws HdException {
+            protected RemoteData<Product> doInBackground() throws Exception {
 
-             return   apiManager.readProductList(productNameValue,pageIndex,pageSize);
-
+                return   apiManager.readProductList(productNameValue,pageIndex,pageSize);
 
             }
 
             @Override
-            protected void done() {
-                super.done();
-                dialog.setVisible(false);
-                dialog.dispose();
-                try {
-                    RemoteData<Product> productRemoteData=get();
-
-                    pagePanel.bindRemoteData(productRemoteData);
+            public void onResult(RemoteData<Product> data) {
 
 
-                    tableModel.setDatas(productRemoteData.datas);
+                pagePanel.bindRemoteData(data);
 
 
+                tableModel.setDatas(data.datas);
 
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
             }
-        }.execute();
-        dialog.setVisible(true);
+        }.go();
+
+
+
+
+
 
     }
 

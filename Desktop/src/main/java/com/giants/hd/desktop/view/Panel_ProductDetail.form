@@ -26,8 +26,8 @@
         <rowspec value="fill:25px:grow"/>
         <rowspec value="fill:25px:grow"/>
         <rowspec value="fill:25px:grow"/>
-        <rowspec value="fill:300px:grow(10.0)"/>
-        <rowspec value="fill:44px:noGrow"/>
+        <rowspec value="fill:400px:grow(10.0)"/>
+        <rowspec value="fill:p:grow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <colspec value="fill:50px:grow"/>
         <colspec value="fill:141px:grow"/>
@@ -1238,6 +1238,22 @@
               <forms/>
             </constraints>
             <properties/>
+          </component>
+          <nested-form id="8ecb7" form-file="com/giants/hd/desktop/view/Panel_XK.form" binding="panel_xiankang">
+            <constraints>
+              <grid row="19" column="0" row-span="1" col-span="19" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+          </nested-form>
+          <component id="67371" class="javax.swing.JCheckBox" binding="cb_xiankang">
+            <constraints>
+              <grid row="1" column="14" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="咸康货品"/>
+              <toolTipText value="咸康货品有额外信息"/>
+            </properties>
           </component>
         </children>
       </grid>

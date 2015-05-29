@@ -2,11 +2,13 @@ package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
+import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.PClass;
+import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -330,53 +332,26 @@ public class Main extends  JFrame {
     /**
      * 预先加载数据
      */
-    private void preLoadData()
-    {
+    private void preLoadData() {
 
 
-
-
-
-        final LoadingDialog dialog = new LoadingDialog(this         ,"数据预加载处理 请稍后。。。", new ActionListener() {
+        new HdSwingWorker<PClass, Object>(this,"数据预加载处理 请稍后。。。") {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            protected RemoteData<PClass> doInBackground() throws Exception {
 
-            }
-        });
-
-
-
-        new  SwingWorker<RemoteData<PClass>,String >(){
-
-
-            @Override
-            protected RemoteData<PClass> doInBackground() throws HdException {
-
-                return   apiManager.readProductClass();
-
+                return apiManager.readProductClass();
 
             }
 
             @Override
-            protected void done() {
-                super.done();
-                dialog.setVisible(false);
-                dialog.dispose();
-                try {
-                    RemoteData<PClass> productRemoteData=get();
+            public void onResult(RemoteData<PClass> data) {
 
 
-                    BufferData.setPClasses(productRemoteData.datas);
+                BufferData.setPClasses(data.datas);
 
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
             }
-        }.execute();
-        dialog.setVisible(true);
+        }.go();
+
+
     }
 }

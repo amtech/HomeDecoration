@@ -24,6 +24,12 @@ public class LoadingDialog extends JDialog {
 		iniDialog("正在加载中...", cancleListener);
 
 	}
+
+	public LoadingDialog(Window owner,String message,
+						 ActionListener cancleListener) {
+		super(owner);
+		iniDialog(message, cancleListener);
+	}
 	public LoadingDialog(Frame owner, String message,
 			ActionListener cancleListener) {
 		super(owner);

@@ -3,6 +3,7 @@ package com.giants3.hd.utils.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 /**
  * 产品材料列表
@@ -389,7 +390,18 @@ public class ProductMaterial  implements Serializable {
 			}else
 			if(type==15&&pWidth<=0&&pHeight<=0)
 			{
-				newQuota=quantity*wLong/100/available;   //TODO  R15 未确定值
+
+
+
+				//分件备注指 参与类型15的计算
+				float r15=0;
+				try {
+					r15= Float.valueOf(memo);
+				}catch (Throwable  t)
+				{
+					Logger.getLogger("TEST").info("分件備註值不是一個浮點數");
+				}
+					newQuota=quantity*wLong*r15/100/available;   //TODO  R15 未确定值
 
 			}
 			else
