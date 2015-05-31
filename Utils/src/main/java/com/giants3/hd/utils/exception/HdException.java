@@ -9,8 +9,11 @@ public class HdException extends  Exception {
 
     public static final int FAIL_ASYNC_CLIENT = 1000;
     public static final int FAIL_READ_RESPONSE_IO = 1001;
-
     public static final int FAIL_SCALE_IMAGE=1002;
+
+
+
+
 
 
     public String message;

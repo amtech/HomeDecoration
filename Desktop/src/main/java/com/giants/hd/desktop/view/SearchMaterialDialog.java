@@ -2,10 +2,12 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
@@ -111,48 +113,27 @@ public class SearchMaterialDialog extends BaseDialog<Material>{
 
 
 
-        new  SwingWorker<RemoteData<Material>,Long >(){
-
-
+        new HdSwingWorker<Material,Object>((Window)getParent())
+        {
             @Override
-            protected RemoteData<Material> doInBackground() throws HdException {
+            protected RemoteData<Material> doInBackground() throws Exception {
 
 
-
-                return   apiManager.loadMaterialByCodeOrName(value,pageIndex,pageSize);
-
+                return   apiManager.loadMaterialByCodeOrName(value, pageIndex, pageSize);
 
             }
 
             @Override
-            protected void done() {
-                super.done();
-
-                try {
-                    RemoteData<Material> remoteData=get();
-
-                    pagePanel.bindRemoteData(remoteData);
-                    materialTableModel.setDatas(remoteData.datas);
+            public void onResult(RemoteData<Material> data) {
 
 
+                pagePanel.bindRemoteData(data);
+                materialTableModel.setDatas(data.datas);
 
-
-
-
-
-
-
-
-
-
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
             }
-        }.execute();
+        }.go();
+
+
 
 
     }
