@@ -8,6 +8,8 @@ import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.PClass;
+import com.giants3.hd.utils.entity.PackMaterialPosition;
+import com.giants3.hd.utils.entity.PackMaterialType;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
@@ -336,8 +338,22 @@ public class Main extends  JFrame {
 
 
         new HdSwingWorker<PClass, Object>(this,"数据预加载处理 请稍后。。。") {
+
+
+
+
+
+            RemoteData<PackMaterialType> materialTypeRemoteData;
+            RemoteData<PackMaterialPosition> packMaterialPositionRemoteData;
+
+
+
             @Override
             protected RemoteData<PClass> doInBackground() throws Exception {
+
+                packMaterialPositionRemoteData=apiManager.readPackMaterialPosition();
+
+                materialTypeRemoteData=apiManager.readPackMaterialType();
 
                 return apiManager.readProductClass();
 
@@ -346,6 +362,12 @@ public class Main extends  JFrame {
             @Override
             public void onResult(RemoteData<PClass> data) {
 
+
+                BufferData.setPackMaterialPositions(packMaterialPositionRemoteData.datas
+                );
+
+                BufferData.setPackMaterialTypes(materialTypeRemoteData.datas
+                );
 
                 BufferData.setPClasses(data.datas);
 

@@ -1,5 +1,7 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.FloatHelper;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -139,9 +141,35 @@ public class ProductMaterial  implements Serializable {
 	public String flowName;
 
 
+	/**
+	 * 材质类型选择   当材质是包装类型 即  flowId=Flow.FLOW_PACK 时候 必填
+	 */
+	@ManyToOne
+	public PackMaterialType packMaterialType;
 
 
+	/**
+	 * 包装材质位置选择  可选
+	 */
+	@ManyToOne
+	public PackMaterialPosition packMaterialPosition;
 
+
+	public PackMaterialType getPackMaterialType() {
+		return packMaterialType;
+	}
+
+	public void setPackMaterialType(PackMaterialType packMaterialType) {
+		this.packMaterialType = packMaterialType;
+	}
+
+	public PackMaterialPosition getPackMaterialPosition() {
+		return packMaterialPosition;
+	}
+
+	public void setPackMaterialPosition(PackMaterialPosition packMaterialPosition) {
+		this.packMaterialPosition = packMaterialPosition;
+	}
 
 	public long getId() {
 		return id;
@@ -426,11 +454,10 @@ public class ProductMaterial  implements Serializable {
 			}
 
 
-		quota = new BigDecimal(newQuota).setScale(5,BigDecimal.ROUND_HALF_UP).floatValue();
+		  quota = FloatHelper.scale(newQuota,5);
 
 
-		   amount=new BigDecimal(quota*price).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
-
+		   amount= FloatHelper.scale(quota*price );
 
 
 

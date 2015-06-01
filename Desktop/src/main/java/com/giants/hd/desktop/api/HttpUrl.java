@@ -4,7 +4,11 @@ import com.giants3.hd.utils.StringUtils;
 import com.ning.http.util.UTF8UrlEncoder;
 
 /**
- *wangl
+ *网络请求  url 串
+ *
+ * 读取 load 开头
+ *
+ * 保存 save 开头
  */
 public class HttpUrl {
 
@@ -65,5 +69,23 @@ public class HttpUrl {
 
         return BaseUrl+"api/material/search?codeOrName="+ UTF8UrlEncoder.encode(value)+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
 
+    }
+
+
+    /**
+     * 包装材料类型
+     *
+     * @return
+     */
+    public static String loadPackMaterialType() {
+        return BaseUrl+"api/packMaterialType/list";
+    }
+
+    /**
+     * 包装材料使用位置
+     * @return
+     */
+    public static String loadPackMaterialPosition() {
+          return BaseUrl+"api/packMaterialPosition/list";
     }
 }

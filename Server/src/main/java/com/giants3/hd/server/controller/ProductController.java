@@ -139,6 +139,7 @@ public class ProductController extends BaseController {
 
         List<ProductMaterial> conceptusCost = new ArrayList<>();
         List<ProductMaterial> assemblesCost = new ArrayList<>();
+        List<ProductMaterial> packCost = new ArrayList<>();
 
 
         for (ProductMaterial productMaterial : productMaterials) {
@@ -157,13 +158,14 @@ public class ProductController extends BaseController {
                     break;
 
                 case Flow.FLOW_PACK:
-                    // assembles.add(productMaterial);
+                    packCost.add(productMaterial);
                     break;
             }
 
         }
         detail.conceptusMaterials = conceptusCost;
         detail.assembleMaterials = assemblesCost;
+        detail.packMaterials=packCost;
 
 
 
@@ -172,6 +174,7 @@ public class ProductController extends BaseController {
         List<ProductWage> productWages = productWageRepository.findByProductIdEquals(productId);
         List<ProductWage> conceptusWage = new ArrayList<>();
         List<ProductWage> assemblesWage = new ArrayList<>();
+        List<ProductWage> packWages=new ArrayList<>();
         for (ProductWage productWage : productWages) {
 
             switch ((int) productWage.flowId) {
@@ -188,7 +191,7 @@ public class ProductController extends BaseController {
                     break;
 
                 case Flow.FLOW_PACK:
-                    // assembles.add(productMaterial);
+                    packWages.add(productWage);
                     break;
             }
 
@@ -197,10 +200,10 @@ public class ProductController extends BaseController {
 
         detail.conceptusWages = conceptusWage;
         detail.assembleWages = assemblesWage;
+        detail.packWages=packWages;
 
         //读取油漆列表信息
         detail.paints = productPaintRepository.findByProductIdEquals(productId);
-
 
         remoteData.datas.add(detail);
         return remoteData;
@@ -295,12 +298,22 @@ public class ProductController extends BaseController {
             saveProductMaterial(productDetail.assembleMaterials, productId, Flow.FLOW_ASSEMBLE);
         }
 
+        //保存包装数据
+        if (productDetail.packMaterials != null) {
+
+            saveProductMaterial(productDetail.packMaterials, productId, Flow.FLOW_PACK);
+        }
+
+
 
         if (productDetail.assembleWages != null)
             saveProductWage(productDetail.assembleWages, productId, Flow.FLOW_ASSEMBLE);
 
         if (productDetail.conceptusWages != null)
             saveProductWage(productDetail.conceptusWages, productId, Flow.FLOW_CONCEPTUS);
+
+        if (productDetail.packWages != null)
+            saveProductWage(productDetail.packWages, productId, Flow.FLOW_PACK);
 
 
         RemoteData data = new RemoteData();

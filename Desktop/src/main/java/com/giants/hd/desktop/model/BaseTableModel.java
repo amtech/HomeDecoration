@@ -114,7 +114,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
      * 添加新行
      * @param index
      */
-    public  void addNewRow(int index)   {
+    public  T addNewRow(int index)   {
 
         T newItem= null;
         try {
@@ -124,7 +124,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        if(null==newItem) return;
+        if(null==newItem) return null;
         if(index<0||index>=getRowCount())
         {
             datas.add(newItem);
@@ -132,6 +132,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         else
             datas.add(index+1,newItem);
         fireTableDataChanged();
+        return newItem;
 
     }
 

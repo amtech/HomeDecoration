@@ -1,11 +1,9 @@
 package com.giants.hd.desktop.api;
 
-import com.giants3.hd.utils.entity.PClass;
-import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
@@ -163,5 +161,44 @@ public class ApiManager {
         RemoteData<Material> remoteData = gson.fromJson(result, generateType);
         return remoteData;
 
+    }
+
+
+    /**
+     * 读取包装材料类型列表
+     * @return
+     */
+    public RemoteData<PackMaterialType> readPackMaterialType()throws HdException {
+
+        String url=HttpUrl.loadPackMaterialType();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.getWithStringReturned(url);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<PackMaterialType>>() {
+        }.getType();
+        RemoteData<PackMaterialType> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+    }
+
+
+
+
+
+
+
+    /**
+     * 读取包装材料类型列表
+     * @return
+     */
+    public RemoteData<PackMaterialPosition> readPackMaterialPosition()throws HdException {
+
+        String url=HttpUrl.loadPackMaterialPosition();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.getWithStringReturned(url);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<PackMaterialPosition>>() {
+        }.getType();
+        RemoteData<PackMaterialPosition> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
     }
 }

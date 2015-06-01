@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class ProductClassController extends BaseController{
 
 
     @Autowired
-    private ProductClassRepository productClassRepository;
+    private JpaRepository<PClass,Long> productClassRepository;
 
 
 

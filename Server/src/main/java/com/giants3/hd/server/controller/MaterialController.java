@@ -34,7 +34,7 @@ public class MaterialController extends BaseController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Material> listPrdtJson(ModelMap model)   {
+    RemoteData<Material> list( )   {
 
 
 

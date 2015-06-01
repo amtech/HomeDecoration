@@ -116,6 +116,12 @@ public class Panel_ProductDetail extends BasePanel {
     ProductPaintTableModel productPaintModel;
 
 
+    @Inject
+            ProductPackMaterialTableModel packMaterialTableModel;
+    @Inject
+    ProductWageTableModel packWageTableModel;
+
+
    // ProductDetailTableModule module;
 
 
@@ -320,6 +326,7 @@ public class Panel_ProductDetail extends BasePanel {
         configTableCellEditor(tb_conceptus_cost);
         configTableCellEditor(tb_assemble_cost);
         configTableCellEditor(tb_product_paint);
+        configTableCellEditor(tb_pack_cost);
 
 
 
@@ -474,6 +481,28 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+        /////////////包装
+
+        List<ProductMaterial> packMaterials=packMaterialTableModel.getDatas();
+        //TODO  包装材料 数据检验
+
+
+        productDetail.packMaterials=packMaterials;
+
+
+        List<ProductWage> packWages=packWageTableModel.getDatas();
+        //TODO   包装工资  数据检验
+
+
+        productDetail.packWages=packWages;
+
+
+
+
+
+
+
+
 
 
     }
@@ -505,6 +534,10 @@ public class Panel_ProductDetail extends BasePanel {
         bindTableDatas(conceptusWageTableModel,productDetail.conceptusWages);
 
         bindTableDatas(productPaintModel,productDetail.paints);
+
+
+        bindTableDatas(packMaterialTableModel, productDetail.packMaterials);
+        bindTableDatas(packWageTableModel,productDetail.packWages);
     }
 
 
@@ -745,6 +778,9 @@ public class Panel_ProductDetail extends BasePanel {
         tb_assemble_wage.setModel(assembleWageTableModel);
 
 
+        tb_pack_cost.setModel(packMaterialTableModel);
+
+        tb_pack_wage.setModel(packWageTableModel);
 
 
 
@@ -793,6 +829,8 @@ public class Panel_ProductDetail extends BasePanel {
         tb_assemble_wage.addMouseListener(adapter);
         tb_product_paint.addMouseListener(adapter);
         tb_pack_cost.addMouseListener(adapter);
+        tb_pack_wage.addMouseListener(adapter);
+
 
 
 
@@ -880,7 +918,7 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf);
-
+        table.setDefaultEditor(Material.class, editor);
 
 //        //
 //        editor.addCellEditorListener(new CellEditorListener() {
@@ -901,9 +939,33 @@ public class Panel_ProductDetail extends BasePanel {
 //            }
 //        });
 
+        JComboBox<PackMaterialType> packMaterialTypeComboBox = new JComboBox<>();
+        for(PackMaterialType type:BufferData.packMaterialTypes)
+            packMaterialTypeComboBox.addItem(type);
+        DefaultCellEditor comboboxEditor = new DefaultCellEditor(packMaterialTypeComboBox);
+
+        table.setDefaultEditor(PackMaterialType.class, comboboxEditor);
 
 
-        table.setDefaultEditor(Material.class, editor);
+
+        JComboBox<PackMaterialPosition> packMaterialPositionComboBox = new JComboBox<>();
+        for(PackMaterialPosition position:BufferData.packMaterialPositions)
+            packMaterialPositionComboBox.addItem(position);
+        table.setDefaultEditor(PackMaterialPosition.class, new DefaultCellEditor(packMaterialPositionComboBox));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

@@ -13,42 +13,91 @@ public class Xiankang {
 
     private long productId;
 
+
+
+
+    /**
+     * 镜子宽
+     */
+    private String jingzi_kuan;
+    /**
+     * 備註
+     */
+    private String beizhu;
+    /**
+     * 槽宽
+     */
+    private String caokuan;
+    /**
+     * 槽深
+     */
+    private String caoshen;
+    /**
+     * 挂距
+     */
+    private String guaju;
+    /**
+     * 画规  高
+     */
+    private String huangui_gao;
+    /**
+     * 画规  宽
+     */
+    private String huangui_kuan;
+
+    /**
+     * 玻璃规格  高
+     */
+    private String boliguige_gao;
+    /**
+     * 玻璃规格 宽
+     */
+    private String boliguige_kuan;
+
+    /**
+     * 材质
+     */
+    private String caizhi;
+    /**
+     * 边框
+     */
+    private String biankuang;
+    /**
+     * 磨边
+     */
+    private String mobian;
+    /**
+     * 其他同产品货号
+     */
+    private String qitahuohao;
+    /**
+     * 材质百分比
+     */
+    private String caizhibaifenbi;
+    /**
+     * 甲醛标记
+     */
+    private String jiaquan;
+    /**
+     * 画芯编号
+     */
+    private String huaxinbianhao;
+    /**
+     * 画芯厂商
+     */
+    private String huaxinchangshang;
+    /**
+     * 画芯效果
+     */
+    private String huaxinxiaoguo;
     /**
      * 镜子规格	高
      */
-
-    private String jingzi_gap;
-
-    private String jingzi_kuan;
-    private String beizhu;
-    private String caokuan;
-    private String caoshen;
-    private String guaju;
-    private String huangui_gao;
-    private String huangui_kuan;
-    private String boliguige_gao;
-    private String boliguige_kuan;
-    private String caizhi;
-    private String biankuang;
-    private String mobian;
-    private String qitahuohao;
-    private String caizhibaifenbi;
-    private String jiaquan;
-    private String huaxinbianhao;
-    private String huaxinchangshang;
-    private String huaxinxiaoguo;
     private String jingzi_gao;
 
     public Xiankang() {
     }
 
-    public String getJingzi_gap() {
-        return jingzi_gap;
-    }
-
-    public void setJingzi_gap(final String jingzi_gap) {
-        this.jingzi_gap = jingzi_gap;
-    }
 
     public String getJingzi_kuan() {
         return jingzi_kuan;
