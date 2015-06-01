@@ -4,6 +4,7 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.LoadingDialog;
+import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
@@ -158,7 +159,7 @@ public class Main extends  JFrame {
 
 //a group of JMenuItems
         JMenuItem   menuItem = new JMenuItem("产品列表",
-                KeyEvent.VK_P);
+            KeyEvent.VK_P);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription(
@@ -169,6 +170,24 @@ public class Main extends  JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 Main.this.setContentPane(new Panel_ProductList().getRoot());
+
+
+            }
+        });
+
+
+            menuItem = new JMenuItem("材料列表",
+                KeyEvent.VK_P);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "产品信息的模块");
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Main.this.setContentPane(new Panel_Material("").getRoot());
 
 
             }

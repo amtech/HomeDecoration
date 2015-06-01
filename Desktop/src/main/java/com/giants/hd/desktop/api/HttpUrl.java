@@ -88,4 +88,13 @@ public class HttpUrl {
     public static String loadPackMaterialPosition() {
           return BaseUrl+"api/packMaterialPosition/list";
     }
+
+
+    /**
+     * 保存材料列表
+     * @return
+     */
+    public static String saveMaterials() {
+        return BaseUrl+"api/material/saveList";
+    }
 }

@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -200,5 +201,26 @@ public class ApiManager {
         }.getType();
         RemoteData<PackMaterialPosition> remoteData = gson.fromJson(result, generateType);
         return remoteData;
+    }
+
+    /**
+     * 保存材料列表
+     * @param materials
+     */
+    public RemoteData<Void> saveMaterials(List<Material> materials) throws HdException {
+
+
+
+
+
+        String url=HttpUrl.saveMaterials();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.postWithStringReturned(url, gson.toJson(materials));
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+
     }
 }

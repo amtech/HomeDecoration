@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- *   ÁĞ±íµÄ·¶ĞÍ×ª»¯³ÉGSON×Ö´®£¬ ºöÂÔÁĞ±í×Ô¶¨µÄ ·¶ÀàĞÍ   Ö±½ÓÊ¹ÓÃÊµ¼ÊÀàĞÍ¡£
+ *   è‡ªå®šä¹‰é›†åˆ json è§£ææ–¹å¼   ä½¿ç”¨é›†åˆä¸­æ¯ä¸ªå…ƒç´ çš„å…·ä½“ç±»å‹
  */
 
 public class ListTypeAdapter implements JsonSerializer<List<?>> {

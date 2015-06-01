@@ -6,18 +6,16 @@ import com.giants3.hd.server.repository.MaterialRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 
-import com.giants3.hd.utils.entity.Product;
-import com.google.gson.JsonArray;
+import com.giants3.hd.utils.entity.MaterialList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Basic;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,7 +56,37 @@ public class MaterialController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/saveList",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<Void> saveList(@RequestBody  MaterialList materials )   {
 
+        for(Material material:materials)
+        {
+
+
+            Material oldData=materialRepository.findByCodeEquals(material.code);
+            if(oldData==null)
+            {
+                material.id=-1;
+
+
+            }else
+            {
+                material.id=oldData.id;
+
+            }
+
+            materialRepository.save(material);
+
+
+        }
+
+
+
+        return wrapData(new ArrayList<Void>());
+    }
 
 
 }

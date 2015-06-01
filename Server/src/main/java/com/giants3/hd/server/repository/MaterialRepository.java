@@ -21,4 +21,7 @@ public interface MaterialRepository extends JpaRepository<Material,Long> {
 
     public Page<Material> findByNameLike( String codeOrName,Pageable pageable);
 
+    public Material findByCodeEquals( String code);
+
+
 }
