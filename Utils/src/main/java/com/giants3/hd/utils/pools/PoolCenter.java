@@ -13,7 +13,7 @@ public class PoolCenter {
 
 
     public synchronized static final ObjectPool getObjectPool(final Class<?> c) {
-       return getObjectPool(c,20);
+       return getObjectPool(c,100);
 
     }
 
@@ -24,7 +24,6 @@ public class PoolCenter {
         }
 
         if (result == null) {
-
             result = new ObjectPool(getObjectFactory(c), size);
             pools.put(c, result);
         }

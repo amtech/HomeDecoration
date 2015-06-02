@@ -2,12 +2,11 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialList;
 import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.pools.ObjectFactory;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
 import com.google.inject.Inject;
@@ -53,7 +52,7 @@ public class Panel_ImportMaterial extends BasePanel {
 
         btn_import.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                final String path = jtf_file.getText().toString().trim();
 
@@ -70,6 +69,9 @@ public class Panel_ImportMaterial extends BasePanel {
 
                     @Override
                     public void onResult(RemoteData<Void> data) {
+
+
+                        JOptionPane.showMessageDialog((Component) e.getSource(), "导入材料成功!");
 
 
 
@@ -182,11 +184,8 @@ public class Panel_ImportMaterial extends BasePanel {
 
 
             List<Material> materials=new ArrayList<>();
-
-            ObjectPool<Material> materialObjectPool= PoolCenter.getObjectPool(Material.class);
-
             int batchSize=100;
-
+            ObjectPool<Material> materialObjectPool= PoolCenter.getObjectPool(Material.class,batchSize);
             Material material;
 
             for (int i = firstRow; i < rsRows; i++) {
@@ -208,35 +207,35 @@ public class Panel_ImportMaterial extends BasePanel {
                 material.code = value;
                 material.name = st.getCell(1, i).getContents();
                 try {
-                    material.wLong = Float.valueOf(st.getCell(2, i).getContents());
+                    material.wLong =FloatHelper.scale(Float.valueOf(st.getCell(2, i).getContents()));
                 } catch (Throwable t) {
                     material.wLong=0;
                 }
                 try {
-                    material.wWidth = Float.valueOf(st.getCell(3, i).getContents());
+                    material.wWidth = FloatHelper.scale(Float.valueOf(st.getCell(3, i).getContents()));
                 } catch (Throwable t) {
                     material.wWidth=0;
                 }
                 try {
-                    material.wHeight = Float.valueOf(st.getCell(4, i).getContents());
+                    material.wHeight = FloatHelper.scale(Float.valueOf(st.getCell(4, i).getContents()));
                 } catch (Throwable t) {
                     material.wHeight=0;
                 }
 
                 try {
-                    material.available = Float.valueOf(st.getCell(5, i).getContents());
+                    material.available = FloatHelper.scale(Float.valueOf(st.getCell(5, i).getContents())) ;
                 } catch (Throwable t) {
                     material.available=0;
                 }
 
                 try {
-                    material.discount = Float.valueOf(st.getCell(6, i).getContents());
+                    material.discount = FloatHelper.scale(Float.valueOf(st.getCell(6, i).getContents()));
                 } catch (Throwable t) {
                     material.discount=0;
                 }
 
                 try {
-                    material.price = Float.valueOf(st.getCell(7, i).getContents());
+                    material.price = FloatHelper.scale(Float.valueOf(st.getCell(7, i).getContents()),5);
                 } catch (Throwable t) {
                     material.price=0;
                 }
@@ -249,7 +248,7 @@ public class Panel_ImportMaterial extends BasePanel {
 
                 material.typeName = String.valueOf(material.typeId);
 
-                material.buffer = st.getCell(9, i).getContents();
+                material.classId = st.getCell(9, i).getContents();
 
                 material.spec = st.getCell(10, i).getContents();
 

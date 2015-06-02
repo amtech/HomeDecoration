@@ -2,10 +2,7 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.local.BufferData;
-import com.giants.hd.desktop.local.HdDateComponentFormatter;
-import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.local.HdUIException;
+import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants.hd.desktop.widget.TablePopMenu;
@@ -29,6 +26,7 @@ import java.awt.event.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -97,8 +95,6 @@ public class Panel_ProductDetail extends BasePanel {
     private ProductDetail productDetail;
 
 
-
-
     @Inject
     ProductMaterialTableModel conceptusMaterialTableModel;
 
@@ -117,18 +113,24 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     @Inject
-            ProductPackMaterialTableModel packMaterialTableModel;
+    ProductPackMaterialTableModel packMaterialTableModel;
     @Inject
     ProductWageTableModel packWageTableModel;
 
 
-   // ProductDetailTableModule module;
+    // ProductDetailTableModule module;
 
 
     /**
      * 油漆表格监听对象
      */
     TableModelListener allTableModelListener;
+
+
+    /**
+     * 表格菜单的回调接口
+     */
+    private TablePopMenu.TableMenuLister tableMenuLister;
 
 
     public Panel_ProductDetail(Product product) {
@@ -204,102 +206,54 @@ public class Panel_ProductDetail extends BasePanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
 
-             panel_xiankang.setVisible(cb_xiankang.isSelected());
+                panel_xiankang.setVisible(cb_xiankang.isSelected());
             }
         });
 
 
-//        //产品名称修改
-//        tf_product.getDocument().addDocumentListener(new DocumentListener() {
-//            public void changedUpdate(DocumentEvent e) {
-//                warn();
-//            }
-//
-//            public void removeUpdate(DocumentEvent e) {
-//                warn();
-//            }
-//
-//            public void insertUpdate(DocumentEvent e) {
-//                warn();
-//            }
-//
-//            public void warn() {
-//
-//                productDetail.product.setName(tf_product.getText().trim());
-//
-//
-//            }
-//        });
-
-
-//        //分类挑选
-//        cb_class.addItemListener(new ItemListener() {
-//            @Override
-//            public void itemStateChanged(ItemEvent e) {
-//
-//                if (e.getStateChange() == ItemEvent.SELECTED) {
-//                    PClass pClass = (PClass) e.getItem();
-//                    productDetail.product.pClassId = pClass.id;
-//                    productDetail.product.pClassName = pClass.name;
-//                }
-//            }
-//        });
-
-
-
         //定义表格模型数据改变监听对象
-        allTableModelListener =new TableModelListener() {
+        allTableModelListener = new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 //数据改变  更新统计数据
                 //汇总计算油漆工资与材料费用
-                float paintWage=0;
-                float paintCost=0;
-                for(ProductPaint paint:productPaintModel.getDatas())
-                {
-                    paintWage+=paint.processPrice;
-                    paintCost+=paint.materialCost+paint.ingredientCost;
+                float paintWage = 0;
+                float paintCost = 0;
+                for (ProductPaint paint : productPaintModel.getDatas()) {
+                    paintWage += paint.processPrice;
+                    paintCost += paint.materialCost + paint.ingredientCost;
 
                 }
                 productDetail.product.updatePaintData(paintCost, paintWage);
 
 
-
                 //汇总计算白胚材料
-                float conceptusCost=0;
-                for(ProductMaterial material:conceptusMaterialTableModel.getDatas())
-                {
-                    conceptusCost+=material.getAmount();
+                float conceptusCost = 0;
+                for (ProductMaterial material : conceptusMaterialTableModel.getDatas()) {
+                    conceptusCost += material.getAmount();
                 }
-                productDetail.product.conceptusCost= FloatHelper.scale(conceptusCost);
+                productDetail.product.conceptusCost = FloatHelper.scale(conceptusCost);
                 //汇总计算组白胚工资
-                float conceptusWage=0;
-                for(ProductWage wage:conceptusWageTableModel.getDatas())
-                {
-                    conceptusWage+=wage.getAmount();
+                float conceptusWage = 0;
+                for (ProductWage wage : conceptusWageTableModel.getDatas()) {
+                    conceptusWage += wage.getAmount();
                 }
-                productDetail.product.conceptusWage= FloatHelper.scale(conceptusWage);
-
+                productDetail.product.conceptusWage = FloatHelper.scale(conceptusWage);
 
 
                 //汇总计算组装材料
-                float assembleCost=0;
-                for(ProductMaterial material:assembleMaterialTableModel.getDatas())
-                {
-                    assembleCost+=material.getAmount();
+                float assembleCost = 0;
+                for (ProductMaterial material : assembleMaterialTableModel.getDatas()) {
+                    assembleCost += material.getAmount();
                 }
-                productDetail.product.assembleCost= FloatHelper.scale(assembleCost);
+                productDetail.product.assembleCost = FloatHelper.scale(assembleCost);
 
                 //汇总计算组装工资
-                float assembleWage=0;
-                for(ProductWage wage:assembleWageTableModel.getDatas())
-                {
-                    assembleWage+=wage.getAmount();
+                float assembleWage = 0;
+                for (ProductWage wage : assembleWageTableModel.getDatas()) {
+                    assembleWage += wage.getAmount();
                 }
-                productDetail.product.assembleWage=FloatHelper.scale(assembleWage);
-
-
-
+                productDetail.product.assembleWage = FloatHelper.scale(assembleWage);
 
 
                 /**
@@ -321,13 +275,11 @@ public class Panel_ProductDetail extends BasePanel {
         conceptusWageTableModel.addTableModelListener(allTableModelListener);
 
 
-
         //配置表格的自定义编辑输入
         configTableCellEditor(tb_conceptus_cost);
         configTableCellEditor(tb_assemble_cost);
         configTableCellEditor(tb_product_paint);
         configTableCellEditor(tb_pack_cost);
-
 
 
     }
@@ -385,17 +337,14 @@ public class Panel_ProductDetail extends BasePanel {
         product.setpPUnitName(tf_unitValue);
 
 
-
         //是否咸康数据
 
         boolean isXiangkang = cb_xiankang.isSelected();
-        if(isXiangkang) {
+        if (isXiangkang) {
             Xiankang xiankang = new Xiankang();
             panel_xiankang.getData(xiankang);
             product.xiankang = xiankang;
         }
-
-
 
 
         //产品净重
@@ -447,62 +396,48 @@ public class Panel_ProductDetail extends BasePanel {
         productDetail.paints = paints;
 
 
-
-        List<ProductMaterial> conceptusMaterial= conceptusMaterialTableModel.getDatas();
+        List<ProductMaterial> conceptusMaterial = conceptusMaterialTableModel.getDatas();
         //TODO  白胚材料的 数据检验
 
 
-        productDetail.conceptusMaterials=conceptusMaterial;
+        productDetail.conceptusMaterials = conceptusMaterial;
 
 
-
-
-        List<ProductMaterial> assembleMaterials=assembleMaterialTableModel.getDatas();
+        List<ProductMaterial> assembleMaterials = assembleMaterialTableModel.getDatas();
         //TODO  组装材料的 数据检验
 
 
-        productDetail.assembleMaterials=assembleMaterials;
+        productDetail.assembleMaterials = assembleMaterials;
 
 
-
-        List<ProductWage> assembleWages=assembleWageTableModel.getDatas();
+        List<ProductWage> assembleWages = assembleWageTableModel.getDatas();
         //TODO  组装工资的 数据检验
 
 
-        productDetail.assembleWages=assembleWages;
+        productDetail.assembleWages = assembleWages;
 
 
-        List<ProductWage> conceptusWages=conceptusWageTableModel.getDatas();
+        List<ProductWage> conceptusWages = conceptusWageTableModel.getDatas();
         //TODO  白胚工资的 数据检验
 
 
-        productDetail.conceptusWages=conceptusWages;
-
-
+        productDetail.conceptusWages = conceptusWages;
 
 
         /////////////包装
 
-        List<ProductMaterial> packMaterials=packMaterialTableModel.getDatas();
+        List<ProductMaterial> packMaterials = packMaterialTableModel.getDatas();
         //TODO  包装材料 数据检验
 
 
-        productDetail.packMaterials=packMaterials;
+        productDetail.packMaterials = packMaterials;
 
 
-        List<ProductWage> packWages=packWageTableModel.getDatas();
+        List<ProductWage> packWages = packWageTableModel.getDatas();
         //TODO   包装工资  数据检验
 
 
-        productDetail.packWages=packWages;
-
-
-
-
-
-
-
-
+        productDetail.packWages = packWages;
 
 
     }
@@ -519,46 +454,37 @@ public class Panel_ProductDetail extends BasePanel {
         bindProductBaseInfo(product);
 
 
-
         bindStatisticsValue(product);
 
 
-
-
-
-
         bindTableDatas(assembleMaterialTableModel, productDetail.assembleMaterials);
-        bindTableDatas(assembleWageTableModel,productDetail.assembleWages);
+        bindTableDatas(assembleWageTableModel, productDetail.assembleWages);
 
         bindTableDatas(conceptusMaterialTableModel, productDetail.conceptusMaterials);
-        bindTableDatas(conceptusWageTableModel,productDetail.conceptusWages);
+        bindTableDatas(conceptusWageTableModel, productDetail.conceptusWages);
 
-        bindTableDatas(productPaintModel,productDetail.paints);
+        bindTableDatas(productPaintModel, productDetail.paints);
 
 
         bindTableDatas(packMaterialTableModel, productDetail.packMaterials);
-        bindTableDatas(packWageTableModel,productDetail.packWages);
+        bindTableDatas(packWageTableModel, productDetail.packWages);
     }
 
 
     /**
      * 重新表格绑定数据
+     *
      * @param model
      * @param datas
      * @param <T>
      */
-    private <T> void  bindTableDatas(BaseTableModel<T> model, List<T> datas)
-    {
+    private <T> void bindTableDatas(BaseTableModel<T> model, List<T> datas) {
         //为了避免触发监听，先移除后添加
         model.removeTableModelListener(allTableModelListener);
         model.setDatas(datas);
         model.addTableModelListener(allTableModelListener);
 
     }
-
-
-
-
 
 
     /**
@@ -605,21 +531,13 @@ public class Panel_ProductDetail extends BasePanel {
         cb_class.setSelectedIndex(selectClassIndex);
 
 
+        boolean isXiangkang = product != null && product.xiankang != null;
 
 
-
-
-        boolean isXiangkang=product!=null&&product.xiankang!=null;
-
-
-         cb_xiankang.setSelected(isXiangkang);
+        cb_xiankang.setSelected(isXiangkang);
         panel_xiankang.setVisible(isXiangkang);
-        if(isXiangkang)
-         panel_xiankang.setData(product.xiankang);
-
-
-
-
+        if (isXiangkang)
+            panel_xiankang.setData(product.xiankang);
 
 
         //绑定包装汇总信息
@@ -648,11 +566,7 @@ public class Panel_ProductDetail extends BasePanel {
         tf_price_2.setText(pack2 == null ? "" : String.valueOf(pack2.price));
 
 
-
-
     }
-
-
 
 
     /**
@@ -664,16 +578,11 @@ public class Panel_ProductDetail extends BasePanel {
     private void saveData(final ProductDetail product) {
 
 
-
-
-
-
-        new HdSwingWorker<Product,Object>(getWindow(getRoot())){
+        new HdSwingWorker<Product, Object>(getWindow(getRoot())) {
             @Override
             protected RemoteData<Product> doInBackground() throws Exception {
 
                 return apiManager.saveProduct(product);
-
 
 
             }
@@ -702,9 +611,7 @@ public class Panel_ProductDetail extends BasePanel {
     private void loadProductDetail(final Product product) {
 
 
-
-        new HdSwingWorker<ProductDetail, Long>(getWindow(getRoot()))
-        {
+        new HdSwingWorker<ProductDetail, Long>(getWindow(getRoot())) {
             @Override
             protected RemoteData<ProductDetail> doInBackground() throws Exception {
                 return apiManager.loadProductDetail(product.id);
@@ -719,9 +626,6 @@ public class Panel_ProductDetail extends BasePanel {
                 initPanel(detail);
             }
         }.go();
-
-
-
 
 
     }
@@ -750,8 +654,8 @@ public class Panel_ProductDetail extends BasePanel {
             cb_class.addItem(pClass);
         }
 
-        JDatePanelImpl  picker=new JDatePanelImpl(null);
-        date =new JDatePickerImpl(picker, new HdDateComponentFormatter()  );
+        JDatePanelImpl picker = new JDatePanelImpl(null);
+        date = new JDatePickerImpl(picker, new HdDateComponentFormatter());
 
 
     }
@@ -772,7 +676,6 @@ public class Panel_ProductDetail extends BasePanel {
         tb_product_paint.setModel(productPaintModel);
 
 
-
         tb_conceptus_wage.setModel(conceptusWageTableModel);
 
         tb_assemble_wage.setModel(assembleWageTableModel);
@@ -781,7 +684,6 @@ public class Panel_ProductDetail extends BasePanel {
         tb_pack_cost.setModel(packMaterialTableModel);
 
         tb_pack_wage.setModel(packWageTableModel);
-
 
 
         tb_conceptus_cost.setRowHeight(30);
@@ -812,7 +714,7 @@ public class Panel_ProductDetail extends BasePanel {
             private void showMenu(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     JTable source = (JTable) e.getSource();
-                    JPopupMenu menu = new TablePopMenu(source);
+                    JPopupMenu menu = new TablePopMenu(source, tableMenuLister);
                     //  取得右键点击所在行
                     int row = e.getY() / tb_conceptus_cost.getRowHeight();
                     menu.show(e.getComponent(), e.getX(), e.getY());
@@ -832,8 +734,143 @@ public class Panel_ProductDetail extends BasePanel {
         tb_pack_wage.addMouseListener(adapter);
 
 
+        /**
+         * 表格弹出菜单回调接口
+         */
+        tableMenuLister = new TablePopMenu.TableMenuLister() {
+            @Override
+            public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex) {
+                switch (index) {
 
 
+                    case TablePopMenu.ITEM_INSERT:
+
+                        tableModel.addNewRow(rowIndex);
+
+                        break;
+                    case TablePopMenu.ITEM_DELETE:
+
+                        tableModel.deleteRow(rowIndex);
+                        break;
+                    case TablePopMenu.ITEM_PAST:
+
+                        handleClipBordDataToTable(tableModel, rowIndex);
+                        break;
+                }
+            }
+        };
+
+
+    }
+
+
+    /**
+     * 处理复制黏贴数据
+     *
+     * @param tableModel
+     * @param rowIndex
+     */
+    private void handleClipBordDataToTable(final BaseTableModel tableModel, final int rowIndex) {
+
+
+        String clipboardText = ClipBordHelper.getSysClipboardText();
+
+
+        String[] rows = clipboardText.split("[\n]+");
+
+        final List<String> codes = new ArrayList<String>();
+        int length = rows.length;
+        final String[][] tableData = new String[length][];
+        for (int i = 0; i < length; i++) {
+            tableData[i] = rows[i].split("[\t]+");
+            if (tableData[i].length > 0 && !StringUtils.isEmpty(tableData[i][0])) {
+                codes.add(tableData[i][0]);
+            }
+
+
+        }
+
+
+        new HdSwingWorker<Material, Object>(getWindow(getRoot())) {
+
+
+            @Override
+            public void onResult(RemoteData<Material> data) {
+
+
+                int firstRow = rowIndex;
+                for (String[] row : tableData) {
+
+                    String code = row == null || row.length == 0 ? "" : row[0].trim();
+                    if (StringUtils.isEmpty(code))
+                        continue;
+
+
+                    Object object = tableModel.addNewRow(firstRow++);
+                    if (object instanceof ProductMaterial) {
+                        ProductMaterial productMaterial = (ProductMaterial) object;
+                        for (Material material : data.datas) {
+
+
+                            if (code.equals(material.code)) {
+                                float quantity = 0;
+                                try {
+                                    quantity = FloatHelper.scale(Float.valueOf(row[2]), 4);
+                                } catch (Throwable t) {
+
+                                }
+                                productMaterial.setQuantity(quantity);
+
+                                float pLong = 0;
+                                try {
+                                    pLong = FloatHelper.scale(Float.valueOf(row[3]));
+                                } catch (Throwable t) {
+
+                                }
+                                productMaterial.setpLong(pLong);
+
+                                float pWidth = 0;
+                                try {
+                                    pWidth = FloatHelper.scale(Float.valueOf(row[4]));
+                                } catch (Throwable t) {
+
+                                }
+                                productMaterial.setpWidth(pWidth);
+
+
+                                float pHeight = 0;
+                                try {
+                                    pHeight = FloatHelper.scale(Float.valueOf(row[5]));
+                                } catch (Throwable t) {
+
+                                }
+                                productMaterial.setpHeight(pHeight);
+
+
+                                productMaterial.updateMaterial(material);
+
+                                break;
+                            }
+
+                        }
+
+
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            protected RemoteData<Material> doInBackground() throws Exception {
+
+
+                return apiManager.readMaterialListByCodeEquals(codes);
+
+            }
+        }.go();
 
 
     }
@@ -842,8 +879,7 @@ public class Panel_ProductDetail extends BasePanel {
     /**
      * 绑定汇总数据
      */
-    private void bindStatisticsValue(Product product)
-    {
+    private void bindStatisticsValue(Product product) {
         jtf_paint_cost.setText(String.valueOf(product.paintCost));
         jtf_paint_wage.setText(String.valueOf(product.paintWage));
 
@@ -856,14 +892,12 @@ public class Panel_ProductDetail extends BasePanel {
         tf_cost.setText(String.valueOf(product.productCost));
 
 
-
     }
 
     /**
-     *  配置表格的 弹出选择框
+     * 配置表格的 弹出选择框
      */
-    private void configTableCellEditor(final JTable table)
-    {
+    private void configTableCellEditor(final JTable table) {
 
 
         //定制表格的编辑功能 弹出物料选择单
@@ -907,11 +941,10 @@ public class Panel_ProductDetail extends BasePanel {
 
                     int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
 
-                  if(  table.getModel() instanceof Materialable)
-                  {
+                    if (table.getModel() instanceof Materialable) {
 
-                      ((Materialable)table.getModel()).setMaterial(material,rowIndex);
-                  }
+                        ((Materialable) table.getModel()).setMaterial(material, rowIndex);
+                    }
 
                 }
             }
@@ -940,31 +973,17 @@ public class Panel_ProductDetail extends BasePanel {
 //        });
 
         JComboBox<PackMaterialType> packMaterialTypeComboBox = new JComboBox<>();
-        for(PackMaterialType type:BufferData.packMaterialTypes)
+        for (PackMaterialType type : BufferData.packMaterialTypes)
             packMaterialTypeComboBox.addItem(type);
         DefaultCellEditor comboboxEditor = new DefaultCellEditor(packMaterialTypeComboBox);
 
         table.setDefaultEditor(PackMaterialType.class, comboboxEditor);
 
 
-
         JComboBox<PackMaterialPosition> packMaterialPositionComboBox = new JComboBox<>();
-        for(PackMaterialPosition position:BufferData.packMaterialPositions)
+        for (PackMaterialPosition position : BufferData.packMaterialPositions)
             packMaterialPositionComboBox.addItem(position);
         table.setDefaultEditor(PackMaterialPosition.class, new DefaultCellEditor(packMaterialPositionComboBox));
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

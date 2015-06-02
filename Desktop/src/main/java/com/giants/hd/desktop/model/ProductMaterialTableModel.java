@@ -67,6 +67,13 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
                 break;
 
+            case 11:
+                //设置高
+                material.setAvailable(Float.valueOf(aValue.toString()));
+                material.update();
+
+                break;
+
             case 15:
                 //设置高
                 material.setMemo( aValue.toString());

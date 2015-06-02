@@ -17,11 +17,13 @@ public class LoadingDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static final String DEFAULT_MESSAGE="正在处理中...";
+
 
 	public LoadingDialog(Window owner,
 						 ActionListener cancleListener) {
 		super(owner);
-		iniDialog("正在加载中...", cancleListener);
+		iniDialog(DEFAULT_MESSAGE, cancleListener);
 
 	}
 
@@ -45,6 +47,8 @@ public class LoadingDialog extends JDialog {
 	}
 
 	private void iniDialog(String message, final ActionListener cancleListener) {
+		if(message ==null)
+		{message=DEFAULT_MESSAGE;}
 		setModal(true);
 		final JPanel mainPane = new JPanel(null);
 		JProgressBar progressBar = new JProgressBar();

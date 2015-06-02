@@ -3,35 +3,40 @@ package com.giants.hd.desktop.local;
 import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
-import com.google.inject.Guice;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.Remote;
 import java.util.concurrent.ExecutionException;
 
 /**
- * 自定义worker 类 封装 进度条等方法。
+ * 自定义worker 类 封装 进度条等方法
+ *
+ * TODO   根据进度值 更新进度条
+ *
  */
-public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V>{
+public abstract class HdSwingStepWorker<T,V>  extends SwingWorker<RemoteData<T>,V>{
       LoadingDialog dialog ;
 
 
     private String message;
 
 
-    public HdSwingWorker(Window component)
+    public HdSwingStepWorker(Window component)
     {
 
-       this(component,null);
+        dialog  = new LoadingDialog(component, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { cancel(true
+            );
+
+            }
+        });
     }
 
-    public HdSwingWorker(Window component,String message)
+    public HdSwingStepWorker(Window component, String message)
     {
-
-
 
 
         dialog  = new LoadingDialog(component,message, new ActionListener() {

@@ -80,16 +80,14 @@ public class Panel_Material  extends  BasePanel{
             public void actionPerformed(ActionEvent e) {
 
 
-
-
-
                 showImportDialog();
-
-
 
             }
         });
 
+
+
+        tb_material.setRowHeight(30);
 
     }
 
@@ -104,6 +102,7 @@ public class Panel_Material  extends  BasePanel{
         dialog.pack();
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);
+        search(jtf_value.getText().trim());
     }
 
 

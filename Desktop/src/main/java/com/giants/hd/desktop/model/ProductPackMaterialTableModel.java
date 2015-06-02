@@ -12,7 +12,7 @@ import javax.swing.*;
 public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
     public static String[] columnNames = new String[]{"材料类别","材质","位置","物料编码", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static String[] fieldName = new String[]{"packMaterialType","packMaterialPosition","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
+    public static String[] fieldName = new String[]{"packMaterialType","className","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
     public  static Class[] classes = new Class[]{PackMaterialType.class,JComboBox.class,PackMaterialPosition.class,Material.class, Material.class, Float.class, Float.class, Float.class, Float.class};
 
     public  static boolean[] editables = new boolean[]{true, true, true,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
@@ -79,6 +79,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
             case 8:
                 //设置高
                 material.setpHeight(Float.valueOf(aValue.toString()));
+                material.update();
+
+                break;
+
+            case 14:
+                //设置高
+                material.setAvailable(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;

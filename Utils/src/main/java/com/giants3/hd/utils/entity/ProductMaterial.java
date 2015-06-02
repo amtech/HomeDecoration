@@ -155,6 +155,20 @@ public class ProductMaterial  implements Serializable {
 	public PackMaterialPosition packMaterialPosition;
 
 
+	/**
+	 * 材料分类 名称
+	 */
+	@Basic
+	public String className;
+
+
+	/**
+	 * 材料分类id
+	 */
+	@Basic
+	public String classId;
+
+
 	public PackMaterialType getPackMaterialType() {
 		return packMaterialType;
 	}
@@ -352,13 +366,16 @@ public class ProductMaterial  implements Serializable {
 
 		price=new BigDecimal(material.price).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
 		available=material.available;
-		memo=material.memo;
+
 		unitName=material.unitName;
 		type=material.typeId;
 
 		mWidth=material.wWidth;
 		mHeight=material.wHeight;
 		mLong =material.wLong;
+		classId=material.classId;
+		className=material.className;
+		memo=material.spec;
 		update();
 
 
@@ -405,53 +422,142 @@ public class ProductMaterial  implements Serializable {
 		wHeight=mHeight+pHeight;
 		wWidth=mWidth+pWidth;
 
+
+
+
+
+
 		//计算定额
+
+
+
 		float newQuota=0;
+
+
+
+
+
 		if(materialId<=0)
 			newQuota=0;
 		else
-			if(type==1&&pHeight<=0)
+		if(quantity<=0)
+			newQuota=0;
+		else
+
+
+		//如果是包装材料  采用特殊计算方式
+		if(flowId==Flow.FLOW_PACK)
+		{
+
+
+
+			//箱子类计算
+			if(classId.equals(Material.MCLass.C_BAZZ))
 			{
 
-				newQuota=0;
-
-			}else
-			if(type==15&&pWidth<=0&&pHeight<=0)
-			{
-
-
-
-				//分件备注指 参与类型15的计算
-				float r15=0;
-				try {
-					r15= Float.valueOf(memo);
-				}catch (Throwable  t)
+				if(pWidth<15) wWidth=pWidth*2;
+				if( pLong+pWidth>130)
 				{
-					Logger.getLogger("TEST").info("分件備註值不是一個浮點數");
+					newQuota=(pLong/100+pWidth/100+0.17f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+				}else
+				{
+					newQuota=(pLong/100+pWidth/100+0.09f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
 				}
-					newQuota=quantity*wLong*r15/100/available;   //TODO  R15 未确定值
+
+
 
 			}
 			else
-			if(pWidth<=0&&pLong<=0&&pHeight<=0)
+			//内盒计算公式
+			if(classId.equals(Material.MCLass.C_2201))
 			{
-				newQuota=quantity/available;
-			}else
-			if(
-				pHeight<=0&&pWidth<=0
-					)
-			{
-				newQuota=quantity*wLong/100/available;
 
-			}else
-			if(pHeight<=0){
+				newQuota=(pLong/100+pWidth/100+0.07f)*(pWidth/100+pHeight/100+0.04f)*2*quantity;
 
 
-				newQuota=quantity*wLong*wWidth/10000/available;
-			}else
-			{
-				newQuota=quantity*wLong*wWidth*wHeight/1000000/available;
 			}
+			else
+				//单瓦彩色内盒特殊计算
+				if(materialCode.equals("BZAF0013"))
+				{
+					newQuota=(pLong/100+pWidth/100*4)*(pWidth/100+pHeight/100+0.06f)*2*quantity;
+				}else
+				//彩色内盒计算公式
+				if(classId.equals(Material.MCLass.C_BZAF))
+				{
+					newQuota=(pLong/100+pWidth/100*2+0.42f)*(pWidth/100*4+pHeight/100+0.02f)*quantity;
+				}
+			else
+			//胶带计算公式
+			if(classId.equals(Material.MCLass.C_BZAE))
+			{
+//TODO  胶带计算公式
+
+			}
+			else
+			{
+				//默认计算公式
+					if(pLong<=0&&pWidth<=0&&pHeight<=0)
+					{
+						newQuota=available<=0?0:quantity/available;
+
+					}else
+						if(pWidth<=0&&pHeight<=0)
+						{
+							newQuota=available<=0?0:quantity*wLong/100/available;
+						}
+				else
+							if(pHeight<=0)
+							{
+								newQuota=available<=0?0:quantity*wLong*wWidth/10000/available;
+							}
+							else
+							{newQuota=available<=0?0:quantity*wLong*wWidth*wHeight/1000000/available;}
+
+
+			}
+
+
+
+
+
+
+		}else {
+
+
+			if (type == 1 && pHeight <= 0) {
+
+				newQuota = 0;
+
+			} else if (type == 15 && pWidth <= 0 && pHeight <= 0) {
+
+
+				//分件备注指 参与类型15的计算
+				float r15 = 0;
+				try {
+					r15 = Float.valueOf(memo);
+				} catch (Throwable t) {
+					Logger.getLogger("TEST").info("分件備註值不是一個浮點數");
+				}
+				newQuota = quantity * wLong * r15 / 100 / available;   //TODO  R15 未确定值
+
+			} else if (pWidth <= 0 && pLong <= 0 && pHeight <= 0) {
+				newQuota = quantity / available;
+			} else if (
+					pHeight <= 0 && pWidth <= 0
+					) {
+				newQuota = quantity * wLong / 100 / available;
+
+			} else if (pHeight <= 0) {
+
+
+				newQuota = quantity * wLong * wWidth / 10000 / available;
+			} else {
+				newQuota = quantity * wLong * wWidth * wHeight / 1000000 / available;
+			}
+
+		}
+
 
 
 		  quota = FloatHelper.scale(newQuota,5);

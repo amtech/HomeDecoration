@@ -1,6 +1,8 @@
 package com.giants3.hd.utils.entity;
 
 
+import com.sun.jmx.mbeanserver.ModifiableClassLoaderRepository;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -85,11 +87,7 @@ public class Material  implements Serializable {
 	public float discount;
 
 
-	/**
-	 * 类别
-	 */
-	@Basic
-	public  String className;
+
 
 	/**
 	 * 类别
@@ -99,18 +97,25 @@ public class Material  implements Serializable {
 
 
 	/**
-	 * 缓存数据
+	 * 缓存数据  buffer  即材料分类id
 	 */
 	@Basic
-	public String buffer;
+	public String classId;
 
 
-	public String getBuffer() {
-		return buffer;
+	/**
+	 * 类别即材料分类名称
+	 */
+	@Basic
+	public  String className;
+
+
+	public String getClassId() {
+		return classId;
 	}
 
-	public void setBuffer(String buffer) {
-		this.buffer = buffer;
+	public void setClassId(String buffer) {
+		this.classId = buffer;
 	}
 
 	public String getSpec() {
@@ -239,5 +244,29 @@ public class Material  implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+
+	public static final class MCLass
+	{
+
+
+		/**
+		 * 箱子类
+		 */
+		public static final String C_BAZZ ="BAZZ";
+		/**
+		 * 内盒
+		 */
+		public static final String C_2201 ="2201";
+		/**
+		 * 展示盒
+		 */
+
+		public static final String C_BZAF = "BZAF";
+		/**
+		 * 	胶带类型
+		 */
+		public static final String C_BZAE = "BZAE";
 	}
 }

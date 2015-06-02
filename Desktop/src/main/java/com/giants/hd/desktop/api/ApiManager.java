@@ -223,4 +223,21 @@ public class ApiManager {
         return remoteData;
 
     }
+
+
+    /**
+     * 根据材料编码列表 查询材料列表
+     * @param codes
+     * @return
+     */
+    public RemoteData<Material> readMaterialListByCodeEquals(List<String> codes) throws HdException{
+        String url=HttpUrl.loadMaterialListByCodeEquals();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.postWithStringReturned(url, gson.toJson(codes));
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<Material>>() {
+        }.getType();
+        RemoteData<Material> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+    }
 }

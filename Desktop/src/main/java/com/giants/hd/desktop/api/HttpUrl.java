@@ -97,4 +97,12 @@ public class HttpUrl {
     public static String saveMaterials() {
         return BaseUrl+"api/material/saveList";
     }
+
+
+    /**
+     *  根据材料编码列表 查询材料列表
+     */
+    public static String loadMaterialListByCodeEquals() {
+        return BaseUrl+"api/material/findListByCodes";
+    }
 }

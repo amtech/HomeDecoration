@@ -91,7 +91,7 @@
             <item value="30"/>
             <item value="50"/>
             <item value="100"/>
-            <item value="99999"/>
+            <item value="999"/>
           </model>
         </properties>
       </component>

@@ -6,7 +6,6 @@ import com.giants3.hd.server.repository.MaterialRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 
-import com.giants3.hd.utils.entity.MaterialList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,7 +59,7 @@ public class MaterialController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<Void> saveList(@RequestBody  MaterialList materials )   {
+    RemoteData<Void> saveList(@RequestBody  List<Material> materials )   {
 
         for(Material material:materials)
         {
@@ -87,6 +86,33 @@ public class MaterialController extends BaseController {
 
         return wrapData(new ArrayList<Void>());
     }
+
+
+    @RequestMapping(value = "/findListByCodes",method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Material> findListByCode(@RequestBody  List<String> codes )   {
+
+
+
+        List<Material> materials=new ArrayList<>();
+        for(String code:codes)
+        {
+
+
+            Material data=materialRepository.findByCodeEquals(code);
+            if(null!=data)
+                materials.add(data);
+
+
+
+        }
+
+
+
+        return wrapData(materials);
+    }
+
 
 
 }
