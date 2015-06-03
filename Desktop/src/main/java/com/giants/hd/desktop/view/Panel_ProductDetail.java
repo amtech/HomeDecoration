@@ -90,6 +90,13 @@ public class Panel_ProductDetail extends BasePanel {
     private JDatePickerImpl date;
     private JCheckBox cb_xiankang;
     private Panel_XK panel_xiankang;
+    private JButton btn_export;
+    private JTextField jtf_cost1;
+    private JTextField jtf_cost8;
+    private JTextField jtf_cost6;
+    private JTextField jtf_cost7;
+    private JTextField jtf_cost5;
+    private JTextField jtf_cost11_15;
 
 
     private ProductDetail productDetail;
@@ -217,49 +224,73 @@ public class Panel_ProductDetail extends BasePanel {
             public void tableChanged(TableModelEvent e) {
                 //数据改变  更新统计数据
                 //汇总计算油漆工资与材料费用
-                float paintWage = 0;
-                float paintCost = 0;
-                for (ProductPaint paint : productPaintModel.getDatas()) {
-                    paintWage += paint.processPrice;
-                    paintCost += paint.materialCost + paint.ingredientCost;
 
-                }
-                productDetail.product.updatePaintData(paintCost, paintWage);
+                productDetail.conceptusMaterials=conceptusMaterialTableModel.getDatas();
+                productDetail.conceptusWages=conceptusWageTableModel.getDatas();
+
+                productDetail.assembleMaterials=assembleMaterialTableModel.getDatas();
+                productDetail.assembleWages=assembleWageTableModel.getDatas();
 
 
-                //汇总计算白胚材料
-                float conceptusCost = 0;
-                for (ProductMaterial material : conceptusMaterialTableModel.getDatas()) {
-                    conceptusCost += material.getAmount();
-                }
-                productDetail.product.conceptusCost = FloatHelper.scale(conceptusCost);
-                //汇总计算组白胚工资
-                float conceptusWage = 0;
-                for (ProductWage wage : conceptusWageTableModel.getDatas()) {
-                    conceptusWage += wage.getAmount();
-                }
-                productDetail.product.conceptusWage = FloatHelper.scale(conceptusWage);
+                productDetail.paints=productPaintModel.getDatas();
+
+                productDetail.packMaterials=packMaterialTableModel.getDatas();
+                productDetail.packWages=packWageTableModel.getDatas();
 
 
-                //汇总计算组装材料
-                float assembleCost = 0;
-                for (ProductMaterial material : assembleMaterialTableModel.getDatas()) {
-                    assembleCost += material.getAmount();
-                }
-                productDetail.product.assembleCost = FloatHelper.scale(assembleCost);
 
-                //汇总计算组装工资
-                float assembleWage = 0;
-                for (ProductWage wage : assembleWageTableModel.getDatas()) {
-                    assembleWage += wage.getAmount();
-                }
-                productDetail.product.assembleWage = FloatHelper.scale(assembleWage);
+                productDetail.updateProductStatistics();
 
-
-                /**
-                 * 重新计算总成本
-                 */
-                productDetail.product.calculateTotalCost();
+//                float cost1=0;
+//                float cost7=0;
+//                float cost8=0;
+//                float cost5=0;
+//                float cost6=0;
+//                float cost11_15=0;
+//
+//                float paintWage = 0;
+//                float paintCost = 0;
+//                for (ProductPaint paint : productPaintModel.getDatas()) {
+//                    paintWage += paint.processPrice;
+//                    paintCost += paint.materialCost + paint.ingredientCost;
+//
+//                }
+//                productDetail.product.updatePaintData(paintCost, paintWage);
+//
+//
+//                //汇总计算白胚材料
+//                float conceptusCost = 0;
+//                for (ProductMaterial material : conceptusMaterialTableModel.getDatas()) {
+//                    conceptusCost += material.getAmount();
+//                }
+//                productDetail.product.conceptusCost = FloatHelper.scale(conceptusCost);
+//                //汇总计算组白胚工资
+//                float conceptusWage = 0;
+//                for (ProductWage wage : conceptusWageTableModel.getDatas()) {
+//                    conceptusWage += wage.getAmount();
+//                }
+//                productDetail.product.conceptusWage = FloatHelper.scale(conceptusWage);
+//
+//
+//                //汇总计算组装材料
+//                float assembleCost = 0;
+//                for (ProductMaterial material : assembleMaterialTableModel.getDatas()) {
+//                    assembleCost += material.getAmount();
+//                }
+//                productDetail.product.assembleCost = FloatHelper.scale(assembleCost);
+//
+//                //汇总计算组装工资
+//                float assembleWage = 0;
+//                for (ProductWage wage : assembleWageTableModel.getDatas()) {
+//                    assembleWage += wage.getAmount();
+//                }
+//                productDetail.product.assembleWage = FloatHelper.scale(assembleWage);
+//
+//
+//                /**
+//                 * 重新计算总成本
+//                 */
+//                productDetail.product.calculateTotalCost();
 
 
                 bindStatisticsValue(productDetail.product);
@@ -848,6 +879,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                                 productMaterial.updateMaterial(material);
+                                tableModel.fireTableDataChanged();
 
                                 break;
                             }
@@ -888,6 +920,13 @@ public class Panel_ProductDetail extends BasePanel {
 
         jtf_conceptus_cost.setText(String.valueOf(product.conceptusCost));
         jtf_conceptus_wage.setText(String.valueOf(product.conceptusWage));
+
+        jtf_cost1.setText(String.valueOf(product.cost1));
+        jtf_cost6.setText(String.valueOf(product.cost6));
+        jtf_cost5.setText(String.valueOf(product.cost5));
+        jtf_cost7.setText(String.valueOf(product.cost7));
+        jtf_cost8.setText(String.valueOf(product.cost8));
+        jtf_cost11_15.setText(String.valueOf(product.cost11_15));
 
         tf_cost.setText(String.valueOf(product.productCost));
 

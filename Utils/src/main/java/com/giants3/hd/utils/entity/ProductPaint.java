@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 
 @Entity(name="T_ProductPaint")
-public class ProductPaint  implements Serializable {
+public class ProductPaint  implements Serializable,Summariable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	public long id;
@@ -126,6 +126,13 @@ public class ProductPaint  implements Serializable {
 	 */
 	@Basic
 	public float ingredientQuantity;
+
+
+	/**
+	 * 材料分类类型
+	 */
+	@Basic
+	public int materialType;
 
 
 	public long getId() {
@@ -273,6 +280,7 @@ public class ProductPaint  implements Serializable {
 		this.materialId=material.id;
 		this.materialPrice=material.price;
 		this.unitName=material.unitName;
+	this.materialType=material.typeId;
 
 
 		//
@@ -296,5 +304,15 @@ public class ProductPaint  implements Serializable {
 		ingredientCost=ingredientQuantity*1.2f;
 
 
+	}
+
+	@Override
+	public int getType() {
+		return materialType;
+	}
+
+	@Override
+	public float getAmount() {
+		return materialCost;
 	}
 }

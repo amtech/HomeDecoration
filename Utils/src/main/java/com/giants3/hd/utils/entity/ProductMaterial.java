@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * 产品材料列表
  */
 @Entity(name="T_ProductMaterial")
-public class ProductMaterial  implements Serializable {
+public class ProductMaterial  implements Serializable,Summariable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
@@ -492,6 +492,10 @@ public class ProductMaterial  implements Serializable {
 			if(classId.equals(Material.MCLass.C_BZAE))
 			{
 //TODO  胶带计算公式
+//				if(pLong<80&&pWidth>=20)
+//					newQuota=()
+//					else
+
 
 			}
 			else
