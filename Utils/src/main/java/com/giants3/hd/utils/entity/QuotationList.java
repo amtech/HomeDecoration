@@ -18,8 +18,7 @@ public class QuotationList {
 
 
 
-    @ManyToOne
-    public ProductPack productPack;
+
 
 
 }

@@ -1,9 +1,6 @@
 package com.giants.hd.desktop.local;
 
-import com.giants3.hd.utils.entity.PClass;
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.PackMaterialType;
-import com.giants3.hd.utils.entity.Unit;
+import com.giants3.hd.utils.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,7 @@ public class BufferData {
     public static List<PClass> pClasses=new ArrayList<>();
     public static List<PackMaterialType> packMaterialTypes=new ArrayList<>();
     public static List<PackMaterialPosition> packMaterialPositions=new ArrayList<>();
+    public static List<PackMaterialClass> packMaterialClasses=new ArrayList<>();
 
     public static void setPClasses(List<PClass> classes)
     {
@@ -45,5 +43,10 @@ public class BufferData {
         BufferData.packMaterialPositions.clear();
         BufferData.packMaterialPositions .addAll(packMaterialPositions);
 
+    }
+
+    public static void setPackMaterialClasses(List<PackMaterialClass> packMaterialClasses) {
+        BufferData.packMaterialClasses.clear();
+        BufferData.packMaterialClasses.addAll( packMaterialClasses);
     }
 }

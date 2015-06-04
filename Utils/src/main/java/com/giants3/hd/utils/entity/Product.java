@@ -5,7 +5,6 @@ import com.giants3.hd.utils.FloatHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 产品表
@@ -90,11 +89,13 @@ public class Product implements Serializable {
 	public float cost5;
 	@Basic
 	public String attribute;
+
+
 	/**
-	 * 包装组合
+	 *包装类型  必选
 	 */
-	@Basic
-	public String packGroup;
+	@ManyToOne(optional = false)
+	public Pack pack;
 	/**
 	 * id 标识字段
 	 */
@@ -143,8 +144,7 @@ public class Product implements Serializable {
 
 
 
-	@Transient
-	public List<ProductPack> packs;
+
 
 
 	/**
@@ -193,6 +193,155 @@ public class Product implements Serializable {
 
 	@OneToOne(cascade={CascadeType.ALL})
 	public Xiankang xiankang;
+
+
+	/**
+	 * 包装才材料成本
+	 */
+	@Basic
+	public float packCost;
+
+	/**
+	 * 包装才材料工资
+	 */
+	@Basic
+	public float packWage;
+
+
+
+	/**
+	 * 出口价  即是FOB
+	 */
+	@Basic
+	public float fob;
+	/**
+	 * 成本价
+	 */
+	@Basic
+	public float cost;
+	/**
+	 * 出产价格 公式  成本价/ 利润比例
+	 */
+	@Basic
+	public float price;
+	/**
+	 * 包装产品数量  即一个包装内有几个产品
+	 */
+	@Basic
+	public int packQuantity;
+	/**
+	 * 包装体积
+	 */
+	@Basic
+	public float packVolume;
+	/**
+	 * 包装的宽
+	 */
+	@Basic
+	public float packWidth;
+	/**
+	 * 包装的高
+	 */
+	@Basic
+	public float packHeight;
+	/**
+	 * 包装长
+	 */
+	@Basic
+	public float packLong;
+	/**
+	 * 包材成本
+	 */
+	@Basic
+	public float packMaterialCost;
+
+
+	/**
+	 * 内盒数量
+	 */
+	@Basic
+	public int insideBoxQuantity;
+	/**
+	 * 包材统计
+	 */
+	@Basic
+	public float cost4;
+
+
+	public float getFob() {
+		return fob;
+	}
+
+	public void setFob(float fob) {
+		this.fob = fob;
+	}
+
+	public float getCost() {
+		return cost;
+	}
+
+	public void setCost(float cost) {
+		this.cost = cost;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public int getPackQuantity() {
+		return packQuantity;
+	}
+
+	public void setPackQuantity(int quantity) {
+		this.packQuantity = quantity;
+	}
+
+	public float getPackVolume() {
+		return packVolume;
+	}
+
+	public void setPackVolume(float packVolume) {
+		this.packVolume = packVolume;
+	}
+
+	public float getPackWidth() {
+		return packWidth;
+	}
+
+	public void setPackWidth(float packWidth) {
+		this.packWidth = packWidth;
+	}
+
+	public float getPackHeight() {
+		return packHeight;
+	}
+
+	public void setPackHeight(float packHeight) {
+		this.packHeight = packHeight;
+	}
+
+	public float getPackLong() {
+		return packLong;
+	}
+
+	public void setPackLong(float packLong) {
+		this.packLong = packLong;
+	}
+
+	public float getPackMaterialCost() {
+		return packMaterialCost;
+	}
+
+	public void setPackMaterialCost(float packMaterialCost) {
+		this.packMaterialCost = packMaterialCost;
+	}
+
+
+
 
 
 	public String getpUnitId() {
@@ -363,13 +512,7 @@ public class Product implements Serializable {
 		this.attribute = attribute;
 	}
 
-	public String getPackGroup() {
-		return packGroup;
-	}
 
-	public void setPackGroup(String packGroup) {
-		this.packGroup = packGroup;
-	}
 
 	public long getId() {
 		return id;
@@ -484,6 +627,36 @@ public class Product implements Serializable {
 	{
 
 		//TODO  目前紧紧累加 油漆数据
-		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage);
+		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage);
+
+
+
+		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
+
+		cost=productCost;
+
+
+		//TODO  make these value  configerrable
+		float ratio=0.65f;
+		price=FloatHelper.scale(cost/ratio);
+		float addition=0.15f;
+		float payForTransform=95f;
+		float exportRate=6;
+		if(packQuantity <=0)
+			fob=0;
+		else
+		//售价+海外运费
+		fob=FloatHelper.scale((price * (1 + addition) + packVolume * payForTransform / packQuantity)/exportRate);
+
+
+
 	}
+
+
+
+
+
+
+
+
 }

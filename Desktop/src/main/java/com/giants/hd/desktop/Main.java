@@ -8,10 +8,7 @@ import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.PClass;
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.PackMaterialType;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -364,7 +361,7 @@ public class Main extends  JFrame {
 
             RemoteData<PackMaterialType> materialTypeRemoteData;
             RemoteData<PackMaterialPosition> packMaterialPositionRemoteData;
-
+            RemoteData<PackMaterialClass> packMaterialClassRemoteData;
 
 
             @Override
@@ -373,6 +370,8 @@ public class Main extends  JFrame {
                 packMaterialPositionRemoteData=apiManager.readPackMaterialPosition();
 
                 materialTypeRemoteData=apiManager.readPackMaterialType();
+
+                packMaterialClassRemoteData  =apiManager.readPackMaterialClass();
 
                 return apiManager.readProductClass();
 
@@ -387,7 +386,8 @@ public class Main extends  JFrame {
 
                 BufferData.setPackMaterialTypes(materialTypeRemoteData.datas
                 );
-
+                BufferData.setPackMaterialClasses(packMaterialClassRemoteData.datas
+                );
                 BufferData.setPClasses(data.datas);
 
             }

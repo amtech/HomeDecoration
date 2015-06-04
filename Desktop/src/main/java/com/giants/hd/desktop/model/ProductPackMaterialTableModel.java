@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.model;
 
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.*;
 import com.google.inject.Inject;
 
@@ -11,11 +12,14 @@ import javax.swing.*;
 
 public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
-    public static String[] columnNames = new String[]{"材料类别","材质","位置","物料编码", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static String[] fieldName = new String[]{"packMaterialType","className","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
-    public  static Class[] classes = new Class[]{PackMaterialType.class,JComboBox.class,PackMaterialPosition.class,Material.class, Material.class, Float.class, Float.class, Float.class, Float.class};
+    public static String[] columnNames = new String[]{"  材料类别    ","  材质     ","  位置    ","  物料编码   ", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static String[] fieldName = new String[]{"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
+    public  static Class[] classes = new Class[]{PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class,Material.class, Material.class, Float.class, Float.class, Float.class, Float.class};
 
     public  static boolean[] editables = new boolean[]{true, true, true,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
+
+    private Product product;
+
 
     @Inject
     public ProductPackMaterialTableModel() {
@@ -26,6 +30,22 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return editables[columnIndex];
+    }
+
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Object value= super.getValueAt(rowIndex, columnIndex);
+
+        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null&&product.packQuantity!=0)
+        {
+
+            float floatValue=Float.valueOf(value.toString());
+            value= FloatHelper.scale(floatValue/product.packQuantity);
+
+        }
+
+        return value;
     }
 
     @Override
@@ -41,6 +61,14 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
             case 0:
+                //设置包装材料大类型
+                material.setPackMaterialClass((PackMaterialClass) aValue);
+
+
+                break;
+
+
+            case 1:
                 //设置材料类型
                 material.setPackMaterialType((PackMaterialType) aValue);
 
@@ -106,6 +134,9 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     }
 
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
     @Override
     public void  setMaterial(Material material,int rowIndex)

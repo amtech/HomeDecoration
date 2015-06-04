@@ -9,8 +9,8 @@
     <children>
       <grid id="3f5b2" binding="cellPanel" custom-create="true" layout-manager="FormLayout">
         <rowspec value="fill:44px:noGrow"/>
-        <rowspec value="fill:25px:noGrow"/>
-        <rowspec value="fill:25px:noGrow"/>
+        <rowspec value="fill:p:noGrow"/>
+        <rowspec value="fill:p:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
@@ -21,10 +21,7 @@
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
-        <rowspec value="fill:25px:noGrow"/>
-        <rowspec value="fill:25px:noGrow"/>
-        <rowspec value="fill:30px:noGrow"/>
-        <rowspec value="fill:200px:grow(10.0)"/>
+        <rowspec value="fill:400px:grow(10.0)"/>
         <rowspec value="fill:m:grow"/>
         <rowspec value="fill:m:noGrow"/>
         <colspec value="fill:50px:grow"/>
@@ -64,7 +61,7 @@
           </component>
           <tabbedpane id="38000" binding="tabbedPane1" default-binding="true">
             <constraints>
-              <grid row="16" column="0" row-span="1" col-span="19" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="13" column="0" row-span="1" col-span="19" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="200" height="200"/>
               </grid>
               <forms/>
@@ -285,7 +282,7 @@
               <text value="成本"/>
             </properties>
           </component>
-          <component id="e72d1" class="javax.swing.JTextField" binding="tf_cost">
+          <component id="e72d1" class="javax.swing.JTextField" binding="tf_unpack_cost">
             <constraints>
               <grid row="2" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -348,7 +345,7 @@
               <text value="产品图片"/>
             </properties>
           </component>
-          <component id="b71a9" class="javax.swing.JLabel" binding="lb_pack_1">
+          <component id="b71a9" class="javax.swing.JLabel" binding="lb_pack">
             <constraints>
               <grid row="10" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -356,16 +353,6 @@
             <properties>
               <horizontalAlignment value="0"/>
               <text value="&lt;html&gt;&lt;HTML&gt;&lt;body &gt;普通 &lt;br&gt; 包装&lt;/body&gt;&lt;/html&gt;"/>
-            </properties>
-          </component>
-          <component id="9b266" class="javax.swing.JLabel" binding="lb_pack_2">
-            <constraints>
-              <grid row="13" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="&lt;html&gt;&lt;HTML&gt;&lt;body &gt;加强 &lt;br&gt; 包装&lt;/body&gt;&lt;/html&gt;"/>
             </properties>
           </component>
           <component id="b05ea" class="javax.swing.JLabel">
@@ -395,86 +382,38 @@
               <text value="成本价(￥): "/>
             </properties>
           </component>
-          <component id="ecb38" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="FOB FUZHOU（$) "/>
-            </properties>
-          </component>
-          <component id="9240c" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <text value="出厂价(￥): "/>
-            </properties>
-          </component>
-          <component id="d3dd6" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="15" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <text value="成本价(￥): "/>
-            </properties>
-          </component>
-          <component id="b70fb" class="javax.swing.JTextField" binding="tf_fob_2">
-            <constraints>
-              <grid row="13" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="3ed88" class="javax.swing.JTextField" binding="tf_fob_1">
+          <component id="3ed88" class="javax.swing.JTextField" binding="tf_fob">
             <constraints>
               <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="84e6e" class="javax.swing.JTextField" binding="tf_price_1">
+          <component id="84e6e" class="javax.swing.JTextField" binding="tf_price">
             <constraints>
               <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="8614c" class="javax.swing.JTextField" binding="tf_cost_1">
+          <component id="8614c" class="javax.swing.JTextField" binding="tf_cost">
             <constraints>
               <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
-          </component>
-          <component id="6cd71" class="javax.swing.JTextField" binding="tf_price_2">
-            <constraints>
-              <grid row="14" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="54176" class="javax.swing.JTextField" binding="tf_cost_2">
-            <constraints>
-              <grid row="15" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="7cdef" class="javax.swing.JLabel">
             <constraints>
@@ -509,39 +448,6 @@
               <text value="箱体积(M3):&#9; "/>
             </properties>
           </component>
-          <component id="4eb10" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="13" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="毛利润"/>
-            </properties>
-          </component>
-          <component id="b126c" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="售价($):"/>
-            </properties>
-          </component>
-          <component id="b6a0f" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="15" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="箱体积(M3):&#9; "/>
-            </properties>
-          </component>
           <component id="8ee1e" class="javax.swing.JTextField" binding="tf_constitute">
             <constraints>
               <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -564,59 +470,38 @@
               <toolTipText value="产品版本号"/>
             </properties>
           </component>
-          <component id="fe712" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="fe712" class="javax.swing.JTextField" binding="tf_gross_profit">
             <constraints>
               <grid row="10" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="89ef5" class="javax.swing.JTextField" default-binding="true">
+          <component id="89ef5" class="javax.swing.JTextField" binding="tf_price_dollar">
             <constraints>
               <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="d93d5" class="javax.swing.JTextField" default-binding="true">
+          <component id="d93d5" class="javax.swing.JTextField" binding="tf_volume">
             <constraints>
               <grid row="12" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
-          </component>
-          <component id="e4d96" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="13" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="44a09" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="14" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="1da54" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="2624f" class="javax.swing.JLabel">
             <constraints>
@@ -627,32 +512,16 @@
               <text value="4包材"/>
             </properties>
           </component>
-          <component id="c7dcb" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+          <component id="c7dcb" class="javax.swing.JTextField" binding="tf_cost4">
             <constraints>
               <grid row="12" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
-          </component>
-          <component id="badf2" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="15" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
             <properties>
-              <text value="4包材"/>
+              <editable value="false"/>
             </properties>
-          </component>
-          <component id="a7d1f" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
           </component>
           <component id="6439f" class="javax.swing.JLabel">
             <constraints>
@@ -684,16 +553,6 @@
               <text value="色板"/>
             </properties>
           </component>
-          <component id="cae9e" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="13" column="8" row-span="1" col-span="10" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="包装规格(CM)"/>
-            </properties>
-          </component>
           <component id="2d4de" class="javax.swing.JLabel">
             <constraints>
               <grid row="11" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -705,52 +564,17 @@
               <text value="内盒数/箱"/>
             </properties>
           </component>
-          <component id="8aad3" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+          <component id="8aad3" class="javax.swing.JTextField" binding="tf_inboxCount">
             <constraints>
-              <grid row="12" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="12" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="dc227" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="12" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="bbb88" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <editable value="false"/>
               <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="内盒数/箱"/>
             </properties>
-          </component>
-          <component id="644a8" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="7c8a8" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
           </component>
           <component id="e0ec0" class="javax.swing.JLabel">
             <constraints>
@@ -760,60 +584,24 @@
             <properties>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
-              <text value="内盒数/箱"/>
+              <text value="装箱数/箱"/>
             </properties>
           </component>
-          <component id="a5cd2" class="javax.swing.JLabel">
+          <component id="8cba6" class="javax.swing.JTextField" binding="tf_quantity">
             <constraints>
-              <grid row="14" column="10" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+              <grid row="12" column="10" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="内盒数/箱"/>
             </properties>
-          </component>
-          <component id="8cba6" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="12" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="bc882" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="12" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="4d245" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="64163" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
           </component>
           <component id="7eac9" class="javax.swing.JLabel">
             <constraints>
-              <grid row="11" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
+              <grid row="11" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
               <text value="长"/>
@@ -821,8 +609,8 @@
           </component>
           <component id="b3157" class="javax.swing.JLabel">
             <constraints>
-              <grid row="11" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
+              <grid row="11" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
               <text value="宽"/>
@@ -830,93 +618,45 @@
           </component>
           <component id="ba06c" class="javax.swing.JLabel">
             <constraints>
-              <grid row="11" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
+              <grid row="11" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
               <text value="高"/>
             </properties>
           </component>
-          <component id="924a0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="长"/>
-            </properties>
-          </component>
-          <component id="ddd03" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="宽"/>
-            </properties>
-          </component>
-          <component id="33e0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="高"/>
-            </properties>
-          </component>
-          <component id="b2946" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+          <component id="b2946" class="javax.swing.JTextField" binding="tf_long">
             <constraints>
               <grid row="12" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="95f10" class="javax.swing.JTextField" default-binding="true">
+          <component id="95f10" class="javax.swing.JTextField" binding="tf_width">
             <constraints>
               <grid row="12" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
-          <component id="6a0fa" class="javax.swing.JTextField" default-binding="true">
+          <component id="6a0fa" class="javax.swing.JTextField" binding="tf_height">
             <constraints>
               <grid row="12" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
-          </component>
-          <component id="37d06" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="658f" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="4cd88" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="15" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="9497f" class="javax.swing.JLabel">
             <constraints>
@@ -943,7 +683,7 @@
           </component>
           <component id="65e57" class="javax.swing.JButton" binding="bn_save">
             <constraints>
-              <grid row="18" column="6" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="15" column="6" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -970,7 +710,7 @@
           </component>
           <nested-form id="8ecb7" form-file="com/giants/hd/desktop/view/Panel_XK.form" binding="panel_xiankang">
             <constraints>
-              <grid row="17" column="0" row-span="1" col-span="19" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="14" column="0" row-span="1" col-span="19" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
           </nested-form>
@@ -986,7 +726,7 @@
           </component>
           <component id="a33a4" class="javax.swing.JButton" binding="btn_export">
             <constraints>
-              <grid row="18" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="15" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>

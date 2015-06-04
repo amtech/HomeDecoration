@@ -82,6 +82,15 @@ public class HttpUrl {
     }
 
     /**
+     * 包装材料大分类
+     *
+     * @return
+     */
+    public static String loadPackMaterialClass() {
+        return BaseUrl+"api/packMaterialClass/list";
+    }
+
+    /**
      * 包装材料使用位置
      * @return
      */

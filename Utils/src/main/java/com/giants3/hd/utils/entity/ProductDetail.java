@@ -63,6 +63,14 @@ public class ProductDetail   {
             paintWage += paint.processPrice;
             paintCost += paint.materialCost + paint.ingredientCost;
 
+
+
+
+
+
+
+
+
         }
         product.updatePaintData(paintCost, paintWage);
 
@@ -95,19 +103,57 @@ public class ProductDetail   {
         }
         product.assembleWage = FloatHelper.scale(assembleWage);
 
-//        //汇总计算包装材料
-//        float packCost = 0;
-//        for (ProductMaterial material : packMaterials) {
-//            packCost += material.getAmount();
-//        }
-//        product.packCost = FloatHelper.scale(packCost);
-//
-//        //汇总计算包装工资
-//        float packWage = 0;
-//        for (ProductWage wage : packWages) {
-//            packWage += wage.getAmount();
-//        }
-//        product.packWage = FloatHelper.scale(packWage);
+        //汇总计算包装材料
+        float packCost = 0;
+        for (ProductMaterial material : packMaterials) {
+
+
+
+
+
+            packCost += material.getAmount();
+
+
+            //如果包材是外箱  则更新产品外包装材料信息
+
+
+            if(material.getPackMaterialClass()!=null)
+            {
+
+                String className=material.getPackMaterialClass().getName();
+                if(className.equals(PackMaterialClass.CLASS_BOX))
+                {
+
+                    product.packLong=material.getpLong();
+                    product.packHeight=material.getpHeight();
+                    product.packWidth=material.getpWidth();
+
+                }else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
+                {
+                    product.insideBoxQuantity=(int)material.quantity;
+                }
+            }
+
+
+
+
+
+
+        }
+
+
+
+
+        //计算包装成本  平摊箱数， 如无箱数 则默认1
+        product.packCost = FloatHelper.scale(product.packQuantity==0?packCost:packCost/product.packQuantity);
+
+        //汇总计算包装工资
+        float packWage = 0;
+        for (ProductWage wage : packWages) {
+            packWage += wage.getAmount();
+        }
+        //计算包装工资 平摊箱数， 如无箱数 则默认1
+        product.packWage = FloatHelper.scale(product.packQuantity==0?packWage:packWage/product.packQuantity);
 
 
 
@@ -126,6 +172,7 @@ public class ProductDetail   {
         float cost8=0;
         float cost5=0;
         float cost6=0;
+        float cost4=0;
         float cost11_15=0;
         for(Summariable summariable:summariables)
         {
@@ -149,7 +196,11 @@ public class ProductDetail   {
                 case 7:
                     cost7+=amount;
                     break;
-                case 11:case 12: case 13:case 14:case15:
+
+                case 4:
+                    cost4+=amount;
+                    break;
+                case 11:case 12: case 13:case 14:case 15:
                     cost11_15+=amount;
                     break;
 
@@ -165,6 +216,15 @@ public class ProductDetail   {
         product.cost7=FloatHelper.scale(cost7);
         product.cost8=FloatHelper.scale(cost8);
         product.cost11_15=FloatHelper.scale(cost11_15);
+
+        //计算包装材料 平摊箱数， 如无箱数 则默认1
+        product.cost4=FloatHelper.scale(product.packQuantity==0?cost4:cost4/product.packQuantity);
+
+
+
+
+
+
 
 
 

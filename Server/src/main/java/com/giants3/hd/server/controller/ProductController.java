@@ -36,8 +36,7 @@ public class ProductController extends BaseController {
     private ProductRepository productRepository;
 
 
-    @Autowired
-    private ProductPackRepository productPackRepository;
+
     @Autowired
     private ProductMaterialRepository productMaterialRepository;
     @Autowired
@@ -72,12 +71,7 @@ public class ProductController extends BaseController {
 
         List<Product> products = pageValue.getContent();
 
-        //读取包装信息
-        for (Product product : products) {
 
-            List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
-            product.packs = packs;
-        }
 
 
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
@@ -91,8 +85,6 @@ public class ProductController extends BaseController {
     Product findProdcutById(@RequestParam("id") long productId) {
 
         Product product = productRepository.findOne(productId);
-        List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
-        product.packs = packs;
         return product;
     }
 
@@ -129,9 +121,7 @@ public class ProductController extends BaseController {
 
         detail.product = product;
 
-        //读取包装信息
-        List<ProductPack> packs = productPackRepository.findByProductIdEquals(product.id);
-        product.packs = packs;
+
 
 
         //读取材料列表信息

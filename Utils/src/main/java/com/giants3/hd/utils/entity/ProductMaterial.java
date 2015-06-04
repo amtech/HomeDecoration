@@ -142,7 +142,7 @@ public class ProductMaterial  implements Serializable,Summariable {
 
 
 	/**
-	 * 材质类型选择   当材质是包装类型 即  flowId=Flow.FLOW_PACK 时候 必填
+	 * 材质类型选择
 	 */
 	@ManyToOne
 	public PackMaterialType packMaterialType;
@@ -153,6 +153,14 @@ public class ProductMaterial  implements Serializable,Summariable {
 	 */
 	@ManyToOne
 	public PackMaterialPosition packMaterialPosition;
+
+
+
+	/**
+	 * 包装材质大分类   当材质是包装类型  即  flowId=Flow.FLOW_PACK 时候 必填
+	 */
+	@ManyToOne
+	public PackMaterialClass packMaterialClass;
 
 
 	/**
@@ -407,6 +415,15 @@ public class ProductMaterial  implements Serializable,Summariable {
 
 	public void setpHeight(float pHeight) {
 		this.pHeight = pHeight;
+	}
+
+
+	public PackMaterialClass getPackMaterialClass() {
+		return packMaterialClass;
+	}
+
+	public void setPackMaterialClass(PackMaterialClass packMaterialClass) {
+		this.packMaterialClass = packMaterialClass;
 	}
 
 	/**

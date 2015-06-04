@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.entity.ProductWage;
 import com.google.inject.Inject;
@@ -16,6 +17,7 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
     public  static Class[] classes = new Class[]{String.class, String.class, Float.class, Float.class, String.class };
 
     public  static boolean[] editables = new boolean[]{true, true, true, true, true};
+    private Product product;
 
     @Inject
     public ProductWageTableModel() {
@@ -28,6 +30,22 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
         return editables[columnIndex];
     }
 
+
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Object value= super.getValueAt(rowIndex, columnIndex);
+
+        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null&&product.packQuantity!=0)
+        {
+
+            float floatValue=Float.valueOf(value.toString());
+            value=floatValue/product.packQuantity;
+
+        }
+
+        return value;
+    }
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
@@ -71,5 +89,7 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
     }
 
 
-
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }

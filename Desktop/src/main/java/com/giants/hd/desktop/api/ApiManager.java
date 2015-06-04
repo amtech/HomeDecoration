@@ -182,7 +182,21 @@ public class ApiManager {
     }
 
 
+    /**
+     * 读取包装材料大类别列表
+     * @return
+     */
+    public RemoteData<PackMaterialClass> readPackMaterialClass()throws HdException {
 
+        String url=HttpUrl.loadPackMaterialClass();
+        Logger.getLogger(TAG).info(url);
+        String result=     client.getWithStringReturned(url);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<PackMaterialClass>>() {
+        }.getType();
+        RemoteData<PackMaterialClass> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+    }
 
 
 
