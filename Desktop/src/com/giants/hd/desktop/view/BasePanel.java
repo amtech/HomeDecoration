@@ -10,7 +10,16 @@ import java.awt.*;
  */
 public  abstract  class BasePanel {
 
+    protected PanelListener listener;
 
+
+    public PanelListener getListener() {
+        return listener;
+    }
+
+    public void setListener(PanelListener listener) {
+        this.listener = listener;
+    }
 
     public BasePanel()
     {
@@ -38,5 +47,13 @@ public  abstract  class BasePanel {
      * @return
      */
     public abstract JComponent getRoot();
+
+
+
+    public interface  PanelListener
+    {
+
+        public void save();
+    }
 
 }

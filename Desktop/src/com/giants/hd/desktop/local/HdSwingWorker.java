@@ -3,19 +3,17 @@ package com.giants.hd.desktop.local;
 import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
-import com.google.inject.Guice;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.Remote;
 import java.util.concurrent.ExecutionException;
 
 /**
  * 自定义worker 类 封装 进度条等方法。
  */
-public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V>{
+public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
       LoadingDialog dialog ;
 
 

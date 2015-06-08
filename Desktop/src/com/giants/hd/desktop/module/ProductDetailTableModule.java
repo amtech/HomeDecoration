@@ -1,11 +1,6 @@
 package com.giants.hd.desktop.module;
 
 import com.giants.hd.desktop.view.Panel_ProductDetail;
-import com.giants.hd.desktop.widget.TablePopMenu;
-
-import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * 成本分析表z中  表格处理类， 分类中成本分析表中大量的表格处理代码

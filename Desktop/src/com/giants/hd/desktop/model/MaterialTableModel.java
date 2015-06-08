@@ -1,10 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * 产品表格模型

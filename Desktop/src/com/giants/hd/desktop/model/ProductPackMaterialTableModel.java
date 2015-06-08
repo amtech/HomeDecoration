@@ -4,8 +4,6 @@ import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.*;
 import com.google.inject.Inject;
 
-import javax.swing.*;
-
 /**
  * 包装 输入表格 模型
  */
@@ -56,6 +54,11 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         super.setValueAt(aValue, rowIndex, columnIndex);
 
         ProductMaterial material=getItem(rowIndex);
+
+
+
+
+
         switch (columnIndex)
         {
 
@@ -63,8 +66,6 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
             case 0:
                 //设置包装材料大类型
                 material.setPackMaterialClass((PackMaterialClass) aValue);
-
-
                 break;
 
 
@@ -128,7 +129,62 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         }
 
 
+
+        //检查波安装
+        //如果是内盒
+        //找出胶带 更新胶带信息
+        if(material.getPackMaterialClass()!=null) {
+            switch (material.getPackMaterialClass().name) {
+
+
+                case PackMaterialClass.CLASS_INSIDE_BOX:
+
+                    for (ProductMaterial productMaterial : getDatas()) {
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
+
+                                productMaterial.updateRelatedMaterial(material);
+                                int relateIndex=getDatas().indexOf(productMaterial);
+                                fireTableRowsUpdated(relateIndex,relateIndex);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+
+
+                    break;
+
+
+                case PackMaterialClass.CLASS_JIAODAI:
+
+                    for (ProductMaterial productMaterial : getDatas()) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_INSIDE_BOX)) {
+
+                                material.updateRelatedMaterial(productMaterial);
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+
+                    break;
+
+            }
+
+        }
+
         fireTableRowsUpdated(rowIndex,rowIndex);
+
 
 
     }

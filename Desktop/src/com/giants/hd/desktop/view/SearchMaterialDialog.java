@@ -1,14 +1,13 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.dialogs.BaseDialog;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -17,9 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.ExecutionException;
 
-public class SearchMaterialDialog extends BaseDialog<Material>{
+public class SearchMaterialDialog extends BaseDialog<Material> {
     private JPanel contentPane;
     private JTextField tf_value;
     private JButton bn_search;

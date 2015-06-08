@@ -1,11 +1,11 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.google.inject.Inject;
 
@@ -26,6 +26,7 @@ public class Panel_Material  extends  BasePanel{
     private JButton btn_search;
     private JButton btn_import;
     private Panel_Page pagePanel;
+    private JButton btn_add;
 
 
     @Override
@@ -89,8 +90,54 @@ public class Panel_Material  extends  BasePanel{
 
         tb_material.setRowHeight(30);
 
+        tb_material.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+
+                if(e.getClickCount()==2)
+                {
+
+                    Material material=    materialTableModel.getItem(tb_material.convertRowIndexToModel(tb_material.getSelectedRow()));
+                    if(material==null) return;
+
+
+                    showDetailDialog(material);
+
+                }
+
+            }
+        });
+
+        btn_add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                showDetailDialog(new Material());
+            }
+        });
+
     }
 
+
+    /**
+     * 显示详细界面
+     * @param material
+     */
+    private void showDetailDialog(Material material)
+    {
+
+        MaterialDetailDialog dialog=new MaterialDetailDialog(SwingUtilities.getWindowAncestor(getRoot()),material);
+        dialog.pack();
+        dialog.setMinimumSize(new Dimension(400, 600));
+        dialog.setLocationByPlatform(true);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+        search(jtf_value.getText().trim());
+
+
+    }
     private  void  showImportDialog()
     {
 

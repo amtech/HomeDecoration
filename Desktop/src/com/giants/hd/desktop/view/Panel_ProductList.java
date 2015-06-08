@@ -5,7 +5,6 @@ import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants3.hd.utils.exception.HdException;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
@@ -14,10 +13,10 @@ import com.google.inject.Singleton;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 产品列表界面
@@ -139,6 +138,7 @@ public class Panel_ProductList  extends BasePanel {
         dialog.setModal(true);
         Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
         dialog.setContentPane(panel_productDetail.getRoot());
+        dialog.setMinimumSize(new Dimension(1024,768));
         dialog.pack();
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);

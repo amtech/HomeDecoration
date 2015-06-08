@@ -1,16 +1,10 @@
 package com.giants.hd.desktop.widget;
 
-import com.giants.hd.desktop.local.ClipBordHelper;
 import com.giants.hd.desktop.model.BaseTableModel;
-import com.giants3.hd.utils.StringUtils;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * 自定义表格右键弹出菜单

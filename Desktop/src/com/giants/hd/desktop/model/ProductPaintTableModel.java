@@ -1,11 +1,8 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.entity.ProductPaint;
 import com.google.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * 油漆工表格模型

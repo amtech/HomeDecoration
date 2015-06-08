@@ -1,4 +1,4 @@
-package com.giants.hd.desktop.view;
+package com.giants.hd.desktop.dialogs;
 
 import com.google.inject.Guice;
 
@@ -16,10 +16,15 @@ public class BaseDialog<T> extends JDialog{
     protected  T result;
     public BaseDialog(Window window)
     {
-        super(window);
+        this(window, "默认对话框");
     }
 
-     @Override
+    public BaseDialog(Window owner, String title) {
+        super(owner, title);
+        dialogInit();
+    }
+
+    @Override
     protected  void dialogInit()
      {
          super.dialogInit();

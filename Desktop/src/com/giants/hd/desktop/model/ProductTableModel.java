@@ -4,8 +4,6 @@ import com.giants3.hd.utils.entity.Product;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.Field;
 
 /**
  * 产品表格模型
