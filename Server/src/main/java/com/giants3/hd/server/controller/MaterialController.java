@@ -4,12 +4,13 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.repository.MaterialRepository;
 
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,15 @@ public class MaterialController extends BaseController {
     @Autowired
     private MaterialRepository materialRepository;
 
+    @Autowired
+    private JpaRepository<MaterialClass,Long> materialClassRepository;
 
+
+    @Autowired
+    private JpaRepository<MaterialType,Long> materialTypeRepository;
+
+    @Autowired
+    private JpaRepository<MaterialEquation,Long> equationRepository;
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
     @ResponseBody
@@ -37,6 +46,10 @@ public class MaterialController extends BaseController {
 
         return wrapData(materialRepository.findAll());
     }
+
+
+
+
 
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -88,10 +101,25 @@ public class MaterialController extends BaseController {
     }
 
 
+
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<Material> save(@RequestBody   Material  material  )   {
+
+
+
+          material=  materialRepository.save(material);
+
+        return wrapData(material);
+    }
+
     @RequestMapping(value = "/findListByCodes",method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<Material> findListByCode(@RequestBody  List<String> codes )   {
+    RemoteData<Material> findListByCodes(@RequestBody  List<String> codes )   {
 
 
 
@@ -114,5 +142,79 @@ public class MaterialController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/findListByNames",method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Material> findListByNames(@RequestBody  List<String> names )   {
+
+
+
+        List<Material> materials=new ArrayList<>();
+        for(String name:names)
+        {
+
+
+            Material data=materialRepository.findByNameEquals(name);
+            if(null!=data)
+                materials.add(data);
+
+
+
+        }
+
+
+
+        return wrapData(materials);
+    }
+
+
+
+
+
+    /**
+     * 获取材料类型类别
+     * @return
+     */
+
+    @RequestMapping(value = "/listClass",method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<MaterialClass> listClass( )   {
+
+
+
+        return wrapData(materialClassRepository.findAll());
+    }
+
+
+
+    /**
+     * 获取材料类型类别
+     * @return
+     */
+
+    @RequestMapping(value = "/listType",method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<MaterialType> listType( )   {
+
+
+
+        return wrapData(materialTypeRepository.findAll());
+    }
+
+
+    /**
+     * 获取材料计算公式。
+     * @return
+     */
+
+    @RequestMapping(value = "/listEquation",method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<MaterialEquation> listEquation( )   {
+
+        return wrapData(equationRepository.findAll());
+    }
 
 }

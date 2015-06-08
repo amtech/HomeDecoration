@@ -46,4 +46,12 @@ public class PackMaterialClass {
     public static final String  CLASS_BOX="外箱";
 
     public static final String CLASS_INSIDE_BOX="内盒";
+
+
+    public static final String CLASS_JIAODAI="胶带";
+
+    public static final String CLASS_ZHANSHIHE="展示盒";
+
+    public static final String CLASS_QIPAODAI="气泡袋";
+
 }

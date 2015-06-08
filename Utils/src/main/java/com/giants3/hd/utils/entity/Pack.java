@@ -44,4 +44,27 @@ public class Pack  implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Pack)) return false;
+
+		Pack pack = (Pack) o;
+
+		return id == pack.id;
+
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (id ^ (id >>> 32));
+	}
 }

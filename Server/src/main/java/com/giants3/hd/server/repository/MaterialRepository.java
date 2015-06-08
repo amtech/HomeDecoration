@@ -24,4 +24,5 @@ public interface MaterialRepository extends JpaRepository<Material,Long> {
     public Material findByCodeEquals( String code);
 
 
+    public Material findByNameEquals(String name);
 }

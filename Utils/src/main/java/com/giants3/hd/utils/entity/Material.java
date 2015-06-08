@@ -110,6 +110,22 @@ public class Material  implements Serializable {
 	public  String className;
 
 
+	/**
+	 * 换算单位 默认为1
+	 */
+	@Basic
+	public float unitRatio=1;
+
+
+	/**
+	 * 定额的计算公式。
+	 */
+	@Basic
+	public int equationId;
+
+
+
+
 	public String getClassId() {
 		return classId;
 	}
@@ -244,6 +260,14 @@ public class Material  implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public float getUnitRatio() {
+		return unitRatio;
+	}
+
+	public void setUnitRatio(Float unitRatio) {
+		this.unitRatio = unitRatio;
 	}
 
 

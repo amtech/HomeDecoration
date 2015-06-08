@@ -240,4 +240,7 @@ public class ProductDetail   {
 
 
     public List<Summariable> summariables=new ArrayList<>();
+
+
+
 }

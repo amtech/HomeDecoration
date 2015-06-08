@@ -633,6 +633,7 @@ public class Product implements Serializable {
 
 		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
 
+		//ConfigData configData=new ConfigData();
 		cost=productCost;
 
 

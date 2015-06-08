@@ -177,6 +177,14 @@ public class ProductMaterial  implements Serializable,Summariable {
 	public String classId;
 
 
+	/**
+	 * 材料的换算单位  默认1；
+	 * @return
+	 */
+	@Basic
+	public float unitRatio=1;
+
+
 	public PackMaterialType getPackMaterialType() {
 		return packMaterialType;
 	}
@@ -372,7 +380,7 @@ public class ProductMaterial  implements Serializable,Summariable {
 		materialName=material.name;
 		materialId=material.id;
 
-		price=new BigDecimal(material.price).setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+		price=FloatHelper.scale(  material.price);
 		available=material.available;
 
 		unitName=material.unitName;
@@ -384,6 +392,7 @@ public class ProductMaterial  implements Serializable,Summariable {
 		classId=material.classId;
 		className=material.className;
 		memo=material.spec;
+		unitRatio=material.unitRatio;
 		update();
 
 
@@ -463,132 +472,217 @@ public class ProductMaterial  implements Serializable,Summariable {
 
 
 		//如果是包装材料  采用特殊计算方式
-		if(flowId==Flow.FLOW_PACK)
+		if(flowId==Flow.FLOW_PACK&&packMaterialClass!=null)
 		{
 
 
 
-			//箱子类计算
-			if(classId.equals(Material.MCLass.C_BAZZ))
+
+			switch (packMaterialClass.name)
 			{
 
-				if(pWidth<15) wWidth=pWidth*2;
-				if( pLong+pWidth>130)
-				{
-					newQuota=(pLong/100+pWidth/100+0.17f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
-				}else
-				{
-					newQuota=(pLong/100+pWidth/100+0.09f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
-				}
-
-
-
-			}
-			else
-			//内盒计算公式
-			if(classId.equals(Material.MCLass.C_2201))
-			{
-
-				newQuota=(pLong/100+pWidth/100+0.07f)*(pWidth/100+pHeight/100+0.04f)*2*quantity;
-
-
-			}
-			else
-				//单瓦彩色内盒特殊计算
-				if(materialCode.equals("BZAF0013"))
-				{
-					newQuota=(pLong/100+pWidth/100*4)*(pWidth/100+pHeight/100+0.06f)*2*quantity;
-				}else
-				//彩色内盒计算公式
-				if(classId.equals(Material.MCLass.C_BZAF))
-				{
-					newQuota=(pLong/100+pWidth/100*2+0.42f)*(pWidth/100*4+pHeight/100+0.02f)*quantity;
-				}
-			else
-			//胶带计算公式
-			if(classId.equals(Material.MCLass.C_BZAE))
-			{
-//TODO  胶带计算公式
-//				if(pLong<80&&pWidth>=20)
-//					newQuota=()
-//					else
-
-
-			}
-			else
-			{
-				//默认计算公式
-					if(pLong<=0&&pWidth<=0&&pHeight<=0)
+				case PackMaterialClass.CLASS_BOX:
+					if(pWidth<15) wWidth=pWidth*2;
+					if( pLong+pWidth>130)
 					{
-						newQuota=available<=0?0:quantity/available;
-
+						newQuota=(pLong/100+pWidth/100+0.17f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
 					}else
-						if(pWidth<=0&&pHeight<=0)
-						{
-							newQuota=available<=0?0:quantity*wLong/100/available;
-						}
-				else
-							if(pHeight<=0)
-							{
-								newQuota=available<=0?0:quantity*wLong*wWidth/10000/available;
-							}
-							else
-							{newQuota=available<=0?0:quantity*wLong*wWidth*wHeight/1000000/available;}
+					{
+						newQuota=(pLong/100+pWidth/100+0.09f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+					}
 
+
+					break;
+
+				case
+						PackMaterialClass.CLASS_INSIDE_BOX:
+					if(materialCode.equals("BZAF0013") )
+					{//单瓦彩色内盒特殊计算
+						newQuota=(pLong/100+pWidth/100*4)*(pWidth/100+pHeight/100+0.06f)*2*quantity;
+					}else {
+						newQuota = (pLong / 100 + pWidth / 100 + 0.07f) * (pWidth / 100 + pHeight / 100 + 0.04f) * 2 * quantity;
+					}
+
+					break;
+
+
+				case PackMaterialClass.CLASS_ZHANSHIHE:
+
+
+					newQuota=(pLong/100+pWidth/100*2+0.42f)*(pWidth/100*4+pHeight/100+0.02f)*quantity;
+
+					break;
+
+				case PackMaterialClass.CLASS_JIAODAI:
+					//TODO  胶带计算公式
+
+
+
+					break;
+
+
+				case PackMaterialClass.CLASS_QIPAODAI:
+
+					newQuota=defaultCalculateQuota();
+
+					break;
+
+
+				default:
+
+					newQuota=defaultCalculateQuota();
+					break;
 
 			}
-
-
-
-
-
 
 		}else {
+			newQuota=defaultCalculateQuota();
+		}
 
 
-			if (type == 1 && pHeight <= 0) {
-
-				newQuota = 0;
-
-			} else if (type == 15 && pWidth <= 0 && pHeight <= 0) {
+			//加上计算单位换算比例（）
+		  quota = FloatHelper.scale(newQuota*unitRatio,5);
 
 
-				//分件备注指 参与类型15的计算
-				float r15 = 0;
-				try {
-					r15 = Float.valueOf(memo);
-				} catch (Throwable t) {
-					Logger.getLogger("TEST").info("分件備註值不是一個浮點數");
-				}
-				newQuota = quantity * wLong * r15 / 100 / available;   //TODO  R15 未确定值
-
-			} else if (pWidth <= 0 && pLong <= 0 && pHeight <= 0) {
-				newQuota = quantity / available;
-			} else if (
-					pHeight <= 0 && pWidth <= 0
-					) {
-				newQuota = quantity * wLong / 100 / available;
-
-			} else if (pHeight <= 0) {
 
 
-				newQuota = quantity * wLong * wWidth / 10000 / available;
-			} else {
-				newQuota = quantity * wLong * wWidth * wHeight / 1000000 / available;
+		updateAmount();
+
+
+
+
+	}
+
+
+	/**
+	 * 更新总额值
+	 * 根据定额与单价计算。
+	 *
+	 */
+	public void updateAmount()
+	{
+
+
+		amount= FloatHelper.scale(quota*price );
+	}
+
+
+	/**
+	 * 更新相关的物料信息
+	 * chuanru
+	 * @param productMaterial
+	 */
+	public void updateRelatedMaterial(ProductMaterial productMaterial)
+	{
+
+		//验证 当前材料是 封口胶带类          关联的材料是 内盒子
+
+
+		PackMaterialClass mPackMaterialClass=productMaterial.getPackMaterialClass();
+
+
+		if(mPackMaterialClass.name.equals(PackMaterialClass.CLASS_INSIDE_BOX)&&packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI))
+		{
+
+			float boxQuantity=productMaterial.quantity;
+			float boxLong=productMaterial.pLong;
+			float boxWidth=productMaterial.pWidth;
+			float boxHeight=productMaterial.pHeight;
+
+
+
+			 float boxQuota=0;
+			if(boxQuantity>0)
+			{
+				if(pLong<80&&pWidth>=20)
+				{
+					boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
+				}else
+					if(pLong>=80&&pWidth>=20)
+					{
+						boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*2)*boxQuantity/100f;
+					}else
+					if(pWidth<20&&pLong<80)
+					{
+						boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
+					}else
+						if(pLong>=80&&pWidth<20)
+						{
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*4)*boxQuantity/100f;
+						}
+
 			}
+
+			float newQuota=0;
+
+
+			if(pWidth>20&&pLong<80)
+			{
+				newQuota=((pLong+20)*2+(pWidth+10)*4)*quantity/100f;
+			}else
+			if(pWidth>=20&&pLong>=80)
+			{
+				newQuota=((pLong+20)*2+(pWidth+10)*4+ (pWidth+20)*2)*quantity/100f;
+			}
+			else
+				if(pWidth<20&&pLong<80)
+				{
+					newQuota=((pLong+20)*2+(pWidth+10)*4)*quantity/100f;
+				}else
+					if(pWidth<20&&pLong>=80)
+					{
+						newQuota=((pLong+20)*2+(pWidth+10)*4+(pWidth+20)*4)*quantity/100f;
+					}
+
+
+			Logger.getLogger("TEST").info("boxQuota:"+boxQuota+",newQuota:"+newQuota);
+
+			quota=FloatHelper.scale(newQuota+boxQuota,5);
+
+
+
+			updateAmount();
+
+
+
 
 		}
 
 
 
-		  quota = FloatHelper.scale(newQuota,5);
-
-
-		   amount= FloatHelper.scale(quota*price );
 
 
 
+	}
 
+
+	/**
+	 * 默认计算公式  长*宽*高*数量、利用率
+	 */
+	private float defaultCalculateQuota()
+	{
+
+		float newQuota=0;
+		//默认计算公式
+		if(pLong<=0&&pWidth<=0&&pHeight<=0)
+		{
+			newQuota=available<=0?0:quantity/available;
+
+		}else
+		if(pWidth<=0&&pHeight<=0)
+		{
+			newQuota=available<=0?0:quantity*wLong/100/available;
+		}
+		else
+		if(pHeight<=0)
+		{
+			newQuota=available<=0?0:quantity*wLong*wWidth/10000/available;
+		}
+		else
+		{newQuota=available<=0?0:quantity*wLong*wWidth*wHeight/1000000/available;}
+
+
+		return newQuota;
 
 
 	}
