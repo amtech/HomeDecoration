@@ -633,21 +633,19 @@ public class Product implements Serializable {
 
 		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
 
-		//ConfigData configData=new ConfigData();
+		 ConfigData configData= ConfigData.getInstance() ;
 		cost=productCost;
 
 
 		//TODO  make these value  configerrable
-		float ratio=0.65f;
-		price=FloatHelper.scale(cost/ratio);
-		float addition=0.15f;
-		float payForTransform=95f;
-		float exportRate=6;
+
+		price=FloatHelper.scale(cost/configData.cost_price_ratio);
+
 		if(packQuantity <=0)
 			fob=0;
 		else
 		//售价+海外运费
-		fob=FloatHelper.scale((price * (1 + addition) + packVolume * payForTransform / packQuantity)/exportRate);
+		fob=FloatHelper.scale((price * (1 + configData.addition) + packVolume * configData.price_of_export / packQuantity)/configData.exportRate);
 
 
 

@@ -10,7 +10,7 @@ public class ConfigData {
     /**
      * 是稀释剂单价
      */
-    public float price_of_diluent=0;
+    public float price_of_diluent=8.3f;
 
 
     /**
@@ -37,5 +37,9 @@ public class ConfigData {
      */
 
     public float price_of_export=95;
+    private static ConfigData instance=new ConfigData();
 
+    public static ConfigData getInstance() {
+        return instance;
+    }
 }
