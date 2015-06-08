@@ -67,7 +67,7 @@ public class ProductController extends BaseController {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Product> pageValue = productRepository.findByNameLike("%" + prd_name + "%", pageable);
+        Page<Product> pageValue = productRepository.findByNameLikeOrderByNameAsc("%" + prd_name + "%", pageable);
 
         List<Product> products = pageValue.getContent();
 
@@ -454,6 +454,70 @@ public class ProductController extends BaseController {
 
 
     }
+
+
+    /**
+     *复制产品信息   即翻单
+     * 检查是否存在同款记录  （product +version）
+     *
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "/copy", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<ProductDetail> copyProduct(@RequestParam("id") long productId,@RequestParam("name") String newProductName,@RequestParam("version") String version) {
+
+        if(productRepository.findByNameEqualsAndPVersionEquals(newProductName,version)!=null)
+        {
+
+
+       return     wrapError("货号："+newProductName +",版本号："+version
+                    +"已经存在,请更换");
+        }
+
+        Product product=productRepository.findOne(productId);
+        if(
+                product==null
+                )
+        {
+            return wrapError("未找到当前产品信息");
+        }
+
+
+
+        product.id= -1;
+        product.name=newProductName;
+        product.pVersion=version;
+        //保存新产品信息
+       Product newProduct= productRepository.save(product);
+
+        long newProductId=newProduct.id;
+        //更新产品材料信息
+    List<ProductMaterial> materials=   productMaterialRepository.findByProductIdEquals(productId);
+        for(ProductMaterial material:materials)
+        {
+            material.id=-1;
+            material.productId=newProductId;
+            productMaterialRepository.save(material);
+
+        }
+
+
+        //更新油漆表信息
+        //更新产品材料信息
+        List<ProductPaint> productPaints=   productPaintRepository.findByProductIdEquals(productId);
+        for(ProductPaint productPaint:productPaints)
+        {
+            productPaint.id=-1;
+            productPaint.productId=newProductId;
+            productPaintRepository.save(productPaint);
+
+        }
+
+        return findProductDetailById(newProductId);
+    }
+
 
 
 }

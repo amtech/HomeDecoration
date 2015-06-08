@@ -2,6 +2,8 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.dialogs.CopyProductDialog;
+import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.APanel;
@@ -228,26 +230,23 @@ public class Panel_ProductDetail extends BasePanel {
 
                 }
 
-                new HdSwingWorker<ProductDetail,Object>(getWindow(getRoot()))
-                {
-
-                    @Override
-                    protected RemoteData<ProductDetail> doInBackground() throws Exception {
+                //显示对话框
 
 
-                        apiManager.copyProductDetail(productDetail.product.id);
-                        return null;
-                    }
+                CopyProductDialog dialog=new CopyProductDialog(SwingUtilities.getWindowAncestor(getRoot()),productDetail.product);
+                dialog.pack();
+                dialog.setMinimumSize(new Dimension(400, 300));
+                dialog.setLocationByPlatform(true);
+                dialog.setModal(true);
+                dialog.setVisible(true);
 
-                    @Override
-                    public void onResult(RemoteData<ProductDetail> data) {
+                if(dialog.getResult()!=null)
+                initPanel(dialog.getResult());
 
 
-                        initPanel(data.datas.get(0));
 
 
-                    }
-                };
+
 
 
 
