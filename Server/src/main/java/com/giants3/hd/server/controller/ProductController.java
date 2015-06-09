@@ -489,6 +489,9 @@ public class ProductController extends BaseController {
         product.id= -1;
         product.name=newProductName;
         product.pVersion=version;
+
+        updateProductPhotoData(product);
+        updateProductPhotoTime(product);
         //保存新产品信息
        Product newProduct= productRepository.save(product);
 

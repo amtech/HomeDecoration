@@ -447,20 +447,20 @@ public class Panel_ProductDetail extends BasePanel {
         //产品油漆数据
 
         List<ProductPaint> paints = productPaintModel.getDatas();
-        //数据检验
-        int size = paints.size();
-        for (int i = 0; i < size; i++) {
-
-            ProductPaint paint = paints.get(i);
-
-
-            int rowIndex = tb_product_paint.convertRowIndexToView(i);
-
-
-            if (StringUtils.isEmpty(paint.processName))
-                throw HdUIException.create(tb_product_paint, "第" + (rowIndex + 1) + "行数据有误，工序名称为必须");
-
-        }
+//        //数据检验
+//        int size = paints.size();
+//        for (int i = 0; i < size; i++) {
+//
+//            ProductPaint paint = paints.get(i);
+//
+//
+//            int rowIndex = tb_product_paint.convertRowIndexToView(i);
+//
+//
+//            if (StringUtils.isEmpty(paint.processName))
+//                throw HdUIException.create(tb_product_paint, "第" + (rowIndex + 1) + "行数据有误，工序名称为必须");
+//
+//        }
 
 
         productDetail.paints = paints;
@@ -577,6 +577,7 @@ public class Panel_ProductDetail extends BasePanel {
         ta_spec.setText(product == null ? "" : product.getSpec());
         ta_memo.setText(product == null ? "" : product.getMemo());
         date.getJFormattedTextField().setText(product == null ? "" : product.getrDate());
+
         tf_unit.setText(product == null ? "" : product.pUnitName);
         tf_weight.setText(product == null ? "" : String.valueOf(product.getWeight()));
 
@@ -1226,20 +1227,71 @@ public class Panel_ProductDetail extends BasePanel {
         jtf.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = ((JTextField) e.getSource()).getText().trim();
-                int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
-                SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text);
-                dialog.pack();
-                dialog.setLocationRelativeTo(table);
-                dialog.setVisible(true);
-                Material material = dialog.getResult();
-                if (material != null) {
-                    if (table.getModel() instanceof Materialable) {
+             final   String text = ((JTextField) e.getSource()).getText().trim();
+             final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
+                final Materialable materialable;
+                if (table.getModel() instanceof Materialable) {
 
-                        ((Materialable) table.getModel()).setMaterial(material, rowIndex);
+                    materialable=       ((Materialable) table.getModel());
+                }
+                else
+                {
+                    return ;
+                }
+                //查询  单记录直接copy
+
+                new HdSwingWorker<Material,Object>(SwingUtilities.getWindowAncestor(getRoot()))
+                {
+                    @Override
+                    protected RemoteData<Material> doInBackground() throws Exception {
+
+
+                        return   apiManager.loadMaterialByCodeOrName(text, 0, 100);
+
                     }
 
-                }
+                    @Override
+                    public void onResult(RemoteData<Material> data) {
+
+                        if(data.isSuccess()&&data.totalCount==1)
+                        {
+
+
+                            materialable.setMaterial(data.datas.get(0), rowIndex);
+
+
+                        }else
+                        {
+
+
+                            SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text, data);
+                            dialog.setMinimumSize(new Dimension(800,600));
+                            dialog.pack();
+                            dialog.setLocationRelativeTo(table);
+                            dialog.setVisible(true);
+                            Material material = dialog.getResult();
+                            if (material != null) {
+                                if (table.getModel() instanceof Materialable) {
+
+                                    ((Materialable) table.getModel()).setMaterial(material, rowIndex);
+                                }
+
+                            }
+
+                        }
+
+
+
+
+                    }
+                }.go();
+
+
+
+
+
+
+
             }
         });
 

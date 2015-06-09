@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.BaseDialog;
 import com.giants.hd.desktop.interf.PageListener;
@@ -8,6 +9,7 @@ import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -30,16 +32,31 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
 
     @Inject
     MaterialTableModel materialTableModel;
+
+
     public SearchMaterialDialog(Window window,String value) {
+
+        this(window,value,null);
+
+    }
+
+
+    public SearchMaterialDialog(Window window,String value,RemoteData<Material> materialRemoteData) {
         super(window);
         setContentPane(contentPane);
+
         setModal(true);
 
         tf_value.setText(value);
-        if(!StringUtils.isEmpty( value))
+
+        if(materialRemoteData!=null)
+        {
+            bindRemoteData(materialRemoteData);
+        }else
         {
             search(value);
         }
+
 
         bn_search.addActionListener(new ActionListener() {
             @Override
@@ -50,6 +67,7 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
                 search(value);
             }
         });
+        table.setRowHeight(ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT);
 
          table.setModel(materialTableModel);
 
@@ -85,10 +103,17 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
         });
 
 
+
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                JTableUtils.setJTableColumnsWidth();
+//            }
+//        });
     }
 
     public static void main(String[] args) {
-        SearchMaterialDialog dialog = new SearchMaterialDialog(null,null);
+        SearchMaterialDialog dialog = new SearchMaterialDialog(null,null,null);
         dialog.setMinimumSize(new Dimension(800,600));
         dialog.pack();
         dialog.setVisible(true);
@@ -125,8 +150,7 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
             public void onResult(RemoteData<Material> data) {
 
 
-                pagePanel.bindRemoteData(data);
-                materialTableModel.setDatas(data.datas);
+                bindRemoteData(data);
 
             }
         }.go();
@@ -134,6 +158,14 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
 
 
 
+    }
+
+
+
+    private  void bindRemoteData(RemoteData<Material> materialRemoteData)
+    {
+        pagePanel.bindRemoteData(materialRemoteData);
+        materialTableModel.setDatas(materialRemoteData.datas);
     }
 
 

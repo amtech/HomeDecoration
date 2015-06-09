@@ -1,8 +1,5 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.Product;
-
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,6 +18,9 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     public Class[] classes ;
     List<T> datas;
     public Class<T> itemClass;
+
+
+    public static final int    MiniRowCount = 10;
 
 
 
@@ -48,9 +48,35 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
         }
 
+        adjustRowCount();
 
     }
 
+
+    /**
+     * 调整默认显示的记录数
+     */
+    protected   void adjustRowCount()
+    {
+
+        int currentSize=this.datas.size();
+
+        if(currentSize< MiniRowCount)
+        {
+            for(int i=currentSize;i< MiniRowCount;i++)
+                try {
+                    this.datas.add(itemClass.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
+
+
+    }
 
 
     @Override
@@ -87,6 +113,9 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
         if(datas!=null)
              this.datas.addAll(datas);
+            adjustRowCount();
+
+
         fireTableDataChanged();
     }
 

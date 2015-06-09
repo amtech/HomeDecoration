@@ -14,6 +14,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
 import java.util.ResourceBundle;
@@ -349,7 +350,18 @@ public class Main extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"");
+
+
+
+
+
+
+
+
+
+                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"",null);
+                dialog.setTitle("搜索材料");
+
                 dialog.pack();
                 dialog.setVisible(true);
             }
