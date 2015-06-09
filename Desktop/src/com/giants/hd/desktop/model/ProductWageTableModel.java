@@ -12,7 +12,7 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
 
     public static String[] columnNames = new String[]{"工序编码", "工序名称", " 工价 ", " 金额 ","备注                    "};
     public static String[] fieldName = new String[]{"processCode", "processName", "price", "amount", "memo" };
-    public  static Class[] classes = new Class[]{String.class, String.class, Float.class, Float.class, String.class };
+    public  static Class[] classes = new Class[]{String.class, String.class  };
 
     public  static boolean[] editables = new boolean[]{true, true, true, true, true};
     private Product product;

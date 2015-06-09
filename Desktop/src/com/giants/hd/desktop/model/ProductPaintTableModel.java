@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 public class ProductPaintTableModel extends BaseTableModel<ProductPaint> implements Materialable {
     public static String[] columnNames = new String[]{"工序代码", "工序名称", "工价", "材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释剂费用"};
     public static String[] fieldName = new String[]{"processCode", "processName", "processPrice", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost"};
-    public static Class[] classes = new Class[]{String.class, String.class, Float.class, Material.class, Float.class, String.class, Float.class, Float.class, Float.class, Float.class};
+    public static Class[] classes = new Class[]{String.class, String.class, Object.class, Material.class, Object.class, String.class };
 
     public static boolean[] editables = new boolean[]{true, true, true, true, true, false, true, false, false, false, false, true, false, false, true, true};
 

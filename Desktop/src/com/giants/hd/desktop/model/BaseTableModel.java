@@ -137,14 +137,23 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
         if (fields[columnIndex] == null) return null;
 
+
+        Object obj = null;
         try {
-            return fields[columnIndex].get(getItem(rowIndex));
+            obj= fields[columnIndex].get(getItem(rowIndex));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
 
-        return null;
+        if(  obj instanceof Number  &&Math.abs(((Number) obj).floatValue())<=0.00001)
+        {
+            return "";
+        }else
+        return obj
+        ;
+
+
     }
 
     /**\

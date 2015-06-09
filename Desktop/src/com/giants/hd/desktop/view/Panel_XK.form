@@ -382,8 +382,8 @@
         </constraints>
         <properties>
           <model>
-            <item value="YES"/>
             <item value="NO"/>
+            <item value="YES"/>
           </model>
         </properties>
       </component>

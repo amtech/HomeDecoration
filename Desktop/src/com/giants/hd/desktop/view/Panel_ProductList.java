@@ -47,7 +47,7 @@ public class Panel_ProductList  extends BasePanel {
         super();
 
 
-
+        searchProduct("");
 
         btn_search.addActionListener(new ActionListener() {
             @Override

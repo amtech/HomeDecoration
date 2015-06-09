@@ -21,6 +21,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
@@ -710,7 +711,7 @@ public class Panel_ProductDetail extends BasePanel {
 
     private void createUIComponents() {
 
-        cellPanel = new APanel();
+       // cellPanel = new APanel();
         //cellPanel.setGridColor(Color.GRAY);
         // cellPanel.setPaintInBackground(false);
         cb_class = new JComboBox<PClass>();
@@ -1317,6 +1318,13 @@ public class Panel_ProductDetail extends BasePanel {
         for (PackMaterialClass packMaterialClass : BufferData.packMaterialClasses)
             packMaterialClassComboBox.addItem(packMaterialClass);
         table.setDefaultEditor(PackMaterialClass.class, new DefaultCellEditor(packMaterialClassComboBox));
+
+
+
+
+
+          DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){};
+
 
     }
 

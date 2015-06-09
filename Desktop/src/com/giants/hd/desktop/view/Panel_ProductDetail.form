@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="3f5b2" binding="cellPanel" custom-create="true" layout-manager="FormLayout">
+      <grid id="3f5b2" binding="cellPanel" layout-manager="FormLayout">
         <rowspec value="fill:44px:noGrow"/>
         <rowspec value="fill:p:noGrow"/>
         <rowspec value="fill:p:noGrow"/>
