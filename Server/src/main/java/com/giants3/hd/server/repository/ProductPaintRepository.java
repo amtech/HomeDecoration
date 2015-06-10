@@ -20,6 +20,6 @@ public interface ProductPaintRepository extends JpaRepository<ProductPaint,Long>
 
 
 
-
+    public ProductPaint   findByMaterialIdEquals(long materialId);
 
 }

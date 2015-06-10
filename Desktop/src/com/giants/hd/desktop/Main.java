@@ -10,6 +10,7 @@ import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 
@@ -25,8 +26,6 @@ import java.util.logging.Logger;
  */
 public class Main extends JFrame {
     private JPanel panel1;
-    private JTextPane textPane1;
-    private JTextArea textArea1;
     private JTextField tf_product;
     private JLabel lable2;
     private JLabel photo;
@@ -439,6 +438,21 @@ public class Main extends JFrame {
 
 
                 BufferData.setMaterialEquations(  materialEquationRemoteData.datas);
+
+            }
+
+
+
+
+            @Override
+            public void onHandleError(HdException exception)
+            {
+
+
+
+                JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。");
+
+
 
             }
         }.go();

@@ -340,16 +340,6 @@
               <text value="产品图片"/>
             </properties>
           </component>
-          <component id="b71a9" class="javax.swing.JLabel" binding="lb_pack">
-            <constraints>
-              <grid row="10" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="&lt;html&gt;&lt;HTML&gt;&lt;body &gt;普通 &lt;br&gt; 包装&lt;/body&gt;&lt;/html&gt;"/>
-            </properties>
-          </component>
           <component id="b05ea" class="javax.swing.JLabel">
             <constraints>
               <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -500,8 +490,8 @@
           </component>
           <component id="2624f" class="javax.swing.JLabel">
             <constraints>
-              <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
+              <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
               <text value="4包材"/>
@@ -520,7 +510,7 @@
           </component>
           <component id="6439f" class="javax.swing.JLabel">
             <constraints>
-              <grid row="10" column="8" row-span="1" col-span="10" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="9" row-span="1" col-span="9" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -673,7 +663,7 @@
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
               <labelFor value="99b00"/>
-              <text value="福州云飞编织贫有限公司产品成本分析表"/>
+              <text value="福州云飞家居有限公司产品成本分析表"/>
             </properties>
           </component>
           <component id="c2c99" class="javax.swing.JTextField" binding="tf_unit">
@@ -700,16 +690,6 @@
               <forms/>
             </constraints>
           </nested-form>
-          <component id="67371" class="javax.swing.JCheckBox" binding="cb_xiankang">
-            <constraints>
-              <grid row="1" column="14" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="咸康货品"/>
-              <toolTipText value="咸康货品有额外信息"/>
-            </properties>
-          </component>
           <component id="4d787" class="javax.swing.JTextField" binding="jtf_cost1">
             <constraints>
               <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
@@ -1002,9 +982,46 @@
             </constraints>
             <properties/>
           </component>
+          <component id="65e57" class="javax.swing.JButton" binding="bn_save">
+            <constraints>
+              <grid row="15" column="4" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="保存"/>
+            </properties>
+          </component>
+          <component id="ca2bc" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="10" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="镜面尺寸"/>
+            </properties>
+          </component>
+          <component id="9f989" class="javax.swing.JTextField" binding="jtf_mirror_size">
+            <constraints>
+              <grid row="10" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="67371" class="javax.swing.JCheckBox" binding="cb_xiankang">
+            <constraints>
+              <grid row="1" column="10" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="咸康货品"/>
+              <toolTipText value="咸康货品有额外信息"/>
+            </properties>
+          </component>
           <component id="a33a4" class="javax.swing.JButton" binding="btn_export">
             <constraints>
-              <grid row="15" column="14" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="15" column="16" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -1013,20 +1030,20 @@
           </component>
           <component id="a5939" class="javax.swing.JButton" binding="btn_copy">
             <constraints>
-              <grid row="15" column="10" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="15" column="9" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
               <text value="翻样"/>
             </properties>
           </component>
-          <component id="65e57" class="javax.swing.JButton" binding="bn_save">
+          <component id="e5083" class="javax.swing.JButton" binding="btn_delete">
             <constraints>
-              <grid row="15" column="4" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="15" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
-              <text value="保存"/>
+              <text value="删除"/>
             </properties>
           </component>
         </children>

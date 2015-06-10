@@ -179,4 +179,13 @@ public class HttpUrl {
     public static String copyProductDetail(long id, String productName,String version) {
         return BaseUrl+"api/product/copy?id="+id+"&name="+productName+"&version="+version;
     }
+
+    public static String deleteProductLogic(long productId) {
+        return BaseUrl+"api/product/logicDelete?id="+productId ;
+    }
+
+
+    public static String deleteMaterialLogic(long materialId) {
+        return BaseUrl+"api/material/logicDelete?id="+materialId ;
+    }
 }

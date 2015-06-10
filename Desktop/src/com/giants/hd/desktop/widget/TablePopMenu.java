@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.widget;
 
+import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.model.BaseTableModel;
 
 import javax.swing.*;
@@ -46,12 +47,12 @@ public class TablePopMenu extends JPopupMenu {
 
 
 
-                int modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
+                int tableRow[]= JTableUtils.getSelectedRowSOnModel(table);
                 if (table.getModel() instanceof BaseTableModel) {
                     BaseTableModel model = (BaseTableModel) table.getModel();
 
                     if(lister!=null)
-                        lister.onTableMenuClick(ITEM_INSERT,model,modelIndex);
+                        lister.onTableMenuClick(ITEM_INSERT,model,tableRow);
                 }
 
 
@@ -61,18 +62,18 @@ public class TablePopMenu extends JPopupMenu {
         deleteItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int tableRow=table.getSelectedRow();
-                if(tableRow<0||tableRow>table.getRowCount()-1)
+                int tableRow[]= JTableUtils.getSelectedRowSOnModel(table);
+                if(tableRow.length==0 )
                 {
                     JOptionPane.showMessageDialog(table,"请选择行进行删除。");
                     return;
                 }
-                int modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
+
                 if (table.getModel() instanceof BaseTableModel) {
                     BaseTableModel model = (BaseTableModel) table.getModel();
 
                     if(lister!=null)
-                        lister.onTableMenuClick(ITEM_DELETE,model,modelIndex);
+                        lister.onTableMenuClick(ITEM_DELETE,model,tableRow);
                 }
 
 
@@ -89,7 +90,7 @@ public class TablePopMenu extends JPopupMenu {
 
 
 
-                int modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
+                int modelIndex[] = JTableUtils.getSelectedRowSOnModel(table);
 
                 if (table.getModel() instanceof BaseTableModel) {
                     BaseTableModel model = (BaseTableModel) table.getModel();
@@ -116,7 +117,7 @@ public class TablePopMenu extends JPopupMenu {
 
     public  interface  TableMenuLister
     {
-        public void onTableMenuClick(int index, BaseTableModel tableModel,int rowIndex);
+        public void onTableMenuClick(int index, BaseTableModel tableModel,int rowIndex[]);
     }
 
 }

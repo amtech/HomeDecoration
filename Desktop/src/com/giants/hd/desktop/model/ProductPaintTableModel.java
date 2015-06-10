@@ -8,11 +8,11 @@ import com.google.inject.Inject;
  * 油漆工表格模型
  */
 public class ProductPaintTableModel extends BaseTableModel<ProductPaint> implements Materialable {
-    public static String[] columnNames = new String[]{"工序代码", "工序名称", "工价", "材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释剂费用"};
-    public static String[] fieldName = new String[]{"processCode", "processName", "processPrice", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost"};
-    public static Class[] classes = new Class[]{String.class, String.class, Object.class, Material.class, Object.class, String.class };
+    public static String[] columnNames = new String[]{"工序代码", "工序名称", "工价","材料编码" ,"材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释剂费用"};
+    public static String[] fieldName = new String[]{"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost"};
+    public static Class[] classes = new Class[]{String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
 
-    public static boolean[] editables = new boolean[]{true, true, true, true, true, false, true, false, false, false, false, true, false, false, true, true};
+    public static boolean[] editables = new boolean[]{true, true, true, true,true,  true, false, true, false, false, false, false, true, false, false, true, true};
 
     @Inject
     public ProductPaintTableModel() {
@@ -45,13 +45,13 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 item.setProcessPrice(Float.valueOf(aValue.toString()));
                 break;
             //"配料比例"
-            case 4:
+            case 5:
                 item.setIngredientRatio(Float.valueOf(aValue.toString()));
                 item.updateMaterialAndIngredientCost();
                 break;
 
             //"用量"
-            case 6:
+            case 7:
                 item.setMaterialQuantity(Float.valueOf(aValue.toString()));
                 item.updateMaterialAndIngredientCost();
                 break;

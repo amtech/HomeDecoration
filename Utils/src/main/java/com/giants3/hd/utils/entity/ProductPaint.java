@@ -280,7 +280,7 @@ public class ProductPaint  implements Serializable,Summariable {
 		this.materialId=material.id;
 		this.materialPrice=material.price;
 		this.unitName=material.unitName;
-	this.materialType=material.typeId;
+		this.materialType=material.typeId;
 
 
 		//
@@ -299,9 +299,11 @@ public class ProductPaint  implements Serializable,Summariable {
 	 */
 	public  void updateMaterialAndIngredientCost()
 	{
+		ConfigData configData=ConfigData.getInstance();
 		materialCost=materialQuantity*materialPrice;
-		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio));
-		ingredientCost=ingredientQuantity*1.2f;
+		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio))*(1+configData.extra_ratio_of_diluent);
+		//配料 即稀释剂   稀释剂单价
+		ingredientCost=ingredientQuantity*configData.price_of_diluent;
 
 
 	}
@@ -313,6 +315,6 @@ public class ProductPaint  implements Serializable,Summariable {
 
 	@Override
 	public float getAmount() {
-		return materialCost;
+		return materialCost+ingredientCost;
 	}
 }

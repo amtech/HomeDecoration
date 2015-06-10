@@ -63,14 +63,6 @@ public class ProductDetail   {
             paintWage += paint.processPrice;
             paintCost += paint.materialCost + paint.ingredientCost;
 
-
-
-
-
-
-
-
-
         }
         product.updatePaintData(paintCost, paintWage);
 

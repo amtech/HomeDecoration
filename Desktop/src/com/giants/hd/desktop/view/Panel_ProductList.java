@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.local.HdSwingUtils;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
@@ -66,7 +67,7 @@ public class Panel_ProductList  extends BasePanel {
         productTable.setRowHeight(100);
 
 
-        JTableUtils.setJTableColumnsWidth(productTable, 800, 40, 60, 60, 60, 60, 60);
+        JTableUtils.setJTableColumnsWidth(productTable, 800, 40, 60, 40, 60,60,20, 40, 60);
 
 
         productTable.addMouseListener(new MouseInputAdapter() {
@@ -87,9 +88,7 @@ public class Panel_ProductList  extends BasePanel {
                         ImageViewDialog.showDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
                     } else {
 
-
-
-                        showDetailPanel(product);
+                        HdSwingUtils.showDetailPanel(product,getRoot());
 
 
 
@@ -108,7 +107,7 @@ public class Panel_ProductList  extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                showDetailPanel(null);
+                HdSwingUtils.showDetailPanel(null,getRoot());
 
 
             }
@@ -127,31 +126,10 @@ public class Panel_ProductList  extends BasePanel {
     }
 
 
-    /**
-     * 显示产品详情
-     * @param product
-     */
-    private void showDetailPanel(Product product)
-    {
 
-        JDialog dialog = new JDialog(getWindow(getRoot()));
-        dialog.setModal(true);
-        Panel_ProductDetail panel_productDetail = new Panel_ProductDetail(product);
-        dialog.setContentPane(panel_productDetail.getRoot());
-        dialog.setMinimumSize(new Dimension(1024,768));
-        dialog.pack();
-        dialog.setLocationByPlatform(true);
-        dialog.setVisible(true);
-
-
-    }
 
     private  void searchProduct(String productNameValue)
     {
-
-
-
-
 
         searchProduct(productNameValue,0,pagePanel.getPageSize());
 

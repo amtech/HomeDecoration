@@ -19,10 +19,20 @@ public class HdException extends  Exception {
     public String message;
     public int errorCode;
 
+    protected HdException(String s, Throwable cause) {
+        super(s,cause);
+
+    }
+
+    public HdException() {
+        super();
+    }
+
     public static HdException create(int errorCode,Throwable cause)
     {
-        HdException hdException= new HdException();
+        HdException hdException= new HdException("", cause);
         hdException.errorCode=errorCode;
+        hdException.message=cause.getLocalizedMessage();
         return hdException;
     }
 

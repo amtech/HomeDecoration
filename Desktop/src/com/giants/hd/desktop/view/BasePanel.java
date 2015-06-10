@@ -49,11 +49,15 @@ public  abstract  class BasePanel {
     public abstract JComponent getRoot();
 
 
-
+    /**
+     * 面板回调接口
+     */
     public interface  PanelListener
     {
 
         public void save();
+
+        public void delete();
     }
 
 }

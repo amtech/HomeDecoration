@@ -6,7 +6,7 @@ import javax.persistence.*;
  * 报价明细列表
  */
 @Entity(name="T_QuotationList")
-public class QuotationList {
+public class QuotationItem {
 
 
     @Id
@@ -14,11 +14,17 @@ public class QuotationList {
     public long id;
 
 
+    /**
+     *
+     */
+    @Basic
+    public long productId=-1;
 
 
-
-
-
-
+    /**
+     *
+     */
+    @Basic
+    public String productname;
 
 }

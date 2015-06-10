@@ -3,6 +3,8 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.MaterialRepository;
 
+import com.giants3.hd.server.repository.ProductMaterialRepository;
+import com.giants3.hd.server.repository.ProductPaintRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 
@@ -37,6 +39,16 @@ public class MaterialController extends BaseController {
 
     @Autowired
     private JpaRepository<MaterialEquation,Long> equationRepository;
+
+
+
+    @Autowired
+    private ProductMaterialRepository productMaterialRepository;
+
+
+    @Autowired
+    private ProductPaintRepository productPaintRepository;
+
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
     @ResponseBody
@@ -215,6 +227,57 @@ public class MaterialController extends BaseController {
     RemoteData<MaterialEquation> listEquation( )   {
 
         return wrapData(equationRepository.findAll());
+    }
+
+
+
+    /**
+     *删除产品信息
+     *
+     *
+     * @param materialId
+     * @return
+     */
+    @RequestMapping(value = "/logicDelete", method = {RequestMethod.GET, RequestMethod.POST})
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData< Void> logicDelete(@RequestParam("id") long materialId ) {
+
+
+
+
+        //查询是否有产品使用该物料。
+        if(productMaterialRepository.findByMaterialIdEquals(materialId)!=null )
+        {
+
+
+            return     wrapError("该材料在产品材料中有使用 ，不能删除 ！");
+        }
+        //查询是否有产品使用该物料。
+        if(productPaintRepository.findByMaterialIdEquals(materialId)!=null )
+        {
+
+
+            return     wrapError("该材料在产品油漆中有使用 ，不能删除 ！");
+        }
+
+
+
+        Material material=materialRepository.findOne(materialId);
+        if(material==null)
+        {
+            return     wrapError("该材料已经删除， 请更新 ！");
+        }
+
+        materialRepository.delete(materialId);
+
+        //TODO   save the delete item to the wareHouse .
+
+
+
+
+        return wrapData( );
     }
 
 }

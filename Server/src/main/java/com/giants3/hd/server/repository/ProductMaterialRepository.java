@@ -18,4 +18,7 @@ public interface ProductMaterialRepository extends JpaRepository<ProductMaterial
 
     public List<ProductMaterial> findByProductIdEquals(long productId);
     public List<ProductMaterial> findByProductIdEqualsAndFlowIdEquals(long productId,long flowId);
+
+
+    public ProductMaterial   findByMaterialIdEquals(long materialId);
 }

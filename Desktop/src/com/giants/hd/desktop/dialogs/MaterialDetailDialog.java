@@ -5,6 +5,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.*;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.ProductDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -68,6 +69,64 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
 
             }
         }.go();
+
+    }
+
+    @Override
+    public void delete() {
+
+
+
+
+
+
+
+        if(material.id<=0)
+        {
+
+            JOptionPane.showMessageDialog(this, "材料数据未建立，请先保存");
+            return;
+
+        }
+
+
+
+        int res=   JOptionPane.showConfirmDialog(this, "是否删除该材料？（导致数据无法恢复）", "删除材料", JOptionPane.OK_CANCEL_OPTION);
+        if(res==JOptionPane.YES_OPTION)
+        {
+            new HdSwingWorker<Void,Void>(this)
+            {
+
+                @Override
+                protected RemoteData<Void> doInBackground() throws Exception {
+
+                    return     apiManager.deleteMaterialLogic(material.id);
+
+                }
+
+                @Override
+                public void onResult(RemoteData<Void> data) {
+
+                    if(data.isSuccess())
+                    {
+
+                        JOptionPane.showMessageDialog(MaterialDetailDialog.this,"删除成功！");
+
+                        MaterialDetailDialog.this.dispose();
+
+
+
+                    }else
+                    {
+                        JOptionPane.showMessageDialog(MaterialDetailDialog.this,data.message);
+                    }
+
+                }
+            }.go();
+
+
+
+        }
 
     }
 }

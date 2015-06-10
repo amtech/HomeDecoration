@@ -49,10 +49,26 @@ public class BaseController {
 
 
 
-            return wrapData(0,datas.size(),1,datas.size(),datas);
+            return wrapData(0,datas==null?0:datas.size(),1,datas==null?0:datas.size(),datas);
 
 
         }
+
+
+    /**
+     * 封装正常的返回结果。
+     * @param <T>
+     * @return
+     */
+    public <T>        RemoteData<T> wrapData( )
+    {
+
+
+
+        return wrapData(null);
+
+
+    }
     /**
      * 封装正常的返回结果。
      * @param datas

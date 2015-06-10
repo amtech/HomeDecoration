@@ -5,6 +5,7 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -45,6 +46,10 @@ public class ProductController extends BaseController {
     private ProductPaintRepository productPaintRepository;
     @Value("${filepath}")
     private String rootFilePath;
+
+    @Autowired
+    private QuotationItemRepository quotationItemRepository;
+
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -267,6 +272,12 @@ public class ProductController extends BaseController {
 
             //添加或者修改记录
             for (ProductPaint newPaint : productDetail.paints) {
+                //过滤空白记录 工序编码 跟名称都为空的情况下 也为设定材料情况下  为空记录。
+                if(StringUtils.isEmpty(newPaint.processName)&&StringUtils.isEmpty(newPaint.processCode)&&newPaint.materialId<=0)
+                {
+                    continue;
+                }
+
                 newPaint.setProductId(product.id);
                 newPaint.setProductName(product.name);
                 newPaint.setFlowId(Flow.FLOW_PAINT);
@@ -343,6 +354,12 @@ public class ProductController extends BaseController {
         //添加或者修改记录
         for (ProductWage newData
                 : wages) {
+
+            if(newData.processId<=0&&StringUtils.isEmpty(newData.processCode)&&StringUtils.isEmpty(newData.processName))
+            {
+                continue;
+            }
+
             newData.setProductId(productId);
             newData.setFlowId(flowId);
             productWageRepository.save(newData);
@@ -383,6 +400,10 @@ public class ProductController extends BaseController {
         //添加或者修改记录
         for (ProductMaterial newData
                 : materials) {
+
+            //无设定材料  数据为空
+            if(newData.materialId<=0)
+            {continue;}
             newData.setProductId(productId);
             newData.setFlowId(flowId);
             productMaterialRepository.save(newData);
@@ -464,7 +485,9 @@ public class ProductController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/copy", method = {RequestMethod.GET, RequestMethod.POST})
+    @Transactional
     public
+
     @ResponseBody
     RemoteData<ProductDetail> copyProduct(@RequestParam("id") long productId,@RequestParam("name") String newProductName,@RequestParam("version") String version) {
 
@@ -521,6 +544,50 @@ public class ProductController extends BaseController {
         return findProductDetailById(newProductId);
     }
 
+
+
+
+
+    /**
+     *删除产品信息
+     *
+     *
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "/logicDelete", method = {RequestMethod.GET, RequestMethod.POST})
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData< Void> logicDelete(@RequestParam("id") long productId ) {
+
+
+
+
+        //查询是否有关联的报价单
+        if(quotationItemRepository.findByProductIdEquals(productId)!=null)
+        {
+
+
+            return     wrapError("该货号在报价单："+ "模拟单号"
+                    +"有使用记录，不能删除");
+        }
+
+        Product product=productRepository.findOne(productId);
+        if(product==null)
+        {
+            return     wrapError("该产品已经删除， 请更新 ！");
+        }
+
+        productRepository.delete(productId);
+
+         //TODO   save the delete item to the wareHouse .
+
+
+
+
+        return wrapData( );
+    }
 
 
 }

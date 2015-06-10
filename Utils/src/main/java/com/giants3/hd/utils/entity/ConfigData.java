@@ -39,6 +39,12 @@ public class ConfigData {
     public float price_of_export=95;
     private static ConfigData instance=new ConfigData();
 
+
+    /**
+     * 稀释剂冗余量， 用为洗刷枪笔
+     */
+    public float extra_ratio_of_diluent=0.1f;
+
     public static ConfigData getInstance() {
         return instance;
     }

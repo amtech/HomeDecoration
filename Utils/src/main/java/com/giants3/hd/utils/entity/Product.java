@@ -268,6 +268,16 @@ public class Product implements Serializable {
 	public float cost4;
 
 
+	/**
+	 * 镜面尺寸
+	 */
+	@Basic
+	public String  mirrorSize;
+
+
+
+
+
 	public float getFob() {
 		return fob;
 	}

@@ -176,7 +176,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             datas.add(newItem);
         }
         else
-            datas.add(index+1,newItem);
+            datas.add(index,newItem);
         fireTableDataChanged();
         return newItem;
 
@@ -196,6 +196,39 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             fireTableDataChanged();
         }
 
+
+    }
+
+
+
+    /**
+     * 删除多行
+     * @param rowIndexs
+     */
+    public   void deleteRows(int[] rowIndexs)
+    {
+
+
+
+        List<T> datasToDelete=new ArrayList<>();
+        for(int rowIndex:rowIndexs)
+        {
+
+            if(rowIndex>=0&&rowIndex<getRowCount())
+            {
+                datasToDelete.add(getItem(rowIndex));
+
+
+
+        }
+
+
+
+        }
+
+        datas.removeAll(datasToDelete);
+
+        fireTableDataChanged();
 
     }
 

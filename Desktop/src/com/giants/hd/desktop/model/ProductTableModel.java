@@ -10,8 +10,8 @@ import javax.swing.*;
  */
 
 public class ProductTableModel extends BaseTableModel<Product> {
-    public static String[] columnNames = new String[]{"图片", "货号", "规格", "单位", "类别", "日期"};
-    public static String[] fieldName = new String[]{"photo", "name", "spec", "pUnitName", "pClassName", "rDate"};
+    public static String[] columnNames = new String[]{"图片", "货号","版本号","包装类型", "规格", "单位", "类别", "日期"};
+    public static String[] fieldName = new String[]{"photo", "name",  "pVersion","pack","spec","pUnitName", "pClassName", "rDate"};
 
     public  static Class[] classes = new Class[]{ImageIcon.class, Object.class, Object.class, Object.class, Object.class, Object.class};
 

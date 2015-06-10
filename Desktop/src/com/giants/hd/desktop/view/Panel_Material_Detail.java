@@ -31,6 +31,7 @@ public class Panel_Material_Detail extends  BasePanel {
     //private JComboBox<MaterialEquation> cb_equation;
     private JPanel rootPanel;
     private JFormattedTextField ftf_available;
+    private JButton btn_delete;
 
 
     @Inject
@@ -48,6 +49,17 @@ public class Panel_Material_Detail extends  BasePanel {
                 if(listener!=null)
                 {
                     listener.save();
+                }
+            }
+        });
+
+        btn_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(listener!=null)
+                {
+                    listener.delete();
                 }
             }
         });
@@ -105,7 +117,7 @@ public class Panel_Material_Detail extends  BasePanel {
         ftf_available.setValue(new Float(data.getAvailable()));
         ftf_unitRatio.setValue(new Float(data.getUnitRatio()));
 
-        int selectedItem=-1;
+        int selectedItem=0;
         for(int i=0,count=cb_materialClass.getItemCount();i<count;i++)
         {
 
@@ -119,7 +131,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
 
-        selectedItem=-1;
+        selectedItem=0;
         for(int i=0,count=cb_materialType.getItemCount();i<count;i++)
         {
 

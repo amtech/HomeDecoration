@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -371,5 +372,32 @@ public class ApiManager {
         RemoteData<ProductDetail> remoteData = gson.fromJson(result ,generateType);
         return remoteData;
 
+    }
+
+    /**
+     * 逻辑删除产品数据
+     * @return
+     */
+    public RemoteData<Void> deleteProductLogic(long productId) throws HdException {
+        String url=HttpUrl.deleteProductLogic(productId);
+        Logger.getLogger(TAG).info(url);
+        String result=     client.postWithStringReturned(url, null);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+
+    public RemoteData<Void> deleteMaterialLogic(long materialId) throws HdException {
+        String url=HttpUrl.deleteMaterialLogic(materialId);
+        Logger.getLogger(TAG).info(url);
+        String result=     client.postWithStringReturned(url, null);
+        Logger.getLogger(TAG).info(result);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
     }
 }

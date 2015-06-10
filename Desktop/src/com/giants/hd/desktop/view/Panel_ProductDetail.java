@@ -8,6 +8,8 @@ import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.APanel;
 import com.giants.hd.desktop.widget.TablePopMenu;
+import com.giants.hd.desktop.widget.header.ColumnGroup;
+import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -15,6 +17,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
+import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -22,6 +25,8 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
@@ -60,7 +65,6 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField tf_price;
     private JTextField tf_cost;
 
-    private JLabel lb_pack;
 
     private JTextField tf_weight;
     private JTextField tf_version;
@@ -103,6 +107,8 @@ public class Panel_ProductDetail extends BasePanel {
     private JComboBox cb_pack;
     private JTabbedPane tabbedPane5;
     private JButton btn_copy;
+    private JTextField jtf_mirror_size;
+    private JButton btn_delete;
 
 
     private ProductDetail productDetail;
@@ -148,6 +154,17 @@ public class Panel_ProductDetail extends BasePanel {
 
    private  DocumentListener tf_quantityListener;
 
+
+
+    public Panel_ProductDetail(ProductDetail productDetail) {
+    super();
+
+        initComponent();
+        addListener();
+        initPanel(productDetail);
+
+
+    }
 
     public Panel_ProductDetail(Product product) {
 
@@ -242,13 +259,29 @@ public class Panel_ProductDetail extends BasePanel {
                 dialog.setVisible(true);
 
                 if(dialog.getResult()!=null)
-                initPanel(dialog.getResult());
+                HdSwingUtils.showDetailPanel(getRoot(),dialog.getResult());
 
 
 
 
 
 
+
+
+
+
+            }
+        });
+
+
+        /**
+         * 删除
+         */
+        btn_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+               if(listener!=null) listener.delete();
 
 
 
@@ -325,19 +358,36 @@ public class Panel_ProductDetail extends BasePanel {
         configTableCellEditor(tb_pack_cost);
 
 
-        //
-
-        cb_pack.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
 
 
-                lb_pack.setText(e.getItem().toString());
-
-            }
-        });
 
 
+        configGroupHeader(tb_conceptus_cost);
+
+
+
+    }
+
+
+
+    public void configGroupHeader(JTable jTable)
+    {
+        ColumnGroup g_name = new ColumnGroup("产品规格");
+        TableColumnModel columnModel = jTable.getColumnModel();
+
+        g_name.add(columnModel.getColumn(3));
+        g_name.add(columnModel.getColumn(4));
+        g_name.add(columnModel.getColumn(5));
+        ColumnGroup g_lang = new ColumnGroup("毛料规格");
+        g_lang.add(columnModel.getColumn(5));
+        g_lang.add(columnModel.getColumn(6));
+        g_lang.add(columnModel.getColumn(7));
+
+        GroupableTableHeader header = new
+                GroupableTableHeader(columnModel);
+        header.addColumnGroup(g_name);
+        header.addColumnGroup(g_lang);
+        jTable.setTableHeader(header);
 
     }
 
@@ -406,6 +456,12 @@ public class Panel_ProductDetail extends BasePanel {
 
         String tf_unitValue = tf_unit.getText().trim();
         product.setpPUnitName(tf_unitValue);
+
+
+        //镜面尺寸
+
+        String mirrorSizeValue=jtf_mirror_size.getText();
+        product.mirrorSize=mirrorSizeValue;
 
 
         //是否咸康数据
@@ -570,6 +626,10 @@ public class Panel_ProductDetail extends BasePanel {
         tf_product.setText(product == null ? "" : product.getName());
 
 
+        jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
+
+
+
         photo.setIcon(product.photo == null ? null : new ImageIcon(product.photo));
 
         photo.setText(product == null ? "产品图片" : "");
@@ -615,8 +675,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        //设置包装信息
-        lb_pack.setText(product.pack == null ? "包装" : product.pack.name);
 
 
 
@@ -758,6 +816,12 @@ public class Panel_ProductDetail extends BasePanel {
         tb_pack_wage.setModel(packWageTableModel);
 
 
+
+
+        //咸康信息 默认不显示
+        panel_xiankang.setVisible(false);
+
+
         int defaultRowHeight= ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
 
         tb_conceptus_cost.setRowHeight(defaultRowHeight);
@@ -849,22 +913,22 @@ public class Panel_ProductDetail extends BasePanel {
          */
         tableMenuLister = new TablePopMenu.TableMenuLister() {
             @Override
-            public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex) {
+            public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex[]) {
                 switch (index) {
 
 
                     case TablePopMenu.ITEM_INSERT:
 
-                        tableModel.addNewRow(rowIndex);
+                        tableModel.addNewRow(rowIndex[0]);
 
                         break;
                     case TablePopMenu.ITEM_DELETE:
 
-                        tableModel.deleteRow(rowIndex);
+                        tableModel.deleteRows(rowIndex);
                         break;
                     case TablePopMenu.ITEM_PAST:
 
-                        handleClipBordDataToTable(tableModel, rowIndex);
+                        handleClipBordDataToTable(tableModel, rowIndex[0]);
                         break;
                 }
             }
@@ -1072,11 +1136,23 @@ public class Panel_ProductDetail extends BasePanel {
 
                         ProductPaint productPaint=(ProductPaint) object;
                         String name = row == null || row.length <=3   ? "" : row[3].trim();
-                        String processCode=row[0];
+
+
+                        String processCode ="";
+                        try {
+                            processCode = row[0];
+                        } catch (Throwable t) {
+
+                        }
                         productPaint.setProcessCode(processCode);
 
 
-                        String processName=row[1];
+                        String processName ="";
+                        try {
+                            processName = row[1];
+                        } catch (Throwable t) {
+
+                        }
                         productPaint.setProcessName(processName);
 
 
@@ -1331,5 +1407,9 @@ public class Panel_ProductDetail extends BasePanel {
     @Override
     public JComponent getRoot() {
         return contentPane;
+    }
+
+    public ProductDetail getData() {
+        return productDetail;
     }
 }

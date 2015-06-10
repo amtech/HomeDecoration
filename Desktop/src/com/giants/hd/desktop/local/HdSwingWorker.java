@@ -52,10 +52,10 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
             result = get();
         } catch (InterruptedException e) {
 
-            exception=HdException.create(e.getMessage());
+            exception=HdException.create(e.getLocalizedMessage());
             e.printStackTrace();
         } catch (ExecutionException e) {
-            exception=HdException.create(e.getMessage());
+            exception=HdException.create(e.getLocalizedMessage());
             e.printStackTrace();
         }
 
@@ -87,6 +87,8 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
 
 
         //TODO  处理线程异常
+
+        JOptionPane.showMessageDialog(null,exception.getMessage());
 
 
 
