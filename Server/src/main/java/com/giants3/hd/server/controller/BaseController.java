@@ -38,6 +38,25 @@ public class BaseController {
 
     }
 
+
+    /**
+     * 封装正常的返回结果。
+     * @param message   带消息参数
+     * @param <T>
+     * @return
+     */
+    public <T>        RemoteData<T> wrapMessageData(String message)
+    {
+
+
+        RemoteData<T> data=new RemoteData<>();
+        data.message=message;
+
+        return data;
+
+
+    }
+
     /**
      * 封装正常的返回结果。
      * @param datas

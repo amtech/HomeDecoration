@@ -1,6 +1,10 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.convert.WritingConverter;
@@ -18,12 +22,14 @@ import java.io.FileOutputStream;
  */
 @Controller
 @RequestMapping("/file")
-public class FileController {
+public class FileController  extends BaseController{
 
 
 
     @Value("${filepath}")
     private String filePath;
+
+
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public @ResponseBody
@@ -67,6 +73,7 @@ public class FileController {
 
         return resource;
     }
+
 
 
 }

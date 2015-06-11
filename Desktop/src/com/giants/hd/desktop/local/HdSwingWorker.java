@@ -88,7 +88,7 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
 
         //TODO  处理线程异常
 
-        JOptionPane.showMessageDialog(null,exception.getMessage());
+      //  JOptionPane.showMessageDialog(null,exception.getMessage());
 
 
 

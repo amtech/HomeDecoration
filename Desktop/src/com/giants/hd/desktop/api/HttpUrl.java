@@ -188,4 +188,21 @@ public class HttpUrl {
     public static String deleteMaterialLogic(long materialId) {
         return BaseUrl+"api/material/logicDelete?id="+materialId ;
     }
+
+    /**
+     * 同步材料图片
+     * @return
+     */
+    public static String syncMaterialPhoto() {
+        return BaseUrl+"api/material/syncPhoto" ;
+    }
+
+    /**
+     * 同步产品图片
+     * @return
+     */
+    public static String syncProductPhoto() {
+
+        return BaseUrl+"api/product/syncPhoto" ;
+    }
 }

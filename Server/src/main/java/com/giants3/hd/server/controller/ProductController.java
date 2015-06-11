@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -233,13 +234,12 @@ public class ProductController extends BaseController {
             //找出旧的记录
             Product oldData = productRepository.findOne(productId);
             //如果产品名称修改  则修正缩略图
-            if (!oldData.name.equals(newProduct.name)) {
+            if (!(oldData.name.equals(newProduct.name)&&oldData.pVersion.equals(newProduct.pVersion))) {
                 updateProductPhotoData(newProduct);
             }
         }
 
 
-        //更新图片更新字段 记录图片的最后更新时间
         updateProductPhotoTime(newProduct);
 
 
@@ -436,13 +436,17 @@ public class ProductController extends BaseController {
         //如果tup图片文件不存在  则 设置photo为空。
         if (!new File(filePath).exists()) {
             product.setPhoto(null);
+            product.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
 
         } else {
             try {
                 product.setPhoto(ImageUtils.scaleProduct(filePath));
+
             } catch (HdException e) {
                 e.printStackTrace();
             }
+
+
         }
 
 
@@ -589,5 +593,107 @@ public class ProductController extends BaseController {
         return wrapData( );
     }
 
+
+
+    /**
+     * 同步产品图片数据
+     * @return
+     */
+
+    @RequestMapping(value="/syncPhoto", method={RequestMethod.GET,RequestMethod.POST})
+    @Transactional
+    @ResponseBody
+    public RemoteData<Void> asyncProduct( ) {
+
+
+        int count=0;
+        //遍历所有产品
+        //一次处理20条记录
+
+         int pageIndex=0;
+        int pageSize=20;
+
+
+        Page<Product> productPage=null;
+
+        do{
+            Pageable pageable = constructPageSpecification(pageIndex++, pageSize);
+              productPage= productRepository.findAll(pageable);
+
+                for(Product product:productPage.getContent())
+                {
+
+
+                    String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
+                    long lastUpdateTime=getFileLastUpdateTime(new File(filePath));
+                    if(lastUpdateTime>0 )
+                    {
+                        if(lastUpdateTime!=product.lastPhotoUpdateTime)
+                        {
+                            updateProductPhotoData(product);
+                            product.lastPhotoUpdateTime=lastUpdateTime;
+
+                            productRepository.save(product);
+                            count++;
+                        }
+
+
+                    }else
+                    {
+                        if(product.photo!=null) {
+                            product.photo = null;
+                            product.lastPhotoUpdateTime = lastUpdateTime;
+                            productRepository.save(product);
+                            count++;
+                        }
+
+                    }
+
+
+
+                }
+
+
+
+
+        }while (productPage.hasNext());
+
+
+
+
+        return wrapMessageData(count>0?"同步产品数据图片成功，共成功同步"+count+"款产品！":"所有产品图片已经都是最新的。");
+    }
+
+
+    /**
+     * 获取文件的最后更新时间  如果文件不存在 返回-1；
+     * @param file
+     * @return
+     */
+    public long getFileLastUpdateTime(File file)
+    {
+
+        if(!file.exists())
+            return -1;
+        BasicFileAttributes attributes =
+                null;
+        try {
+            attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+
+        if (null != attributes) {
+
+            FileTime lastModifiedTime = attributes.lastModifiedTime();
+
+            return lastModifiedTime.toMillis();
+
+        }
+        return 0;
+    }
 
 }

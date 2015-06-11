@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.jidesoft:jide-oss:2.4.8">
+    <CLASSES>
+      <root url="jar://E:/buildTools/.gradle/caches/modules-2/files-2.1/com.jidesoft/jide-oss/2.4.8/ed1762d38c2dfcda1ee173b550cd63da593813cb/jide-oss-2.4.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://E:/buildTools/.gradle/caches/modules-2/files-2.1/com.jidesoft/jide-oss/2.4.8/4ddaf6a6a21fecbc9856141a3ee91f0de4a681a7/jide-oss-2.4.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

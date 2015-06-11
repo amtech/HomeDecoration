@@ -2,6 +2,7 @@ package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.dialogs.PhotoSyncDialog;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
@@ -146,7 +147,7 @@ public class Main extends JFrame {
         menuBar.add(createReport());
 
         menuBar.add(createTest());
-
+        menuBar.add(createSysetm());
 
         //System.exit(0);
         setJMenuBar(menuBar);
@@ -305,6 +306,11 @@ public class Main extends JFrame {
 
     }
 
+
+    /**
+     * 添加测试菜单
+     * @return
+     */
     private JMenu createTest()
     {
         //Build second menu in the menu bar.
@@ -329,6 +335,75 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ImageViewDialog dialog = new ImageViewDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+
+
+        //
+        menuItem = new JMenuItem("打开搜索材料对话框",
+                KeyEvent.VK_U);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "This doesn't really do anything");
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+
+
+
+
+
+
+                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"",null);
+                dialog.setTitle("搜索材料");
+
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+
+        return menu;
+    }
+
+
+
+    /**
+     * 添加测试菜单
+     * @return
+     */
+    private JMenu createSysetm()
+    {
+        //Build second menu in the menu bar.
+        JMenu  menu = new JMenu("系统功能");
+        menu.setMnemonic(KeyEvent.VK_S);
+        menu.getAccessibleContext().setAccessibleDescription(
+                "This menu does nothing");
+
+
+
+        //
+        JMenuItem  menuItem = new JMenuItem("图片同步" );
+
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "当图片不能正常显示时候执行");
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PhotoSyncDialog dialog = new PhotoSyncDialog(Main.this);
                 dialog.pack();
                 dialog.setVisible(true);
             }

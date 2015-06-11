@@ -362,7 +362,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        configGroupHeader(tb_conceptus_cost);
+
 
 
 
@@ -379,15 +379,15 @@ public class Panel_ProductDetail extends BasePanel {
         g_name.add(columnModel.getColumn(4));
         g_name.add(columnModel.getColumn(5));
         ColumnGroup g_lang = new ColumnGroup("毛料规格");
-        g_lang.add(columnModel.getColumn(5));
         g_lang.add(columnModel.getColumn(6));
         g_lang.add(columnModel.getColumn(7));
+        g_lang.add(columnModel.getColumn(8));
 
-        GroupableTableHeader header = new
-                GroupableTableHeader(columnModel);
+        GroupableTableHeader header = (GroupableTableHeader) jTable.getTableHeader();
+
         header.addColumnGroup(g_name);
         header.addColumnGroup(g_lang);
-        jTable.setTableHeader(header);
+        //jTable.setTableHeader(header);
 
     }
 
@@ -788,6 +788,7 @@ public class Panel_ProductDetail extends BasePanel {
         date = new JDatePickerImpl(picker, new HdDateComponentFormatter());
 
 
+
     }
 
 
@@ -800,6 +801,7 @@ public class Panel_ProductDetail extends BasePanel {
         //module.initComponent();
 
         tb_conceptus_cost.setModel(conceptusMaterialTableModel);
+
 
         tb_assemble_cost.setModel(assembleMaterialTableModel);
 

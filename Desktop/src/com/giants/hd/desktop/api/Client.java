@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import com.ning.http.client.*;
 
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 /**
  *  提供远程请求的客户端类
@@ -17,6 +18,7 @@ public class Client {
 
     public static final String BODY_ENCODING="UTF-8";
     private static final String BASE_URL = "http://api.twitter.com/1/";
+    private static final String TAG = "HTTPCLIENT";
     //客户端连接
     public AsyncHttpClient client;
     @Inject
@@ -33,9 +35,9 @@ public class Client {
 
 
     public String postWithStringReturned(String url,String body) throws HdException {
+        Logger.getLogger(TAG).info(url);
 
-
-       return post(url,body,     new AsyncCompletionHandler<String>()
+       String result= post(url,body,     new AsyncCompletionHandler<String>()
             {
                 @Override
                 public String onCompleted(Response response) throws Exception {
@@ -50,7 +52,9 @@ public class Client {
             });
 
 
+        Logger.getLogger(TAG).info(result);
 
+        return result;
 
     }
 
@@ -58,8 +62,8 @@ public class Client {
 
     public String getWithStringReturned(String url ) throws HdException {
 
-
-        return get(url, new AsyncCompletionHandler<String>() {
+        Logger.getLogger(TAG).info(url);
+        String result= get(url, new AsyncCompletionHandler<String>() {
             @Override
             public String onCompleted(Response response) throws Exception {
 
@@ -70,9 +74,9 @@ public class Client {
             }
         });
 
+        Logger.getLogger(TAG).info(result);
 
-
-
+        return result;
     }
 
 
