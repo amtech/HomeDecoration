@@ -298,7 +298,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                     if (!StringUtils.isEmpty(tf_product.getText().trim())) {
-                        ImageViewDialog.showDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim());
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim());
                     } else {
 
 

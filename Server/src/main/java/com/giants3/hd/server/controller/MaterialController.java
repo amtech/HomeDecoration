@@ -5,10 +5,14 @@ import com.giants3.hd.server.repository.MaterialRepository;
 
 import com.giants3.hd.server.repository.ProductMaterialRepository;
 import com.giants3.hd.server.repository.ProductPaintRepository;
+import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 
+import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,7 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -48,6 +54,11 @@ public class MaterialController extends BaseController {
 
     @Autowired
     private ProductPaintRepository productPaintRepository;
+
+
+
+    @Value("${materialfilepath}")
+    private String rootFilePath;
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
@@ -278,6 +289,111 @@ public class MaterialController extends BaseController {
 
 
         return wrapData( );
+    }
+
+
+
+
+    /**
+     * 同步材料图片数据
+     * @return
+     */
+
+    @RequestMapping(value="/syncPhoto", method={RequestMethod.GET,RequestMethod.POST})
+    @Transactional
+    @ResponseBody
+    public RemoteData<Void> asyncProduct( ) {
+
+
+        int count=0;
+        //遍历所有产品
+        //一次处理20条记录
+
+        int pageIndex=0;
+        int pageSize=20;
+
+
+        Page<Material> materialPage=null;
+
+        do{
+            Pageable pageable = constructPageSpecification(pageIndex++, pageSize);
+            materialPage= materialRepository.findAll(pageable);
+
+            for(Material material
+                    :materialPage.getContent())
+            {
+
+
+                String filePath= FileUtils.getMaterialPicturePath(rootFilePath, material.code);
+                long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
+                if(lastUpdateTime>0 )
+                {
+                    if(lastUpdateTime!=material.lastPhotoUpdateTime)
+                    {
+                        updateMaterialPhoto(material);
+                        material.lastPhotoUpdateTime=lastUpdateTime;
+
+                        materialRepository.save(material);
+                        count++;
+                    }
+
+
+                }else
+                {
+                    if(material.photo!=null) {
+                        material.photo = null;
+                        material.lastPhotoUpdateTime = lastUpdateTime;
+                        materialRepository.save(material);
+                        count++;
+                    }
+
+                }
+
+
+
+            }
+
+
+
+
+        }while (materialPage.hasNext());
+
+
+
+
+        return wrapMessageData(count>0?"同步材料数据图片成功，共成功同步"+count+"款材料！":"所有材料图片已经都是最新的。");
+    }
+
+
+
+
+    /**
+     * 更新材料的缩略图数据
+     *
+     * @param material
+     */
+    private final void updateMaterialPhoto(Material material) {
+
+
+        String filePath = FileUtils.getMaterialPicturePath(rootFilePath, material.code);
+
+        //如果tup图片文件不存在  则 设置photo为空。
+        if (!new File(filePath).exists()) {
+            material.setPhoto(null);
+            material.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
+
+        } else {
+            try {
+                material.setPhoto(ImageUtils.scaleMaterial(filePath));
+
+            } catch (HdException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
     }
 
 }

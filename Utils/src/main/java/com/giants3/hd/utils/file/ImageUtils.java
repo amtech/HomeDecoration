@@ -37,8 +37,6 @@ public class ImageUtils {
         return scale(path, MAX_PRODUCT_MINIATURE_WIDTH, MAX_PRODUCT_MINIATURE_HEIGHT);
 
 
-
-
     }
 
 
@@ -50,7 +48,7 @@ public class ImageUtils {
      */
     public static final byte[] scaleMaterial(String path) throws HdException {
 
-        return scale(path, MAX_PRODUCT_MINIATURE_WIDTH, MAX_PRODUCT_MINIATURE_HEIGHT);
+        return scale(path, MAX_MATERIAL_MINIATURE_WIDTH, MAX_MATERIAL_MINIATURE_HEIGHT);
 
 
 

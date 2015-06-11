@@ -1,6 +1,8 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.local.BufferData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.entity.MaterialEquation;
@@ -8,8 +10,10 @@ import com.giants3.hd.utils.entity.MaterialType;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 /**
  * 材料详细
@@ -32,6 +36,7 @@ public class Panel_Material_Detail extends  BasePanel {
     private JPanel rootPanel;
     private JFormattedTextField ftf_available;
     private JButton btn_delete;
+    private JLabel lb_photo;
 
 
     @Inject
@@ -97,7 +102,24 @@ public class Panel_Material_Detail extends  BasePanel {
 //            cb_equation.addItem(equation);
 //        }
 
+         lb_photo  .addMouseListener(new MouseInputAdapter() {
+             @Override
+             public void mouseClicked(MouseEvent e) {
+                 super.mouseClicked(e);
+                 if (e.getClickCount() >= 2) {
 
+
+                     if (!StringUtils.isEmpty(tf_code.getText().trim())) {
+                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()), tf_code.getText().trim());
+                     } else {
+
+
+                         JOptionPane.showMessageDialog(lb_photo, "请输入编码...");
+                     }
+
+                 }
+             }
+    });
 
     }
 
@@ -142,6 +164,11 @@ public class Panel_Material_Detail extends  BasePanel {
             }
         }
         cb_materialType.setSelectedIndex(selectedItem);
+
+
+
+
+        lb_photo.setIcon(data.photo == null ? null : new ImageIcon(data.photo));
 
 
 

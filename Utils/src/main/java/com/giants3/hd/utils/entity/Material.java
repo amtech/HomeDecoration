@@ -123,7 +123,18 @@ public class Material  implements Serializable {
 	@Basic
 	public int equationId;
 
+	/**
+	 * 最新图片更新时间
+	 */
+	@Basic(optional = false)
 
+	public long lastPhotoUpdateTime=0;
+
+	/**
+	 * 图片，存放缩略图
+	 */
+	@Lob  @Basic
+	public byte[] photo;
 
 
 	public String getClassId() {
@@ -133,6 +144,9 @@ public class Material  implements Serializable {
 	public void setClassId(String buffer) {
 		this.classId = buffer;
 	}
+
+
+
 
 	public String getSpec() {
 		return spec;
@@ -270,6 +284,21 @@ public class Material  implements Serializable {
 		this.unitRatio = unitRatio;
 	}
 
+	public long getLastPhotoUpdateTime() {
+		return lastPhotoUpdateTime;
+	}
+
+	public void setLastPhotoUpdateTime(long lastPhotoUpdateTime) {
+		this.lastPhotoUpdateTime = lastPhotoUpdateTime;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
 
 	public static final class MCLass
 	{

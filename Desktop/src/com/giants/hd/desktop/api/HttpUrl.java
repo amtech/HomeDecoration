@@ -205,4 +205,16 @@ public class HttpUrl {
 
         return BaseUrl+"api/product/syncPhoto" ;
     }
+
+
+    /**
+     * 读取材料图片
+     * @param materialCode
+     * @return
+     */
+    public static String loadMaterialPicture(String materialCode) {
+        String url= BaseUrl+"api/file/download/material/"+materialCode;
+        url+=  ".jpg";
+        return  url;
+    }
 }

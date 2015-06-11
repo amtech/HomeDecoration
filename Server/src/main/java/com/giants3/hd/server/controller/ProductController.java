@@ -601,7 +601,7 @@ public class ProductController extends BaseController {
      */
 
     @RequestMapping(value="/syncPhoto", method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
+
     @ResponseBody
     public RemoteData<Void> asyncProduct( ) {
 
@@ -625,7 +625,7 @@ public class ProductController extends BaseController {
 
 
                     String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
-                    long lastUpdateTime=getFileLastUpdateTime(new File(filePath));
+                    long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
                     if(lastUpdateTime>0 )
                     {
                         if(lastUpdateTime!=product.lastPhotoUpdateTime)
@@ -665,35 +665,6 @@ public class ProductController extends BaseController {
     }
 
 
-    /**
-     * 获取文件的最后更新时间  如果文件不存在 返回-1；
-     * @param file
-     * @return
-     */
-    public long getFileLastUpdateTime(File file)
-    {
 
-        if(!file.exists())
-            return -1;
-        BasicFileAttributes attributes =
-                null;
-        try {
-            attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-
-        if (null != attributes) {
-
-            FileTime lastModifiedTime = attributes.lastModifiedTime();
-
-            return lastModifiedTime.toMillis();
-
-        }
-        return 0;
-    }
 
 }

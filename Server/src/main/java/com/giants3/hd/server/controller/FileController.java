@@ -1,13 +1,8 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.convert.WritingConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +22,10 @@ public class FileController  extends BaseController{
 
 
     @Value("${filepath}")
-    private String filePath;
+    private String productFilePath;
 
-
+    @Value("${materialfilepath}")
+    private String materialFilePath;
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public @ResponseBody
@@ -68,12 +64,21 @@ public class FileController  extends BaseController{
     public FileSystemResource getProductFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
 
-        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(filePath,name,"",type));
+        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,"",type));
         //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
 
         return resource;
     }
 
+    @RequestMapping(value="/download/material/{name}", method=RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getMaterialFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
+
+        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, name, type));
+        //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
+
+        return resource;
+    }
 
 }

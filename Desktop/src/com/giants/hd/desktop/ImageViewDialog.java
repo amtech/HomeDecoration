@@ -98,7 +98,7 @@ public class ImageViewDialog extends JDialog {
 
 
 
-        setMinimumSize(new Dimension(800, 600));
+        setMinimumSize(new Dimension(400, 300));
         setLocationRelativeTo(getParent());
         pack();
         setVisible(true);
@@ -107,13 +107,36 @@ public class ImageViewDialog extends JDialog {
 
     /**
      * 显示图片显示框体框
+     * @param materialCode
+     */
+    public static void showMaterialDialog(Window frame,String materialCode) {
+
+
+
+        String url=HttpUrl.loadMaterialPicture(materialCode);
+         showDialog(frame,url);
+
+    }
+
+    /**
+     * 显示图片显示框体框
      * @param productName
      */
-    public static void showDialog(Window frame,String productName,String version) {
+    public static void showProductDialog(Window frame,String productName,String version) {
 
 
 
         String url=HttpUrl.loadProductPicture(productName,version);
+        ImageViewDialog dialog=new ImageViewDialog(frame);
+        dialog.loadImageAndShow(url);
+
+    }
+
+    /**
+     * 显示图片显示框体框
+     * @param url
+     */
+    public static void showDialog(Window frame,String url) {
         ImageViewDialog dialog=new ImageViewDialog(frame);
         dialog.loadImageAndShow(url);
 

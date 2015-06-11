@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.model;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -150,6 +151,14 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         {
             return "";
         }else
+        //显示图片
+        if(obj instanceof  byte[] && getColumnClass(columnIndex).equals(ImageIcon.class))
+        {
+
+            return new ImageIcon((byte[])obj);
+
+        }
+
         return obj
         ;
 

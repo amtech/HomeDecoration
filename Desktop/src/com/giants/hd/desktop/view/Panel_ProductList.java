@@ -9,6 +9,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -64,7 +65,7 @@ public class Panel_ProductList  extends BasePanel {
 
 
         productTable.setModel(tableModel);
-        productTable.setRowHeight(100);
+        productTable.setRowHeight(ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT);
 
 
         JTableUtils.setJTableColumnsWidth(productTable, 800, 40, 60, 40, 60,60,20, 40, 60);
@@ -85,7 +86,7 @@ public class Panel_ProductList  extends BasePanel {
                     int column = productTable.convertColumnIndexToModel(productTable.getSelectedColumn());
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
                     } else {
 
                         HdSwingUtils.showDetailPanel(product,getRoot());

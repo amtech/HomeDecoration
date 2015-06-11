@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.interf.PageListener;
@@ -7,6 +8,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -88,7 +90,7 @@ public class Panel_Material  extends  BasePanel{
 
 
 
-        tb_material.setRowHeight(30);
+        tb_material.setRowHeight(ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT);
 
         tb_material.addMouseListener(new MouseAdapter() {
             @Override
@@ -99,12 +101,23 @@ public class Panel_Material  extends  BasePanel{
                 if(e.getClickCount()==2)
                 {
 
-                    Material material=    materialTableModel.getItem(tb_material.convertRowIndexToModel(tb_material.getSelectedRow()));
-                    if(material==null) return;
+
+                    Material material = materialTableModel.getItem(tb_material.convertRowIndexToModel(tb_material.getSelectedRow()));
+                    if (material == null) return;
+
+                    int column = tb_material.convertColumnIndexToModel(tb_material.getSelectedColumn());
+                    //单击第一列 显示原图
+                    if (column == 0) {
 
 
-                    showDetailDialog(material);
+                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material),material.code);
 
+                    }else {
+
+
+
+                        showDetailDialog(material);
+                    }
                 }
 
             }

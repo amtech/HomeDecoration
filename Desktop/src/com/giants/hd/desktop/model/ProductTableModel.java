@@ -23,23 +23,7 @@ public class ProductTableModel extends BaseTableModel<Product> {
 
 
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
 
-
-        Product product = getItem(rowIndex);
-        if (columnIndex == 0) {
-
-            if (product.getPhoto() == null) {
-                return null;
-            } else
-                return new ImageIcon(product.getPhoto());
-
-        } else
-
-        return       super.getValueAt(rowIndex,columnIndex);
-
-    }
 
 
 }
