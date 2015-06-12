@@ -34,9 +34,10 @@ public class FileUtils {
      *
      * @param filePath           文件根目录
      * @param code     材料编码
+     *                      @param mClass    材料类型 即子文件夹
      * @return
      */
-    public static  final String getMaterialPicturePath(String filePath,String code )
+    public static  final String getMaterialPicturePath(String filePath,String code,String mClass )
     {
 
         return getMaterialPicturePath(filePath ,code,"jpg");
@@ -47,12 +48,21 @@ public class FileUtils {
      *
      * @param filePath           文件根目录
      * @param code     材料编码
+     *                 @param mClass    材料类型 即子文件夹
      * @return
      */
-    public static  final String getMaterialPicturePath(String filePath,String code,String type )
+    public static  final String getMaterialPicturePath(String filePath,String code,String mClass,String type )
     {
 
-        return  filePath+code+"."+type;
+
+        if(StringUtils.isEmpty(mClass))
+        {
+
+            return  filePath +code+"."+type;
+        }
+        else
+
+        return  filePath+mClass+File.separator+code+"."+type;
 
     }
     /**获取图片路径   根据规则  （第一个英文字母为之前的字符串 作为文件夹）

@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.JTableUtils;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.local.HdSwingUtils;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
@@ -65,10 +66,7 @@ public class Panel_ProductList  extends BasePanel {
 
 
         productTable.setModel(tableModel);
-        productTable.setRowHeight(ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT);
 
-
-        JTableUtils.setJTableColumnsWidth(productTable, 800, 40, 60, 40, 60,60,20, 40, 60);
 
 
         productTable.addMouseListener(new MouseInputAdapter() {
@@ -90,8 +88,6 @@ public class Panel_ProductList  extends BasePanel {
                     } else {
 
                         HdSwingUtils.showDetailPanel(product,getRoot());
-
-
 
                     }
 

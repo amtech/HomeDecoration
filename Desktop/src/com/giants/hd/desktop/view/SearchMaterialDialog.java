@@ -42,7 +42,7 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
 
 
     public SearchMaterialDialog(Window window,String value,RemoteData<Material> materialRemoteData) {
-        super(window);
+        super(window,"材料查找");
         setContentPane(contentPane);
 
         setModal(true);
@@ -67,7 +67,7 @@ public class SearchMaterialDialog extends BaseDialog<Material> {
                 search(value);
             }
         });
-        table.setRowHeight(ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT);
+
 
          table.setModel(materialTableModel);
 

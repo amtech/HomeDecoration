@@ -1,7 +1,9 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 /**
@@ -11,6 +13,9 @@ import com.google.inject.Inject;
 public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
     public static String[] columnNames = new String[]{"  材料类别    ","  材质     ","  位置    ","  物料编码   ", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{      80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+
+
     public static String[] fieldName = new String[]{"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
     public  static Class[] classes = new Class[]{PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class,Material.class, Material.class };
 
@@ -35,11 +40,19 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object value= super.getValueAt(rowIndex, columnIndex);
 
-        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null&&product.packQuantity!=0)
+        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null )
         {
 
-            float floatValue=Float.valueOf(value.toString());
-            value= FloatHelper.scale(floatValue/product.packQuantity);
+            if(product.packQuantity>0)
+            {
+                float floatValue=Float.valueOf(value.toString());
+                value= FloatHelper.scale(floatValue/product.packQuantity);
+            }
+//            else
+//            {
+//                value="请输入装箱数";
+//            }
+
 
         }
 
@@ -218,5 +231,17 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         //包装的计算公式不一致  需要在本地标记类型id
         p.setFlowId(Flow.FLOW_PACK);
         return p;
+    }
+
+
+    @Override
+    public int[] getColumnWidth() {
+        return columnWidths;
+    }
+
+
+    @Override
+    public int getRowHeight() {
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
     }
 }

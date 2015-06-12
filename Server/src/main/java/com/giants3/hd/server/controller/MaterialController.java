@@ -324,7 +324,7 @@ public class MaterialController extends BaseController {
             {
 
 
-                String filePath= FileUtils.getMaterialPicturePath(rootFilePath, material.code);
+                String filePath= FileUtils.getMaterialPicturePath(rootFilePath, material.code,material.classId);
                 long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
                 if(lastUpdateTime>0 )
                 {
@@ -375,7 +375,7 @@ public class MaterialController extends BaseController {
     private final void updateMaterialPhoto(Material material) {
 
 
-        String filePath = FileUtils.getMaterialPicturePath(rootFilePath, material.code);
+        String filePath = FileUtils.getMaterialPicturePath(rootFilePath, material.code,material.classId);
 
         //如果tup图片文件不存在  则 设置photo为空。
         if (!new File(filePath).exists()) {

@@ -109,11 +109,11 @@ public class ImageViewDialog extends JDialog {
      * 显示图片显示框体框
      * @param materialCode
      */
-    public static void showMaterialDialog(Window frame,String materialCode) {
+    public static void showMaterialDialog(Window frame,String materialCode,String classId) {
 
 
 
-        String url=HttpUrl.loadMaterialPicture(materialCode);
+        String url=HttpUrl.loadMaterialPicture(materialCode,classId);
          showDialog(frame,url);
 
     }

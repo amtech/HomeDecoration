@@ -212,9 +212,11 @@ public class HttpUrl {
      * @param materialCode
      * @return
      */
-    public static String loadMaterialPicture(String materialCode) {
+    public static String loadMaterialPicture(String materialCode,String classId) {
         String url= BaseUrl+"api/file/download/material/"+materialCode;
         url+=  ".jpg";
+
+        url+="?mClass="+classId;
         return  url;
     }
 }

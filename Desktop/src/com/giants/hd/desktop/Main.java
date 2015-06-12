@@ -49,7 +49,7 @@ public class Main extends JFrame {
 
     public Main()
     {
-        super();
+        super("报价系统");
 
 
 
@@ -101,7 +101,8 @@ public class Main extends JFrame {
 
 
         frame.setContentPane(frame.panel1);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+       frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.generateMenu();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -117,6 +118,8 @@ public class Main extends JFrame {
                 }
             }
         });
+
+        frame.pack();
         frame.setVisible(true);
 
 
@@ -526,6 +529,7 @@ public class Main extends JFrame {
 
 
                 JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。");
+                System.exit(0);
 
 
 

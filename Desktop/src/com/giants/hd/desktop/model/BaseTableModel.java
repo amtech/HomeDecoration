@@ -246,9 +246,19 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
      *定制列宽度
      * @return
      */
-    public float[] getColumnWidth()
+    public int[] getColumnWidth()
     {
         return null;
     }
 
+
+    /**
+     * 返回
+     * @return
+     */
+    public int getRowHeight() {
+
+        return
+                0;
+    }
 }

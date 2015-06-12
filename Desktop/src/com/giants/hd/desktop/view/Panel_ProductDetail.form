@@ -88,7 +88,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="bb708" class="javax.swing.JTable" binding="tb_conceptus_cost">
+                      <component id="17d93" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_conceptus_cost">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -103,7 +103,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="b02fd" class="javax.swing.JTable" binding="tb_conceptus_wage">
+                      <component id="4d1c" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_conceptus_wage">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -129,7 +129,7 @@
                     </properties>
                     <border type="none"/>
                     <children>
-                      <component id="c970c" class="javax.swing.JTable" binding="tb_assemble_cost">
+                      <component id="3e83" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_assemble_cost">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -144,7 +144,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="47659" class="javax.swing.JTable" binding="tb_assemble_wage">
+                      <component id="9b568" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_assemble_wage">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -163,7 +163,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="692ce" class="javax.swing.JTable" binding="tb_product_paint">
+                  <component id="25004" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_product_paint">
                     <constraints/>
                     <properties>
                       <fillsViewportHeight value="true"/>
@@ -185,7 +185,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="770bc" class="javax.swing.JTable" binding="tb_pack_cost">
+                      <component id="da1bd" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_pack_cost">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -200,7 +200,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="df989" class="javax.swing.JTable" binding="tb_pack_wage">
+                      <component id="a44c4" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_pack_wage">
                         <constraints/>
                         <properties>
                           <fillsViewportHeight value="true"/>
@@ -541,12 +541,13 @@
           </component>
           <component id="8aad3" class="javax.swing.JTextField" binding="tf_inboxCount">
             <constraints>
-              <grid row="12" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="12" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <columns value="2"/>
               <editable value="false"/>
               <horizontalAlignment value="0"/>
             </properties>
@@ -564,12 +565,13 @@
           </component>
           <component id="8cba6" class="javax.swing.JTextField" binding="tf_quantity">
             <constraints>
-              <grid row="12" column="10" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="12" column="10" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <columns value="2"/>
               <horizontalAlignment value="0"/>
             </properties>
           </component>

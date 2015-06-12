@@ -110,11 +110,9 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
                      if (!StringUtils.isEmpty(tf_code.getText().trim())) {
-                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()), tf_code.getText().trim());
+                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()), tf_code.getText().trim(),((MaterialClass)cb_materialClass.getSelectedItem()).code);
                      } else {
-
-
-                         JOptionPane.showMessageDialog(lb_photo, "请输入编码...");
+                         JOptionPane.showMessageDialog(lb_photo, "请输入编码,并选择类型...");
                      }
 
                  }

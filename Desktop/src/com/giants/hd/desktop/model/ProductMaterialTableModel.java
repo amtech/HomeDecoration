@@ -1,7 +1,9 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.ProductMaterial;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 /**
@@ -11,6 +13,8 @@ import com.google.inject.Inject;
 public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
     public static String[] columnNames = new String[]{"物料编码", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{      100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+
     public static String[] fieldName = new String[]{"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
     public  static Class[] classes = new Class[]{Material.class, Material.class};
 
@@ -105,5 +109,22 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
         fireTableRowsUpdated(rowIndex,rowIndex);
 
+    }
+
+
+
+
+
+
+
+    @Override
+    public int[] getColumnWidth() {
+        return columnWidths;
+    }
+
+
+    @Override
+    public int getRowHeight() {
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
     }
 }

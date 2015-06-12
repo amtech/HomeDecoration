@@ -90,7 +90,7 @@ public class Panel_Material  extends  BasePanel{
 
 
 
-        tb_material.setRowHeight(ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT);
+
 
         tb_material.addMouseListener(new MouseAdapter() {
             @Override
@@ -110,7 +110,7 @@ public class Panel_Material  extends  BasePanel{
                     if (column == 0) {
 
 
-                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material),material.code);
+                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material),material.code,material.classId);
 
                     }else {
 

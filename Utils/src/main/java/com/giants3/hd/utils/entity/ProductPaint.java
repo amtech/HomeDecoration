@@ -36,6 +36,8 @@ public class ProductPaint  implements Serializable,Summariable {
 	 */
 	@Basic
 	public long flowId;
+	@Basic
+	public  String memo;
 
 
 	public long getFlowId() {
@@ -316,5 +318,13 @@ public class ProductPaint  implements Serializable,Summariable {
 	@Override
 	public float getAmount() {
 		return materialCost+ingredientCost;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+
+	public String getMemo() {
+		return memo;
 	}
 }

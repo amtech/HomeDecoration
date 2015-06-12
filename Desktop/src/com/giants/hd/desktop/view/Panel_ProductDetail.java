@@ -824,16 +824,7 @@ public class Panel_ProductDetail extends BasePanel {
         panel_xiankang.setVisible(false);
 
 
-        int defaultRowHeight= ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
 
-        tb_conceptus_cost.setRowHeight(defaultRowHeight);
-        tb_assemble_cost.setRowHeight(defaultRowHeight);
-        tb_pack_cost.setRowHeight(defaultRowHeight);
-        tb_conceptus_wage.setRowHeight(defaultRowHeight);
-        tb_assemble_wage.setRowHeight(defaultRowHeight);
-        tb_pack_wage.setRowHeight(defaultRowHeight);
-
-        tb_product_paint.setRowHeight(defaultRowHeight);
 
         //监听器， 监听表格右键点击功能
         MouseAdapter adapter = new MouseAdapter() {

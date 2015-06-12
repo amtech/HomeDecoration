@@ -86,12 +86,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="97054" class="javax.swing.JTable" binding="productTable">
+          <component id="7ca46" class="com.giants.hd.desktop.widget.JHdTable" binding="productTable">
             <constraints/>
-            <properties>
-              <enabled value="true"/>
-              <fillsViewportHeight value="true"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </scrollpane>

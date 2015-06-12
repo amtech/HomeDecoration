@@ -48,7 +48,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="3579f" class="javax.swing.JTable" binding="table">
+          <component id="6ce8e" class="com.giants.hd.desktop.widget.JHdTable" binding="table">
             <constraints/>
             <properties>
               <fillsViewportHeight value="true"/>

@@ -1,7 +1,9 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductWage;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 /**
@@ -11,6 +13,8 @@ import com.google.inject.Inject;
 public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
 
     public static String[] columnNames = new String[]{"工序编码", "工序名称", " 工价 ", " 金额 ","备注                    "};
+    public static int[] columnWidths=new int[]{          120,        120,        60,      80,   ConstantData.MAX_COLUMN_WIDTH};
+
     public static String[] fieldName = new String[]{"processCode", "processName", "price", "amount", "memo" };
     public  static Class[] classes = new Class[]{String.class, String.class  };
 
@@ -89,5 +93,17 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+
+    @Override
+    public int[] getColumnWidth() {
+        return columnWidths;
+    }
+
+
+    @Override
+    public int getRowHeight() {
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
     }
 }

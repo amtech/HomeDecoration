@@ -1,7 +1,10 @@
 package com.giants.hd.desktop;
 
+import com.giants.hd.desktop.local.ConstantData;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  * JTable 控件的功能类。
@@ -10,21 +13,33 @@ import javax.swing.table.TableColumn;
 public class JTableUtils {
 
 
+
+
     /**
      * 定制列宽
      * @param table
-     * @param tablePreferredWidth
-     * @param percentages
+     * @param widths
      */
-    public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double... percentages) {
-        double total = 0;
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+    public static void setJTableColumnsWidth(JTable table, int... widths) {
 
-            total += percentages[i];
-        }
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-            TableColumn column = table.getColumnModel().getColumn(i);
-            column.setPreferredWidth((int) (tablePreferredWidth * (percentages[i] / total)));
+        if(widths==null) return;
+
+         int length = widths.length;
+
+
+        TableColumnModel columnModel = table.getColumnModel();
+        int columnCount = columnModel.getColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            if(i<length) {
+                TableColumn column = columnModel.getColumn(i);
+
+                if(widths[i]>= ConstantData.MAX_COLUMN_WIDTH)
+                    column.setPreferredWidth(  widths[i]);
+                else
+                    column.setMinWidth(  widths[i]);
+
+            }
+
         }
 
 

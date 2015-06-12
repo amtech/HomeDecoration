@@ -65,18 +65,29 @@ public class FileController  extends BaseController{
 
 
         FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,"",type));
-        //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
+        //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
     }
 
-    @RequestMapping(value="/download/material/{name}", method=RequestMethod.GET)
+    /**
+     *
+     * @param code  材料编码
+     * @param mClass 材料类别   类别即为文件归类的文件夹
+     * @param type   图片类型  默认jpg
+     * @return
+     */
+    @RequestMapping(value="/download/material/{code}", method=RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getMaterialFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+
+    public FileSystemResource getMaterialFile(@PathVariable  String code,@RequestParam(value = "mClass",defaultValue = "") String mClass,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
 
-        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, name, type));
-        //  FileSystemResource resource= new FileSystemResource("E://photos//lintw.jpg");
+
+
+
+        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, code,mClass, type));
+        //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;
     }

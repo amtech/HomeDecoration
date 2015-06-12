@@ -516,6 +516,7 @@ public class ProductMaterial  implements Serializable,Summariable {
 				case PackMaterialClass.CLASS_JIAODAI:
 					//TODO  胶带计算公式
 
+					//这个计算公式独立计算。
 
 
 					break;

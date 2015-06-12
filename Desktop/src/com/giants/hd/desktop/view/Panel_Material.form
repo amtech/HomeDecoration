@@ -12,7 +12,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="11ac6" class="javax.swing.JTable" binding="tb_material">
+          <component id="86895" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_material">
             <constraints/>
             <properties>
               <fillsViewportHeight value="true"/>
