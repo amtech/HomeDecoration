@@ -1,6 +1,7 @@
 package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 包装材质大分类
@@ -9,7 +10,7 @@ import javax.persistence.*;
 
 
 @Entity(name="T_PackMaterialClass")
-public class PackMaterialClass {
+public class PackMaterialClass   implements Serializable {
 
 
     @Id

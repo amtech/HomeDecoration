@@ -59,10 +59,10 @@ public abstract class HdSwingStepWorker<T,V>  extends SwingWorker<RemoteData<T>,
             result = get();
         } catch (InterruptedException e) {
 
-            exception=HdException.create(e.getMessage());
+            exception=HdException.create(e.getCause());
             e.printStackTrace();
         } catch (ExecutionException e) {
-            exception=HdException.create(e.getMessage());
+            exception=HdException.create(e.getCause());
             e.printStackTrace();
         }
 

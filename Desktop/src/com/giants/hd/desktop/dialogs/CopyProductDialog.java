@@ -87,7 +87,7 @@ public class CopyProductDialog extends BaseDialog<ProductDetail>  implements Bas
                     JOptionPane.showMessageDialog(CopyProductDialog.this,data.message);
                     return;
                 }
-
+                JOptionPane.showMessageDialog(CopyProductDialog.this,"翻单成功！");
 
                 setResult(data.datas.get(0));
                 dispose();

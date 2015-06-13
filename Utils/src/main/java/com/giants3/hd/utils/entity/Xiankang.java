@@ -1,9 +1,10 @@
 package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name="T_Xiankang")
-public class Xiankang {
+public class Xiankang implements Serializable {
 
 
     @Id

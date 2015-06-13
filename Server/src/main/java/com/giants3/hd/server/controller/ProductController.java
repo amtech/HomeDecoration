@@ -9,13 +9,19 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,7 +56,8 @@ public class ProductController extends BaseController {
 
     @Autowired
     private QuotationItemRepository quotationItemRepository;
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -95,6 +102,8 @@ public class ProductController extends BaseController {
     }
 
 
+
+
     /**
      * 查询产品的详细信息
      * 包括 包装信息
@@ -106,19 +115,38 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/detail", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<ProductDetail> findProductDetailById(@RequestParam("id") long productId) {
+    RemoteData<ProductDetail> returnFindProductDetailById(@RequestParam("id") long productId) {
 
 
-        RemoteData<ProductDetail> remoteData = new RemoteData<>();
+
+        ProductDetail detail=findProductDetailById(productId);
+
+        if(detail==null)
+        {
+            return  wrapError("未能根据id找到产品");
+        }
+
+
+        return wrapData(detail);
+
+
+    }
+
+
+    /**
+     * 根据产品id 查询产品详情
+     * @param productId
+     * @return
+     */
+    public   ProductDetail  findProductDetailById(  long productId) {
+
+
 
         //读取产品信息
         Product product = productRepository.findOne(productId);
         if (product == null) {
+            return null;
 
-            remoteData.code = RemoteData.CODE_FAIL;
-            remoteData.message = "未能根据id找到产品";
-            return
-                    remoteData;
 
         }
 
@@ -201,8 +229,9 @@ public class ProductController extends BaseController {
         //读取油漆列表信息
         detail.paints = productPaintRepository.findByProductIdEquals(productId);
 
-        remoteData.datas.add(detail);
-        return remoteData;
+
+        return detail;
+
     }
 
 
@@ -495,7 +524,7 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<ProductDetail> copyProduct(@RequestParam("id") long productId,@RequestParam("name") String newProductName,@RequestParam("version") String version) {
 
-        if(productRepository.findByNameEqualsAndPVersionEquals(newProductName,version)!=null)
+        if(productRepository.findFirstByNameEqualsAndPVersionEquals(newProductName, version)!=null)
         {
 
 
@@ -503,30 +532,35 @@ public class ProductController extends BaseController {
                     +"已经存在,请更换");
         }
 
-        Product product=productRepository.findOne(productId);
-        if(
-                product==null
-                )
+        Product product=findProdcutById(productId);
+
+        if(   product==null  )
         {
             return wrapError("未找到当前产品信息");
         }
 
+        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        Product newProduct= (Product) SerializationUtils.deserialize(SerializationUtils.serialize(product));
 
 
-        product.id= -1;
-        product.name=newProductName;
-        product.pVersion=version;
+        newProduct.id= -1;
+        newProduct.name=newProductName;
+        newProduct.pVersion=version;
 
         updateProductPhotoData(product);
         updateProductPhotoTime(product);
         //保存新产品信息
-       Product newProduct= productRepository.save(product);
+         newProduct= productRepository.save(newProduct);
 
         long newProductId=newProduct.id;
         //更新产品材料信息
-    List<ProductMaterial> materials=   productMaterialRepository.findByProductIdEquals(productId);
-        for(ProductMaterial material:materials)
+    List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
+        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        List<ProductMaterial> newMaterials= (List<ProductMaterial>) SerializationUtils.deserialize(SerializationUtils.serialize(materials));
+        for(ProductMaterial material:newMaterials)
         {
+
+
             material.id=-1;
             material.productId=newProductId;
             productMaterialRepository.save(material);
@@ -537,7 +571,9 @@ public class ProductController extends BaseController {
         //更新油漆表信息
         //更新产品材料信息
         List<ProductPaint> productPaints=   productPaintRepository.findByProductIdEquals(productId);
-        for(ProductPaint productPaint:productPaints)
+        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        List<ProductPaint> newProductPaints= (List<ProductPaint>) SerializationUtils.deserialize(SerializationUtils.serialize(productPaints));
+        for(ProductPaint productPaint:newProductPaints)
         {
             productPaint.id=-1;
             productPaint.productId=newProductId;
@@ -545,7 +581,21 @@ public class ProductController extends BaseController {
 
         }
 
-        return findProductDetailById(newProductId);
+        //复制工资
+
+        List<ProductWage> productWages=   productWageRepository.findByProductIdEquals(productId);
+        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        List<ProductWage> newProductWages= (List<ProductWage>) SerializationUtils.deserialize(SerializationUtils.serialize(productWages));
+        for(ProductWage productWage
+                :newProductWages)
+        {
+            productWage.id=-1;
+            productWage.productId=newProductId;
+            productWageRepository.save(productWage);
+
+        }
+
+        return returnFindProductDetailById(newProductId);
     }
 
 
@@ -569,7 +619,7 @@ public class ProductController extends BaseController {
 
 
         //查询是否有关联的报价单
-        if(quotationItemRepository.findByProductIdEquals(productId)!=null)
+        if(quotationItemRepository.findFirstByProductIdEquals(productId)!=null)
         {
 
 

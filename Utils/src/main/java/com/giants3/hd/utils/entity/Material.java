@@ -72,11 +72,12 @@ public class Material  implements Serializable {
 	 * 材料利用率  默认
 	 */
 	@Basic
-	public float available;
+	public float available=1;
 	/**
 	 * 物料 编码
 	 */
 	@Basic
+	@Column(unique = true)
 	public String  code;
 
 

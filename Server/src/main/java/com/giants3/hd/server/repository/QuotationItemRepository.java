@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface QuotationItemRepository extends JpaRepository<QuotationItem,Long> {
 
-   QuotationItem findByProductIdEquals(long productId  );
+   QuotationItem findFirstByProductIdEquals(long productId);
 }

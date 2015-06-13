@@ -5,7 +5,7 @@ import javax.persistence.*;
 /**
  * 报价明细列表
  */
-@Entity(name="T_QuotationList")
+@Entity(name="T_QuotationItem")
 public class QuotationItem {
 
 

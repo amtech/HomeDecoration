@@ -3,10 +3,8 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
-import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.widget.APanel;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
@@ -14,10 +12,8 @@ import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
-import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -25,7 +21,6 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
@@ -55,7 +50,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JComboBox<PClass> cb_class;
     private JTextField tf_constitute;
     private JTextField tf_unpack_cost;
-    private JTextArea ta_spec;
+    private JTextArea ta_spec_inch;
     private JTextArea ta_memo;
     private JPanel cellPanel;
     private JTable tb_conceptus_cost;
@@ -109,6 +104,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JButton btn_copy;
     private JTextField jtf_mirror_size;
     private JButton btn_delete;
+    private JTextArea ta_spec_cm;
 
 
     private ProductDetail productDetail;
@@ -138,6 +134,16 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     // ProductDetailTableModule module;
+
+
+    /**
+     * 规格英寸输入框的监听
+     */
+    private DocumentListener ta_spec_inchListener;
+    /**
+     * 规格厘米输入框的监听
+     */
+    private DocumentListener ta_spec_cmListener;
 
 
     /**
@@ -211,6 +217,12 @@ public class Panel_ProductDetail extends BasePanel {
 
         //数量改变
          tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+
+//        //修改规格监听
+//        ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
+//        //修改规格监听
+//        ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
+
 
 
         /**
@@ -414,9 +426,13 @@ public class Panel_ProductDetail extends BasePanel {
         product.setName(productName);
 
         //规格
-        String ta_spcValue = ta_spec.getText().trim();
+        String ta_spcValue = ta_spec_inch.getText().trim();
         product.setSpec(ta_spcValue);
 
+
+        //规格
+        String ta_spc_cmValue = ta_spec_cm.getText().trim();
+        product.setSpecCm(ta_spc_cmValue);
 
         //备注
         String ta_memoValue = ta_memo.getText().trim();
@@ -635,7 +651,10 @@ public class Panel_ProductDetail extends BasePanel {
         photo.setText(product == null ? "产品图片" : "");
 
 
-        ta_spec.setText(product == null ? "" : product.getSpec());
+
+        bindProductSpecInchData(product == null ? "" : product.getSpec());
+        bindProductSpecCmData(product == null ? "" : product.getSpecCm());
+
         ta_memo.setText(product == null ? "" : product.getMemo());
         date.getJFormattedTextField().setText(product == null ? "" : product.getrDate());
 
@@ -995,7 +1014,77 @@ public class Panel_ProductDetail extends BasePanel {
             }
         };
 
+
+
+
+        //英寸输入监听
+        ta_spec_inchListener=new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+
+                updateCm();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateCm();
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+
+
+
+            public void updateCm()
+            {
+
+                String cmString= StringUtils.convertInchStringToCmString(   ta_spec_inch.getText().trim());
+                bindProductSpecCmData(cmString);
+
+
+            }
+        };
+
+
+
+        //厘米输入监听
+        ta_spec_cmListener=new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+
+                updateInch( );
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateInch() ;
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+
+            public void updateInch( )
+            {
+
+
+                String inchString=StringUtils.convertCmStringToInchString(ta_spec_cm.getText().trim());
+
+                bindProductSpecInchData(inchString);
+
+            }
+        };
+
     }
+
+
+
 
 
     /**
@@ -1260,6 +1349,36 @@ public class Panel_ProductDetail extends BasePanel {
         }
     }
 
+
+    /**
+     * 绑定英寸规格数据
+     * @param inchString
+     */
+    private void bindProductSpecInchData(String inchString)
+    {
+
+
+        ta_spec_inch.getDocument().removeDocumentListener(ta_spec_inchListener);
+        ta_spec_inch.setText(inchString);
+        ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
+
+    }
+
+
+    /**
+     * 绑定厘米规格数据
+     * @param cmString
+     */
+    private void bindProductSpecCmData(String cmString)
+    {
+
+
+        ta_spec_cm.getDocument().removeDocumentListener(ta_spec_cmListener);
+        ta_spec_cm.setText(cmString);
+        ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
+
+    }
+
     /**
      * 配置表格的 弹出选择框
      */
@@ -1268,18 +1387,22 @@ public class Panel_ProductDetail extends BasePanel {
 
         //定制表格的编辑功能 弹出物料选择单
 
-        JTextField jtf = new JTextField();
+        final JTextField jtf = new JTextField();
         jtf.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 Document object = e.getDocument();
-//                Logger.getLogger("TAG").info("insertUpdate" + object.toString());
+                if(!jtf.hasFocus())
+                jtf.requestFocus();
+
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 Document object = e.getDocument();
-//                Logger.getLogger("TAG").info("removeUpdate" + object.toString());
+                if(!jtf.hasFocus())
+                jtf.requestFocus();
+
             }
 
             @Override
@@ -1287,75 +1410,29 @@ public class Panel_ProductDetail extends BasePanel {
 
                 Document object = e.getDocument();
 
-//                Logger.getLogger("TAG").info("changedUpdate" + object.toString());
+                Logger.getLogger("TAG").info("changedUpdate" + object.toString());
 
             }
         });
 
 
+
+        jtf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                final   String text = ((JTextField) e.getSource()).getText().trim();
+                Logger.getLogger("TAG").info("focusLost" + e.toString());
+                handleTableMaterialInput(table, text);
+
+            }
+        });
         //回车键触发
         jtf.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
              final   String text = ((JTextField) e.getSource()).getText().trim();
-             final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
-                final Materialable materialable;
-                if (table.getModel() instanceof Materialable) {
-
-                    materialable=       ((Materialable) table.getModel());
-                }
-                else
-                {
-                    return ;
-                }
-                //查询  单记录直接copy
-
-                new HdSwingWorker<Material,Object>(SwingUtilities.getWindowAncestor(getRoot()))
-                {
-                    @Override
-                    protected RemoteData<Material> doInBackground() throws Exception {
-
-
-                        return   apiManager.loadMaterialByCodeOrName(text, 0, 100);
-
-                    }
-
-                    @Override
-                    public void onResult(RemoteData<Material> data) {
-
-                        if(data.isSuccess()&&data.totalCount==1)
-                        {
-
-
-                            materialable.setMaterial(data.datas.get(0), rowIndex);
-
-
-                        }else
-                        {
-
-
-                            SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text, data);
-                            dialog.setMinimumSize(new Dimension(800,600));
-                            dialog.pack();
-                            dialog.setLocationRelativeTo(table);
-                            dialog.setVisible(true);
-                            Material material = dialog.getResult();
-                            if (material != null) {
-                                if (table.getModel() instanceof Materialable) {
-
-                                    ((Materialable) table.getModel()).setMaterial(material, rowIndex);
-                                }
-
-                            }
-
-                        }
-
-
-
-
-                    }
-                }.go();
-
+             handleTableMaterialInput(table,text);
 
 
 
@@ -1364,6 +1441,10 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         });
+
+
+
+
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf);
         table.setDefaultEditor(Material.class, editor);
@@ -1392,7 +1473,80 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-          DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){};
+        //  DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){};
+
+
+    }
+
+
+    /**
+     * 处理表格的 材料输入时间
+     * @return
+     * @param table
+     * @param text
+     */
+
+
+    private void  handleTableMaterialInput(final JTable table,final  String text)
+    {
+
+        final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
+        final Materialable materialable;
+        if (table.getModel() instanceof Materialable) {
+
+            materialable=       ((Materialable) table.getModel());
+        }
+        else
+        {
+            return ;
+        }
+        //查询  单记录直接copy
+
+        new HdSwingWorker<Material,Object>(SwingUtilities.getWindowAncestor(getRoot()))
+        {
+            @Override
+            protected RemoteData<Material> doInBackground() throws Exception {
+
+
+                return   apiManager.loadMaterialByCodeOrName(text, 0, 100);
+
+            }
+
+            @Override
+            public void onResult(RemoteData<Material> data) {
+
+                if(data.isSuccess()&&data.totalCount==1)
+                {
+
+
+                    materialable.setMaterial(data.datas.get(0), rowIndex);
+
+
+                }else
+                {
+
+
+                    SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text, data);
+                    dialog.setMinimumSize(new Dimension(800,600));
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(table);
+                    dialog.setVisible(true);
+                    Material material = dialog.getResult();
+                    if (material != null) {
+                        if (table.getModel() instanceof Materialable) {
+
+                            ((Materialable) table.getModel()).setMaterial(material, rowIndex);
+                        }
+
+                    }
+
+                }
+
+
+
+
+            }
+        }.go();
 
 
     }

@@ -130,5 +130,25 @@ public class ArrayUtils {
 
 
     }
+
+
+    /**
+     * 返回 给定值在数组中的位置
+     * @param array
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public static <T> int indexOnArray(T[] array,T value)
+    {
+
+        int length = array.length;
+
+        for (int i = 0; i < length; i++) {
+            if(value.equals(array[i]))
+                return i;
+        }
+        return -1;
+    }
 }
 

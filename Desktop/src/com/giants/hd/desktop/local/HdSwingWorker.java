@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -52,10 +54,10 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
             result = get();
         } catch (InterruptedException e) {
 
-            exception=HdException.create(e.getLocalizedMessage());
+            exception=HdException.create(e.getCause());
             e.printStackTrace();
         } catch (ExecutionException e) {
-            exception=HdException.create(e.getLocalizedMessage());
+            exception=HdException.create(e.getCause());
             e.printStackTrace();
         }
 
@@ -88,7 +90,16 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
 
         //TODO  处理线程异常
 
-      //  JOptionPane.showMessageDialog(null,exception.getMessage());
+
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+
+        exception.getCause().printStackTrace(new PrintStream(byteArrayOutputStream));
+
+        JTextArea jTextArea=new JTextArea(byteArrayOutputStream.toString());
+        JScrollPane jScrollPane=new JScrollPane(jTextArea);
+        jScrollPane.setPreferredSize(new Dimension(800,500));
+        JOptionPane.showMessageDialog(null,jScrollPane);
+
 
 
 

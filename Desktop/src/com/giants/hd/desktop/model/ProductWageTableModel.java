@@ -12,13 +12,13 @@ import com.google.inject.Inject;
 
 public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
 
-    public static String[] columnNames = new String[]{"工序编码", "工序名称", " 工价 ", " 金额 ","备注                    "};
-    public static int[] columnWidths=new int[]{          120,        120,        60,      80,   ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{"序号","工序编码", "工序名称", " 工价 ", " 金额 ","备注                    "};
+    public static int[] columnWidths=new int[]{    40,      150,        200,        80,      100,   ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{"processCode", "processName", "price", "amount", "memo" };
-    public  static Class[] classes = new Class[]{String.class, String.class  };
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"processCode", "processName", "price", "amount", "memo" };
+    public  static Class[] classes = new Class[]{Object.class,String.class, String.class  };
 
-    public  static boolean[] editables = new boolean[]{true, true, true, true, true};
+    public  static boolean[] editables = new boolean[]{false,true, true, true, false, true};
     private Product product;
 
     @Inject
@@ -59,24 +59,24 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
         switch (columnIndex)
         {
 
-            case 0:
+            case  1:
                  data.setProcessCode(aValue.toString());
 
                 break;
-            case 1:
+            case 2:
 
                 data.setProcessName(aValue.toString());
                 break;
 
 
-            case 2:
+            case 3:
 
                 data.setPrice(Float.valueOf(aValue.toString()));
                 data.setAmount(data.price);
                 break;
 
 
-            case 4:
+            case 5:
 
                data.setMemo(aValue.toString());
                 break;
@@ -104,6 +104,6 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> {
 
     @Override
     public int getRowHeight() {
-        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
     }
 }

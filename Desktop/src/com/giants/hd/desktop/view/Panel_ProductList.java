@@ -9,6 +9,7 @@ import com.giants.hd.desktop.local.HdSwingUtils;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
@@ -16,6 +17,10 @@ import com.google.inject.Singleton;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -119,6 +124,11 @@ public class Panel_ProductList  extends BasePanel {
                 searchProduct(productName.getText().toString().trim(),pageIndex,pageSize);
             }
         });
+
+
+
+
+
 
     }
 

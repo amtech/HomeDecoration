@@ -86,9 +86,7 @@
         </constraints>
         <properties>
           <model>
-            <item value="10"/>
             <item value="20"/>
-            <item value="30"/>
             <item value="50"/>
             <item value="100"/>
             <item value="999"/>

@@ -107,7 +107,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
     @Override
     public int getRowHeight() {
-        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
     }
 
 }

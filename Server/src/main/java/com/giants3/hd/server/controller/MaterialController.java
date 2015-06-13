@@ -101,7 +101,7 @@ public class MaterialController extends BaseController {
         {
 
 
-            Material oldData=materialRepository.findByCodeEquals(material.code);
+            Material oldData=materialRepository.findFirstByCodeEquals(material.code);
             if(oldData==null)
             {
                 material.id=-1;
@@ -151,7 +151,7 @@ public class MaterialController extends BaseController {
         {
 
 
-            Material data=materialRepository.findByCodeEquals(code);
+            Material data=materialRepository.findFirstByCodeEquals(code);
             if(null!=data)
                 materials.add(data);
 
@@ -177,7 +177,7 @@ public class MaterialController extends BaseController {
         {
 
 
-            Material data=materialRepository.findByNameEquals(name);
+            Material data=materialRepository.findFirstByNameEquals(name);
             if(null!=data)
                 materials.add(data);
 
@@ -259,14 +259,14 @@ public class MaterialController extends BaseController {
 
 
         //查询是否有产品使用该物料。
-        if(productMaterialRepository.findByMaterialIdEquals(materialId)!=null )
+        if(productMaterialRepository.findFirstByMaterialIdEquals(materialId)!=null )
         {
 
 
             return     wrapError("该材料在产品材料中有使用 ，不能删除 ！");
         }
         //查询是否有产品使用该物料。
-        if(productPaintRepository.findByMaterialIdEquals(materialId)!=null )
+        if(productPaintRepository.findFirstByMaterialIdEquals(materialId)!=null )
         {
 
 

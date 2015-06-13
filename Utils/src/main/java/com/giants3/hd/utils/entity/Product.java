@@ -46,7 +46,7 @@ public class Product implements Serializable {
 	 * 产品单位名称
 	 */
 	@Basic
-	public String pUnitName;
+	public String pUnitName ;
 	/**
 	 * 净重
 	 */
@@ -89,6 +89,13 @@ public class Product implements Serializable {
 	public float cost5;
 	@Basic
 	public String attribute;
+
+
+	/**
+	 * 规格尺寸  厘米为单位
+	 */
+	@Basic
+	public String  specCm;
 
 
 	/**
@@ -662,10 +669,11 @@ public class Product implements Serializable {
 	}
 
 
+	public String getSpecCm() {
+		return specCm;
+	}
 
-
-
-
-
-
+	public void setSpecCm(String specCm) {
+		this.specCm = specCm;
+	}
 }

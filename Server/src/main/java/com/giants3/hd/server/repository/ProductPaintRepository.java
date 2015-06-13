@@ -18,8 +18,8 @@ public interface ProductPaintRepository extends JpaRepository<ProductPaint,Long>
 
     public List<ProductPaint> findByProductIdEquals(long productId);
 
+    public List<ProductPaint>   findByMaterialIdEquals(long materialId);
 
-
-    public ProductPaint   findByMaterialIdEquals(long materialId);
+    public ProductPaint   findFirstByMaterialIdEquals(long materialId);
 
 }

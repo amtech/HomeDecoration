@@ -522,7 +522,7 @@ public class Main extends JFrame {
 
 
 
-            @Override
+           @Override
             public void onHandleError(HdException exception)
             {
 

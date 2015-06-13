@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -38,5 +39,12 @@ public class MaterialTableModel extends BaseTableModel<Material> {
         return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT ;
     }
 
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
 
+
+        if(StringUtils.isEmpty(getItem(rowIndex).code))
+            return null;
+        return super.getValueAt(rowIndex, columnIndex);
+    }
 }

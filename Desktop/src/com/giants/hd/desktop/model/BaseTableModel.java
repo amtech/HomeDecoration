@@ -1,5 +1,7 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.local.ConstantData;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
@@ -21,7 +23,9 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     public Class<T> itemClass;
 
 
-    public static final int    MiniRowCount = 10;
+
+
+    public static final int    MiniRowCount = 20;
 
 
 
@@ -136,7 +140,16 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-        if (fields[columnIndex] == null) return null;
+
+        if(fieldName[columnIndex].equals(ConstantData.COLUMN_INDEX))
+        {
+            return rowIndex+1;
+        }
+
+        if (fields[columnIndex] == null)
+            return null;
+
+
 
 
         Object obj = null;
@@ -253,12 +266,22 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
 
     /**
-     * 返回
+     * 返回 设置行高
      * @return
      */
     public int getRowHeight() {
 
         return
                 0;
+    }
+
+
+    /**
+     * 获取文本为多行显示的列。默认为空。
+      * @return
+     */
+    public int[] getMultiLineColumns()
+    {
+        return null;
     }
 }

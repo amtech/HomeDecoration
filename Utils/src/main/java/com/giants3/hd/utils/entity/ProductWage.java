@@ -1,12 +1,13 @@
 package com.giants3.hd.utils.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 产品工资信息
  */
 @Entity(name="T_ProductWage")
-public class ProductWage {
+public class ProductWage  implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     public long id;

@@ -19,5 +19,11 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByNameLikeOrderByNameAsc(String proName, Pageable pageable);
 
 
-    Product findByNameEqualsAndPVersionEquals(String proName,String version);
+    /**
+     * 产品由产品名称与 产品版本号  共同作为识别码
+     * @param proName
+     * @param version
+     * @return
+     */
+    Product findFirstByNameEqualsAndPVersionEquals(String proName, String version);
 }

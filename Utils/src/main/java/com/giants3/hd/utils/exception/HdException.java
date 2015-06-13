@@ -44,4 +44,9 @@ public class HdException extends  Exception {
         hdException.message=message;
         return hdException;
     }
+
+    public static HdException create( Throwable cause)
+    {
+       return create(-1,cause);
+    }
 }
