@@ -7,6 +7,7 @@ import com.giants3.hd.server.repository.ProductMaterialRepository;
 import com.giants3.hd.server.repository.ProductPaintRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 
 import com.giants3.hd.utils.exception.HdException;
@@ -78,13 +79,19 @@ public class MaterialController extends BaseController {
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Material> listPrdtJson(@RequestParam(value = "codeOrName",required = false,defaultValue ="") String codeOrName
+    RemoteData<Material> searchMaterial(@RequestParam(value = "codeOrName",required = false,defaultValue ="") String codeOrName,@RequestParam(value = "classId",required = false,defaultValue ="") String classId
             ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize)   {
 
         Pageable pageable=constructPageSpecification(pageIndex, pageSize,sortByParam(Sort.Direction.ASC,"code"));
         String searchValue="%" + codeOrName.trim() + "%";
-        Page<Material>  pageValue=
-        materialRepository.findByCodeLikeOrNameLike(searchValue,searchValue, pageable);
+        Page<Material>  pageValue;
+        if(StringUtils.isEmpty(classId)) {
+
+            pageValue = materialRepository.findByCodeLikeOrNameLike(searchValue, searchValue, pageable);
+        }else
+        {
+            pageValue = materialRepository.findByCodeLikeAndClassIdOrNameLikeAndClassIdEquals(searchValue,classId, searchValue,classId, pageable);
+        }
 
         List<Material> materials=pageValue.getContent();
         return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),materials);

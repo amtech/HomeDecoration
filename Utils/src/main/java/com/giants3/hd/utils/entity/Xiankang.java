@@ -261,4 +261,71 @@ public class Xiankang implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Xiankang)) return false;
+
+        Xiankang xiankang = (Xiankang) o;
+
+        if (id != xiankang.id) return false;
+        if (productId != xiankang.productId) return false;
+        if (jingzi_kuan != null ? !jingzi_kuan.equals(xiankang.jingzi_kuan) : xiankang.jingzi_kuan != null)
+            return false;
+        if (beizhu != null ? !beizhu.equals(xiankang.beizhu) : xiankang.beizhu != null) return false;
+        if (caokuan != null ? !caokuan.equals(xiankang.caokuan) : xiankang.caokuan != null) return false;
+        if (caoshen != null ? !caoshen.equals(xiankang.caoshen) : xiankang.caoshen != null) return false;
+        if (guaju != null ? !guaju.equals(xiankang.guaju) : xiankang.guaju != null) return false;
+        if (huangui_gao != null ? !huangui_gao.equals(xiankang.huangui_gao) : xiankang.huangui_gao != null)
+            return false;
+        if (huangui_kuan != null ? !huangui_kuan.equals(xiankang.huangui_kuan) : xiankang.huangui_kuan != null)
+            return false;
+        if (boliguige_gao != null ? !boliguige_gao.equals(xiankang.boliguige_gao) : xiankang.boliguige_gao != null)
+            return false;
+        if (boliguige_kuan != null ? !boliguige_kuan.equals(xiankang.boliguige_kuan) : xiankang.boliguige_kuan != null)
+            return false;
+        if (caizhi != null ? !caizhi.equals(xiankang.caizhi) : xiankang.caizhi != null) return false;
+        if (biankuang != null ? !biankuang.equals(xiankang.biankuang) : xiankang.biankuang != null) return false;
+        if (mobian != null ? !mobian.equals(xiankang.mobian) : xiankang.mobian != null) return false;
+        if (qitahuohao != null ? !qitahuohao.equals(xiankang.qitahuohao) : xiankang.qitahuohao != null) return false;
+        if (caizhibaifenbi != null ? !caizhibaifenbi.equals(xiankang.caizhibaifenbi) : xiankang.caizhibaifenbi != null)
+            return false;
+        if (jiaquan != null ? !jiaquan.equals(xiankang.jiaquan) : xiankang.jiaquan != null) return false;
+        if (huaxinbianhao != null ? !huaxinbianhao.equals(xiankang.huaxinbianhao) : xiankang.huaxinbianhao != null)
+            return false;
+        if (huaxinchangshang != null ? !huaxinchangshang.equals(xiankang.huaxinchangshang) : xiankang.huaxinchangshang != null)
+            return false;
+        if (huaxinxiaoguo != null ? !huaxinxiaoguo.equals(xiankang.huaxinxiaoguo) : xiankang.huaxinxiaoguo != null)
+            return false;
+        return !(jingzi_gao != null ? !jingzi_gao.equals(xiankang.jingzi_gao) : xiankang.jingzi_gao != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (productId ^ (productId >>> 32));
+        result = 31 * result + (jingzi_kuan != null ? jingzi_kuan.hashCode() : 0);
+        result = 31 * result + (beizhu != null ? beizhu.hashCode() : 0);
+        result = 31 * result + (caokuan != null ? caokuan.hashCode() : 0);
+        result = 31 * result + (caoshen != null ? caoshen.hashCode() : 0);
+        result = 31 * result + (guaju != null ? guaju.hashCode() : 0);
+        result = 31 * result + (huangui_gao != null ? huangui_gao.hashCode() : 0);
+        result = 31 * result + (huangui_kuan != null ? huangui_kuan.hashCode() : 0);
+        result = 31 * result + (boliguige_gao != null ? boliguige_gao.hashCode() : 0);
+        result = 31 * result + (boliguige_kuan != null ? boliguige_kuan.hashCode() : 0);
+        result = 31 * result + (caizhi != null ? caizhi.hashCode() : 0);
+        result = 31 * result + (biankuang != null ? biankuang.hashCode() : 0);
+        result = 31 * result + (mobian != null ? mobian.hashCode() : 0);
+        result = 31 * result + (qitahuohao != null ? qitahuohao.hashCode() : 0);
+        result = 31 * result + (caizhibaifenbi != null ? caizhibaifenbi.hashCode() : 0);
+        result = 31 * result + (jiaquan != null ? jiaquan.hashCode() : 0);
+        result = 31 * result + (huaxinbianhao != null ? huaxinbianhao.hashCode() : 0);
+        result = 31 * result + (huaxinchangshang != null ? huaxinchangshang.hashCode() : 0);
+        result = 31 * result + (huaxinxiaoguo != null ? huaxinxiaoguo.hashCode() : 0);
+        result = 31 * result + (jingzi_gao != null ? jingzi_gao.hashCode() : 0);
+        return result;
+    }
 }

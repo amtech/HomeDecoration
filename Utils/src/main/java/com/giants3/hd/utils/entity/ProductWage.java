@@ -1,5 +1,7 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.StringUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -7,7 +9,7 @@ import java.io.Serializable;
  * 产品工资信息
  */
 @Entity(name="T_ProductWage")
-public class ProductWage  implements Serializable {
+public class ProductWage  implements Serializable,Valuable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     public long id;
@@ -126,5 +128,49 @@ public class ProductWage  implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductWage)) return false;
+
+        ProductWage that = (ProductWage) o;
+
+        if (id != that.id) return false;
+        if (productId != that.productId) return false;
+        if (flowId != that.flowId) return false;
+        if (processId != that.processId) return false;
+        if (Float.compare(that.price, price) != 0) return false;
+        if (Float.compare(that.amount, amount) != 0) return false;
+        if (flowName != null ? !flowName.equals(that.flowName) : that.flowName != null) return false;
+        if (processCode != null ? !processCode.equals(that.processCode) : that.processCode != null) return false;
+        if (processName != null ? !processName.equals(that.processName) : that.processName != null) return false;
+        return !(memo != null ? !memo.equals(that.memo) : that.memo != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (productId ^ (productId >>> 32));
+        result = 31 * result + (int) (flowId ^ (flowId >>> 32));
+        result = 31 * result + (flowName != null ? flowName.hashCode() : 0);
+        result = 31 * result + (int) (processId ^ (processId >>> 32));
+        result = 31 * result + (processCode != null ? processCode.hashCode() : 0);
+        result = 31 * result + (processName != null ? processName.hashCode() : 0);
+        result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+        result = 31 * result + (amount != +0.0f ? Float.floatToIntBits(amount) : 0);
+        result = 31 * result + (memo != null ? memo.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean isEmpty() {
+
+        //工序相关信息都未填 即为空。
+       return processId<=0&& StringUtils.isEmpty(processCode)&&StringUtils.isEmpty(processName) ;
+
     }
 }

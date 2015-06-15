@@ -3,6 +3,7 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.Operatable;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_ProductDetail;
 import com.giants3.hd.utils.RemoteData;
@@ -12,6 +13,8 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  *  产品详细模块
@@ -28,7 +31,10 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
 
 
+
         super("产品详情[" + (productDetail.product == null ? "新增" : ("货号：" + productDetail.product.getName() + "---版本号：" + productDetail.product.getpVersion())) + "]");
+
+
           panel_productDetail = new Panel_ProductDetail(productDetail);
         init();
     }
@@ -45,6 +51,41 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
         setMinimumSize(new Dimension(1024, 768));
         pack();
 
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try {
+                    if(panel_productDetail.isModified())
+                    {
+
+                     int option=   JOptionPane.showConfirmDialog(ProductDetailFrame.this,"数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+
+                        if (JOptionPane.OK_OPTION == option) {
+                            //点击了确定按钮
+
+                            ProductDetailFrame.this.dispose();
+                        }
+
+                    }else
+                    {
+                        //点击了确定按钮
+
+                        ProductDetailFrame.this.dispose();
+                    }
+                } catch (HdUIException uiEx) {
+                    JOptionPane.showMessageDialog(uiEx.component, uiEx.message);
+                    uiEx.component.requestFocus();
+                }
+
+
+            }
+        });
+
+
+
 
     }
     /**
@@ -57,8 +98,8 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     {
 
         super("产品详情[" + (product == null ? "新增" : ("货号：" + product.getName() + "---版本号：" + product.getpVersion())) + "]");
-          panel_productDetail = new Panel_ProductDetail(product);
-        init( );
+
+                loadProductDetail(product);
 
     }
 
@@ -123,6 +164,43 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
 
         }
+
+
+    }
+
+    @Override
+    public void close() {
+        dispose();
+    }
+
+
+
+
+    /**
+     * 加载产品详情信息
+     */
+    private void loadProductDetail(final Product product) {
+
+
+        new HdSwingWorker<ProductDetail, Long>(this) {
+            @Override
+            protected RemoteData<ProductDetail> doInBackground() throws Exception {
+                return apiManager.loadProductDetail(product.id);
+            }
+
+            @Override
+            public void onResult(RemoteData<ProductDetail> data) {
+
+                if(data.isSuccess()) {
+
+                    ProductDetail detail = data.datas.get(0);
+
+
+                    panel_productDetail = new Panel_ProductDetail(detail);
+                    init();
+                }
+            }
+        }.go();
 
 
     }

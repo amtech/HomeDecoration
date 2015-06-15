@@ -74,7 +74,9 @@
               <tabPlacement value="1"/>
               <toolTipText value=""/>
             </properties>
-            <border type="none"/>
+            <border type="none">
+              <font/>
+            </border>
             <children>
               <tabbedpane id="7f753" binding="tabbedPane3" default-binding="true">
                 <constraints>
@@ -267,7 +269,9 @@
               </grid>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <text value="0"/>
+            </properties>
           </component>
           <component id="166ae" class="javax.swing.JLabel">
             <constraints>

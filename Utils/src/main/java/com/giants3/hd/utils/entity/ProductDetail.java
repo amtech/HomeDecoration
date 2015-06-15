@@ -2,13 +2,14 @@ package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.FloatHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 产品详细信息
  */
-public class ProductDetail   {
+public class ProductDetail  implements Serializable {
 
 
     public Product product;
@@ -234,5 +235,39 @@ public class ProductDetail   {
     public List<Summariable> summariables=new ArrayList<>();
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductDetail)) return false;
 
+        ProductDetail detail = (ProductDetail) o;
+
+        if (product != null ? !product.equals(detail.product) : detail.product != null) return false;
+        if (conceptusMaterials != null ? !conceptusMaterials.equals(detail.conceptusMaterials) : detail.conceptusMaterials != null)
+            return false;
+        if (assembleMaterials != null ? !assembleMaterials.equals(detail.assembleMaterials) : detail.assembleMaterials != null)
+            return false;
+        if (paints != null ? !paints.equals(detail.paints) : detail.paints != null) return false;
+        if (conceptusWages != null ? !conceptusWages.equals(detail.conceptusWages) : detail.conceptusWages != null)
+            return false;
+        if (assembleWages != null ? !assembleWages.equals(detail.assembleWages) : detail.assembleWages != null)
+            return false;
+        if (packMaterials != null ? !packMaterials.equals(detail.packMaterials) : detail.packMaterials != null)
+            return false;
+        return !(packWages != null ? !packWages.equals(detail.packWages) : detail.packWages != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = product != null ? product.hashCode() : 0;
+        result = 31 * result + (conceptusMaterials != null ? conceptusMaterials.hashCode() : 0);
+        result = 31 * result + (assembleMaterials != null ? assembleMaterials.hashCode() : 0);
+        result = 31 * result + (paints != null ? paints.hashCode() : 0);
+        result = 31 * result + (conceptusWages != null ? conceptusWages.hashCode() : 0);
+        result = 31 * result + (assembleWages != null ? assembleWages.hashCode() : 0);
+        result = 31 * result + (packMaterials != null ? packMaterials.hashCode() : 0);
+        result = 31 * result + (packWages != null ? packWages.hashCode() : 0);
+        return result;
+    }
 }

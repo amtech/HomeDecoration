@@ -1,15 +1,18 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants3.hd.utils.entity.Valuable;
+
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
- * Created by Administrator on 2015-05-19.
+ * 表格模型基类
  */
 
 public  abstract class BaseTableModel<T> extends AbstractTableModel {
@@ -44,12 +47,14 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
         for (int i = 0; i < size; i++) {
 
-            try {
-                fields[i] = itemClass.getField(fieldName[i]);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
 
+                try {
+                    fields[i] = itemClass.getField(fieldName[i]);
+                } catch (NoSuchFieldException e) {
+
+                    Logger.getLogger("TEST").info(fieldName[i] +" is not a field of class :"+itemClass);
+
+                }
 
         }
 
@@ -107,7 +112,30 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         return columnNames[column];
     }
     public List<T> getDatas() {
+
+
+
         return datas;
+    }
+
+
+    public List<T> getValuableDatas()
+    {
+        ArrayList<T> newArrays=new ArrayList<>();
+        for(T data:datas)
+        {
+            if(data instanceof Valuable)
+            {
+                if(!((Valuable)data).isEmpty())
+                {
+                    newArrays.add(data);
+                }
+            }
+
+        }
+
+        return newArrays;
+
     }
 
     public void setDatas(List<T> datas) {

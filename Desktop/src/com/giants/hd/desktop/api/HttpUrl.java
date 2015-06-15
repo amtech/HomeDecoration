@@ -69,10 +69,10 @@ public class HttpUrl {
 
     }
 
-    public static String loadMaterialByCodeOrName(String value,int pageIndex,int pageSize
+    public static String loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize
     ) {
 
-        return BaseUrl+"api/material/search?codeOrName="+ UTF8UrlEncoder.encode(value)+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return BaseUrl+"api/material/search?codeOrName="+ UTF8UrlEncoder.encode(value)+"&classId="+classId+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
 
     }
 
@@ -215,8 +215,27 @@ public class HttpUrl {
     public static String loadMaterialPicture(String materialCode,String classId) {
         String url= BaseUrl+"api/file/download/material/"+materialCode;
         url+=  ".jpg";
-
         url+="?mClass="+classId;
         return  url;
     }
+
+    /**
+     * 上传文文件的uRl
+     * @param productName
+     * @return
+     */
+    public static String uploadProductPicture(String productName,boolean doesOverride) {
+        return BaseUrl+"api/file/uploadProduct?name="+productName+"&doesOverride="+doesOverride;
+    }
+
+
+    /**
+     * 上传材料图片文件的uRl
+     * @param materialName
+     * @return
+     */
+    public static String uploadMaterialPicture(String materialName,boolean doesOverride) {
+        return BaseUrl+"api/file/uploadMaterial?name="+materialName+"&doesOverride="+doesOverride;
+    }
+
 }

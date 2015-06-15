@@ -1,5 +1,7 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.StringUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,7 +12,7 @@ import java.io.Serializable;
 
 
 @Entity(name="T_ProductPaint")
-public class ProductPaint  implements Serializable,Summariable {
+public class ProductPaint  implements Serializable,Summariable,Valuable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	public long id;
@@ -326,5 +328,68 @@ public class ProductPaint  implements Serializable,Summariable {
 
 	public String getMemo() {
 		return memo;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ProductPaint)) return false;
+
+		ProductPaint that = (ProductPaint) o;
+
+		if (id != that.id) return false;
+		if (productId != that.productId) return false;
+		if (processId != that.processId) return false;
+		if (materialId != that.materialId) return false;
+		if (flowId != that.flowId) return false;
+		if (Float.compare(that.materialPrice, materialPrice) != 0) return false;
+		if (Float.compare(that.processPrice, processPrice) != 0) return false;
+		if (Float.compare(that.ingredientRatio, ingredientRatio) != 0) return false;
+		if (Float.compare(that.materialQuantity, materialQuantity) != 0) return false;
+		if (Float.compare(that.materialCost, materialCost) != 0) return false;
+		if (Float.compare(that.ingredientCost, ingredientCost) != 0) return false;
+		if (Float.compare(that.ingredientQuantity, ingredientQuantity) != 0) return false;
+		if (materialType != that.materialType) return false;
+		if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
+		if (memo != null ? !memo.equals(that.memo) : that.memo != null) return false;
+		if (materialCode != null ? !materialCode.equals(that.materialCode) : that.materialCode != null) return false;
+		if (materialName != null ? !materialName.equals(that.materialName) : that.materialName != null) return false;
+		if (unitName != null ? !unitName.equals(that.unitName) : that.unitName != null) return false;
+		if (processCode != null ? !processCode.equals(that.processCode) : that.processCode != null) return false;
+		return !(processName != null ? !processName.equals(that.processName) : that.processName != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (int) (id ^ (id >>> 32));
+		result = 31 * result + (int) (productId ^ (productId >>> 32));
+		result = 31 * result + (int) (processId ^ (processId >>> 32));
+		result = 31 * result + (int) (materialId ^ (materialId >>> 32));
+		result = 31 * result + (productName != null ? productName.hashCode() : 0);
+		result = 31 * result + (int) (flowId ^ (flowId >>> 32));
+		result = 31 * result + (memo != null ? memo.hashCode() : 0);
+		result = 31 * result + (materialCode != null ? materialCode.hashCode() : 0);
+		result = 31 * result + (materialName != null ? materialName.hashCode() : 0);
+		result = 31 * result + (unitName != null ? unitName.hashCode() : 0);
+		result = 31 * result + (processCode != null ? processCode.hashCode() : 0);
+		result = 31 * result + (processName != null ? processName.hashCode() : 0);
+		result = 31 * result + (materialPrice != +0.0f ? Float.floatToIntBits(materialPrice) : 0);
+		result = 31 * result + (processPrice != +0.0f ? Float.floatToIntBits(processPrice) : 0);
+		result = 31 * result + (ingredientRatio != +0.0f ? Float.floatToIntBits(ingredientRatio) : 0);
+		result = 31 * result + (materialQuantity != +0.0f ? Float.floatToIntBits(materialQuantity) : 0);
+		result = 31 * result + (materialCost != +0.0f ? Float.floatToIntBits(materialCost) : 0);
+		result = 31 * result + (ingredientCost != +0.0f ? Float.floatToIntBits(ingredientCost) : 0);
+		result = 31 * result + (ingredientQuantity != +0.0f ? Float.floatToIntBits(ingredientQuantity) : 0);
+		result = 31 * result + materialType;
+		return result;
+	}
+
+	@Override
+	public boolean isEmpty() {
+
+	return 	StringUtils.isEmpty(processName)&&StringUtils.isEmpty(processCode)&&materialId<=0;
+
 	}
 }

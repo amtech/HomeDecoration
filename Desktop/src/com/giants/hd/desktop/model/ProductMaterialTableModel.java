@@ -12,13 +12,13 @@ import com.google.inject.Inject;
 
 public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
-    public static String[] columnNames = new String[]{"物料编码", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static int[] columnWidths = new int []{      100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{"序号","物料编码", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{     40,    100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
-    public  static Class[] classes = new Class[]{Material.class, Material.class};
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
+    public  static Class[] classes = new Class[]{Object.class,Material.class, Material.class};
 
-    public  static boolean[] editables = new boolean[]{true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
+    public  static boolean[] editables = new boolean[]{false,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
 
     @Inject
     public ProductMaterialTableModel() {
@@ -41,7 +41,7 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
         ProductMaterial material=getItem(rowIndex);
         switch (columnIndex)
         {
-            case 2:
+            case 3:
                 //设置用量
                 material.setQuantity(Float.valueOf(aValue.toString()));
                 material.update();
@@ -49,7 +49,7 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
                 break;
 
 
-            case 3:
+            case 4:
                 //设置长
                 material.setpLong(Float.valueOf(aValue.toString()));
                 material.update();
@@ -57,29 +57,29 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
                 break;
 
 
-            case 4:
+            case 5:
                 //设置宽
                 material.setpWidth(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 5:
+            case 6:
                 //设置高
                 material.setpHeight(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 11:
-                //设置高
+            case 12:
+                //设置利用率
                 material.setAvailable(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 15:
-                //设置高
+            case 16:
+                //设置备注
                 material.setMemo( aValue.toString());
                 break;
 

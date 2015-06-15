@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * 产品材料列表
  */
 @Entity(name="T_ProductMaterial")
-public class ProductMaterial  implements Serializable,Summariable {
+public class ProductMaterial  implements Serializable,Summariable ,Valuable{
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
@@ -684,6 +684,96 @@ public class ProductMaterial  implements Serializable,Summariable {
 
 
 		return newQuota;
+
+
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ProductMaterial)) return false;
+
+		ProductMaterial that = (ProductMaterial) o;
+
+		if (id != that.id) return false;
+		if (productId != that.productId) return false;
+		if (Float.compare(that.quota, quota) != 0) return false;
+		if (materialId != that.materialId) return false;
+		if (Float.compare(that.quantity, quantity) != 0) return false;
+		if (Float.compare(that.mLong, mLong) != 0) return false;
+		if (Float.compare(that.mWidth, mWidth) != 0) return false;
+		if (Float.compare(that.mHeight, mHeight) != 0) return false;
+		if (Float.compare(that.pLong, pLong) != 0) return false;
+		if (Float.compare(that.pWidth, pWidth) != 0) return false;
+		if (Float.compare(that.pHeight, pHeight) != 0) return false;
+		if (Float.compare(that.wLong, wLong) != 0) return false;
+		if (Float.compare(that.wWidth, wWidth) != 0) return false;
+		if (Float.compare(that.wHeight, wHeight) != 0) return false;
+		if (Float.compare(that.available, available) != 0) return false;
+		if (type != that.type) return false;
+		if (Float.compare(that.price, price) != 0) return false;
+		if (Float.compare(that.amount, amount) != 0) return false;
+		if (flowId != that.flowId) return false;
+		if (Float.compare(that.unitRatio, unitRatio) != 0) return false;
+		if (materialCode != null ? !materialCode.equals(that.materialCode) : that.materialCode != null) return false;
+		if (materialName != null ? !materialName.equals(that.materialName) : that.materialName != null) return false;
+		if (unitName != null ? !unitName.equals(that.unitName) : that.unitName != null) return false;
+		if (memo != null ? !memo.equals(that.memo) : that.memo != null) return false;
+		if (flowName != null ? !flowName.equals(that.flowName) : that.flowName != null) return false;
+		if (packMaterialType != null ? !packMaterialType.equals(that.packMaterialType) : that.packMaterialType != null)
+			return false;
+		if (packMaterialPosition != null ? !packMaterialPosition.equals(that.packMaterialPosition) : that.packMaterialPosition != null)
+			return false;
+		if (packMaterialClass != null ? !packMaterialClass.equals(that.packMaterialClass) : that.packMaterialClass != null)
+			return false;
+		if (className != null ? !className.equals(that.className) : that.className != null) return false;
+		return !(classId != null ? !classId.equals(that.classId) : that.classId != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (int) (id ^ (id >>> 32));
+		result = 31 * result + (int) (productId ^ (productId >>> 32));
+		result = 31 * result + (quota != +0.0f ? Float.floatToIntBits(quota) : 0);
+		result = 31 * result + (int) (materialId ^ (materialId >>> 32));
+		result = 31 * result + (materialCode != null ? materialCode.hashCode() : 0);
+		result = 31 * result + (materialName != null ? materialName.hashCode() : 0);
+		result = 31 * result + (quantity != +0.0f ? Float.floatToIntBits(quantity) : 0);
+		result = 31 * result + (mLong != +0.0f ? Float.floatToIntBits(mLong) : 0);
+		result = 31 * result + (mWidth != +0.0f ? Float.floatToIntBits(mWidth) : 0);
+		result = 31 * result + (mHeight != +0.0f ? Float.floatToIntBits(mHeight) : 0);
+		result = 31 * result + (pLong != +0.0f ? Float.floatToIntBits(pLong) : 0);
+		result = 31 * result + (pWidth != +0.0f ? Float.floatToIntBits(pWidth) : 0);
+		result = 31 * result + (pHeight != +0.0f ? Float.floatToIntBits(pHeight) : 0);
+		result = 31 * result + (wLong != +0.0f ? Float.floatToIntBits(wLong) : 0);
+		result = 31 * result + (wWidth != +0.0f ? Float.floatToIntBits(wWidth) : 0);
+		result = 31 * result + (wHeight != +0.0f ? Float.floatToIntBits(wHeight) : 0);
+		result = 31 * result + (available != +0.0f ? Float.floatToIntBits(available) : 0);
+		result = 31 * result + (unitName != null ? unitName.hashCode() : 0);
+		result = 31 * result + type;
+		result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+		result = 31 * result + (amount != +0.0f ? Float.floatToIntBits(amount) : 0);
+		result = 31 * result + (memo != null ? memo.hashCode() : 0);
+		result = 31 * result + (int) (flowId ^ (flowId >>> 32));
+		result = 31 * result + (flowName != null ? flowName.hashCode() : 0);
+		result = 31 * result + (packMaterialType != null ? packMaterialType.hashCode() : 0);
+		result = 31 * result + (packMaterialPosition != null ? packMaterialPosition.hashCode() : 0);
+		result = 31 * result + (packMaterialClass != null ? packMaterialClass.hashCode() : 0);
+		result = 31 * result + (className != null ? className.hashCode() : 0);
+		result = 31 * result + (classId != null ? classId.hashCode() : 0);
+		result = 31 * result + (unitRatio != +0.0f ? Float.floatToIntBits(unitRatio) : 0);
+		return result;
+	}
+
+	@Override
+	public boolean isEmpty() {
+
+
+		//无设定材料  数据为空
+		return (materialId<=0);
+
 
 
 	}

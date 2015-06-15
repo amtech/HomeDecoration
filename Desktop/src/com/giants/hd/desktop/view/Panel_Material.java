@@ -4,10 +4,12 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
@@ -29,6 +31,7 @@ public class Panel_Material  extends  BasePanel{
     private JButton btn_import;
     private Panel_Page pagePanel;
     private JButton btn_add;
+    private JComboBox<MaterialClass> cb_class;
 
 
     @Override
@@ -45,13 +48,13 @@ public class Panel_Material  extends  BasePanel{
 
 
 
-    public Panel_Material( String value) {
+    public Panel_Material(final String value) {
 
 
 
         jtf_value.setText(value);
 
-            search(value);
+
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -131,6 +134,28 @@ public class Panel_Material  extends  BasePanel{
             }
         });
 
+
+
+        //初始化下拉框
+        MaterialClass aMaterialClass=new MaterialClass();
+        aMaterialClass.name="所有分类";
+        aMaterialClass.code="";
+        cb_class.addItem(aMaterialClass);
+        for(MaterialClass materialClass: BufferData.materialClasses)
+        {
+            cb_class.addItem(materialClass);
+        }
+
+
+
+
+        //执行查询
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                search(value);
+            }
+        });
     }
 
 
@@ -182,6 +207,8 @@ public class Panel_Material  extends  BasePanel{
     {
 
 
+      final  String mClassId=((MaterialClass)cb_class.getSelectedItem()).code;
+
 
         new HdSwingWorker<Material,Object>( getWindow(getRoot()))
         {
@@ -189,7 +216,7 @@ public class Panel_Material  extends  BasePanel{
             protected RemoteData<Material> doInBackground() throws Exception {
 
 
-                return   apiManager.loadMaterialByCodeOrName(value, pageIndex, pageSize);
+                return   apiManager.loadMaterialByCodeOrName(value,mClassId, pageIndex, pageSize);
 
             }
 

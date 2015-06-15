@@ -3,6 +3,7 @@ package com.giants.hd.desktop;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.dialogs.PhotoSyncDialog;
+import com.giants.hd.desktop.dialogs.UploadPictureDialog;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
@@ -16,6 +17,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
@@ -68,7 +70,12 @@ public class Main extends JFrame {
 
     public static void main(String[] args) {
 
-        try {
+
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
 //            // Set cross-platform Java L&F (also called "Metal")
 //            UIManager.setLookAndFeel(
 //                    UIManager.getCrossPlatformLookAndFeelClassName());
@@ -79,22 +86,38 @@ public class Main extends JFrame {
 //                    UIManager.getSystemLookAndFeelClassName());
 
 
-            UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+
+                      UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
 
 
-         // setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
+                    // setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();
+                }
+
+                init();
+
+            }
+        });
 
 
+
+
+
+
+
+
+    }
+
+    private static final void  init()
+    {
         final Main frame = new Main();
 
 
@@ -102,7 +125,7 @@ public class Main extends JFrame {
 
         frame.setContentPane(frame.panel1);
 
-       frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.generateMenu();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -126,8 +149,6 @@ public class Main extends JFrame {
 
 
         frame.preLoadData();
-
-
     }
 
 
@@ -412,7 +433,18 @@ public class Main extends JFrame {
             }
         });
 
+        //
+        menuItem = new JMenuItem("图片批量上传" );
 
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UploadPictureDialog dialog = new UploadPictureDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
 
         //
         menuItem = new JMenuItem("打开搜索材料对话框",

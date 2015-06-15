@@ -58,6 +58,12 @@ public  abstract  class BasePanel {
         public void save();
 
         public void delete();
+
+
+       public  void close();
     }
+
+
+
 
 }

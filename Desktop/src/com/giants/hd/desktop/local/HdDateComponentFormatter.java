@@ -21,7 +21,7 @@ public class HdDateComponentFormatter extends JFormattedTextField.AbstractFormat
     DateFormat format;
 
     public HdDateComponentFormatter(){
-        format =new SimpleDateFormat("YYYY-MM-dd");
+        format =new SimpleDateFormat("yyyy-MM-dd");
     }
 
     @Override

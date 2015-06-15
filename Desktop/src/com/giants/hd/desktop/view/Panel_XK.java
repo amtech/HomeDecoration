@@ -30,7 +30,11 @@ public class Panel_XK {
     private JTextField huaxinxiaoguo;
     private JComboBox cb_jiaqian;
 
+    private Xiankang data;
+
     public void setData(Xiankang data) {
+        this.data=data;
+        if(data==null) return;
         jingzi_gao.setText(data.getJingzi_gao());
         jingzi_kuan.setText(data.getJingzi_kuan());
         beizhu.setText(data.getBeizhu());
@@ -52,7 +56,8 @@ public class Panel_XK {
         huaxinxiaoguo.setText(data.getHuaxinxiaoguo());
     }
 
-    public void getData(Xiankang data) {
+    public Xiankang getData( ) {
+        if(data==null) data=new Xiankang();
         data.setJingzi_gao(jingzi_gao.getText());
         data.setJingzi_kuan(jingzi_kuan.getText());
         data.setBeizhu(beizhu.getText());
@@ -72,6 +77,7 @@ public class Panel_XK {
         data.setHuaxinbianhao(huaxinbianhao.getText());
         data.setHuaxinchangshang(huaxinchangshang.getText());
         data.setHuaxinxiaoguo(huaxinxiaoguo.getText());
+        return data;
     }
 
     public boolean isModified(Xiankang data) {

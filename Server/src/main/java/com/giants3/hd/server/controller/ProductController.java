@@ -3,6 +3,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 
 import com.giants3.hd.utils.StringUtils;
@@ -302,7 +303,7 @@ public class ProductController extends BaseController {
             //添加或者修改记录
             for (ProductPaint newPaint : productDetail.paints) {
                 //过滤空白记录 工序编码 跟名称都为空的情况下 也为设定材料情况下  为空记录。
-                if(StringUtils.isEmpty(newPaint.processName)&&StringUtils.isEmpty(newPaint.processCode)&&newPaint.materialId<=0)
+                if(newPaint.isEmpty())
                 {
                     continue;
                 }
@@ -346,10 +347,10 @@ public class ProductController extends BaseController {
             saveProductWage(productDetail.packWages, productId, Flow.FLOW_PACK);
 
 
-        RemoteData data = new RemoteData();
 
 
-        return data;
+
+        return returnFindProductDetailById(productId);
     }
 
 
@@ -384,7 +385,7 @@ public class ProductController extends BaseController {
         for (ProductWage newData
                 : wages) {
 
-            if(newData.processId<=0&&StringUtils.isEmpty(newData.processCode)&&StringUtils.isEmpty(newData.processName))
+            if(newData.isEmpty())
             {
                 continue;
             }
@@ -431,7 +432,7 @@ public class ProductController extends BaseController {
                 : materials) {
 
             //无设定材料  数据为空
-            if(newData.materialId<=0)
+            if(newData.isEmpty() )
             {continue;}
             newData.setProductId(productId);
             newData.setFlowId(flowId);
@@ -540,15 +541,17 @@ public class ProductController extends BaseController {
         }
 
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
-        Product newProduct= (Product) SerializationUtils.deserialize(SerializationUtils.serialize(product));
+        Product newProduct= (Product)  ObjectUtils.deepCopy(product);
 
 
         newProduct.id= -1;
         newProduct.name=newProductName;
         newProduct.pVersion=version;
 
-        updateProductPhotoData(product);
-        updateProductPhotoTime(product);
+        updateProductPhotoData(newProduct);
+        updateProductPhotoTime(newProduct);
+
+
         //保存新产品信息
          newProduct= productRepository.save(newProduct);
 
@@ -556,7 +559,7 @@ public class ProductController extends BaseController {
         //更新产品材料信息
     List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
-        List<ProductMaterial> newMaterials= (List<ProductMaterial>) SerializationUtils.deserialize(SerializationUtils.serialize(materials));
+        List<ProductMaterial> newMaterials= (List<ProductMaterial>) ObjectUtils.deepCopy(materials);
         for(ProductMaterial material:newMaterials)
         {
 
@@ -572,7 +575,9 @@ public class ProductController extends BaseController {
         //更新产品材料信息
         List<ProductPaint> productPaints=   productPaintRepository.findByProductIdEquals(productId);
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
-        List<ProductPaint> newProductPaints= (List<ProductPaint>) SerializationUtils.deserialize(SerializationUtils.serialize(productPaints));
+        List<ProductPaint> newProductPaints = (List<ProductPaint>) ObjectUtils.deepCopy(productPaints);
+
+
         for(ProductPaint productPaint:newProductPaints)
         {
             productPaint.id=-1;
@@ -585,7 +590,7 @@ public class ProductController extends BaseController {
 
         List<ProductWage> productWages=   productWageRepository.findByProductIdEquals(productId);
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
-        List<ProductWage> newProductWages= (List<ProductWage>) SerializationUtils.deserialize(SerializationUtils.serialize(productWages));
+        List<ProductWage> newProductWages= (List<ProductWage>)  ObjectUtils.deepCopy(productWages);
         for(ProductWage productWage
                 :newProductWages)
         {

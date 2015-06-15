@@ -7,6 +7,7 @@ import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDetail;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 /**
@@ -24,6 +25,7 @@ public class HdSwingUtils {
      */
     public static  void showDetailPanel(Product product ,Component component)
     {
+        UIManager.put("TabbedPane.selected", Color.RED);
 
         JFrame frame =new ProductDetailFrame(product);
         frame.setLocationRelativeTo(component);

@@ -46,4 +46,23 @@ public class PackMaterialType  implements Serializable{
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PackMaterialType)) return false;
+
+        PackMaterialType that = (PackMaterialType) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        return !(name != null ? !name.equals(that.name) : that.name != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

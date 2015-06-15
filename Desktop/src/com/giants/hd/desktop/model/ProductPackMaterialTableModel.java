@@ -12,14 +12,17 @@ import com.google.inject.Inject;
 
 public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
-    public static String[] columnNames = new String[]{"  材料类别    ","  材质     ","  位置    ","  物料编码   ", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static int[] columnWidths = new int []{      80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+
+      static final String COLUMN_AMOUNT = "amount";
+
+    public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ","  物料编码   ", "材料名称", "数量","长","宽","高","长", "宽", "高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{       30 ,   80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
 
 
-    public static String[] fieldName = new String[]{"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
-    public  static Class[] classes = new Class[]{PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class,Material.class, Material.class };
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
+    public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class,Material.class, Material.class };
 
-    public  static boolean[] editables = new boolean[]{true, true, true,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
+    public  static boolean[] editables = new boolean[]{false,true, true, true,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
 
     private Product product;
 
@@ -40,7 +43,8 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object value= super.getValueAt(rowIndex, columnIndex);
 
-        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null )
+
+        if(fieldName[columnIndex].equals(COLUMN_AMOUNT)&&value instanceof Float&&product!=null )
         {
 
             if(product.packQuantity>0)
@@ -76,13 +80,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         {
 
 
-            case 0:
+            case 1:
                 //设置包装材料大类型
                 material.setPackMaterialClass((PackMaterialClass) aValue);
                 break;
 
 
-            case 1:
+            case 2:
                 //设置材料类型
                 material.setPackMaterialType((PackMaterialType) aValue);
 
@@ -90,12 +94,12 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 break;
 
 
-            case 2:
+            case 3:
                 //设置使用位置
                 material.setPackMaterialPosition((PackMaterialPosition) aValue);
 
                 break;
-            case 5:
+            case 6:
                 //设置用量
                 material.setQuantity(Float.valueOf(aValue.toString()));
                 material.update();
@@ -103,7 +107,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 break;
 
 
-            case 6:
+            case 7:
                 //设置长
                 material.setpLong(Float.valueOf(aValue.toString()));
                 material.update();
@@ -111,29 +115,29 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 break;
 
 
-            case 7:
+            case 8:
                 //设置宽
                 material.setpWidth(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 8:
+            case 9:
                 //设置高
                 material.setpHeight(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 14:
+            case 15:
                 //设置高
                 material.setAvailable(Float.valueOf(aValue.toString()));
                 material.update();
 
                 break;
 
-            case 18:
-                //设置
+            case 19:
+                //设置备注
                 material.setMemo( aValue.toString());
                 break;
 
@@ -152,13 +156,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
                 case PackMaterialClass.CLASS_INSIDE_BOX:
 
-                    for (ProductMaterial productMaterial : getDatas()) {
+                    for (ProductMaterial productMaterial : datas) {
                         PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
 
                                 productMaterial.updateRelatedMaterial(material);
-                                int relateIndex=getDatas().indexOf(productMaterial);
+                                int relateIndex=datas.indexOf(productMaterial);
                                 fireTableRowsUpdated(relateIndex,relateIndex);
                                 break;
                             }
@@ -174,7 +178,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
                 case PackMaterialClass.CLASS_JIAODAI:
 
-                    for (ProductMaterial productMaterial : getDatas()) {
+                    for (ProductMaterial productMaterial : datas) {
 
                         PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
                         if (packMaterialClass != null) {

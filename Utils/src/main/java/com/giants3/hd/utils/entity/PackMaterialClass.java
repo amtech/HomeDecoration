@@ -55,4 +55,19 @@ public class PackMaterialClass   implements Serializable {
 
     public static final String CLASS_QIPAODAI="气泡袋";
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PackMaterialClass)) return false;
+
+        PackMaterialClass that = (PackMaterialClass) o;
+
+        return !(id != null ? !id.equals(that.id) : that.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

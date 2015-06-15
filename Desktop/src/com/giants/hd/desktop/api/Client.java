@@ -5,7 +5,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.ning.http.client.*;
+import com.ning.http.client.multipart.FilePart;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -28,6 +31,9 @@ public class Client {
 
     }
 
+    @Inject
+    MimetypesFileTypeMap mimetypesFileTypeMap;
+
 
     public void put()
     {}
@@ -43,8 +49,6 @@ public class Client {
                 public String onCompleted(Response response) throws Exception {
 
                     String result= response.getResponseBody(BODY_ENCODING);
-
-
                     return result;
 
 
@@ -80,6 +84,32 @@ public class Client {
     }
 
 
+    /**
+     * 上传文件
+     * @param url
+     * @param file
+     * @return
+     */
+    public String uploadWidthStringReturned(String url,File file ) throws HdException {
+        Logger.getLogger(TAG).info(url);
+        String result= upload(url,file, new AsyncCompletionHandler<String>() {
+            @Override
+            public String onCompleted(Response response) throws Exception {
+
+                String result = response.getResponseBody(BODY_ENCODING);
+                return result;
+
+
+            }
+        });
+
+        Logger.getLogger(TAG).info(result);
+
+        return result;
+
+    }
+
+
     public <T> T get(String url,   AsyncHandler<T> handler)throws HdException
     {
 
@@ -100,6 +130,27 @@ public class Client {
 
         if (null != body)
             builder.setBody(body);
+
+        return execute(handler, builder);
+
+    }
+
+
+    /**
+     * 上传文件
+     * @param url
+     * @param file
+     * @param handler
+     * @param <T>
+     * @return
+     * @throws HdException
+     */
+    public <T> T upload(String url,File file,AsyncHandler<T> handler) throws HdException {
+
+        AsyncHttpClient.BoundRequestBuilder builder;
+        builder = client.preparePost(url);
+        builder.addHeader("Content-Type","multipart/*");
+        builder.addBodyPart(new FilePart("file",file,mimetypesFileTypeMap.getContentType(file)));
 
         return execute(handler, builder);
 

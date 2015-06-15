@@ -18,6 +18,8 @@ public interface MaterialRepository extends JpaRepository<Material,Long> {
 
 
     public Page<Material> findByCodeLikeOrNameLike(String code,String name ,Pageable pageable);
+    public Page<Material> findByCodeLikeAndClassIdOrNameLikeAndClassIdEquals(String code, String classId,String name,String classId1,Pageable pageable);
+
 
     public Page<Material> findByNameLike( String codeOrName,Pageable pageable);
 

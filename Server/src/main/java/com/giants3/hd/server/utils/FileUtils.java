@@ -40,7 +40,7 @@ public class FileUtils {
     public static  final String getMaterialPicturePath(String filePath,String code,String mClass )
     {
 
-        return getMaterialPicturePath(filePath ,code,"jpg");
+        return getMaterialPicturePath(filePath ,code,mClass,"jpg");
 
     }
 
@@ -55,14 +55,20 @@ public class FileUtils {
     {
 
 
+
+
+        if(code.startsWith("C")||code.startsWith("c"))
+        {
+
+            mClass="C";
+        }
         if(StringUtils.isEmpty(mClass))
         {
 
             return  filePath +code+"."+type;
         }
         else
-
-        return  filePath+mClass+File.separator+code+"."+type;
+            return  filePath+mClass+File.separator+code+"."+type;
 
     }
     /**获取图片路径   根据规则  （第一个英文字母为之前的字符串 作为文件夹）
@@ -138,5 +144,19 @@ public class FileUtils {
 
         }
         return 0;
+    }
+
+
+    /**
+     * 根据文件名 获取路径
+     * @param materialFilePath
+     * @param fileName  文件名 带后缀
+     */
+    public static String getMaterialPicturePath(String materialFilePath, String fileName) {
+
+
+        int indexOfDot= fileName.indexOf(".");
+        return   getMaterialPicturePath(materialFilePath, fileName.substring(0, indexOfDot), fileName.substring(0, 4), fileName.substring(indexOfDot + 1));
+
     }
 }

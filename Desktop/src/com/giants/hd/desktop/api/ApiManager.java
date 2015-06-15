@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sun.xml.internal.bind.v2.TODO;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.logging.Logger;
@@ -57,47 +58,24 @@ public class ApiManager {
 
     }
 
-    /**
-     * 读出材料列表
-     * @param materialName
-     * @param pageIndex
-     * @param pageSize
-     * @return
-     * @throws HdException
-     */
-    public RemoteData<Material>  readMaterialList(String materialName,int pageIndex,int pageSize) throws HdException {
 
-
-        String url=HttpUrl.loadProductList(materialName, pageIndex, pageSize);
-
-        String result=     client.postWithStringReturned(url, null);
-
-        Type   generateType = new TypeToken<RemoteData<Material>>() {
-        }.getType();
-
-        RemoteData<Material> productRemoteData = gson.fromJson(result, generateType);
-
-        return productRemoteData;
-
-
-    }
 
     /**
      * 保存产品数据
      * @param productDetail
      * @return
      */
-    public RemoteData  saveProduct(ProductDetail productDetail) throws HdException {
+    public RemoteData<ProductDetail>  saveProduct(ProductDetail productDetail) throws HdException {
 
 
         String url=HttpUrl.saveProduct();
 
         String result=     client.postWithStringReturned(url, gson.toJson(productDetail));
 
-        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
         }.getType();
 
-        RemoteData<Void> productRemoteData = gson.fromJson(result, generateType);
+        RemoteData<ProductDetail> productRemoteData = gson.fromJson(result, generateType);
 
         return productRemoteData;
 
@@ -145,7 +123,6 @@ public class ApiManager {
 
 
     }
-
     /**
      * 根据物料编码与名称 模糊搜索材料
      * @param value
@@ -153,10 +130,18 @@ public class ApiManager {
      */
     public RemoteData<Material> loadMaterialByCodeOrName(String value,int pageIndex,int pageSize) throws HdException {
 
-        String url=HttpUrl.loadMaterialByCodeOrName(value, pageIndex, pageSize);
 
+        return loadMaterialByCodeOrName(  value,  "",  pageIndex,  pageSize);
+    }
+    /**
+     * 根据物料编码与名称 模糊搜索材料
+     * @param value
+     * @return
+     */
+    public RemoteData<Material> loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize) throws HdException {
+
+        String url=HttpUrl.loadMaterialByCodeOrName(value, classId,pageIndex, pageSize);
         String result=     client.getWithStringReturned(url);
-
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
         RemoteData<Material> remoteData = gson.fromJson(result, generateType);
@@ -430,4 +415,48 @@ public class ApiManager {
         RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
         return remoteData;
     }
+
+
+    /**
+     * 上传产品图片
+     * @param file
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Void> uploadProductPicture(File file,boolean doesOverride) throws HdException {
+
+
+
+        String productName=file.getName();
+        String url=HttpUrl.uploadProductPicture(  productName,  doesOverride);
+
+
+
+        String result=  client.uploadWidthStringReturned(url,file);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+    }
+    /**
+     * 上传材料图片
+     * @param file
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Void> uploadMaterialPicture(File file,boolean doesOverride) throws HdException {
+
+
+
+        String materialName=file.getName();
+        String url=HttpUrl.uploadMaterialPicture(  materialName,doesOverride);
+
+        String result=  client.uploadWidthStringReturned(url,file);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
 }

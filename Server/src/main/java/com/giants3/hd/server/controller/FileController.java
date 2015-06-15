@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 文件上传控制类
@@ -38,23 +40,77 @@ public class FileController  extends BaseController{
         model.addAttribute("message", "Hello world!");
         return "uploadfile";
     }
-    @RequestMapping(value="/upload", method=RequestMethod.POST)
-    public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
+    @RequestMapping(value="/uploadProduct", method=RequestMethod.POST)
+    public @ResponseBody
+    RemoteData<Void> handleProductUpload(@RequestParam("name") String name,@RequestParam("doesOverride") boolean doesOverride,
                                                  @RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
-            try {
-                byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded")));
-                stream.write(bytes);
-                stream.close();
-                return "You successfully uploaded " + name + " into " + name + "-uploaded !";
-            } catch (Exception e) {
-                return "You failed to upload " + name + " => " + e.getMessage();
+
+
+            int indexOfDot=name.indexOf(".");
+
+            String filePath=FileUtils.getProductPicturePath(productFilePath,name.substring(0,indexOfDot),"",name.substring(indexOfDot+1));
+
+
+            if (new File(filePath).exists() && !doesOverride)
+            {
+                return wrapMessageData(filePath+" 已经存在 ，并且要求不覆盖。");
             }
+
+         return   handleFileUpload(file,filePath);
+
         } else {
-            return "You failed to upload " + name + " because the file was empty.";
+            return wrapError("You failed to upload " + name + " because the file was empty.");
         }
+    }
+
+
+    @RequestMapping(value="/uploadMaterial", method=RequestMethod.POST)
+    public @ResponseBody
+    RemoteData<Void> handleMaterialUpload(@RequestParam("name") String name,@RequestParam("doesOverride") boolean doesOverride,
+                                         @RequestParam("file") MultipartFile file){
+        if (!file.isEmpty()) {
+
+
+            String newPath = FileUtils.getMaterialPicturePath(materialFilePath, name);
+            if (new File(newPath).exists() && !doesOverride)
+            {
+                return wrapMessageData(newPath+" 已经存在 ，并且要求不覆盖。");
+            }
+
+
+            return   handleFileUpload(file,newPath);
+
+        } else {
+            return wrapError("You failed to upload " + name + " because the file was empty.");
+        }
+    }
+
+
+
+    private  RemoteData<Void> handleFileUpload( MultipartFile file,String newFilePath)
+    {
+
+
+        byte[] bytes  ;
+        try {
+
+            File newFile=new File(newFilePath);
+            File parentFile=newFile.getParentFile();
+            if(!parentFile.exists())
+                parentFile.mkdirs();
+            bytes = file.getBytes();
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream(newFile));
+            stream.write(bytes);
+            stream.close();
+            return  wrapMessageData("成功上传文件到" + newFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return  wrapError("You failed to upload " + newFilePath + " => " + e.getMessage());
+        }
+
+
     }
 
 
@@ -90,6 +146,52 @@ public class FileController  extends BaseController{
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;
+    }
+
+
+    /**
+     * Upload multiple file using Spring Controller
+     */
+    @Deprecated
+    @RequestMapping(value = "/uploadMultipleFile", method = RequestMethod.POST)
+    public @ResponseBody
+    String uploadMultipleFileHandler(@RequestParam("name") String[] names,
+                                     @RequestParam("file") MultipartFile[] files) {
+
+        if (files.length != names.length)
+            return "Mandatory information missing";
+
+        String message = "";
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+            String name = names[i];
+            try {
+                byte[] bytes = file.getBytes();
+
+                // Creating the directory to store file
+                String rootPath = System.getProperty("catalina.home");
+                File dir = new File(rootPath + File.separator + "tmpFiles");
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                // Create the file on server
+                File serverFile = new File(dir.getAbsolutePath()
+                        + File.separator + name);
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+                stream.close();
+//
+//                 info("Server File Location="
+//                        + serverFile.getAbsolutePath());
+
+                message = message + "You successfully uploaded file=" + name
+                        + "<br />";
+            } catch (Exception e) {
+                return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        }
+        return message;
     }
 
 }

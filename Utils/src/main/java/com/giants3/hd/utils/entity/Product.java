@@ -5,6 +5,7 @@ import com.giants3.hd.utils.FloatHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 产品表
@@ -675,5 +676,115 @@ public class Product implements Serializable {
 
 	public void setSpecCm(String specCm) {
 		this.specCm = specCm;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Product)) return false;
+
+		Product product = (Product) o;
+
+		if (pClassId != product.pClassId) return false;
+		if (Float.compare(product.weight, weight) != 0) return false;
+		if (Float.compare(product.costWage, costWage) != 0) return false;
+		if (Float.compare(product.cost8, cost8) != 0) return false;
+		if (Float.compare(product.cost7, cost7) != 0) return false;
+		if (Float.compare(product.cost1, cost1) != 0) return false;
+		if (Float.compare(product.cost6, cost6) != 0) return false;
+		if (Float.compare(product.cost11_15, cost11_15) != 0) return false;
+		if (Float.compare(product.cost5, cost5) != 0) return false;
+		if (id != product.id) return false;
+
+		if (Float.compare(product.paintCost, paintCost) != 0) return false;
+		if (Float.compare(product.paintWage, paintWage) != 0) return false;
+		if (Float.compare(product.productCost, productCost) != 0) return false;
+		if (Float.compare(product.assembleWage, assembleWage) != 0) return false;
+		if (Float.compare(product.assembleCost, assembleCost) != 0) return false;
+		if (Float.compare(product.conceptusCost, conceptusCost) != 0) return false;
+		if (Float.compare(product.conceptusWage, conceptusWage) != 0) return false;
+		if (Float.compare(product.packCost, packCost) != 0) return false;
+		if (Float.compare(product.packWage, packWage) != 0) return false;
+		if (Float.compare(product.fob, fob) != 0) return false;
+		if (Float.compare(product.cost, cost) != 0) return false;
+		if (Float.compare(product.price, price) != 0) return false;
+		if (packQuantity != product.packQuantity) return false;
+		if (Float.compare(product.packVolume, packVolume) != 0) return false;
+		if (Float.compare(product.packWidth, packWidth) != 0) return false;
+		if (Float.compare(product.packHeight, packHeight) != 0) return false;
+		if (Float.compare(product.packLong, packLong) != 0) return false;
+		if (Float.compare(product.packMaterialCost, packMaterialCost) != 0) return false;
+		if (insideBoxQuantity != product.insideBoxQuantity) return false;
+		if (Float.compare(product.cost4, cost4) != 0) return false;
+		if (memo != null ? !memo.equals(product.memo) : product.memo != null) return false;
+
+		if (url != null ? !url.equals(product.url) : product.url != null) return false;
+		if (pClassName != null ? !pClassName.equals(product.pClassName) : product.pClassName != null) return false;
+		if (pUnitId != null ? !pUnitId.equals(product.pUnitId) : product.pUnitId != null) return false;
+		if (pUnitName != null ? !pUnitName.equals(product.pUnitName) : product.pUnitName != null) return false;
+		if (attribute != null ? !attribute.equals(product.attribute) : product.attribute != null) return false;
+		if (specCm != null ? !specCm.equals(product.specCm) : product.specCm != null) return false;
+		if (pack != null ? !pack.equals(product.pack) : product.pack != null) return false;
+		if (name != null ? !name.equals(product.name) : product.name != null) return false;
+		if (rDate != null ? !rDate.equals(product.rDate) : product.rDate != null) return false;
+		if (spec != null ? !spec.equals(product.spec) : product.spec != null) return false;
+		if (pVersion != null ? !pVersion.equals(product.pVersion) : product.pVersion != null) return false;
+		if (constitute != null ? !constitute.equals(product.constitute) : product.constitute != null) return false;
+		if (xiankang != null ? !xiankang.equals(product.xiankang) : product.xiankang != null) return false;
+		return !(mirrorSize != null ? !mirrorSize.equals(product.mirrorSize) : product.mirrorSize != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = memo != null ? memo.hashCode() : 0;
+
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		result = 31 * result + (int) (pClassId ^ (pClassId >>> 32));
+		result = 31 * result + (pClassName != null ? pClassName.hashCode() : 0);
+		result = 31 * result + (pUnitId != null ? pUnitId.hashCode() : 0);
+		result = 31 * result + (pUnitName != null ? pUnitName.hashCode() : 0);
+		result = 31 * result + (weight != +0.0f ? Float.floatToIntBits(weight) : 0);
+		result = 31 * result + (costWage != +0.0f ? Float.floatToIntBits(costWage) : 0);
+		result = 31 * result + (cost8 != +0.0f ? Float.floatToIntBits(cost8) : 0);
+		result = 31 * result + (cost7 != +0.0f ? Float.floatToIntBits(cost7) : 0);
+		result = 31 * result + (cost1 != +0.0f ? Float.floatToIntBits(cost1) : 0);
+		result = 31 * result + (cost6 != +0.0f ? Float.floatToIntBits(cost6) : 0);
+		result = 31 * result + (cost11_15 != +0.0f ? Float.floatToIntBits(cost11_15) : 0);
+		result = 31 * result + (cost5 != +0.0f ? Float.floatToIntBits(cost5) : 0);
+		result = 31 * result + (attribute != null ? attribute.hashCode() : 0);
+		result = 31 * result + (specCm != null ? specCm.hashCode() : 0);
+		result = 31 * result + (pack != null ? pack.hashCode() : 0);
+		result = 31 * result + (int) (id ^ (id >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (rDate != null ? rDate.hashCode() : 0);
+		result = 31 * result + (spec != null ? spec.hashCode() : 0);
+		result = 31 * result + (pVersion != null ? pVersion.hashCode() : 0);
+
+		result = 31 * result + (constitute != null ? constitute.hashCode() : 0);
+		result = 31 * result + (paintCost != +0.0f ? Float.floatToIntBits(paintCost) : 0);
+		result = 31 * result + (paintWage != +0.0f ? Float.floatToIntBits(paintWage) : 0);
+		result = 31 * result + (productCost != +0.0f ? Float.floatToIntBits(productCost) : 0);
+		result = 31 * result + (assembleWage != +0.0f ? Float.floatToIntBits(assembleWage) : 0);
+		result = 31 * result + (assembleCost != +0.0f ? Float.floatToIntBits(assembleCost) : 0);
+		result = 31 * result + (conceptusCost != +0.0f ? Float.floatToIntBits(conceptusCost) : 0);
+		result = 31 * result + (conceptusWage != +0.0f ? Float.floatToIntBits(conceptusWage) : 0);
+		result = 31 * result + (xiankang != null ? xiankang.hashCode() : 0);
+		result = 31 * result + (packCost != +0.0f ? Float.floatToIntBits(packCost) : 0);
+		result = 31 * result + (packWage != +0.0f ? Float.floatToIntBits(packWage) : 0);
+		result = 31 * result + (fob != +0.0f ? Float.floatToIntBits(fob) : 0);
+		result = 31 * result + (cost != +0.0f ? Float.floatToIntBits(cost) : 0);
+		result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+		result = 31 * result + packQuantity;
+		result = 31 * result + (packVolume != +0.0f ? Float.floatToIntBits(packVolume) : 0);
+		result = 31 * result + (packWidth != +0.0f ? Float.floatToIntBits(packWidth) : 0);
+		result = 31 * result + (packHeight != +0.0f ? Float.floatToIntBits(packHeight) : 0);
+		result = 31 * result + (packLong != +0.0f ? Float.floatToIntBits(packLong) : 0);
+		result = 31 * result + (packMaterialCost != +0.0f ? Float.floatToIntBits(packMaterialCost) : 0);
+		result = 31 * result + insideBoxQuantity;
+		result = 31 * result + (cost4 != +0.0f ? Float.floatToIntBits(cost4) : 0);
+		result = 31 * result + (mirrorSize != null ? mirrorSize.hashCode() : 0);
+		return result;
 	}
 }

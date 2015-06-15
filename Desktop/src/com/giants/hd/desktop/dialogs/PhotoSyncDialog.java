@@ -125,4 +125,10 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
 
     }
 
+    @Override
+    public void close() {
+
+        dispose();
+    }
+
 }

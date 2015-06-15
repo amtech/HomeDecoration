@@ -10,16 +10,16 @@ import com.google.inject.Inject;
  * 油漆工表格模型
  */
 public class ProductPaintTableModel extends BaseTableModel<ProductPaint> implements Materialable {
-    public static String[] columnNames = new String[]{"工序代码", "工序名称", "工价","材料编码" ,"材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释费用","备注"};
+    public static String[] columnNames = new String[]{"序号","工序代码", "工序名称", "工价","材料编码" ,"材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释费用","备注"};
 
-    public static int[] columnWidths = new int []{      80,             80,    60,     100,        120,       80,        40,     60,       60,      60,         80,ConstantData.MAX_COLUMN_WIDTH };
+    public static int[] columnWidths = new int []{      40,   80,             80,    60,     100,        120,       80,        40,     60,       60,      60,         80,ConstantData.MAX_COLUMN_WIDTH };
 
 
 
-    public static String[] fieldName = new String[]{"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost","memo"};
-    public static Class[] classes = new Class[]{String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
+    public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost","memo"};
+    public static Class[] classes = new Class[]{Object.class,String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
 
-    public static boolean[] editables = new boolean[]{true, true, true, true,true,  true, false, true, false, false, false, true };
+    public static boolean[] editables = new boolean[]{false,true, true, true, true,true,  true, false, true, false, false, false, true };
 
     @Inject
     public ProductPaintTableModel() {
@@ -45,31 +45,31 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         ProductPaint item = getItem(rowIndex);
         switch (columnIndex) {
             // "工序代码"
-            case 0:
+            case 1:
                 item.setProcessCode(aValue.toString());
                 break;
             //"工序名称"
-            case 1:
+            case 2:
                 item.setProcessName(aValue.toString());
                 break;
                 //"工价"
-            case 2:
+            case 3:
                 item.setProcessPrice(Float.valueOf(aValue.toString()));
                 break;
             //"配料比例"
-            case 5:
+            case 6:
                 item.setIngredientRatio(Float.valueOf(aValue.toString()));
                 item.updateMaterialAndIngredientCost();
                 break;
 
             //"用量"
-            case 7:
+            case 8:
                 item.setMaterialQuantity(Float.valueOf(aValue.toString()));
                 item.updateMaterialAndIngredientCost();
                 break;
 
             //"备注说明"
-            case 11:
+            case 12:
                 item.setMemo(aValue.toString());
                 break;
 

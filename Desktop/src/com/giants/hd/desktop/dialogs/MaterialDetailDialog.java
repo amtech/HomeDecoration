@@ -129,4 +129,9 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
         }
 
     }
+
+    @Override
+    public void close() {
+        dispose();
+    }
 }
