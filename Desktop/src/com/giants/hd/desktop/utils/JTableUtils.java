@@ -1,4 +1,4 @@
-package com.giants.hd.desktop;
+package com.giants.hd.desktop.utils;
 
 import com.giants.hd.desktop.local.ConstantData;
 

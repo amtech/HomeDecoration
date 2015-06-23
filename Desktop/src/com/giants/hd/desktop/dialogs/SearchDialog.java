@@ -7,11 +7,8 @@ import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.view.Panel_Page;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.ProductProcess;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -27,7 +24,7 @@ public class SearchDialog<T> extends BaseDialog<T> {
     private ComonSearch<T> comonSearch;
 
 
-    public SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData) {
+    private SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData) {
         super(window);
         setContentPane(contentPane);
         setModal(true);
@@ -146,4 +143,40 @@ public class SearchDialog<T> extends BaseDialog<T> {
     }
 
 
+    public static class Builder<T> {
+        private Window window;
+        private BaseTableModel<T> tableModel;
+        private ComonSearch<T> comonSearch;
+        private String value;
+        private RemoteData<T> remoteData;
+
+        public Builder setWindow(Window window) {
+            this.window = window;
+            return this;
+        }
+
+        public Builder setTableModel(BaseTableModel<T> tableModel) {
+            this.tableModel = tableModel;
+            return this;
+        }
+
+        public Builder setComonSearch(ComonSearch<T> comonSearch) {
+            this.comonSearch = comonSearch;
+            return this;
+        }
+
+        public Builder setValue(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public Builder setRemoteData(RemoteData<T> remoteData) {
+            this.remoteData = remoteData;
+            return this;
+        }
+
+        public SearchDialog createSearchDialog() {
+            return new SearchDialog(window, tableModel, comonSearch, value, remoteData);
+        }
+    }
 }

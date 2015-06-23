@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.widget;
 
-import com.giants.hd.desktop.JTableUtils;
-import com.giants.hd.desktop.local.HdSwingUtils;
+import com.giants.hd.desktop.utils.JTableUtils;
+import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.model.BaseTableModel;
 
 import javax.swing.*;

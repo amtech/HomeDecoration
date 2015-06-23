@@ -4,9 +4,12 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
+import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.utils.ExportHelper;
+import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.FloatHelper;
@@ -17,6 +20,8 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
+import javafx.stage.FileChooser;
+import jxl.write.WriteException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -27,6 +32,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -480,6 +487,43 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         };
+
+
+        /**
+         * 导出数据
+         */
+        btn_export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                JFileChooser fileChooser = new JFileChooser(".");
+                //下面这句是去掉显示所有文件这个过滤器。
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fileChooser.showOpenDialog(null);
+                File file=null;
+                if (result == JFileChooser.APPROVE_OPTION) {
+
+                    file= fileChooser.getSelectedFile();
+
+                }
+                if(file==null) return;
+
+                try {
+                    ExportHelper.export(productDetail,file.getPath());
+                    JOptionPane.showMessageDialog(getRoot(), "导出成功");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(getRoot(),e1.getLocalizedMessage());
+                } catch (WriteException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(getRoot(), e1.getLocalizedMessage());
+                }
+
+            }
+        });
 
     }
 
@@ -1078,7 +1122,7 @@ public class Panel_ProductDetail extends BasePanel {
                 dialog.setVisible(true);
 
                 if(dialog.getResult()!=null)
-                    HdSwingUtils.showDetailPanel(getRoot(),dialog.getResult());
+                    HdSwingUtils.showDetailPanel(getRoot(), dialog.getResult());
 
 
 
@@ -1656,12 +1700,12 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-                    SearchDialog<Material> dialog = new SearchDialog<Material>(getWindow(contentPane),new MaterialTableModel( ), new ComonSearch<Material>() {
+                    SearchDialog<Material> dialog = new SearchDialog.Builder().setWindow(getWindow(contentPane)).setTableModel(new MaterialTableModel()).setComonSearch(new ComonSearch<Material>() {
                         @Override
                         public RemoteData<Material> search(String value, int pageIndex, int pageCount) throws HdException {
                             return apiManager.loadMaterialByCodeOrName(value, pageIndex, pageCount);
                         }
-                    }, text, data);
+                    }).setValue(text).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));
                     dialog.pack();
                     dialog.setLocationRelativeTo(table);
@@ -1736,12 +1780,12 @@ public class Panel_ProductDetail extends BasePanel {
                 {
 
 
-                    SearchDialog<ProductProcess> dialog = new SearchDialog<ProductProcess>(getWindow(contentPane),new ProductProcessModel(false), new ComonSearch<ProductProcess>() {
+                    SearchDialog<ProductProcess> dialog = new SearchDialog.Builder().setWindow(getWindow(contentPane)).setTableModel(new ProductProcessModel(false)).setComonSearch(new ComonSearch<ProductProcess>() {
                         @Override
                         public RemoteData<ProductProcess> search(String value, int pageIndex, int pageCount) throws HdException {
-                            return apiManager.loadProcessByCodeOrName(value,pageIndex,pageCount);
+                            return apiManager.loadProcessByCodeOrName(value, pageIndex, pageCount);
                         }
-                    }, text, data);
+                    }).setValue(text).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));
                     dialog.pack();
                     dialog.setLocationRelativeTo(table);

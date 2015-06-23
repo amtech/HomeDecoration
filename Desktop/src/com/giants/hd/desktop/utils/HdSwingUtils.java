@@ -1,4 +1,4 @@
-package com.giants.hd.desktop.local;
+package com.giants.hd.desktop.utils;
 
 import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants.hd.desktop.view.Panel_ProductDetail;
