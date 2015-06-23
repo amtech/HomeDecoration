@@ -133,6 +133,23 @@ public class ApiManager {
 
         return loadMaterialByCodeOrName(  value,  "",  pageIndex,  pageSize);
     }
+
+    /**
+     * 根据工序编码名称 模糊搜索工序
+     * @param value
+     * @return
+     */
+    public RemoteData<ProductProcess> loadProcessByCodeOrName
+    (String value,int pageIndex,int pageSize) throws HdException {
+
+        String url=HttpUrl.loadProcessByCodeOrName(value, pageIndex, pageSize);
+        String result=     client.getWithStringReturned(url);
+        Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
+        }.getType();
+        RemoteData<ProductProcess> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+    }
+
     /**
      * 根据物料编码与名称 模糊搜索材料
      * @param value

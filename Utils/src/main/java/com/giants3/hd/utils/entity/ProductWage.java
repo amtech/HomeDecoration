@@ -131,6 +131,19 @@ public class ProductWage  implements Serializable,Valuable {
     }
 
 
+    /**
+     * 替换工序
+     * @param productProcess
+     */
+    public void setProductProcess(ProductProcess productProcess)
+    {
+        processId=productProcess.id;
+        processCode=productProcess.code;
+        processName=productProcess.name;
+        memo=productProcess.memo;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

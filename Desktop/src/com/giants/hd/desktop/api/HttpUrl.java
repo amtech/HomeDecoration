@@ -256,4 +256,16 @@ public class HttpUrl {
 
         return BaseUrl+"api/process/saveList";
     }
+
+    /**
+     * 模糊查询工序
+     * @param value
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static String loadProcessByCodeOrName(String value, int pageIndex, int pageSize) {
+        return BaseUrl+"api/process/search?name="+ UTF8UrlEncoder.encode(value)+ "&pageIndex="+pageIndex+"&pageSize="+pageSize;
+
+    }
 }

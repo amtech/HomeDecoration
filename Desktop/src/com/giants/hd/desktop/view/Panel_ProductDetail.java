@@ -3,6 +3,8 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
+import com.giants.hd.desktop.dialogs.SearchDialog;
+import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
@@ -12,6 +14,7 @@ import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -1135,11 +1138,21 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
-        //配置表格的自定义编辑输入
-        configTableCellEditor(tb_conceptus_cost);
-        configTableCellEditor(tb_assemble_cost);
-        configTableCellEditor(tb_product_paint);
-        configTableCellEditor(tb_pack_cost);
+        //配置表格的自定义编辑输入   //材料
+        configTableCellMaterialEditor(tb_conceptus_cost);
+        configTableCellMaterialEditor(tb_assemble_cost);
+        configTableCellMaterialEditor(tb_product_paint);
+        configTableCellMaterialEditor(tb_pack_cost);
+
+        configTableCellMaterialEditor(tb_pack_wage);
+        configTableCellMaterialEditor(tb_conceptus_wage);
+        configTableCellMaterialEditor(tb_assemble_wage);
+
+
+
+
+
+        //配置表格的自定义编辑输入   //工序
 
         initListeners();
     }
@@ -1442,9 +1455,9 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
     /**
-     * 配置表格的 弹出选择框
+     * 配置表格的 弹出选择框  材料选择
      */
-    private void configTableCellEditor(final JTable table) {
+    private void configTableCellMaterialEditor(final JTable table) {
 
 
         //定制表格的编辑功能 弹出物料选择单
@@ -1454,22 +1467,21 @@ public class Panel_ProductDetail extends BasePanel {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 Document object = e.getDocument();
-                if(!jtf.hasFocus())
-                jtf.requestFocus();
+                if (!jtf.hasFocus())
+                    jtf.requestFocus();
 
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 Document object = e.getDocument();
-                if(!jtf.hasFocus())
-                jtf.requestFocus();
+                if (!jtf.hasFocus())
+                    jtf.requestFocus();
 
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-
 
 
             }
@@ -1481,33 +1493,61 @@ public class Panel_ProductDetail extends BasePanel {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                final   String text = ((JTextField) e.getSource()).getText().trim();
+                final String text = ((JTextField) e.getSource()).getText().trim();
                 Logger.getLogger("TAG").info("focusLost" + e.toString());
                 handleTableMaterialInput(table, text);
 
             }
         });
-//        //回车键触发
-//        jtf.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//             final   String text = ((JTextField) e.getSource()).getText().trim();
-//             handleTableMaterialInput(table,text);
-//
-//
-//
-//
-//
-//
-//            }
-//        });
-
-
-
 
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf);
         table.setDefaultEditor(Material.class, editor);
+
+
+
+
+
+        final JTextField processjtf = new JTextField();
+        processjtf.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Document object = e.getDocument();
+                if (!processjtf.hasFocus())
+                    processjtf.requestFocus();
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                Document object = e.getDocument();
+                if (!processjtf.hasFocus())
+                    processjtf.requestFocus();
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+
+            }
+        });
+
+
+
+        processjtf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                final String text = ((JTextField) e.getSource()).getText().trim();
+                handleTableProcessInput(table, text);
+
+            }
+        });
+
+
+
+        table.setDefaultEditor(ProductProcess.class, new DefaultCellEditor(processjtf));
 
 
         JComboBox<PackMaterialType> packMaterialTypeComboBox = new JComboBox<>();
@@ -1551,7 +1591,24 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     }
+    /**
+     * 配置表格的 弹出选择框  工序选择
+     */
+    private void configTableCellProcessEditor(final JTable table) {
 
+
+        //定制表格的编辑功能 弹出物料选择单
+
+
+
+
+
+
+
+
+
+
+    }
 
     /**
      * 处理表格的 材料输入时间
@@ -1598,8 +1655,14 @@ public class Panel_ProductDetail extends BasePanel {
                 {
 
 
-                    SearchMaterialDialog dialog = new SearchMaterialDialog(getWindow(contentPane), text, data);
-                    dialog.setMinimumSize(new Dimension(800,600));
+
+                    SearchDialog<Material> dialog = new SearchDialog<Material>(getWindow(contentPane),new MaterialTableModel( ), new ComonSearch<Material>() {
+                        @Override
+                        public RemoteData<Material> search(String value, int pageIndex, int pageCount) throws HdException {
+                            return apiManager.loadMaterialByCodeOrName(value, pageIndex, pageCount);
+                        }
+                    }, text, data);
+                    dialog.setMinimumSize(new Dimension(800, 600));
                     dialog.pack();
                     dialog.setLocationRelativeTo(table);
                     dialog.setVisible(true);
@@ -1613,6 +1676,7 @@ public class Panel_ProductDetail extends BasePanel {
 
                     }
 
+
                 }
 
 
@@ -1623,6 +1687,96 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     }
+
+
+    /**
+     * 处理工序输入检索
+     * @param table
+     * @param text
+     */
+    private  void handleTableProcessInput(final JTable table,final String text)
+    {
+
+
+
+
+
+
+        final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
+        final Processable processable;
+        if (table.getModel() instanceof Processable) {
+
+            processable=       ((Processable) table.getModel());
+        }
+        else
+        {
+            return ;
+        }
+        //查询  单记录直接copy
+        new HdSwingWorker<ProductProcess,Object>(SwingUtilities.getWindowAncestor(getRoot()))
+        {
+            @Override
+            protected RemoteData<ProductProcess> doInBackground() throws Exception {
+
+
+                return   apiManager.loadProcessByCodeOrName(text, 0, 100);
+
+            }
+
+            @Override
+            public void onResult(RemoteData<ProductProcess> data) {
+
+                if(data.isSuccess()&&data.totalCount==1)
+                {
+
+                    processable.setProcess(data.datas.get(0), rowIndex);
+
+
+                }else
+                {
+
+
+                    SearchDialog<ProductProcess> dialog = new SearchDialog<ProductProcess>(getWindow(contentPane),new ProductProcessModel(false), new ComonSearch<ProductProcess>() {
+                        @Override
+                        public RemoteData<ProductProcess> search(String value, int pageIndex, int pageCount) throws HdException {
+                            return apiManager.loadProcessByCodeOrName(value,pageIndex,pageCount);
+                        }
+                    }, text, data);
+                    dialog.setMinimumSize(new Dimension(800, 600));
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(table);
+                    dialog.setVisible(true);
+                    ProductProcess process = dialog.getResult();
+                    if (process != null) {
+                        if (table.getModel() instanceof Processable) {
+
+
+                            ((Processable) table.getModel()).setProcess(process, rowIndex);
+                        }
+
+                    }
+
+                }
+
+
+
+
+            }
+        }.go();
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
 
     @Override
     public JComponent getRoot() {

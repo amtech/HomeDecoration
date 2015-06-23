@@ -69,14 +69,28 @@ public class ProductProcessController extends BaseController {
         {
 
 
+
+
             ProductProcess oldData=processRepository.findOne(process.id);
             if(oldData==null)
             {
                 process.id=-1;
 
 
+                //如果是空数据  略过添加
+                if(process.isEmpty())
+                {
+                    continue;
+                }
+
+
+
             }else
             {
+
+
+
+
                 process.id=oldData.id;
 
             }

@@ -8,10 +8,8 @@ import com.giants.hd.desktop.dialogs.UploadPictureDialog;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
-import com.giants.hd.desktop.view.Panel_BaseData;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
-import com.giants.hd.desktop.view.SearchMaterialDialog;
 import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
@@ -20,12 +18,8 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.InputStream;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Created by davidleen29 on 2015/5/6.
@@ -262,7 +256,7 @@ public class Main extends JFrame {
 
         menu.addSeparator();
 
-        menuItem = new JMenuItem("基础数据" );
+        menuItem = new JMenuItem("工序列表" );
 
 
         menu.add(menuItem);
@@ -416,36 +410,6 @@ public class Main extends JFrame {
 
 
 
-        //
-        menuItem = new JMenuItem("打开搜索材料对话框",
-                KeyEvent.VK_U);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_1, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
-        menu.add(menuItem);
-
-
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-
-
-
-
-
-
-
-                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"",null);
-                dialog.setTitle("搜索材料");
-
-                dialog.pack();
-                dialog.setVisible(true);
-            }
-        });
-
 
         return menu;
     }
@@ -496,35 +460,6 @@ public class Main extends JFrame {
             }
         });
 
-        //
-        menuItem = new JMenuItem("打开搜索材料对话框",
-                KeyEvent.VK_U);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_1, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
-        menu.add(menuItem);
-
-
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-
-
-
-
-
-
-
-                SearchMaterialDialog dialog = new SearchMaterialDialog(Main.this,"",null);
-                dialog.setTitle("搜索材料");
-
-                dialog.pack();
-                dialog.setVisible(true);
-            }
-        });
 
 
         return menu;
