@@ -238,4 +238,22 @@ public class HttpUrl {
         return BaseUrl+"api/file/uploadMaterial?name="+materialName+"&doesOverride="+doesOverride;
     }
 
+
+    /**
+     * 工序列表url
+     * @return
+     */
+    public static String loadProductProcess() {
+
+        return BaseUrl+"api/process/list";
+    }
+
+    /**
+     * 保存工序列表数据
+     * @return
+     */
+    public static String saveProductProcesses() {
+
+        return BaseUrl+"api/process/saveList";
+    }
 }

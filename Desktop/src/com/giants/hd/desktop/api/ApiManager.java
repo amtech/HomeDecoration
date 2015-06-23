@@ -428,11 +428,11 @@ public class ApiManager {
 
 
         String productName=file.getName();
-        String url=HttpUrl.uploadProductPicture(  productName,  doesOverride);
+        String url=HttpUrl.uploadProductPicture(productName, doesOverride);
 
 
 
-        String result=  client.uploadWidthStringReturned(url,file);
+        String result=  client.uploadWidthStringReturned(url, file);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
         RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
@@ -449,7 +449,7 @@ public class ApiManager {
 
 
         String materialName=file.getName();
-        String url=HttpUrl.uploadMaterialPicture(  materialName,doesOverride);
+        String url=HttpUrl.uploadMaterialPicture(materialName, doesOverride);
 
         String result=  client.uploadWidthStringReturned(url,file);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
@@ -459,4 +459,36 @@ public class ApiManager {
     }
 
 
+    /**
+     * 读取工序列表
+     * @return
+     */
+    public RemoteData<ProductProcess> loadProductProcess()throws HdException {
+
+        String url=HttpUrl.loadProductProcess();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
+        }.getType();
+        RemoteData<ProductProcess> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 保存工序列表数据
+     * @param datas
+     * @return
+     */
+    public RemoteData<ProductProcess> saveProductProcess(List<ProductProcess> datas)throws HdException {
+        String url=HttpUrl.saveProductProcesses();
+
+        String result=     client.postWithStringReturned(url, gson.toJson(datas));
+
+        Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
+        }.getType();
+        RemoteData<ProductProcess> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+    }
 }

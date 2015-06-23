@@ -3,10 +3,12 @@ package com.giants.hd.desktop;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.dialogs.PhotoSyncDialog;
+import com.giants.hd.desktop.dialogs.ProductProcessDialog;
 import com.giants.hd.desktop.dialogs.UploadPictureDialog;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
+import com.giants.hd.desktop.view.Panel_BaseData;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
@@ -228,8 +230,7 @@ public class Main extends JFrame {
             KeyEvent.VK_P);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_P, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "产品信息的模块");
+
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -246,8 +247,7 @@ public class Main extends JFrame {
                 KeyEvent.VK_M);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_M, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "产品信息的模块");
+
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -255,6 +255,27 @@ public class Main extends JFrame {
 
                 Main.this.setContentPane(new Panel_Material("").getRoot());
 
+
+            }
+        });
+
+
+        menu.addSeparator();
+
+        menuItem = new JMenuItem("基础数据" );
+
+
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                Main.this.setContentPane(new Panel_BaseData().getRoot());
+                ProductProcessDialog dialog=new ProductProcessDialog(Main.this);
+                dialog.setMinimumSize(new Dimension(480,600));
+                dialog.pack();;
+                dialog.setLocationRelativeTo(Main.this);
+                dialog.setVisible(true);
 
             }
         });

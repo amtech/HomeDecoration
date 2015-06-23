@@ -5,6 +5,7 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
@@ -935,35 +936,9 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        //监听器， 监听表格右键点击功能
-        MouseAdapter adapter = new MouseAdapter() {
 
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                showMenu(e);
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mouseReleased(e);
-                showMenu(e);
-
-            }
-
-            private void showMenu(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    JTable source = (JTable) e.getSource();
-                    JPopupMenu menu = new TablePopMenu(source, tableMenuLister);
-                    //  取得右键点击所在行
-                    int row = e.getY() / tb_conceptus_cost.getRowHeight();
-                    menu.show(e.getComponent(), e.getX(), e.getY());
-
-                }
-            }
-        };
+        TableMouseAdapter adapter=new TableMouseAdapter(tableMenuLister);
 
         //设置表格点击监听
         tb_conceptus_cost.addMouseListener(adapter);

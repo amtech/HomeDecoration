@@ -1,9 +1,6 @@
 package com.giants3.hd.utils.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -21,6 +18,16 @@ public class ProductProcess implements Serializable{
     public long id;
 
 
+    @Basic
+    public String code;
+
+
+    @Basic
     public String name;
+
+
+    @Basic
+    public String memo;
+
 
 }
