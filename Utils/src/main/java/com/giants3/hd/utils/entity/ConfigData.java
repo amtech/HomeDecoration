@@ -48,4 +48,7 @@ public class ConfigData {
     public static ConfigData getInstance() {
         return instance;
     }
+
+
+    public Material ingredient;
 }

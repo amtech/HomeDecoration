@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.test;
 
+import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants.hd.desktop.widget.HdTabbedPane;
 
 import javax.swing.*;
@@ -69,7 +70,7 @@ public class TestTabPane extends JDialog {
             e.printStackTrace();
         }
 
-        UIManager.put("TabbedPane.selected", Color.RED);
+
         TestTabPane dialog = new TestTabPane();
         dialog.pack();
         dialog.setVisible(true);

@@ -20,6 +20,7 @@ public class BaseFrame  extends JFrame{
     }
 
     public BaseFrame(  String title) {
+        super(title);
 
         Guice.createInjector().injectMembers(this);
     }

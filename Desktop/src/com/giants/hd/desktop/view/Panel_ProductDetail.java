@@ -19,9 +19,11 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -59,7 +61,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField tf_cost;
 
 
-    private JTextField tf_weight;
+    private JFormattedTextField tf_weight;
     private JTextField tf_version;
     private JTextField tf_gross_profit;
 
@@ -162,13 +164,31 @@ public class Panel_ProductDetail extends BasePanel {
 
 
    private  DocumentListener tf_quantityListener;
+    /**
+     * 单位改变的监听器
+     */
+    private DocumentListener tf_unitDocumentListener;
+    /**
+     * 包装改变监听类。
+     */
+    private ItemListener cb_packItemListener;
 
 
-
-    public Panel_ProductDetail(ProductDetail productDetail) {
+    public Panel_ProductDetail( ) {
     super();
 
         initComponent();
+
+
+
+    }
+
+
+    /**
+     * 设置数据
+     */
+    public void setProductDetail(ProductDetail productDetail)
+    {
 
 
         initPanel(productDetail);
@@ -208,14 +228,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        //注册表模型的监听
-        productPaintModel.addTableModelListener(allTableModelListener);
-        assembleMaterialTableModel.addTableModelListener(allTableModelListener);
-        assembleWageTableModel.addTableModelListener(allTableModelListener);
-        conceptusMaterialTableModel.addTableModelListener(allTableModelListener);
-        conceptusWageTableModel.addTableModelListener(allTableModelListener);
-        packMaterialTableModel.addTableModelListener(allTableModelListener);
-        packWageTableModel.addTableModelListener(allTableModelListener);
 
 
 
@@ -237,15 +249,15 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-
-        //注册表模型的监听
-        productPaintModel.removeTableModelListener(allTableModelListener);
-        assembleMaterialTableModel.removeTableModelListener(allTableModelListener);
-        assembleWageTableModel.removeTableModelListener(allTableModelListener);
-        conceptusMaterialTableModel.removeTableModelListener(allTableModelListener);
-        conceptusWageTableModel.removeTableModelListener(allTableModelListener);
-        packMaterialTableModel.removeTableModelListener(allTableModelListener);
-        packWageTableModel.removeTableModelListener(allTableModelListener);
+//
+//        //注册表模型的监听
+//        productPaintModel.removeTableModelListener(allTableModelListener);
+//        assembleMaterialTableModel.removeTableModelListener(allTableModelListener);
+//        assembleWageTableModel.removeTableModelListener(allTableModelListener);
+//        conceptusMaterialTableModel.removeTableModelListener(allTableModelListener);
+//        conceptusWageTableModel.removeTableModelListener(allTableModelListener);
+//        packMaterialTableModel.removeTableModelListener(allTableModelListener);
+//        packWageTableModel.removeTableModelListener(allTableModelListener);
     }
 
 
@@ -274,6 +286,17 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         };
+
+
+
+//        //注册表模型的监听
+//        productPaintModel.addTableModelListener(allTableModelListener);
+//        assembleMaterialTableModel.addTableModelListener(allTableModelListener);
+//        assembleWageTableModel.addTableModelListener(allTableModelListener);
+//        conceptusMaterialTableModel.addTableModelListener(allTableModelListener);
+//        conceptusWageTableModel.addTableModelListener(allTableModelListener);
+//        packMaterialTableModel.addTableModelListener(allTableModelListener);
+//        packWageTableModel.addTableModelListener(allTableModelListener);
 
 
 
@@ -331,7 +354,7 @@ public class Panel_ProductDetail extends BasePanel {
 
                     newValue= Integer.valueOf(tf_quantity.getText().trim());
                     productDetail.product.packQuantity=newValue;
-                    packMaterialTableModel.fireTableDataChanged();
+                    packMaterialTableModel.updateProduct();
                     packWageTableModel.fireTableDataChanged();
 
 
@@ -373,7 +396,7 @@ public class Panel_ProductDetail extends BasePanel {
             {
 
 
-                String cmString= StringUtils.convertInchStringToCmString(   ta_spec_inch.getText().trim());
+                String cmString= StringUtils.convertInchStringToCmString( ta_spec_inch.getText().trim());
                 bindProductSpecCmData(cmString);
 
 
@@ -412,6 +435,48 @@ public class Panel_ProductDetail extends BasePanel {
             }
         };
 
+
+
+        //包材选择切换箭筒
+        cb_packItemListener=new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+
+                if(e.getStateChange()==ItemEvent.SELECTED) {
+                    productDetail.product.pack = (Pack) e.getItem();
+                    packMaterialTableModel.updateProduct();
+                }
+            }
+        };
+
+
+        tf_unitDocumentListener=new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+
+            private void update()
+            {
+
+                productDetail.product.pUnitName=tf_unit.getText().trim();
+                packMaterialTableModel.updateProduct();
+
+            }
+        };
+
     }
 
 
@@ -422,19 +487,14 @@ public class Panel_ProductDetail extends BasePanel {
      *
      * @see
      */
-    private void collectionData() throws HdUIException {
+    private void collectionData()  {
 
 
         Product product = productDetail.product;
 
         //货号
         String productName = tf_product.getText().trim();
-        //检验输入
 
-
-        if (StringUtils.isEmpty(productName)) {
-            throw HdUIException.create(tf_product, "请输入货号。。。");
-        }
 
         product.setName(productName);
 
@@ -453,22 +513,14 @@ public class Panel_ProductDetail extends BasePanel {
 
         //产品分类
         PClass pClassData = (PClass) cb_class.getSelectedItem();
-        if (pClassData == null) {
-            throw HdUIException.create(cb_class, "请选择产品类别。。。");
+        if(pClassData!=null) {
+            product.setpClassId(pClassData.id);
+            product.setpClassName(pClassData.name);
         }
-
-
-
-        product.setpClassId(pClassData.id);
-        product.setpClassName(pClassData.name);
 
 
         //包装类型
         Pack pack= (Pack) cb_pack.getSelectedItem();
-        if(pack==null)
-        {
-            throw HdUIException.create(cb_pack, "请选择产品包装类型。。。");
-        }
         product.pack=pack;
 
 
@@ -513,8 +565,7 @@ public class Panel_ProductDetail extends BasePanel {
             product.setWeight(tf_weightValue);
         } catch (Throwable t) {
             t.printStackTrace();
-
-            throw HdUIException.create(tf_weight, "输入产品净重，数值型数据");
+            product.setWeight(0);
         }
 
 
@@ -602,6 +653,30 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
+
+
+    private void checkData(ProductDetail productDetail) throws HdUIException
+    {
+
+        //检验输入
+
+
+        if (StringUtils.isEmpty(productDetail.product.name)) {
+            throw HdUIException.create(tf_product, "请输入货号。。。");
+        }
+
+        if(productDetail.product.pack==null)
+        {
+            throw HdUIException.create(cb_pack, "请选择包装类型。。。");
+        }
+
+//        if(StringUtils.isEmpty()productDetail.product.classid==null)
+//        {
+//            throw HdUIException.create(cb_class, "请选择产品类型。。。");
+//        }
+
+    }
+
     /**
      * 更新界面方法  负责数据的绑定
      */
@@ -612,21 +687,21 @@ public class Panel_ProductDetail extends BasePanel {
 
         bindProductBaseInfo(product);
 
-
         bindStatisticsValue(product);
 
 
-        bindTableDatas(assembleMaterialTableModel, productDetail.assembleMaterials);
-        bindTableDatas(assembleWageTableModel, productDetail.assembleWages);
+        bindTableDatas(tb_assemble_cost,assembleMaterialTableModel, productDetail.assembleMaterials);
+        bindTableDatas(tb_assemble_wage,assembleWageTableModel, productDetail.assembleWages);
 
-        bindTableDatas(conceptusMaterialTableModel, productDetail.conceptusMaterials);
-        bindTableDatas(conceptusWageTableModel, productDetail.conceptusWages);
+        bindTableDatas(tb_conceptus_cost,conceptusMaterialTableModel, productDetail.conceptusMaterials);
+        bindTableDatas(tb_conceptus_wage,conceptusWageTableModel, productDetail.conceptusWages);
 
-        bindTableDatas(productPaintModel, productDetail.paints);
+        bindTableDatas(tb_product_paint,productPaintModel, productDetail.paints);
 
 
-        bindTableDatas(packMaterialTableModel, productDetail.packMaterials);
-        bindTableDatas(packWageTableModel, productDetail.packWages);
+        bindTableDatas(tb_pack_cost,packMaterialTableModel, productDetail.packMaterials);
+        bindTableDatas(tb_pack_wage,packWageTableModel, productDetail.packWages);
+
     }
 
 
@@ -637,11 +712,12 @@ public class Panel_ProductDetail extends BasePanel {
      * @param datas
      * @param <T>
      */
-    private <T> void bindTableDatas(BaseTableModel<T> model, List<T> datas) {
+    private <T> void bindTableDatas(JTable table,BaseTableModel<T> model, List<T> datas) {
         //为了避免触发监听，先移除后添加
         model.removeTableModelListener(allTableModelListener);
         model.setDatas(datas);
-        model.addTableModelListener(allTableModelListener);
+         table.setModel(model);
+         model.addTableModelListener(allTableModelListener);
 
     }
 
@@ -655,10 +731,18 @@ public class Panel_ProductDetail extends BasePanel {
     private void bindProductBaseInfo(Product product) {
 
 
+
+
+
+
         if(product==null) return;
 
         tf_product.setText(product == null ? "" : product.getName());
 
+
+        //产品 版本号 一旦保存就不能再修改
+        tf_product.setEditable(product.id<=0);
+        tf_version.setEditable(product.id<=0);
 
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
@@ -676,8 +760,13 @@ public class Panel_ProductDetail extends BasePanel {
         ta_memo.setText(product == null ? "" : product.getMemo());
         date.getJFormattedTextField().setText(product == null ? "" : product.getrDate());
 
+
+
+        tf_unit.getDocument().removeDocumentListener(tf_unitDocumentListener);
         tf_unit.setText(product == null ? "" : product.pUnitName);
-        tf_weight.setText(product == null ? "" : String.valueOf(product.getWeight()));
+        tf_unit.getDocument().addDocumentListener(tf_unitDocumentListener);
+
+        tf_weight.setValue(product == null?0.0f:product.getWeight());
 
         tf_constitute.setText(product == null ? "" : product.getConstitute());
         tf_version.setText(product == null ? "" : product.getpVersion());
@@ -699,8 +788,12 @@ public class Panel_ProductDetail extends BasePanel {
             }
         cb_class.setSelectedIndex(selectClassIndex);
 
+        cb_pack.removeItemListener(cb_packItemListener);
+        if(product.pack!=null)
         cb_pack.setSelectedItem(product.pack);
-
+        else
+            cb_pack.setSelectedIndex(0);
+        cb_pack.addItemListener(cb_packItemListener);
 
         boolean isXiangkang = product != null && product.xiankang != null;
 
@@ -758,6 +851,9 @@ public class Panel_ProductDetail extends BasePanel {
                     initPanel(data.datas.get(0));
 
 
+                }else
+                {
+                    JOptionPane.showMessageDialog(contentPane,data.message);
                 }
             }
         }.go();
@@ -778,20 +874,18 @@ public class Panel_ProductDetail extends BasePanel {
 
         if(detail==null)
         {
-            oldData=null;
+
             productDetail=new ProductDetail();
-            productDetail.product=new Product();
+            oldData=(ProductDetail) ObjectUtils.deepCopy(productDetail);
 
         }else
         {
-            oldData= (ProductDetail) ObjectUtils.deepCopy(detail);
+             oldData= (ProductDetail) ObjectUtils.deepCopy(detail);
             productDetail = detail;
-            setProductInfoToPackageModel();
-            bindData();
 
         }
-
-
+        setProductInfoToPackageModel();
+        bindData();
 
         addListeners();
 
@@ -813,6 +907,7 @@ public class Panel_ProductDetail extends BasePanel {
             cb_pack.addItem(pack);
         }
 
+     //  cb_pack.setSelectedIndex(0);
 
 
         JDatePanelImpl picker = new JDatePanelImpl(null);
@@ -829,24 +924,7 @@ public class Panel_ProductDetail extends BasePanel {
     public void initComponent() {
 
 
-        //module.initComponent();
 
-        tb_conceptus_cost.setModel(conceptusMaterialTableModel);
-
-
-        tb_assemble_cost.setModel(assembleMaterialTableModel);
-
-        tb_product_paint.setModel(productPaintModel);
-
-
-        tb_conceptus_wage.setModel(conceptusWageTableModel);
-
-        tb_assemble_wage.setModel(assembleWageTableModel);
-
-
-        tb_pack_cost.setModel(packMaterialTableModel);
-
-        tb_pack_wage.setModel(packWageTableModel);
 
 
 
@@ -972,13 +1050,19 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                 try {
-
-                    if(!isModified())
+                    //非新增数据
+                    if(!isModified() )
                     {
 
-                        JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()),"数据无改变！");
-                        return;
+                        if(productDetail.product.id>0) {
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), "数据无改变！");
+                            return;
+                        }
                     }
+
+
+                    checkData(productDetail);
+
 
 
                     saveData(productDetail);
@@ -1474,7 +1558,21 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        //  DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){};
+        //让浮点数去除尾吧0
+         DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){
+            private DecimalFormat format=new DecimalFormat("#.#####");
+             @Override
+             protected void setValue(Object value) {
+                 if(value instanceof  Float) {
+
+                    super.setValue(format.format(((Float) value).floatValue()));
+                    // super.setValue( FloatHelper.scale(((Float) value).floatValue(), 10));
+                 }else
+                 super.setValue(value);
+             }
+         };
+
+        table.setDefaultRenderer( Object.class,renderer);
 
 
     }
@@ -1561,12 +1659,7 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-    /**
-     * 预留方法
-     * @param data
-     */
-    public void setData(ProductDetail data) {
-    }
+
     /**
      * 预留方法
      * @param data

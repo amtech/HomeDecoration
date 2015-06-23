@@ -1,5 +1,6 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 
 import javax.persistence.*;
@@ -40,6 +41,12 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public long flowId;
 	@Basic
 	public  String memo;
+
+	/**
+	 * 配料单价
+	 */
+	@Basic
+	public float price_of_diluent;
 
 
 	public long getFlowId() {
@@ -304,10 +311,10 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public  void updateMaterialAndIngredientCost()
 	{
 		ConfigData configData=ConfigData.getInstance();
-		materialCost=materialQuantity*materialPrice;
-		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio))*(1+configData.extra_ratio_of_diluent);
+		materialCost=FloatHelper.scale(materialQuantity*materialPrice);
+		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio)) ;
 		//配料 即稀释剂   稀释剂单价
-		ingredientCost=ingredientQuantity*configData.price_of_diluent;
+		ingredientCost= FloatHelper.scale(ingredientQuantity* price_of_diluent);
 
 
 	}
@@ -390,6 +397,19 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public boolean isEmpty() {
 
 	return 	StringUtils.isEmpty(processName)&&StringUtils.isEmpty(processCode)&&materialId<=0;
+
+	}
+
+	/**
+	 * 设置配料材质
+	 * @param material
+	 */
+	public void setIngredientMaterial(Material material) {
+
+
+
+		price_of_diluent=material.price;
+		updateMaterialAndIngredientCost();
 
 	}
 }

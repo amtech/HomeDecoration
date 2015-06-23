@@ -258,6 +258,19 @@ public class ProductController extends BaseController {
          * 未生成id 添加记录
          */
         if (!productRepository.exists(productId)) {
+
+
+            //检查唯一性
+            if(productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name,newProduct.pVersion)!=null)
+            {
+
+
+             return   wrapError("货号："+newProduct.name +",版本号："+newProduct.pVersion
+                        +"已经存在,请更换");
+            }
+
+
+
             //更新缩略图
             updateProductPhotoData(newProduct);
         } else {
@@ -271,6 +284,10 @@ public class ProductController extends BaseController {
 
 
         updateProductPhotoTime(newProduct);
+
+
+
+
 
 
         //最新product 数据
@@ -660,7 +677,12 @@ public class ProductController extends BaseController {
     @ResponseBody
     public RemoteData<Void> asyncProduct( ) {
 
-
+//
+//        try {
+//            Thread.sleep(300000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         int count=0;
         //遍历所有产品
         //一次处理20条记录

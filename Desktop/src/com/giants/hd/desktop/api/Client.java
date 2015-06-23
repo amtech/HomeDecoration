@@ -26,9 +26,7 @@ public class Client {
     public AsyncHttpClient client;
     @Inject
     public Client() {//设置链接参数   默认超时时间6秒
-        client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectTimeout(3000).setRequestTimeout(60000).build());
-
-
+        client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectTimeout(3000).setRequestTimeout(Integer.MAX_VALUE).setReadTimeout(Integer.MAX_VALUE).build());
     }
 
     @Inject

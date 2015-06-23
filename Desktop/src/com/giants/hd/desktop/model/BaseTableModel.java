@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.Valuable;
 
 
@@ -138,18 +139,19 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     }
 
-    public void setDatas(List<T> datas) {
+    public void setDatas(List<T> newDatas) {
 
 
 
         this.datas.clear();
 
-        if(datas!=null)
-             this.datas.addAll(datas);
-            adjustRowCount();
+        if(newDatas!=null)
+             this.datas.addAll(newDatas);
+         adjustRowCount();
 
 
-        fireTableDataChanged();
+       // fireTableStructureChanged();
+         fireTableDataChanged();
     }
 
     @Override
@@ -188,9 +190,17 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         }
 
 
-        if(  obj instanceof Number  &&Math.abs(((Number) obj).floatValue())<=0.00001)
+        //数字为0  显示空字符串
+        if(  obj instanceof Number )
         {
+            if( Math.abs(((Number) obj).floatValue())<=0.00001)
             return "";
+            else
+                if(obj instanceof  Float)
+                {
+                    //TODO   make the float value 3.0  to show in 3 ,without the fraction.
+                    return FloatHelper.scale((Float)obj,5);
+                }
         }else
         //显示图片
         if(obj instanceof  byte[] && getColumnClass(columnIndex).equals(ImageIcon.class))

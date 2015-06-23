@@ -12,6 +12,19 @@ import java.util.List;
 public class ProductDetail  implements Serializable {
 
 
+    public ProductDetail() {
+
+        product=new Product();
+        conceptusMaterials=new ArrayList<>();
+        assembleMaterials=new ArrayList<>();
+        paints=new ArrayList<>();
+        conceptusWages=new ArrayList<>();
+        assembleWages=new ArrayList<>();
+        packMaterials=new ArrayList<>();
+        packWages=new ArrayList<>();
+
+    }
+
     public Product product;
     /**
      * 白胚材料列表

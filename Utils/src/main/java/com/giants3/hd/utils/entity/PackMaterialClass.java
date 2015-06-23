@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class PackMaterialClass   implements Serializable {
 
 
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -54,6 +55,8 @@ public class PackMaterialClass   implements Serializable {
     public static final String CLASS_ZHANSHIHE="展示盒";
 
     public static final String CLASS_QIPAODAI="气泡袋";
+    public static final String CLASS_CAIHE = "彩盒";
+    public static final String CLASS_BAOLILONG = "保丽隆";
 
     @Override
     public boolean equals(Object o) {

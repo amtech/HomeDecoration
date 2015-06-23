@@ -10,6 +10,7 @@ import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.SearchMaterialDialog;
+import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
@@ -75,33 +76,8 @@ public class Main extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
-//            // Set cross-platform Java L&F (also called "Metal")
-//            UIManager.setLookAndFeel(
-//                    UIManager.getCrossPlatformLookAndFeelClassName());
-//
 
-//            // Set System L&F
-//            UIManager.setLookAndFeel(
-//                    UIManager.getSystemLookAndFeelClassName());
-
-
-
-                      UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
-
-
-                    // setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
-
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedLookAndFeelException e) {
-                    e.printStackTrace();
-                }
-
+                initLookAndFeel();
                 init();
 
             }
@@ -116,6 +92,59 @@ public class Main extends JFrame {
 
     }
 
+
+    /**
+     * 配置界面的样式
+     */
+    private static void initLookAndFeel()
+    {
+
+
+        try {
+//            // Set cross-platform Java L&F (also called "Metal")
+//            UIManager.setLookAndFeel(
+//                    UIManager.getCrossPlatformLookAndFeelClassName());
+//
+
+//            // Set System L&F
+//            UIManager.setLookAndFeel(
+//                    UIManager.getSystemLookAndFeelClassName());
+
+
+
+            UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+
+
+            // setUIFont(new javax.swing.plaf.FontUIResource("宋体", Font.PLAIN, 18));
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+
+        //设置分页标签选中时候颜色为红色
+
+        //        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Enabled].backgroundPainter", new BackgroundPainter(Color.white));
+//        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Enabled+MouseOver].backgroundPainter", new BackgroundPainter(Color.white));
+//        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Enabled+Pressed].backgroundPainter", new BackgroundPainter(Color.white));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Focused+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[MouseOver+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+    }
+
+
+    /**
+     * 应用程序初始化
+     */
     private static final void  init()
     {
         final Main frame = new Main();

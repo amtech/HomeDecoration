@@ -13,6 +13,10 @@ import java.io.Serializable;
 public class PackMaterialPosition   implements Serializable {
 
 
+
+    public  static final String FRONT="前后";
+    public  static final String BETWEEN="中间";
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;

@@ -15,6 +15,12 @@ import java.io.Serializable;
 @Entity(name="T_Pack")
 public class Pack  implements Serializable {
 
+
+	/**
+	 * 折叠包装常量
+	 */
+	public static final String PACK_ZHEDIE="折叠盒包装";
+
 	/**
 	 * 包装类型id
 	 */

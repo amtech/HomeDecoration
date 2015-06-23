@@ -25,6 +25,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
     @Inject
     ApiManager apiManager;
+    @Inject
     Panel_ProductDetail panel_productDetail;
   public   ProductDetailFrame(ProductDetail productDetail )
     {
@@ -35,14 +36,18 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
         super("产品详情[" + (productDetail.product == null ? "新增" : ("货号：" + productDetail.product.getName() + "---版本号：" + productDetail.product.getpVersion())) + "]");
 
 
-          panel_productDetail = new Panel_ProductDetail(productDetail);
-        init();
+        init( );
+
+        panel_productDetail.setProductDetail(productDetail);
     }
 
 
 
-    public void init( )
+    public void init()
     {
+
+
+
 
 
         panel_productDetail.setListener(this);
@@ -98,9 +103,17 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     {
 
         super("产品详情[" + (product == null ? "新增" : ("货号：" + product.getName() + "---版本号：" + product.getpVersion())) + "]");
+        init( );
+        if(product==null)
+        {
 
-                loadProductDetail(product);
+            panel_productDetail.setProductDetail(null);
 
+        }
+         else
+        {
+         loadProductDetail(product);
+        }
     }
 
 
@@ -170,6 +183,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
     @Override
     public void close() {
+        setVisible(false);
         dispose();
     }
 
@@ -195,9 +209,18 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
                     ProductDetail detail = data.datas.get(0);
 
+                    panel_productDetail.setProductDetail(detail);
+                }else
+                {
 
-                    panel_productDetail = new Panel_ProductDetail(detail);
-                    init();
+                    JOptionPane.showMessageDialog(ProductDetailFrame.this,data.message);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            close();
+                        }
+                    });
+
                 }
             }
         }.go();

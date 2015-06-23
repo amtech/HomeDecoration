@@ -17,7 +17,7 @@ public class Product implements Serializable {
 	 * 备注
 	 */
 	@Basic
-	public String memo;
+	public String memo="";
 	/**
 	 * 图片，存放缩略图
 	 */
@@ -27,7 +27,7 @@ public class Product implements Serializable {
 	 * 图片路径 大图片存放地址
 	 */
 	@Basic
-	public String url;
+	public String url="";
 	/**
 	 * 产品类别id
 	 */
@@ -37,17 +37,17 @@ public class Product implements Serializable {
 	 * 产品类别名称
 	 */
 	@Basic
-	public String pClassName;
+	public String pClassName="";
 	/**
 	 * 产品单位id
 	 */
 	@Basic
-	public String pUnitId;
+	public String pUnitId="";
 	/**
 	 * 产品单位名称
 	 */
 	@Basic
-	public String pUnitName ;
+	public String pUnitName="" ;
 	/**
 	 * 净重
 	 */
@@ -89,14 +89,14 @@ public class Product implements Serializable {
 	@Basic
 	public float cost5;
 	@Basic
-	public String attribute;
+	public String attribute="";
 
 
 	/**
 	 * 规格尺寸  厘米为单位
 	 */
 	@Basic
-	public String  specCm;
+	public String  specCm="";
 
 
 	/**
@@ -114,12 +114,12 @@ public class Product implements Serializable {
 	 * 产品名称
 	 */
 	@Basic
-	public String  name;
+	public String  name="";
 	/**
 	 * 登记日期
 	 */
 	@Basic
-	public String rDate;
+	public String rDate="";
 
 
 	/**
@@ -127,7 +127,7 @@ public class Product implements Serializable {
 	 * @return
 	 */
 	@Basic
-	public String spec;
+	public String spec="";
 
 
 
@@ -136,7 +136,7 @@ public class Product implements Serializable {
 	 * @return
 	 */
 	@Basic
-	public String pVersion;
+	public String pVersion="";
 
 	@Basic
 	public long lastPhotoUpdateTime;
@@ -148,7 +148,7 @@ public class Product implements Serializable {
 	 * @return
 	 */
 	@Basic
-	public String constitute;
+	public String constitute="";
 
 
 
@@ -280,7 +280,7 @@ public class Product implements Serializable {
 	 * 镜面尺寸
 	 */
 	@Basic
-	public String  mirrorSize;
+	public String  mirrorSize="";
 
 
 
@@ -632,8 +632,8 @@ public class Product implements Serializable {
 	 */
 	public void updatePaintData(float paintCost, float paintWage) {
 
-		this.paintCost=paintCost;
-		this.paintWage=paintWage;
+		this.paintCost=FloatHelper.scale(paintCost);
+		this.paintWage=FloatHelper.scale(paintWage);
 		calculateTotalCost();
 	}
 

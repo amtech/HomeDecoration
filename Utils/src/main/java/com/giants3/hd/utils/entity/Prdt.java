@@ -32,4 +32,7 @@ public class Prdt implements Serializable{
     public void setUt(String ut) {
         this.ut = ut;
     }
+
+
+
 }

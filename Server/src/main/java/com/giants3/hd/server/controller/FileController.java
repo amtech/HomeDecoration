@@ -87,7 +87,13 @@ public class FileController  extends BaseController{
     }
 
 
-
+    /**
+     * 处理上传的文件  存放到文件中。
+     *
+     * @param file
+     * @param newFilePath
+     * @return
+     */
     private  RemoteData<Void> handleFileUpload( MultipartFile file,String newFilePath)
     {
 
