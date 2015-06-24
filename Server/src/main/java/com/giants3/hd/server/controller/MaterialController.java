@@ -5,6 +5,7 @@ import com.giants3.hd.server.repository.MaterialRepository;
 
 import com.giants3.hd.server.repository.ProductMaterialRepository;
 import com.giants3.hd.server.repository.ProductPaintRepository;
+import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
 * 材料信息控制类。
@@ -57,6 +59,13 @@ public class MaterialController extends BaseController {
     private ProductPaintRepository productPaintRepository;
 
 
+
+    @Autowired
+    private ProductRepository productRepository;
+
+
+    @Autowired
+    private ProductController productController;
 
     @Value("${materialfilepath}")
     private String rootFilePath;
@@ -118,9 +127,14 @@ public class MaterialController extends BaseController {
             {
                 material.id=oldData.id;
 
-            }
+                //价格比较
 
-            materialRepository.save(material);
+
+
+
+            }
+            save(material);
+
 
 
         }
@@ -140,6 +154,82 @@ public class MaterialController extends BaseController {
     RemoteData<Material> save(@RequestBody   Material  material  )   {
 
 
+        Material oldData=materialRepository.findOne(material.id);
+        if(oldData==null)
+        {
+             return wrapError("未找到材料信息  编码："+material.code+"，名称："+material.name);
+        }else
+        {
+
+            //价格比较
+            if(Float.compare(oldData.price,material.price)!=0)
+            {
+
+
+                Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
+                //价格发生变动， 调整有用到该材料的费用
+                long id=material.id;
+
+             List<ProductMaterial> datas=   productMaterialRepository.findByMaterialIdEquals(id);
+
+                List<Long> productIds=new ArrayList<>();
+                for (ProductMaterial productMaterial:datas)
+                {
+                    productMaterial.materialCode=material.code;
+                    productMaterial.materialName=material.name;
+                    productMaterial.price=material.price;
+
+
+                    productMaterial.amount=productMaterial.quota *material.price;
+                    //更新
+                    productMaterialRepository.save(productMaterial);
+
+                    //搜集关联的产品
+                    if(productIds.indexOf(productMaterial.productId)==-1)
+                    {
+                        productIds.add(productMaterial.productId);
+                    }
+
+
+
+                }
+
+
+
+                //修正关联产品的统计数据
+                int size = productIds.size();
+                if(size >0)
+                {
+
+                    for(long productId:productIds) {
+
+
+                     ProductDetail productDetail=   productController.findProductDetailById(productId);
+                        if(productDetail!=null) {
+                            productDetail.updateProductStatistics();
+                            productRepository.save(productDetail.product);
+                        }
+
+                    }
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+
+
+        }
 
           material=  materialRepository.save(material);
 
@@ -295,7 +385,7 @@ public class MaterialController extends BaseController {
 
 
 
-        return wrapData( );
+        return wrapData();
     }
 
 

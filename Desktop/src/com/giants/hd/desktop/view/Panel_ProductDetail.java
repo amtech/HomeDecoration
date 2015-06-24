@@ -72,7 +72,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField tf_cost;
 
 
-    private JFormattedTextField tf_weight;
+    private JTextField tf_weight;
     private JTextField tf_version;
     private JTextField tf_gross_profit;
 
@@ -790,7 +790,7 @@ public class Panel_ProductDetail extends BasePanel {
 
         //产品 版本号 一旦保存就不能再修改
         tf_product.setEditable(product.id<=0);
-        tf_version.setEditable(product.id<=0);
+        tf_version.setEditable(product.id <= 0);
 
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
@@ -811,10 +811,10 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         tf_unit.getDocument().removeDocumentListener(tf_unitDocumentListener);
-        tf_unit.setText(product == null ? "S/1" :  product.pUnitName);
+        tf_unit.setText(product == null ? "S/1" : product.pUnitName);
         tf_unit.getDocument().addDocumentListener(tf_unitDocumentListener);
 
-        tf_weight.setValue(product == null?0.0f:product.getWeight());
+        tf_weight.setText(product.getWeight() > 0.0f ? String.valueOf(product.getWeight() ): "");
 
         tf_constitute.setText(product == null ? "" : product.getConstitute());
         tf_version.setText(product == null ? "" : product.getpVersion());
@@ -984,6 +984,32 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+        /**
+         * 表格弹出菜单回调接口
+         */
+        tableMenuLister = new TablePopMenu.TableMenuLister() {
+            @Override
+            public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex[]) {
+                switch (index) {
+
+
+                    case TablePopMenu.ITEM_INSERT:
+
+                        tableModel.addNewRow(rowIndex[0]);
+
+                        break;
+                    case TablePopMenu.ITEM_DELETE:
+
+                        tableModel.deleteRows(rowIndex);
+                        break;
+                    case TablePopMenu.ITEM_PAST:
+
+                        handleClipBordDataToTable(tableModel, rowIndex[0]);
+                        break;
+                }
+            }
+        };
+
 
         TableMouseAdapter adapter=new TableMouseAdapter(tableMenuLister);
 
@@ -1032,32 +1058,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        /**
-         * 表格弹出菜单回调接口
-         */
-        tableMenuLister = new TablePopMenu.TableMenuLister() {
-            @Override
-            public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex[]) {
-                switch (index) {
-
-
-                    case TablePopMenu.ITEM_INSERT:
-
-                        tableModel.addNewRow(rowIndex[0]);
-
-                        break;
-                    case TablePopMenu.ITEM_DELETE:
-
-                        tableModel.deleteRows(rowIndex);
-                        break;
-                    case TablePopMenu.ITEM_PAST:
-
-                        handleClipBordDataToTable(tableModel, rowIndex[0]);
-                        break;
-                }
-            }
-        };
-
 
 
 
@@ -1073,10 +1073,9 @@ public class Panel_ProductDetail extends BasePanel {
 
                 try {
                     //非新增数据
-                    if(!isModified() )
-                    {
+                    if (!isModified()) {
 
-                        if(productDetail.product.id>0) {
+                        if (productDetail.product.id > 0) {
                             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), "数据无改变！");
                             return;
                         }
@@ -1084,7 +1083,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                     checkData(productDetail);
-
 
 
                     saveData(productDetail);
@@ -1103,8 +1101,7 @@ public class Panel_ProductDetail extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                if(productDetail.product.id<=0)
-                {
+                if (productDetail.product.id <= 0) {
 
                     JOptionPane.showMessageDialog((Component) e.getSource(), "产品数据未建立，请先保存");
                     return;
@@ -1114,23 +1111,15 @@ public class Panel_ProductDetail extends BasePanel {
                 //显示对话框
 
 
-                CopyProductDialog dialog=new CopyProductDialog(SwingUtilities.getWindowAncestor(getRoot()),productDetail.product);
+                CopyProductDialog dialog = new CopyProductDialog(SwingUtilities.getWindowAncestor(getRoot()), productDetail.product);
                 dialog.pack();
                 dialog.setMinimumSize(new Dimension(400, 300));
                 dialog.setLocationByPlatform(true);
                 dialog.setModal(true);
                 dialog.setVisible(true);
 
-                if(dialog.getResult()!=null)
+                if (dialog.getResult() != null)
                     HdSwingUtils.showDetailPanel(getRoot(), dialog.getResult());
-
-
-
-
-
-
-
-
 
 
             }
@@ -1144,9 +1133,7 @@ public class Panel_ProductDetail extends BasePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if(listener!=null) listener.delete();
-
-
+                if (listener != null) listener.delete();
 
 
             }
