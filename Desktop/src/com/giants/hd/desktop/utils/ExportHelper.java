@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 导出功能帮助类。
@@ -70,14 +71,17 @@ public class ExportHelper {
 
 
         String nameAppendix="";
+        List<ProductMaterial>  datas = null;
         switch (index)
         {
             case 0:
                 nameAppendix="白胚";
+                datas=detail.conceptusMaterials;
                 break;
             case 1:
                 nameAppendix="组装";
-                break;
+                datas=detail.assembleMaterials;
+            break;
             case 2:
 
 
@@ -85,6 +89,7 @@ public class ExportHelper {
                 break;
             case 3:
                 nameAppendix="包装";
+                datas=detail.packMaterials;
                 break;
         }
 
@@ -114,15 +119,16 @@ public class ExportHelper {
         writableSheet.addCell(label3);
         writableSheet.addCell(label4);
 
-
+        if(datas==null) return;
 
         WritableCellFormat discountFormat = new WritableCellFormat(new NumberFormat("0.00"));
         WritableCellFormat quotaFormat = new WritableCellFormat(new NumberFormat("0.00000"));
 
         Number num;
         int startRow=1;
+
         //白胚
-        for(ProductMaterial productMaterial:detail.conceptusMaterials)
+        for(ProductMaterial productMaterial:datas)
         {
 
 
@@ -133,14 +139,11 @@ public class ExportHelper {
             writableSheet.addCell(num);
             if(index==3)
             {
-                label1 = new Label(2, startRow, productMaterial.pLong+"*"+productMaterial.pWidth+"*"+productMaterial.pHeight);
-
+                label1 = new Label(2, startRow, (productMaterial.pLong>0?(productMaterial.pLong):"")+(productMaterial.pWidth>0?("*"+productMaterial.pWidth):"")+(productMaterial.pHeight>0?("*"+productMaterial.pHeight ):""));
+                writableSheet.addCell(label1);
             }
-                else
 
-            label1 = new Label(2, startRow, productMaterial.memo);
 
-            writableSheet.addCell(label1);
 
             num = new Number(3, startRow, 1-productMaterial.available,discountFormat);
             writableSheet.addCell(num);

@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface ProductProcessRepository extends JpaRepository<ProductProcess,Long> {
 
-    Page<ProductProcess> findByNameLike(String name, Pageable pageable);
+    Page<ProductProcess> findByNameLikeOrCodeLike(String name, String code,Pageable pageable);
 }

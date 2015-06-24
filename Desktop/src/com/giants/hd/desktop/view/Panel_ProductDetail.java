@@ -811,7 +811,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         tf_unit.getDocument().removeDocumentListener(tf_unitDocumentListener);
-        tf_unit.setText(product == null ? "" : product.pUnitName);
+        tf_unit.setText(product == null ? "S/1" :  product.pUnitName);
         tf_unit.getDocument().addDocumentListener(tf_unitDocumentListener);
 
         tf_weight.setValue(product == null?0.0f:product.getWeight());

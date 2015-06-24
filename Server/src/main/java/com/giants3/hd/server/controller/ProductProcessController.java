@@ -42,14 +42,14 @@ public class ProductProcessController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<ProductProcess> search(@RequestParam(value = "name", required = false, defaultValue = "") String prd_name
+    RemoteData<ProductProcess> search(@RequestParam(value = "name", required = false, defaultValue = "") String name
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<ProductProcess> pageValue = processRepository.findByNameLike("%" + prd_name + "%", pageable);
+        Page<ProductProcess> pageValue = processRepository.findByNameLikeOrCodeLike("%" + name + "%", "%" + name + "%", pageable);
 
         List<ProductProcess> products = pageValue.getContent();
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);

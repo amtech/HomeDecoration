@@ -47,7 +47,7 @@ public class Product implements Serializable {
 	 * 产品单位名称
 	 */
 	@Basic
-	public String pUnitName="" ;
+	public String pUnitName="S/1" ;
 	/**
 	 * 净重
 	 */
