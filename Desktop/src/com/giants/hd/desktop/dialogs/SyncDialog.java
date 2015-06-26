@@ -3,11 +3,8 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_CopyProduct;
-import com.giants.hd.desktop.view.Panel_PhotoSync;
+import com.giants.hd.desktop.view.Panel_Sync;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -16,9 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * 图片同步对话框
+ *  同步对话框
  */
-public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.PanelListener {
+public class SyncDialog extends BaseDialog<Void>  implements BasePanel.PanelListener {
 
 
     @Inject
@@ -26,11 +23,11 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
 
 
     @Inject
-    Panel_PhotoSync panel_photoSync;
+    Panel_Sync panel_photoSync;
 
-    public PhotoSyncDialog(Window window )
+    public SyncDialog(Window window)
     {
-        super(window,"图片同步");
+        super(window,"数据同步");
         setMinimumSize(new Dimension(400,400));
         setLocationRelativeTo(window);
 
@@ -52,7 +49,7 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                new HdSwingWorker<Void,Object>(PhotoSyncDialog.this)
+                new HdSwingWorker<Void,Object>(SyncDialog.this)
                 {
 
                     @Override
@@ -69,7 +66,7 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
 
 
 
-                            JOptionPane.showMessageDialog(PhotoSyncDialog.this,data.message);
+                            JOptionPane.showMessageDialog(SyncDialog.this,data.message);
 
 
 
@@ -82,7 +79,7 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                new HdSwingWorker<Void,Object>(PhotoSyncDialog.this)
+                new HdSwingWorker<Void,Object>(SyncDialog.this)
                 {
 
                     @Override
@@ -96,7 +93,36 @@ public class PhotoSyncDialog extends BaseDialog<Void>  implements BasePanel.Pane
                     @Override
                     public void onResult(RemoteData<Void> data) {
 
-                        JOptionPane.showMessageDialog(PhotoSyncDialog.this,data.message);
+                        JOptionPane.showMessageDialog(SyncDialog.this,data.message);
+
+                    }
+                }.go();
+            }
+        });
+
+
+        panel_photoSync.btn_erp_sync.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                new HdSwingWorker<Void, Void>(SyncDialog.this) {
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+                        return apiManager.syncErpMaterial();
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+
+                        if(data.isSuccess())
+                        {
+                            JOptionPane.showMessageDialog(SyncDialog.this,"ERP材料同步成功");
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(SyncDialog.this,data.message);
+                        }
 
                     }
                 }.go();

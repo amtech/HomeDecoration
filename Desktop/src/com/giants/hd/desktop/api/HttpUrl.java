@@ -268,4 +268,13 @@ public class HttpUrl {
         return BaseUrl+"api/process/search?name="+ UTF8UrlEncoder.encode(value)+ "&pageIndex="+pageIndex+"&pageSize="+pageSize;
 
     }
+
+
+    /**
+     * 同步erp 材料
+     * @return
+     */
+    public static String syncErpMaterial() {
+        return BaseUrl+"api/material/syncERP" ;
+    }
 }

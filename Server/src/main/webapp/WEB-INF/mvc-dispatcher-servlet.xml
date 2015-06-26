@@ -39,16 +39,57 @@
 
     <context:property-placeholder  location="config/application.properties"/>
 
-    <jpa:repositories base-package="com.giants3.hd.server.repository"/>
+    <jpa:repositories base-package="com.giants3.hd.server.repository"  />
 
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+
+            >
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
+        <property name="packagesToScan" >
+            <list>
+                <value>com.giants3.hd.utils.entity</value>
+
+            </list>
+         </property>
+
     </bean>
+
+
+    <!--<bean id="transactionManagerERP" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryERP" />
+    </bean>
+    -->
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
+
+    <!--<bean id="entityManagerFactoryERP" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="erpPersistenceUnit"/>
+    </bean>-->
+
+   <!-- <bean id="prdtRepository" class="com.giants3.hd.server.repository.ErpPrdtRepository">
+        <property name="entityManager" ref="sharedEntityManager"/>
+    </bean>-->
+    <!-- <bean id="entityManagerFactoryERP" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+            autowire-candidate="false"
+           primary="false"
+
+             >-->
+       <!--  <property name="persistenceXmlLocation" value="classpath:config/persitence.xml" />-->
+      <!--  <property name="persistenceUnitName" value="erpPersistenceUnit" />-->
+
+        <!--<property name="dataSource" ref="restDemoLegacyDS" />
+        <property name="packagesToScan" value="org.codingpedia.demo.*" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="true" />
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+            </bean>
+        </property>-->
+   <!-- </bean>
+-->
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

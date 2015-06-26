@@ -30,4 +30,24 @@
             <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
+
+
+
+
+    <!--erp数据库配置定义-->
+    <persistence-unit name="erpPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.giants3.hd.utils.entity_erp.Prdt</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2008Dialect" />
+            <property name="hibernate.connection.url" value="jdbc:sqlserver://localhost:1433;databaseName=TEST1" />
+            <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+            <property name="hibernate.connection.username" value="sa" />
+            <property name="hibernate.connection.password" value="11111111" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true"/>
+
+        </properties>
+    </persistence-unit>
 </persistence>

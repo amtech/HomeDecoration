@@ -4,7 +4,6 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_PhotoSync;
 import com.giants.hd.desktop.view.Panel_UploadPicture;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;

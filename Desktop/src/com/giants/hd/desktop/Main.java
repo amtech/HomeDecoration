@@ -2,7 +2,7 @@ package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
-import com.giants.hd.desktop.dialogs.PhotoSyncDialog;
+import com.giants.hd.desktop.dialogs.SyncDialog;
 import com.giants.hd.desktop.dialogs.ProductProcessDialog;
 import com.giants.hd.desktop.dialogs.UploadPictureDialog;
 import com.giants.hd.desktop.local.BufferData;
@@ -431,7 +431,7 @@ public class Main extends JFrame {
 
 
         //
-        JMenuItem  menuItem = new JMenuItem("图片同步" );
+        JMenuItem  menuItem = new JMenuItem("数据同步" );
 
         menuItem.getAccessibleContext().setAccessibleDescription(
                 "当图片不能正常显示时候执行");
@@ -441,7 +441,7 @@ public class Main extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PhotoSyncDialog dialog = new PhotoSyncDialog(Main.this);
+                SyncDialog dialog = new SyncDialog(Main.this);
                 dialog.pack();
                 dialog.setVisible(true);
             }
@@ -459,6 +459,10 @@ public class Main extends JFrame {
                 dialog.setVisible(true);
             }
         });
+
+
+
+
 
 
 

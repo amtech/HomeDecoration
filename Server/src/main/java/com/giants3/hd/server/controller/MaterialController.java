@@ -1,18 +1,18 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.MaterialRepository;
+import com.giants3.hd.server.repository.*;
 
-import com.giants3.hd.server.repository.ProductMaterialRepository;
-import com.giants3.hd.server.repository.ProductPaintRepository;
-import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 
+import com.giants3.hd.utils.entity_erp.Prdt;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.pools.ObjectPool;
+import com.giants3.hd.utils.pools.PoolCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Persistence;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,8 +68,22 @@ public class MaterialController extends BaseController {
     @Autowired
     private ProductController productController;
 
+
+    ObjectPool<Material> materialObjectPool;
+
+    ErpPrdtRepository repository;
+
+
     @Value("${materialfilepath}")
     private String rootFilePath;
+
+
+    public MaterialController() {
+
+
+        materialObjectPool= PoolCenter.getObjectPool(Material.class);
+        repository=new ErpPrdtRepository(Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager());
+    }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public
@@ -129,9 +144,6 @@ public class MaterialController extends BaseController {
 
                 //价格比较
 
-
-
-
             }
             save(material);
 
@@ -144,6 +156,81 @@ public class MaterialController extends BaseController {
         return wrapData(new ArrayList<Void>());
     }
 
+
+    /**
+     * 保存覆盖旧erp 的数据
+     * @param prdt
+     */
+    public void savePrdt(Prdt prdt)
+    {
+
+
+        Material oldData=materialRepository.findFirstByCodeEquals(prdt.prd_no);
+        if(oldData==null)
+        {
+            Material material=materialObjectPool.newObject();
+
+            convert(material,prdt);
+            materialRepository.save(material);
+          materialObjectPool.release(material);
+
+        }else
+        {
+
+
+
+            if(Float.compare(oldData.price,prdt.price)!=0)
+            {
+                oldData.price=prdt.price;
+                updatePriceRelateData(oldData);
+            }
+
+
+
+            convert(oldData,prdt);
+            materialRepository.save(oldData);
+
+
+        }
+
+
+
+
+    }
+
+
+    /**
+     * 同步erp 数据
+     * @return
+     */
+    @RequestMapping(value = "/syncERP",method ={ RequestMethod.GET,RequestMethod.POST})
+    public
+    @ResponseBody
+
+    RemoteData<Void> syncERP( )   {
+
+
+        List<Prdt>  datas=repository.list();
+
+        int size=datas.size();
+
+
+        for (int i = 0; i < size; i++) {
+            savePrdt(datas.get(i));
+        }
+
+
+
+
+
+
+
+
+
+
+
+        return wrapData();
+    }
 
 
 
@@ -165,64 +252,7 @@ public class MaterialController extends BaseController {
             if(Float.compare(oldData.price,material.price)!=0)
             {
 
-
-                Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
-                //价格发生变动， 调整有用到该材料的费用
-                long id=material.id;
-
-             List<ProductMaterial> datas=   productMaterialRepository.findByMaterialIdEquals(id);
-
-                List<Long> productIds=new ArrayList<>();
-                for (ProductMaterial productMaterial:datas)
-                {
-                    productMaterial.materialCode=material.code;
-                    productMaterial.materialName=material.name;
-                    productMaterial.price=material.price;
-
-
-                    productMaterial.amount=productMaterial.quota *material.price;
-                    //更新
-                    productMaterialRepository.save(productMaterial);
-
-                    //搜集关联的产品
-                    if(productIds.indexOf(productMaterial.productId)==-1)
-                    {
-                        productIds.add(productMaterial.productId);
-                    }
-
-
-
-                }
-
-
-
-                //修正关联产品的统计数据
-                int size = productIds.size();
-                if(size >0)
-                {
-
-                    for(long productId:productIds) {
-
-
-                     ProductDetail productDetail=   productController.findProductDetailById(productId);
-                        if(productDetail!=null) {
-                            productDetail.updateProductStatistics();
-                            productRepository.save(productDetail.product);
-                        }
-
-                    }
-
-                }
-
-
-
-
-
-
-
-
-
-
+                updatePriceRelateData(material);
 
             }
 
@@ -234,6 +264,60 @@ public class MaterialController extends BaseController {
           material=  materialRepository.save(material);
 
         return wrapData(material);
+    }
+
+
+    /**
+     * 更新该材料相关的单价信息  必须在单价有变动的情况下调用。
+     * @param material
+     */
+    private void updatePriceRelateData(  Material material) {
+        Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
+        //价格发生变动， 调整有用到该材料的费用
+        long id=material.id;
+
+        List<ProductMaterial> datas=   productMaterialRepository.findByMaterialIdEquals(id);
+
+        List<Long> productIds=new ArrayList<>();
+        for (ProductMaterial productMaterial:datas)
+        {
+            productMaterial.materialCode=material.code;
+            productMaterial.materialName=material.name;
+            productMaterial.price=material.price;
+
+
+            productMaterial.amount=productMaterial.quota *material.price;
+            //更新
+            productMaterialRepository.save(productMaterial);
+
+            //搜集关联的产品
+            if(productIds.indexOf(productMaterial.productId)==-1)
+            {
+                productIds.add(productMaterial.productId);
+            }
+
+
+
+        }
+
+
+        //修正关联产品的统计数据
+        int size = productIds.size();
+        if(size >0)
+        {
+
+            for(long productId:productIds) {
+
+
+             ProductDetail productDetail=   productController.findProductDetailById(productId);
+                if(productDetail!=null) {
+                    productDetail.updateProductStatistics();
+                    productRepository.save(productDetail.product);
+                }
+
+            }
+
+        }
     }
 
     @RequestMapping(value = "/findListByCodes",method = RequestMethod.POST)
@@ -458,7 +542,7 @@ public class MaterialController extends BaseController {
 
 
 
-        return wrapMessageData(count>0?"同步材料数据图片成功，共成功同步"+count+"款材料！":"所有材料图片已经都是最新的。");
+        return wrapMessageData(count > 0 ? "同步材料数据图片成功，共成功同步" + count + "款材料！" : "所有材料图片已经都是最新的。");
     }
 
 
@@ -493,4 +577,21 @@ public class MaterialController extends BaseController {
 
     }
 
+
+
+    private  void   convert(Material material,Prdt prdt)
+    {
+
+        //todo 数据转化  更详细的数据
+
+        material.code=prdt.prd_no;
+        material.name=prdt.name;
+        material.unitName=prdt.ut;
+
+        material.spec=prdt.spec;
+        material.price=prdt.price;
+        material.memo=prdt.rem;
+
+
+    }
 }

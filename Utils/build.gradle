@@ -11,7 +11,7 @@ repositories {
 dependencies {
 
 
-    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: '1.0.1.Final'
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
     compile 'de.greenrobot:java-common:2.0.0'
     compile 'com.google.code.gson:gson:1.7.2'
 

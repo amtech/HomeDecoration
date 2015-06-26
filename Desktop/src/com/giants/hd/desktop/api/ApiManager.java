@@ -157,7 +157,7 @@ public class ApiManager {
      */
     public RemoteData<Material> loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize) throws HdException {
 
-        String url=HttpUrl.loadMaterialByCodeOrName(value, classId,pageIndex, pageSize);
+        String url=HttpUrl.loadMaterialByCodeOrName(value, classId, pageIndex, pageSize);
         String result=     client.getWithStringReturned(url);
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
@@ -506,6 +506,22 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
         }.getType();
         RemoteData<ProductProcess> remoteData = gson.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 同步erp材料
+     * @return
+     */
+    public RemoteData<Void> syncErpMaterial() throws HdException{
+        String url=HttpUrl.syncErpMaterial();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
         return remoteData;
     }
 }
