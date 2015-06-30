@@ -75,7 +75,7 @@ public class ProductDetail  implements Serializable {
         float paintCost = 0;
         for (ProductPaint paint : paints) {
             paintWage += paint.processPrice;
-            paintCost += paint.materialCost + paint.ingredientCost;
+            paintCost += paint.cost  ;
 
         }
         product.updatePaintData(paintCost, paintWage);

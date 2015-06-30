@@ -277,4 +277,28 @@ public class HttpUrl {
     public static String syncErpMaterial() {
         return BaseUrl+"api/material/syncERP" ;
     }
+
+    /**
+     * 保存材料分类数据
+     * @return
+     */
+    public static String saveMaterialClasses() {
+        return BaseUrl+"api/material/saveClassList" ;
+    }
+
+
+    /**
+     * 读取报价记录
+
+     * @param searchValue
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static String loadQuotation(String  searchValue,int pageIndex,int pageSize
+    ) {
+
+        return BaseUrl+"api/quotation/search?searchValue="+ UTF8UrlEncoder.encode(searchValue)+  "&pageIndex="+pageIndex+"&pageSize="+pageSize;
+
+    }
 }

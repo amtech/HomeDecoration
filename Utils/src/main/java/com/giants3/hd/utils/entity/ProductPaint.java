@@ -2,6 +2,7 @@ package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.interf.Valuable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -42,11 +43,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	@Basic
 	public  String memo;
 
-	/**
-	 * 配料单价
-	 */
-	@Basic
-	public float price_of_diluent;
+
 
 
 	public long getFlowId() {
@@ -99,9 +96,13 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public String processName;
 
 
-
 	/**
-	 * 材料单价
+	 * 混合后的材料单价
+	 */
+	@Basic
+	public  float price;
+	/**
+	 * 原材料单价
 	 */
 	@Basic
 	public float materialPrice;
@@ -115,8 +116,15 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	 */
 	@Basic
 	public float ingredientRatio;
+
+
 	/**
-	 * 材料用量  
+	 * 混合材料的用量
+	 */
+	@Basic
+	public float quantity;
+	/**
+	 * 原材料用量  
 	 */
 	@Basic
 	public float materialQuantity;
@@ -124,12 +132,8 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	 * 材料费用=（materialPrice*materialQuantity）
 	 */
 	@Basic
-	public float materialCost;
-	/**
-	 * 配料（稀释剂）费用（配料用量×配料单价）
-	 */
-	@Basic
-	public float ingredientCost;
+	public float cost;
+
 	/**
 	 * 配料（稀释剂）的用量   =材料用量×（配料比例/（1+配料比例））
 	 * 
@@ -202,13 +206,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		this.processName = processName;
 	}
 
-	public float getMaterialPrice() {
-		return materialPrice;
-	}
 
-	public void setMaterialPrice(float materialPrice) {
-		this.materialPrice = materialPrice;
-	}
 
 	public float getProcessPrice() {
 		return processPrice;
@@ -222,41 +220,11 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		return ingredientRatio;
 	}
 
-	public void setIngredientRatio(float ingredientRatio) {
-		this.ingredientRatio = ingredientRatio;
-	}
 
-	public float getMaterialQuantity() {
-		return materialQuantity;
-	}
 
-	public void setMaterialQuantity(float materialQuantity) {
-		this.materialQuantity = materialQuantity;
-	}
 
-	public float getMaterialCost() {
-		return materialCost;
-	}
 
-	public void setMaterialCost(float materialCost) {
-		this.materialCost = materialCost;
-	}
 
-	public float getIngredientCost() {
-		return ingredientCost;
-	}
-
-	public void setIngredientCost(float ingredientCost) {
-		this.ingredientCost = ingredientCost;
-	}
-
-	public float getIngredientQuantity() {
-		return ingredientQuantity;
-	}
-
-	public void setIngredientQuantity(float ingredientQuantity) {
-		this.ingredientQuantity = ingredientQuantity;
-	}
 
 
 	public String getProcessCode() {
@@ -290,13 +258,15 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		this.materialName=material.name;
 		this.materialId=material.id;
 		this.materialPrice=material.price;
+
+
 		this.unitName=material.unitName;
 		this.materialType=material.typeId;
+		this.ingredientRatio=material.ingredientRatio;
 
 
-		//
 
-		updateMaterialAndIngredientCost();
+		updatePriceAndCostAndQuantity();
 
 
 
@@ -305,16 +275,27 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	}
 
 
+
+
+
+
+
+
+
+
 	/**
 	 * 更新材料费用与配料费用
 	 */
-	public  void updateMaterialAndIngredientCost()
+	public  void updatePriceAndCostAndQuantity()
 	{
+
 		ConfigData configData=ConfigData.getInstance();
-		materialCost=FloatHelper.scale(materialQuantity*materialPrice);
-		ingredientQuantity=materialQuantity*(ingredientRatio/(1+ingredientRatio)) ;
-		//配料 即稀释剂   稀释剂单价
-		ingredientCost= FloatHelper.scale(ingredientQuantity* price_of_diluent);
+		price=FloatHelper.scale((materialPrice + configData.price_of_diluent * ingredientRatio)/(1+ingredientRatio),3);
+		cost=FloatHelper.scale(quantity*price);
+
+		//配料 即主成分用量
+		materialQuantity= FloatHelper.scale(quantity/(1+ingredientRatio),3) ;
+		ingredientQuantity=quantity-materialQuantity ;
 
 
 	}
@@ -326,7 +307,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 
 	@Override
 	public float getAmount() {
-		return materialCost+ingredientCost;
+		return cost;
 	}
 
 	public void setMemo(String memo) {
@@ -350,12 +331,13 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		if (processId != that.processId) return false;
 		if (materialId != that.materialId) return false;
 		if (flowId != that.flowId) return false;
+		if (Float.compare(that.price, price) != 0) return false;
 		if (Float.compare(that.materialPrice, materialPrice) != 0) return false;
 		if (Float.compare(that.processPrice, processPrice) != 0) return false;
 		if (Float.compare(that.ingredientRatio, ingredientRatio) != 0) return false;
+		if (Float.compare(that.quantity, quantity) != 0) return false;
 		if (Float.compare(that.materialQuantity, materialQuantity) != 0) return false;
-		if (Float.compare(that.materialCost, materialCost) != 0) return false;
-		if (Float.compare(that.ingredientCost, ingredientCost) != 0) return false;
+		if (Float.compare(that.cost, cost) != 0) return false;
 		if (Float.compare(that.ingredientQuantity, ingredientQuantity) != 0) return false;
 		if (materialType != that.materialType) return false;
 		if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
@@ -382,12 +364,13 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		result = 31 * result + (unitName != null ? unitName.hashCode() : 0);
 		result = 31 * result + (processCode != null ? processCode.hashCode() : 0);
 		result = 31 * result + (processName != null ? processName.hashCode() : 0);
+		result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
 		result = 31 * result + (materialPrice != +0.0f ? Float.floatToIntBits(materialPrice) : 0);
 		result = 31 * result + (processPrice != +0.0f ? Float.floatToIntBits(processPrice) : 0);
 		result = 31 * result + (ingredientRatio != +0.0f ? Float.floatToIntBits(ingredientRatio) : 0);
+		result = 31 * result + (quantity != +0.0f ? Float.floatToIntBits(quantity) : 0);
 		result = 31 * result + (materialQuantity != +0.0f ? Float.floatToIntBits(materialQuantity) : 0);
-		result = 31 * result + (materialCost != +0.0f ? Float.floatToIntBits(materialCost) : 0);
-		result = 31 * result + (ingredientCost != +0.0f ? Float.floatToIntBits(ingredientCost) : 0);
+		result = 31 * result + (cost != +0.0f ? Float.floatToIntBits(cost) : 0);
 		result = 31 * result + (ingredientQuantity != +0.0f ? Float.floatToIntBits(ingredientQuantity) : 0);
 		result = 31 * result + materialType;
 		return result;
@@ -400,16 +383,18 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 
 	}
 
-	/**
-	 * 设置配料材质
-	 * @param material
-	 */
-	public void setIngredientMaterial(Material material) {
 
 
-
-		price_of_diluent=material.price;
-		updateMaterialAndIngredientCost();
-
-	}
+//	/**
+//	 * 设置配料材质
+//	 * @param material
+//	 */
+//	public void setIngredientMaterial(Material material) {
+//
+//
+//
+//		//price_of_diluent=material.price;
+//		updateCostAndQuantity();
+//
+//	}
 }

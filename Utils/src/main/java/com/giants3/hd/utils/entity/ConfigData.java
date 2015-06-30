@@ -10,7 +10,7 @@ public class ConfigData {
     /**
      * 是稀释剂单价
      */
-    public float price_of_diluent=8.3f;
+    public float price_of_diluent=9f;
 
 
     /**

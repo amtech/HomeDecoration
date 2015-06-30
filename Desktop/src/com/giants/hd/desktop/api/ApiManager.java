@@ -309,6 +309,24 @@ public class ApiManager {
     }
 
 
+
+    /**
+     *  材料分类保存
+     * @return
+     */
+    public RemoteData<Void> saveMaterialClasses(List<MaterialClass> materialClasses)throws HdException {
+
+        String url=HttpUrl.saveMaterialClasses();
+
+        String result=     client.postWithStringReturned(url, gson.toJson(materialClasses));
+
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+    }
+
+
     /**
      * 读取材料类型
      * @return
@@ -523,5 +541,24 @@ public class ApiManager {
         }.getType();
         RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
         return remoteData;
+    }
+
+
+    /**
+     * 读取报价历史记录
+     * @param searchValue
+     * @return
+     */
+    public RemoteData<Quotation> loadQuotation(String searchValue,int pageIndex, int pageSize) throws HdException {
+
+        String url=HttpUrl.loadQuotation(searchValue,pageIndex,pageSize);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Quotation>>() {
+        }.getType();
+        RemoteData<Quotation> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
     }
 }

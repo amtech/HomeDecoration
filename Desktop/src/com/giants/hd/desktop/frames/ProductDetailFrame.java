@@ -63,6 +63,13 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
             public void windowClosing(WindowEvent e) {
 
                 try {
+
+                    if(panel_productDetail.productDetail==null)
+                    {
+                        dispose();
+                        return;
+                    }
+
                     if(panel_productDetail.isModified())
                     {
 

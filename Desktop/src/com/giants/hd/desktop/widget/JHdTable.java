@@ -3,6 +3,7 @@ package com.giants.hd.desktop.widget;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants3.hd.utils.entity.Product;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -68,4 +69,6 @@ public class JHdTable extends JTable {
 
 
     }
+
+
 }

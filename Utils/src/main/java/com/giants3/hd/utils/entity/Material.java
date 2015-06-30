@@ -131,6 +131,14 @@ public class Material  implements Serializable {
 
 	public long lastPhotoUpdateTime=0;
 
+
+	/**
+	 * 配料比例
+	 */
+	@Basic
+	public float ingredientRatio=0f;
+
+
 	/**
 	 * 图片，存放缩略图
 	 */

@@ -55,7 +55,7 @@ public   class ErpPrdtRepository    {
 //        //Predicate isLongTermCustomer = builder.lessThan(root.get(Customer_.createdAt), today.minusYears(2);
 //        query.where(builder.and(hasBirthday));//, isLongTermCustomer
 //     return   em.createQuery(query.select(root)).getResultList();
-        ParameterExpression<String> p = builder.parameter(String.class,"prd_no");
+
 // where e.prd_no = :prd_no   .setParameter(p,prd_no)
        // return em.createQuery("select  e  from PRDT e left join CST_STD  d fetch    e.prd_no = d.prd_no where e.prd_no=:prd_no ",Prdt.class) .setParameter("prd_no",prd_no).getResultList();
 //        Specification<Prdt> prdtSpecification=new Prdt
@@ -64,7 +64,7 @@ public   class ErpPrdtRepository    {
 //        query.setParameter(1, customer);
 
 
-     List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spec AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
+     List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
      ///   return em.createQuery("select  e  from prdt e  ,(select f.prd_no,f.up_std from CST_STD f) d where e.prd_no=:prd_no ",Prdt.class) .setParameter("prd_no",prd_no).getResultList();
         return  convertToPojo(result);
 
@@ -78,10 +78,12 @@ public   class ErpPrdtRepository    {
     {
 
 
+        //找到唯一的单价记录    利用日期 最大值判断
+        String sql_find_distinct_cst_std="select a.prd_no,a.UP_CST_ML as price from CST_STD a  inner join  (select distinct  prd_no ,MAX(SYS_DATE) as sys_date  from CST_STD  group by PRD_NO ) c on c.PRD_NO =a.PRD_NO  and c.sys_date=a.sys_date where UP_CST_ML>0  ";
 
 
 
-        List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spec AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  " ).getResultList();
+        List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join ("+sql_find_distinct_cst_std+") cs on p.prd_no=cs.prd_no  " ).getResultList();
 
 
       return  convertToPojo(result);

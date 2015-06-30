@@ -2,6 +2,7 @@ package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.dialogs.MaterialClassDialog;
 import com.giants.hd.desktop.dialogs.SyncDialog;
 import com.giants.hd.desktop.dialogs.ProductProcessDialog;
 import com.giants.hd.desktop.dialogs.UploadPictureDialog;
@@ -10,6 +11,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
+import com.giants.hd.desktop.view.Panel_Quotation;
 import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
@@ -364,6 +366,8 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                 setContentPane(new Panel_Quotation( ).getRoot());
+
             }
         });
 
@@ -382,7 +386,7 @@ public class Main extends JFrame {
     private JMenu createTest()
     {
         //Build second menu in the menu bar.
-        JMenu  menu = new JMenu("功能测试");
+        JMenu  menu = new JMenu("基础数据");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
                 "This menu does nothing");
@@ -390,20 +394,17 @@ public class Main extends JFrame {
 
 
         //
-        JMenuItem  menuItem = new JMenuItem("上传图片",
-                KeyEvent.VK_U);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_U, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
+        JMenuItem  menuItem = new JMenuItem("材质类型列表"
+                );
+
         menu.add(menuItem);
 
 
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageViewDialog dialog = new ImageViewDialog(Main.this);
-                dialog.pack();
+                MaterialClassDialog dialog = new MaterialClassDialog(Main.this);
+
                 dialog.setVisible(true);
             }
         });

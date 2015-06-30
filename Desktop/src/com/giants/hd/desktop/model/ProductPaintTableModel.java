@@ -1,14 +1,9 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.entity.ConfigData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.ProductPaint;
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 /**
  * 油漆工表格模型
@@ -19,20 +14,21 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
     public static final String COLUMN_materialQuantity="materialQuantity";
     public static final String COLUMN_ingredientRatio="ingredientRatio";
-    public static String[] columnNames = new String[]{"序号","工序代码", "工序名称", "工价","材料编码" ,"材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "稀释费用","备注"};
+    public static String[] columnNames = new String[]{"序号","工序代码", "工序名称", "工价","材料编码" ,"材料名称", "配料比例", "单位", "用量", "物料单价", "物料费用", "配料量","稀释剂","备注"};
 
-    public static int[] columnWidths = new int []{      40,   80,             80,    60,     100,        120,       80,        40,     60,       60,      60,         80,ConstantData.MAX_COLUMN_WIDTH };
+    public static int[] columnWidths = new int []{      40,   80,             80,    60,     100,        120,       80,        40,     60,       60,      60,          60,        60,ConstantData.MAX_COLUMN_WIDTH };
 
 
 
-    public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "materialQuantity", "materialPrice", "materialCost", "ingredientCost","memo"};
+    public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "quantity", "price", "cost", "materialQuantity","ingredientQuantity","memo"};
     public static Class[] classes = new Class[]{Object.class,String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
 
     public static boolean[] editables = new boolean[]{false,true, true, true, true,true,  true, false, true, false, false, false, true };
 
+
     @Inject
     public ProductPaintTableModel() {
-        super(columnNames, fieldName, classes, ProductPaint.class);
+        super(new ProductPaintArrayList(),columnNames, fieldName, classes, ProductPaint.class);
     }
 
 
@@ -60,7 +56,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 break;
             //"工序名称"
             case 2:
-                item.setProcessName(aValue.toString());
+                item.setProcessName(aValue.toString().trim());
                 /**
                  * 当前行修改是洗刷统计行
                  */
@@ -78,21 +74,22 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 break;
             //"配料比例"
             case 6:
-                item.setIngredientRatio(Float.valueOf(aValue.toString()));
-                item.updateMaterialAndIngredientCost();
+                item.ingredientRatio=Float.valueOf(aValue.toString());
+                item.updatePriceAndCostAndQuantity();
                 updateQuantityOfIngredient();
                 break;
 
             //"用量"
             case 8:
-                item.setMaterialQuantity(Float.valueOf(aValue.toString()));
 
-                item.updateMaterialAndIngredientCost();
+                item.quantity=  Float.valueOf(aValue.toString());
+
+                item.updatePriceAndCostAndQuantity();
                 updateQuantityOfIngredient();
                 break;
 
             //"备注说明"
-            case 12:
+            case 13:
                 item.setMemo(aValue.toString());
                 break;
 
@@ -113,29 +110,16 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
     {
 
 
-        ProductPaint ingredientPaint=null;
-        float totalIngredientQuantity=0;
-        for(ProductPaint paint:datas)
+
+        if(datas instanceof  ProductPaintArrayList)
         {
 
-            if(!ProductProcess.XISHUA.equals(paint.processName))
-            {
-                if(paint.materialId>0)
-                totalIngredientQuantity+=paint.ingredientQuantity;
-            }else
-                ingredientPaint=paint;
-
-        }
-
-        if(ingredientPaint!=null)
-        {
-
-
-            ingredientPaint.setMaterialQuantity(FloatHelper.scale(totalIngredientQuantity* ConfigData.getInstance().extra_ratio_of_diluent,3));
-            int index=datas.indexOf(ingredientPaint);
-
+            ProductPaintArrayList list=(ProductPaintArrayList)datas;
+           int index= list.updateQuantityOfIngredient();
+            if(index>-1)
             fireTableRowsUpdated(index, index);
         }
+
 
 
     }
@@ -152,62 +136,28 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
             productPaint.updateMaterial(material);
         }
 
-        if(ProductProcess.XISHUA.equals(productPaint.processName))
-        {
 
+//        if(ProductProcess.XISHUA.equals(productPaint.processName))
+//
+//        {
+//
+//            //找出其他材料的稀释剂用量
+//
+//            float totalGrient=0;
+//            for(ProductPaint temp:datas)
+//            {
+//                totalGrient+=temp.ingredientQuantity;
+//            }
+//
+//            productPaint.quantity=totalGrient*0.1f;
+//
+//            productPaint.updatePriceAndCostAndQuantity();
+//
+//
+//
+//
+//        }
 
-            for(ProductPaint paint:datas)
-            {
-                //如果配料单价有改变  则适配新单价
-                if(Float.compare(paint.price_of_diluent, material.price) != 0) {
-
-                    paint.setIngredientMaterial(
-                            material
-                    );
-                    int index=datas.indexOf(paint);
-                    fireTableRowsUpdated(index,index);
-                }
-
-            }
-
-
-        }else
-        {
-            //找到配料行
-            ProductPaint foundXishua=null;
-            for(ProductPaint paint:datas)
-            {
-
-                if(ProductProcess.XISHUA.equals(paint.processName))
-                {
-                    foundXishua=paint;
-
-                    break;
-
-                }
-
-
-            }
-
-            if(foundXishua!=null)
-            for(ProductPaint paint:datas)
-            {
-
-                //如果配料单价有改变  则适配新单价
-                if(Float.compare(paint.price_of_diluent, foundXishua.price_of_diluent) != 0) {
-
-                    paint.price_of_diluent=foundXishua.price_of_diluent;
-                    paint.updateMaterialAndIngredientCost();
-                    int index=datas.indexOf(paint);
-                    fireTableRowsUpdated(index,index);
-                }
-
-
-            }
-
-
-
-        }
 
 
         fireTableRowsUpdated(rowIndex,rowIndex);

@@ -53,14 +53,14 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Quotation> listPrdtJson(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
+    RemoteData<Quotation> listPrdtJson(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLike("%" + prd_name + "%", pageable);
+        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLike("%" + searchValue + "%", pageable);
 
         List<Quotation> products = pageValue.getContent();
 

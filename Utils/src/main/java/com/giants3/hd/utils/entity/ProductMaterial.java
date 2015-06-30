@@ -1,18 +1,17 @@
 package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.FloatHelper;
-import com.sun.istack.internal.Nullable;
+import com.giants3.hd.utils.interf.Valuable;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 /**
  * 产品材料列表
  */
 @Entity(name="T_ProductMaterial")
-public class ProductMaterial  implements Serializable,Summariable ,Valuable{
+public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

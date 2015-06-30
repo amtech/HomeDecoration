@@ -25,7 +25,7 @@ public class HdSwingUtils {
      */
     public static  void showDetailPanel(Product product ,Component component)
     {
-        UIManager.put("TabbedPane.selected", Color.RED);
+
 
         JFrame frame =new ProductDetailFrame(product);
         frame.setLocationRelativeTo(component);

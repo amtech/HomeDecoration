@@ -149,6 +149,9 @@ public class Panel_Material  extends  BasePanel{
 
 
 
+
+
+
         //执行查询
         SwingUtilities.invokeLater(new Runnable() {
             @Override

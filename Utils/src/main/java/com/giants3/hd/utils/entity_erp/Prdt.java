@@ -22,8 +22,18 @@ public class Prdt implements Serializable{
     public int knd;
     public String spec;
     public String rem;
-    @Transient
+
     public float price;
 
 
+    public float wLong;
+    public float wWidth;
+    public float wHeight;
+    public float available=1;
+    public float discount=0;
+    public int type;
+
+
+    public String classId;
+    public String className;
 }

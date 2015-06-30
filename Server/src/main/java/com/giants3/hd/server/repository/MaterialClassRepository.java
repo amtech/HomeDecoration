@@ -1,6 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
+import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.entity.PackMaterialClass;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface MaterialClassRepository extends JpaRepository<MaterialClass,Long> {
 
+
+
+    public MaterialClass findFirstByCodeEquals(String code);
 }

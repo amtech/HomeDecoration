@@ -2,7 +2,7 @@ package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.entity.Valuable;
+import com.giants3.hd.utils.interf.Valuable;
 
 
 import javax.swing.*;
@@ -37,7 +37,16 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     public BaseTableModel( String[] columnNames, String[] fieldName,Class[] classes ,Class<T> itemClass)
     {
-        this.datas=new ArrayList<T>();
+
+        this(new ArrayList<T>(),columnNames,fieldName,classes,itemClass);
+
+
+    }
+
+
+    public BaseTableModel(List<T> datas, String[] columnNames, String[] fieldName,Class[] classes ,Class<T> itemClass)
+    {
+        this.datas=datas;
 
         this.classes=classes;
         this.fieldName=fieldName;
@@ -49,20 +58,19 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         for (int i = 0; i < size; i++) {
 
 
-                try {
-                    fields[i] = itemClass.getField(fieldName[i]);
-                } catch (NoSuchFieldException e) {
+            try {
+                fields[i] = itemClass.getField(fieldName[i]);
+            } catch (NoSuchFieldException e) {
 
-                    Logger.getLogger("TEST").info(fieldName[i] +" is not a field of class :"+itemClass);
+                Logger.getLogger("TEST").info(fieldName[i] +" is not a field of class :"+itemClass);
 
-                }
+            }
 
         }
 
         adjustRowCount();
 
     }
-
 
     /**
      * 调整默认显示的记录数

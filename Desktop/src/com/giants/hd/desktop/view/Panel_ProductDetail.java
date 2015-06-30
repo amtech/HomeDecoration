@@ -123,7 +123,7 @@ public class Panel_ProductDetail extends BasePanel {
      */
     private ProductDetail oldData;
 
-    private ProductDetail productDetail;
+    public ProductDetail productDetail;
 
 
     @Inject
@@ -1357,7 +1357,7 @@ public class Panel_ProductDetail extends BasePanel {
                         } catch (Throwable t) {
 
                         }
-                        productPaint.setIngredientRatio(ingredientRatio) ;
+                        productPaint.ingredientRatio=ingredientRatio; ;
 
 
                         float materialQuantity = 0;
@@ -1366,7 +1366,7 @@ public class Panel_ProductDetail extends BasePanel {
                         } catch (Throwable t) {
 
                         }
-                        productPaint.setMaterialQuantity(materialQuantity);
+                        productPaint.quantity=materialQuantity;
 
                         //查找匹配材料   油漆表中 材料不是必须
                         for (Material material : data.datas) {
@@ -1380,6 +1380,8 @@ public class Panel_ProductDetail extends BasePanel {
                             }
 
                         }
+
+                        productPaint.updatePriceAndCostAndQuantity();
 
 
 
@@ -1833,6 +1835,8 @@ public class Panel_ProductDetail extends BasePanel {
      * @return
      */
     public boolean isModified( ) throws HdUIException {
+
+
 
 
             collectionData();

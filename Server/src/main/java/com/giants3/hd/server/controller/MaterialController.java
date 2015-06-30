@@ -4,6 +4,7 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.repository.*;
 
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -41,7 +42,7 @@ public class MaterialController extends BaseController {
     private MaterialRepository materialRepository;
 
     @Autowired
-    private JpaRepository<MaterialClass,Long> materialClassRepository;
+    private MaterialClassRepository  materialClassRepository;
 
 
     @Autowired
@@ -165,6 +166,10 @@ public class MaterialController extends BaseController {
     {
 
 
+
+
+
+
         Material oldData=materialRepository.findFirstByCodeEquals(prdt.prd_no);
         if(oldData==null)
         {
@@ -184,9 +189,6 @@ public class MaterialController extends BaseController {
                 oldData.price=prdt.price;
                 updatePriceRelateData(oldData);
             }
-
-
-
             convert(oldData,prdt);
             materialRepository.save(oldData);
 
@@ -214,9 +216,40 @@ public class MaterialController extends BaseController {
 
         int size=datas.size();
 
+        List<MaterialClass> materialClasses=materialClassRepository.findAll();
+
+
 
         for (int i = 0; i < size; i++) {
-            savePrdt(datas.get(i));
+            Prdt prdt =datas.get(i);
+            String classId;
+            int length=prdt.prd_no.length();
+            if(length<5 ) continue;
+            if(prdt.prd_no.startsWith("C")||prdt.prd_no.startsWith("c"))
+                classId  =prdt.prd_no.substring(1,4);
+                    else
+                classId  =prdt.prd_no.substring(0,4);
+
+
+            for(MaterialClass materialClass:materialClasses)
+            {
+
+                if(materialClass.code.equals(classId))
+                {
+                    //数据附加
+                    prdt.wLong=materialClass.wLong;
+                    prdt.wWidth=materialClass.wWidth;
+                    prdt.wHeight=materialClass.wHeight;
+                    prdt.available=materialClass.available;
+                    prdt.discount=materialClass.discount;
+                    prdt.classId=materialClass.code;
+                    prdt.className=materialClass.name;
+                    prdt.type=materialClass.type;
+                    break;
+                }
+            }
+
+            savePrdt(prdt);
         }
 
 
@@ -241,10 +274,10 @@ public class MaterialController extends BaseController {
     RemoteData<Material> save(@RequestBody   Material  material  )   {
 
 
-        Material oldData=materialRepository.findOne(material.id);
+        Material oldData = materialRepository.findOne(material.id);
         if(oldData==null)
         {
-             return wrapError("未找到材料信息  编码："+material.code+"，名称："+material.name);
+            // return wrapError("未找到材料信息  编码："+material.code+"，名称："+material.name);
         }else
         {
 
@@ -276,17 +309,21 @@ public class MaterialController extends BaseController {
         //价格发生变动， 调整有用到该材料的费用
         long id=material.id;
 
-        List<ProductMaterial> datas=   productMaterialRepository.findByMaterialIdEquals(id);
 
+
+
+        //调整材料相关的数据
         List<Long> productIds=new ArrayList<>();
+
+        List<ProductMaterial> datas=   productMaterialRepository.findByMaterialIdEquals(id);
         for (ProductMaterial productMaterial:datas)
         {
             productMaterial.materialCode=material.code;
             productMaterial.materialName=material.name;
-            productMaterial.price=material.price;
+            productMaterial.price=FloatHelper.scale(material.price,3);
 
 
-            productMaterial.amount=productMaterial.quota *material.price;
+            productMaterial.amount= FloatHelper.scale(productMaterial.quota *material.price);
             //更新
             productMaterialRepository.save(productMaterial);
 
@@ -299,6 +336,31 @@ public class MaterialController extends BaseController {
 
 
         }
+
+        //调整油漆相关的材料数据
+
+        List<ProductPaint>  productPaints=productPaintRepository.findByMaterialIdEquals(id);
+        for (ProductPaint productPaint :productPaints)
+        {
+            productPaint.materialCode=material.code;
+            productPaint.materialName=material.name;
+            productPaint.materialPrice=material.price;
+
+            productPaint.updatePriceAndCostAndQuantity();
+
+            //更新
+            productPaintRepository.save(productPaint);
+
+            //搜集关联的产品
+            if(productIds.indexOf(productPaint.productId)==-1)
+            {
+                productIds.add(productPaint.productId);
+            }
+
+
+
+        }
+
 
 
         //修正关联产品的统计数据
@@ -579,6 +641,46 @@ public class MaterialController extends BaseController {
 
 
 
+    @RequestMapping(value = "/saveClassList",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<Void> saveClassList(@RequestBody  List<MaterialClass> materialClasses)   {
+
+        for(MaterialClass materialClass: materialClasses)
+        {
+
+
+            MaterialClass oldData=materialClassRepository.findFirstByCodeEquals(materialClass.code);
+            if(oldData==null)
+            {
+                materialClass.id=-1;
+
+
+            }else
+            {
+                materialClass.id=oldData.id;
+
+
+
+            }
+            materialClassRepository.save(materialClass);
+
+
+
+        }
+
+
+
+        return wrapData(new ArrayList<Void>());
+    }
+
+
+    /**
+     * erp 数据转换成材料数据
+     * @param material
+     * @param prdt
+     */
     private  void   convert(Material material,Prdt prdt)
     {
 
@@ -591,6 +693,18 @@ public class MaterialController extends BaseController {
         material.spec=prdt.spec;
         material.price=prdt.price;
         material.memo=prdt.rem;
+        material.typeId=prdt.type;
+
+
+        material.classId=prdt.classId;
+        material.className=prdt.className;
+
+        material.available=prdt.available;
+        material.discount=prdt.discount;
+        material.wLong=prdt.wLong;
+        material.wWidth=prdt.wWidth;
+        material.wHeight=prdt.wHeight;
+
 
 
     }

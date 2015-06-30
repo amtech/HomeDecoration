@@ -1,6 +1,7 @@
 package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.interf.Valuable;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -61,6 +61,14 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
             @Override
             public void onResult(RemoteData<Material> data) {
 
+                if(data.isSuccess())
+                {
+                    JOptionPane.showMessageDialog(MaterialDetailDialog.this,"保存成功");
+
+                }else {
+
+                    JOptionPane.showMessageDialog(MaterialDetailDialog.this,data.message);
+                }
 
 
                 dispose();

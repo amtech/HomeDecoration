@@ -1,6 +1,8 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -10,10 +12,12 @@ import javax.swing.*;
  */
 
 public class QuotationTableModel extends BaseTableModel<Quotation> {
-    public static String[] columnNames = new String[]{"图片", "货号", "规格", "单位", "类别", "日期"};
-    public static String[] fieldName = new String[]{"photo", "name", "spec", "pUnitName", "pClassName", "rDate"};
+    public static String[] columnNames = new String[]{"报价日期", "报价单号","客户", "有效日期","币别", "业务员" ,"备注"};
+    public static String[] fieldName = new String[]{"qDatae",       "qNumber", "customerName", "vDate", "currency", "salesman","memo"};
+    public static int[] columnWidths = new int []{      60,              80,             60,    60,     40,          100,    ConstantData.MAX_COLUMN_WIDTH };
 
-    public  static Class[] classes = new Class[]{ImageIcon.class, Object.class, Object.class, Object.class, Object.class, Object.class};
+
+    public  static Class[] classes = new Class[]{Object.class, Object.class, Object.class, Object.class, Object.class, Object.class};
 
     @Inject
     public QuotationTableModel() {
@@ -23,13 +27,16 @@ public class QuotationTableModel extends BaseTableModel<Quotation> {
 
 
 
+
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-
-
-        return null;
-
+    public int[] getColumnWidth() {
+        return columnWidths;
     }
 
+
+    @Override
+    public int getRowHeight() {
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
+    }
 
 }

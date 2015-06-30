@@ -11,9 +11,7 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * 材料详细
@@ -37,6 +35,12 @@ public class Panel_Material_Detail extends  BasePanel {
     private JFormattedTextField ftf_available;
     private JButton btn_delete;
     private JLabel lb_photo;
+    private JTextField jtf_ingredientRatio;
+    private JTextField jtf_discount;
+
+
+
+    private ItemListener materialClassListener;
 
 
     @Inject
@@ -51,8 +55,7 @@ public class Panel_Material_Detail extends  BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                if(listener!=null)
-                {
+                if (listener != null) {
                     listener.save();
                 }
             }
@@ -68,6 +71,22 @@ public class Panel_Material_Detail extends  BasePanel {
                 }
             }
         });
+
+        materialClassListener=new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange()==ItemEvent.SELECTED)
+                {
+                    MaterialClass materialClass= (MaterialClass) e.getItem();
+                    ftf_wLong.setValue(materialClass.wLong);
+                    ftf_wHeight.setValue(materialClass.wHeight);
+                    ftf_wWdith.setValue(materialClass.wWidth);
+                    ftf_available.setValue(materialClass.available);
+
+
+                }
+            }
+        };
     }
 
 
@@ -124,6 +143,12 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
     public void setData(Material data) {
+
+
+
+        cb_materialClass.removeItemListener(materialClassListener);
+
+
         tf_code.setText(data.getCode());
         tf_name.setText(data.getName());
         tf_unit.setText(data.getUnitName());
@@ -136,6 +161,8 @@ public class Panel_Material_Detail extends  BasePanel {
         ftf_wHeight.setValue(new Float(data.getwHeight()));
         ftf_available.setValue(new Float(data.getAvailable()));
         ftf_unitRatio.setValue(new Float(data.getUnitRatio()));
+        jtf_discount.setText(String.valueOf(data.discount));
+        jtf_ingredientRatio.setText(data.ingredientRatio<=0?"":String.valueOf(data.ingredientRatio));
 
         int selectedItem=0;
         for(int i=0,count=cb_materialClass.getItemCount();i<count;i++)
@@ -182,6 +209,9 @@ public class Panel_Material_Detail extends  BasePanel {
 //        }
 //        cb_equation.setSelectedIndex(selectedItem);
 
+
+        cb_materialClass.addItemListener(materialClassListener);
+
     }
 
     public void getData(Material data) {
@@ -217,7 +247,19 @@ public class Panel_Material_Detail extends  BasePanel {
 
         data.setUnitRatio(Float.valueOf(ftf_unitRatio.getValue().toString()));
 
+        try {
+            data.ingredientRatio = Float.valueOf(jtf_ingredientRatio.getText());
+        }catch (Throwable t)
+        {
+            data.ingredientRatio=0;
+        }
 
+        try {
+            data.discount = Float.valueOf(jtf_discount.getText());
+        }catch (Throwable t)
+        {
+            data.discount=0;
+        }
 
     }
 

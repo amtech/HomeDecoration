@@ -24,7 +24,7 @@ public class SearchDialog<T> extends BaseDialog<T> {
     private ComonSearch<T> comonSearch;
 
 
-    private SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData) {
+    public SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData) {
         super(window);
         setContentPane(contentPane);
         setModal(true);
