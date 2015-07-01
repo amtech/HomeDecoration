@@ -278,6 +278,20 @@ public class MaterialController extends BaseController {
         if(oldData==null)
         {
             // return wrapError("未找到材料信息  编码："+material.code+"，名称："+material.name);
+            //确定编码唯一性
+
+            if(!isDistinctCode(material.code))
+            {
+                return wrapError("编码：["+material.code+"],已经存在，唯一性字段不能重复");
+            }
+
+
+            material.id=-1;
+            //更新缩略图
+            updateMaterialPhoto(material);
+
+
+
         }else
         {
 
@@ -290,14 +304,47 @@ public class MaterialController extends BaseController {
             }
 
 
+            //编号
+            if(!oldData.code.equals(material.code))
+            {
+
+                if(!isDistinctCode(material.code))
+                {
+                    return wrapError("编码：["+material.code+"],已经存在，唯一性字段不能重复");
+                }
+
+                updateMaterialPhoto(material);
+            }
+
+
 
 
         }
+
+
+
+
+
+
 
           material=  materialRepository.save(material);
 
         return wrapData(material);
     }
+
+
+    /**
+     * 检查编码唯一性
+     * @param newCode
+     * @return
+     */
+    private  boolean isDistinctCode(String newCode)
+    {
+
+      return   materialRepository.findFirstByCodeEquals(newCode)==null;
+    }
+
+
 
 
     /**

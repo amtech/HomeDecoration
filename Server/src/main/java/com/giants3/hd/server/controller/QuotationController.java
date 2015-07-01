@@ -24,6 +24,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * 报价
@@ -38,6 +39,8 @@ public class QuotationController extends BaseController {
 
 
 
+    @Autowired
+    private QuotationItemRepository quotationItemRepository;
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -53,14 +56,14 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Quotation> listPrdtJson(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue
+    RemoteData<Quotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLike("%" + searchValue + "%", pageable);
+        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLikeOrderByQDateDesc("%" + searchValue + "%", pageable);
 
         List<Quotation> products = pageValue.getContent();
 
@@ -74,4 +77,118 @@ public class QuotationController extends BaseController {
 
 
 
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> detail(@RequestParam(value = "id", required = false, defaultValue = "") long id)
+    {
+     Quotation quotation=   quotationRepository.findOne(id);
+
+        if(quotation==null)
+            return wrapError("未找到id="+id+"的报价记录数据");
+
+        QuotationDetail detail=new QuotationDetail();
+        detail.quotation=quotation;
+        detail.items=  quotationItemRepository.findByQuotationIdEquals(id);
+
+
+        return wrapData(detail);
+    }
+
+
+
+
+    /**
+     * 产品完整信息的保存
+     *
+     * @param quotationDetail 报价单全部信息
+     * @return
+     */
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> saveQuotationDetail(@RequestBody QuotationDetail quotationDetail) {
+
+
+        Quotation newQuotation=quotationDetail.quotation;
+
+        if(!quotationRepository.exists(newQuotation.id))
+        {
+            //检查单号唯一性
+            if(quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber)!=null)
+            {
+
+                return   wrapError("报价单号:"+newQuotation.qNumber
+                        +"已经存在,请更换");
+            }
+
+            newQuotation.id=-1;
+        }else {
+
+
+            Quotation oldQuotation = quotationRepository.findOne(newQuotation.id);
+
+            if(!oldQuotation.qNumber.equals(newQuotation.qNumber))
+            {
+
+                //检查单号唯一性
+                if(quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber)!=null)
+                {
+
+                    return   wrapError("报价单号:"+newQuotation.qNumber
+                            +"已经存在,请更换");
+                }
+
+            }
+
+
+            newQuotation.id=oldQuotation.id;
+        }
+
+
+     Quotation savedQuotation=   quotationRepository.save(newQuotation);
+
+        long newId=savedQuotation.id;
+
+        for(QuotationItem item:quotationDetail.items)
+        {
+
+            item.quotationId= newId;
+            quotationItemRepository.save(item);
+        }
+
+        return detail(newId);
+
+
+    }
+
+
+    /**
+     *删除产品信息
+     *
+     *
+     * @param quotationId
+     * @return
+     */
+    @RequestMapping(value = "/logicDelete", method = {RequestMethod.GET, RequestMethod.POST})
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData< Void> logicDelete(@RequestParam("id") long quotationId ) {
+
+        //检查是否有关联数据
+
+
+
+
+        quotationRepository.delete(quotationId);
+
+       int affectedRow= quotationItemRepository.deleteByQuotationIdEquals(quotationId);
+        Logger.getLogger("TEST").info("quotationItemRepository delete affectedRow:" + affectedRow);
+
+
+        return wrapData();
+
+    }
 }

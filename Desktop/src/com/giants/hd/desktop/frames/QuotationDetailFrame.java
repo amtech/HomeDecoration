@@ -6,10 +6,12 @@ import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_Quotation;
 import com.giants.hd.desktop.view.Panel_QuotationDetail;
+import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.entity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -28,7 +30,10 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
     ApiManager apiManager;
     @Inject
     Panel_QuotationDetail panel_QuotationDetail;
-  public QuotationDetailFrame(Quotation quotation)
+
+    private QuotationDetail oldData;
+    private QuotationDetail quotationDetail;
+    public QuotationDetailFrame(final Quotation quotation)
     {
 
 
@@ -39,8 +44,32 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
         init();
 
-        panel_QuotationDetail.setQuotation(quotation);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                loadQuotationDetail(quotation);
+            }
+        });
+
     }
+    public QuotationDetailFrame( )
+    {
+
+
+
+
+        super("新增报价单");
+
+        init();
+     QuotationDetail   newDetail=new QuotationDetail();
+        newDetail.init();
+        setQuotationDetail(newDetail);
+
+
+
+    }
+
+
 
 
 
@@ -63,28 +92,28 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
             public void windowClosing(WindowEvent e) {
 
 
+                if (panel_QuotationDetail.data == null) {
+                    dispose();
+                    return;
+                }
 
-                    if (panel_QuotationDetail.quotation == null) {
-                        dispose();
-                        return;
-                    }
+                panel_QuotationDetail.getData(quotationDetail);
 
-                    if (panel_QuotationDetail.isModified(null)) {
+                if (!quotationDetail.equals(oldData) ) {
 
-                        int option = JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+                    int option = JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
 
-                        if (JOptionPane.OK_OPTION == option) {
-                            //点击了确定按钮
-
-                            QuotationDetailFrame.this.dispose();
-                        }
-
-                    } else {
+                    if (JOptionPane.OK_OPTION == option) {
                         //点击了确定按钮
 
                         QuotationDetailFrame.this.dispose();
                     }
 
+                } else {
+                    //点击了确定按钮
+
+                    QuotationDetailFrame.this.dispose();
+                }
 
 
             }
@@ -92,13 +121,45 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
+        panel_QuotationDetail.setListener(this);
+
+
 
     }
 
 
 
+    private void setQuotationDetail(QuotationDetail newDetail)
+    {
+
+
+        oldData= (QuotationDetail) ObjectUtils.deepCopy(newDetail);
+        this.quotationDetail=newDetail;
+        panel_QuotationDetail.setData(newDetail);
+
+    }
+
     @Override
     public void save() {
+
+
+        try {
+            panel_QuotationDetail.checkData(quotationDetail);
+        } catch (HdUIException e)
+        {
+            JOptionPane.showMessageDialog(e.component,e.message);
+            e.component.requestFocus();
+            return;
+        }
+
+
+        panel_QuotationDetail.getData(quotationDetail);
+
+        saveQuotationDetail(quotationDetail);
+
+
+
+
 
 
     }
@@ -109,15 +170,16 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
-       // final Quotation detail=panel_QuotationDetail.getData();
+        final QuotationDetail detail= quotationDetail;
+        if(detail==null)return;
 
-//        if(detail.product.id<=0)
-//        {
-//
-//            JOptionPane.showMessageDialog(this, "产品数据未建立，请先保存");
-//            return;
-//
-//        }
+        if(detail.quotation.id<=0)
+        {
+
+            JOptionPane.showMessageDialog(this, "产品数据未建立，请先保存");
+            return;
+
+        }
 
 
 
@@ -130,8 +192,8 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
             @Override
             protected RemoteData<Void> doInBackground() throws Exception {
 
-               // return     apiManager.deleteProductLogic(detail.product.id);
-                return null;
+               return     apiManager.deleteQuotationLogic(detail.quotation.id);
+
 
             }
 
@@ -171,41 +233,75 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
-//    /**
-//     * 加载产品详情信息
-//     */
-//    private void loadQuoationDetail(final Product product) {
-//
-//
-//        new HdSwingWorker<Quotation, Long>(this) {
-//            @Override
-//            protected RemoteData<Quotation> doInBackground() throws Exception {
-//                return apiManager.loadQuotation(product.id);
-//            }
-//
-//            @Override
-//            public void onResult(RemoteData<Quotation> data) {
-//
-//                if(data.isSuccess()) {
-//
-//                    Quotation detail = data.datas.get(0);
-//
-//                    panel_Quotation.setQuotation(detail);
-//                }else
-//                {
-//
-//                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
-//                    SwingUtilities.invokeLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            close();
-//                        }
-//                    });
-//
-//                }
-//            }
-//        }.go();
-//
-//
-//    }
+    /**
+     * 加载产品详情信息
+     */
+    private void loadQuotationDetail(final Quotation quotation) {
+
+
+        new HdSwingWorker<QuotationDetail, Long>(this) {
+            @Override
+            protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                return apiManager.loadQuotationDetail( quotation.id);
+            }
+
+            @Override
+            public void onResult(RemoteData<QuotationDetail> data) {
+
+                if(data.isSuccess()) {
+
+                      setQuotationDetail(data.datas.get(0));
+
+                }else {
+
+                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            close();
+                        }
+                    });
+
+                }
+            }
+        }.go();
+
+
+    }
+
+
+
+
+
+    /**
+     * 加载产品详情信息
+     */
+    private void saveQuotationDetail(final QuotationDetail quotationDetail) {
+
+
+        new HdSwingWorker<QuotationDetail, Long>(this) {
+            @Override
+            protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                return apiManager.saveQuotationDetail(quotationDetail);
+            }
+
+            @Override
+            public void onResult(RemoteData<QuotationDetail> data) {
+
+                if(data.isSuccess()) {
+
+                    setQuotationDetail(data.datas.get(0));
+                    JOptionPane.showMessageDialog(QuotationDetailFrame.this, "保存成功");
+
+                }else {
+
+                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+
+
+                }
+            }
+        }.go();
+
+
+    }
 }

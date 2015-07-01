@@ -27,21 +27,29 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
     public MaterialDetailDialog(Window window,Material material)
     {
         super(window,"材料详情");
-        this.material=material;
         setContentPane(   material_detail.getRoot());
-        init();
+        init(  material);
     }
 
 
 
 
-    public void init()
+    public void init(Material newMaterial)
     {
-        //material_detail.init();
+
         material_detail.setListener(this);
+        bindMaterial(newMaterial);
+
+
+
+    }
+
+
+
+    public void bindMaterial(Material newMaterial)
+    {
+        this.material=newMaterial;
         material_detail.setData(material);
-
-
     }
 
     @Override
@@ -64,6 +72,8 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
                 if(data.isSuccess())
                 {
                     JOptionPane.showMessageDialog(MaterialDetailDialog.this,"保存成功");
+                    bindMaterial(data.datas.get(0));
+
 
                 }else {
 
@@ -71,7 +81,7 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
                 }
 
 
-                dispose();
+
 
 
 

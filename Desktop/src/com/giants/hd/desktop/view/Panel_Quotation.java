@@ -28,7 +28,6 @@ public class Panel_Quotation extends BasePanel{
     private JPanel panel1;
     private JTextField jtf_product;
     private JButton btn_search;
-    private JCheckBox cb_date;
     private JButton btn_add;
     private JHdTable tb;
     private Panel_Page pagePanel;
@@ -50,7 +49,14 @@ public class Panel_Quotation extends BasePanel{
 
         init();
 
-        loadData();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+
+            }
+        });
+
 
     }
 
@@ -81,11 +87,24 @@ public class Panel_Quotation extends BasePanel{
 
                 if (e.getClickCount() == 2) {
 
-                    Quotation quotation=tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
-                    JFrame frame =new QuotationDetailFrame(quotation);
+                    Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
+                    JFrame frame = new QuotationDetailFrame(quotation);
                     frame.setLocationRelativeTo(getRoot());
                     frame.setVisible(true);
                 }
+            }
+        });
+
+
+        btn_add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                JFrame frame = new QuotationDetailFrame();
+                frame.setLocationRelativeTo(getRoot());
+                frame.setVisible(true);
+
             }
         });
 

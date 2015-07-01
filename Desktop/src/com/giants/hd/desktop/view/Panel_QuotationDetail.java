@@ -1,16 +1,19 @@
 package com.giants.hd.desktop.view;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
+import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -21,8 +24,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.util.logging.Logger;
 
 /**
@@ -33,14 +35,16 @@ import java.util.logging.Logger;
 public class Panel_QuotationDetail extends BasePanel {
     private JHdTable tb;
     private JPanel root;
-    private JTextArea textArea1;
-    private JTextField textField1;
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JComboBox comboBox3;
+    private JTextArea ta_memo;
+    private JTextField jtf_number;
+    private JComboBox cb_currency;
+    private JComboBox<Salesman> cb_salesman;
+    private JComboBox<Customer> cb_customer;
     private JDatePickerImpl qDate;
     private JDatePickerImpl vDate;
-    public Quotation quotation;
+    private JButton btn_save;
+    private JButton btn_delete;
+    public QuotationDetail data;
 
 
     @Inject
@@ -49,6 +53,9 @@ public class Panel_QuotationDetail extends BasePanel {
 
     @Inject
     QuotationItemTableModel model;
+
+
+
 
     public Panel_QuotationDetail() {
 
@@ -62,6 +69,56 @@ public class Panel_QuotationDetail extends BasePanel {
 
 
         configTableEditor();
+
+
+
+        btn_save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (listener != null)
+                    listener.save();
+            }
+        });
+
+
+        tb.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+
+                if (e.getClickCount() == 2) {
+
+
+                    int column = tb.convertColumnIndexToModel(tb.getSelectedColumn());
+                    //单击第一列 显示原图
+                    if (column == 1) {
+
+                        QuotationItem item = model.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
+                        if (item.productId > 0) {
+                            ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion);
+                        }
+
+                    }
+
+                }
+
+            }
+        });
+
+
+
+        btn_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                if (listener != null) {
+                    listener.delete();
+                }
+            }
+        });
+
 
 
     }
@@ -190,19 +247,133 @@ public class Panel_QuotationDetail extends BasePanel {
         return root;
     }
 
-    public void setQuotation(Quotation quotation) {
-        this.quotation = quotation;
+
+    public void setData(QuotationDetail data) {
+
+
+        this.data=data;
+        Quotation quotation=data.quotation;
+
+        jtf_number.setText(quotation.qNumber);
+        qDate.getJFormattedTextField().setText(quotation.qDate);
+        vDate.getJFormattedTextField().setText(quotation.vDate);
+
+        int index=-1;
+
+            for (int i = 0, count = cb_customer.getItemCount(); i < count; i++) {
+
+                if (cb_customer.getItemAt(i).id == quotation.customerId) {
+
+                    index = i;
+                    break;
+                }
+
+            }
+
+        cb_customer.setSelectedIndex(index
+        );
+
+         index=-1;
+
+        for (int i = 0, count = cb_salesman.getItemCount(); i < count; i++) {
+
+            if (cb_salesman.getItemAt(i).id == quotation.salesmanId) {
+
+                index = i;
+                break;
+            }
+
+        }
+
+        cb_salesman.setSelectedIndex(index
+        );
+
+
+        for (int i = 0, count = cb_currency.getItemCount(); i < count; i++) {
+
+            if (cb_currency.getItemAt(i).equals(  quotation.currency)) {
+
+                index = i;
+                break;
+            }
+
+        }
+        cb_currency.setSelectedIndex(index);
+
+
+
+        model.setDatas(data.items);
+         tb.setModel(model);
+
+
     }
 
-    public void setData(Quotation data) {
+
+
+    public void checkData(QuotationDetail detail)throws HdUIException
+    {
+
+
+        if(StringUtils.isEmpty(jtf_number.getText().trim()))
+        {
+            throw   HdUIException.create(jtf_number,"请输入报价单号");
+        }
+
+        if(cb_customer.getSelectedItem()==null)
+        {
+            throw   HdUIException.create(cb_customer,"请选择客户");
+        }
+
+
+        if(cb_salesman.getSelectedItem()==null)
+        {
+            throw   HdUIException.create(cb_salesman,"请选择业务员");
+        }
+        if(cb_currency.getSelectedItem()==null)
+        {
+            throw   HdUIException.create(cb_currency,"请选择币种");
+        }
+
+        if(StringUtils.isEmpty(qDate.getJFormattedTextField().getText()) )
+        {
+            throw   HdUIException.create(qDate,"请选择报价日期");
+        }
+        if(StringUtils.isEmpty(vDate.getJFormattedTextField().getText()) )
+        {
+            throw   HdUIException.create(vDate,"请选择有效日期");
+        }
+
+
+
+
     }
 
-    public void getData(Quotation data) {
+    public void getData(QuotationDetail data) {
+
+        Quotation quotation=data.quotation;
+
+        quotation.qNumber=jtf_number.getText().trim();
+        quotation.currency=String.valueOf(cb_currency.getSelectedItem()==null?"":cb_currency.getSelectedItem()) ;
+        Customer selectedCustomer= (Customer) cb_customer.getSelectedItem();
+        if(selectedCustomer!=null) {
+            quotation.customerId = selectedCustomer.id;
+            quotation.customerName = selectedCustomer.name;
+        }
+        Salesman selectedSalesman= (Salesman) cb_salesman.getSelectedItem();
+        if(selectedSalesman!=null) {
+            quotation.salesmanId = selectedSalesman.id;
+            quotation.salesman = selectedSalesman.name;
+        }
+        quotation.qDate=qDate.getJFormattedTextField().getText().trim();
+        quotation.vDate=vDate.getJFormattedTextField().getText().trim();
+        quotation.memo=ta_memo.getText();
+        data.items.clear();
+        data.items.addAll(model.getValuableDatas());
+
+
     }
 
-    public boolean isModified(Quotation data) {
-        return false;
-    }
+
 
     private void createUIComponents() {
 
@@ -214,6 +385,17 @@ public class Panel_QuotationDetail extends BasePanel {
         vDate = new JDatePickerImpl(picker, new HdDateComponentFormatter());
 
 
+
+
+        cb_customer = new JComboBox<Customer>();
+        for (Customer customer : BufferData.customers) {
+            cb_customer.addItem(customer);
+        }
+
+        cb_salesman=  new JComboBox<Salesman>();
+        for (Salesman salesman : BufferData.salesmans) {
+            cb_salesman.addItem(salesman);
+        }
 
     }
 }

@@ -69,6 +69,27 @@ public class HttpUrl {
 
     }
 
+    /**
+     * 读取业务员
+     * @return
+     */
+    public static String loadSalesmans() {
+
+        return BaseUrl+"api/salesman/list";
+
+    }
+
+    /**
+     * 读取客户
+     * @return
+     */
+    public static String loadCustomers() {
+
+        return BaseUrl+"api/customer/list";
+
+    }
+
+
     public static String loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize
     ) {
 
@@ -300,5 +321,29 @@ public class HttpUrl {
 
         return BaseUrl+"api/quotation/search?searchValue="+ UTF8UrlEncoder.encode(searchValue)+  "&pageIndex="+pageIndex+"&pageSize="+pageSize;
 
+    }
+
+    /**
+     * 读取报价详情
+     * @param id
+     * @return
+     */
+    public static String loadQuotationDetail(long id) {
+
+        return BaseUrl+"api/quotation/detail?id="+ id;
+
+    }
+
+    /**
+     * 保存报价详细数据
+     * @return
+     */
+    public static String saveQuotationDetail() {
+        return BaseUrl+"api/quotation/save";
+    }
+
+    public static String deleteQuotationLogic(long quotationId) {
+
+            return BaseUrl+"api/quotation/logicDelete?id="+quotationId ;
     }
 }

@@ -106,7 +106,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
      * @Param component
      *
      */
-    public      ProductDetailFrame(Product product  )
+    public      ProductDetailFrame(final Product product  )
     {
 
         super("产品详情[" + (product == null ? "新增" : ("货号：" + product.getName() + "---版本号：" + product.getpVersion())) + "]");
@@ -119,7 +119,14 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
         }
          else
         {
-         loadProductDetail(product);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    loadProductDetail(product);
+                }
+            });
+
         }
     }
 

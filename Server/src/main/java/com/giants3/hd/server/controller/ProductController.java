@@ -32,6 +32,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * 产品信息
@@ -57,6 +58,9 @@ public class ProductController extends BaseController {
 
     @Autowired
     private QuotationItemRepository quotationItemRepository;
+
+    @Autowired
+    private QuotationRepository quotationRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -74,7 +78,7 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Product> listPrdtJson(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
+    RemoteData<Product> search(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
@@ -265,8 +269,8 @@ public class ProductController extends BaseController {
             {
 
 
-             return   wrapError("货号："+newProduct.name +",版本号："+newProduct.pVersion
-                        +"已经存在,请更换");
+                 return   wrapError("货号："+newProduct.name +",版本号："+newProduct.pVersion
+                            +"已经存在,请更换");
             }
 
 
@@ -507,22 +511,8 @@ public class ProductController extends BaseController {
 
         String filePath = FileUtils.getProductPicturePath(rootFilePath, product.name, product.pVersion);
 
-        BasicFileAttributes attributes =
-                null;
-        try {
-            attributes = Files.readAttributes(new File(filePath).toPath(), BasicFileAttributes.class);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-
-        if (null != attributes) {
-
-            FileTime lastModifiedTime = attributes.lastModifiedTime();
-            product.setLastPhotoUpdateTime(lastModifiedTime.toMillis());
-        }
+        long newLastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
+        product.setLastPhotoUpdateTime(newLastUpdateTime);
 
 
     }
@@ -546,8 +536,8 @@ public class ProductController extends BaseController {
         {
 
 
-       return     wrapError("货号："+newProductName +",版本号："+version
-                    +"已经存在,请更换");
+           return     wrapError("货号："+newProductName +",版本号："+version
+                +"已经存在,请更换");
         }
 
         Product product=findProdcutById(productId);
@@ -641,12 +631,14 @@ public class ProductController extends BaseController {
 
 
         //查询是否有关联的报价单
-        if(quotationItemRepository.findFirstByProductIdEquals(productId)!=null)
+
+        QuotationItem quotationItem=quotationItemRepository.findFirstByProductIdEquals(productId);
+        if(quotationItem!=null)
         {
+            Quotation quotation=    quotationRepository.findOne(quotationItem.quotationId);
 
-
-            return     wrapError("该货号在报价单："+ "模拟单号"
-                    +"有使用记录，不能删除");
+            return     wrapError("该货号在报价单：["+(quotation==null?"":quotation.qNumber)
+                    +"]有使用记录，不能删除");
         }
 
         Product product=productRepository.findOne(productId);
@@ -656,6 +648,14 @@ public class ProductController extends BaseController {
         }
 
         productRepository.delete(productId);
+
+        int affectedRow=0;
+        affectedRow=productWageRepository.deleteByProductIdEquals(productId);
+        Logger.getLogger("TEST").info("productWageRepository delete affectedRow:"+affectedRow);
+        affectedRow= productMaterialRepository.deleteByProductIdEquals(productId);
+        Logger.getLogger("TEST").info("productMaterialRepository delete affectedRow:" + affectedRow);
+        affectedRow=  productPaintRepository.deleteByProductIdEquals(productId);
+        Logger.getLogger("TEST").info("productPaintRepository delete affectedRow:" + affectedRow);
 
          //TODO   save the delete item to the wareHouse .
 

@@ -1,9 +1,11 @@
 package com.giants.hd.desktop.local;
 
 import com.giants3.hd.utils.entity.*;
+import com.google.inject.internal.InternalFlags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * 本地缓存数据
@@ -12,6 +14,7 @@ public class BufferData {
 
 
     public static List<PClass> pClasses=new ArrayList<>();
+    public static List<Customer> customers=new ArrayList<>();
     public static List<PackMaterialType> packMaterialTypes=new ArrayList<>();
     public static List<PackMaterialPosition> packMaterialPositions=new ArrayList<>();
     public static List<PackMaterialClass> packMaterialClasses=new ArrayList<>();
@@ -20,6 +23,8 @@ public class BufferData {
     public static List<MaterialClass> materialClasses=new ArrayList<>();
     public static List<MaterialType> materialTypes=new ArrayList<>();
     public  static List<MaterialEquation> materialEquations=new ArrayList<>();
+    public static List<Salesman> salesmans=new ArrayList<>();
+            ;
 
     public static void setPClasses(List<PClass> classes)
     {
@@ -52,7 +57,7 @@ public class BufferData {
 
     public static void setPackMaterialClasses(List<PackMaterialClass> packMaterialClasses) {
         BufferData.packMaterialClasses.clear();
-        BufferData.packMaterialClasses.addAll( packMaterialClasses);
+        BufferData.packMaterialClasses.addAll(packMaterialClasses);
     }
 
     public static void setPacks(List<Pack> packs) {
@@ -76,5 +81,19 @@ public class BufferData {
     public static void setMaterialEquations(List<MaterialEquation> materialEquations) {
         BufferData.materialEquations.clear();
         BufferData.materialEquations.addAll( materialEquations);
+    }
+
+
+
+    public static void setCustomers(List<Customer> customers)
+    {
+        BufferData.customers.clear();
+        BufferData.customers.addAll(customers);
+    }
+
+    public static void setSalesmans(List<Salesman> salesmans)
+    {
+        BufferData.salesmans.clear();
+        BufferData.salesmans.addAll(salesmans);
     }
 }

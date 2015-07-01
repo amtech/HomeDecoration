@@ -12,7 +12,7 @@
     <rowspec value="center:60px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
-    <rowspec value="center:80px:grow"/>
+    <rowspec value="center:m:grow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:30px:grow"/>
@@ -38,7 +38,7 @@
           <text value="备注"/>
         </properties>
       </component>
-      <component id="64b2f" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+      <component id="64b2f" class="javax.swing.JTextArea" binding="ta_memo">
         <constraints>
           <grid row="8" column="2" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
@@ -117,7 +117,7 @@
           </component>
         </children>
       </scrollpane>
-      <component id="d55cb" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="d55cb" class="javax.swing.JTextField" binding="jtf_number">
         <constraints>
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -126,7 +126,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="59041" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+      <component id="59041" class="javax.swing.JComboBox" binding="cb_currency">
         <constraints>
           <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
@@ -138,14 +138,14 @@
           </model>
         </properties>
       </component>
-      <component id="2ff55" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+      <component id="2ff55" class="javax.swing.JComboBox" binding="cb_salesman" custom-create="true">
         <constraints>
           <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties/>
       </component>
-      <component id="ac677" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
+      <component id="ac677" class="javax.swing.JComboBox" binding="cb_customer" custom-create="true">
         <constraints>
           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
@@ -165,6 +165,24 @@
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
+      </component>
+      <component id="85f24" class="javax.swing.JButton" binding="btn_save">
+        <constraints>
+          <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="保存"/>
+        </properties>
+      </component>
+      <component id="b6a3c" class="javax.swing.JButton" binding="btn_delete">
+        <constraints>
+          <grid row="11" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <text value="删除"/>
+        </properties>
       </component>
     </children>
   </grid>

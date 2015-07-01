@@ -123,6 +123,48 @@ public class ApiManager {
 
 
     }
+
+
+    /**
+     * \读取产品类别列表
+     * @return
+     */
+
+    public RemoteData<Customer> readCustomer() throws HdException {
+
+
+        String url=HttpUrl.loadCustomers();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Customer>>() {
+        }.getType();
+        RemoteData<Customer> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
+
+    }
+
+
+    /**
+     * \读取业务员列表
+     * @return
+     */
+
+    public RemoteData<Salesman> readSalesmans() throws HdException {
+
+
+        String url=HttpUrl.loadSalesmans();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Salesman>>() {
+        }.getType();
+        RemoteData<Salesman> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
+
+    }
     /**
      * 根据物料编码与名称 模糊搜索材料
      * @param value
@@ -551,13 +593,72 @@ public class ApiManager {
      */
     public RemoteData<Quotation> loadQuotation(String searchValue,int pageIndex, int pageSize) throws HdException {
 
-        String url=HttpUrl.loadQuotation(searchValue,pageIndex,pageSize);
+        String url=HttpUrl.loadQuotation(searchValue, pageIndex, pageSize);
 
         String result=     client.getWithStringReturned(url);
 
         Type   generateType = new TypeToken<RemoteData<Quotation>>() {
         }.getType();
         RemoteData<Quotation> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
+    }
+
+
+
+    /**
+     * 读取报价详细
+     * @param id
+     * @return
+     */
+    public RemoteData<QuotationDetail> loadQuotationDetail(long id) throws HdException {
+
+        String url=HttpUrl.loadQuotationDetail(id);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType();
+        RemoteData<QuotationDetail> remoteData = gson.fromJson(result, generateType);
+        return remoteData;
+
+    }
+
+    /**
+     * 保存报价详情数据
+     * @param detail
+     * @return
+     */
+    public RemoteData<QuotationDetail> saveQuotationDetail(QuotationDetail detail) throws HdException {
+
+        String url=HttpUrl.saveQuotationDetail();
+
+        String result=     client.postWithStringReturned(url, gson.toJson(detail));
+
+        Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType();
+
+        RemoteData<QuotationDetail> productRemoteData = gson.fromJson(result, generateType);
+
+        return productRemoteData;
+
+    }
+
+    /**
+     * 删除报价单
+     * @param quotationId
+     * @return
+     */
+    public RemoteData<Void> deleteQuotationLogic(long quotationId) throws HdException {
+
+
+        String url=HttpUrl.deleteQuotationLogic(quotationId);
+
+        String result=     client.postWithStringReturned(url, null);
+
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
         return remoteData;
 
     }

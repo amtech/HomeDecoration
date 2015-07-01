@@ -46,7 +46,7 @@ public class Panel_ProductList  extends BasePanel {
         super();
 
 
-        searchProduct("");
+
 
         btn_search.addActionListener(new ActionListener() {
             @Override
@@ -80,10 +80,10 @@ public class Panel_ProductList  extends BasePanel {
                     int column = productTable.convertColumnIndexToModel(productTable.getSelectedColumn());
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showProductDialog(getWindow(getRoot()),product.getName(),product.getpVersion());
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()), product.getName(), product.getpVersion());
                     } else {
 
-                        HdSwingUtils.showDetailPanel(product,getRoot());
+                        HdSwingUtils.showDetailPanel(product, getRoot());
 
                     }
 
@@ -100,7 +100,7 @@ public class Panel_ProductList  extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                HdSwingUtils.showDetailPanel(null,getRoot());
+                HdSwingUtils.showDetailPanel(null, getRoot());
 
 
             }
@@ -112,14 +112,19 @@ public class Panel_ProductList  extends BasePanel {
         pagePanel.setListener(new PageListener() {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {
-                searchProduct(productName.getText().toString().trim(),pageIndex,pageSize);
+                searchProduct(productName.getText().trim(), pageIndex, pageSize);
             }
         });
 
 
 
 
-
+SwingUtilities.invokeLater(new Runnable() {
+    @Override
+    public void run() {
+        searchProduct("");
+    }
+});
 
     }
 

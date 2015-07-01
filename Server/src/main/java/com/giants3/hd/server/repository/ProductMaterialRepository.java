@@ -24,4 +24,7 @@ public interface ProductMaterialRepository extends JpaRepository<ProductMaterial
 
 
     public ProductMaterial   findFirstByMaterialIdEquals(long materialId);
+
+
+    public int deleteByProductIdEquals(long productId);
 }

@@ -22,4 +22,6 @@ public interface ProductPaintRepository extends JpaRepository<ProductPaint,Long>
 
     public ProductPaint   findFirstByMaterialIdEquals(long materialId);
 
+    public int deleteByProductIdEquals(long productId);
+
 }

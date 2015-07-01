@@ -496,6 +496,13 @@ public class Main extends JFrame {
             RemoteData<MaterialClass> materialClassRemoteData;
             RemoteData<MaterialEquation> materialEquationRemoteData;
 
+
+            RemoteData<Customer> customerRemoteData;
+
+
+            RemoteData<Salesman> salesmanRemoteData;
+
+
             @Override
             protected RemoteData<PClass> doInBackground() throws Exception {
 
@@ -512,6 +519,9 @@ public class Main extends JFrame {
                 materialClassRemoteData=apiManager.readMaterialClasses();
 
                 materialEquationRemoteData=   apiManager.readMaterialEquations();
+                salesmanRemoteData=apiManager.readSalesmans();
+                customerRemoteData=apiManager.readCustomer();
+
                 return apiManager.readProductClass();
 
             }
@@ -537,7 +547,12 @@ public class Main extends JFrame {
                 BufferData.setMaterialTypes(materialTypeRemoteData.datas);
 
 
-                BufferData.setMaterialEquations(  materialEquationRemoteData.datas);
+                BufferData.setMaterialEquations(materialEquationRemoteData.datas);
+
+                BufferData.setCustomers(  customerRemoteData.datas);
+
+                BufferData.setSalesmans(  salesmanRemoteData.datas);
+
 
             }
 
