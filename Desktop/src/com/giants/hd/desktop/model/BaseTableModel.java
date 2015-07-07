@@ -83,13 +83,15 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         if(currentSize< MiniRowCount)
         {
             for(int i=currentSize;i< MiniRowCount;i++)
-                try {
-                    this.datas.add(itemClass.newInstance());
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+
+                addNewRow(i);
+//                try {
+//                    this.datas.add(itemClass.newInstance());
+//                } catch (InstantiationException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
 
         }
 
@@ -285,13 +287,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             if(rowIndex>=0&&rowIndex<getRowCount())
             {
                 datasToDelete.add(getItem(rowIndex));
-
-
-
-        }
-
-
-
+            }
         }
 
         datas.removeAll(datasToDelete);
@@ -313,7 +309,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     /**
      * 返回 设置行高
-     * @return
+    * @return
      */
     public int getRowHeight() {
 

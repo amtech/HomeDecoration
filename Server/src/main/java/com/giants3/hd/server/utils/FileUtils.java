@@ -40,7 +40,7 @@ public class FileUtils {
     public static  final String getMaterialPicturePath(String filePath,String code,String mClass )
     {
 
-        return getMaterialPicturePath(filePath ,code,mClass,"jpg");
+        return getMaterialPicturePath(filePath, code, mClass, "jpg");
 
     }
 
@@ -158,5 +158,17 @@ public class FileUtils {
         int indexOfDot= fileName.indexOf(".");
         return   getMaterialPicturePath(materialFilePath, fileName.substring(0, indexOfDot), fileName.substring(0, 4), fileName.substring(indexOfDot + 1));
 
+    }
+
+
+    /**
+     * 根据文件名 获取模板文件。
+     * @param quotationfilepath
+     * @param name
+     * @return
+     */
+    public static String getQuotationFile(String quotationfilepath, String name) {
+
+        return quotationfilepath+File.separator+name+".xls";
     }
 }

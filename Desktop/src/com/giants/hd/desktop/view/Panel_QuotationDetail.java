@@ -2,6 +2,7 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.local.BufferData;
@@ -9,6 +10,7 @@ import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
@@ -16,6 +18,8 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -25,6 +29,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -44,6 +49,7 @@ public class Panel_QuotationDetail extends BasePanel {
     private JDatePickerImpl vDate;
     private JButton btn_save;
     private JButton btn_delete;
+    private JButton btn_export;
     public QuotationDetail data;
 
 
@@ -119,6 +125,20 @@ public class Panel_QuotationDetail extends BasePanel {
             }
         });
 
+
+
+
+        btn_export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+               new  ExportQuotationDialog(SwingUtilities.getWindowAncestor(getRoot()),data).setVisible(true);
+
+
+
+            }
+        });
 
 
     }

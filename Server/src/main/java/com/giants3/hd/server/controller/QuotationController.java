@@ -36,7 +36,8 @@ public class QuotationController extends BaseController {
 
     @Autowired
     private QuotationRepository quotationRepository;
-
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @Autowired
@@ -63,7 +64,7 @@ public class QuotationController extends BaseController {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLikeOrderByQDateDesc("%" + searchValue + "%", pageable);
+        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLikeOrQDateLikeOrSalesmanLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", "%" + searchValue + "%", pageable);
 
         List<Quotation> products = pageValue.getContent();
 
@@ -90,6 +91,7 @@ public class QuotationController extends BaseController {
         QuotationDetail detail=new QuotationDetail();
         detail.quotation=quotation;
         detail.items=  quotationItemRepository.findByQuotationIdEquals(id);
+
 
 
         return wrapData(detail);

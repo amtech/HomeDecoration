@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.api;
 
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
@@ -28,8 +29,7 @@ public class ApiManager {
     @Inject
     Client client;
 
-     @Inject
-    Gson gson;
+
 
 
 
@@ -52,7 +52,7 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<Product>>() {
         }.getType();
 
-        RemoteData<Product> productRemoteData = gson.fromJson(result, generateType);
+        RemoteData<Product> productRemoteData = GsonUtils.fromJson(result, generateType);
         return productRemoteData;
 
 
@@ -70,12 +70,12 @@ public class ApiManager {
 
         String url=HttpUrl.saveProduct();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(productDetail));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(productDetail));
 
         Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
         }.getType();
 
-        RemoteData<ProductDetail> productRemoteData = gson.fromJson(result, generateType);
+        RemoteData<ProductDetail> productRemoteData = GsonUtils.fromJson(result, generateType);
 
         return productRemoteData;
 
@@ -97,7 +97,7 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
         }.getType();
 
-        RemoteData<ProductDetail> productRemoteData = gson.fromJson(result, generateType);
+        RemoteData<ProductDetail> productRemoteData = GsonUtils.fromJson(result, generateType);
 
         return productRemoteData;
 
@@ -118,7 +118,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<PClass>>() {
         }.getType();
-        RemoteData<PClass> remoteData = gson.fromJson(result, generateType);
+        RemoteData<PClass> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
 
@@ -126,11 +126,11 @@ public class ApiManager {
 
 
     /**
-     * \读取产品类别列表
+     * \读取客户列表
      * @return
      */
 
-    public RemoteData<Customer> readCustomer() throws HdException {
+    public RemoteData<Customer> readCustomers() throws HdException {
 
 
         String url=HttpUrl.loadCustomers();
@@ -139,9 +139,30 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Customer>>() {
         }.getType();
-        RemoteData<Customer> remoteData = gson.fromJson(result, generateType);
+        RemoteData<Customer> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
+
+    }
+
+
+    /**
+     * 保存客户列表
+     * @return
+     */
+
+    public RemoteData<Customer> saveCustomers(List<Customer> customers) throws HdException {
+
+
+
+        String url=HttpUrl.saveCustomers();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(customers));
+
+        Type   generateType = new TypeToken<RemoteData<Customer>>() {
+        }.getType();
+        RemoteData<Customer> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
 
     }
 
@@ -160,9 +181,30 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Salesman>>() {
         }.getType();
-        RemoteData<Salesman> remoteData = gson.fromJson(result, generateType);
+        RemoteData<Salesman> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
+
+    }
+
+
+    /**
+     * 保存业务员列表
+     * @return
+     */
+
+    public RemoteData<Salesman> saveSalesmans(List<Salesman> salesmans) throws HdException {
+
+
+
+        String url=HttpUrl.saveSalesmans();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(salesmans));
+
+        Type   generateType = new TypeToken<RemoteData<Salesman>>() {
+        }.getType();
+        RemoteData<Salesman> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
 
     }
     /**
@@ -188,7 +230,7 @@ public class ApiManager {
         String result=     client.getWithStringReturned(url);
         Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
         }.getType();
-        RemoteData<ProductProcess> remoteData = gson.fromJson(result, generateType);
+        RemoteData<ProductProcess> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -203,7 +245,7 @@ public class ApiManager {
         String result=     client.getWithStringReturned(url);
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
-        RemoteData<Material> remoteData = gson.fromJson(result, generateType);
+        RemoteData<Material> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
     }
@@ -221,7 +263,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<PackMaterialType>>() {
         }.getType();
-        RemoteData<PackMaterialType> remoteData = gson.fromJson(result, generateType);
+        RemoteData<PackMaterialType> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -238,7 +280,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<PackMaterialClass>>() {
         }.getType();
-        RemoteData<PackMaterialClass> remoteData = gson.fromJson(result, generateType);
+        RemoteData<PackMaterialClass> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -257,7 +299,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<PackMaterialPosition>>() {
         }.getType();
-        RemoteData<PackMaterialPosition> remoteData = gson.fromJson(result, generateType);
+        RemoteData<PackMaterialPosition> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -269,11 +311,11 @@ public class ApiManager {
 
         String url=HttpUrl.saveMaterials();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(materials));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(materials));
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
     }
@@ -291,11 +333,11 @@ public class ApiManager {
     public RemoteData<Material> readMaterialListByCodeEquals(List<String> codes) throws HdException{
         String url=HttpUrl.loadMaterialListByCodeEquals();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(codes));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(codes));
 
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
-        RemoteData<Material> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Material> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -307,11 +349,11 @@ public class ApiManager {
     public RemoteData<Material> readMaterialListByNameEquals(List<String> names) throws HdException{
         String url=HttpUrl.loadMaterialListByNameEquals();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(names));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(names));
 
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
-        RemoteData<Material> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Material> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -328,7 +370,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Pack>>() {
         }.getType();
-        RemoteData<Pack> remoteData = gson.fromJson(result, generateType);
+        RemoteData<Pack> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -346,7 +388,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<MaterialClass>>() {
         }.getType();
-        RemoteData<MaterialClass> remoteData = gson.fromJson(result, generateType);
+        RemoteData<MaterialClass> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -356,15 +398,15 @@ public class ApiManager {
      *  材料分类保存
      * @return
      */
-    public RemoteData<Void> saveMaterialClasses(List<MaterialClass> materialClasses)throws HdException {
+    public RemoteData<MaterialClass> saveMaterialClasses(List<MaterialClass> materialClasses)throws HdException {
 
         String url=HttpUrl.saveMaterialClasses();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(materialClasses));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(materialClasses));
 
-        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        Type   generateType = new TypeToken<RemoteData<MaterialClass>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result, generateType);
+        RemoteData<MaterialClass> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -381,7 +423,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<MaterialType>>() {
         }.getType();
-        RemoteData<MaterialType> remoteData = gson.fromJson(result, generateType);
+        RemoteData<MaterialType> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -398,7 +440,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<MaterialEquation>>() {
         }.getType();
-        RemoteData<MaterialEquation> remoteData = gson.fromJson(result, generateType);
+        RemoteData<MaterialEquation> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -410,11 +452,11 @@ public class ApiManager {
 
         String url=HttpUrl.saveMaterial();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(material));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(material));
 
         Type   generateType = new TypeToken<RemoteData<Material>>() {
         }.getType();
-        RemoteData<Material> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Material> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -431,7 +473,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
         }.getType();
-        RemoteData<ProductDetail> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<ProductDetail> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
     }
@@ -447,7 +489,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
     }
@@ -459,7 +501,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -475,7 +517,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -489,7 +531,7 @@ public class ApiManager {
         String result=     client.getWithStringReturned(url);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -512,7 +554,7 @@ public class ApiManager {
         String result=  client.uploadWidthStringReturned(url, file);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
     /**
@@ -531,7 +573,7 @@ public class ApiManager {
         String result=  client.uploadWidthStringReturned(url,file);
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -548,7 +590,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
         }.getType();
-        RemoteData<ProductProcess> remoteData = gson.fromJson(result, generateType);
+        RemoteData<ProductProcess> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
     }
 
@@ -561,11 +603,11 @@ public class ApiManager {
     public RemoteData<ProductProcess> saveProductProcess(List<ProductProcess> datas)throws HdException {
         String url=HttpUrl.saveProductProcesses();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(datas));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(datas));
 
         Type   generateType = new TypeToken<RemoteData<ProductProcess>>() {
         }.getType();
-        RemoteData<ProductProcess> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<ProductProcess> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -581,7 +623,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 
@@ -599,7 +641,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Quotation>>() {
         }.getType();
-        RemoteData<Quotation> remoteData = gson.fromJson(result, generateType);
+        RemoteData<Quotation> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
     }
@@ -619,7 +661,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
         }.getType();
-        RemoteData<QuotationDetail> remoteData = gson.fromJson(result, generateType);
+        RemoteData<QuotationDetail> remoteData = GsonUtils.fromJson(result, generateType);
         return remoteData;
 
     }
@@ -633,12 +675,12 @@ public class ApiManager {
 
         String url=HttpUrl.saveQuotationDetail();
 
-        String result=     client.postWithStringReturned(url, gson.toJson(detail));
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(detail));
 
         Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
         }.getType();
 
-        RemoteData<QuotationDetail> productRemoteData = gson.fromJson(result, generateType);
+        RemoteData<QuotationDetail> productRemoteData = GsonUtils.fromJson(result, generateType);
 
         return productRemoteData;
 
@@ -658,7 +700,7 @@ public class ApiManager {
 
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
-        RemoteData<Void> remoteData = gson.fromJson(result ,generateType);
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
     }

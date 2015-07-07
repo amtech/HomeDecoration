@@ -16,10 +16,7 @@ import com.giants3.hd.utils.entity.Quotation;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * 报价列表界面
@@ -94,6 +91,9 @@ public class Panel_Quotation extends BasePanel{
                 }
             }
         });
+
+
+
 
 
         btn_add.addActionListener(new ActionListener() {

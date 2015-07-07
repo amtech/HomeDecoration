@@ -13,7 +13,7 @@ public class ImageViewDialog extends JDialog {
     private JPanel contentPane;
     private JLabel picture;
 
-    public ImageViewDialog(Window frame) {
+    private ImageViewDialog(Window frame) {
 
         super(frame);
         setContentPane(contentPane);
@@ -23,7 +23,7 @@ public class ImageViewDialog extends JDialog {
 
 
 // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
@@ -98,7 +98,9 @@ public class ImageViewDialog extends JDialog {
 
 
 
-        setMinimumSize(new Dimension(400, 300));
+        setMinimumSize(new Dimension(800, 600));
+        setMaximumSize(new Dimension(1200, 900));
+
         setLocationRelativeTo(getParent());
         pack();
         setVisible(true);
@@ -128,6 +130,7 @@ public class ImageViewDialog extends JDialog {
 
         String url=HttpUrl.loadProductPicture(productName,version);
         ImageViewDialog dialog=new ImageViewDialog(frame);
+        dialog.setTitle(productName+"_"+version);
         dialog.loadImageAndShow(url);
 
     }
@@ -138,6 +141,7 @@ public class ImageViewDialog extends JDialog {
      */
     public static void showDialog(Window frame,String url) {
         ImageViewDialog dialog=new ImageViewDialog(frame);
+        dialog.setTitle(url);
         dialog.loadImageAndShow(url);
 
     }

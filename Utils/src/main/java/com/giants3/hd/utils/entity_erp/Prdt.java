@@ -19,7 +19,7 @@ public class Prdt implements Serializable{
     public String prd_no;
     public String name;
     public String ut;
-    public int knd;
+    public String knd;
     public String spec;
     public String rem;
 

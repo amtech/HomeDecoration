@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class MaterialController extends BaseController {
 
     ObjectPool<Material> materialObjectPool;
 
-    ErpPrdtRepository repository;
+  //  ErpPrdtRepository repository;
 
 
     @Value("${materialfilepath}")
@@ -81,9 +82,8 @@ public class MaterialController extends BaseController {
 
     public MaterialController() {
 
-
         materialObjectPool= PoolCenter.getObjectPool(Material.class);
-        repository=new ErpPrdtRepository(Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager());
+
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
@@ -208,12 +208,13 @@ public class MaterialController extends BaseController {
     @RequestMapping(value = "/syncERP",method ={ RequestMethod.GET,RequestMethod.POST})
     public
     @ResponseBody
-
     RemoteData<Void> syncERP( )   {
 
+       EntityManager manager= Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager();
+        ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
 
         List<Prdt>  datas=repository.list();
-
+        manager.close();
         int size=datas.size();
 
         List<MaterialClass> materialClasses=materialClassRepository.findAll();
@@ -692,7 +693,7 @@ public class MaterialController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<Void> saveClassList(@RequestBody  List<MaterialClass> materialClasses)   {
+    RemoteData<MaterialClass> saveClassList(@RequestBody  List<MaterialClass> materialClasses)   {
 
         for(MaterialClass materialClass: materialClasses)
         {
@@ -719,7 +720,7 @@ public class MaterialController extends BaseController {
 
 
 
-        return wrapData(new ArrayList<Void>());
+        return listClass();
     }
 
 

@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
@@ -177,4 +178,12 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
     }
 
+
+    @Override
+    public ProductPaint addNewRow(int index) {
+        ProductPaint productPaint= super.addNewRow(index);
+
+        productPaint.id= -RandomUtils.nextInt();
+        return productPaint;
+    }
 }

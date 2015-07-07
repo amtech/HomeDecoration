@@ -1,11 +1,14 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
+
+import java.util.Random;
 
 /**
  * 材料列表  表格模型
@@ -13,13 +16,16 @@ import com.google.inject.Inject;
 
 public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
 
+
+
+
     public static String[] columnNames = new String[]{"序号","物料编码", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
     public static int[] columnWidths = new int []{     40,    100,        120,        40,   40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
 
     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price","amount","memo"};
     public  static Class[] classes = new Class[]{Object.class,Material.class, Material.class};
 
-    public  static boolean[] editables = new boolean[]{false,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
+    public  static boolean[] editables = new boolean[]{false,true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
 
     @Inject
     public ProductMaterialTableModel() {
@@ -40,13 +46,21 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
         super.setValueAt(aValue, rowIndex, columnIndex);
 
         ProductMaterial material=getItem(rowIndex);
+        String valueString = aValue.toString().trim();
+        float floatValue=0;
+        try {
+              floatValue =   Float.valueOf(valueString);
+        }catch (Throwable t)
+        {
 
-
+        }
         switch (columnIndex)
         {
             case 3:
                 //设置用量
-                material.setQuantity(Float.valueOf(aValue.toString()));
+
+
+                material.setQuantity(floatValue);
                 material.update();
 
                 break;
@@ -55,10 +69,9 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
             case 4:
                 //设置长
             {
-                String valueString = aValue.toString().trim();
-                float value = StringUtils.isEmpty(valueString) ? 0 : Float.valueOf(valueString);
 
-                material.setpLong(value);
+
+                material.setpLong(floatValue);
                 material.update();
             }
                 break;
@@ -67,9 +80,8 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
             case 5:
                 //设置宽
             {
-                String valueString = aValue.toString().trim();
-                float value = StringUtils.isEmpty(valueString) ? 0 : Float.valueOf(valueString);
-                material.setpWidth(value);
+
+                material.setpWidth(floatValue);
                 material.update();
             }
                 break;
@@ -77,10 +89,8 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
             case 6:
                 //设置高
             {
-                String valueString = aValue.toString().trim();
-                float value = StringUtils.isEmpty(valueString) ? 0 : Float.valueOf(valueString);
-                material.setpWidth(value);
-                material.setpHeight(value);
+
+                material.setpHeight(floatValue);
                 material.update();
             }
                 break;
@@ -140,5 +150,14 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
     @Override
     public int getRowHeight() {
         return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
+    }
+
+
+    @Override
+    public ProductMaterial addNewRow(int index) {
+        ProductMaterial productMaterial= super.addNewRow(index);
+
+        productMaterial.id= -RandomUtils.nextInt();
+        return productMaterial;
     }
 }

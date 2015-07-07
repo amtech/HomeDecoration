@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -249,6 +250,10 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     @Override
     public ProductMaterial addNewRow(int index) {
         ProductMaterial p=     super.addNewRow(index);
+
+
+
+            p.id= -RandomUtils.nextInt();
 
         //包装的计算公式不一致  需要在本地标记类型id
         p.setFlowId(Flow.FLOW_PACK);

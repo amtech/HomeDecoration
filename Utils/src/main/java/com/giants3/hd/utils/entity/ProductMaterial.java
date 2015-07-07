@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 @Entity(name="T_ProductMaterial")
 public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
+
+
+
+
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	public long id;

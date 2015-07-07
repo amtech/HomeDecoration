@@ -19,8 +19,6 @@ public class Panel_ProductProcess extends BasePanel {
     @Inject
    public ProductProcessModel productProcessModel;
     public Panel_ProductProcess() {
-        jt_process.setModel(productProcessModel);
-
 
     }
 
@@ -32,7 +30,6 @@ public class Panel_ProductProcess extends BasePanel {
     public void setData(List<ProductProcess> datas) {
 
         productProcessModel.setDatas(datas);
-        jt_process.setModel(productProcessModel);
 
 
     }

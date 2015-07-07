@@ -1,21 +1,30 @@
 package com.giants.hd.desktop.utils;
 
+import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.ProductDetail;
-import com.giants3.hd.utils.entity.ProductMaterial;
+import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.exception.HdException;
+import com.google.inject.Guice;
+import jxl.CellFeatures;
+import jxl.Image;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.format.*;
+import jxl.read.biff.BiffException;
 import jxl.write.*;
+import jxl.write.Alignment;
 import jxl.write.Boolean;
 import jxl.write.Number;
 import jxl.write.NumberFormat;
 import jxl.write.biff.RowsExceededException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -160,6 +169,192 @@ public class ExportHelper {
     }
 
 
+    /**
+     * 导出excel 表格
+     * @param quotationDetail
+     * @param modelName
+     * @param fileOutputDirectory
+     * @throws IOException
+     * @throws BiffException
+     */
+    public  static final void exportQuotation(QuotationDetail quotationDetail,String modelName,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
 
+//        modelName="F://quotation/咸康(灯具)报价格式.xls";
+//        fileOutputDirectory="F:\\quotation\\output\\";
+
+
+        File outputFile=new File(fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber + ".xls");
+        switch (modelName)
+        {
+            case QuotationFile.FILE_XIANGKANG_1:
+
+                exportXiankangDengju(quotationDetail,new URL(HttpUrl.loadQuotationFile(modelName)).openStream(),outputFile);
+
+                break;
+
+            case QuotationFile.FILE_XIANGKANG_2:
+
+                exportXiankangDengju(quotationDetail,new URL(HttpUrl.loadQuotationFile(modelName)).openStream(),outputFile);
+
+
+                break;
+        }
+
+
+    }
+
+
+    /**
+     * 导出咸康灯具模板
+     * @param quotationDetail
+     * @param inputStream
+     * @param output
+     * @throws IOException
+     * @throws BiffException
+     */
+    private static void exportXiankangDengju(QuotationDetail quotationDetail,InputStream inputStream,File output) throws IOException, BiffException, WriteException, HdException {
+
+        Workbook existingWorkbook = Workbook.getWorkbook(inputStream);
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(output, existingWorkbook);
+        WritableSheet writableSheet = workbookCopy.getSheet(0);
+
+        int defaultRowCount=10;
+
+        int startRow=4;
+
+
+        int rowHeight = writableSheet.getRowHeight(startRow);
+
+
+
+        int dataSize=quotationDetail.items.size();
+
+
+
+        //实际数据超出范围 插入空行
+        if(dataSize>defaultRowCount)
+        {
+            //插入空行
+            for(int j=0;j<dataSize-defaultRowCount;j++) {
+
+                int rowToInsert=startRow+defaultRowCount+j;
+                writableSheet.insertRow(rowToInsert);
+                writableSheet.setRowView(rowToInsert, rowHeight);
+                //复制表格。
+                for (int i = 0, count = writableSheet.getColumns(); i < count; i++) {
+                    WritableCell cell = (WritableCell) writableSheet.getCell(i, startRow);
+                    cell = cell.copyTo(i, rowToInsert);
+                    writableSheet.addCell(cell);
+
+                }
+            }
+        }
+
+
+
+
+        //填充数据
+
+        Label label1;
+        Number num;
+        WritableImage  image;
+
+        int rowCount=  writableSheet.getRows();
+        int columnCount=  writableSheet.getColumns();
+        WritableCellFormat format=new WritableCellFormat();
+        format.setAlignment(jxl.format.Alignment.CENTRE);
+        format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+
+        //报价日期
+        //设计号  版本号
+        label1 = new Label(7, 1, quotationDetail.quotation.qDate,format);
+        writableSheet.addCell(label1);
+
+
+
+
+        ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
+        float pictureGap=0.1f;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for(int i=0;i<dataSize;i++)
+        {
+            int rowUpdate=startRow+i;
+            QuotationItem item=quotationDetail.items.get(i);
+
+
+
+            //图片
+            if(item.productPhoto!=null) {
+
+
+
+
+                baos.reset();
+                BufferedImage bufferedImage=ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName,item.pVersion)));
+                ImageIO.write(bufferedImage, "PNG", baos);
+                image = new WritableImage(4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
+                image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
+                writableSheet.addImage(image);
+            }
+
+
+            //读取咸康数据
+            ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
+
+
+
+            //行号
+            //设计号  版本号
+            label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
+            writableSheet.addCell(label1);
+
+            //设计号  版本号
+            label1 = new Label(1, rowUpdate, item.pVersion,format);
+            writableSheet.addCell(label1);
+
+            //货号
+            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
+            writableSheet.addCell(label1);
+
+
+
+
+
+            //材料比重
+            //货号
+            label1 = new Label(8, rowUpdate,  productDetail.product.constitute);
+            writableSheet.addCell(label1);
+
+            if(productDetail.product.xiankang!=null)
+            {
+
+
+                //同款货号
+                label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
+                writableSheet.addCell(label1);
+
+                //甲醛标示
+                label1 = new Label(9, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
+                writableSheet.addCell(label1);
+
+                //材质
+                label1 = new Label(10, rowUpdate,  productDetail.product.xiankang.getCaizhi(),format);
+                writableSheet.addCell(label1);
+            }
+
+        }
+
+
+
+
+
+
+
+        //Write and close the workbook
+        workbookCopy.write();
+        workbookCopy.close();
+
+
+    }
 
 }

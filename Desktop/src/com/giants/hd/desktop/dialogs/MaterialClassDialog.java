@@ -3,17 +3,14 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.MaterialClassTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
-import com.giants3.hd.utils.entity.ProductProcess;
-import com.giants3.hd.utils.pools.ObjectPool;
-import com.giants3.hd.utils.pools.PoolCenter;
+import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import jxl.Cell;
 import jxl.Sheet;
@@ -24,10 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,14 +31,12 @@ import java.util.List;
 /**
  * 材料分类对话框
  */
-public class MaterialClassDialog extends BaseDialog<MaterialClass> {
+public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
     private JPanel contentPane;
     private JButton btn_save;
     private JButton btn_import;
     private JHdTable jtable;
 
-
-    public List<MaterialClass> oldData=null;
     @Inject
     ApiManager apiManager;
 
@@ -56,54 +48,23 @@ public class MaterialClassDialog extends BaseDialog<MaterialClass> {
 
     public MaterialClassDialog(Window window)
     {
-        super(window, "材料分类列表");
-        setContentPane(contentPane);
-        setModal(true);
-        setMinimumSize(new Dimension(800, 600));
-
-
-       // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-
-                dispose();
-
-            }
-        });
-
-
-
-        init();
-
-
-
-        loadData();
+        super(window);
 
     }
 
 
-    private void init()
+    @Override
+    protected void init()
     {
-
+        setContentPane(contentPane);
+        setTitle( "材料分类列表");
         jtable.setModel(classTableModel);
 
         //保存数据
         btn_save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-                final List<MaterialClass> newData = classTableModel.getValuableDatas();
-
-                if (newData.equals(oldData)) {
-
-                    JOptionPane.showMessageDialog(MaterialClassDialog.this, "数据无改变！");
-                    return;
-
-                }
-
-                saveDatas(newData);
+                doSaveWork();
 
 
             }
@@ -131,7 +92,8 @@ public class MaterialClassDialog extends BaseDialog<MaterialClass> {
 
                     try {
                         List<MaterialClass> datas = readDataFromXLS(path);
-                        saveDatas(datas);
+                        classTableModel.setDatas(datas);
+                       // doSaveWork( );
                     } catch (Throwable e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(MaterialClassDialog.this, "文件读失败:" + e1.getMessage());
@@ -147,43 +109,7 @@ public class MaterialClassDialog extends BaseDialog<MaterialClass> {
     }
 
 
-    /**
-     * 保存数据
-     * @param datas
-     */
 
-    private void saveDatas(final List<MaterialClass> datas)
-    {
-
-
-        new HdSwingWorker<Void, Object>(MaterialClassDialog.this) {
-            @Override
-            protected RemoteData<Void> doInBackground() throws Exception {
-
-
-                return apiManager.saveMaterialClasses(datas);
-            }
-
-            @Override
-            public void onResult(RemoteData<Void> data) {
-
-
-                if (data.isSuccess()) {
-
-
-                    JOptionPane.showMessageDialog(MaterialClassDialog.this, "保存成功");
-                    loadData();
-
-
-                } else {
-                    JOptionPane.showMessageDialog(MaterialClassDialog.this, data.message);
-                }
-
-
-            }
-        }.go();
-
-    }
 
     /**
      * 从excel 表格中读取分类数据·
@@ -288,42 +214,21 @@ public class MaterialClassDialog extends BaseDialog<MaterialClass> {
 
     }
 
-    private  void loadData()
-    {
-        new HdSwingWorker<MaterialClass,Object>(this)
-        {
-            @Override
-            protected RemoteData<MaterialClass> doInBackground() throws Exception {
-
-
-
-
-                return apiManager.readMaterialClasses();
-            }
-
-            @Override
-            public void onResult(RemoteData<MaterialClass> data) {
-
-
-                if(data.isSuccess())
-                {
-                    oldData= (List<MaterialClass>) ObjectUtils.deepCopy(data.datas);
-                    classTableModel.setDatas(data.datas);
-
-
-                }else
-                {
-                    JOptionPane.showMessageDialog(MaterialClassDialog.this,data.message);
-                }
-
-
-
-
-
-            }
-        }.go();
+    @Override
+    protected RemoteData<MaterialClass> readData() throws HdException {
+        return apiManager.readMaterialClasses();
     }
 
+    @Override
+    protected BaseTableModel<MaterialClass> getTableModel() {
+        return classTableModel;
+    }
 
+    @Override
+    protected   RemoteData<MaterialClass> saveData(List<MaterialClass> datas)throws HdException
+    {
+
+        return apiManager.saveMaterialClasses(datas);
+    }
 
 }

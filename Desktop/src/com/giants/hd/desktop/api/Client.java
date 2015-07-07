@@ -76,6 +76,9 @@ public class Client {
             }
         });
 
+
+
+
         Logger.getLogger(TAG).info(result);
 
         return result;

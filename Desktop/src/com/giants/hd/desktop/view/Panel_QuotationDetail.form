@@ -177,11 +177,20 @@
       </component>
       <component id="b6a3c" class="javax.swing.JButton" binding="btn_delete">
         <constraints>
-          <grid row="11" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties>
           <text value="删除"/>
+        </properties>
+      </component>
+      <component id="3a54e" class="javax.swing.JButton" binding="btn_export">
+        <constraints>
+          <grid row="11" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="导出"/>
         </properties>
       </component>
     </children>

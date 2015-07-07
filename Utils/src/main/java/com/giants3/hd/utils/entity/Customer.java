@@ -1,9 +1,10 @@
 package com.giants3.hd.utils.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.interf.Valuable;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  *
@@ -11,7 +12,7 @@ import javax.persistence.Id;
  * Created by davidleen29 on 2015/7/1.
  */
 @Entity(name = "T_Customer")
-public class Customer {
+public class Customer implements Serializable ,Valuable{
     /**
      * 单位 id
      */
@@ -21,11 +22,20 @@ public class Customer {
 
 
 
+    @Basic
+    public String code;
+    @Basic
     public String name;
 
 
     @Override
     public String toString() {
-        return name;
+        return "["+code+"]"+name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return StringUtils.isEmpty(code)&&StringUtils.isEmpty(name
+        );
     }
 }

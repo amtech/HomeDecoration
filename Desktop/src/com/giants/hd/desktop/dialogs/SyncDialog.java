@@ -27,14 +27,13 @@ public class SyncDialog extends BaseDialog<Void>  implements BasePanel.PanelList
 
     public SyncDialog(Window window)
     {
-        super(window,"数据同步");
-        setMinimumSize(new Dimension(400,400));
-        setLocationRelativeTo(window);
+        super(window, "数据同步");
+        setMinimumSize(new Dimension(400, 400));
 
 
-        setContentPane(   panel_photoSync.getRoot());
+        setContentPane(panel_photoSync.getRoot());
         init();
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
 
     }
 

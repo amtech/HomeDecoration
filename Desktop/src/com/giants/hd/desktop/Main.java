@@ -2,10 +2,7 @@ package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
-import com.giants.hd.desktop.dialogs.MaterialClassDialog;
-import com.giants.hd.desktop.dialogs.SyncDialog;
-import com.giants.hd.desktop.dialogs.ProductProcessDialog;
-import com.giants.hd.desktop.dialogs.UploadPictureDialog;
+import com.giants.hd.desktop.dialogs.*;
 import com.giants.hd.desktop.local.BufferData;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
@@ -197,7 +194,7 @@ public class Main extends JFrame {
 
         menuBar.add(createReport());
 
-        menuBar.add(createTest());
+        menuBar.add(createBaseData());
         menuBar.add(createSysetm());
 
         //System.exit(0);
@@ -256,82 +253,9 @@ public class Main extends JFrame {
         });
 
 
-        menu.addSeparator();
-
-        menuItem = new JMenuItem("工序列表" );
 
 
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-//                Main.this.setContentPane(new Panel_BaseData().getRoot());
-                ProductProcessDialog dialog=new ProductProcessDialog(Main.this);
-                dialog.setMinimumSize(new Dimension(480,600));
-                dialog.pack();;
-                dialog.setLocationRelativeTo(Main.this);
-                dialog.setVisible(true);
-
-            }
-        });
-
-
-//        menuItem = new JMenuItem("Both text and icon",
-//                new ImageIcon("images/middle.gif"));
-//        menuItem.setMnemonic(KeyEvent.VK_B);
-//        menu.add(menuItem);
-//
-//        menuItem = new JMenuItem(new ImageIcon("images/middle.gif"));
-//        menuItem.setMnemonic(KeyEvent.VK_D);
-//        menu.add(menuItem);
-
-//a group of radio button menu items
-//        menu.addSeparator();
-//        ButtonGroup group = new ButtonGroup();
-//        JRadioButtonMenuItem   rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
-//        rbMenuItem.setSelected(true);
-//        rbMenuItem.setMnemonic(KeyEvent.VK_R);
-//        group.add(rbMenuItem);
-//        menu.add(rbMenuItem);
-
-//        rbMenuItem = new JRadioButtonMenuItem("Another one");
-//        rbMenuItem.setMnemonic(KeyEvent.VK_O);
-//        group.add(rbMenuItem);
-//        menu.add(rbMenuItem);
-
-//a group of check box menu items
-
-//        JCheckBoxMenuItem      cbMenuItem = new JCheckBoxMenuItem("A check box menu item");
-//        cbMenuItem.setMnemonic(KeyEvent.VK_C);
-//        menu.add(cbMenuItem);
-//
-//        cbMenuItem = new JCheckBoxMenuItem("Another one");
-//        cbMenuItem.setMnemonic(KeyEvent.VK_H);
-//        menu.add(cbMenuItem);
-
-//a submenu
-//        menu.addSeparator();
-//        JMenu  submenu = new JMenu("A submenu");
-//        submenu.setMnemonic(KeyEvent.VK_S);
-
-//        menuItem = new JMenuItem("An item in the submenu");
-//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-//                KeyEvent.VK_2, ActionEvent.ALT_MASK));
-//        submenu.add(menuItem);
-//
-//        menuItem = new JMenuItem("打开材料搜索对话框");
-//        submenu.add(menuItem);
-//        menu.add(submenu);
-
-
-//
-//        menuItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
 
         return menu;
 
@@ -383,7 +307,7 @@ public class Main extends JFrame {
      * 添加测试菜单
      * @return
      */
-    private JMenu createTest()
+    private JMenu createBaseData()
     {
         //Build second menu in the menu bar.
         JMenu  menu = new JMenu("基础数据");
@@ -404,14 +328,60 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MaterialClassDialog dialog = new MaterialClassDialog(Main.this);
+                dialog.setLocationRelativeTo(getRootPane());
+                dialog.setVisible(true);
+            }
+        });
 
+        //
+           menuItem = new JMenuItem("客户列表"        );
+
+        menu.add(menuItem);
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomerDialog dialog = new CustomerDialog(Main.this);
+                dialog.setLocationRelativeTo(getRootPane());
                 dialog.setVisible(true);
             }
         });
 
 
 
+        menu.addSeparator();
 
+        menuItem = new JMenuItem("工序列表" );
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                Main.this.setContentPane(new Panel_BaseData().getRoot());
+                ProductProcessDialog dialog=new ProductProcessDialog(Main.this);
+                dialog.setLocationRelativeTo(getRootPane());
+
+                dialog.setVisible(true);
+
+            }
+        });
+
+
+        menu.addSeparator();
+
+        menuItem = new JMenuItem("业务员列表" );
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                SalesmanDialog dialog=new SalesmanDialog(Main.this);
+                dialog.setLocationRelativeTo(getRootPane());
+                dialog.setVisible(true);
+
+            }
+        });
         return menu;
     }
 
@@ -520,7 +490,7 @@ public class Main extends JFrame {
 
                 materialEquationRemoteData=   apiManager.readMaterialEquations();
                 salesmanRemoteData=apiManager.readSalesmans();
-                customerRemoteData=apiManager.readCustomer();
+                customerRemoteData=apiManager.readCustomers();
 
                 return apiManager.readProductClass();
 

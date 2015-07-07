@@ -61,8 +61,8 @@ public class ProductController extends BaseController {
 
     @Autowired
     private QuotationRepository quotationRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
+    //@PersistenceContext
+    //private EntityManager entityManager;
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -304,7 +304,7 @@ public class ProductController extends BaseController {
         if (productDetail.paints != null) {
             //保存油漆数据
             List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(productId);
-            //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
+            //查找旧记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
             for (ProductPaint oldPaint : oldPaints) {
                 boolean exist = false;
                 for (ProductPaint newPaint : productDetail.paints) {

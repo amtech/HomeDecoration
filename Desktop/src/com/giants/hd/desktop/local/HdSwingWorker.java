@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.ExecutionException;
 
@@ -19,7 +20,6 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
       LoadingDialog dialog ;
 
 
-    private String message;
 
 
     public HdSwingWorker(Window component)
@@ -54,10 +54,14 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
             result = get();
         } catch (InterruptedException e) {
 
-            exception=HdException.create(e.getCause());
+
+            exception=getCauseException(e);
+
+          //  exception=HdException.create(e.getCause());
             e.printStackTrace();
         } catch (ExecutionException e) {
-            exception=HdException.create(e.getCause());
+            exception=getCauseException(e);
+         //   exception=HdException.create(e.getCause());
             e.printStackTrace();
         }
 
@@ -72,6 +76,26 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
         }
     }
 
+
+
+    private HdException getCauseException(Throwable t)
+    {
+
+        Throwable newT=t;
+        do{
+
+            if(newT instanceof HdException)
+            {
+                return (HdException)newT;
+
+            }
+            newT=newT.getCause();
+        } while(newT!=null);
+
+        return HdException.create(t);
+
+
+    }
 
     /**
      * 启动任务bu
@@ -91,11 +115,26 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
         //TODO  处理线程异常
 
 
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        String errorMessage="";
+        if(exception.getCause()!=null) {
+            ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+            exception.getCause().printStackTrace(new PrintStream(byteArrayOutputStream));
+            errorMessage=byteArrayOutputStream.toString();
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else
+        {
+            errorMessage=exception.message;
 
-        exception.getCause().printStackTrace(new PrintStream(byteArrayOutputStream));
+        }
 
-        JTextArea jTextArea=new JTextArea(byteArrayOutputStream.toString());
+        JTextArea jTextArea=new JTextArea(errorMessage);
+        jTextArea.setLineWrap(true);
+
+
         JScrollPane jScrollPane=new JScrollPane(jTextArea);
         jScrollPane.setPreferredSize(new Dimension(800,500));
         JOptionPane.showMessageDialog(null,jScrollPane);

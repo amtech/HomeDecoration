@@ -79,6 +79,17 @@ public class HttpUrl {
 
     }
 
+
+    /**
+     * 保存业务员业务员
+     * @return
+     */
+    public static String saveSalesmans() {
+
+        return BaseUrl+"api/salesman/save";
+
+    }
+
     /**
      * 读取客户
      * @return
@@ -88,6 +99,16 @@ public class HttpUrl {
         return BaseUrl+"api/customer/list";
 
     }
+
+
+    /**
+     * 保存客户列表
+     * @return
+     */
+    public static String saveCustomers() {
+        return BaseUrl+"api/customer/save";
+    }
+
 
 
     public static String loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize
@@ -132,6 +153,8 @@ public class HttpUrl {
     public static String saveMaterials() {
         return BaseUrl+"api/material/saveList";
     }
+
+
 
 
     /**
@@ -345,5 +368,14 @@ public class HttpUrl {
     public static String deleteQuotationLogic(long quotationId) {
 
             return BaseUrl+"api/quotation/logicDelete?id="+quotationId ;
+    }
+
+    /**
+     * 读取报价文件
+     * @return
+     */
+    public static String loadQuotationFile(String name) {
+
+        return BaseUrl+"api/file/download/quotation?name="+ name ;
     }
 }

@@ -28,7 +28,8 @@ public class FileController  extends BaseController{
 
     @Value("${materialfilepath}")
     private String materialFilePath;
-
+    @Value("${quotationfilepath}")
+    private String quotationfilepath;
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public @ResponseBody
     String provideUploadInfo() {
@@ -148,7 +149,27 @@ public class FileController  extends BaseController{
 
 
 
-        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, code,mClass, type));
+        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, code, mClass, type));
+        //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
+
+        return resource;
+    }
+
+
+    /**
+     *
+     *
+     */
+    @RequestMapping(value="/download/quotation", method=RequestMethod.GET)
+    @ResponseBody
+
+    public FileSystemResource getQuotationFile(@RequestParam(value = "name",defaultValue = "") String name ) {
+
+
+
+
+
+        FileSystemResource resource= new FileSystemResource(  FileUtils.getQuotationFile(quotationfilepath, name));
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;

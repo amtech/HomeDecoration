@@ -64,7 +64,7 @@ public   class ErpPrdtRepository    {
 //        query.setParameter(1, customer);
 
 
-     List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
+     List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd='4') p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
      ///   return em.createQuery("select  e  from prdt e  ,(select f.prd_no,f.up_std from CST_STD f) d where e.prd_no=:prd_no ",Prdt.class) .setParameter("prd_no",prd_no).getResultList();
         return  convertToPojo(result);
 
@@ -83,7 +83,7 @@ public   class ErpPrdtRepository    {
 
 
 
-        List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd=4) p inner join ("+sql_find_distinct_cst_std+") cs on p.prd_no=cs.prd_no  " ).getResultList();
+        List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price from (select * from  prdt  where prdt.knd='4') p inner join ("+sql_find_distinct_cst_std+") cs on p.prd_no=cs.prd_no  " ).getResultList();
 
 
       return  convertToPojo(result);
