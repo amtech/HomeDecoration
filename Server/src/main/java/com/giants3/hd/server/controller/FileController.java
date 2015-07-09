@@ -162,7 +162,6 @@ public class FileController  extends BaseController{
      */
     @RequestMapping(value="/download/quotation", method=RequestMethod.GET)
     @ResponseBody
-
     public FileSystemResource getQuotationFile(@RequestParam(value = "name",defaultValue = "") String name ) {
 
 

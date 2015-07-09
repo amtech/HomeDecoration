@@ -20,7 +20,6 @@ public class Client {
 
 
     public static final String BODY_ENCODING="UTF-8";
-    private static final String BASE_URL = "http://api.twitter.com/1/";
     private static final String TAG = "HTTPCLIENT";
     //客户端连接
     public AsyncHttpClient client;
@@ -55,6 +54,8 @@ public class Client {
 
 
         Logger.getLogger(TAG).info(result);
+
+
 
         return result;
 

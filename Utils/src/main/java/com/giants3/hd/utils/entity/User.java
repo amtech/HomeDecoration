@@ -1,57 +1,27 @@
 package com.giants3.hd.utils.entity;
 
 /**
-* Created by davidleen29
+* 用户列表
 */
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name="T_Account")
+@Entity(name="T_User")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
 
     @Basic
-    private String firstName;
+    public String code;
 
     @Basic
-    private String lastName;
-
-    @Basic
-    private String email;
+    public String name;
 
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public long getId() {
 
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

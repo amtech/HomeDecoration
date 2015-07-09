@@ -207,6 +207,94 @@ public class ApiManager {
         return remoteData;
 
     }
+
+
+
+
+    /**
+     * \读取用户员列表
+     * @return
+     */
+
+    public RemoteData<User> readUsers() throws HdException {
+
+
+        String url=HttpUrl.loadUsers();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<User>>() {
+        }.getType();
+        RemoteData<User> remoteData = GsonUtils.fromJson(result, generateType);
+        return remoteData;
+
+
+    }
+
+
+    /**
+     * 保存用户列表
+     * @return
+     */
+
+    public RemoteData<User> saveUsers(List<User> users
+    ) throws HdException {
+
+
+
+        String url=HttpUrl.saveSalesmans();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(users));
+
+        Type   generateType = new TypeToken<RemoteData<User>>() {
+        }.getType();
+        RemoteData<User> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+
+
+    /**
+     * \读取用户员列表
+     * @return
+     */
+
+    public RemoteData<Module> readModules() throws HdException {
+
+
+        String url=HttpUrl.loadUsers();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Module>>() {
+        }.getType();
+        RemoteData<Module> remoteData = GsonUtils.fromJson(result, generateType);
+        return remoteData;
+
+
+    }
+
+
+    /**
+     * 保存用户列表
+     * @return
+     */
+
+    public RemoteData<Module> saveModules(List<Module> users
+    ) throws HdException {
+
+
+
+        String url=HttpUrl.saveSalesmans();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(users));
+
+        Type   generateType = new TypeToken<RemoteData<Module>>() {
+        }.getType();
+        RemoteData<Module> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
     /**
      * 根据物料编码与名称 模糊搜索材料
      * @param value
@@ -701,6 +789,42 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
         RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+
+
+    /**
+     * 读取用户权限
+     * @param id
+     * @return
+     */
+    public RemoteData<Authority> readAuthorityByUser(long id) throws HdException {
+
+        String url=HttpUrl.loadAuthorityByUser(id);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Authority>>() {
+        }.getType();
+        RemoteData<Authority> remoteData = GsonUtils.fromJson(result, generateType);
+        return remoteData;
+
+    }
+
+
+    /**
+     * 保存用户权限
+     */
+    public RemoteData<Authority> saveAuthorities(long userId,List<Authority> authorities) throws HdException {
+
+        String url=HttpUrl.saveAuthorities(userId);
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(authorities));
+
+        Type   generateType = new TypeToken<RemoteData<Authority>>() {
+        }.getType();
+        RemoteData<Authority> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
     }

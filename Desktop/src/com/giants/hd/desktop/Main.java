@@ -195,7 +195,10 @@ public class Main extends JFrame {
         menuBar.add(createReport());
 
         menuBar.add(createBaseData());
+
+        menuBar.add(createAuthority());
         menuBar.add(createSysetm());
+
 
         //System.exit(0);
         setJMenuBar(menuBar);
@@ -290,7 +293,7 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                 setContentPane(new Panel_Quotation( ).getRoot());
+                setContentPane(new Panel_Quotation().getRoot());
 
             }
         });
@@ -382,10 +385,71 @@ public class Main extends JFrame {
 
             }
         });
+
+
+
+
         return menu;
     }
 
 
+    /**
+     * 权限菜单
+     * @return
+     */
+    public  JMenu createAuthority()
+    {
+        //Build second menu in the menu bar.
+        JMenu  menu = new JMenu("权限管理");
+
+
+
+
+        //
+        JMenuItem  menuItem = new JMenuItem("用户列表" );
+
+
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserDialog dialog = new UserDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+        //
+        menuItem = new JMenuItem("模块列表" );
+
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModuleDialog dialog = new ModuleDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+        //
+        menuItem = new JMenuItem("权限设置" );
+
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AuthorityDialog dialog = new AuthorityDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+        return menu;
+
+    }
 
     /**
      * 添加测试菜单

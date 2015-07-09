@@ -378,4 +378,29 @@ public class HttpUrl {
 
         return BaseUrl+"api/file/download/quotation?name="+ name ;
     }
+
+    public static String loadUsers() {
+        return BaseUrl+"api/user/list";
+    }
+
+
+    /**
+     * 读取用户权限
+     * @param id
+     * @return
+     */
+    public static String loadAuthorityByUser(long id) {
+
+        return BaseUrl+"api/authority/findByUser?userId="+ id ;
+
+
+    }
+
+    /**
+     * 保存权限数据
+     * @return
+     */
+    public static String saveAuthorities(long userId) {
+        return BaseUrl+"api/authority/saveList?userId="+ userId;
+    }
 }

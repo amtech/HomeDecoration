@@ -1,5 +1,7 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Salesman;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.server.repository.UserRepository;
 import com.google.gson.Gson;
@@ -18,8 +20,8 @@ import java.util.List;
 * Created by Administrator on 2014/9/18.
 */
 @Controller
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/user")
+public class UserController extends  BaseController{
 
     @Autowired
     private UserRepository userRepository;
@@ -48,27 +50,14 @@ public class UserController {
         return "redirect:/";
     }
 
-
-    @RequestMapping(  method = RequestMethod.GET)
+    @RequestMapping(value="/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    String listUsersJson(ModelMap model) {
-        JsonArray userArray = new JsonArray();
+    RemoteData<User> list( )   {
 
-        Gson gson=new Gson();
-       List<User> userList= userRepository.findAll();
-
-        for (User user : userList) {
-
-            userArray.add( gson.toJsonTree(user));
-        }
-
-        userList= userRepository.findByFirstNameLike("dav%");
-        for (User user : userList) {
-
-            userArray.add( gson.toJsonTree(user));
-        }
-
-        return userArray.toString();
+        return  wrapData(userRepository.findAll());
     }
+
+
+
 }

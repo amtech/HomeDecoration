@@ -31,7 +31,12 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     public static final int    MiniRowCount = 20;
 
+    private boolean editable=true;
+    private boolean adjustable=true;
 
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
 
 
@@ -77,6 +82,8 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
      */
     protected   void adjustRowCount()
     {
+
+        if(!adjustable)return;
 
         int currentSize=this.datas.size();
 
@@ -325,5 +332,21 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     public int[] getMultiLineColumns()
     {
         return null;
+    }
+
+
+    /**
+     * 是否自动追加记录
+     * @param adjustable
+     * @return
+     */
+    public void setRowAdjustable(boolean adjustable)
+    {
+        this.adjustable=adjustable;
+        if(!adjustable)
+        {
+            datas.clear();
+
+        }
     }
 }
