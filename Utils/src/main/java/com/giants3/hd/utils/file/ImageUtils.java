@@ -1,5 +1,6 @@
 package com.giants3.hd.utils.file;
 
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 
 import javax.imageio.ImageIO;
@@ -115,4 +116,12 @@ public class ImageUtils {
         }
     }
 
+    public static boolean isPictureFile(String fileName) {
+
+
+        if(StringUtils.isEmpty(fileName)) return false;
+        String lowerCaseValue=fileName.toLowerCase();
+
+     return lowerCaseValue.endsWith(".jpg")||lowerCaseValue.endsWith(".jpeg")||lowerCaseValue.endsWith(".png")  ;
+    }
 }

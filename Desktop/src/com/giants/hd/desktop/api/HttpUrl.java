@@ -376,7 +376,7 @@ public class HttpUrl {
      */
     public static String loadQuotationFile(String name) {
 
-        return BaseUrl+"api/file/download/quotation?name="+ name ;
+        return BaseUrl+"api/file/download/quotation?name="+ UTF8UrlEncoder.encode(name) ;
     }
 
     public static String loadUsers() {

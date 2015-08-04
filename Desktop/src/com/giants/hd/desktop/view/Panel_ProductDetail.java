@@ -6,12 +6,15 @@ import com.giants.hd.desktop.dialogs.CopyProductDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.interf.ComonSearch;
+import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
+import com.giants.hd.desktop.widget.header.ColumnGroup;
+import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
@@ -29,6 +32,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
@@ -116,6 +120,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField jtf_mirror_size;
     private JButton btn_delete;
     private JTextArea ta_spec_cm;
+    private Panel_XK_Pack jp_pack;
 
 
     /**
@@ -236,13 +241,6 @@ public class Panel_ProductDetail extends BasePanel {
       // ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
 
 
-
-
-
-
-
-
-
     }
 
 
@@ -290,8 +288,6 @@ public class Panel_ProductDetail extends BasePanel {
                 productDetail.paints=productPaintModel.getDatas();
                 productDetail.packMaterials=packMaterialTableModel.getDatas();
                 productDetail.packWages=packWageTableModel.getDatas();
-
-
                 productDetail.updateProductStatistics();
                 bindStatisticsValue(productDetail.product);
 
@@ -525,6 +521,20 @@ public class Panel_ProductDetail extends BasePanel {
             }
         });
 
+
+
+        //咸康包装描述数据改变监听接口。
+        jp_pack.setDataChangeListener(new DataChangeListener<Xiankang>() {
+            @Override
+            public void onDataChanged(Xiankang data) {
+
+                productDetail.product.xiankang=data;
+                packMaterialTableModel.updateProduct();
+
+
+            }
+        });
+
     }
 
 
@@ -596,14 +606,11 @@ public class Panel_ProductDetail extends BasePanel {
         //是否咸康数据
 
         boolean isXiangkang = cb_xiankang.isSelected();
+        product.isXK=isXiangkang;
 
-        if (isXiangkang) {
-            product.xiankang=    panel_xiankang.getData();
+         product.xiankang=    panel_xiankang.getData();
 
-        }else
-        {
-            product.xiankang=null;
-        }
+
 
 
         //产品净重
@@ -612,7 +619,7 @@ public class Panel_ProductDetail extends BasePanel {
             float tf_weightValue = Float.valueOf(tf_weight.getText().trim());
             product.setWeight(tf_weightValue);
         } catch (Throwable t) {
-            t.printStackTrace();
+           // t.printStackTrace();
             product.setWeight(0);
         }
 
@@ -708,7 +715,6 @@ public class Panel_ProductDetail extends BasePanel {
 
         //检验输入
 
-
         if (StringUtils.isEmpty(productDetail.product.name)) {
             throw HdUIException.create(tf_product, "请输入货号。。。");
         }
@@ -738,17 +744,19 @@ public class Panel_ProductDetail extends BasePanel {
         bindStatisticsValue(product);
 
 
-        bindTableDatas(tb_assemble_cost,assembleMaterialTableModel, productDetail.assembleMaterials);
+        bindTableDatas(tb_assemble_cost, assembleMaterialTableModel, productDetail.assembleMaterials);
         bindTableDatas(tb_assemble_wage,assembleWageTableModel, productDetail.assembleWages);
 
         bindTableDatas(tb_conceptus_cost,conceptusMaterialTableModel, productDetail.conceptusMaterials);
-        bindTableDatas(tb_conceptus_wage,conceptusWageTableModel, productDetail.conceptusWages);
+        bindTableDatas(tb_conceptus_wage, conceptusWageTableModel, productDetail.conceptusWages);
 
-        bindTableDatas(tb_product_paint,productPaintModel, productDetail.paints);
+        bindTableDatas(tb_product_paint, productPaintModel, productDetail.paints);
 
 
-        bindTableDatas(tb_pack_cost,packMaterialTableModel, productDetail.packMaterials);
-        bindTableDatas(tb_pack_wage,packWageTableModel, productDetail.packWages);
+        bindTableDatas(tb_pack_cost, packMaterialTableModel, productDetail.packMaterials);
+        bindTableDatas(tb_pack_wage, packWageTableModel, productDetail.packWages);
+
+
 
     }
 
@@ -843,13 +851,16 @@ public class Panel_ProductDetail extends BasePanel {
             cb_pack.setSelectedIndex(0);
         cb_pack.addItemListener(cb_packItemListener);
 
-        boolean isXiangkang = product != null && product.xiankang != null;
+        boolean isXiangkang = product != null && product.isXK  ;
 
 
         cb_xiankang.setSelected(isXiangkang);
         panel_xiankang.setVisible(isXiangkang);
-        if (isXiangkang)
-            panel_xiankang.setData(product.xiankang);
+        jp_pack.setVisible(isXiangkang);
+         panel_xiankang.setData(product.xiankang);
+          jp_pack.setData(product.xiankang);
+
+
 
 
 
@@ -924,6 +935,7 @@ public class Panel_ProductDetail extends BasePanel {
         {
 
             productDetail=new ProductDetail();
+
             oldData=(ProductDetail) ObjectUtils.deepCopy(productDetail);
 
         }else
@@ -980,10 +992,6 @@ public class Panel_ProductDetail extends BasePanel {
         //咸康信息 默认不显示
         panel_xiankang.setVisible(false);
 
-
-
-
-
         /**
          * 表格弹出菜单回调接口
          */
@@ -1004,7 +1012,29 @@ public class Panel_ProductDetail extends BasePanel {
                         break;
                     case TablePopMenu.ITEM_PAST:
 
-                        handleClipBordDataToTable(tableModel, rowIndex[0]);
+
+
+
+                        try {
+                            tableModel.insertNewRows(TableDuplicateHelper.getBufferData(), rowIndex.length == 0 ? 0 : rowIndex[0]);
+                            TableDuplicateHelper.clear();
+                        }catch(Throwable t)
+                        {
+                            t.printStackTrace();
+                            JOptionPane.showMessageDialog(getRoot(),"数据格式不对， 不能黏贴。");
+                        }
+
+
+
+                       // handleCopyTableData(tableModel, rowIndex[0]);
+                        break;
+
+                    case TablePopMenu.ITEM_COPY:
+
+                        ObjectUtils.deepCopy(tableModel.getValuableDatas());
+                        TableDuplicateHelper.saveBufferData((List<Object>) ObjectUtils.deepCopy(tableModel.getValuableDatas()));
+//                        JOptionPane.showMessageDialog(getRoot(),"成功");
+                       // handleClipBordDataToTable(tableModel, rowIndex[0]);
                         break;
                 }
             }
@@ -1012,7 +1042,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         TableMouseAdapter adapter=new TableMouseAdapter(tableMenuLister);
-
         //设置表格点击监听
         tb_conceptus_cost.addMouseListener(adapter);
         tb_conceptus_wage.addMouseListener(adapter);
@@ -1165,6 +1194,7 @@ public class Panel_ProductDetail extends BasePanel {
             public void itemStateChanged(ItemEvent e) {
 
                 panel_xiankang.setVisible(cb_xiankang.isSelected());
+                jp_pack.setVisible(cb_xiankang.isSelected());
             }
         });
 
@@ -1187,6 +1217,8 @@ public class Panel_ProductDetail extends BasePanel {
 
         initListeners();
     }
+
+
 
 
 
@@ -1847,5 +1879,13 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
+    public void setData(Xiankang data) {
+    }
 
+    public void getData(Xiankang data) {
+    }
+
+    public boolean isModified(Xiankang data) {
+        return false;
+    }
 }

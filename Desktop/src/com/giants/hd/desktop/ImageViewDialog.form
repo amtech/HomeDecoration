@@ -7,21 +7,14 @@
     <properties/>
     <border type="none"/>
     <children>
-      <scrollpane id="b498a">
+      <component id="cfbc6" class="javax.swing.JLabel" binding="picture">
         <constraints border-constraint="Center"/>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="e41e7" class="javax.swing.JLabel" binding="picture">
-            <constraints/>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value=""/>
-            </properties>
-          </component>
-        </children>
-      </scrollpane>
+        <properties>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <text value=""/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

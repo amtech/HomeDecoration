@@ -183,21 +183,40 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <scrollpane id="78bd8">
+                  <grid id="b4d2f" layout-manager="FormLayout">
+                    <rowspec value="center:d:grow"/>
+                    <colspec value="fill:m:noGrow"/>
+                    <colspec value="fill:d:grow"/>
                     <constraints>
                       <tabbedpane title="材料"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="da1bd" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_pack_cost">
-                        <constraints/>
-                        <properties>
-                          <fillsViewportHeight value="true"/>
-                        </properties>
-                      </component>
+                      <scrollpane id="3ffb5">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <forms/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="7fcdd" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_pack_cost">
+                            <constraints/>
+                            <properties>
+                              <fillsViewportHeight value="true"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <nested-form id="a6e28" form-file="com/giants/hd/desktop/view/Panel_XK_Pack.form" binding="jp_pack">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                        </constraints>
+                      </nested-form>
                     </children>
-                  </scrollpane>
+                  </grid>
                   <scrollpane id="ddf9b">
                     <constraints>
                       <tabbedpane title="工资"/>

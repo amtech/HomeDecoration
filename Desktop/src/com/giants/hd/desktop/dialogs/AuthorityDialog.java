@@ -160,6 +160,7 @@ public class AuthorityDialog extends BaseDialog<Authority> {
                 public void onResult(RemoteData<Authority> data) {
                     if(data.isSuccess())
                     {
+                        JOptionPane.showMessageDialog(AuthorityDialog.this,"保存成功");
                         oldData= (java.util.List<Authority>) ObjectUtils.deepCopy(data.datas);
                         authorityModel.setDatas(data.datas);
                     }else

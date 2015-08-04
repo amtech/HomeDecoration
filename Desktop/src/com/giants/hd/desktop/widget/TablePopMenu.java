@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.widget;
 
+import com.giants.hd.desktop.local.TableDuplicateHelper;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.model.BaseTableModel;
 
@@ -21,6 +22,7 @@ public class TablePopMenu extends JPopupMenu {
 
     public static  final int ITEM_INSERT=1;
     public static  final int ITEM_DELETE=2;
+    public static final int ITEM_COPY=4;
     public static  final int ITEM_PAST=3;
 
     public TablePopMenu(JTable table,TableMenuLister lister)
@@ -36,23 +38,27 @@ public class TablePopMenu extends JPopupMenu {
 
         JMenuItem insertItem = new JMenuItem("添加行");
         JMenuItem deleteItem = new JMenuItem("删除行");
-        JMenuItem pastItem = new JMenuItem("黏贴");
+        JMenuItem copyItem = new JMenuItem("整表复制");
+        JMenuItem pastItem = new JMenuItem("整表黏贴");
         add(insertItem);
         add(deleteItem);
+        add(copyItem);
         add(pastItem);
+
+       // copyItem.setEnabled(!TableDuplicateHelper.hasBufferData());
+        pastItem.setEnabled(TableDuplicateHelper.hasBufferData());
+
         insertItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
 
-
-
-                int tableRow[]= JTableUtils.getSelectedRowSOnModel(table);
+                int tableRow[] = JTableUtils.getSelectedRowSOnModel(table);
                 if (table.getModel() instanceof BaseTableModel) {
                     BaseTableModel model = (BaseTableModel) table.getModel();
 
-                    if(lister!=null)
-                        lister.onTableMenuClick(ITEM_INSERT,model,tableRow);
+                    if (lister != null)
+                        lister.onTableMenuClick(ITEM_INSERT, model, tableRow);
                 }
 
 
@@ -75,6 +81,37 @@ public class TablePopMenu extends JPopupMenu {
                     if(lister!=null)
                         lister.onTableMenuClick(ITEM_DELETE,model,tableRow);
                 }
+
+
+            }
+        });
+
+
+        copyItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+
+
+
+
+                int modelIndex[] = JTableUtils.getSelectedRowSOnModel(table);
+
+                if (table.getModel() instanceof BaseTableModel) {
+                    BaseTableModel model = (BaseTableModel) table.getModel();
+                    if(lister!=null)
+                        lister.onTableMenuClick(ITEM_COPY ,model,modelIndex);
+
+
+
+                }
+
+
+
+
+
 
 
             }

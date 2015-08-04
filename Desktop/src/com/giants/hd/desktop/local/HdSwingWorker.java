@@ -11,13 +11,15 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
  * 自定义worker 类 封装 进度条等方法。
  */
 public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
-      LoadingDialog dialog ;
+      protected LoadingDialog dialog ;
 
 
 
@@ -43,6 +45,15 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
         });
     }
 
+
+
+
+    public void publishMessage(V... message)
+
+    {
+
+        publish(message);
+    }
 
     @Override
     protected void done() {
@@ -77,6 +88,10 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
     }
 
 
+    @Override
+    protected void process(List<V> chunks) {
+        super.process(chunks);
+    }
 
     private HdException getCauseException(Throwable t)
     {

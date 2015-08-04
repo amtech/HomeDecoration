@@ -188,11 +188,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 	@Basic
 	public float unitRatio=1;
 
-	/**
-	 * 包装位置的间隔 可选输入
-	 */
-	@Basic
-	public float gap;
+
 
 
 	public PackMaterialType getPackMaterialType() {
@@ -532,11 +528,11 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 
 					break;
-				case PackMaterialClass.CLASS_BAOLILONG:
+				case PackMaterialClass.CLASS_TESHU_BAOLILONG:
 					//TODO  保丽隆计算公式
 
 					//这个计算公式独立计算。即有关联其他材料进行计算  @link  updateJiaodaiQuota
-
+					break;
 
 				case PackMaterialClass.CLASS_QIPAODAI:
 
@@ -611,11 +607,11 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 			float boxQuota=0;
 			//装箱胶带用量
 			float newQuota=0;
-			String packName=product.pack==null?"":product.pack.name;
-			switch (packName)
+			int packIndex=product.pack==null?0:product.pack.pIndex;
+			switch (packIndex)
 			{
 				//折叠盒包装的胶带公式
-				case Pack.PACK_ZHEDIE:
+				case Pack.PACK_XIANKANG_ZHEDIE:
 
 					//不计算内盒胶带用量
 					boxQuota=0;
@@ -641,46 +637,102 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 
 					break;
+
+				//咸康加强的胶带公式
+				case Pack.PACK_XIANKANG_JIAQIANG_SHUAIXIANG:
+				case Pack.PACK_XIANKANG_PUTONG_SHUAIXIANG:
+
+
+					//不计算内盒胶带用量
+
+					//装箱数大于0
+					if(product.packQuantity>0) {
+						if (pWidth >= 20 && pLong < 80) {
+							newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 2) * quantity / 100f;
+						}
+						else if (pWidth >= 20 && pLong >= 80) {
+							newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4+ (pWidth + 20) * 4) * quantity / 100f;
+						}
+						else if (pWidth < 20 && pLong < 80) {
+							newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4+ (pWidth + 20) * 2) * quantity / 100f;
+						} else   {
+							newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 8) * quantity / 100f;
+						}
+
+					}
+
+					//内盒胶带用量
+					if(boxQuantity>0)
+					{
+
+						if(pLong<80&&pWidth>=20)
+						{
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
+						}else
+						if(pLong>=80&&pWidth>=20)
+						{
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*2)*boxQuantity/100f;
+						}else
+						if(pWidth<20&&pLong<80)
+						{
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*2)*boxQuantity/100f;
+						}else
+
+						{
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*8)*boxQuantity/100f;
+						}
+
+
+
+					}
+
+
+
+
+
+				break;
+
+
 				//默认普通公式
 				default:
 
-			//计算内盒胶带用量
-			if(boxQuantity>0)
-			{
-				if(pLong<80&&pWidth>=20)
-				{
-					boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
-				}else
-					if(pLong>=80&&pWidth>=20)
+					//计算内盒胶带用量
+					if(boxQuantity>0)
 					{
-						boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*2)*boxQuantity/100f;
-					}else
-					if(pWidth<20&&pLong<80)
-					{
-						boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
-					}else
-						if(pLong>=80&&pWidth<20)
+						if(pLong<80&&pWidth>=20)
 						{
-							boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*4)*boxQuantity/100f;
+							boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
+						}else
+							if(pLong>=80&&pWidth>=20)
+							{
+								boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*2)*boxQuantity/100f;
+							}else
+							if(pWidth<20&&pLong<80)
+							{
+								boxQuota=((boxLong+20)*2+(boxWidth+10)*4)*boxQuantity/100f;
+							}else
+								if(pLong>=80&&pWidth<20)
+								{
+									boxQuota=((boxLong+20)*2+(boxWidth+10)*4+(boxWidth+20)*4)*boxQuantity/100f;
+								}
+
+					}
+					//装箱数大于0
+					if(product.packQuantity>0) {
+							if (pWidth >= 20 && pLong < 80) {
+								newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4) * quantity / 100f;
+							} else if (pWidth >= 20 && pLong >= 80) {
+								newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 2) * quantity / 100f;
+							} else if (pWidth < 20 && pLong < 80) {
+								newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4) * quantity / 100f;
+							} else if (pWidth < 20 && pLong >= 80) {
+								newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 4) * quantity / 100f;
+							}
+
 						}
 
-			}
- 			//装箱数大于0
-	 		if(product.packQuantity>0) {
-					if (pWidth >= 20 && pLong < 80) {
-						newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4) * quantity / 100f;
-					} else if (pWidth >= 20 && pLong >= 80) {
-						newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 2) * quantity / 100f;
-					} else if (pWidth < 20 && pLong < 80) {
-						newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4) * quantity / 100f;
-					} else if (pWidth < 20 && pLong >= 80) {
-						newQuota = ((pLong + 20) * 2 + (pWidth + 10) * 4 + (pWidth + 20) * 4) * quantity / 100f;
+
 					}
-
-				}
-
-
-			}
 
 
 
@@ -710,20 +762,78 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 	/**
 	 * 更新保丽龙的材料成本
 	 */
-	public void updateBAOLILONGQuota(Product product,ProductMaterial waixiang,float  gapFront,float gapBetween)
+	public void updateBAOLILONGQuota(Product product,ProductMaterial waixiang )
 	{
 
 		float waixiangLong=waixiang.pLong;
 		float waixiangWidth=waixiang.pWidth;
 		float waixiangHeight=waixiang.pHeight;
+		Xiankang xiankang=product.xiankang;
+
 		int unitSize=1;
 		try {
 			unitSize=Integer.valueOf(product.pUnitName.substring(product.pUnitName.lastIndexOf("/") +1 ));
 		}catch (Throwable t)
 		{}
-		float newQuota=0;
 
-			newQuota=	waixiangLong*waixiangHeight/10000*2.54f/100f*(gapFront+gapBetween*(unitSize-1));
+		float newQuota=0;
+		int packIndex=product.pack==null?0:product.pack.pIndex;
+		switch (packIndex)
+		{
+
+				//折叠盒包装的胶带公式
+				case Pack.PACK_XIANKANG_ZHEDIE:
+
+
+
+					newQuota=	waixiangLong*waixiangHeight/10000*2.54f/100f*(xiankang.pack_front+xiankang.pack_middle*(unitSize-1));
+					break;
+
+			//咸康加强的胶带公式
+			case Pack.PACK_XIANKANG_JIAQIANG_SHUAIXIANG:
+			case Pack.PACK_XIANKANG_PUTONG_SHUAIXIANG:
+				//newQuota=	waixiangLong*waixiangHeight/10000*2.54f/100f*(xiankang.pack_front+xiankang.pack_middle*(unitSize-1));
+				if(xiankang.pack_perimeter>0&&xiankang.pack_front_back>0&&xiankang.pack_middle>0)
+				{
+					newQuota=	waixiangLong*waixiangWidth/10000f*xiankang.pack_perimeter*2.54f/100f*2
+							+waixiangHeight*waixiangWidth/10000f*xiankang.pack_perimeter*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_front_back*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_middle*2.54f/100f*(unitSize-1);
+				}else
+				if(xiankang.pack_perimeter>0&&xiankang.pack_front_back>0)
+				{
+
+					newQuota=	waixiangLong*waixiangWidth/10000f*xiankang.pack_perimeter*2.54f/100f*2
+							+waixiangHeight*waixiangWidth/10000f*xiankang.pack_perimeter*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_front_back*2.54f/100f*2;
+				}else
+				if(xiankang.pack_cube>0&&xiankang.pack_middle>0)
+				{
+					newQuota=	waixiangLong*waixiangWidth/10000f*xiankang.pack_cube*2.54f/100f*2
+							+waixiangHeight*waixiangWidth/10000f*xiankang.pack_cube*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_cube*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_middle*2.54f/100f*(unitSize-1);
+				}else
+				if(xiankang.pack_cube>0)
+				{
+					newQuota=		waixiangLong*waixiangWidth/10000f*xiankang.pack_cube*2.54f/100f*2
+							+waixiangHeight*waixiangWidth/10000f*xiankang.pack_cube*2.54f/100f*2
+							+waixiangLong*waixiangHeight/10000f*xiankang.pack_cube*2.54f/100f*2;
+				}
+
+
+
+				break;
+
+
+			default:
+
+				 newQuota=0;
+
+
+		}
+
+
 		 quota=newQuota;
 		updateAmount();
 
@@ -785,7 +895,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 		if (Float.compare(that.wHeight, wHeight) != 0) return false;
 		if (Float.compare(that.available, available) != 0) return false;
 
-		if (Float.compare(that.gap, gap) != 0) return false;
+
 		if (type != that.type) return false;
 		if (Float.compare(that.price, price) != 0) return false;
 		if (Float.compare(that.amount, amount) != 0) return false;
@@ -839,7 +949,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 		result = 31 * result + (className != null ? className.hashCode() : 0);
 		result = 31 * result + (classId != null ? classId.hashCode() : 0);
 		result = 31 * result + (unitRatio != +0.0f ? Float.floatToIntBits(unitRatio) : 0);
-		result = 31 * result + (gap != +0.0f ? Float.floatToIntBits(gap) : 0);
+
 		return result;
 	}
 
@@ -854,11 +964,5 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 	}
 
-	public void setGap(float gap) {
-		this.gap = gap;
-	}
 
-	public float getGap() {
-		return gap;
-	}
 }

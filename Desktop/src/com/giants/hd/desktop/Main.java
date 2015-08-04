@@ -134,6 +134,8 @@ public class Main extends JFrame {
         UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[MouseOver+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
         UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter", new BackgroundPainter(Color.RED));
         UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TabbedPane:TabbedPaneTab[Selected].backgroundPainter", new BackgroundPainter(Color.RED));
+        UIManager.getLookAndFeelDefaults().put("TableHeader.cellBorder", BorderFactory.createLineBorder(Color.LIGHT_GRAY));
     }
 
 
@@ -144,6 +146,7 @@ public class Main extends JFrame {
     {
         final Main frame = new Main();
 
+      //  frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon_confused.gif"));
 
 
 

@@ -20,6 +20,10 @@ public class LoadingDialog extends JDialog {
 	public static final String DEFAULT_MESSAGE="正在处理中...";
 
 
+	JLabel messageLable;
+
+
+
 	public LoadingDialog(Window owner,
 						 ActionListener cancleListener) {
 		super(owner);
@@ -52,8 +56,8 @@ public class LoadingDialog extends JDialog {
 		setModal(true);
 		final JPanel mainPane = new JPanel(null);
 		JProgressBar progressBar = new JProgressBar();
-		JLabel lbStatus = new JLabel("" + message);
-		lbStatus.setHorizontalAlignment(JLabel.CENTER);
+		messageLable = new JLabel("" + message);
+		messageLable.setHorizontalAlignment(JLabel.CENTER);
 		JButton btnCancel = new JButton("Cancel");
 		progressBar.setIndeterminate(true);
 		btnCancel.addActionListener(new ActionListener() {
@@ -67,7 +71,7 @@ public class LoadingDialog extends JDialog {
 		});
 		mainPane.setLayout(new BorderLayout());
 		mainPane.add(progressBar,BorderLayout.NORTH);
-		mainPane.add(lbStatus,BorderLayout.CENTER);
+		mainPane.add(messageLable,BorderLayout.CENTER);
 		  mainPane.add(btnCancel,BorderLayout.SOUTH);
 		  mainPane.setBackground(Color.white);
 		getContentPane().add(mainPane);
@@ -77,6 +81,12 @@ public class LoadingDialog extends JDialog {
 		setLocationRelativeTo(getParent()); // 设置此窗口相对于指定组件的位�?
 		 setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
 
+	}
+
+	public void setMessage(String message)
+	{
+
+		messageLable.setText(message);
 	}
 
 }

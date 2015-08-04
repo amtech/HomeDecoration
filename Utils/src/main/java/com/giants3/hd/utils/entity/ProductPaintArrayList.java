@@ -25,7 +25,7 @@ public class ProductPaintArrayList extends ArrayList<ProductPaint> {
         for(ProductPaint paint:this)
         {
 
-            if(!ProductProcess.XISHUA.equals(paint.processName))
+            if( paint.processName==null|| !paint.processName.contains(ProductProcess.XISHUA)  )
             {
                 if(paint.materialId>0)
                     totalIngredientQuantity+=paint.ingredientQuantity;

@@ -16,10 +16,20 @@ import java.io.Serializable;
 public class Pack  implements Serializable {
 
 
+
+
 	/**
-	 * 折叠包装常量
+	 * 折叠包装常量  （咸康普通）
 	 */
-	public static final String PACK_ZHEDIE="折叠盒包装";
+	public  static final int PACK_XIANKANG_ZHEDIE=5;
+	/**
+	 * 折叠普通摔箱常量 （咸康加强）
+	 */
+	public static final int PACK_XIANKANG_PUTONG_SHUAIXIANG=6;
+	/**
+	 * 折叠加强摔箱常量  （咸康加强）
+	 */
+	public static final int PACK_XIANKANG_JIAQIANG_SHUAIXIANG=7;
 
 	/**
 	 * 包装类型id
@@ -34,6 +44,14 @@ public class Pack  implements Serializable {
 	@Basic
 	public String name;
 
+
+
+
+	/**
+	 * 序号id
+	 */
+	@Basic
+	public int pIndex;
 
 	public long getId() {
 		return id;

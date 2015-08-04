@@ -1,7 +1,6 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -198,9 +198,19 @@ public class Product implements Serializable {
 	public float conceptusWage;
 
 
+	/**
+	 * 是否咸康信息
+	 */
+	@Basic
+	public boolean isXK=false;
+
 
 	@OneToOne(cascade={CascadeType.ALL})
 	public Xiankang xiankang;
+
+
+
+
 
 
 	/**
@@ -731,6 +741,7 @@ public class Product implements Serializable {
 		if (spec != null ? !spec.equals(product.spec) : product.spec != null) return false;
 		if (pVersion != null ? !pVersion.equals(product.pVersion) : product.pVersion != null) return false;
 		if (constitute != null ? !constitute.equals(product.constitute) : product.constitute != null) return false;
+		if (isXK != product.isXK) return false;
 		if (xiankang != null ? !xiankang.equals(product.xiankang) : product.xiankang != null) return false;
 		return !(mirrorSize != null ? !mirrorSize.equals(product.mirrorSize) : product.mirrorSize != null);
 

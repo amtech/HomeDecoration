@@ -5,10 +5,14 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants.hd.desktop.frames.QuotationDetailFrame;
+import com.giants.hd.desktop.frames.QuotationXKDetailFrame;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.model.QuotationItemXKTableModel;
 import com.giants.hd.desktop.model.QuotationTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.header.ColumnGroup;
+import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
@@ -16,6 +20,8 @@ import com.giants3.hd.utils.entity.Quotation;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 import java.awt.event.*;
 
 /**
@@ -28,6 +34,7 @@ public class Panel_Quotation extends BasePanel{
     private JButton btn_add;
     private JHdTable tb;
     private Panel_Page pagePanel;
+    private JButton btn_add_xiankang;
 
 
     @Inject
@@ -41,7 +48,7 @@ public class Panel_Quotation extends BasePanel{
     {
 
 
-        tb.setModel(tableModel);
+       tb.setModel(tableModel);
 
 
         init();
@@ -85,7 +92,16 @@ public class Panel_Quotation extends BasePanel{
                 if (e.getClickCount() == 2) {
 
                     Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
-                    JFrame frame = new QuotationDetailFrame(quotation);
+                    if (quotation.id <= 0)
+                        return;
+                    JFrame frame;
+                    if (quotation.quotationTypeId == 2) {
+                        frame = new QuotationXKDetailFrame(quotation);
+
+                    } else {
+                        frame = new QuotationDetailFrame(quotation);
+                    }
+
                     frame.setLocationRelativeTo(getRoot());
                     frame.setVisible(true);
                 }
@@ -102,6 +118,20 @@ public class Panel_Quotation extends BasePanel{
 
 
                 JFrame frame = new QuotationDetailFrame();
+                frame.setLocationRelativeTo(getRoot());
+                frame.setVisible(true);
+
+            }
+        });
+
+
+
+        btn_add_xiankang.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                JFrame frame = new QuotationXKDetailFrame();
                 frame.setLocationRelativeTo(getRoot());
                 frame.setVisible(true);
 
@@ -158,4 +188,6 @@ public class Panel_Quotation extends BasePanel{
 
 
     }
+
+
 }

@@ -10,16 +10,12 @@ import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.utils.ExportHelper;
-import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -29,8 +25,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * 报价单详情
@@ -57,7 +51,7 @@ public class Panel_QuotationDetail extends BasePanel {
     ApiManager apiManager;
 
 
-    @Inject
+
     QuotationItemTableModel model;
 
 
@@ -70,7 +64,7 @@ public class Panel_QuotationDetail extends BasePanel {
     }
 
     private void init() {
-
+        model=new QuotationItemTableModel();
         tb.setModel(model);
 
 
@@ -320,10 +314,10 @@ public class Panel_QuotationDetail extends BasePanel {
         }
         cb_currency.setSelectedIndex(index);
 
-
+        ta_memo.setText(quotation.memo);
 
         model.setDatas(data.items);
-         tb.setModel(model);
+
 
 
     }

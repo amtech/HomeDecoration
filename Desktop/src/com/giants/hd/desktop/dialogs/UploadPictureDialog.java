@@ -6,7 +6,9 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_UploadPicture;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -14,6 +16,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.*;
+import java.util.List;
 
 /**
  * 图片批量上传对话框
@@ -68,15 +72,21 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
 
 
 
-                    new HdSwingWorker<Void,Object>(UploadPictureDialog.this)
+                    new HdSwingWorker<Void,String>(UploadPictureDialog.this)
                     {
 
                         @Override
                         protected RemoteData<Void> doInBackground() throws Exception {
 
-                             uploadFile(file,0,doesOverride);
+                             uploadFile(file,0,doesOverride,this);
 
                             return new RemoteData<Void>();
+                        }
+
+                        @Override
+                        protected void process(List<String> chunks) {
+
+                            dialog.setMessage(chunks.get(0));
                         }
 
                         @Override
@@ -113,16 +123,23 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
                     final  boolean doesOverride=panel_uploadPicture.cb_productReplace.isSelected();
 
 
-                new HdSwingWorker<Void,Object>(UploadPictureDialog.this)
+                new HdSwingWorker<Void,String>(UploadPictureDialog.this)
                 {
 
                     @Override
                     protected RemoteData<Void> doInBackground() throws Exception {
 
-                             uploadFile(file,1,doesOverride);
+                           uploadFile(file, 1, doesOverride,this);
+
                         return new RemoteData<Void>();
 
 
+                    }
+
+                    @Override
+                    protected void process(List<String> chunks) {
+
+                        dialog.setMessage(chunks.get(0));
                     }
 
                     @Override
@@ -191,7 +208,7 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
      * @param file
      * @throws HdException
      */
-    private void uploadFile(File file,int type,boolean doesOverride) throws HdException {
+    private void uploadFile(File file,int type,boolean doesOverride,HdSwingWorker<Void,String> swingWorker) throws HdException {
         if(file.isDirectory())
         {
 
@@ -200,19 +217,30 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
             for (int i = 0; i < childFiles.length; i++) {
 
 
+                    if(childFiles[i].getName().lastIndexOf(".jpg")>1)
 
-                    uploadFile(childFiles[i],type,doesOverride);
+                        if(ImageUtils.isPictureFile(childFiles[i].getName()))
+                    uploadFile(childFiles[i],type,doesOverride,swingWorker);
 
             }
 
         }else
         {
-            if( type==1)  apiManager.uploadProductPicture(file,doesOverride);
+            RemoteData result=null;
+            if( type==1)
+                result=apiManager.uploadProductPicture(file,doesOverride);
                 else
-                apiManager.uploadMaterialPicture(file, doesOverride);
+                result=apiManager.uploadMaterialPicture(file, doesOverride);
+
+            swingWorker.publishMessage(result.message);
+
+
         }
 
 
     }
+
+
+
 
 }

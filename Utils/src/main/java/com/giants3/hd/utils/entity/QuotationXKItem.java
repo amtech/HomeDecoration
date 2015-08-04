@@ -8,18 +8,15 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * 报价明细列表
+ * 咸康报价明细列表
  */
-@Entity(name="T_QuotationItem")
-public class QuotationItem implements Serializable,Valuable {
+@Entity(name="T_QuotationXKItem")
+public class QuotationXKItem implements Serializable,Valuable {
 
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     public long id;
-
-
-
 
 
     /**
@@ -30,7 +27,6 @@ public class QuotationItem implements Serializable,Valuable {
 
 
     /**
-     *
      */
     @Basic
     public String productName;
@@ -116,13 +112,142 @@ public class QuotationItem implements Serializable,Valuable {
     public String mirrorSize;
 
 
-    @Basic
-    public long quotationId;
+
+
+
+
 
 
     @Basic
 
     public String memo;
+
+
+/**
+ * 以下是第二个货号属性  普通包装 --》  加强包装
+ */
+
+
+    /**
+     *
+     */
+    @Basic
+    public long productId2=-1;
+
+
+    /**
+     *
+     */
+    @Basic
+    public String productName2;
+
+    @Lob  @Basic
+    public byte[]  productPhoto2;
+
+
+    @Basic
+    public String pVersion2;
+
+    @Basic
+    public int  inBoxCount2;
+
+
+    /**
+     * 包装箱数
+     */
+    @Basic
+    public int packQuantity2;
+
+
+    /**
+     * 箱子规格
+     */
+    @Basic
+    public String packageSize2;
+
+
+    /**
+     * 单位
+     */
+    @Basic
+    public String unit2;
+
+    /**
+     * 成本价
+     */
+    @Basic
+    public float cost2;
+
+
+    /**
+     * 单价
+     */
+    @Basic
+    public float price2;
+
+
+
+    /**
+     * 立方数
+     */
+    @Basic
+    public float volumeSize2;
+    /**
+     *净重
+     */
+    @Basic
+    public float weight2;
+
+
+
+    /**
+     *货品规格
+     */
+    @Basic
+    public String spec2;
+
+
+
+    /**
+     *材质
+     */
+    @Basic
+    public String constitute2;
+
+
+    /**
+     *镜面尺寸
+     */
+    @Basic
+    public String mirrorSize2;
+
+
+
+
+
+
+
+
+    @Basic
+
+    public String memo2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Basic
+    public long quotationId;
 
     public void updateProduct(Product product) {
 
@@ -147,6 +272,35 @@ public class QuotationItem implements Serializable,Valuable {
         mirrorSize=product.mirrorSize;
         memo=product.memo;
 
+        updateProduct2(null);
+
+
+    }
+
+
+    public void updateProduct2(Product product) {
+
+
+        productId2=product==null?0:product.id;
+        productPhoto2=product==null?null:product.photo;
+        productName2=product==null?"":product.name;
+        pVersion2=product==null?"":product.pVersion;
+        inBoxCount2=product==null?0:product.insideBoxQuantity;
+        packQuantity2=product==null?0:product.packQuantity;
+        packageSize2=product==null?"":StringUtils.combineNumberValue(product.packLong, product.packWidth, product.packHeight);
+
+
+        unit2=product==null?"":product.pUnitName;
+        cost2=product==null?0:product.cost;
+        price2=product==null?0:product.fob;
+
+        volumeSize2=product==null?0:product.getPackVolume();
+        weight2=product==null?0:product.weight;
+        spec2=product==null?"":product.spec;
+        constitute2=product==null?"":product.constitute;
+        mirrorSize2=product==null?"":product.mirrorSize;
+        memo2=product==null?"":product.memo;
+
 
     }
 
@@ -159,9 +313,9 @@ public class QuotationItem implements Serializable,Valuable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof QuotationItem)) return false;
+        if (!(o instanceof QuotationXKItem)) return false;
 
-        QuotationItem item = (QuotationItem) o;
+        QuotationXKItem item = (QuotationXKItem) o;
 
         if (id != item.id) return false;
         if (productId != item.productId) return false;

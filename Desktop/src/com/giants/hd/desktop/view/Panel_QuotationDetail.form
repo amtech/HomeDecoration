@@ -12,7 +12,7 @@
     <rowspec value="center:60px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
-    <rowspec value="center:m:grow"/>
+    <rowspec value="center:m:noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:30px:grow"/>

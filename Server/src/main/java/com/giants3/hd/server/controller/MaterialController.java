@@ -82,7 +82,8 @@ public class MaterialController extends BaseController {
 
     public MaterialController() {
 
-        materialObjectPool= PoolCenter.getObjectPool(Material.class);
+        materialObjectPool= PoolCenter.getObjectPool(Material.class)
+        ;
 
     }
 
@@ -174,7 +175,7 @@ public class MaterialController extends BaseController {
         if(oldData==null)
         {
             Material material=materialObjectPool.newObject();
-
+            material.id=-1;
             convert(material,prdt);
             materialRepository.save(material);
           materialObjectPool.release(material);
@@ -214,8 +215,11 @@ public class MaterialController extends BaseController {
         ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
 
         List<Prdt>  datas=repository.list();
+
+
         manager.close();
         int size=datas.size();
+        Logger.getLogger("TEST").info("syncErp total  material size :"+size);
 
         List<MaterialClass> materialClasses=materialClassRepository.findAll();
 
@@ -227,14 +231,16 @@ public class MaterialController extends BaseController {
             int length=prdt.prd_no.length();
             if(length<5 ) continue;
             if(prdt.prd_no.startsWith("C")||prdt.prd_no.startsWith("c"))
-                classId  =prdt.prd_no.substring(1,4);
+                classId  =prdt.prd_no.substring(1,5);
                     else
                 classId  =prdt.prd_no.substring(0,4);
 
 
+            boolean  foundClass=false;
             for(MaterialClass materialClass:materialClasses)
             {
 
+                foundClass=false;
                 if(materialClass.code.equals(classId))
                 {
                     //数据附加
@@ -246,9 +252,12 @@ public class MaterialController extends BaseController {
                     prdt.classId=materialClass.code;
                     prdt.className=materialClass.name;
                     prdt.type=materialClass.type;
+                    foundClass=true;
                     break;
                 }
             }
+            if(!foundClass)
+                Logger.getLogger("TEST").info("material :"+prdt.prd_no+" didnot found its class :"+classId);
 
             savePrdt(prdt);
         }

@@ -12,9 +12,9 @@ import javax.swing.*;
  */
 
 public class QuotationTableModel extends BaseTableModel<Quotation> {
-    public static String[] columnNames = new String[]{"报价日期", "报价单号","客户", "有效日期","币别", "业务员" ,"备注"};
-    public static String[] fieldName = new String[]{"qDate",       "qNumber", "customerName", "vDate", "currency", "salesman","memo"};
-    public static int[] columnWidths = new int []{      120,              100,             100,    120,     80,          100,    ConstantData.MAX_COLUMN_WIDTH };
+    public static String[] columnNames = new String[]{"报价日期", "报价单号","客户", "有效日期","币别", "业务员" ,"报价类型","备注"};
+    public static String[] fieldName = new String[]{"qDate",       "qNumber", "customerName", "vDate", "currency", "salesman","quotationTypeName","memo"};
+    public static int[] columnWidths = new int []{      120,              100,             100,    120,     80,          100,   120, ConstantData.MAX_COLUMN_WIDTH };
 
 
     public  static Class[] classes = new Class[]{Object.class, Object.class, Object.class, Object.class, Object.class, Object.class};

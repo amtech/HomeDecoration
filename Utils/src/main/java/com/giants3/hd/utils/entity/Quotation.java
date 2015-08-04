@@ -80,6 +80,19 @@ public class Quotation  implements Serializable {
     public  String  memo="";
 
 
+    /**
+     * 报价类别  普通 咸康
+     */
+    @Basic
+    public long quotationTypeId;
+
+    /**
+     * 报价类别  普通 咸康
+     */
+    @Basic
+    public String quotationTypeName;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

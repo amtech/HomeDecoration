@@ -3,11 +3,13 @@ package com.giants.hd.desktop.model;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.Flow;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -159,5 +161,15 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
         productMaterial.id= -RandomUtils.nextInt();
         return productMaterial;
+    }
+
+    @Override
+    public void insertNewRows(List<ProductMaterial> insertDatas, int index) {
+
+        for(ProductMaterial material:insertDatas)
+        {
+            material.id=-1;
+        }
+        super.insertNewRows(insertDatas, index);
     }
 }

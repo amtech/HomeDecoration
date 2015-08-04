@@ -20,12 +20,12 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
       static final String COLUMN_AMOUNT = "amount";
 
-    public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ","间隔","  物料编码   ", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static int[] columnWidths = new int []{       30 ,   80,              60,             60,       40 ,    100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
-     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","gap","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
-    public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class,String.class,Material.class, Material.class };
+    public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ",   "  物料编码   ", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{       40 ,   80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
+    public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class, Material.class, Material.class };
 
-    public  static boolean[] editables = new boolean[]{false,true, true, true,true,true, true, true, true, true, true,false,false,false , false, false, true, false,false,true,true };
+    public  static boolean[] editables = new boolean[]{false,true, true, true,  true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
 
     private Product product;
 
@@ -74,6 +74,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         super.setValueAt(aValue, rowIndex, columnIndex);
 
         ProductMaterial material=getItem(rowIndex);
+        float floatValue=0;
+        try {
+            floatValue =   Float.valueOf(aValue.toString());
+        }catch (Throwable t)
+        {
+
+        }
 
         switch (columnIndex)
         {
@@ -82,6 +89,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
             case 1:
                 //设置包装材料大类型
                 material.setPackMaterialClass((PackMaterialClass) aValue);
+                material.update();
                 updateProduct();
                 break;
 
@@ -101,50 +109,45 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 break;
 
 
-            case 4:
-                //设置间距
-                material.setGap(Float.valueOf(aValue.toString()));
-                updateProduct();
+
+            case 6:
+                //设置用量
+                material.setQuantity(floatValue);
+                material.update();
 
                 break;
+
+
             case 7:
-                //设置用量
-                material.setQuantity(Float.valueOf(aValue.toString()));
+                //设置长
+                material.setpLong(floatValue);
                 material.update();
 
                 break;
 
 
             case 8:
-                //设置长
-                material.setpLong(Float.valueOf(aValue.toString()));
+                //设置宽
+                material.setpWidth(floatValue);
                 material.update();
 
                 break;
-
 
             case 9:
-                //设置宽
-                material.setpWidth(Float.valueOf(aValue.toString()));
-                material.update();
-
-                break;
-
-            case 10:
                 //设置高
-                material.setpHeight(Float.valueOf(aValue.toString()));
+                material.setpHeight(floatValue);
                 material.update();
 
                 break;
 
-            case 16:
+            case 15:
                 //设置高
-                material.setAvailable(Float.valueOf(aValue.toString()));
+                material.setAvailable(floatValue);
                 material.update();
 
                 break;
 
-            case 20:
+            case 19:
                 //设置备注
                 material.setMemo( aValue.toString());
                 break;
@@ -156,12 +159,12 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
         //检查包装
-        //如果是内盒
-        //找出胶带 更新胶带信息
+
         if(material.getPackMaterialClass()!=null) {
             switch (material.getPackMaterialClass().name) {
 
-
+                //如果是内盒
+                //找出胶带 更新胶带信息
                 case PackMaterialClass.CLASS_INSIDE_BOX:
 
                     for (ProductMaterial productMaterial : datas) {
@@ -210,6 +213,63 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
                     break;
 
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_BOX:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundBaolilong=null;
+                    for (ProductMaterial productMaterial : datas) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_TESHU_BAOLILONG)) {
+                                foundBaolilong=productMaterial;
+                                foundBaolilong.updateBAOLILONGQuota(product, material);
+                                int relateIndex=datas.indexOf(productMaterial);
+                                fireTableRowsUpdated(relateIndex,relateIndex);
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+
+
+                    break;
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundWaixiang=null;
+                    for (ProductMaterial productMaterial : datas) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_BOX)) {
+                                foundWaixiang=productMaterial;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                    if(foundWaixiang!=null)
+                        material.updateBAOLILONGQuota(product, foundWaixiang);
+
+
+                    break;
+
             }
 
         }
@@ -242,7 +302,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         }
 
 
-        fireTableRowsUpdated(rowIndex,rowIndex);
+        fireTableRowsUpdated(rowIndex, rowIndex);
 
     }
 
@@ -251,10 +311,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public ProductMaterial addNewRow(int index) {
         ProductMaterial p=     super.addNewRow(index);
 
-
-
             p.id= -RandomUtils.nextInt();
-
         //包装的计算公式不一致  需要在本地标记类型id
         p.setFlowId(Flow.FLOW_PACK);
         return p;
@@ -301,8 +358,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         //找出保丽隆
         List<ProductMaterial> baolilongs=new ArrayList<>();
 
-        float gapFront=0;
-        float gapBetween=0;
+
 
         for (int i = 0; i < size; i++) {
             ProductMaterial material=datas.get(i);
@@ -326,7 +382,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                     jiaodais.add(material);
                     break;
 
-                case PackMaterialClass.CLASS_BAOLILONG:
+                case PackMaterialClass.CLASS_TESHU_BAOLILONG:
 
                     baolilongs.add(material);
                     break;
@@ -335,39 +391,22 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
 
-            //查找特定间隔值
-            //前部
-            //中间
-            PackMaterialPosition position=material.getPackMaterialPosition();
-            if(position!=null)
-            {
-                switch (position.name)
-                {
-                    case PackMaterialPosition.BETWEEN:
-                        gapBetween=material.gap;
-
-                        break;
-
-                    case PackMaterialPosition.FRONT:
-                        gapFront=material.gap;
-
-                        break;
-                }
-            }
 
 
 
 
         }
 
+        if(neihe!=null)
             for(ProductMaterial jiaodai:jiaodais)
               jiaodai.updateJiaodaiQuota(product,neihe);
 
 
-        for(ProductMaterial baolilong:baolilongs)
-        {
-            baolilong.updateBAOLILONGQuota(product, waixiang,gapFront,gapBetween);
-        }
+        if(waixiang!=null)
+            for(ProductMaterial baolilong:baolilongs)
+            {
+                baolilong.updateBAOLILONGQuota(product, waixiang);
+            }
 
 
 
@@ -382,5 +421,16 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
         fireTableDataChanged();
 
+    }
+
+    @Override
+    public void insertNewRows(List<ProductMaterial> insertDatas, int index) {
+
+        for(ProductMaterial material:insertDatas)
+        {
+            material.id=-1;
+            material.flowId=Flow.FLOW_PACK;
+        }
+        super.insertNewRows(insertDatas, index);
     }
 }

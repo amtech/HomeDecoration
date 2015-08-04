@@ -6,29 +6,19 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -303,7 +293,7 @@ public class ProductController extends BaseController {
 
         if (productDetail.paints != null) {
             //保存油漆数据
-            List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(productId);
+             List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(productId);
             //查找旧记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
             for (ProductPaint oldPaint : oldPaints) {
                 boolean exist = false;
@@ -436,7 +426,7 @@ public class ProductController extends BaseController {
             boolean exist = false;
             for (ProductMaterial newData : materials) {
 
-                if (oldData.getId() == newData.id) {
+                if (oldData.getId() == newData.id ) {
                     exist = true;
                     break;
                 }

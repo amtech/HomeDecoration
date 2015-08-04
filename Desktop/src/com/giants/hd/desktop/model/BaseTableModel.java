@@ -166,9 +166,8 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
              this.datas.addAll(newDatas);
          adjustRowCount();
 
+          fireTableDataChanged();
 
-       // fireTableStructureChanged();
-         fireTableDataChanged();
     }
 
     @Override
@@ -276,6 +275,17 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     }
 
+
+    /**
+     * 插入新数据
+     * @param insertDatas
+     * @param index
+     */
+    public void insertNewRows(List<T> insertDatas,int index)
+    {
+        datas.addAll(index,insertDatas);
+        fireTableDataChanged();
+    }
 
 
     /**

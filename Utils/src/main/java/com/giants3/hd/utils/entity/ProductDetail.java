@@ -15,6 +15,7 @@ public class ProductDetail  implements Serializable {
     public ProductDetail() {
 
         product=new Product();
+        product.xiankang=new Xiankang();
         conceptusMaterials=new ArrayList<>();
         assembleMaterials=new ArrayList<>();
         paints=new ArrayList<>();

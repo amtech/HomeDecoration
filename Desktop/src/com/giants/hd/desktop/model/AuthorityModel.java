@@ -11,12 +11,12 @@ import com.google.inject.Inject;
  */
 public class AuthorityModel extends  BaseTableModel<Authority> {
 
-    public static String[] columnNames = new String[]{    "模块名称 ", "添加", "修改"  ,"" };
-    public static int[] columnWidth=new int[]{   200,       80, 80 ,ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{    "模块名称 ", "添加", "修改"  ,"删除","导入","导出","审核" };
+    public static int[] columnWidth=new int[]{   200,       40, 40 ,40, 40 ,40, 40  };
 
-    public static String[] fieldName = new String[]{ "module", "addable",  "editable",""};
+    public static String[] fieldName = new String[]{ "module", "addable",  "editable","deletable","importable","exportable","checkable"};
 
-    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class };
+    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class, Boolean.class, Boolean.class ,Boolean.class, Boolean.class };
 
 
     @Inject
@@ -53,11 +53,24 @@ public class AuthorityModel extends  BaseTableModel<Authority> {
         {
 
             case 1:
-            authority.addable=true;
+            authority.addable=booleanValue;
             break;
             case 2:
-                authority.editable=true;
+                authority.editable=booleanValue;
                 break;
+            case 3:
+                authority.deletable=booleanValue;
+                break;
+            case 4:
+                authority.importable=booleanValue;
+                break;
+            case 5:
+                authority.exportable=booleanValue;
+                break;
+            case 6:
+                authority.checkable=booleanValue;
+                break;
+
         }
 
         fireTableCellUpdated(rowIndex,columnIndex);

@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.frames;
 
 import com.google.inject.Guice;
+import com.sun.imageio.plugins.common.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +18,12 @@ public class BaseFrame  extends JFrame{
 
         this(" ");
 
+
     }
 
     public BaseFrame(  String title) {
         super(title);
-
+        //setIcon;
         Guice.createInjector().injectMembers(this);
     }
 

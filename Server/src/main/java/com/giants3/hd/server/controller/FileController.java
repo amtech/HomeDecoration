@@ -70,6 +70,12 @@ public class FileController  extends BaseController{
     public @ResponseBody
     RemoteData<Void> handleMaterialUpload(@RequestParam("name") String name,@RequestParam("doesOverride") boolean doesOverride,
                                          @RequestParam("file") MultipartFile file){
+
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         if (!file.isEmpty()) {
 
 

@@ -2,27 +2,16 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,7 +28,8 @@ public class QuotationController extends BaseController {
     @Autowired
     private ProductRepository productRepository;
 
-
+    @Autowired
+    private QuotationXKItemRepository quotationXKItemRepository;
     @Autowired
     private QuotationItemRepository quotationItemRepository;
 
@@ -91,6 +81,8 @@ public class QuotationController extends BaseController {
         QuotationDetail detail=new QuotationDetail();
         detail.quotation=quotation;
         detail.items=  quotationItemRepository.findByQuotationIdEquals(id);
+
+        detail.XKItems=quotationXKItemRepository.findByQuotationIdEquals(id);
 
 
 
@@ -159,6 +151,14 @@ public class QuotationController extends BaseController {
             item.quotationId= newId;
             quotationItemRepository.save(item);
         }
+
+        for(QuotationXKItem item:quotationDetail.XKItems)
+        {
+
+            item.quotationId= newId;
+            quotationXKItemRepository.save(item);
+        }
+
 
         return detail(newId);
 

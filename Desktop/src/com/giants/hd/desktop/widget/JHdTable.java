@@ -19,6 +19,8 @@ import javax.swing.table.TableModel;
 public class JHdTable extends JTable {
 
 
+
+
     @Override
     public void setModel(TableModel dataModel) {
         super.setModel(dataModel);

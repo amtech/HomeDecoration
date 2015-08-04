@@ -2,6 +2,7 @@ package com.giants.hd.desktop.widget.header;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTableHeaderUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -57,15 +58,38 @@ public class GroupableTableHeaderUI extends BasicTableHeaderUI {
     private void paintCell(Graphics g, Rectangle cellRect, int columnIndex) {
         TableColumn aColumn = header.getColumnModel().getColumn(columnIndex);
         TableCellRenderer renderer = aColumn.getHeaderRenderer();
-        Component component = renderer.getTableCellRendererComponent(
+        //revised by Java2s.com
+        renderer = new DefaultTableCellRenderer(){
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel header = new JLabel();
+                header.setForeground(table.getTableHeader().getForeground());
+                header.setBackground(table.getTableHeader().getBackground());
+                header.setFont(table.getTableHeader().getFont());
+
+                header.setHorizontalAlignment(JLabel.CENTER);
+                header.setText(value.toString());
+                 header.setBorder(UIManager.getLookAndFeelDefaults().getBorder("TableHeader.cellBorder"));
+                return header;
+            }
+
+        };
+        Component c = renderer.getTableCellRendererComponent(
                 header.getTable(), aColumn.getHeaderValue(),false, false, -1, columnIndex);
-        rendererPane.add(component);
-        rendererPane.paintComponent(g, component, header, cellRect.x, cellRect.y,
+
+        c.setBackground(UIManager.getLookAndFeelDefaults().getColor("control"));
+
+        rendererPane.add(c);
+        rendererPane.paintComponent(g, c, header, cellRect.x, cellRect.y,
                 cellRect.width, cellRect.height, true);
     }
 
     private void paintCell(Graphics g, Rectangle cellRect,ColumnGroup cGroup) {
         TableCellRenderer renderer = cGroup.getHeaderRenderer();
+        //revised by Java2s.com
+        // if(renderer == null){
+//      return ;
+        //    }
+
         Component component = renderer.getTableCellRendererComponent(
                 header.getTable(), cGroup.getHeaderValue(),false, false, -1, -1);
         rendererPane.add(component);
@@ -79,13 +103,18 @@ public class GroupableTableHeaderUI extends BasicTableHeaderUI {
         for(int column = 0; column < columnModel.getColumnCount(); column++) {
             TableColumn aColumn = columnModel.getColumn(column);
             TableCellRenderer renderer = aColumn.getHeaderRenderer();
+            //revised by Java2s.com
+            if(renderer == null){
+                return 60;
+            }
+
             Component comp = renderer.getTableCellRendererComponent(
                     header.getTable(), aColumn.getHeaderValue(), false, false,-1, column);
             int cHeight = comp.getPreferredSize().height;
-            Enumeration enumeration = ((GroupableTableHeader)header).getColumnGroups(aColumn);
-            if (enumeration != null) {
-                while (enumeration.hasMoreElements()) {
-                    ColumnGroup cGroup = (ColumnGroup)enumeration.nextElement();
+            Enumeration e = ((GroupableTableHeader)header).getColumnGroups(aColumn);
+            if (e != null) {
+                while (e.hasMoreElements()) {
+                    ColumnGroup cGroup = (ColumnGroup)e.nextElement();
                     cHeight += cGroup.getSize(header.getTable()).height;
                 }
             }

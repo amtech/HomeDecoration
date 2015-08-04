@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class ProductProcess implements Serializable,Valuable {
 
 
-    public static final String XISHUA="洗枪洗笔刷费用";
+    public static final String XISHUA="洗枪";
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

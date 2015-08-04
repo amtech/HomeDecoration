@@ -2,10 +2,7 @@ package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
@@ -19,13 +16,14 @@ import javax.swing.*;
 public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> implements  Productable {
 
     public static final String COLUMN_SPEC="spec";
-    public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号", "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "单价", "立方数","净重",       "货品规格","材质","镜面尺寸","备注" };
-    public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,     50,       60,                       80,     40,    50  ,    50,     50,      50,          100,       120,     80,    ConstantData.MAX_COLUMN_WIDTH};
+    public static final String COLUMN_COST="cost";
+    public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号", "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注" };
+    public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,     50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"productPhoto", "productName", "pVersion", "inBoxCount", "packQuantity", "packageSize","unit","cost","price", "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize","memo"};
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"productPhoto", "productName", "pVersion", "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,"price", "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize","memo"};
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class};
 
-    public  static boolean[] editables = new boolean[]{false,false,                                 true, true,              false,         false,           false,     false,false, false , false,         false,   false,    false,        false,       true };
+    public  static boolean[] editables = new boolean[]{false,false,                                   true,           true, false,       false,             false,     false,false, true , false,         false,   false,    false,        false,       true };
 
 
 
@@ -38,8 +36,21 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> impl
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
-       // return true;
+
+
          return editables[columnIndex];
+    }
+
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+
+
+//        if(fieldName[columnIndex].equals(COLUMN_COST))
+//        {
+//            return "***";
+//        }
+        return super.getValueAt(rowIndex, columnIndex);
     }
 
     @Override
@@ -54,6 +65,11 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> impl
 
         switch (columnIndex )
         {
+
+            case 9:
+
+                quotationItem.price=Float.valueOf(aValue.toString());
+                break;
             case 15:
 
                 quotationItem.memo=aValue.toString();
@@ -99,7 +115,6 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> impl
 
 
         item.updateProduct(product);
-
 
 
         fireTableRowsUpdated(rowIndex,rowIndex);

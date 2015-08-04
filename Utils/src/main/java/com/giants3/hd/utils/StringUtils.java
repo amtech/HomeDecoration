@@ -120,4 +120,54 @@ public class StringUtils {
 
 
     }
+
+
+    /**
+     * 将数字用* 串联起来
+     * @param value
+     * @return
+     */
+    public static String combineNumberValue(Number... value)
+    {
+
+        String result="";
+
+        int length = value.length;
+        for (int i = 0; i < length; i++) {
+
+            result+=value[i];
+            if(i<length-1) {
+
+                result+= spec_separator;
+            }
+        }
+
+        return result;
+
+    }
+
+
+    /**
+     * 解析包装串
+     * @param packageString
+     * @return
+     */
+    public static float[] decouplePackageString(String packageString)
+    {
+
+        int firstIndex=packageString.indexOf(spec_separator);
+        int lastIndex=packageString.lastIndexOf(spec_separator);
+
+        float[] result=new float[3];
+
+        result[0]=Float.valueOf(packageString.substring(0,firstIndex));
+        result[1]=Float.valueOf(packageString.substring(firstIndex+1,lastIndex));
+        result[2]=Float.valueOf(packageString.substring(lastIndex+1));
+
+        return result;
+
+    }
+
+
+
 }

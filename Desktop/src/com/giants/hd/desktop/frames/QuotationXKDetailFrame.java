@@ -4,12 +4,9 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_Quotation;
-import com.giants.hd.desktop.view.Panel_QuotationDetail;
+import com.giants.hd.desktop.view.Panel_QuotationXKDetail;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationDetail;
 import com.google.inject.Inject;
@@ -22,24 +19,24 @@ import java.awt.event.WindowEvent;
 /**
  *  报价单详情模块
  */
-public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelListener {
+public class QuotationXKDetailFrame extends BaseFrame implements  BasePanel.PanelListener {
 
 
 
     @Inject
     ApiManager apiManager;
     @Inject
-    Panel_QuotationDetail panel_QuotationDetail;
+    Panel_QuotationXKDetail panel_QuotationXKDetail;
 
     private QuotationDetail oldData;
     private QuotationDetail quotationDetail;
-    public QuotationDetailFrame(final Quotation quotation)
+    public QuotationXKDetailFrame(final Quotation quotation)
     {
 
 
 
 
-        super("报价详情[" + quotation.qNumber + "]");
+        super("咸康报价详情[" + quotation.qNumber + "]");
 
 
         init();
@@ -52,16 +49,16 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
         });
 
     }
-    public QuotationDetailFrame( )
+    public QuotationXKDetailFrame()
     {
 
 
 
 
-        super("新增报价单");
+        super("新增咸康报价单");
 
         init();
-     QuotationDetail   newDetail=new QuotationDetail();
+        QuotationDetail   newDetail=new QuotationDetail();
         newDetail.init();
         setQuotationDetail(newDetail);
 
@@ -81,7 +78,7 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
-        setContentPane(panel_QuotationDetail.getRoot());
+        setContentPane(panel_QuotationXKDetail.getRoot());
         setMinimumSize(new Dimension(1024, 768));
         pack();
 
@@ -92,27 +89,27 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
             public void windowClosing(WindowEvent e) {
 
 
-                if (panel_QuotationDetail.data == null) {
+                if (panel_QuotationXKDetail.data == null) {
                     dispose();
                     return;
                 }
 
-                panel_QuotationDetail.getData(quotationDetail);
+                panel_QuotationXKDetail.getData(quotationDetail);
 
-                if (!quotationDetail.equals(oldData)) {
+                if (!quotationDetail.equals(oldData) ) {
 
-                    int option = JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+                    int option = JOptionPane.showConfirmDialog(QuotationXKDetailFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
 
                     if (JOptionPane.OK_OPTION == option) {
                         //点击了确定按钮
 
-                        QuotationDetailFrame.this.dispose();
+                        QuotationXKDetailFrame.this.dispose();
                     }
 
                 } else {
                     //点击了确定按钮
 
-                    QuotationDetailFrame.this.dispose();
+                    QuotationXKDetailFrame.this.dispose();
                 }
 
 
@@ -121,7 +118,7 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
-        panel_QuotationDetail.setListener(this);
+        panel_QuotationXKDetail.setListener(this);
 
 
 
@@ -135,7 +132,7 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
         oldData= (QuotationDetail) ObjectUtils.deepCopy(newDetail);
         this.quotationDetail=newDetail;
-        panel_QuotationDetail.setData(newDetail);
+        panel_QuotationXKDetail.setData(newDetail);
 
     }
 
@@ -144,7 +141,8 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
         try {
-            panel_QuotationDetail.checkData(quotationDetail);
+            panel_QuotationXKDetail.checkData(quotationDetail);
+
         } catch (HdUIException e)
         {
             JOptionPane.showMessageDialog(e.component,e.message);
@@ -153,13 +151,13 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
         }
 
 
-        panel_QuotationDetail.getData(quotationDetail);
+        panel_QuotationXKDetail.getData(quotationDetail);
 
 
         if(quotationDetail.quotation.quotationTypeId==0) {
-            quotationDetail.quotation.quotationTypeId = 1;
+            quotationDetail.quotation.quotationTypeId = 2;
 
-            quotationDetail.quotation.quotationTypeName = "普通报价";
+            quotationDetail.quotation.quotationTypeName = "咸康报价";
         }
         saveQuotationDetail(quotationDetail);
 
@@ -209,15 +207,15 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
                 if(data.isSuccess())
                 {
 
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,"删除成功！");
+                    JOptionPane.showMessageDialog(QuotationXKDetailFrame.this,"删除成功！");
 
-                    QuotationDetailFrame.this.dispose();
+                    QuotationXKDetailFrame.this.dispose();
 
 
 
                 }else
                 {
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                    JOptionPane.showMessageDialog(QuotationXKDetailFrame.this,data.message);
                 }
 
             }
@@ -260,7 +258,7 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
                 }else {
 
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                    JOptionPane.showMessageDialog(QuotationXKDetailFrame.this,data.message);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -297,11 +295,11 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
                 if(data.isSuccess()) {
 
                     setQuotationDetail(data.datas.get(0));
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this, "保存成功");
+                    JOptionPane.showMessageDialog(QuotationXKDetailFrame.this, "保存成功");
 
                 }else {
 
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                    JOptionPane.showMessageDialog(QuotationXKDetailFrame.this,data.message);
 
 
                 }

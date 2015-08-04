@@ -56,16 +56,14 @@ public class ColumnGroup {
 
     /**
      * @param c    TableColumn
-     *
+     * @param v    ColumnGroups
      */
     public Vector getColumnGroups(TableColumn c, Vector g) {
         g.addElement(this);
         if (v.contains(c)) return g;
-
-
-        Enumeration enumeration=v.elements();
-        while (enumeration.hasMoreElements()) {
-            Object obj = enumeration.nextElement();
+        Enumeration e = v.elements();
+        while (e.hasMoreElements()) {
+            Object obj = e.nextElement();
             if (obj instanceof ColumnGroup) {
                 Vector groups =
                         (Vector)((ColumnGroup)obj).getColumnGroups(c,(Vector)g.clone());
@@ -94,9 +92,9 @@ public class ColumnGroup {
                 table, getHeaderValue(), false, false,-1, -1);
         int height = comp.getPreferredSize().height;
         int width  = 0;
-        Enumeration enumeration = v.elements();
-        while (enumeration.hasMoreElements()) {
-            Object obj = enumeration.nextElement();
+        Enumeration e = v.elements();
+        while (e.hasMoreElements()) {
+            Object obj = e.nextElement();
             if (obj instanceof TableColumn) {
                 TableColumn aColumn = (TableColumn)obj;
                 width += aColumn.getWidth();
@@ -110,9 +108,9 @@ public class ColumnGroup {
 
     public void setColumnMargin(int margin) {
         this.margin = margin;
-        Enumeration enumeration = v.elements();
-        while (enumeration.hasMoreElements()) {
-            Object obj = enumeration.nextElement();
+        Enumeration e = v.elements();
+        while (e.hasMoreElements()) {
+            Object obj = e.nextElement();
             if (obj instanceof ColumnGroup) {
                 ((ColumnGroup)obj).setColumnMargin(margin);
             }

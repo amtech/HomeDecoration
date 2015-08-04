@@ -1,11 +1,15 @@
 package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.HttpUrl;
+import jxl.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Image;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
@@ -21,39 +25,20 @@ public class ImageViewDialog extends JDialog {
         setModal(true);
        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-
-// call onCancel() when cross is clicked
-
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                dispose();
             }
         });
 
-// call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private void onOK() {
-// add your code here
-        dispose();
-    }
-
-    private void onCancel() {
-// add your code here if necessary
-        dispose();
-    }
-
-    public static void main(String[] args) {
-
-        ImageViewDialog dialog=new ImageViewDialog(null);
-        dialog.loadImageAndShow(HttpUrl.loadProductPicture("10X1003",null));
+        Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setMinimumSize(new Dimension(600, 200));
+        setLocation((dimension.width - 600) / 2, (dimension.height - 200) / 2);
 
     }
+
+
+
 
 
 
@@ -62,15 +47,15 @@ public class ImageViewDialog extends JDialog {
 
 
         picture.setText("正在加载图片....");
-        pack();
-        new SwingWorker<Image,String>()
+
+        new SwingWorker<BufferedImage,String>()
         {
 
             @Override
             protected void done() {
                 super.done();
 
-                Image image= null;
+                BufferedImage image= null;
                 try {
                     image = get();
                 } catch (InterruptedException e) {
@@ -79,30 +64,67 @@ public class ImageViewDialog extends JDialog {
                     e.printStackTrace();
                 }
                 if(null!=image) {
+
+
                     picture.setText("");
-                    picture.setIcon(new ImageIcon(image));
+                    Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+
+                  int width=  image.getWidth();
+                    int height=image.getHeight();
+
+
+                    while (!(width<dimension.width&&height<dimension.height))
+                    {
+                        width= (int) (width/1.1f);height = (int) (height/1.1f);
+                    }
+
+
+
+                    try {
+                      BufferedImage  newImage= resizeImage (image, width, height, image.getType());
+
+                        image=newImage;
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ImageIcon imageIcon=new ImageIcon(image);
+                    picture.setIcon(imageIcon);
+
+
+
+                   setSize(new Dimension(width, height));
+                   setLocation((dimension.width - width) / 2, (dimension.height - height) / 2);
+
+
+
+
+
+
+
+
                 }else
                 {
                     picture.setText("图片加载失败");
+
                 }
-                ImageViewDialog.this.pack();
+                //ImageViewDialog.this.pack();
 
 
             }
 
             @Override
-            protected Image doInBackground() throws Exception {
+            protected BufferedImage doInBackground() throws Exception {
                 return ImageIO.read(new URL(url));
             }
         }.execute();
 
 
 
-        setMinimumSize(new Dimension(800, 600));
-        setMaximumSize(new Dimension(1200, 900));
 
-        setLocationRelativeTo(getParent());
-        pack();
+
+
         setVisible(true);
 
     }
@@ -116,7 +138,7 @@ public class ImageViewDialog extends JDialog {
 
 
         String url=HttpUrl.loadMaterialPicture(materialCode,classId);
-         showDialog(frame,url);
+         showDialog(frame, url);
 
     }
 
@@ -128,10 +150,9 @@ public class ImageViewDialog extends JDialog {
 
 
 
-        String url=HttpUrl.loadProductPicture(productName,version);
-        ImageViewDialog dialog=new ImageViewDialog(frame);
-        dialog.setTitle(productName+"_"+version);
-        dialog.loadImageAndShow(url);
+        String url=HttpUrl.loadProductPicture(productName, version);
+
+        showDialog(frame,url,productName+"_"+version);
 
     }
 
@@ -140,9 +161,28 @@ public class ImageViewDialog extends JDialog {
      * @param url
      */
     public static void showDialog(Window frame,String url) {
+        showDialog(frame,url,url);
+
+    }
+
+    /**
+     * 显示图片显示框体框
+     * @param url
+     */
+    public static void showDialog(Window frame,String url,String title) {
         ImageViewDialog dialog=new ImageViewDialog(frame);
-        dialog.setTitle(url);
+        dialog.setTitle(title);
         dialog.loadImageAndShow(url);
 
+
+    }
+
+
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
     }
 }

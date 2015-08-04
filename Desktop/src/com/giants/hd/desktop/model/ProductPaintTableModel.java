@@ -6,6 +6,8 @@ import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
+import java.util.List;
+
 /**
  * 油漆工表格模型
  */
@@ -37,7 +39,8 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
         //当前行是XISHUA 行  并且不是材料选择行
-        if(ProductProcess.XISHUA.equals(getItem(rowIndex).processName)&&(columnIndex==6||columnIndex==8))
+        String processName=getItem(rowIndex).processName;
+        if(processName!=null&&processName.contains(ProductProcess.XISHUA)&&(columnIndex==6||columnIndex==8))
         {
             return false;
         }
@@ -61,7 +64,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 /**
                  * 当前行修改是洗刷统计行
                  */
-                if(ProductProcess.XISHUA.equals(item.processName))
+                if(item.processName!=null&&item.processName.contains(ProductProcess.XISHUA) )
                 {
                     updateQuantityOfIngredient();
 
@@ -185,5 +188,16 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
         productPaint.id= -RandomUtils.nextInt();
         return productPaint;
+    }
+
+
+    @Override
+    public void insertNewRows(List<ProductPaint> insertDatas, int index) {
+
+        for (ProductPaint paint:insertDatas)
+        {
+            paint.id=-1;
+        }
+        super.insertNewRows(insertDatas, index);
     }
 }

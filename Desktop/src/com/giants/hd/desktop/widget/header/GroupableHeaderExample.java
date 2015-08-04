@@ -24,6 +24,8 @@ public class GroupableHeaderExample extends JFrame {
                 return new GroupableTableHeader(columnModel);
             }
         };
+
+
         TableColumnModel cm = table.getColumnModel();
         ColumnGroup g_name = new ColumnGroup("Name");
         g_name.add(cm.getColumn(1));
@@ -34,6 +36,7 @@ public class GroupableHeaderExample extends JFrame {
         g_other.add(cm.getColumn(4));
         g_other.add(cm.getColumn(5));
         g_lang.add(g_other);
+
         GroupableTableHeader header = (GroupableTableHeader)table.getTableHeader();
         header.addColumnGroup(g_name);
         header.addColumnGroup(g_lang);
@@ -50,8 +53,5 @@ public class GroupableHeaderExample extends JFrame {
             }
         });
         frame.setVisible(true);
-
-
-
     }
 }

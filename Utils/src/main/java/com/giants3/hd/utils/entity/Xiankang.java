@@ -78,7 +78,7 @@ public class Xiankang implements Serializable {
     /**
      * 甲醛标记
      */
-    private String jiaquan;
+    private String jiaquan="NO";
     /**
      * 画芯编号
      */
@@ -95,6 +95,57 @@ public class Xiankang implements Serializable {
      * 镜子规格	高
      */
     private String jingzi_gao;
+
+
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 前
+     *
+     */
+    public float pack_front;
+
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 前后
+     *
+     */
+    public float pack_front_back;
+
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 中间
+     *
+     */
+    public float pack_middle;
+
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 六面
+     *
+     */
+    public float pack_cube;
+
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 四周
+     *
+     */
+    public float pack_perimeter;
+    /**
+     * 包装描述额外信息 会参与计算
+     *
+     * 描述
+     *
+     */
+    public String pack_memo;
+
+
+
 
     public Xiankang() {
     }
@@ -272,6 +323,11 @@ public class Xiankang implements Serializable {
 
         if (id != xiankang.id) return false;
         if (productId != xiankang.productId) return false;
+        if (Float.compare(xiankang.pack_front, pack_front) != 0) return false;
+        if (Float.compare(xiankang.pack_front_back, pack_front_back) != 0) return false;
+        if (Float.compare(xiankang.pack_middle, pack_middle) != 0) return false;
+        if (Float.compare(xiankang.pack_cube, pack_cube) != 0) return false;
+        if (Float.compare(xiankang.pack_perimeter, pack_perimeter) != 0) return false;
         if (jingzi_kuan != null ? !jingzi_kuan.equals(xiankang.jingzi_kuan) : xiankang.jingzi_kuan != null)
             return false;
         if (beizhu != null ? !beizhu.equals(xiankang.beizhu) : xiankang.beizhu != null) return false;
@@ -299,7 +355,8 @@ public class Xiankang implements Serializable {
             return false;
         if (huaxinxiaoguo != null ? !huaxinxiaoguo.equals(xiankang.huaxinxiaoguo) : xiankang.huaxinxiaoguo != null)
             return false;
-        return !(jingzi_gao != null ? !jingzi_gao.equals(xiankang.jingzi_gao) : xiankang.jingzi_gao != null);
+        if (jingzi_gao != null ? !jingzi_gao.equals(xiankang.jingzi_gao) : xiankang.jingzi_gao != null) return false;
+        return !(pack_memo != null ? !pack_memo.equals(xiankang.pack_memo) : xiankang.pack_memo != null);
 
     }
 
@@ -326,6 +383,12 @@ public class Xiankang implements Serializable {
         result = 31 * result + (huaxinchangshang != null ? huaxinchangshang.hashCode() : 0);
         result = 31 * result + (huaxinxiaoguo != null ? huaxinxiaoguo.hashCode() : 0);
         result = 31 * result + (jingzi_gao != null ? jingzi_gao.hashCode() : 0);
+        result = 31 * result + (pack_front != +0.0f ? Float.floatToIntBits(pack_front) : 0);
+        result = 31 * result + (pack_front_back != +0.0f ? Float.floatToIntBits(pack_front_back) : 0);
+        result = 31 * result + (pack_middle != +0.0f ? Float.floatToIntBits(pack_middle) : 0);
+        result = 31 * result + (pack_cube != +0.0f ? Float.floatToIntBits(pack_cube) : 0);
+        result = 31 * result + (pack_perimeter != +0.0f ? Float.floatToIntBits(pack_perimeter) : 0);
+        result = 31 * result + (pack_memo != null ? pack_memo.hashCode() : 0);
         return result;
     }
 }

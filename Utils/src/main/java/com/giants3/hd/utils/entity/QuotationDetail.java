@@ -1,8 +1,8 @@
 package com.giants3.hd.utils.entity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 /**
@@ -12,9 +12,7 @@ public class QuotationDetail implements Serializable {
 
         public Quotation quotation;
        public List<QuotationItem> items;
-
-
-
+    public  List<QuotationXKItem> XKItems ;
 
 
     @Override
@@ -25,7 +23,8 @@ public class QuotationDetail implements Serializable {
         QuotationDetail that = (QuotationDetail) o;
 
         if (quotation != null ? !quotation.equals(that.quotation) : that.quotation != null) return false;
-        return !(items != null ? !items.equals(that.items) : that.items != null);
+        if (items != null ? !items.equals(that.items) : that.items != null) return false;
+        return !(XKItems != null ? !XKItems.equals(that.XKItems) : that.XKItems != null);
 
     }
 
@@ -33,11 +32,13 @@ public class QuotationDetail implements Serializable {
     public int hashCode() {
         int result = quotation != null ? quotation.hashCode() : 0;
         result = 31 * result + (items != null ? items.hashCode() : 0);
+        result = 31 * result + (XKItems != null ? XKItems.hashCode() : 0);
         return result;
     }
 
     public void init() {
         quotation=new Quotation();
         items=new ArrayList<>();
+        XKItems=new ArrayList<>();
     }
 }
