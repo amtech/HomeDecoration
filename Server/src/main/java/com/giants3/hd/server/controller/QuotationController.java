@@ -188,8 +188,8 @@ public class QuotationController extends BaseController {
 
        int affectedRow= quotationItemRepository.deleteByQuotationIdEquals(quotationId);
         Logger.getLogger("TEST").info("quotationItemRepository delete affectedRow:" + affectedRow);
-
-
+          affectedRow= quotationXKItemRepository.deleteByQuotationIdEquals(quotationId);
+        Logger.getLogger("TEST").info("quotationXKItemRepository delete affectedRow:" + affectedRow);
         return wrapData();
 
     }

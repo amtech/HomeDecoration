@@ -16,7 +16,7 @@ public class QuotationFile {
 
     public static  final String FILE_XIANGKANG_1="咸康家具报价格式";
     public static  final String FILE_XIANGKANG_2="咸康(灯具)报价格式";
-
+    public static  final String FILE_XIANGKANG_3="咸康(镜子 杂+画)报价";
     public static List<QuotationFile> defaultFiles;
 
 
@@ -37,6 +37,10 @@ public class QuotationFile {
 
         file=new QuotationFile();
         file.name=FILE_XIANGKANG_2;
+        defaultFiles.add(file);
+
+        file=new QuotationFile();
+        file.name=FILE_XIANGKANG_3;
         defaultFiles.add(file);
 
     }

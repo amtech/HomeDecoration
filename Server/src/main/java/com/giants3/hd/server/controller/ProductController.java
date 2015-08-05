@@ -87,6 +87,40 @@ public class ProductController extends BaseController {
 
     }
 
+
+
+
+    @RequestMapping(value = "/searchByName", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<Product> searchByName(@RequestParam(value = "proName" ) String prd_name
+            , @RequestParam(value = "productId") int productId
+
+    ) throws UnsupportedEncodingException {
+
+
+
+        List<Product> pageValue = productRepository.findByNameEquals(prd_name );
+
+        int size = pageValue.size();
+        for (int i = 0; i < size; i++) {
+            Product product=pageValue.get(i);
+            if(product.id==productId)
+            {
+                pageValue.remove(i);
+                break;
+            }
+        }
+
+
+
+
+
+        return wrapData( pageValue);
+
+
+    }
+
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public
     @ResponseBody

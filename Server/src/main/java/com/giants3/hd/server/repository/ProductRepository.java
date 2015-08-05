@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
 *  产品资源库
 */
@@ -27,5 +29,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
      */
     Product findFirstByNameEqualsAndPVersionEquals(String proName, String version);
 
-
+    /**
+     * 查找相同产品品名的货物
+     * @param proName
+     * @return
+     */
+    List<Product> findByNameEquals(String proName);
 }
