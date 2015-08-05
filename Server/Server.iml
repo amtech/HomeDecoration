@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id=":Server" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="HomeDecoration" external.system.module.version="1.0" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/file-dispatcher-servlet.xml</file>
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml</file>
-        </fileset>
-      </configuration>
-    </facet>
-    <facet type="jpa" name="JPA">
-      <configuration>
-        <setting name="validation-enabled" value="true" />
-        <setting name="provider-name" value="" />
-        <datasource-mapping>
-          <factory-entry name="PersistenceUnit_Sql2000" />
-          <factory-entry name="defaultPersistenceUnit" />
-          <factory-entry name="demoRestPersistenceLegacy" />
-          <factory-entry name="erpPersistenceUnit" />
-          <factory-entry name="erpPersistenceUnit_2008" />
-          <factory-entry name="erpPersistenceUnit_test" />
-        </datasource-mapping>
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
-      </configuration>
-    </facet>
     <facet type="web" name="Web Gradle : Server-1.0.war">
       <configuration>
         <descriptors>
@@ -33,8 +10,8 @@
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
         <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/resources" />
           <root url="file://$MODULE_DIR$/src/main/java" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -51,7 +28,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Utils" exported="" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: javax.servlet:javax.servlet-api:3.0.1" level="project" />
@@ -60,6 +37,8 @@
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-web:3.2.0.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.hibernate:hibernate-entitymanager:3.6.10.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.yaml:snakeyaml:1.13" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-fileupload:commons-fileupload:1.3.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: net.sourceforge.jtds:jtds:1.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-orm:4.0.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-context:4.0.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-aop:4.0.9.RELEASE" level="project" />
@@ -69,6 +48,7 @@
     <orderEntry type="library" exported="" name="Gradle: org.hibernate:hibernate-core:3.6.10.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: cglib:cglib:2.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: javassist:javassist:3.12.0.GA" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-jdbc:4.0.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: antlr:antlr:2.7.6" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-collections:commons-collections:3.1" level="project" />
@@ -82,12 +62,8 @@
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-beans:4.0.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:slf4j-api:1.7.10" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.10" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.0.9.RELEASE" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: jstl:jstl:1.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-fileupload:commons-fileupload:1.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-io:commons-io:2.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: net.sourceforge.jtds:jtds:1.3.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.0.9.RELEASE" level="project" />
     <orderEntry type="module-library" exported="">
       <library name="Gradle: E__projects_giants3_HomeDecoration_Server_libs_sqljdbc4_jar">
         <CLASSES>
@@ -97,5 +73,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: jstl:jstl:1.2" level="project" />
   </component>
 </module>
