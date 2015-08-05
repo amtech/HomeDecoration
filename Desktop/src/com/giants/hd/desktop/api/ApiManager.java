@@ -828,4 +828,23 @@ public class ApiManager {
         return remoteData;
 
     }
+
+
+    /**
+     *
+     * @param product2Name  货号名称
+     * @param productId      排除的id
+     * @return
+     */
+    public RemoteData<Product> readSameNameProductList(String product2Name, long productId) throws HdException {
+
+        String url=HttpUrl.readSameNameProductList(product2Name,productId);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<Product>>() {
+        }.getType();
+        RemoteData<Product> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
 }

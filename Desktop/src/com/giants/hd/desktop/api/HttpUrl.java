@@ -403,4 +403,11 @@ public class HttpUrl {
     public static String saveAuthorities(long userId) {
         return BaseUrl+"api/authority/saveList?userId="+ userId;
     }
+
+    public static String readSameNameProductList(String product2Name, long productId) {
+
+
+        return BaseUrl+"api/product/searchByName?proName="+product2Name+"&productId="+productId;
+
+    }
 }

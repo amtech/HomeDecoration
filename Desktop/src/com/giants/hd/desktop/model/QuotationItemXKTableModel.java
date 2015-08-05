@@ -3,6 +3,8 @@ package com.giants.hd.desktop.model;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.entity.Product;
+
+import com.giants3.hd.utils.entity.Product2;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -33,7 +35,7 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
                                                                                                                             "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,"price2", "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2","memo2"};
 
 
-public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class};
+public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class,Product2.class};
 
     public  static boolean[] editables = new boolean[]{false,false,                                   true,           true, true,false,       false,             false,     false,false, true , false,         false,   false,    false,        false,       true ,
 
@@ -79,6 +81,7 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Produ
 
         switch (columnIndex )
         {
+
 
             case 9:
 
