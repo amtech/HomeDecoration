@@ -24,7 +24,7 @@ public class SearchDialog<T> extends BaseDialog<T> {
     private ComonSearch<T> comonSearch;
 
 
-    public SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData) {
+    public SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData,boolean searchTextFixed) {
         super(window);
         setContentPane(contentPane);
         setModal(true);
@@ -35,6 +35,8 @@ public class SearchDialog<T> extends BaseDialog<T> {
 
         jtf.setText(value);
 
+
+        jtf.setEnabled(!searchTextFixed);
 
 
         panel_page.setListener(new PageListener() {
@@ -149,6 +151,7 @@ public class SearchDialog<T> extends BaseDialog<T> {
         private ComonSearch<T> comonSearch;
         private String value;
         private RemoteData<T> remoteData;
+        private boolean searchTextFixed=false;
 
         public Builder setWindow(Window window) {
             this.window = window;
@@ -169,14 +172,17 @@ public class SearchDialog<T> extends BaseDialog<T> {
             this.value = value;
             return this;
         }
-
+        public Builder setSearchTextFixed(boolean value) {
+            this.searchTextFixed = value;
+            return this;
+        }
         public Builder setRemoteData(RemoteData<T> remoteData) {
             this.remoteData = remoteData;
             return this;
         }
 
         public SearchDialog createSearchDialog() {
-            return new SearchDialog(window, tableModel, comonSearch, value, remoteData);
+            return new SearchDialog(window, tableModel, comonSearch, value, remoteData,searchTextFixed);
         }
     }
 }

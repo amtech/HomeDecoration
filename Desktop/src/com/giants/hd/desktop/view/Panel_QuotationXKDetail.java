@@ -300,7 +300,7 @@ public class Panel_QuotationXKDetail extends BasePanel {
                         public RemoteData<Product> search(String value, int pageIndex, int pageCount) throws HdException {
                             return apiManager.readProductList(value, pageIndex, pageCount);
                         }
-                    }).setValue(item.productName).setRemoteData(data).createSearchDialog();
+                    }).setValue(item.productName).setSearchTextFixed(true).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));
                     dialog.pack();
                     dialog.setLocationRelativeTo(tb);

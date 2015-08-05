@@ -1,7 +1,7 @@
 *.class
-.idea
-out
-Server/build
+.idea/
+out/
+Server/build/
 Desktop/Desktop.iml
 HomeDecoration.iml
 Utils/Utils.iml
