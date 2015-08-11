@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.entity.Salesman;
+
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
@@ -11,12 +11,12 @@ import com.google.inject.Inject;
  */
 public class UserModel extends  BaseTableModel<User> {
 
-    public static String[] columnNames = new String[]{                         "编号 ",  "名称"  ,"" };
-    public static int[] columnWidth=new int[]{   100,        120 ,ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{ "编号 ",  "名称" ,"中文名称      ","密码" ,"电话","邮件","是否业务员" };
+    public static int[] columnWidth=new int[]{   80,        100 ,120,120,120,120,40};
 
-    public static String[] fieldName = new String[]{ "code", "name",  " "};
+    public static String[] fieldName = new String[]{ "code", "name", "chineseName", "password","tel","email","isSalesman"};
 
-    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class };
+    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class, Object.class, Object.class,Object.class,Boolean.class};
 
 
     @Inject
@@ -25,8 +25,10 @@ public class UserModel extends  BaseTableModel<User> {
     }
 
 
-
-
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return editable;
+    }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -40,6 +42,22 @@ public class UserModel extends  BaseTableModel<User> {
                 break;
             case 1:
                 customer.name=stringValue;
+                break;
+            case 2:
+                customer.chineseName=stringValue;
+                break;
+            case 3:
+                customer.password=stringValue;
+                break;
+
+            case 4:
+                customer.tel=stringValue;
+                break;
+            case 5:
+                customer.email=stringValue;
+                break;
+            case 6:
+                customer.isSalesman=Boolean.valueOf(stringValue);
                 break;
 
         }

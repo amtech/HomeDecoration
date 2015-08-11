@@ -2,14 +2,16 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
-import com.giants.hd.desktop.local.BufferData;
+
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -37,7 +39,7 @@ public class Panel_QuotationDetail extends BasePanel {
     private JTextArea ta_memo;
     private JTextField jtf_number;
     private JComboBox cb_currency;
-    private JComboBox<Salesman> cb_salesman;
+    private JComboBox<User> cb_salesman;
     private JComboBox<Customer> cb_customer;
     private JDatePickerImpl qDate;
     private JDatePickerImpl vDate;
@@ -133,6 +135,23 @@ public class Panel_QuotationDetail extends BasePanel {
 
             }
         });
+
+
+
+        //配置权限  是否修改  是否可以删除
+
+        boolean modifiable= AuthorityUtil.getInstance().editQuotation()||AuthorityUtil.getInstance().addQuotation();
+
+        btn_save.setVisible(modifiable);
+
+
+
+
+        btn_delete.setVisible(AuthorityUtil.getInstance().deleteQuotation());
+
+
+        btn_export.setVisible(AuthorityUtil.getInstance().exportQuotation());
+
 
 
     }
@@ -373,10 +392,10 @@ public class Panel_QuotationDetail extends BasePanel {
             quotation.customerId = selectedCustomer.id;
             quotation.customerName = selectedCustomer.name;
         }
-        Salesman selectedSalesman= (Salesman) cb_salesman.getSelectedItem();
+        User selectedSalesman= (User) cb_salesman.getSelectedItem();
         if(selectedSalesman!=null) {
             quotation.salesmanId = selectedSalesman.id;
-            quotation.salesman = selectedSalesman.name;
+            quotation.salesman = selectedSalesman.chineseName;
         }
         quotation.qDate=qDate.getJFormattedTextField().getText().trim();
         quotation.vDate=vDate.getJFormattedTextField().getText().trim();
@@ -402,12 +421,12 @@ public class Panel_QuotationDetail extends BasePanel {
 
 
         cb_customer = new JComboBox<Customer>();
-        for (Customer customer : BufferData.customers) {
+        for (Customer customer : CacheManager.getInstance().bufferData.customers) {
             cb_customer.addItem(customer);
         }
 
-        cb_salesman=  new JComboBox<Salesman>();
-        for (Salesman salesman : BufferData.salesmans) {
+        cb_salesman=  new JComboBox<User>();
+        for (User salesman : CacheManager.getInstance().bufferData.salesmans) {
             cb_salesman.addItem(salesman);
         }
 

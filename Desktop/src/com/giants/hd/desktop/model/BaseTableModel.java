@@ -31,7 +31,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     public static final int    MiniRowCount = 20;
 
-    private boolean editable=true;
+    protected boolean editable=true;
     private boolean adjustable=true;
 
     public void setEditable(boolean editable) {

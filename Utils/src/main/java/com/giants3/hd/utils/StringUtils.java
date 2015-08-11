@@ -169,5 +169,12 @@ public class StringUtils {
     }
 
 
+    public static float inchToCm(float inchValue) {
+        return FloatHelper.scale( inchValue*INCH_TO_CM);
+    }
 
+
+    public static float cmToInch(float cmValue) {
+        return FloatHelper.scale( cmValue *CM_TO_INCH);
+    }
 }

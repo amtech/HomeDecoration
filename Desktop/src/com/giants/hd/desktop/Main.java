@@ -1,11 +1,13 @@
 package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.dialogs.*;
-import com.giants.hd.desktop.local.BufferData;
+
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.Panel_Quotation;
@@ -153,7 +155,7 @@ public class Main extends JFrame {
         frame.setContentPane(frame.panel1);
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.generateMenu();
+      //  frame.generateMenu();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 
@@ -174,8 +176,26 @@ public class Main extends JFrame {
 
 
 
+        //ask for login
 
-        frame.preLoadData();
+
+        LoginDialog dialog=new LoginDialog(frame);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        if(dialog.getResult()==null)
+        {
+            System.exit(0);
+        }
+        else
+        {
+            frame.preLoadData(dialog.getResult());
+
+        }
+
+
+
+
     }
 
 
@@ -190,16 +210,29 @@ public class Main extends JFrame {
 
 
         //Create the menu bar.
+
+
         menuBar = new JMenuBar();
 
 
-        menuBar.add(createProduct());
+        if(AuthorityUtil.getInstance().viewProductModule())
+             menuBar.add(createProduct());
 
-        menuBar.add(createReport());
 
+
+        if(AuthorityUtil.getInstance().viewQuotationModule())
+             menuBar.add(createReport());
+
+
+
+        if(AuthorityUtil.getInstance().viewBaseDataModule())
         menuBar.add(createBaseData());
 
+
+        if(AuthorityUtil.getInstance().viewAuthorityModule())
         menuBar.add(createAuthority());
+
+        if(AuthorityUtil.getInstance().viewSystemModule())
         menuBar.add(createSysetm());
 
 
@@ -217,47 +250,59 @@ public class Main extends JFrame {
     public JMenu createProduct()
     {
 
-//Build the first menu.
-        JMenu     menu = new JMenu("产品模块");
+        JMenu     menu;
+
+
+
+              menu = new JMenu("产品模块");
         menu.setMnemonic(KeyEvent.VK_A);
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
 
 
 //a group of JMenuItems
-        JMenuItem   menuItem = new JMenuItem("产品列表",
-            KeyEvent.VK_P);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_P, ActionEvent.ALT_MASK));
+        JMenuItem menuItem;
 
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        if(AuthorityUtil.getInstance().viewProductList()) {
+              menuItem = new JMenuItem("产品列表",
+                    KeyEvent.VK_P);
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                    KeyEvent.VK_P, ActionEvent.ALT_MASK));
 
-                Main.this.setContentPane(new Panel_ProductList().getRoot());
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    Main.this.setContentPane(new Panel_ProductList().getRoot());
 
 
-            }
-        });
-        menu.addSeparator();
+                }
+            });
 
+
+         //   menu.addSeparator();
+
+        }
+
+        if(AuthorityUtil.getInstance().viewMaterialList()) {
             menuItem = new JMenuItem("材料列表",
-                KeyEvent.VK_M);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_M, ActionEvent.ALT_MASK));
+                    KeyEvent.VK_M);
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                    KeyEvent.VK_M, ActionEvent.ALT_MASK));
 
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
-                Main.this.setContentPane(new Panel_Material("").getRoot());
+                    Main.this.setContentPane(new Panel_Material("").getRoot());
 
 
-            }
-        });
+                }
+            });
 
+        }
 
 
 
@@ -274,7 +319,7 @@ public class Main extends JFrame {
     {
 
 
-        //Build second menu in the menu bar.
+
         JMenu    menu = new JMenu("报价管理");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
@@ -315,79 +360,64 @@ public class Main extends JFrame {
      */
     private JMenu createBaseData()
     {
-        //Build second menu in the menu bar.
+
         JMenu  menu = new JMenu("基础数据");
-        menu.setMnemonic(KeyEvent.VK_N);
-        menu.getAccessibleContext().setAccessibleDescription(
-                "This menu does nothing");
+
+        JMenuItem  menuItem;
+
+        if(AuthorityUtil.getInstance().viewMaterialClassList()) {
+            menuItem = new JMenuItem("材质类型列表"
+            );
+
+            menu.add(menuItem);
+
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    MaterialClassDialog dialog = new MaterialClassDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+                }
+            });
+        }
+
+        if(AuthorityUtil.getInstance().viewCustomerList()) {
+            menuItem = new JMenuItem("客户列表");
+
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    CustomerDialog dialog = new CustomerDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+                }
+            });
+
+        }
 
 
 
-        //
-        JMenuItem  menuItem = new JMenuItem("材质类型列表"
-                );
+        if(AuthorityUtil.getInstance().viewProcessList()) {
 
-        menu.add(menuItem);
-
-
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MaterialClassDialog dialog = new MaterialClassDialog(Main.this);
-                dialog.setLocationRelativeTo(getRootPane());
-                dialog.setVisible(true);
-            }
-        });
-
-        //
-           menuItem = new JMenuItem("客户列表"        );
-
-        menu.add(menuItem);
-
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CustomerDialog dialog = new CustomerDialog(Main.this);
-                dialog.setLocationRelativeTo(getRootPane());
-                dialog.setVisible(true);
-            }
-        });
-
-
-
-        menu.addSeparator();
-
-        menuItem = new JMenuItem("工序列表" );
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            menuItem = new JMenuItem("工序列表");
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 //                Main.this.setContentPane(new Panel_BaseData().getRoot());
-                ProductProcessDialog dialog=new ProductProcessDialog(Main.this);
-                dialog.setLocationRelativeTo(getRootPane());
+                    ProductProcessDialog dialog = new ProductProcessDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
 
-                dialog.setVisible(true);
+                    dialog.setVisible(true);
 
-            }
-        });
+                }
+            });
 
-
-        menu.addSeparator();
-
-        menuItem = new JMenuItem("业务员列表" );
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-                SalesmanDialog dialog=new SalesmanDialog(Main.this);
-                dialog.setLocationRelativeTo(getRootPane());
-                dialog.setVisible(true);
-
-            }
-        });
+        }
 
 
 
@@ -462,43 +492,48 @@ public class Main extends JFrame {
     {
         //Build second menu in the menu bar.
         JMenu  menu = new JMenu("系统功能");
-        menu.setMnemonic(KeyEvent.VK_S);
-        menu.getAccessibleContext().setAccessibleDescription(
-                "This menu does nothing");
 
 
 
-        //
-        JMenuItem  menuItem = new JMenuItem("数据同步" );
-
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "当图片不能正常显示时候执行");
-        menu.add(menuItem);
 
 
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SyncDialog dialog = new SyncDialog(Main.this);
-                dialog.pack();
-                dialog.setVisible(true);
-            }
-        });
-
-        //
-        menuItem = new JMenuItem("图片批量上传" );
-
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                UploadPictureDialog dialog = new UploadPictureDialog(Main.this);
-                dialog.pack();
-                dialog.setVisible(true);
-            }
-        });
+        JMenuItem  menuItem;
 
 
+        if(AuthorityUtil.getInstance().viewSyncData()) {
+            menuItem = new JMenuItem("数据同步");
+
+            menuItem.getAccessibleContext().setAccessibleDescription(
+                    "当图片不能正常显示时候执行");
+            menu.add(menuItem);
+
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SyncDialog dialog = new SyncDialog(Main.this);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+            });
+        }
+
+
+        if(AuthorityUtil.getInstance().viewPictureUpload()) {
+            //
+            menuItem = new JMenuItem("图片批量上传");
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    UploadPictureDialog dialog = new UploadPictureDialog(Main.this);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+            });
+
+        }
 
 
 
@@ -513,82 +548,34 @@ public class Main extends JFrame {
     /**
      * 预先加载数据
      */
-    private void preLoadData() {
+    private void preLoadData(final User user
+    ) {
 
 
-        new HdSwingWorker<PClass, Object>(this,"数据预加载处理 请稍后。。。") {
+        new HdSwingWorker<BufferData, Object>(this,"数据预加载处理 请稍后。。。") {
 
 
 
 
 
-            RemoteData<PackMaterialType> packMaterialTypeRemoteData;
-            RemoteData<PackMaterialPosition> packMaterialPositionRemoteData;
-            RemoteData<PackMaterialClass> packMaterialClassRemoteData;
 
-            RemoteData<Pack> packRemoteData;
-
-
-            RemoteData<MaterialType> materialTypeRemoteData;
-            RemoteData<MaterialClass> materialClassRemoteData;
-            RemoteData<MaterialEquation> materialEquationRemoteData;
-
-
-            RemoteData<Customer> customerRemoteData;
-
-
-            RemoteData<Salesman> salesmanRemoteData;
 
 
             @Override
-            protected RemoteData<PClass> doInBackground() throws Exception {
-
-                packMaterialPositionRemoteData=apiManager.readPackMaterialPosition();
-
-                packMaterialTypeRemoteData=apiManager.readPackMaterialType();
-
-                packMaterialClassRemoteData  =apiManager.readPackMaterialClass();
-
-                packRemoteData=apiManager.readPacks();
+            protected RemoteData<BufferData> doInBackground() throws Exception {
 
 
-                materialTypeRemoteData=apiManager.readMaterialTypes();
-                materialClassRemoteData=apiManager.readMaterialClasses();
-
-                materialEquationRemoteData=   apiManager.readMaterialEquations();
-                salesmanRemoteData=apiManager.readSalesmans();
-                customerRemoteData=apiManager.readCustomers();
-
-                return apiManager.readProductClass();
+                return apiManager.loadInitData(user);
 
             }
 
             @Override
-            public void onResult(RemoteData<PClass> data) {
+            public void onResult(RemoteData<BufferData> data) {
 
 
-                BufferData.setPackMaterialPositions(packMaterialPositionRemoteData.datas
-                );
-
-                BufferData.setPackMaterialTypes(packMaterialTypeRemoteData.datas
-                );
-                BufferData.setPackMaterialClasses(packMaterialClassRemoteData.datas
-                );
-
-                BufferData.setPacks(packRemoteData.datas);
-                BufferData.setPClasses(data.datas);
-
-
-
-                BufferData.setMaterialClasses(materialClassRemoteData.datas);
-                BufferData.setMaterialTypes(materialTypeRemoteData.datas);
-
-
-                BufferData.setMaterialEquations(materialEquationRemoteData.datas);
-
-                BufferData.setCustomers(  customerRemoteData.datas);
-
-                BufferData.setSalesmans(  salesmanRemoteData.datas);
+                CacheManager.getInstance().bufferData=data.datas.get(0);
+                CacheManager.getInstance().bufferData.loginUser=user;
+                generateMenu();
 
 
             }
@@ -600,12 +587,8 @@ public class Main extends JFrame {
             public void onHandleError(HdException exception)
             {
 
-
-
                 JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。");
                 System.exit(0);
-
-
 
             }
         }.go();

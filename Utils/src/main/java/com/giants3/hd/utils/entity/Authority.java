@@ -23,6 +23,12 @@ public class Authority implements Serializable{
 
 
     /**
+     * 查看权限
+     */
+    public boolean viewable;
+
+
+    /**
      * 可修改权限
      */
     public boolean editable;
@@ -62,6 +68,7 @@ public class Authority implements Serializable{
         Authority authority = (Authority) o;
 
         if (id != authority.id) return false;
+        if (viewable != authority.viewable) return false;
         if (editable != authority.editable) return false;
         if (addable != authority.addable) return false;
         if (deletable != authority.deletable) return false;
@@ -78,6 +85,7 @@ public class Authority implements Serializable{
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (module != null ? module.hashCode() : 0);
+        result = 31 * result + (viewable ? 1 : 0);
         result = 31 * result + (editable ? 1 : 0);
         result = 31 * result + (addable ? 1 : 0);
         result = 31 * result + (deletable ? 1 : 0);

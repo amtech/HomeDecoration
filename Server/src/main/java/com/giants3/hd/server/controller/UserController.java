@@ -1,16 +1,16 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Salesman;
+import com.giants3.hd.utils.entity.BufferData;
+import com.giants3.hd.utils.entity.PackMaterialPosition;
+import com.giants3.hd.utils.entity.ProductProcess;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.server.repository.UserRepository;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +25,34 @@ public class UserController extends  BaseController{
 
     @Autowired
     private UserRepository userRepository;
-//    @RequestMapping(method = RequestMethod.GET)
-//    public String listUsers(ModelMap model)
-//    {
-//        model.addAttribute("user", new User());
-//        model.addAttribute("users", userRepository.findAll());
-//        return "hello";
-//    }
 
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private PackMaterialClassRepository packMaterialClassRepository;
+
+    @Autowired
+    private PackMaterialPositionRepository packMaterialPositionRepository;
+
+
+    @Autowired
+    private MaterialTypeRepository materialTypeRepository;
+
+    @Autowired
+    private PackMaterialTypeRepository packMaterialTypeRepository;
+
+    @Autowired
+    private PackRepository   packRepository;
+
+    @Autowired
+    private ProductClassRepository   productClassRepository;
+
+    @Autowired
+    private MaterialClassRepository   materialClassRepository;
 
     @RequestMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId) {
@@ -58,6 +78,83 @@ public class UserController extends  BaseController{
         return  wrapData(userRepository.findAll());
     }
 
+
+    @RequestMapping(value = "/saveList",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<User> saveList(@RequestBody List<User> users )   {
+
+        for(User user :users)
+        {
+
+
+
+
+            User oldData=userRepository.findOne(user.id);
+            if(oldData==null)
+            {
+                user.id=-1;
+
+
+                //如果是空数据  略过添加
+                if(user.isEmpty())
+                {
+                    continue;
+                }
+
+
+
+            }else
+            {
+
+
+
+
+                user.id=oldData.id;
+
+            }
+
+            userRepository.save(user);
+
+
+        }
+
+
+
+        return list();
+    }
+
+
+
+
+    @RequestMapping(value = "/initData",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<BufferData> initData(@RequestBody User user )   {
+
+
+        BufferData bufferData=new BufferData();
+        bufferData.authorities=authorityRepository.findByUser_IdEquals(user.id);
+        bufferData.customers=customerRepository.findAll();
+
+        bufferData.materialClasses=materialClassRepository.findAll();
+        bufferData.packMaterialClasses=packMaterialClassRepository.findAll();
+        bufferData.packMaterialPositions=packMaterialPositionRepository.findAll();
+
+        bufferData.materialTypes=materialTypeRepository.findAll();
+        bufferData.packMaterialTypes=packMaterialTypeRepository.findAll();
+        bufferData.packs=packRepository.findAll();
+        bufferData.pClasses=productClassRepository.findAll();
+        bufferData.salesmans=userRepository.findByIsSalesman(true);
+
+
+
+
+
+        return wrapData(bufferData);
+    }
 
 
 }

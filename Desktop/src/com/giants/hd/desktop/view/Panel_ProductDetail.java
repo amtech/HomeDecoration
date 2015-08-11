@@ -2,19 +2,18 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
-import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
-import com.giants.hd.desktop.widget.header.ColumnGroup;
-import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
@@ -23,7 +22,6 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
-import javafx.stage.FileChooser;
 import jxl.write.WriteException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -32,7 +30,6 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
@@ -958,12 +955,12 @@ public class Panel_ProductDetail extends BasePanel {
         //cellPanel.setGridColor(Color.GRAY);
         // cellPanel.setPaintInBackground(false);
         cb_class = new JComboBox<PClass>();
-        for (PClass pClass : BufferData.pClasses) {
+        for (PClass pClass : CacheManager.getInstance().bufferData.pClasses) {
             cb_class.addItem(pClass);
         }
 
         cb_pack=  new JComboBox<Pack>();
-        for (Pack pack : BufferData.packs) {
+        for (Pack pack : CacheManager.getInstance().bufferData.packs) {
             cb_pack.addItem(pack);
         }
 
@@ -1212,8 +1209,28 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+        //配置权限  是否修改  是否可以删除
+
+        boolean modifiable=AuthorityUtil.getInstance().editProduct()||AuthorityUtil.getInstance().addProduct();
+
+        bn_save.setVisible(modifiable);
+
+
+        btn_copy.setVisible(AuthorityUtil.getInstance().editProduct());
+
+
+        btn_delete.setVisible(AuthorityUtil.getInstance().deleteProduct());
+
+
+        btn_export.setVisible(AuthorityUtil.getInstance().exportProduct());
+
+
+
+
+
 
         //配置表格的自定义编辑输入   //工序
+
 
         initListeners();
     }
@@ -1616,7 +1633,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         JComboBox<PackMaterialType> packMaterialTypeComboBox = new JComboBox<>();
-        for (PackMaterialType type : BufferData.packMaterialTypes)
+        for (PackMaterialType type : CacheManager.getInstance().bufferData.packMaterialTypes)
             packMaterialTypeComboBox.addItem(type);
         DefaultCellEditor comboboxEditor = new DefaultCellEditor(packMaterialTypeComboBox);
 
@@ -1624,13 +1641,13 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         JComboBox<PackMaterialPosition> packMaterialPositionComboBox = new JComboBox<>();
-        for (PackMaterialPosition position : BufferData.packMaterialPositions)
+        for (PackMaterialPosition position : CacheManager.getInstance().bufferData.packMaterialPositions)
             packMaterialPositionComboBox.addItem(position);
         table.setDefaultEditor(PackMaterialPosition.class, new DefaultCellEditor(packMaterialPositionComboBox));
 
 
         JComboBox<PackMaterialClass> packMaterialClassComboBox = new JComboBox<>();
-        for (PackMaterialClass packMaterialClass : BufferData.packMaterialClasses)
+        for (PackMaterialClass packMaterialClass : CacheManager.getInstance().bufferData.packMaterialClasses)
             packMaterialClassComboBox.addItem(packMaterialClass);
         table.setDefaultEditor(PackMaterialClass.class, new DefaultCellEditor(packMaterialClassComboBox));
 

@@ -2,11 +2,10 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.model.BaseTableModel;
-import com.giants.hd.desktop.model.SalesmanModel;
+
 import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Salesman;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
@@ -28,6 +27,8 @@ public class UserDialog extends BaseSimpleDialog<User> {
     UserModel model;
     public UserDialog(Window window) {
         super(window);
+
+
     }
 
     @Override
@@ -47,7 +48,7 @@ public class UserDialog extends BaseSimpleDialog<User> {
 
     @Override
     protected void init() {
-        setTitle("业务员列表");
+        setTitle("用户列表");
         setContentPane(contentPane);
         jt.setModel(model);
         btn_save.addActionListener(new ActionListener() {

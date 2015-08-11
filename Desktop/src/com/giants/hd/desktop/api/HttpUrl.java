@@ -410,4 +410,29 @@ public class HttpUrl {
         return BaseUrl+"api/product/searchByName?proName="+product2Name+"&productId="+productId;
 
     }
+
+    public static String login() {
+        return BaseUrl+"api/authority/login";
+
+    }
+
+    public static String loadModules() {
+
+        return BaseUrl+"api/authority/moduleList";
+
+    }
+
+    public static String saveUsers() {
+        return BaseUrl+"api/user/saveList";
+
+    }
+
+    public static String saveModules() {
+
+        return BaseUrl+"api/authority/saveModules";
+    }
+
+    public static String loadInitData() {
+        return BaseUrl+"api/user/initData";
+    }
 }

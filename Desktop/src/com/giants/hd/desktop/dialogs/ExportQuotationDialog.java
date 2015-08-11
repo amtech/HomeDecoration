@@ -1,14 +1,14 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.reports.ReportFactory;
+import com.giants.hd.desktop.reports.excels.ExcelReportor;
 import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationFile;
-import javafx.stage.FileChooser;
+import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +26,9 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
     private JButton btn_confirm;
 
     private static String lastSelectedPath="";
+
+    @Inject
+    ReportFactory reportFactory;
 
 
     private QuotationDetail detail;
@@ -104,8 +107,10 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
             @Override
             protected RemoteData<Void> doInBackground() throws Exception {
 
+            ExcelReportor reporter= reportFactory.createExcelReportor(modelName);
+                reporter.report(detail, exportPath);
 
-                ExportHelper.exportQuotation(detail, modelName, exportPath);
+            //    ExportHelper.exportQuotation(detail, modelName, exportPath);
 
                 return null;
             }

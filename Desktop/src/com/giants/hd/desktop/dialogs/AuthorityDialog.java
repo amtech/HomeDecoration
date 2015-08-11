@@ -40,6 +40,7 @@ public class AuthorityDialog extends BaseDialog<Authority> {
 
         super(window,"权限配置");
         setContentPane(contentPane);
+        setMinimumSize(new Dimension(1000,600));
 
 
         jt_user.setModel(userModel);

@@ -192,7 +192,7 @@ public class ExportHelper {
 
             case QuotationFile.FILE_XIANGKANG_1:
 
-                exportXiankangDengju(quotationDetail,writableSheet);
+                exportXiankangDengju(quotationDetail, writableSheet);
 
                 break;
 
@@ -200,6 +200,9 @@ public class ExportHelper {
 
                 exportXiankangDengju(quotationDetail,writableSheet);
 
+            case QuotationFile.FILE_XIANGKANG_3:
+
+                exportXiankangDengju(quotationDetail,writableSheet);
 
                 break;
         }

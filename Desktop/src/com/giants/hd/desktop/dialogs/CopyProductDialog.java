@@ -36,7 +36,7 @@ public class CopyProductDialog extends BaseDialog<ProductDetail>  implements Bas
         this.product=product;
         setContentPane(   panel_copyProduct.getRoot());
         init();
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
 
     }
 

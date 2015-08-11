@@ -10,6 +10,7 @@ import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.QuotationItemXKTableModel;
 import com.giants.hd.desktop.model.QuotationTableModel;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
@@ -139,6 +140,12 @@ public class Panel_Quotation extends BasePanel{
         });
 
 
+
+
+        boolean quotationAddable=AuthorityUtil.getInstance().addQuotation();
+
+        btn_add.setVisible(quotationAddable);
+        btn_add_xiankang.setVisible(quotationAddable);
     }
 
 

@@ -2,11 +2,13 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.interf.PageListener;
-import com.giants.hd.desktop.local.BufferData;
+
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
@@ -141,13 +143,16 @@ public class Panel_Material  extends  BasePanel{
         aMaterialClass.name="所有分类";
         aMaterialClass.code="";
         cb_class.addItem(aMaterialClass);
-        for(MaterialClass materialClass: BufferData.materialClasses)
+        for(MaterialClass materialClass: CacheManager.getInstance().bufferData.materialClasses)
         {
             cb_class.addItem(materialClass);
         }
 
 
 
+
+
+        btn_add.setVisible(AuthorityUtil.getInstance().addMaterial());
 
 
 

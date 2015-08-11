@@ -11,10 +11,10 @@ import com.google.inject.Inject;
  */
 public class ModuleModel extends  BaseTableModel<Module> {
 
-    public static String[] columnNames = new String[]{                         "编号 ",  "名称"  ,"" };
+    public static String[] columnNames = new String[]{                         "名称 ",  "标题"  ,"" };
     public static int[] columnWidth=new int[]{   100,        120 ,ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{ "code", "name",  " "};
+    public static String[] fieldName = new String[]{ "name", "title",  " "};
 
     public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class };
 

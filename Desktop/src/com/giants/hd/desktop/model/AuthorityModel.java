@@ -11,12 +11,12 @@ import com.google.inject.Inject;
  */
 public class AuthorityModel extends  BaseTableModel<Authority> {
 
-    public static String[] columnNames = new String[]{    "模块名称 ", "添加", "修改"  ,"删除","导入","导出","审核" };
-    public static int[] columnWidth=new int[]{   200,       40, 40 ,40, 40 ,40, 40  };
+    public static String[] columnNames = new String[]{    "模块名称 ","查看", "添加", "修改"  ,"删除","导入","导出","审核" };
+    public static int[] columnWidth=new int[]{   200,    40,40,   40, 40 ,40, 40 ,40, 40  };
 
-    public static String[] fieldName = new String[]{ "module", "addable",  "editable","deletable","importable","exportable","checkable"};
+    public static String[] fieldName = new String[]{ "module","viewable", "addable",  "editable","deletable","importable","exportable","checkable"};
 
-    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class, Boolean.class, Boolean.class ,Boolean.class, Boolean.class };
+    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class, Boolean.class, Boolean.class ,Boolean.class, Boolean.class,Boolean.class };
 
 
     @Inject
@@ -34,10 +34,6 @@ public class AuthorityModel extends  BaseTableModel<Authority> {
     }
 
 
-    @Override
-    public void setEditable(boolean editable) {
-        super.setEditable(editable);
-    }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -51,23 +47,26 @@ public class AuthorityModel extends  BaseTableModel<Authority> {
 
         switch (columnIndex)
         {
-
             case 1:
-            authority.addable=booleanValue;
-            break;
+                authority.viewable=booleanValue;
+                break;
             case 2:
+            authority.addable=booleanValue;
+
+            break;
+            case 3:
                 authority.editable=booleanValue;
                 break;
-            case 3:
+            case 4:
                 authority.deletable=booleanValue;
                 break;
-            case 4:
+            case 5:
                 authority.importable=booleanValue;
                 break;
-            case 5:
+            case 6:
                 authority.exportable=booleanValue;
                 break;
-            case 6:
+            case 7:
                 authority.checkable=booleanValue;
                 break;
 

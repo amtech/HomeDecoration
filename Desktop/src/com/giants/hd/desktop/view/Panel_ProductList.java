@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
@@ -21,7 +22,7 @@ import java.awt.event.MouseEvent;
  * 产品列表界面
  */
 @Singleton
-public class Panel_ProductList  extends BasePanel {
+public class Panel_ProductList extends BasePanel {
 
     @Inject
     ApiManager apiManager;
@@ -41,11 +42,8 @@ public class Panel_ProductList  extends BasePanel {
     ProductTableModel tableModel;
 
 
-
     public Panel_ProductList() {
         super();
-
-
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -58,11 +56,7 @@ public class Panel_ProductList  extends BasePanel {
         });
 
 
-
-
-
         productTable.setModel(tableModel);
-
 
 
         productTable.addMouseListener(new MouseInputAdapter() {
@@ -107,8 +101,6 @@ public class Panel_ProductList  extends BasePanel {
         });
 
 
-
-
         pagePanel.setListener(new PageListener() {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {
@@ -117,40 +109,34 @@ public class Panel_ProductList  extends BasePanel {
         });
 
 
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                searchProduct("");
+            }
+        });
 
 
-SwingUtilities.invokeLater(new Runnable() {
-    @Override
-    public void run() {
-        searchProduct("");
-    }
-});
+        bn_add.setVisible(AuthorityUtil.getInstance().addProduct());
 
-    }
-
-
-
-
-    private  void searchProduct(String productNameValue)
-    {
-
-        searchProduct(productNameValue,0,pagePanel.getPageSize());
 
     }
 
-    private  void searchProduct(final String productNameValue,final int pageIndex,final int pageSize)
-    {
+
+    private void searchProduct(String productNameValue) {
+
+        searchProduct(productNameValue, 0, pagePanel.getPageSize());
+
+    }
+
+    private void searchProduct(final String productNameValue, final int pageIndex, final int pageSize) {
 
 
-
-
-
-        new HdSwingWorker<Product,Object>(getWindow(getRoot()))
-        {
+        new HdSwingWorker<Product, Object>(getWindow(getRoot())) {
             @Override
             protected RemoteData<Product> doInBackground() throws Exception {
 
-                return   apiManager.readProductList(productNameValue,pageIndex,pageSize);
+                return apiManager.readProductList(productNameValue, pageIndex, pageSize);
 
             }
 
@@ -165,10 +151,6 @@ SwingUtilities.invokeLater(new Runnable() {
 
             }
         }.go();
-
-
-
-
 
 
     }

@@ -27,6 +27,8 @@ public class AuthorityController extends  BaseController{
 
 
 
+
+
     @Autowired
     private AuthorityRepository authorityRepository;
 
@@ -107,6 +109,49 @@ public class AuthorityController extends  BaseController{
         return  wrapData(newData);
     }
 
+
+
+    @RequestMapping(value="/login", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<User> login(  @RequestBody User user)   {
+
+
+        List<User> userList=userRepository.findByNameEquals(user.name);
+
+        int size=userList.size();
+        if(size<=0)
+        return     wrapError("用户账户不存在");
+        if(size>1)
+            return     wrapError("存在重名用户，请联系管理员");
+
+        User findUser=userList.get(0);
+        if(!findUser.password.equals(user.password))
+        {
+            return     wrapError("密码错误");
+        }
+
+
+
+        return  wrapData(findUser);
+    }
+
+    @RequestMapping(value="/moduleList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Module> moduleList( )   {
+
+
+
+
+
+        return    wrapData(moduleRepository.findAll()  );
+
+
+
+
+
+    }
 
 
 

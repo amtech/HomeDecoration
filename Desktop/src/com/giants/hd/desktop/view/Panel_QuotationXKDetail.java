@@ -2,10 +2,11 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
-import com.giants.hd.desktop.local.BufferData;
+
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
@@ -13,6 +14,8 @@ import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants.hd.desktop.model.Productable;
 import com.giants.hd.desktop.model.QuotationItemTableModel;
 import com.giants.hd.desktop.model.QuotationItemXKTableModel;
+import com.giants.hd.desktop.reports.ReportFactory;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
@@ -47,7 +50,7 @@ public class Panel_QuotationXKDetail extends BasePanel {
     private JHdTable tb;
     private JTextField jtf_number;
     private JComboBox cb_currency;
-    private JComboBox<Salesman> cb_salesman;
+    private JComboBox<User> cb_salesman;
     private JComboBox<Customer> cb_customer;
     private JDatePickerImpl qDate;
     private JDatePickerImpl vDate;
@@ -63,6 +66,8 @@ public class Panel_QuotationXKDetail extends BasePanel {
 
     @Inject
     ApiManager apiManager;
+
+
 
 
     private JComboBox productComboBox;
@@ -84,6 +89,22 @@ public class Panel_QuotationXKDetail extends BasePanel {
         configTableEditor();
         configProduct2Editor();
 
+
+
+
+        //配置权限  是否修改  是否可以删除
+
+        boolean modifiable= AuthorityUtil.getInstance().editQuotation()||AuthorityUtil.getInstance().addQuotation();
+
+        btn_save.setVisible(modifiable);
+
+
+
+
+        btn_delete.setVisible(AuthorityUtil.getInstance().deleteQuotation());
+
+
+        btn_export.setVisible(AuthorityUtil.getInstance().exportQuotation());
     }
 
 
@@ -323,46 +344,46 @@ public class Panel_QuotationXKDetail extends BasePanel {
     }
 
 
-    private void loadProduct2(final String product2Name, final long productId,int rowIndex)
-    {
-
-        //查询  单记录直接copy
-        new HdSwingWorker<Product,Object>(SwingUtilities.getWindowAncestor(getRoot()))
-        {
-            @Override
-            protected RemoteData<Product> doInBackground() throws Exception {
-
-
-                return   apiManager.readSameNameProductList(product2Name,productId);
-
-            }
-
-            @Override
-            public void onResult(RemoteData<Product> data) {
-
-                if(data.isSuccess()  )
-                {
-
-
-                    productComboBox.removeAllItems();
-                    for(Product product:data.datas)
-                    {
-                        productComboBox.addItem(new Product2(product));
-                    }
-
-
-
-
-
-
-                }
-
-
-
-
-            }
-        }.go();
-    }
+//    private void loadProduct2(final String product2Name, final long productId,int rowIndex)
+//    {
+//
+//        //查询  单记录直接copy
+//        new HdSwingWorker<Product,Object>(SwingUtilities.getWindowAncestor(getRoot()))
+//        {
+//            @Override
+//            protected RemoteData<Product> doInBackground() throws Exception {
+//
+//
+//                return   apiManager.readSameNameProductList(product2Name,productId);
+//
+//            }
+//
+//            @Override
+//            public void onResult(RemoteData<Product> data) {
+//
+//                if(data.isSuccess()  )
+//                {
+//
+//
+//                    productComboBox.removeAllItems();
+//                    for(Product product:data.datas)
+//                    {
+//                        productComboBox.addItem(new Product2(product));
+//                    }
+//
+//
+//
+//
+//
+//
+//                }
+//
+//
+//
+//
+//            }
+//        }.go();
+//    }
 
 
     private void createUIComponents() {
@@ -378,12 +399,12 @@ public class Panel_QuotationXKDetail extends BasePanel {
 
 
         cb_customer = new JComboBox<Customer>();
-        for (Customer customer : BufferData.customers) {
+        for (Customer customer : CacheManager.getInstance().bufferData.customers) {
             cb_customer.addItem(customer);
         }
 
-        cb_salesman=  new JComboBox<Salesman>();
-        for (Salesman salesman : BufferData.salesmans) {
+        cb_salesman=  new JComboBox<User>();
+        for (User salesman : CacheManager.getInstance().bufferData.salesmans) {
             cb_salesman.addItem(salesman);
         }
 
@@ -437,10 +458,10 @@ public class Panel_QuotationXKDetail extends BasePanel {
             quotation.customerId = selectedCustomer.id;
             quotation.customerName = selectedCustomer.name;
         }
-        Salesman selectedSalesman= (Salesman) cb_salesman.getSelectedItem();
+        User selectedSalesman= (User) cb_salesman.getSelectedItem();
         if(selectedSalesman!=null) {
             quotation.salesmanId = selectedSalesman.id;
-            quotation.salesman = selectedSalesman.name;
+            quotation.salesman = selectedSalesman.chineseName;
         }
         quotation.qDate=qDate.getJFormattedTextField().getText().trim();
         quotation.vDate=vDate.getJFormattedTextField().getText().trim();

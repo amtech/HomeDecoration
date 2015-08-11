@@ -1,7 +1,8 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.ImageViewDialog;
-import com.giants.hd.desktop.local.BufferData;
+
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
@@ -106,12 +107,12 @@ public class Panel_Material_Detail extends  BasePanel {
        // cb_materialClass.addItem();
 
 
-        for(MaterialClass materialClass: BufferData.materialClasses)
+        for(MaterialClass materialClass: CacheManager.getInstance().bufferData.materialClasses)
         {
             cb_materialClass.addItem(materialClass);
         }
 
-        for(MaterialType materialType: BufferData.materialTypes)
+        for(MaterialType materialType: CacheManager.getInstance().bufferData.materialTypes)
         {
             cb_materialType.addItem(materialType);
         }
