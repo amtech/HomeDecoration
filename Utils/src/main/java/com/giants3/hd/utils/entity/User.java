@@ -80,6 +80,6 @@ public class User implements Serializable,Valuable {
     public String toString() {
 
 
-        return "["+code+"]"+chineseName;
+        return "["+code+"]["+name+"]"+chineseName;
     }
 }

@@ -236,6 +236,8 @@ public class Main extends JFrame {
         menuBar.add(createSysetm());
 
 
+        menuBar.add(createPersonal());
+
         //System.exit(0);
         setJMenuBar(menuBar);
 
@@ -313,7 +315,11 @@ public class Main extends JFrame {
     }
 
 
-
+    /**
+     * 报价模块
+     *
+     * @return
+     */
 
     private JMenu createReport()
     {
@@ -540,6 +546,47 @@ public class Main extends JFrame {
 
 
         return menu;
+    }
+
+
+    /**
+     * 个人设置模块
+     *
+     */
+
+
+    private JMenu createPersonal()
+    {
+
+
+
+        JMenu    menu = new JMenu("个人模块");
+
+        //
+        JMenuItem  menuItem = new JMenuItem("修改密码"
+                );
+
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                UpdatePasswordDialog dialog = new UpdatePasswordDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+
+
+            }
+        });
+
+
+
+        return menu;
+
+
     }
 
 

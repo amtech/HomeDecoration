@@ -20,6 +20,8 @@ public class UserDialog extends BaseSimpleDialog<User> {
     private JButton btn_save;
     private JHdTable jt;
 
+
+
     @Inject
     ApiManager apiManager;
 

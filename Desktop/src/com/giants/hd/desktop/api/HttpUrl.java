@@ -435,4 +435,12 @@ public class HttpUrl {
     public static String loadInitData() {
         return BaseUrl+"api/user/initData";
     }
+
+    public static String updatePassword() {
+
+
+
+        return BaseUrl+"api/user/updatePassword";
+
+    }
 }

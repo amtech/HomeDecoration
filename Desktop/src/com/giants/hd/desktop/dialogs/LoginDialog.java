@@ -2,9 +2,11 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -14,10 +16,10 @@ import java.awt.event.ActionListener;
 
 public class LoginDialog extends BaseDialog<User> {
     private JPanel contentPane;
-    private JTextField tf_name;
     private JTextField tf_password;
     private JButton btn_login;
     private JButton btn_logout;
+    private JComboBox cb_user;
 
 
     @Inject
@@ -27,13 +29,13 @@ public class LoginDialog extends BaseDialog<User> {
 
 
     public LoginDialog( Window window) {
-        super(window,"登录窗口");
+        super(window,"登录");
         setContentPane(contentPane);
+
 
         btn_login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
 
 
                 login();
@@ -49,7 +51,67 @@ public class LoginDialog extends BaseDialog<User> {
                 dispose();
             }
         });
+
+
+
+        loadUsers();
+
+
+
+
+
+
+
+
+
     }
+
+
+
+
+    private  void  loadUsers()
+    {
+
+        new HdSwingWorker<User,Object>(this)
+        {
+            @Override
+            protected RemoteData<User> doInBackground() throws Exception {
+                return apiManager.readUsers();
+            }
+
+            @Override
+            public void onResult(RemoteData<User> data) {
+
+                if(data.isSuccess())
+                {
+
+
+
+                    cb_user.removeAllItems();
+                    for(User  user:data.datas)
+                        cb_user.addItem(user);
+
+
+
+
+                }else {
+
+                    JOptionPane.showMessageDialog(LoginDialog.this,data.message);
+                }
+
+
+
+
+
+
+            }
+        }.go();
+    }
+
+
+
+
+
 
 
 
@@ -59,7 +121,7 @@ public class LoginDialog extends BaseDialog<User> {
     {
 
 
-        final  String userName=tf_name.getText().toString();
+        final  String userName=((User)(cb_user.getSelectedItem())).name;
         final String password=tf_password.getText().toString();
 
         new HdSwingWorker<User,Object>(this)

@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 import com.giants.hd.desktop.ImageViewDialog;
 
 import com.giants.hd.desktop.api.CacheManager;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
@@ -138,6 +139,28 @@ public class Panel_Material_Detail extends  BasePanel {
                  }
              }
     });
+
+
+
+
+
+
+
+
+
+
+        //配置权限  是否修改  是否可以删除
+
+        boolean modifiable= AuthorityUtil.getInstance().editProduct()||AuthorityUtil.getInstance().addProduct();
+
+        btn_save.setVisible(modifiable);
+
+
+
+
+
+        btn_delete.setVisible(AuthorityUtil.getInstance().deleteProduct());
+
 
     }
 

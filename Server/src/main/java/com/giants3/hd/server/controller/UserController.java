@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * Created by Administrator on 2014/9/18.
@@ -156,5 +157,42 @@ public class UserController extends  BaseController{
         return wrapData(bufferData);
     }
 
+    @RequestMapping(value = "/updatePassword",method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<Void> initData(@RequestBody String[] map )   {
 
+
+        long userId= Long.valueOf(map[0]);
+        String oldPassword  = map[1];
+        String newPassword= map[2];
+     User user=userRepository.findOne(userId);
+        if(user!=null)
+        {
+
+            if(user.password.equals(oldPassword))
+            {
+
+                user.password=newPassword;
+                userRepository.save(user);
+                return wrapData( );
+            }else
+            {
+                return   wrapError("旧密码错误");
+            }
+
+
+        }else
+        {
+
+          return   wrapError("要修改的员工不存在");
+        }
+
+
+
+
+
+
+    }
 }

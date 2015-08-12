@@ -12,7 +12,9 @@ import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -888,5 +890,32 @@ public class ApiManager {
         RemoteData<BufferData> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
 
+    }
+
+
+    /**
+     * 修改密码
+     * @param userId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Void> updatePassword(long userId, String oldPassword, String newPassword) throws HdException {
+
+
+        String url=HttpUrl.updatePassword();
+        String[] body=new String[3];
+        body[0]=String.valueOf(userId
+        );
+        body[1]=oldPassword;
+        body[2]=newPassword;
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(body));
+
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
     }
 }
