@@ -76,6 +76,14 @@ public class Panel_Quotation extends BasePanel{
             }
         });
 
+        jtf_product.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                loadData();
+            }
+        });
+
         pagePanel.setListener(new PageListener() {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {

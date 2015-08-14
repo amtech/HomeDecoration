@@ -5,6 +5,7 @@ import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.dialogs.*;
 
+
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
@@ -15,8 +16,10 @@ import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,10 +59,16 @@ public class Main extends JFrame {
 
 
 
+
         String baseUrl=PropertyWorker.readData("BaseUrl");
 
         if(null!=baseUrl)
         HttpUrl.iniBaseUrl(baseUrl );
+
+
+        int version= PropertyWorker.getVersion().versionCode;
+        HttpUrl.setVersionCode(version);
+
 
 
 
@@ -178,7 +187,6 @@ public class Main extends JFrame {
 
         //ask for login
 
-
         LoginDialog dialog=new LoginDialog(frame);
         dialog.setModal(true);
         dialog.setVisible(true);
@@ -196,6 +204,12 @@ public class Main extends JFrame {
 
 
 
+
+
+
+
+
+
     }
 
 
@@ -203,6 +217,8 @@ public class Main extends JFrame {
      * 生成菜单
      */
     public void generateMenu() {
+
+
 
 
 
@@ -237,6 +253,8 @@ public class Main extends JFrame {
 
 
         menuBar.add(createPersonal());
+
+        menuBar.add(createHelp());
 
         //System.exit(0);
         setJMenuBar(menuBar);
@@ -590,13 +608,50 @@ public class Main extends JFrame {
     }
 
 
+    /**
+     * 帮助菜单
+     *
+     */
 
+
+    private JMenu createHelp()
+    {
+
+
+
+        JMenu    menu = new JMenu("帮助");
+
+        //
+        JMenuItem  menuItem = new JMenuItem("检查更新"
+        );
+
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                UpgradeDialog dialog = new UpgradeDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+
+
+            }
+        });
+
+
+
+        return menu;
+
+
+    }
 
     /**
      * 预先加载数据
      */
-    private void preLoadData(final User user
-    ) {
+    private void preLoadData(final User user) {
 
 
         new HdSwingWorker<BufferData, Object>(this,"数据预加载处理 请稍后。。。") {
@@ -640,6 +695,16 @@ public class Main extends JFrame {
             }
         }.go();
 
+
+    }
+
+
+    @Override
+    public void dispose() {
+
+
+
+        super.dispose();
 
     }
 }

@@ -64,7 +64,15 @@ public class Panel_Material  extends  BasePanel{
             public void actionPerformed(ActionEvent e) {
 
 
-                String value= jtf_value.getText();
+                String value = jtf_value.getText();
+                search(value);
+            }
+        });
+        jtf_value.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String value = jtf_value.getText();
                 search(value);
             }
         });

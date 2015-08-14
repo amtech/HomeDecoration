@@ -16,15 +16,66 @@ public class HttpUrl {
 
     public static  final String URL_ENCODING="UTF-8";
 
-    public  static
-      String BaseUrl="http://localhost:8080/";
+   // public  static     String BaseUrl="http://192.168.10.198:8080/Server/";
+      public  static     String BaseUrl="http://127.0.0.1:8080/";
+    private static int versionCode;
 
     public static final void iniBaseUrl
             (String configUrl)
     {BaseUrl=configUrl;}
 
+
+    public static String TOKEN="";
+
+
+
+
+    public static void setToken(String newToken) {
+
+
+        TOKEN=newToken;
+    }
+
+    public static String appendix(String url)
+    {
+
+
+        if(StringUtils.isEmpty(TOKEN))
+        {
+            return url;
+        }
+
+        if(url.contains("?"))
+        {
+            url+="&token="+TOKEN;
+        }else
+        {
+            url+="?token="+TOKEN;
+        }
+        if(url.contains("?"))
+        {
+            url+="&version="+versionCode;
+        }else
+        {
+            url+="?version="+versionCode;
+        }
+
+        return url;
+    }
+
+    public static void setVersionCode(int versionCode) {
+        HttpUrl.versionCode = versionCode;
+    }
+
+
+
+
+
+
+
+
     public static String loadProductList(String productName, int pageIndex, int pageSize) {
-        return BaseUrl+"api/product/search?proName="+productName+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return appendix(BaseUrl + "api/product/search?proName=" + productName + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 
     /**
@@ -32,7 +83,7 @@ public class HttpUrl {
      * @return
      */
     public static String saveProduct() {
-         return BaseUrl+"api/product/save";
+         return appendix(BaseUrl + "api/product/save");
     }
 
 
@@ -42,7 +93,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadProductDetail(long id) {
-        return BaseUrl+"api/product/detail?id="+id;
+        return appendix(BaseUrl + "api/product/detail?id=" + id);
     }
 
     /**
@@ -56,7 +107,7 @@ public class HttpUrl {
         if(!StringUtils.isEmpty(version))
             url+="_"+version.trim();
         url+=  ".jpg";
-        return  url;
+        return  appendix(url);
     }
 
     /**
@@ -65,7 +116,7 @@ public class HttpUrl {
      */
     public static String loadProductClass() {
 
-        return BaseUrl+"api/productClass/list";
+        return appendix(BaseUrl + "api/productClass/list");
 
     }
 
@@ -75,7 +126,7 @@ public class HttpUrl {
      */
     public static String loadSalesmans() {
 
-        return BaseUrl+"api/salesman/list";
+        return appendix(BaseUrl + "api/salesman/list");
 
     }
 
@@ -86,7 +137,7 @@ public class HttpUrl {
      */
     public static String saveSalesmans() {
 
-        return BaseUrl+"api/salesman/save";
+        return appendix(BaseUrl + "api/salesman/save");
 
     }
 
@@ -96,7 +147,7 @@ public class HttpUrl {
      */
     public static String loadCustomers() {
 
-        return BaseUrl+"api/customer/list";
+        return appendix(BaseUrl + "api/customer/list");
 
     }
 
@@ -106,7 +157,7 @@ public class HttpUrl {
      * @return
      */
     public static String saveCustomers() {
-        return BaseUrl+"api/customer/save";
+        return appendix(BaseUrl + "api/customer/save");
     }
 
 
@@ -114,7 +165,7 @@ public class HttpUrl {
     public static String loadMaterialByCodeOrName(String value,String classId,int pageIndex,int pageSize
     ) {
 
-        return BaseUrl+"api/material/search?codeOrName="+ UTF8UrlEncoder.encode(value)+"&classId="+classId+"&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return appendix(BaseUrl + "api/material/search?codeOrName=" + UTF8UrlEncoder.encode(value) + "&classId=" + classId + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 
@@ -125,7 +176,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadPackMaterialType() {
-        return BaseUrl+"api/packMaterialType/list";
+        return appendix(BaseUrl + "api/packMaterialType/list");
     }
 
     /**
@@ -134,7 +185,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadPackMaterialClass() {
-        return BaseUrl+"api/packMaterialClass/list";
+        return appendix(BaseUrl + "api/packMaterialClass/list");
     }
 
     /**
@@ -142,7 +193,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadPackMaterialPosition() {
-          return BaseUrl+"api/packMaterialPosition/list";
+          return appendix(BaseUrl + "api/packMaterialPosition/list");
     }
 
 
@@ -151,7 +202,7 @@ public class HttpUrl {
      * @return
      */
     public static String saveMaterials() {
-        return BaseUrl+"api/material/saveList";
+        return appendix(BaseUrl + "api/material/saveList");
     }
 
 
@@ -161,14 +212,14 @@ public class HttpUrl {
      *  根据材料编码列表 查询材料列表
      */
     public static String loadMaterialListByCodeEquals() {
-        return BaseUrl+"api/material/findListByCodes";
+        return appendix(BaseUrl + "api/material/findListByCodes");
     }
 
     /**
      *  根据材料名称列表 查询材料列表
      */
     public static String loadMaterialListByNameEquals() {
-        return BaseUrl+"api/material/findListByNames";
+        return appendix(BaseUrl + "api/material/findListByNames");
     }
 
 
@@ -178,7 +229,7 @@ public class HttpUrl {
      */
     public static String loadPacks() {
 
-        return BaseUrl+"api/pack/list";
+        return appendix(BaseUrl + "api/pack/list");
 
     }
 
@@ -189,7 +240,7 @@ public class HttpUrl {
      */
     public static String loadMaterialTypes() {
 
-        return BaseUrl+"api/material/listType";
+        return appendix(BaseUrl + "api/material/listType");
     }
 
 
@@ -199,11 +250,11 @@ public class HttpUrl {
      */
     public static String loadMaterialClasses() {
 
-        return BaseUrl+"api/material/listClass";
+        return appendix(BaseUrl + "api/material/listClass");
     }
 
     public static String saveMaterial() {
-        return BaseUrl+"api/material/save";
+        return appendix(BaseUrl + "api/material/save");
     }
 
     /**
@@ -211,7 +262,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadMaterialEquations() {
-        return BaseUrl+"api/material/listEquation";
+        return appendix(BaseUrl + "api/material/listEquation");
 
     }
 
@@ -221,16 +272,16 @@ public class HttpUrl {
      * @return
      */
     public static String copyProductDetail(long id, String productName,String version) {
-        return BaseUrl+"api/product/copy?id="+id+"&name="+productName+"&version="+version;
+        return appendix(BaseUrl + "api/product/copy?id=" + id + "&name=" + productName + "&version=" + version);
     }
 
     public static String deleteProductLogic(long productId) {
-        return BaseUrl+"api/product/logicDelete?id="+productId ;
+        return appendix(BaseUrl + "api/product/logicDelete?id=" + productId) ;
     }
 
 
     public static String deleteMaterialLogic(long materialId) {
-        return BaseUrl+"api/material/logicDelete?id="+materialId ;
+        return appendix(BaseUrl + "api/material/logicDelete?id=" + materialId);
     }
 
     /**
@@ -238,7 +289,7 @@ public class HttpUrl {
      * @return
      */
     public static String syncMaterialPhoto() {
-        return BaseUrl+"api/material/syncPhoto" ;
+        return appendix(BaseUrl + "api/material/syncPhoto") ;
     }
 
     /**
@@ -247,7 +298,7 @@ public class HttpUrl {
      */
     public static String syncProductPhoto() {
 
-        return BaseUrl+"api/product/syncPhoto" ;
+        return appendix(BaseUrl + "api/product/syncPhoto") ;
     }
 
 
@@ -260,7 +311,7 @@ public class HttpUrl {
         String url= BaseUrl+"api/file/download/material/"+materialCode;
         url+=  ".jpg";
         url+="?mClass="+classId;
-        return  url;
+        return  appendix(url);
     }
 
     /**
@@ -269,7 +320,7 @@ public class HttpUrl {
      * @return
      */
     public static String uploadProductPicture(String productName,boolean doesOverride) {
-        return BaseUrl+"api/file/uploadProduct?name="+productName+"&doesOverride="+doesOverride;
+        return appendix(BaseUrl + "api/file/uploadProduct?name=" + productName + "&doesOverride=" + doesOverride);
     }
 
 
@@ -279,7 +330,7 @@ public class HttpUrl {
      * @return
      */
     public static String uploadMaterialPicture(String materialName,boolean doesOverride) {
-        return BaseUrl+"api/file/uploadMaterial?name="+materialName+"&doesOverride="+doesOverride;
+        return appendix(BaseUrl + "api/file/uploadMaterial?name=" + materialName + "&doesOverride=" + doesOverride);
     }
 
 
@@ -289,7 +340,7 @@ public class HttpUrl {
      */
     public static String loadProductProcess() {
 
-        return BaseUrl+"api/process/list";
+        return appendix(BaseUrl + "api/process/list");
     }
 
     /**
@@ -298,7 +349,7 @@ public class HttpUrl {
      */
     public static String saveProductProcesses() {
 
-        return BaseUrl+"api/process/saveList";
+        return appendix(BaseUrl + "api/process/saveList");
     }
 
     /**
@@ -309,7 +360,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadProcessByCodeOrName(String value, int pageIndex, int pageSize) {
-        return BaseUrl+"api/process/search?name="+ UTF8UrlEncoder.encode(value)+ "&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return appendix(BaseUrl + "api/process/search?name=" + UTF8UrlEncoder.encode(value) + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 
@@ -319,7 +370,7 @@ public class HttpUrl {
      * @return
      */
     public static String syncErpMaterial() {
-        return BaseUrl+"api/material/syncERP" ;
+        return appendix(BaseUrl + "api/material/syncERP") ;
     }
 
     /**
@@ -327,7 +378,7 @@ public class HttpUrl {
      * @return
      */
     public static String saveMaterialClasses() {
-        return BaseUrl+"api/material/saveClassList" ;
+        return appendix(BaseUrl + "api/material/saveClassList");
     }
 
 
@@ -342,7 +393,7 @@ public class HttpUrl {
     public static String loadQuotation(String  searchValue,int pageIndex,int pageSize
     ) {
 
-        return BaseUrl+"api/quotation/search?searchValue="+ UTF8UrlEncoder.encode(searchValue)+  "&pageIndex="+pageIndex+"&pageSize="+pageSize;
+        return appendix(BaseUrl + "api/quotation/search?searchValue=" + UTF8UrlEncoder.encode(searchValue) + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 
@@ -353,7 +404,7 @@ public class HttpUrl {
      */
     public static String loadQuotationDetail(long id) {
 
-        return BaseUrl+"api/quotation/detail?id="+ id;
+        return appendix(BaseUrl + "api/quotation/detail?id=" + id);
 
     }
 
@@ -362,12 +413,12 @@ public class HttpUrl {
      * @return
      */
     public static String saveQuotationDetail() {
-        return BaseUrl+"api/quotation/save";
+        return appendix(BaseUrl + "api/quotation/save");
     }
 
     public static String deleteQuotationLogic(long quotationId) {
 
-            return BaseUrl+"api/quotation/logicDelete?id="+quotationId ;
+            return appendix(BaseUrl + "api/quotation/logicDelete?id=" + quotationId) ;
     }
 
     /**
@@ -376,11 +427,11 @@ public class HttpUrl {
      */
     public static String loadQuotationFile(String name) {
 
-        return BaseUrl+"api/file/download/quotation?name="+ UTF8UrlEncoder.encode(name) ;
+        return appendix(BaseUrl + "api/file/download/quotation?name=" + UTF8UrlEncoder.encode(name));
     }
 
     public static String loadUsers() {
-        return BaseUrl+"api/user/list";
+        return appendix(BaseUrl + "api/user/list");
     }
 
 
@@ -391,7 +442,7 @@ public class HttpUrl {
      */
     public static String loadAuthorityByUser(long id) {
 
-        return BaseUrl+"api/authority/findByUser?userId="+ id ;
+        return appendix(BaseUrl + "api/authority/findByUser?userId=" + id);
 
 
     }
@@ -401,46 +452,63 @@ public class HttpUrl {
      * @return
      */
     public static String saveAuthorities(long userId) {
-        return BaseUrl+"api/authority/saveList?userId="+ userId;
+        return appendix(BaseUrl + "api/authority/saveList?userId=" + userId);
     }
 
     public static String readSameNameProductList(String product2Name, long productId) {
 
 
-        return BaseUrl+"api/product/searchByName?proName="+product2Name+"&productId="+productId;
+        return appendix(BaseUrl + "api/product/searchByName?proName=" + product2Name + "&productId=" + productId);
 
     }
 
     public static String login() {
-        return BaseUrl+"api/authority/login";
+        return appendix(BaseUrl + "api/authority/login");
 
     }
 
     public static String loadModules() {
 
-        return BaseUrl+"api/authority/moduleList";
+        return appendix(BaseUrl + "api/authority/moduleList");
 
     }
 
     public static String saveUsers() {
-        return BaseUrl+"api/user/saveList";
+        return appendix(BaseUrl + "api/user/saveList");
 
     }
 
     public static String saveModules() {
 
-        return BaseUrl+"api/authority/saveModules";
+        return appendix(BaseUrl + "api/authority/saveModules");
     }
 
     public static String loadInitData() {
-        return BaseUrl+"api/user/initData";
+        return appendix(BaseUrl + "api/user/initData");
     }
 
     public static String updatePassword() {
 
 
 
-        return BaseUrl+"api/user/updatePassword";
+        return appendix(BaseUrl + "api/user/updatePassword");
 
+    }
+
+
+
+
+    /**
+     * 读取app 版本信息
+     * @return
+     */
+    public static String readAppVersion() {
+
+        return appendix(BaseUrl + "api/authority/loadAppVersion");
+    }
+
+    public static String loadApp() {
+
+        return appendix(BaseUrl + "api/file/download/app");
     }
 }

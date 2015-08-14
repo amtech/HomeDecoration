@@ -11,6 +11,11 @@
 
     <context:component-scan base-package="com.giants3.hd.server.controller"/>
 
+
+
+
+
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
@@ -54,6 +59,15 @@
          </property>
 
     </bean>
+
+
+
+    <mvc:interceptors>
+        <!--&lt;!&ndash; 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 &ndash;&gt;-->
+        <!--<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />-->
+        <!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 -->
+        <bean class="com.giants3.hd.server.interceptor.AuthInterceptor"></bean>
+    </mvc:interceptors>
 
 
     <!--<bean id="transactionManagerERP" class="org.springframework.orm.jpa.JpaTransactionManager">

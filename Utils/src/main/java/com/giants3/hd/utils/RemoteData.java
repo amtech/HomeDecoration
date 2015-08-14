@@ -28,6 +28,9 @@ public class RemoteData<T> implements Serializable{
     public int totalCount;
 
 
+    public String token;
+
+
     public RemoteData()
     {
 
@@ -46,7 +49,10 @@ public class RemoteData<T> implements Serializable{
      */
     public  static final int CODE_FAIL=-1;
 
-
+    /**
+     * 请求失败状态码
+     */
+    public  static final int CODE_UNLOGIN=2;
     /**
      * 是否成功的调用
      * @return

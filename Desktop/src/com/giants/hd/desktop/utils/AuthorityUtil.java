@@ -352,7 +352,7 @@ public class AuthorityUtil {
     }
 
     public boolean exportProduct() {
-        return exportable(Module.NAME_MODULE);
+        return exportable(Module.NAME_PRODUCT);
     }
 
     public boolean editQuotation() {
@@ -368,5 +368,15 @@ public class AuthorityUtil {
     public boolean deleteQuotation() {
 
         return deletable(Module.NAME_QUOTATION);
+    }
+
+    public boolean editMaterial() {
+
+        return editable(Module.NAME_MATERIAL);
+    }
+
+    public boolean deleteMaterial() {
+
+        return deletable(Module.NAME_MATERIAL);
     }
 }

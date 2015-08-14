@@ -1,19 +1,17 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.repository.AuthorityRepository;
-import com.giants3.hd.server.repository.ModuleRepository;
-import com.giants3.hd.server.repository.UserRepository;
+import com.giants3.hd.server.repository.*;
+import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Authority;
-import com.giants3.hd.utils.entity.Customer;
-import com.giants3.hd.utils.entity.Module;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,6 +20,7 @@ import java.util.List;
 * Created by davidleen29 on 2014/9/18.
 */
 @Controller
+
 @RequestMapping("/authority")
 public class AuthorityController extends  BaseController{
 
@@ -32,9 +31,17 @@ public class AuthorityController extends  BaseController{
     @Autowired
     private AuthorityRepository authorityRepository;
 
+    @Autowired
+
+    private SessionRepository sessionRepository;
+
 
     @Autowired
     ModuleRepository moduleRepository;
+
+    @Autowired
+    AppVersionRepository appVersionRepository;
+
 
     @Autowired
     UserRepository userRepository;
@@ -57,8 +64,7 @@ public class AuthorityController extends  BaseController{
             boolean found=false;
             for(Authority authority:authorities)
             {
-                if(authority.module.id==module.id
-                        )
+                if(authority.module.id==module.id)
                 {
                     found=true;
                     break;
@@ -114,7 +120,7 @@ public class AuthorityController extends  BaseController{
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<User> login(  @RequestBody User user)   {
+    RemoteData<User> login( HttpServletRequest request, @RequestBody User user)   {
 
 
         List<User> userList=userRepository.findByNameEquals(user.name);
@@ -133,7 +139,26 @@ public class AuthorityController extends  BaseController{
 
 
 
-        return  wrapData(findUser);
+        RemoteData<User>  data= wrapData(findUser);
+        long loginTime=Calendar.getInstance().getTimeInMillis();
+        data.token= DigestUtils.md5(findUser.toString()+loginTime);
+
+
+       //Session session= sessionRepository.findFirstByUser_IdEqualsEqualsOrderByLoginTimeDesc(findUser.id);
+
+        Session     session=new Session();
+         session.user
+                    =findUser;
+
+
+        session.loginTime=loginTime;
+        session.token= data.token;
+        session.loginIp=request.getRemoteAddr();
+
+        sessionRepository.save(session);
+
+
+        return data;
     }
 
     @RequestMapping(value="/moduleList", method = RequestMethod.GET)
@@ -142,16 +167,30 @@ public class AuthorityController extends  BaseController{
     RemoteData<Module> moduleList( )   {
 
 
-
-
-
-        return    wrapData(moduleRepository.findAll()  );
-
-
-
+        return    wrapData(moduleRepository.findAll());
 
 
     }
+
+
+    @RequestMapping(value="/loadAppVersion", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<AppVersion> loadAppVersion( )   {
+
+
+        AppVersion appVersion=appVersionRepository.findFirstByAppNameLikeOrderByVersionCodeDesc("%%");
+        if(appVersion==null)
+        {
+            wrapError("无最新版本");
+        }
+
+        return    wrapData(appVersion);
+
+
+    }
+
+
 
 
 

@@ -55,6 +55,14 @@ public class Panel_ProductList extends BasePanel {
             }
         });
 
+        productName.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchProduct(productName.getText().toString().trim());
+
+            }
+        });
+
 
         productTable.setModel(tableModel);
 

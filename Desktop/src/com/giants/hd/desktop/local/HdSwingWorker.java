@@ -1,8 +1,11 @@
 package com.giants.hd.desktop.local;
 
+import com.giants.hd.desktop.dialogs.LoginDialog;
+import com.giants.hd.desktop.events.LoginEvent;
 import com.giants.hd.desktop.view.LoadingDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
       protected LoadingDialog dialog ;
 
-
+    private Window window;
 
 
     public HdSwingWorker(Window component)
@@ -34,7 +37,7 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
     {
 
 
-
+        this.window=component;
 
         dialog  = new LoadingDialog(component,message, new ActionListener() {
             @Override
@@ -80,9 +83,28 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
         dialog.dispose();
 
         if(exception==null) {
+
+
+            if(result.code==RemoteData.CODE_UNLOGIN)
+            {
+
+
+                JOptionPane.showMessageDialog(window,"登录超时，请重新登录。");
+
+                LoginDialog dialog=new LoginDialog(window);
+                dialog.setModal(true);
+                dialog.setVisible(true);
+
+                return;
+            }
             onResult(result);
         }else
         {
+
+
+
+
+
             onHandleError(exception);
         }
     }

@@ -1,7 +1,10 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.AppVersion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
@@ -30,6 +33,13 @@ public class FileController  extends BaseController{
     private String materialFilePath;
     @Value("${quotationfilepath}")
     private String quotationfilepath;
+
+    @Value("${appfilepath}")
+    private String appFilePath;
+
+    @Autowired
+    AppVersionRepository repository;
+
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public @ResponseBody
     String provideUploadInfo() {
@@ -178,6 +188,26 @@ public class FileController  extends BaseController{
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;
+    }
+
+
+
+    @RequestMapping(value="/download/app", method=RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getAppFile( )  {
+
+
+        AppVersion appVersion=repository.findFirstByAppNameLikeOrderByVersionCodeDesc("%%");
+
+
+            FileSystemResource resource= new FileSystemResource(  appFilePath+appVersion.appName);
+            return resource;
+
+
+
+
+
+
     }
 
 

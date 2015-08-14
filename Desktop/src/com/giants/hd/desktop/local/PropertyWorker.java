@@ -1,5 +1,8 @@
 package com.giants.hd.desktop.local;
 
+import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.utils.entity.AppVersion;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,7 +10,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 
 /**
@@ -90,5 +97,33 @@ public class PropertyWorker {
 			System.err.println("Visit " + PROPERTY_FILE + " for updating "
 					+ value + " value error");
 		}
+	}
+
+
+	public static AppVersion getVersion()
+	{
+		URLClassLoader cl = (URLClassLoader)PropertyWorker.class.getClassLoader();
+		AppVersion appVersion=new AppVersion();
+
+		try {
+			URL url = cl.findResource("META-INF/MANIFEST.MF");
+			InputStream inputStream=url.openStream();
+			Manifest manifest = new Manifest(inputStream);
+			inputStream.close();
+			// do stuff with it
+			Attributes attributes=   manifest.getMainAttributes();
+			String   version=attributes.getValue("Manifest-Version");
+
+			int    versionCode=Integer.valueOf(attributes.getValue("Manifest-Version_Number"));
+
+			appVersion.versionCode=versionCode;
+			appVersion.versionName=attributes.getValue("Manifest-Version");
+			appVersion.memo=attributes.getValue("Manifest-Version_Spec");
+
+		} catch (Throwable E) {
+			// handle
+			E.printStackTrace();
+		}
+		return appVersion;
 	}
 }

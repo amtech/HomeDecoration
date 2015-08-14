@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.RemoteData;
@@ -52,6 +53,15 @@ public class LoginDialog extends BaseDialog<User> {
             }
         });
 
+
+        tf_password.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                login();
+            }
+        });
 
 
         loadUsers();
@@ -137,6 +147,10 @@ public class LoginDialog extends BaseDialog<User> {
                 if(data.isSuccess())
                 {
 
+
+                    //登录成功
+
+                    HttpUrl.setToken(data.token);
                     setResult(data.datas.get(0));
                     dispose();
 

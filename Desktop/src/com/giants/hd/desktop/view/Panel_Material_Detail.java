@@ -151,7 +151,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
         //配置权限  是否修改  是否可以删除
 
-        boolean modifiable= AuthorityUtil.getInstance().editProduct()||AuthorityUtil.getInstance().addProduct();
+        boolean modifiable= AuthorityUtil.getInstance().editMaterial()||AuthorityUtil.getInstance().addMaterial();
 
         btn_save.setVisible(modifiable);
 
@@ -159,7 +159,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
 
-        btn_delete.setVisible(AuthorityUtil.getInstance().deleteProduct());
+        btn_delete.setVisible(AuthorityUtil.getInstance().deleteMaterial());
 
 
     }

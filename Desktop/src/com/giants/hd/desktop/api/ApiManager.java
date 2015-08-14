@@ -654,9 +654,6 @@ public class ApiManager {
      * @throws HdException
      */
     public RemoteData<Void> uploadMaterialPicture(File file,boolean doesOverride) throws HdException {
-
-
-
         String materialName=file.getName();
         String url=HttpUrl.uploadMaterialPicture(materialName, doesOverride);
 
@@ -906,8 +903,7 @@ public class ApiManager {
 
         String url=HttpUrl.updatePassword();
         String[] body=new String[3];
-        body[0]=String.valueOf(userId
-        );
+        body[0]=String.valueOf(userId);
         body[1]=oldPassword;
         body[2]=newPassword;
 
@@ -916,6 +912,23 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<Void>>() {
         }.getType();
         RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 读取客户端版本信息
+     * @return
+     */
+    public RemoteData<AppVersion> readAppVersion() throws HdException {
+
+        String url=HttpUrl.readAppVersion();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<AppVersion>>() {
+        }.getType();
+        RemoteData<AppVersion> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 }
