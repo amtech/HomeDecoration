@@ -88,11 +88,8 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 
 
             //图片
-            if(item.productPhoto!=null) {
 
                 attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 4 + pictureGap / 2, rowUpdate + pictureGap / 2, 1 - pictureGap, 1 - pictureGap);
-
-            }
 
 
             //读取咸康数据

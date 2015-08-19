@@ -74,7 +74,7 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
         ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
         float pictureGap=0.1f;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
         for(int i=0;i<dataSize;i++)
         {
             int rowUpdate=startRow+i;
@@ -83,15 +83,10 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
 
             //图片
-            if(item.productPhoto!=null) {
+            attachPicture(writableSheet,HttpUrl.loadProductPicture(item.productName, item.pVersion),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
 
-                baos.reset();
-                BufferedImage bufferedImage= ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName, item.pVersion)));
-                ImageIO.write(bufferedImage, "PNG", baos);
-                image = new WritableImage(4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
-                image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
-                writableSheet.addImage(image);
-            }
+
+
 
 
             //读取咸康数据

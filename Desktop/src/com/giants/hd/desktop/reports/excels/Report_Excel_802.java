@@ -122,13 +122,11 @@ public class Report_Excel_802 extends ExcelReportor {
             addNumber(writableSheet, fob, 10, 18);
 
 
-            //图片
-            if(item.productPhoto!=null) {
+
 
 
                 attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 0 + pictureGap, 10 + pictureGap, 5 - pictureGap, 13 - pictureGap);
 
-            }
 
 
 

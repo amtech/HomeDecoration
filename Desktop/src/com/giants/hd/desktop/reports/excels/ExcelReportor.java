@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Number;
 import java.net.URL;
 
@@ -35,14 +36,31 @@ public   class ExcelReportor {
 
 
         File outputFile=new File(fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber +"."+ file.appendix );
-        Workbook existingWorkbook = Workbook.getWorkbook(new URL(HttpUrl.loadQuotationFile(file.name,file.appendix)).openStream());
+
+
+        InputStream inputStream=new URL(HttpUrl.loadQuotationFile(file.name,file.appendix)).openStream();
+        Workbook existingWorkbook = Workbook.getWorkbook(inputStream);
+        inputStream.close();
         WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, existingWorkbook);
-        writeOnExcel(quotationDetail,workbookCopy);
         workbookCopy.write();
         workbookCopy.close();
 
+         doOnLocalFile(quotationDetail, new File(fileOutputDirectory + File.separator + quotationDetail.quotation.qNumber + "." + file.appendix));
     }
 
+
+
+    protected  void doOnLocalFile(QuotationDetail quotationDetail, File outputFile) throws IOException, BiffException, HdException, WriteException {
+
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, Workbook.getWorkbook(outputFile));
+        writeOnExcel(quotationDetail, workbookCopy);
+        workbookCopy.write();
+        workbookCopy.close();
+
+
+
+
+    }
 
     protected void writeOnExcel(QuotationDetail detail,WritableSheet  writableSheet) throws WriteException, IOException, HdException {
 
@@ -73,15 +91,24 @@ public   class ExcelReportor {
 
         WritableImage image;
 
+        BufferedImage bufferedImage=null;
+        try {
+              bufferedImage = ImageIO.read(new URL(url));
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+
+        if(bufferedImage!=null) {
             baos.reset();
-            BufferedImage bufferedImage= ImageIO.read(new URL(url));
             ImageIO.write(bufferedImage, "PNG", baos);
             bufferedImage.flush();
-            image = new WritableImage(x,y ,width, height, baos.toByteArray());
+            image = new WritableImage(x, y, width, height, baos.toByteArray());
             image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
             sheet.addImage(image);
 
-
+        }
     }
 
 
