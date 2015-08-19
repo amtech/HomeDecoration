@@ -4,6 +4,7 @@ import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
+import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
@@ -24,6 +25,8 @@ public class UpgradeDialog extends BaseDialog {
     private JTextField tf_new_version;
     private JButton upgrade;
     private JTextArea ta_spec;
+
+
 
 
     @Inject
@@ -79,8 +82,16 @@ public class UpgradeDialog extends BaseDialog {
                         initValue(currentVersion,version);
                     }else
                     {
-                        JOptionPane.showMessageDialog(UpgradeDialog.this,"目前已经是最新版本");
-                        dispose();
+                        JOptionPane.showMessageDialog(UpgradeDialog.this, "目前已经是最新版本");
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                UpgradeDialog.this.dispose();
+                            }
+                        });
+
+
                     }
 
 
@@ -88,7 +99,13 @@ public class UpgradeDialog extends BaseDialog {
                 {
 
                     JOptionPane.showMessageDialog(UpgradeDialog.this,"检查版本失败，原因："+data.message);
-                    dispose();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            UpgradeDialog.this.dispose();
+                        }
+                    });
                 }
 
             }
@@ -212,7 +229,7 @@ public class UpgradeDialog extends BaseDialog {
 
 
         newAppVersion=version;
-        ta_spec.setText(version.memo);
+        ta_spec.setText( version.memo);
         tf_new_version.setText(version.versionName);
         tf_old_version.setText(currentVersion.versionName);
         upgrade.setEnabled(true);

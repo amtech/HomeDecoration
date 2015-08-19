@@ -1,12 +1,11 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.entity.*;
 
-import com.giants3.hd.utils.entity.Product2;
-import com.giants3.hd.utils.entity.QuotationItem;
-import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
@@ -22,6 +21,11 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
     public static final String COLUMN_SPEC2="spec2";
     public static final String COLUMN_COST="cost";
     public static final String COLUMN_COST2="cost2";
+
+    public static final String COLUMN_PRICE="price";
+    public static final String COLUMN_PRICE2="price2";
+
+    QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
     public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号",   "配方号(加强)",  "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
                                                             ,                                                                            "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
@@ -30,16 +34,16 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
     public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,       60,     50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   300,
                                                                                                                                     50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    300};
 
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"productPhoto", "productName", "pVersion", "pVersion2" ,"inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,"price", "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize","memo",
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"productPhoto", "productName", "pVersion", "pVersion2" ,"inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize","memo",
 
-                                                                                                                            "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,"price2", "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2","memo2"};
+                                                                                                                            "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,COLUMN_PRICE2, "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2","memo2"};
 
 
 public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class,Product2.class};
 
-    public  static boolean[] editables = new boolean[]{false,false,                                   true,           true, true,false,       false,             false,     false,false, true , false,         false,   false,    false,        false,       true ,
+    public  static boolean[] editables = new boolean[]{false,false,                                   true,           true, true,false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
 
-                                                                                                                                  false,       false,             false,     false,false, true , false,         false,   false,    false,        false,       true };
+                                                                                                                                  false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true };
 
 
 
@@ -53,6 +57,12 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Produ
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
+        if(quoteAuth.fobEditable)
+        {
+
+                return  fieldName[columnIndex].equals(COLUMN_PRICE) ||fieldName[columnIndex].equals(COLUMN_PRICE2) ;
+        }
+
 
          return editables[columnIndex];
     }
@@ -61,11 +71,20 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Produ
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
+        QuotationXKItem item= getItem(rowIndex);
+        if( item.productId<=0&&item.productId2<=0)
+            return "";
+        if((fieldName[columnIndex].equals(COLUMN_COST)||fieldName[columnIndex].equals(COLUMN_COST2))&&!quoteAuth.costVisible)
+        {
+            return "***";
+        }
 
-//        if(fieldName[columnIndex].equals(COLUMN_COST))
-//        {
-//            return "***";
-//        }
+
+        if((fieldName[columnIndex].equals(COLUMN_PRICE)||fieldName[columnIndex].equals(COLUMN_PRICE2))&&!quoteAuth.fobVisible)
+        {
+            return "***";
+        }
+
         return super.getValueAt(rowIndex, columnIndex);
     }
 
@@ -83,13 +102,22 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Produ
         {
 
 
-            case 9:
+            case 10:
 
-                quotationItem.price=Float.valueOf(aValue.toString());
+                quotationItem.price= FloatHelper.scale(Float.valueOf(aValue.toString()));
                 break;
-            case 15:
 
-                quotationItem.memo=aValue.toString();
+            case 22:
+
+                quotationItem.price2=FloatHelper.scale(Float.valueOf(aValue.toString()));
+                break;
+            case 16:
+
+            quotationItem.memo=aValue.toString();
+            break;
+            case 28:
+
+                quotationItem.memo2=aValue.toString();
                 break;
         }
 

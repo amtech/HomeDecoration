@@ -3,11 +3,10 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.reports.ReportFactory;
 import com.giants.hd.desktop.reports.excels.ExcelReportor;
-import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.QuotationDetail;
-import com.giants3.hd.utils.entity.QuotationFile;
+import com.giants.hd.desktop.reports.QuotationFile;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -40,7 +39,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
 
         for(QuotationFile s: QuotationFile.defaultFiles)
         {
-            cb_model.addItem(s.name);
+            cb_model.addItem(s);
         }
 
         jtf_path.setText(lastSelectedPath);
@@ -88,18 +87,39 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
 
 
 
-                doExportWork(cb_model.getSelectedItem().toString(),jtf_path.getText().trim());
+                doExportWork((QuotationFile) cb_model.getSelectedItem(),jtf_path.getText().trim());
             }
         });
+
+
+
+        //默认关联对应客户的模板
+
+
+        int itemCount=cb_model.getItemCount();
+
+        int selectItem=0;
+        for (int i = 0; i < itemCount; i++) {
+            QuotationFile file= (QuotationFile) cb_model.getItemAt(i);
+            if(file.name.indexOf(detail.quotation.customerName)>-1)
+            {
+                selectItem=i;
+                break;
+            }
+        }
+
+        cb_model.setSelectedIndex(selectItem);
+
+
 
     }
 
     /**
      * 导出数据模型
-     * @param modelName
+     * @param file
      * @param exportPath
      */
-    private void doExportWork( final String modelName, final String exportPath) {
+    private void doExportWork( final QuotationFile file, final String exportPath) {
 
 
         new HdSwingWorker<Void,Void>(ExportQuotationDialog.this)
@@ -107,7 +127,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
             @Override
             protected RemoteData<Void> doInBackground() throws Exception {
 
-            ExcelReportor reporter= reportFactory.createExcelReportor(modelName);
+            ExcelReportor reporter= reportFactory.createExcelReportor(file);
                 reporter.report(detail, exportPath);
 
             //    ExportHelper.exportQuotation(detail, modelName, exportPath);

@@ -78,7 +78,11 @@ public class ImageUtils {
     public static final byte[] scale(String filePath, int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
 
         try {
-            BufferedImage img = ImageIO.read(new File(filePath));
+
+
+
+            File file=new File(filePath);
+            BufferedImage img = ImageIO.read(file);
 
             int sourceWidth=img.getWidth();
             int sourceHeight=img.getHeight();
@@ -101,13 +105,14 @@ public class ImageUtils {
 
           //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
             g.drawImage(img, 0, 0, newWidth, newHeight, null);
-
             g.dispose();
+
+            img.flush();
+
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             ImageIO.write(imageBuff, preserveAlpha ? "png" : "jpg", buffer);
-
-
+            imageBuff.flush();
             byte[] result= buffer.toByteArray();
             buffer.close();
             return result;

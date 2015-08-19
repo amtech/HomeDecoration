@@ -47,19 +47,22 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Quotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue
+    RemoteData<Quotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,@RequestParam(value = "salesmanId", required = false, defaultValue ="-1") long salesmanId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Quotation> pageValue = quotationRepository.findByCustomerNameLikeOrQDateLikeOrSalesmanLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", "%" + searchValue + "%", pageable);
+        Page<Quotation> pageValue;
+        if(salesmanId<0) {
+             pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+        }else
+        {
+            pageValue= quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQNumberDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
 
+        }
         List<Quotation> products = pageValue.getContent();
-
-
-
 
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 

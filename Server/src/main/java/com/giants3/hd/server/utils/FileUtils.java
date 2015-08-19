@@ -167,8 +167,8 @@ public class FileUtils {
      * @param name
      * @return
      */
-    public static String getQuotationFile(String quotationfilepath, String name) {
+    public static String getQuotationFile(String quotationfilepath, String name,String appendix) {
 
-        return quotationfilepath+File.separator+name+".xls";
+        return quotationfilepath+File.separator+name+"."+appendix;
     }
 }

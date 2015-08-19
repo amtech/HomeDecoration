@@ -1,5 +1,7 @@
 package com.giants3.hd.utils;
 
+import com.giants3.hd.utils.entity.Unit;
+
 /**
  * 字符串的功能类。
  */
@@ -17,8 +19,6 @@ public class StringUtils {
     public static final String spec_separator="*";
 
     public static final String spec_separator_pattern="\\*";
-    public static final float CM_TO_INCH=0.3937f;
-    public static final float INCH_TO_CM=1/CM_TO_INCH;
 
 
     /**
@@ -44,7 +44,7 @@ public class StringUtils {
                 String spec=specs[j];
                 try {
                     float cmValue = Float.valueOf(spec.trim());
-                    float inchValue=FloatHelper.scale(cmValue*CM_TO_INCH);
+                    float inchValue=UnitUtils.cmToInch(cmValue);
                     inchString+=inchValue;
 
                 }catch (Throwable t)
@@ -94,7 +94,7 @@ public class StringUtils {
                 String spec=specs[j];
                 try {
                     float inchValue = Float.valueOf(spec.trim());
-                    float cmValue=FloatHelper.scale(inchValue*INCH_TO_CM);
+                    float cmValue= UnitUtils.inchToCm(inchValue  );
                     cmString+=cmValue;
 
                 }catch (Throwable t)
@@ -160,21 +160,48 @@ public class StringUtils {
 
         float[] result=new float[3];
 
-        result[0]=Float.valueOf(packageString.substring(0,firstIndex));
-        result[1]=Float.valueOf(packageString.substring(firstIndex+1,lastIndex));
-        result[2]=Float.valueOf(packageString.substring(lastIndex+1));
-
+        try {
+            result[0] = Float.valueOf(packageString.substring(0, firstIndex));
+            result[1] = Float.valueOf(packageString.substring(firstIndex + 1, lastIndex));
+            result[2] = Float.valueOf(packageString.substring(lastIndex + 1));
+        }catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
         return result;
 
     }
 
 
-    public static float inchToCm(float inchValue) {
-        return FloatHelper.scale( inchValue*INCH_TO_CM);
+
+
+
+
+    /**
+     * 解析产品规格串   23*66*99 69*89*12 95*78*12
+     * @param specString
+     * @return
+     */
+    public static float[][] decoupleSpecString(String specString)
+    {
+
+        String[] rows = specString.trim().split("[" + row_separator + "]+");
+
+        int length = rows.length;
+        float[][] result=new float[length][];
+
+        for (int i = 0; i < length; i++) {
+
+           result[i]= decouplePackageString(rows[i]);
+        }
+
+
+        return result;
+
+
+
+
     }
 
 
-    public static float cmToInch(float cmValue) {
-        return FloatHelper.scale( cmValue *CM_TO_INCH);
-    }
 }

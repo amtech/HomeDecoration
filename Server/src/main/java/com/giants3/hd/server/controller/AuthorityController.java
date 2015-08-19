@@ -42,6 +42,9 @@ public class AuthorityController extends  BaseController{
     @Autowired
     AppVersionRepository appVersionRepository;
 
+    @Autowired
+    QuoteAuthRepository quoteAuthRepository;
+
 
     @Autowired
     UserRepository userRepository;
@@ -193,5 +196,81 @@ public class AuthorityController extends  BaseController{
 
 
 
+    @RequestMapping(value="/findQuoteAuth", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuoteAuth> findQuoteAuth(@RequestParam(value = "userId" ) long userId)   {
+
+
+        QuoteAuth quoteAuth=quoteAuthRepository.findFirstByUser_IdEquals(userId);
+        return    wrapData(quoteAuth);
+
+
+    }
+
+
+    @RequestMapping(value="/quoteAuthList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuoteAuth> quoteAuthList( )   {
+
+
+
+        List<User> users=userRepository.findAll();
+
+
+        List<QuoteAuth> quoteAuths=quoteAuthRepository.findAll();
+        List<QuoteAuth> unConfigAuthorities=new ArrayList<>();
+
+        int size=users.size();
+        for (int i = 0; i < size; i++) {
+
+            User user=users.get(i);
+            boolean found=false;
+            for(QuoteAuth quoteAuth:quoteAuths)
+            {
+                if(user.id==quoteAuth.user.id)
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(!found)
+            {
+                QuoteAuth authority=new QuoteAuth();
+                authority.user=user;
+                unConfigAuthorities.add(authority);
+
+            }
+
+
+        }
+
+        quoteAuths.addAll(unConfigAuthorities);
+
+
+
+        return wrapData(quoteAuths);
+    }
+
+    @RequestMapping(value="/saveQuoteList", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<QuoteAuth> saveQuoteList(  @RequestBody List<QuoteAuth> authorities)   {
+
+
+
+        List<QuoteAuth> newData=new ArrayList<>();
+
+        for(QuoteAuth authority : authorities)
+        {
+
+            newData.add( quoteAuthRepository.save(authority));
+        }
+
+
+        return  wrapData(newData);
+    }
 
 }

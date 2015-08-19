@@ -47,7 +47,6 @@ public class Quotation  implements Serializable {
     /**
      * 有效日期
      */
-
     @Basic
     public String vDate="";
 

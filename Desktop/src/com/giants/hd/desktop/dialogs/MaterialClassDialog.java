@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
@@ -10,6 +11,7 @@ import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.utils.entity.QuoteAuth;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import jxl.Cell;

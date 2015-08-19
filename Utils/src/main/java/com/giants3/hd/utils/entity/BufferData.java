@@ -29,6 +29,7 @@ public class BufferData {
     //public    List<MaterialEquation> materialEquations=new ArrayList<>();
     public   List<User> salesmans;
     public List<Authority> authorities;
+    public QuoteAuth quoteAuth;
 
     public  User loginUser;
 }

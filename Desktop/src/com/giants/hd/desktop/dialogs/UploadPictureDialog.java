@@ -5,6 +5,7 @@ import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_UploadPicture;
+import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.exception.HdException;
@@ -217,9 +218,11 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
             for (int i = 0; i < childFiles.length; i++) {
 
 
-                    if(childFiles[i].getName().lastIndexOf(".jpg")>1)
 
-                        if(ImageUtils.isPictureFile(childFiles[i].getName()))
+
+
+
+               if(ImageUtils.isPictureFile(childFiles[i].getName()))
                     uploadFile(childFiles[i],type,doesOverride,swingWorker);
 
             }

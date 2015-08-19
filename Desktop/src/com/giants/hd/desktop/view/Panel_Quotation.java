@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 
 
 import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants.hd.desktop.frames.QuotationDetailFrame;
 import com.giants.hd.desktop.frames.QuotationXKDetailFrame;
@@ -18,6 +19,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.entity.User;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -36,6 +38,7 @@ public class Panel_Quotation extends BasePanel{
     private JHdTable tb;
     private Panel_Page pagePanel;
     private JButton btn_add_xiankang;
+    private JComboBox cb_salesman;
 
 
     @Inject
@@ -44,10 +47,10 @@ public class Panel_Quotation extends BasePanel{
     @Inject
     QuotationTableModel tableModel;
 
-
+    boolean limitSelf;
     public Panel_Quotation()
     {
-
+        limitSelf= CacheManager.getInstance().bufferData.quoteAuth.limitSelf;
 
        tb.setModel(tableModel);
 
@@ -66,6 +69,22 @@ public class Panel_Quotation extends BasePanel{
     }
 
     private void init() {
+
+
+
+        cb_salesman.setVisible(!limitSelf);
+
+        User all=new User();
+        all.id=-1;
+        all.code="--";
+        all.name="--";
+        all.chineseName="所有人";
+        cb_salesman.addItem(all);
+        for(User user:CacheManager.getInstance().bufferData.salesmans)
+        {
+            cb_salesman.addItem(user);
+        }
+
 
         btn_search.addActionListener(new ActionListener() {
             @Override
@@ -179,6 +198,15 @@ public class Panel_Quotation extends BasePanel{
     {
         final  String searchValue=jtf_product.getText().trim();
 
+      final  long salemansId;
+        if(limitSelf)
+        {
+            salemansId=CacheManager.getInstance().bufferData.loginUser.id;
+        }else
+        {
+            salemansId=((User)cb_salesman.getSelectedItem()).id;
+        }
+
 
         new HdSwingWorker<Quotation,Object>( getWindow(getRoot()))
         {
@@ -186,7 +214,7 @@ public class Panel_Quotation extends BasePanel{
             protected RemoteData<Quotation> doInBackground() throws Exception {
 
 
-                return   apiManager.loadQuotation(searchValue,pageIndex,pageSize);
+                return   apiManager.loadQuotation(searchValue,salemansId,pageIndex,pageSize);
 
             }
 

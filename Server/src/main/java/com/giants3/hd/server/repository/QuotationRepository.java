@@ -14,8 +14,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface QuotationRepository extends JpaRepository<Quotation,Long> {
 
-    Page<Quotation> findByCustomerNameLikeOrQDateLikeOrSalesmanLikeOrderByQNumberDesc(String name, String qNumber,String salesman,Pageable pageable);
+   // Page<Quotation> findByCustomerNameLikeOrQDateLikeOrSalesmanLikeOrderByQNumberDesc(String name, String qNumber,String salesman,Pageable pageable);
 
+    Page<Quotation> findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQNumberDesc(String customerName,long salesManId, String qNumber,long salesManId2,Pageable pageable);
+    Page<Quotation> findByCustomerNameLikeOrQNumberLikeOrderByQNumberDesc(String customerName, String qNumber,Pageable pageable);
 
     Quotation findFirstByqNumberEquals(String qNumber);
 

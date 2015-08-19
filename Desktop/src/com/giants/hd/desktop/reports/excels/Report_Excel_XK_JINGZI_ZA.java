@@ -2,30 +2,27 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
-import com.giants3.hd.utils.FloatHelper;
+import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
-import jxl.format.*;
 import jxl.write.*;
-import jxl.write.BorderLineStyle;
-import jxl.write.biff.RowsExceededException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-/**œÃøµ ª≠‘”  æµ◊”¿‡ƒ£∞Â
+/**Âí∏Â∫∑ ÁîªÊùÇ  ÈïúÂ≠êÁ±ªÊ®°Êùø
  * Created by davidleen29 on 2015/8/6.
  */
-public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
+public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
 
-    public Report_Excel_XK_HUA_ZA_JINGZI(String modelName) {
+    public Report_Excel_XK_JINGZI_ZA(QuotationFile modelName) {
         super(modelName);
     }
 
@@ -38,41 +35,18 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
 
 
         int defaultRowCount=10;
-
         int startRow=5;
-
-
-        int rowHeight = writableSheet.getRowHeight(startRow);
-
-
-
         int dataSize=quotationDetail.XKItems.size();
-
-
-
-        // µº  ˝æ›≥¨≥ˆ∑∂Œß ≤Â»Îø’––
-        if(dataSize>defaultRowCount)
-        {
-            //≤Â»Îø’––
-            for(int j=0;j<dataSize-defaultRowCount;j++) {
-
-                int rowToInsert=startRow+defaultRowCount+j;
-                writableSheet.insertRow(rowToInsert);
-                writableSheet.setRowView(rowToInsert, rowHeight);
-                //∏¥÷∆±Ì∏Ò°£
-                for (int i = 0, count = writableSheet.getColumns(); i < count; i++) {
-                    WritableCell cell = (WritableCell) writableSheet.getCell(i, startRow);
-                    cell = cell.copyTo(i, rowToInsert);
-                    writableSheet.addCell(cell);
-
-                }
-            }
-        }
+        //ÂÆûÈôÖÊï∞ÊçÆË∂ÖÂá∫ËåÉÂõ¥ ÊèíÂÖ•Á©∫Ë°å
+        duplicateRow(writableSheet,startRow,defaultRowCount,dataSize);
 
 
 
 
-        //ÃÓ≥‰ ˝æ›
+
+
+
+        //Â°´ÂÖÖÊï∞ÊçÆ
 
         Label label1;
         jxl.write.Number num;
@@ -86,13 +60,13 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
         format.setWrap(true);
         format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
 
-        //±®º€»’∆⁄
+        //Êä•‰ª∑Êó•Êúü
         label1 = new Label(5, 1, quotationDetail.quotation.qDate,format);
         writableSheet.addCell(label1);
 
 
 
-                //±®º€»’∆⁄
+                //Êä•‰ª∑Êó•Êúü
                 label1 = new Label(14, 1, "Verdoer YUNFEI",format);
         writableSheet.addCell(label1);
 
@@ -108,7 +82,7 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
 
 
 
-            //Õº∆¨
+            //ÂõæÁâá
             if(item.productPhoto!=null) {
 
                 baos.reset();
@@ -120,21 +94,21 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
             }
 
 
-            //∂¡»°œÃøµ ˝æ›
+            //ËØªÂèñÂí∏Â∫∑Êï∞ÊçÆ
             ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
-            //∂¡»°œÃøµ ˝æ›
+            //ËØªÂèñÂí∏Â∫∑Êï∞ÊçÆ
             ProductDetail productDetail2=    apiManager.loadProductDetail(item.productId2).datas.get(0);
 
-            //––∫≈
+            //Ë°åÂè∑
             label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
             writableSheet.addCell(label1);
 
-            //…Ëº∆∫≈  ∞Ê±æ∫≈
+            //ËÆæËÆ°Âè∑  ÁâàÊú¨Âè∑
             label1 = new Label(1, rowUpdate, item.pVersion,format);
             writableSheet.addCell(label1);
 
-            //ªı∫≈
+            //Ë¥ßÂè∑
             label1 = new Label(2, rowUpdate, item.productName.trim(),format);
             writableSheet.addCell(label1);
 
@@ -144,7 +118,7 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
 
 
 
-            //µ•Œª
+            //Âçï‰Ωç
             label1 = new Label(8, rowUpdate,  item.unit ,format);
             writableSheet.addCell(label1);
 
@@ -152,52 +126,52 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
             {
 
 
-                //Õ¨øÓªı∫≈
+                //ÂêåÊ¨æË¥ßÂè∑
                 label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
                 writableSheet.addCell(label1);
-                //≤ƒ¡œ±»÷ÿ
+                //ÊùêÊñôÊØîÈáç
 
                 label1 = new Label(6, rowUpdate,  productDetail.product.xiankang.getCaizhibaifenbi(),format);
                 writableSheet.addCell(label1);
-                //º◊»©±Í æ
+                //Áî≤ÈÜõÊ†áÁ§∫
                 label1 = new Label(7, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
                 writableSheet.addCell(label1);
 
-                //±ﬂøÚ
+                //ËæπÊ°Ü
                 label1 = new Label(12, rowUpdate,  productDetail.product.xiankang.getBiankuang(),format);
                 writableSheet.addCell(label1);
 
 
-                //≤€øÌ
+                //ÊßΩÂÆΩ
 
                 label1 = new Label(13, rowUpdate,  productDetail.product.xiankang.getCaokuan(),format);
                 writableSheet.addCell(label1);
 
-                //≤€…Ó
+                //ÊßΩÊ∑±
                 label1 = new Label(14, rowUpdate,  productDetail.product.xiankang.getCaokuan(),format);
                 writableSheet.addCell(label1);
 
-                //æµ◊”≥ﬂ¥Á	øÌ
+                //ÈïúÂ≠êÂ∞∫ÂØ∏	ÂÆΩ
                 label1 = new Label(15, rowUpdate,  productDetail.product.xiankang.getJingzi_kuan(),format);
                 writableSheet.addCell(label1);
 
-                //æµ◊”≥ﬂ¥Á	∏ﬂ
+                //ÈïúÂ≠êÂ∞∫ÂØ∏	È´ò
                 label1 = new Label(16, rowUpdate,  productDetail.product.xiankang.getJingzi_kuan(),format);
                 writableSheet.addCell(label1);
 
 
-                //ƒ•±ﬂ
+                //Á£®Ëæπ
                 label1 = new Label(17, rowUpdate,  productDetail.product.xiankang.getMobian(),format);
                 writableSheet.addCell(label1);
             }
 
 
 
-            //’€∫–º€∏Ò
+            //ÊäòÁõí‰ª∑Ê†º
             label1 = new Label(10, rowUpdate, String.valueOf(item.price),format);
             writableSheet.addCell(label1);
 
-            //º”«øº€∏Ò
+            //Âä†Âº∫‰ª∑Ê†º
             label1 = new Label(11, rowUpdate,  String.valueOf(item.price2),format);
             writableSheet.addCell(label1);
 
@@ -205,102 +179,102 @@ public class Report_Excel_XK_HUA_ZA_JINGZI extends ExcelReportor {
 
 
 
-            //◊‹≥§
+            //ÊÄªÈïø
             label1 = new Label(18, rowUpdate, String.valueOf(item.spec),format);
             writableSheet.addCell(label1);
 
 
-            //◊‹øÌ
+            //ÊÄªÂÆΩ
             label1 = new Label(19, rowUpdate, String.valueOf(item.spec),format);
             writableSheet.addCell(label1);
 
-            //◊‹…Ó
+            //ÊÄªÊ∑±
             label1 = new Label(20, rowUpdate,  String.valueOf(item.spec) ,format);
             writableSheet.addCell(label1);
 
 
-            //÷ÿ¡ø
+            //ÈáçÈáè
             label1 = new Label(21, rowUpdate,  String.valueOf(item.weight) ,format);
             writableSheet.addCell(label1);
 
 
 
-            //’€∫–∞¸◊∞√Ë ˆ
+            //ÊäòÁõíÂåÖË£ÖÊèèËø∞
             label1 = new Label(22, rowUpdate,  String.valueOf(productDetail.product.xiankang.pack_memo) ,format);
             writableSheet.addCell(label1);
 
-            //º∏∏ˆ◊∞
+            //Âá†‰∏™Ë£Ö
             label1 = new Label(28, rowUpdate,  String.valueOf(item.packQuantity) ,format);
             writableSheet.addCell(label1);
 
             float[] packValue=  StringUtils.decouplePackageString(item.packageSize);
 
-            //’€∫–∞¸◊∞l
+            //ÊäòÁõíÂåÖË£Öl
             label1 = new Label(29, rowUpdate,  String.valueOf(packValue[0]) ,format);
             writableSheet.addCell(label1);
-            //’€∫–∞¸◊∞w
+            //ÊäòÁõíÂåÖË£Öw
             label1 = new Label(30, rowUpdate,  String.valueOf(packValue[1]) ,format);
             writableSheet.addCell(label1);
 
-            //’€∫–∞¸◊∞h
+            //ÊäòÁõíÂåÖË£Öh
             label1 = new Label(31, rowUpdate,  String.valueOf(packValue[2]) ,format);
             writableSheet.addCell(label1);
 
 
-            //’€∫–∞¸◊∞l cm
-            label1 = new Label(33, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue[0])) ,format);
+            //ÊäòÁõíÂåÖË£Öl cm
+            label1 = new Label(33, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue[0])) ,format);
             writableSheet.addCell(label1);
-            //’€∫–∞¸◊∞w cm
-            label1 = new Label(34, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue[1])) ,format);
-            writableSheet.addCell(label1);
-
-            //’€∫–∞¸◊∞h cm
-            label1 = new Label(35, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue[2])) ,format);
+            //ÊäòÁõíÂåÖË£Öw cm
+            label1 = new Label(34, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue[1])) ,format);
             writableSheet.addCell(label1);
 
+            //ÊäòÁõíÂåÖË£Öh cm
+            label1 = new Label(35, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue[2])) ,format);
+            writableSheet.addCell(label1);
 
 
 
 
-            //º”«ø∞¸◊∞√Ë ˆ
+
+            //Âä†Âº∫ÂåÖË£ÖÊèèËø∞
             label1 = new Label(37, rowUpdate,  String.valueOf(productDetail2.product.xiankang.pack_memo) ,format);
             writableSheet.addCell(label1);
 
-            //º∏∏ˆ◊∞
+            //Âá†‰∏™Ë£Ö
             label1 = new Label(38, rowUpdate,  String.valueOf(item.packQuantity2) ,format);
             writableSheet.addCell(label1);
 
             float[] packValue2=  StringUtils.decouplePackageString(item.packageSize2);
 
-            //º”«ø∞¸◊∞∞¸◊∞l
+            //Âä†Âº∫ÂåÖË£ÖÂåÖË£Öl
             label1 = new Label(39, rowUpdate,  String.valueOf(packValue2[0]) ,format);
             writableSheet.addCell(label1);
-            //º”«ø∞¸◊∞w
+            //Âä†Âº∫ÂåÖË£Öw
             label1 = new Label(40, rowUpdate,  String.valueOf(packValue2[1]) ,format);
             writableSheet.addCell(label1);
 
-            //º”«ø∞¸◊∞h
+            //Âä†Âº∫ÂåÖË£Öh
             label1 = new Label(41, rowUpdate,  String.valueOf(packValue2[2]) ,format);
             writableSheet.addCell(label1);
 
 
-            //º”«ø∞¸◊∞l cm
-            label1 = new Label(45, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue2[0])) ,format);
+            //Âä†Âº∫ÂåÖË£Öl cm
+            label1 = new Label(45, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue2[0])) ,format);
             writableSheet.addCell(label1);
-            //º”«ø∞¸◊∞w cm
-            label1 = new Label(46, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue2[1])) ,format);
-            writableSheet.addCell(label1);
-
-            //º”«ø∞¸◊∞h cm
-            label1 = new Label(47, rowUpdate,  String.valueOf(StringUtils.cmToInch(packValue2[2])) ,format);
+            //Âä†Âº∫ÂåÖË£Öw cm
+            label1 = new Label(46, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue2[1])) ,format);
             writableSheet.addCell(label1);
 
+            //Âä†Âº∫ÂåÖË£Öh cm
+            label1 = new Label(47, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue2[2])) ,format);
+            writableSheet.addCell(label1);
 
 
-            //π“π≥æ‡¿Î
+
+            //ÊåÇÈí©Ë∑ùÁ¶ª
             label1 = new Label(49, rowUpdate,  String.valueOf(productDetail.product.xiankang.getGuaju()) ,format);
             writableSheet.addCell(label1);
-            //π“π≥æ‡¿Î
+            //ÊåÇÈí©Ë∑ùÁ¶ª
             label1 = new Label(57, rowUpdate,  String.valueOf(productDetail.product.memo) ,format);
             writableSheet.addCell(label1);
 

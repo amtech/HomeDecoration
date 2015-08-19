@@ -41,4 +41,35 @@ public class FileUtils {
 
 
     }
+
+
+
+    public static final String[] PICTURE_APPENDIX=new String[]{"jpg","JPEG","JPG"};
+
+
+    /**
+     * 判断文件是否图片文件
+     * @param fileName
+     * @return
+     */
+    public static boolean isPictureFile(String fileName)
+    {
+
+
+        if(fileName!=null)
+        {
+
+
+            for(String appendix:PICTURE_APPENDIX)
+            {
+                if(fileName.toLowerCase().lastIndexOf(appendix.toLowerCase())>1)
+                    return true;
+            }
+
+
+        }
+        return false;
+
+
+    }
 }

@@ -718,11 +718,12 @@ public class ApiManager {
     /**
      * 读取报价历史记录
      * @param searchValue
+     * @param salesmanId    业务员id  查询指定业务员的报价单  -1 标示查询所有
      * @return
      */
-    public RemoteData<Quotation> loadQuotation(String searchValue,int pageIndex, int pageSize) throws HdException {
+    public RemoteData<Quotation> loadQuotation(String searchValue,long salesmanId,int pageIndex, int pageSize) throws HdException {
 
-        String url=HttpUrl.loadQuotation(searchValue, pageIndex, pageSize);
+        String url=HttpUrl.loadQuotation(searchValue,salesmanId, pageIndex, pageSize);
 
         String result=     client.getWithStringReturned(url);
 
@@ -929,6 +930,40 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<AppVersion>>() {
         }.getType();
         RemoteData<AppVersion> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+    /**
+     * 读取报价权限列表
+     * @return
+     */
+    public RemoteData<QuoteAuth> readQuoteAuth() throws HdException {
+
+        String url=HttpUrl.readQuoteAuth();
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<QuoteAuth>>() {
+        }.getType();
+        RemoteData<QuoteAuth> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 保存报价权限信息
+     * @param datas
+     * @return
+     */
+    public RemoteData<QuoteAuth> saveQuoteAuthList(List<QuoteAuth> datas) throws HdException {
+
+        String url=HttpUrl.saveQuoteAuthList();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(datas));
+
+        Type   generateType = new TypeToken<RemoteData<QuoteAuth>>() {
+        }.getType();
+        RemoteData<QuoteAuth> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 }

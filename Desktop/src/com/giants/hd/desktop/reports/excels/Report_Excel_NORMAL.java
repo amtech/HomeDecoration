@@ -2,6 +2,7 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationDetail;
@@ -18,13 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-/** Õ®”√±®º€ƒ£∞Â
+/** ÈÄöÁî®Êä•‰ª∑Ê®°Êùø
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_NORMAL extends ExcelReportor {
 
 
-    public Report_Excel_NORMAL(String modelName) {
+    public Report_Excel_NORMAL(QuotationFile modelName) {
         super(modelName);
     }
 
@@ -34,79 +35,44 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
         int defaultRowCount=7;
         int startItemRow=9;
-        int rowHeight = writableSheet.getRowHeight(startItemRow);
-
 
         int dataSize=quotationDetail.items.size();
-        // µº  ˝æ›≥¨≥ˆ∑∂Œß ≤Â»Îø’––
-        if(dataSize>defaultRowCount)
-        {
-            //≤Â»Îø’––
-            for(int j=0;j<dataSize-defaultRowCount;j++) {
 
-                int rowToInsert=startItemRow+defaultRowCount+j;
-                writableSheet.insertRow(rowToInsert);
-                writableSheet.setRowView(rowToInsert, rowHeight);
-                //∏¥÷∆±Ì∏Ò°£
-                for (int i = 0, count = writableSheet.getColumns(); i < count; i++) {
-                    WritableCell cell = (WritableCell) writableSheet.getCell(i, startItemRow);
-                    cell = cell.copyTo(i, rowToInsert);
-                    writableSheet.addCell(cell);
-
-                }
-            }
-        }
-
-        //∏Ò Ω
-        WritableCellFormat format=new WritableCellFormat();
-        format.setAlignment(jxl.format.Alignment.CENTRE);
-        format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-        format.setWrap(true);
-        format.setBorder(Border.ALL, BorderLineStyle.NONE);
-
-//∏Ò Ω
-        WritableCellFormat BorderFormat=new WritableCellFormat();
-        BorderFormat.setAlignment(jxl.format.Alignment.CENTRE);
-        BorderFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-        BorderFormat.setWrap(true);
-        BorderFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
-
-        Label label1;
-
-        //±ÌÕ∑
-        //◊¢»Î±®º€µ•∫≈
-        //±®º€»’∆⁄
-
-        label1 = new Label(2, 1, quotationDetail.quotation.qNumber,BorderFormat);
-        writableSheet.addCell(label1);
+        //ÂÆûÈôÖÊï∞ÊçÆË∂ÖÂá∫ËåÉÂõ¥ ÊèíÂÖ•Á©∫Ë°å
+        duplicateRow(writableSheet,startItemRow,defaultRowCount,dataSize);
 
 
-        //±®º€»’∆⁄
 
-        label1 = new Label(14, 1, quotationDetail.quotation.qDate,BorderFormat);
-        writableSheet.addCell(label1);
+        Quotation quotation=quotationDetail.quotation;
+        //Ë°®Â§¥
+        //Ê≥®ÂÖ•Êä•‰ª∑ÂçïÂè∑
+       addString(writableSheet, quotation.qNumber, 2, 1);
+
+
+
+        //Êä•‰ª∑Êó•Êúü
+        addString(writableSheet, quotation.qDate, 14, 1);
+
 
 
 
 
 
         //TO
+        addString(writableSheet, quotation.customerName, 2, 7);
 
-        label1 = new Label(2, 7, quotationDetail.quotation.customerName,format);
-        writableSheet.addCell(label1);
 
-        //“µŒÒ‘±¥˙¬Î
-
-        label1 = new Label(11, 7, quotationDetail.quotation.salesman,format);
-        writableSheet.addCell(label1);
+        //‰∏öÂä°Âëò‰ª£Á†Å
+        addString(writableSheet, quotation.salesman, 11, 7);
 
 
 
 
-        ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
+
+
         float pictureGap=0.1f;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        WritableImage image;
+
+
         for (int i = 0; i <dataSize; i++) {
 
 
@@ -114,18 +80,15 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             int rowUpdate=startItemRow+i;
             QuotationItem item=quotationDetail.items.get(i);
 
-            //Õº∆¨
-            if(item.productPhoto!=null) {
-                baos.reset();
-                BufferedImage bufferedImage= ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName, item.pVersion)));
-                ImageIO.write(bufferedImage, "PNG", baos);
-                image = new WritableImage(0+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
-                image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
-                writableSheet.addImage(image);
+            //ÂõæÁâá
+            if (item.productPhoto != null) {
+
+                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion),0+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+
             }
 
 
-            //∂¡»°œÃøµ ˝æ›
+            //ËØªÂèñÂí∏Â∫∑Êï∞ÊçÆ
             //  ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
@@ -134,73 +97,72 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
 
-            //ªı∫≈
-            label1 = new Label(2, rowUpdate, item.productName.trim()+"-"+item.pVersion.trim(),format);
-            writableSheet.addCell(label1);
+            //Ë¥ßÂè∑
+            addString(writableSheet, item.productName.trim(), 2, rowUpdate);
 
 
 
 
 
-            //≤ƒ¡œ±»÷ÿ
-            label1 = new Label(4, rowUpdate,  item.constitute,format);
-            writableSheet.addCell(label1);
+
+            //ÊùêÊñôÊØîÈáç
+            addString(writableSheet, item.constitute.trim(), 4, rowUpdate);
 
 
-            //µ•Œª
 
+            //Âçï‰Ωç
             int lastIndex=item.unit.lastIndexOf("/");
-            label1 = new Label(6, rowUpdate,  lastIndex==-1?"1":item.unit.substring(lastIndex+1),format);
-            writableSheet.addCell(label1);
+            addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 6, rowUpdate);
 
-            //∞¸◊∞≥ﬂ¥Á
-            //ƒ⁄∫– ˝
-            label1 = new Label(8, rowUpdate,  String.valueOf(item.inBoxCount),format);
-            writableSheet.addCell(label1);
 
-            //∞¸◊∞ ˝
-            label1 = new Label(9, rowUpdate,  String.valueOf(item.packQuantity),format);
-            writableSheet.addCell(label1);
 
-            //Ω‚Œˆ≥ˆ≥§øÌ∏ﬂ
+            //ÂåÖË£ÖÂ∞∫ÂØ∏
+            //ÂÜÖÁõíÊï∞
+            addNumber(writableSheet, item.inBoxCount, 8, rowUpdate);
+
+
+            //ÂåÖË£ÖÊï∞
+            addNumber(writableSheet, item.packQuantity, 9, rowUpdate);
+
+
+
+            //Ëß£ÊûêÂá∫ÈïøÂÆΩÈ´ò
 
             float[] result=     StringUtils.decouplePackageString(item.packageSize);
 
 
-            //∞¸◊∞≥§
-            label1 = new Label(11, rowUpdate,  String.valueOf(result[0]),format);
-            writableSheet.addCell(label1);
-            //∞¸◊∞øÌ
-            label1 = new Label(13, rowUpdate,  String.valueOf(result[1]),format);
-            writableSheet.addCell(label1);
+            //ÂåÖË£ÖÈïø
+            addNumber(writableSheet, result[0], 11, rowUpdate);
 
-            //∞¸◊∞∏ﬂ
-            label1 = new Label(15, rowUpdate,  String.valueOf(result[2]),format);
-            writableSheet.addCell(label1);
+            //ÂåÖË£ÖÂÆΩ
+            addNumber(writableSheet, result[1], 13, rowUpdate);
 
 
-            //∞¸◊∞ÃÂª˝
-            label1 = new Label(16, rowUpdate,  String.valueOf(item.volumeSize),format);
-            writableSheet.addCell(label1);
+            //ÂåÖË£ÖÈ´ò
+            addNumber(writableSheet, result[2], 15, rowUpdate);
 
 
-            //≤˙∆∑πÊ∏Ò
 
-            label1 = new Label(17, rowUpdate,  String.valueOf(item.spec),format);
-            writableSheet.addCell(label1);
+            //ÂåÖË£Ö‰ΩìÁßØ
+            addNumber(writableSheet, item.volumeSize, 16, rowUpdate);
 
-            //æµ√Ê≥ﬂ¥Á
 
-            label1 = new Label(19, rowUpdate,  String.valueOf(item.mirrorSize),format);
-            writableSheet.addCell(label1);
 
-            //æª÷ÿ
-            label1 = new Label(20, rowUpdate,  String.valueOf( item.weight),format);
-            writableSheet.addCell(label1);
+            //‰∫ßÂìÅËßÑÊ†º
+            addString(writableSheet, item.spec.trim(), 17, rowUpdate);
 
-            //±∏◊¢
-            label1 = new Label(22, rowUpdate,  String.valueOf( item.memo),format);
-            writableSheet.addCell(label1);
+
+            //ÈïúÈù¢Â∞∫ÂØ∏
+            addString(writableSheet, item.mirrorSize.trim(), 19, rowUpdate);
+
+
+            //ÂáÄÈáç
+            addNumber(writableSheet, item.weight, 20, rowUpdate);
+
+
+            //Â§áÊ≥®
+            addString(writableSheet, item.memo.trim(), 22, rowUpdate);
+
 
         }
 

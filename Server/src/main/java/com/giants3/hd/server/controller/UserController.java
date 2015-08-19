@@ -2,10 +2,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.BufferData;
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.ProductProcess;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.entity.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +51,8 @@ public class UserController extends  BaseController{
 
     @Autowired
     private MaterialClassRepository   materialClassRepository;
-
+    @Autowired
+    private QuoteAuthRepository   quoteAuthRepository;
     @RequestMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId) {
 
@@ -149,8 +147,13 @@ public class UserController extends  BaseController{
         bufferData.packs=packRepository.findAll();
         bufferData.pClasses=productClassRepository.findAll();
         bufferData.salesmans=userRepository.findByIsSalesman(true);
-
-
+        QuoteAuth quoteAuth=quoteAuthRepository.findFirstByUser_IdEquals(user.id);
+        if(quoteAuth==null)
+        {
+            quoteAuth=new QuoteAuth();
+            quoteAuth.user=user;
+        }
+        bufferData.quoteAuth=quoteAuth;
 
 
 

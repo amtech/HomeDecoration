@@ -1,5 +1,6 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
 
@@ -137,11 +138,11 @@ public class QuotationItem implements Serializable,Valuable {
 
 
         unit=product.pUnitName;
-        cost=product.cost;
-        price=product.fob;
+        cost= FloatHelper.scale(product.cost);
+        price=FloatHelper.scale(product.fob);
 
         volumeSize=product.getPackVolume();
-        weight=product.weight;
+        weight=FloatHelper.scale(product.weight);
         spec=product.spec;
         constitute=product.constitute;
         mirrorSize=product.mirrorSize;

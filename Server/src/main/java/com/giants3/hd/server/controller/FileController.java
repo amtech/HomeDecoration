@@ -178,13 +178,13 @@ public class FileController  extends BaseController{
      */
     @RequestMapping(value="/download/quotation", method=RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getQuotationFile(@RequestParam(value = "name",defaultValue = "") String name ) {
+    public FileSystemResource getQuotationFile(@RequestParam(value = "name",defaultValue = "") String name, @RequestParam(value = "appendix",defaultValue = "xls") String appendix) {
 
 
 
 
 
-        FileSystemResource resource= new FileSystemResource(  FileUtils.getQuotationFile(quotationfilepath, name));
+        FileSystemResource resource= new FileSystemResource(  FileUtils.getQuotationFile(quotationfilepath, name,appendix));
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;

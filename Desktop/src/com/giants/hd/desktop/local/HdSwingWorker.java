@@ -83,9 +83,7 @@ public abstract class HdSwingWorker<T,V>  extends SwingWorker<RemoteData<T>,V> {
         dialog.dispose();
 
         if(exception==null) {
-
-
-            if(result.code==RemoteData.CODE_UNLOGIN)
+            if(result!=null&&result.code==RemoteData.CODE_UNLOGIN)
             {
 
 

@@ -80,8 +80,6 @@ public class ProductController extends BaseController {
         List<Product> products = pageValue.getContent();
 
 
-
-
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 
 
@@ -573,8 +571,9 @@ public class ProductController extends BaseController {
 
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
         Product newProduct= (Product)  ObjectUtils.deepCopy(product);
-
-
+        Xiankang xiankang=(Xiankang)ObjectUtils.deepCopy(product.xiankang);
+        xiankang.setId(-1);
+        newProduct.xiankang=xiankang;
         newProduct.id= -1;
         newProduct.name=newProductName;
         newProduct.pVersion=version;
@@ -729,7 +728,7 @@ public class ProductController extends BaseController {
                     long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
                     if(lastUpdateTime>0 )
                     {
-                        if(lastUpdateTime!=product.lastPhotoUpdateTime)
+                        if(product.photo==null||lastUpdateTime!=product.lastPhotoUpdateTime)
                         {
                             updateProductPhotoData(product);
                             product.lastPhotoUpdateTime=lastUpdateTime;
@@ -739,9 +738,9 @@ public class ProductController extends BaseController {
                         }
 
 
-                    }else
+                    }else//图片不存在 设置为空。
                     {
-                        if(product.photo!=null) {
+                        if(product.photo!=null||product.lastPhotoUpdateTime>0) {
                             product.photo = null;
                             product.lastPhotoUpdateTime = lastUpdateTime;
                             productRepository.save(product);

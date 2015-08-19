@@ -2,6 +2,7 @@ package com.giants.hd.desktop.utils;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;

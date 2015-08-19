@@ -35,6 +35,8 @@ public class Main extends JFrame {
     private JLabel photo;
 
 
+    public static final String TITLE="报价系统";
+
 
     @Inject
     ApiManager apiManager;
@@ -52,7 +54,7 @@ public class Main extends JFrame {
 
     public Main()
     {
-        super("报价系统");
+        super(TITLE);
 
 
 
@@ -504,6 +506,22 @@ public class Main extends JFrame {
             }
         });
 
+
+
+        //
+        menuItem = new JMenuItem("报价细分权限" );
+
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                QuoteAuthDialog dialog = new QuoteAuthDialog(Main.this);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+
         return menu;
 
     }
@@ -678,6 +696,10 @@ public class Main extends JFrame {
                 CacheManager.getInstance().bufferData=data.datas.get(0);
                 CacheManager.getInstance().bufferData.loginUser=user;
                 generateMenu();
+                setTitle(TITLE+"       ("+user.toString()+")");
+
+
+
 
 
             }

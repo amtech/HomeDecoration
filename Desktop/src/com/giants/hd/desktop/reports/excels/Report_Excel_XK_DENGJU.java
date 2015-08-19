@@ -2,6 +2,7 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationDetail;
@@ -16,13 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-/** ±®º€µº≥ˆœÃøµµ∆æﬂƒ£∞Â
+/** Êä•‰ª∑ÂØºÂá∫Âí∏Â∫∑ÁÅØÂÖ∑Ê®°Êùø
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
 
-    public Report_Excel_XK_DENGJU(String modelName) {
+    public Report_Excel_XK_DENGJU(QuotationFile modelName) {
         super(modelName);
     }
 
@@ -34,37 +35,20 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         int startRow=4;
 
 
-        int rowHeight = writableSheet.getRowHeight(startRow);
 
 
 
         int dataSize=quotationDetail.items.size();
 
-
-
-        // µº  ˝æ›≥¨≥ˆ∑∂Œß ≤Â»Îø’––
-        if(dataSize>defaultRowCount)
-        {
-            //≤Â»Îø’––
-            for(int j=0;j<dataSize-defaultRowCount;j++) {
-
-                int rowToInsert=startRow+defaultRowCount+j;
-                writableSheet.insertRow(rowToInsert);
-                writableSheet.setRowView(rowToInsert, rowHeight);
-                //∏¥÷∆±Ì∏Ò°£
-                for (int i = 0, count = writableSheet.getColumns(); i < count; i++) {
-                    WritableCell cell = (WritableCell) writableSheet.getCell(i, startRow);
-                    cell = cell.copyTo(i, rowToInsert);
-                    writableSheet.addCell(cell);
-
-                }
-            }
-        }
+        //ÂÆûÈôÖÊï∞ÊçÆË∂ÖÂá∫ËåÉÂõ¥ ÊèíÂÖ•Á©∫Ë°å
+        duplicateRow(writableSheet,startRow,defaultRowCount,dataSize);
 
 
 
 
-        //ÃÓ≥‰ ˝æ›
+
+
+        //Â°´ÂÖÖÊï∞ÊçÆ
 
         Label label1;
         jxl.write.Number num;
@@ -77,8 +61,8 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
         format.setWrap(true);
         format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
-        //±®º€»’∆⁄
-        //…Ëº∆∫≈  ∞Ê±æ∫≈
+        //Êä•‰ª∑Êó•Êúü
+        //ËÆæËÆ°Âè∑  ÁâàÊú¨Âè∑
         label1 = new Label(7, 1, quotationDetail.quotation.qDate,format);
         writableSheet.addCell(label1);
 
@@ -87,7 +71,7 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
         ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
         float pictureGap=0.1f;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
         for(int i=0;i<dataSize;i++)
         {
             int rowUpdate=startRow+i;
@@ -95,42 +79,39 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
 
 
-            //Õº∆¨
+            //ÂõæÁâá
             if(item.productPhoto!=null) {
 
-                baos.reset();
-                BufferedImage bufferedImage= ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName, item.pVersion)));
-                ImageIO.write(bufferedImage, "PNG", baos);
-                image = new WritableImage(4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
-                image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
-                writableSheet.addImage(image);
+                attachPicture(writableSheet,HttpUrl.loadProductPicture(item.productName, item.pVersion),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+
+
             }
 
 
-            //∂¡»°œÃøµ ˝æ›
-            ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
 
-            //––∫≈
-            //…Ëº∆∫≈  ∞Ê±æ∫≈
+
+            //Ë°åÂè∑
+            //ËÆæËÆ°Âè∑  ÁâàÊú¨Âè∑
             label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
             writableSheet.addCell(label1);
 
-            //…Ëº∆∫≈  ∞Ê±æ∫≈
+            //ËÆæËÆ°Âè∑  ÁâàÊú¨Âè∑
             label1 = new Label(1, rowUpdate, item.pVersion,format);
             writableSheet.addCell(label1);
 
-            //ªı∫≈
+            //Ë¥ßÂè∑
             label1 = new Label(2, rowUpdate, item.productName.trim(),format);
             writableSheet.addCell(label1);
 
+            //ËØªÂèñÂí∏Â∫∑Êï∞ÊçÆ
+            ProductDetail productDetail= apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
 
-
-            //≤ƒ¡œ±»÷ÿ
-            //ªı∫≈
+            //ÊùêÊñôÊØîÈáç
+            //Ë¥ßÂè∑
             label1 = new Label(8, rowUpdate,  productDetail.product.constitute);
             writableSheet.addCell(label1);
 
@@ -138,15 +119,15 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             {
 
 
-                //Õ¨øÓªı∫≈
+                //ÂêåÊ¨æË¥ßÂè∑
                 label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
                 writableSheet.addCell(label1);
 
-                //º◊»©±Í æ
+                //Áî≤ÈÜõÊ†áÁ§∫
                 label1 = new Label(9, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
                 writableSheet.addCell(label1);
 
-                //≤ƒ÷ 
+                //ÊùêË¥®
                 label1 = new Label(10, rowUpdate,  productDetail.product.xiankang.getCaizhi(),format);
                 writableSheet.addCell(label1);
             }
