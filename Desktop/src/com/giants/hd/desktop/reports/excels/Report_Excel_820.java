@@ -23,10 +23,10 @@ import java.util.Map;
 /**802 客户 模板
  * Created by davidleen29 on 2015/8/6.
  */
-public class Report_Excel_802 extends ExcelReportor {
+public class Report_Excel_820 extends ExcelReportor {
 
 
-    public Report_Excel_802(QuotationFile modelName) {
+    public Report_Excel_820(QuotationFile modelName) {
         super(modelName);
     }
 

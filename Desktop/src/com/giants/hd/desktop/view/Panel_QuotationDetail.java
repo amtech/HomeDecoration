@@ -390,6 +390,7 @@ public class Panel_QuotationDetail extends BasePanel {
         Customer selectedCustomer= (Customer) cb_customer.getSelectedItem();
         if(selectedCustomer!=null) {
             quotation.customerId = selectedCustomer.id;
+            quotation.customerCode=selectedCustomer.code;
             quotation.customerName = selectedCustomer.name;
         }
         User selectedSalesman= (User) cb_salesman.getSelectedItem();

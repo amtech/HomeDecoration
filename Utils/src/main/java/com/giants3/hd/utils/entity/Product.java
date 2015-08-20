@@ -296,6 +296,12 @@ public class Product implements Serializable {
 
 
 
+
+
+
+
+
+
 	public float getFob() {
 		return fob;
 	}

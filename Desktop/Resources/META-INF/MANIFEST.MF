@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.5
-Manifest-Version_Number: 5
+Manifest-Version: 1.0.6
+Manifest-Version_Number: 6
 Manifest-Version_Spec: 1:添加报价模板
  2:修正上传图片问题
 Main-Class: com.giants.hd.desktop.Main

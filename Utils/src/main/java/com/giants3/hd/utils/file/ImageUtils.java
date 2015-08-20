@@ -6,9 +6,8 @@ import com.giants3.hd.utils.exception.HdException;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -77,12 +76,91 @@ public class ImageUtils {
      */
     public static final byte[] scale(String filePath, int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
 
+
+
+
+        byte[] result=null;
+
         try {
 
 
 
-            File file=new File(filePath);
-            BufferedImage img = ImageIO.read(file);
+
+           FileInputStream fileInputStream= new FileInputStream(filePath);
+            result=   scale(fileInputStream,maxWidth,maxHeight,preserveAlpha);
+            fileInputStream.close();
+
+        } catch (IOException e) {
+            throw HdException.create(HdException.FAIL_SCALE_IMAGE,e);
+        }
+
+        return result;
+    }
+
+
+
+    /**
+     * 生成缩略图的字节流
+     *
+     * 设定最高宽高， 等比例压缩
+     *
+     * @param url
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     * @throws HdException
+     */
+    public static final byte[] scale(URL url, int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
+
+
+
+
+        byte[] result=null;
+        InputStream inputStream = null;
+
+        try {
+
+
+
+
+              inputStream=url.openStream();
+            result=   scale(inputStream,maxWidth,maxHeight,preserveAlpha);
+
+
+        } catch (IOException e) {
+            throw HdException.create(HdException.FAIL_SCALE_IMAGE,e);
+        } finally {
+            try {
+                if(inputStream!=null)
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 生成缩略图的字节流
+     *
+     * 设定最高宽高， 等比例压缩
+     *
+     * @param inputStream
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     * @throws HdException
+     */
+    public static final byte[] scale(InputStream inputStream , int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
+
+        try {
+
+
+
+
+            BufferedImage img = ImageIO.read(inputStream);
 
             int sourceWidth=img.getWidth();
             int sourceHeight=img.getHeight();
@@ -103,7 +181,7 @@ public class ImageUtils {
             if(preserveAlpha)
                 g.setComposite(AlphaComposite.Src);
 
-          //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
+            //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
             g.drawImage(img, 0, 0, newWidth, newHeight, null);
             g.dispose();
 

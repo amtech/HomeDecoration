@@ -101,7 +101,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
         int selectItem=0;
         for (int i = 0; i < itemCount; i++) {
             QuotationFile file= (QuotationFile) cb_model.getItemAt(i);
-            if(file.name.indexOf(detail.quotation.customerName)>-1)
+            if(file.name.contains(detail.quotation.customerName) ||file.name.contains(detail.quotation.customerCode))
             {
                 selectItem=i;
                 break;

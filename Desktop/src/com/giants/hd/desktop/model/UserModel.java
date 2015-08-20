@@ -6,6 +6,8 @@ import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
+import java.util.List;
+
 /**
  *  业务员表格数据模型
  */
@@ -22,6 +24,8 @@ public class UserModel extends  BaseTableModel<User> {
     @Inject
     public UserModel() {
         super(columnNames, fieldName, classes, User.class);
+        setRowAdjustable(true);
+
     }
 
 
@@ -74,4 +78,10 @@ public class UserModel extends  BaseTableModel<User> {
     }
 
 
+    @Override
+    public void setDatas(List<User> newDatas) {
+
+        MiniRowCount=newDatas.size()+20;
+        super.setDatas(newDatas);
+    }
 }

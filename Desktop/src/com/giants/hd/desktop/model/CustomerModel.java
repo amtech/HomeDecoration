@@ -2,10 +2,12 @@ package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.entity.Customer;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * 客户路表格数据模型
@@ -23,6 +25,7 @@ public class CustomerModel extends  BaseTableModel<Customer> {
     @Inject
     public CustomerModel( ) {
         super(columnNames, fieldName, classes, Customer.class);
+        setRowAdjustable(true);
     }
 
 
@@ -58,5 +61,13 @@ public class CustomerModel extends  BaseTableModel<Customer> {
     @Override
     public int getRowHeight() {
         return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT ;
+    }
+
+
+    @Override
+    public void setDatas(List<Customer> newDatas) {
+
+        MiniRowCount=newDatas.size()+20;
+        super.setDatas(newDatas);
     }
 }

@@ -28,24 +28,34 @@ public   class ExcelReportor {
     private QuotationFile file;
     public ExcelReportor(QuotationFile file)
     {this.file=file;}
-    public  final void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
+    public   final void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
 
 
 
 
 
 
-        File outputFile=new File(fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber +"."+ file.appendix );
+        String outputFilePath=fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber +"."+ file.appendix;
 
 
-        InputStream inputStream=new URL(HttpUrl.loadQuotationFile(file.name,file.appendix)).openStream();
+        operation(quotationDetail,new URL(HttpUrl.loadQuotationFile(file.name,file.appendix)),outputFilePath);
+
+
+    }
+
+
+
+    protected  void operation(QuotationDetail quotationDetail,URL url,String outputFile) throws IOException, BiffException, WriteException, HdException {
+
+        InputStream inputStream=url.openStream();
         Workbook existingWorkbook = Workbook.getWorkbook(inputStream);
         inputStream.close();
-        WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, existingWorkbook);
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(new File(outputFile), existingWorkbook);
         workbookCopy.write();
         workbookCopy.close();
 
-         doOnLocalFile(quotationDetail, new File(fileOutputDirectory + File.separator + quotationDetail.quotation.qNumber + "." + file.appendix));
+        doOnLocalFile(quotationDetail, new File(outputFile));
+
     }
 
 

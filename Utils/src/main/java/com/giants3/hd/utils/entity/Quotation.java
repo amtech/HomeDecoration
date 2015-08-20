@@ -23,7 +23,11 @@ public class Quotation  implements Serializable {
     public long customerId  ;
 
 
-
+    /**
+     * 顾客名称
+     */
+    @Basic
+    public String customerCode ="" ;
 
 
     /**
@@ -102,6 +106,9 @@ public class Quotation  implements Serializable {
         if (id != quotation.id) return false;
         if (customerId != quotation.customerId) return false;
         if (salesmanId != quotation.salesmanId) return false;
+        if (quotationTypeId != quotation.quotationTypeId) return false;
+        if (customerCode != null ? !customerCode.equals(quotation.customerCode) : quotation.customerCode != null)
+            return false;
         if (customerName != null ? !customerName.equals(quotation.customerName) : quotation.customerName != null)
             return false;
         if (qDate != null ? !qDate.equals(quotation.qDate) : quotation.qDate != null) return false;
@@ -109,7 +116,8 @@ public class Quotation  implements Serializable {
         if (vDate != null ? !vDate.equals(quotation.vDate) : quotation.vDate != null) return false;
         if (salesman != null ? !salesman.equals(quotation.salesman) : quotation.salesman != null) return false;
         if (currency != null ? !currency.equals(quotation.currency) : quotation.currency != null) return false;
-        return !(memo != null ? !memo.equals(quotation.memo) : quotation.memo != null);
+        if (memo != null ? !memo.equals(quotation.memo) : quotation.memo != null) return false;
+        return !(quotationTypeName != null ? !quotationTypeName.equals(quotation.quotationTypeName) : quotation.quotationTypeName != null);
 
     }
 
@@ -117,6 +125,7 @@ public class Quotation  implements Serializable {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (customerId ^ (customerId >>> 32));
+        result = 31 * result + (customerCode != null ? customerCode.hashCode() : 0);
         result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
         result = 31 * result + (qDate != null ? qDate.hashCode() : 0);
         result = 31 * result + (qNumber != null ? qNumber.hashCode() : 0);
@@ -125,6 +134,8 @@ public class Quotation  implements Serializable {
         result = 31 * result + (salesman != null ? salesman.hashCode() : 0);
         result = 31 * result + (currency != null ? currency.hashCode() : 0);
         result = 31 * result + (memo != null ? memo.hashCode() : 0);
+        result = 31 * result + (int) (quotationTypeId ^ (quotationTypeId >>> 32));
+        result = 31 * result + (quotationTypeName != null ? quotationTypeName.hashCode() : 0);
         return result;
     }
 }
