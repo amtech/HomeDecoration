@@ -27,6 +27,12 @@ public class ProductDetail  implements Serializable {
     }
 
     public Product product;
+
+
+    /**
+     * 记录表  该数据仅仅参与显示 不参与数据修改与否的比较
+     */
+    public ProductLog productLog;
     /**
      * 白胚材料列表
      */

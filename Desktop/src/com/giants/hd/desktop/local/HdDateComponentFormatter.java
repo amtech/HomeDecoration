@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.local;
 
+import com.giants3.hd.utils.DateFormats;
 import net.sourceforge.jdatepicker.impl.DateComponentFormatter;
 import net.sourceforge.jdatepicker.util.JDatePickerUtil;
 
@@ -18,10 +19,9 @@ public class HdDateComponentFormatter extends JFormattedTextField.AbstractFormat
 
 
 
-    DateFormat format;
 
     public HdDateComponentFormatter(){
-        format =new SimpleDateFormat("yyyy-MM-dd");
+
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HdDateComponentFormatter extends JFormattedTextField.AbstractFormat
         if (cal == null) {
             return "";
         }
-        return format.format(cal.getTime());
+        return DateFormats.FORMAT_YYYY_MM_DD.format(cal.getTime());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class HdDateComponentFormatter extends JFormattedTextField.AbstractFormat
         if (text == null || text.equals("")) {
             return null;
         }
-        Date date = format.parse(text);
+        Date date = DateFormats.FORMAT_YYYY_MM_DD.parse(text);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;

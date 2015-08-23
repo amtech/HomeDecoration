@@ -1,13 +1,17 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 
 import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.entity.User;
 import org.hibernate.criterion.Order;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.servlet.http.HttpServletRequest;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,12 @@ public class BaseController {
     protected static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
 
 
+
+    @ModelAttribute(Constraints.ATTR_LOGIN_USER)
+    public User getUser(HttpServletRequest request)
+    {
+        return (User) request.getAttribute(Constraints.ATTR_LOGIN_USER);
+    }
 
     /**
      * 封装正常的返回结果。

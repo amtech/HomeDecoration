@@ -57,6 +57,11 @@ public class Panel_QuotationXKDetail extends BasePanel {
     private JButton btn_save;
     private JButton btn_delete;
     private JButton btn_export;
+    private JPanel jp_log;
+    private JLabel creator;
+    private JLabel updator;
+    private JLabel createTime;
+    private JLabel updateTime;
     public QuotationDetail data;
 
 
@@ -560,6 +565,31 @@ public class Panel_QuotationXKDetail extends BasePanel {
         ta_memo.setText(quotation.memo);
         model.setDatas(data.XKItems);
 
+
+        bindLogData(data.quotationLog);
+
+
+    }
+    /**
+     * 绑定修改记录信息
+     * @param quotationLog
+     */
+    private void bindLogData(QuotationLog quotationLog) {
+
+
+        jp_log.setVisible(quotationLog!=null);
+
+
+        if(quotationLog==null)
+        {
+            return;
+        }
+
+
+        creator.setText(quotationLog.creatorCName);
+        createTime.setText(quotationLog.createTimeString);
+        updateTime.setText(quotationLog.updateTimeString);
+        updator.setText(quotationLog.updatorCName);
 
     }
 

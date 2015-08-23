@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class QuotationController extends BaseController {
     private QuotationXKItemRepository quotationXKItemRepository;
     @Autowired
     private QuotationItemRepository quotationItemRepository;
-
+    @Autowired
+    private QuotationLogRepository quotationLogRepository;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
@@ -83,6 +85,7 @@ public class QuotationController extends BaseController {
 
         QuotationDetail detail=new QuotationDetail();
         detail.quotation=quotation;
+        detail.quotationLog=quotationLogRepository.findFirstByQuotationIdEquals(id);
         detail.items=  quotationItemRepository.findByQuotationIdEquals(id);
 
         detail.XKItems=quotationXKItemRepository.findByQuotationIdEquals(id);
@@ -105,7 +108,7 @@ public class QuotationController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<QuotationDetail> saveQuotationDetail(@RequestBody QuotationDetail quotationDetail) {
+    RemoteData<QuotationDetail> saveQuotationDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,   @RequestBody QuotationDetail quotationDetail) {
 
 
         Quotation newQuotation=quotationDetail.quotation;
@@ -146,7 +149,14 @@ public class QuotationController extends BaseController {
 
      Quotation savedQuotation=   quotationRepository.save(newQuotation);
 
+
+
+        updateQuotationLog(savedQuotation,user);
+
         long newId=savedQuotation.id;
+
+
+
 
         for(QuotationItem item:quotationDetail.items)
         {
@@ -169,6 +179,28 @@ public class QuotationController extends BaseController {
     }
 
 
+
+    /**
+     * 记录报价修改信息
+     */
+    private void updateQuotationLog(Quotation quotation,User user)
+    {
+
+        //记录数据当前修改着相关信息
+        QuotationLog quotationLog=quotationLogRepository.findFirstByQuotationIdEquals(quotation.id);
+        if(quotationLog==null)
+        {
+            quotationLog=new QuotationLog();
+            quotationLog.quotationId=quotation.id;
+
+        }
+
+        quotationLog.quotationNumber=quotation.qNumber;
+        quotationLog.setUpdator(user);
+        quotationLogRepository.save(quotationLog);
+
+
+    }
     /**
      *删除产品信息
      *

@@ -7,8 +7,10 @@ package com.giants3.hd.server.interceptor;
 
         import com.giants3.hd.server.repository.SessionRepository;
         import com.giants3.hd.server.repository.UserRepository;
+        import com.giants3.hd.server.utils.Constraints;
         import com.giants3.hd.utils.RemoteData;
         import com.giants3.hd.utils.entity.Session;
+        import com.giants3.hd.utils.entity.User;
         import com.google.gson.Gson;
 
 
@@ -54,8 +56,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
               long currentTime=  Calendar.getInstance().getTimeInMillis();
                 if(currentTime-session.loginTime<VALIDATE_TIME)
                 {
+
+
+
+                    request.setAttribute(Constraints.ATTR_LOGIN_USER,session.user);
                     return true;
                 }
+
 
 
 

@@ -24,6 +24,8 @@
         <rowspec value="fill:311px:grow(10.0)"/>
         <rowspec value="fill:m:grow"/>
         <rowspec value="fill:m:noGrow"/>
+        <rowspec value="center:d:noGrow"/>
+        <rowspec value="top:m:noGrow"/>
         <colspec value="fill:50px:grow"/>
         <colspec value="fill:40px:grow"/>
         <colspec value="fill:40px:grow"/>
@@ -1072,6 +1074,140 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <grid id="73546" binding="jp_log" layout-manager="GridLayoutManager" row-count="1" column-count="16" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="17" column="0" row-span="1" col-span="22" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="351b1" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="建立："/>
+                </properties>
+              </component>
+              <component id="b8dbd" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="15" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Label"/>
+                </properties>
+              </component>
+              <component id="cd90e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="最后修改："/>
+                </properties>
+              </component>
+              <component id="6b17" class="javax.swing.JLabel" binding="updator">
+                <constraints>
+                  <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <hspacer id="75b99">
+                <constraints>
+                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="6cfac" class="javax.swing.JLabel" binding="creator">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="7ff8a" class="javax.swing.JLabel" binding="createTime">
+                <constraints>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <hspacer id="d93cb">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <hspacer id="359f3">
+                <constraints>
+                  <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="ea3fc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="5a4fc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <hspacer id="492da">
+                <constraints>
+                  <grid row="0" column="14" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="b618e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="b6072" class="javax.swing.JLabel" binding="updateTime">
+                <constraints>
+                  <grid row="0" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="ff6bc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="---"/>
+                </properties>
+              </component>
+              <component id="58b52" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="---"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="4d76" class="javax.swing.JSeparator">
+            <constraints>
+              <grid row="16" column="0" row-span="1" col-span="22" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties/>
           </component>

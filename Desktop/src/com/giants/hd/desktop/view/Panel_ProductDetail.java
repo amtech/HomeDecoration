@@ -120,6 +120,14 @@ public class Panel_ProductDetail extends BasePanel {
     private Panel_XK_Pack jp_pack;
 
 
+    private JLabel creator;
+
+    private JLabel updateTime;
+    private JLabel updator;
+    private JLabel createTime;
+    private JPanel jp_log;
+
+
     /**
      * 旧数据 传递进来的数据
      */
@@ -944,7 +952,37 @@ public class Panel_ProductDetail extends BasePanel {
         setProductInfoToPackageModel();
         bindData();
 
+
+
+        bindLogData(detail==null?null:detail.productLog);
+
+
+
         addListeners();
+
+    }
+
+
+    /**
+     * 绑定修改记录信息
+     * @param productLog
+     */
+    private void bindLogData(ProductLog productLog) {
+
+
+        jp_log.setVisible(productLog!=null);
+
+
+        if(productLog==null)
+        {
+            return;
+        }
+
+
+        creator.setText(productLog.creatorCName);
+        createTime.setText(productLog.createTimeString);
+        updateTime.setText(productLog.updateTimeString);
+        updator.setText(productLog.updatorCName);
 
     }
 

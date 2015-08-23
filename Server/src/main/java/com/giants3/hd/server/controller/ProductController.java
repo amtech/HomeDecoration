@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
@@ -43,6 +44,9 @@ public class ProductController extends BaseController {
     private ProductWageRepository productWageRepository;
     @Autowired
     private ProductPaintRepository productPaintRepository;
+
+    @Autowired
+    private ProductLogRepository productLogRepository;
     @Value("${filepath}")
     private String rootFilePath;
 
@@ -98,7 +102,7 @@ public class ProductController extends BaseController {
 
 
 
-        List<Product> pageValue = productRepository.findByNameEquals(prd_name );
+        List<Product> pageValue = productRepository.findByNameEquals(prd_name);
 
         int size = pageValue.size();
         for (int i = 0; i < size; i++) {
@@ -181,6 +185,8 @@ public class ProductController extends BaseController {
 
 
         detail.product = product;
+
+        detail.productLog=productLogRepository.findFirstByProductIdEquals(productId);
 
 
 
@@ -272,7 +278,7 @@ public class ProductController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<ProductDetail> saveProductDetail(@RequestBody ProductDetail productDetail) {
+    RemoteData<ProductDetail> saveProductDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestBody ProductDetail productDetail) {
 
 
         long productId = productDetail.product.id;
@@ -289,8 +295,6 @@ public class ProductController extends BaseController {
             //检查唯一性
             if(productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name,newProduct.pVersion)!=null)
             {
-
-
                  return   wrapError("货号："+newProduct.name +",版本号："+newProduct.pVersion
                             +"已经存在,请更换");
             }
@@ -321,6 +325,18 @@ public class ProductController extends BaseController {
 
 
         productId = product.id;
+
+
+        //更新修改记录
+        updateProductLog(product, user);
+
+
+
+
+
+        //将此次修改记录插入历史修改记录表中。
+
+
 
 
         if (productDetail.paints != null) {
@@ -552,7 +568,7 @@ public class ProductController extends BaseController {
     public
 
     @ResponseBody
-    RemoteData<ProductDetail> copyProduct(@RequestParam("id") long productId,@RequestParam("name") String newProductName,@RequestParam("version") String version) {
+    RemoteData<ProductDetail> copyProduct( @ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,  @RequestParam("id") long productId,@RequestParam("name") String newProductName,@RequestParam("version") String version) {
 
         if(productRepository.findFirstByNameEqualsAndPVersionEquals(newProductName, version)!=null)
         {
@@ -586,9 +602,14 @@ public class ProductController extends BaseController {
          newProduct= productRepository.save(newProduct);
 
         long newProductId=newProduct.id;
+
+        updateProductLog(newProduct,user);
+
+
+
         //更新产品材料信息
     List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
-        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        //深度复制对象， 重新保存数据， 不能能直接使用源数据保存，会报错。
         List<ProductMaterial> newMaterials= (List<ProductMaterial>) ObjectUtils.deepCopy(materials);
         for(ProductMaterial material:newMaterials)
         {
@@ -633,6 +654,28 @@ public class ProductController extends BaseController {
         return returnFindProductDetailById(newProductId);
     }
 
+
+    /**
+     * 记录产品修改信息
+     */
+    private void updateProductLog(Product product,User user)
+    {
+
+        //记录数据当前修改着相关信息
+        ProductLog productLog=productLogRepository.findFirstByProductIdEquals(product.id);
+        if(productLog==null)
+        {
+            productLog=new ProductLog();
+            productLog.productId=product.id;
+
+        }
+        productLog.productName=product.name;
+        productLog.pVersion=product.pVersion;
+        productLog.setUpdator(user);
+        productLogRepository.save(productLog);
+
+
+    }
 
 
 

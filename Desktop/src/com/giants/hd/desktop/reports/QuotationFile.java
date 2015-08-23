@@ -32,16 +32,20 @@ public class QuotationFile {
     public static final String FILE_977_XLSX="977客户报价格式";
     public static final String FILE_302="302客户报价格式";
     public static final String FILE_127="127客户报价格式";
+
+    public static final String FILE_307_XLSX="307客户报价格式";
     public static  final String[] FORMATS=new String[]{
             FILE_NORMAL,FILE_XIANGKANG_1,FILE_XIANGKANG_2,FILE_XIANGKANG_3,FILE_XIANGKANG_4,
-            FILE_820,FILE_314,FILE_859,FILE_907,FILE_302,FILE_127,FILE_977_XLSX
+            FILE_820,FILE_314,FILE_859,FILE_907,FILE_302,
+            FILE_127,FILE_977_XLSX,FILE_307_XLSX
 
 
     };
 
     public static  final Class[] CLASSES=new Class[]{
             Report_Excel_NORMAL.class, Report_Excel_XK_JIAJU.class, Report_Excel_XK_DENGJU.class, Report_Excel_XK_JINGZI_ZA.class, Report_Excel_XK_HUALEI.class,
-            Report_Excel_820.class,Report_Excel_314.class,Report_Excel_859.class,Report_Excel_907.class,Report_Excel_302.class,Report_Excel_127.class,Report_Excel_977_XLXS.class
+            Report_Excel_820.class,Report_Excel_314.class,Report_Excel_859.class,Report_Excel_907.class,Report_Excel_302.class,
+            Report_Excel_127.class,Report_Excel_977_XLXS.class,Report_Excel_307_XLXS.class
 
 
 
@@ -51,7 +55,8 @@ public class QuotationFile {
     public static final String XLSX="xlsx";
     public static  final String[] APPENDIXS=new String[]{
             XLS,XLS,XLS,XLS,XLS,
-            XLS,XLS,XLS,XLS,XLS,XLS,XLSX
+            XLS,XLS,XLS,XLS,XLS,
+            XLS,XLSX,XLSX
 
 
     };

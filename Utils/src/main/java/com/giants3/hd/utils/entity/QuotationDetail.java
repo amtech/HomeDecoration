@@ -11,6 +11,12 @@ import java.util.List;
 public class QuotationDetail implements Serializable {
 
         public Quotation quotation;
+
+
+    /**
+     * 报价修改记录信息  不参与数据完整性比对
+     */
+     public   QuotationLog quotationLog;
        public List<QuotationItem> items;
     public  List<QuotationXKItem> XKItems ;
 

@@ -6,6 +6,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.QuotationDetail;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.file.ImageUtils;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.*;
@@ -25,10 +26,10 @@ import java.net.URL;
 public   class ExcelReportor {
 
 
-    private QuotationFile file;
+    protected QuotationFile file;
     public ExcelReportor(QuotationFile file)
     {this.file=file;}
-    public   final void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
+    public     void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
 
 
 
@@ -94,27 +95,42 @@ public   class ExcelReportor {
 
 
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
     protected void attachPicture(WritableSheet sheet,String url,float x, float y, float width,float height) throws IOException {
         //图片
 
+        sheet.getColumnView((int) y).getSize();
 
-        WritableImage image;
+        int cellWidth=0;
+        int cellHeight=0;
 
-        BufferedImage bufferedImage=null;
-        try {
-              bufferedImage = ImageIO.read(new URL(url));
-        }catch (IOException e)
+
+
+        //1 character (X) = 8 pixel (X)   1 character (Y) = 16 pixel (Y)
+        for(int i=Math.round(x - 0.5f);i<Math.round(x + width + 0.5);i++)
         {
-            e.printStackTrace();
+            cellWidth+= sheet.getColumnView(i).getSize() *8/256;;
         }
 
+        for(int i=Math.round(y - 0.5f);i<Math.round(y + height + 0.5);i++)
+        {
+            cellHeight+= sheet.getRowView(i).getSize() /20/3*4;
+        }
 
-        if(bufferedImage!=null) {
-            baos.reset();
-            ImageIO.write(bufferedImage, "PNG", baos);
-            bufferedImage.flush();
-            image = new WritableImage(x, y, width, height, baos.toByteArray());
+        byte[] data=null;
+        try {
+           // data=  ImageUtils.scale(new URL(url), cellWidth * 4, cellHeight * 4, true);
+            data=  ImageUtils.scale(new URL(url), 1280, 1280, true);
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+        WritableImage image;
+
+
+
+
+        if(data!=null) {
+            image = new WritableImage(x, y, width, height,data);
             image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
             sheet.addImage(image);
 
