@@ -142,6 +142,12 @@ public class AuthorityController extends  BaseController{
 
 
 
+
+
+
+
+        findUser.password="***";
+
         RemoteData<User>  data= wrapData(findUser);
         long loginTime=Calendar.getInstance().getTimeInMillis();
         data.token= DigestUtils.md5(findUser.toString()+loginTime);

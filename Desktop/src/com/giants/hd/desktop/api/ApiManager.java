@@ -4,18 +4,14 @@ import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
-import com.google.gson.Gson;
+import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * 远程操作接口
@@ -723,7 +719,7 @@ public class ApiManager {
      */
     public RemoteData<Quotation> loadQuotation(String searchValue,long salesmanId,int pageIndex, int pageSize) throws HdException {
 
-        String url=HttpUrl.loadQuotation(searchValue,salesmanId, pageIndex, pageSize);
+        String url=HttpUrl.loadQuotation(searchValue, salesmanId, pageIndex, pageSize);
 
         String result=     client.getWithStringReturned(url);
 
@@ -964,6 +960,131 @@ public class ApiManager {
         Type   generateType = new TypeToken<RemoteData<QuoteAuth>>() {
         }.getType();
         RemoteData<QuoteAuth> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 读取历史操作记录
+     * @param className
+     * @param id
+     */
+    public RemoteData<OperationLog> readOperationLog(String className, long id) throws HdException {
+        String url=HttpUrl.readOperationLog(className, id);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<OperationLog>>() {
+        }.getType();
+        RemoteData<OperationLog> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 读取被删除的产品列表
+     * @param value
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<ProductDelete> loadDeleteProducts(String value, int pageIndex, int pageSize) throws HdException {
+        String url=HttpUrl.loadDeleteProducts(value, pageIndex, pageSize);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<ProductDelete>>() {
+        }.getType();
+        RemoteData<ProductDelete> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 查询被删除的产品信息详情
+     * @param deleteProductId
+     * @return
+     */
+    public RemoteData<ProductDetail> productDetailOfDeleted(long deleteProductId) throws HdException {
+        String url=HttpUrl.productDetailDelete(deleteProductId);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
+        }.getType();
+        RemoteData<ProductDetail> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+    /**
+     * 查询被删除的报价信息详情
+     * @param deleteQuotationId
+     * @return
+     */
+    public RemoteData<QuotationDetail> quotationDetailOfDeleted(long deleteQuotationId) throws HdException {
+        String url=HttpUrl.quotationDetailDelete(deleteQuotationId);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType();
+        RemoteData<QuotationDetail> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+
+    /**
+     * 恢复被删除的产品 信息
+     * @param deleteProductId
+     * @return
+     */
+    public RemoteData<ProductDetail> resumeDeleteProduct(long deleteProductId) throws HdException {
+
+        String url=HttpUrl.resumeDeleteProduct(deleteProductId);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<ProductDetail>>() {
+        }.getType();
+        RemoteData<ProductDetail> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 读取被删除的报价列表
+     * @param value
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<QuotationDelete> loadDeleteQuotations(String value, int pageIndex, int pageSize) throws HdException {
+
+        String url=HttpUrl.loadDeleteQuotations(value, pageIndex, pageSize);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<QuotationDelete>>() {
+        }.getType();
+        RemoteData<QuotationDelete> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+    /**
+     * 恢复被删除的报价单
+     * @param deleteQuotationId
+     * @return
+     */
+    public RemoteData<QuotationDetail> resumeDeleteQuotation(long deleteQuotationId) throws HdException {
+        String url=HttpUrl.resumeDeleteQuotation(deleteQuotationId);
+
+        String result=     client.getWithStringReturned(url);
+
+        Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType();
+        RemoteData<QuotationDetail> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
 }

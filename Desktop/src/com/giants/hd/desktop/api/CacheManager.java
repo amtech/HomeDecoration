@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.api;
 
-import com.giants3.hd.utils.entity.BufferData;
+import com.giants3.hd.utils.noEntity.BufferData;
 
 /**
  * Created by davidleen29 on 2015/8/8.

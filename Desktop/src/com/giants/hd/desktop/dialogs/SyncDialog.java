@@ -44,60 +44,8 @@ public class SyncDialog extends BaseDialog<Void>  implements BasePanel.PanelList
     {
 
 
-        panel_photoSync.btn_material.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                new HdSwingWorker<Void,Object>(SyncDialog.this)
-                {
-
-                    @Override
-                    protected RemoteData<Void> doInBackground() throws Exception {
 
 
-                        return   apiManager.syncMaterialPhoto();
-
-                    }
-
-                    @Override
-                    public void onResult(RemoteData<Void> data) {
-
-
-
-
-                            JOptionPane.showMessageDialog(SyncDialog.this,data.message);
-
-
-
-                    }
-                }.go();
-            }
-        });
-
-        panel_photoSync.btn_product.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                new HdSwingWorker<Void,Object>(SyncDialog.this)
-                {
-
-                    @Override
-                    protected RemoteData<Void> doInBackground() throws Exception {
-
-
-                        return   apiManager.syncProductPhoto();
-
-                    }
-
-                    @Override
-                    public void onResult(RemoteData<Void> data) {
-
-                        JOptionPane.showMessageDialog(SyncDialog.this,data.message);
-
-                    }
-                }.go();
-            }
-        });
 
 
         panel_photoSync.btn_erp_sync.addActionListener(new ActionListener() {

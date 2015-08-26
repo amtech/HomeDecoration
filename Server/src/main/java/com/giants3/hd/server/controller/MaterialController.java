@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 
 import com.giants3.hd.server.utils.FileUtils;
@@ -82,8 +83,7 @@ public class MaterialController extends BaseController {
 
     public MaterialController() {
 
-        materialObjectPool= PoolCenter.getObjectPool(Material.class)
-        ;
+        materialObjectPool= PoolCenter.getObjectPool(Material.class);
 
     }
 
@@ -201,7 +201,6 @@ public class MaterialController extends BaseController {
 
     }
 
-
     /**
      * 同步erp 数据
      * @return
@@ -211,15 +210,16 @@ public class MaterialController extends BaseController {
     @ResponseBody
     RemoteData<Void> syncERP( )   {
 
-       EntityManager manager= Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager();
-        ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
+//       EntityManager manager= Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager();
+//       ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
 
+        EntityManagerHelper helper=EntityManagerHelper.getErp();
+        EntityManager manager=helper.getEntityManager();
+        ErpPrdtRepository repository=new ErpPrdtRepository(manager);
         List<Prdt>  datas=repository.list();
-
-
-        manager.close();
+        helper.closeEntityManager();
         int size=datas.size();
-        Logger.getLogger("TEST").info("syncErp total  material size :"+size);
+      //  Logger.getLogger("TEST").info("syncErp total  material size :"+size);
 
         List<MaterialClass> materialClasses=materialClassRepository.findAll();
 
@@ -628,7 +628,7 @@ public class MaterialController extends BaseController {
                 long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
                 if(lastUpdateTime>0 )
                 {
-                    if(lastUpdateTime!=material.lastPhotoUpdateTime)
+                    if(lastUpdateTime!=material.lastPhotoUpdateTime||material.photo==null)
                     {
                         updateMaterialPhoto(material);
                         material.lastPhotoUpdateTime=lastUpdateTime;

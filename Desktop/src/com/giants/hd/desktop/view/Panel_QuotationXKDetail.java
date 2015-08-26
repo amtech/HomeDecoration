@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
+import com.giants.hd.desktop.dialogs.OperationLogDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
 
@@ -62,6 +63,7 @@ public class Panel_QuotationXKDetail extends BasePanel {
     private JLabel updator;
     private JLabel createTime;
     private JLabel updateTime;
+    private JLabel viewLog;
     public QuotationDetail data;
 
 
@@ -110,6 +112,25 @@ public class Panel_QuotationXKDetail extends BasePanel {
 
 
         btn_export.setVisible(AuthorityUtil.getInstance().exportQuotation());
+
+
+        viewLog.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+
+
+                    Window window = getWindow(Panel_QuotationXKDetail.this.getRoot());
+                    OperationLogDialog dialog = new OperationLogDialog(window, Quotation.class, data.quotation.id);
+                    dialog.setLocationRelativeTo(window);
+                    dialog.setVisible(true);
+
+
+                }
+
+            }
+        });
+
     }
 
 

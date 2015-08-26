@@ -16,10 +16,7 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialClass;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.entity.*;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -119,19 +116,44 @@ public class Panel_Quotation extends BasePanel{
 
                 if (e.getClickCount() == 2) {
 
-                    Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
-                    if (quotation.id <= 0)
-                        return;
-                    JFrame frame;
-                    if (quotation.quotationTypeId == 2) {
-                        frame = new QuotationXKDetailFrame(quotation);
+                   final Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
 
-                    } else {
-                        frame = new QuotationDetailFrame(quotation);
-                    }
+                    new HdSwingWorker<QuotationDetail, Long>(SwingUtilities.getWindowAncestor(getRoot())) {
+                        @Override
+                        protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                            return apiManager.loadQuotationDetail( quotation.id);
+                        }
 
-                    frame.setLocationRelativeTo(getRoot());
-                    frame.setVisible(true);
+                        @Override
+                        public void onResult(RemoteData<QuotationDetail> data) {
+
+                            if(data.isSuccess()) {
+
+                                JFrame   frame =new QuotationDetailFrame(data.datas.get(0));
+                                frame.setLocationRelativeTo(getRoot());
+                                frame.setVisible(true);
+
+                            }else {
+
+                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), data.message);
+
+
+                            }
+                        }
+                    }.go();
+
+//                    if (quotation.id <= 0)
+//                        return;
+//                    JFrame frame;
+//                    if (quotation.quotationTypeId == 2) {
+//                        frame = new QuotationXKDetailFrame(quotation);
+//
+//                    } else {
+//                        frame = new QuotationDetailFrame(quotation);
+//                    }
+//
+//                    frame.setLocationRelativeTo(getRoot());
+//                    frame.setVisible(true);
                 }
             }
         });
@@ -144,10 +166,8 @@ public class Panel_Quotation extends BasePanel{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_NORMAL,"普通报价");
 
-                JFrame frame = new QuotationDetailFrame();
-                frame.setLocationRelativeTo(getRoot());
-                frame.setVisible(true);
 
             }
         });
@@ -158,10 +178,8 @@ public class Panel_Quotation extends BasePanel{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_XK,"咸康报价");
 
-                JFrame frame = new QuotationXKDetailFrame();
-                frame.setLocationRelativeTo(getRoot());
-                frame.setVisible(true);
 
             }
         });
@@ -173,6 +191,18 @@ public class Panel_Quotation extends BasePanel{
 
         btn_add.setVisible(quotationAddable);
         btn_add_xiankang.setVisible(quotationAddable);
+    }
+
+
+    private void addQuotationDetailFrame(int quotationType,String typeName)
+    {
+        QuotationDetail quotationDetail=new QuotationDetail();
+        quotationDetail.init();
+        quotationDetail.quotation.quotationTypeId=quotationType;
+        quotationDetail.quotation.quotationTypeName=typeName;
+        JFrame frame = new QuotationDetailFrame( quotationDetail);
+        frame.setLocationRelativeTo(getRoot());
+        frame.setVisible(true);
     }
 
 

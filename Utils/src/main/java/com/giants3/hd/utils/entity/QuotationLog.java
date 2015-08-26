@@ -77,8 +77,6 @@ public class QuotationLog implements Serializable {
         updateTime= Calendar.getInstance().getTimeInMillis();
         updateTimeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(updateTime));
 
-
-
     }
 
 

@@ -94,7 +94,7 @@ public class StringUtils {
                 String spec=specs[j];
                 try {
                     float inchValue = Float.valueOf(spec.trim());
-                    float cmValue= UnitUtils.inchToCm(inchValue  );
+                    float cmValue= UnitUtils.inchToCm(inchValue);
                     cmString+=cmValue;
 
                 }catch (Throwable t)
@@ -203,5 +203,19 @@ public class StringUtils {
 
     }
 
+
+
+    public static int index(String[] array,String s)
+    {
+
+        int length = array.length;
+        for (int i = 0; i < length; i++) {
+
+            if(array[i].equals(s))
+                return i;
+
+        }
+        return -1;
+    }
 
 }

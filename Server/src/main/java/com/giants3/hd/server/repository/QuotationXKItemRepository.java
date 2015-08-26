@@ -4,6 +4,9 @@ package com.giants3.hd.server.repository;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.entity.QuotationXKItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -17,4 +20,13 @@ public interface QuotationXKItemRepository extends JpaRepository<QuotationXKItem
 
    public List<QuotationXKItem>  findByQuotationIdEquals(long quotationId);
    int  deleteByQuotationIdEquals(long quotationId);
+
+   @Modifying
+   @Query("update T_QuotationXKItem p set    p.productPhoto=:productPhoto    WHERE p.productId =   :productId ")
+   public int updatePhotoByProductId(@Param("productPhoto") byte[] productPhoto,@Param("productId") long productId);
+
+   @Modifying
+   @Query("update T_QuotationXKItem p set    p.productPhoto2=:productPhoto     WHERE p.productId2 =   :productId ")
+   public int updatePhoto2ByProductId(@Param("productPhoto") byte[] productPhoto,@Param("productId") long productId);
+
 }

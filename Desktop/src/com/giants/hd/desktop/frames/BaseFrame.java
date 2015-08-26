@@ -16,7 +16,7 @@ public class BaseFrame  extends JFrame{
 
     public BaseFrame(  ) {
 
-        this(" ");
+        this("");
 
 
     }

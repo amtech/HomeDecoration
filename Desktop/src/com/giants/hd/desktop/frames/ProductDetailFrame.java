@@ -1,13 +1,13 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.interf.Operatable;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_ProductDetail;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.entity.ProductDetail;
 import com.google.inject.Inject;
 
@@ -27,18 +27,30 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     ApiManager apiManager;
     @Inject
     Panel_ProductDetail panel_productDetail;
-  public   ProductDetailFrame(ProductDetail productDetail )
+    ProductDelete productDelete =null;
+   public   ProductDetailFrame(ProductDetail productDetail )
     {
 
 
+        this(productDetail, null);
 
 
-        super("产品详情[" + (productDetail.product == null ? "新增" : ("货号：" + productDetail.product.getName() + "---版本号：" + productDetail.product.getpVersion())) + "]");
+    }
+
+    public   ProductDetailFrame(ProductDetail productDetail,ProductDelete productDelete )
+    {
+
+
+        super();
+        this.productDelete =productDelete;
+
+
+        setTitle("产品详情[" + (productDetail.product == null ? "新增" : ("货号：" + productDetail.product.getName() + "---版本号：" + productDetail.product.getpVersion())) + "]" + (productDelete!=null ? "    [已删除]   " : ""));
 
 
         init( );
 
-        panel_productDetail.setProductDetail(productDetail);
+        panel_productDetail.setProductDetail(productDetail,productDelete);
     }
 
 
@@ -50,8 +62,8 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
 
 
-        panel_productDetail.setListener(this);
 
+        panel_productDetail.setListener(this);
         setContentPane(panel_productDetail.getRoot());
         setMinimumSize(new Dimension(1024, 768));
         pack();
@@ -64,7 +76,8 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
                 try {
 
-                    if(panel_productDetail.productDetail==null)
+
+                    if(panel_productDetail.productDetail==null|| productDelete!=null)
                     {
                         dispose();
                         return;
@@ -141,6 +154,8 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     public void delete() {
 
 
+
+        if(productDelete!=null) return;
 
 
         final ProductDetail detail=panel_productDetail.getData();

@@ -17,6 +17,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 
+import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 
@@ -307,6 +308,26 @@ public class Main extends JFrame {
 
         }
 
+
+        if(AuthorityUtil.getInstance().viewProductPicture()) {
+            menuItem = new JMenuItem("产品图片" );
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                   // Main.this.setContentPane(new Panel_Material("").getRoot());
+                    ProductPictureDialog dialog = new ProductPictureDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+
+                }
+            });
+
+        }
+
+
+
         if(AuthorityUtil.getInstance().viewMaterialList()) {
             menuItem = new JMenuItem("材料列表",
                     KeyEvent.VK_M);
@@ -318,7 +339,7 @@ public class Main extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    Main.this.setContentPane(new Panel_Material("").getRoot());
+                   Main.this.setContentPane(new Panel_Material("").getRoot());
 
 
                 }
@@ -327,8 +348,42 @@ public class Main extends JFrame {
         }
 
 
+        if(AuthorityUtil.getInstance().viewMaterialPicture()) {
+            menuItem = new JMenuItem(Module.TITLE_MATERIAL_PICTURE );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
+                    MaterialPictureDialog dialog = new MaterialPictureDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+
+                }
+            });
+
+        }
+
+
+        if(AuthorityUtil.getInstance().viewProductDelete()) {
+            menuItem = new JMenuItem(Module.TITLE_PRODUCT_DELETE );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    ProductDeleteDialog dialog = new ProductDeleteDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+
+                }
+            });
+
+        }
 
         return menu;
 
@@ -352,25 +407,41 @@ public class Main extends JFrame {
                 "This menu does nothing");
 
 
+        if(AuthorityUtil.getInstance().viewQuotationList()) {
+            JMenuItem menuItem = new JMenuItem("报价列表"
+            );
 
-        //
-        JMenuItem  menuItem = new JMenuItem("报价列表",
-                KeyEvent.VK_B);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_B, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
-        menu.add(menuItem);
+            menu.add(menuItem);
 
 
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
-                setContentPane(new Panel_Quotation().getRoot());
+                    setContentPane(new Panel_Quotation().getRoot());
 
-            }
-        });
+                }
+            });
+        }
+
+
+        if(AuthorityUtil.getInstance().viewQuotationDeleteList())
+        {
+            JMenuItem   menuItem = new JMenuItem(Module.TITLE_QUOTATION_DELETE );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    QuotationDeleteDialog dialog = new QuotationDeleteDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+
+                }
+            });
+        }
 
 
 
@@ -560,22 +631,6 @@ public class Main extends JFrame {
             });
         }
 
-
-        if(AuthorityUtil.getInstance().viewPictureUpload()) {
-            //
-            menuItem = new JMenuItem("图片批量上传");
-
-            menu.add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    UploadPictureDialog dialog = new UploadPictureDialog(Main.this);
-                    dialog.pack();
-                    dialog.setVisible(true);
-                }
-            });
-
-        }
 
 
 

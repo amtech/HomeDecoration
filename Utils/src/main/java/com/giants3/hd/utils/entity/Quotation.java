@@ -10,6 +10,9 @@ import java.util.List;
 @Entity(name="T_Quotation")
 public class Quotation  implements Serializable {
 
+    public static final int QUOTATION_TYPE_NORMAL=1;
+
+    public static final int QUOTATION_TYPE_XK=2;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

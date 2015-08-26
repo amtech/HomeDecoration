@@ -8,10 +8,8 @@ import com.giants.hd.desktop.view.Panel_Quotation;
 import com.giants.hd.desktop.view.Panel_QuotationDetail;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.entity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -33,38 +31,75 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
     private QuotationDetail oldData;
     private QuotationDetail quotationDetail;
-    public QuotationDetailFrame(final Quotation quotation)
+
+
+
+
+
+
+
+
+
+
+    public QuotationDetailFrame(final QuotationDetail quotationDetail)
     {
 
 
-
-
-        super("报价详情[" + quotation.qNumber + "]");
-
-
-        init();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                loadQuotationDetail(quotation);
-            }
-        });
-
+        this(quotationDetail, null);
     }
-    public QuotationDetailFrame( )
+
+    public QuotationDetailFrame(final QuotationDetail quotationDetail,QuotationDelete quotationDelete)
     {
 
+        super();
+
+
+        Quotation quotation=quotationDetail.quotation;
+
+        String title="";
+        if(quotation.id<=0)
+        {
+        switch ((int)quotation.quotationTypeId)
+        {
+
+            case Quotation.QUOTATION_TYPE_NORMAL:
+
+                title="新增普通报价单";
+                break;
+            case Quotation.QUOTATION_TYPE_XK:
+                title="新增咸康报价单";
+                break;
+        }
 
 
 
-        super("新增报价单");
+        }else
+        {
+            switch ((int)quotation.quotationTypeId)
+            {
+
+                case Quotation.QUOTATION_TYPE_NORMAL:
+
+                    title="普通报价单详情[" + quotationDetail.quotation.qNumber + "]";
+                    break;
+                case Quotation.QUOTATION_TYPE_XK:
+                    title="咸康报价单详情[" + quotationDetail.quotation.qNumber + "]";
+                    break;
+            }
+
+            if(quotationDelete!=null)
+            {
+                title+="      [已删除]";
+            }
+
+        }
+        setTitle(title);
 
         init();
-     QuotationDetail   newDetail=new QuotationDetail();
-        newDetail.init();
-        setQuotationDetail(newDetail);
+        setQuotationDetail(quotationDetail);
 
+
+            panel_QuotationDetail.setQuotationDelete(quotationDelete);
 
 
     }
@@ -156,11 +191,14 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
         panel_QuotationDetail.getData(quotationDetail);
 
 
-        if(quotationDetail.quotation.quotationTypeId==0) {
-            quotationDetail.quotation.quotationTypeId = 1;
 
-            quotationDetail.quotation.quotationTypeName = "普通报价";
+
+        if (quotationDetail.equals(oldData)) {
+          JOptionPane.showMessageDialog(QuotationDetailFrame.this, "数据无改动");
+            return;
         }
+
+
         saveQuotationDetail(quotationDetail);
 
 
@@ -239,41 +277,6 @@ public class QuotationDetailFrame extends BaseFrame implements  BasePanel.PanelL
 
 
 
-    /**
-     * 加载产品详情信息
-     */
-    private void loadQuotationDetail(final Quotation quotation) {
-
-
-        new HdSwingWorker<QuotationDetail, Long>(this) {
-            @Override
-            protected RemoteData<QuotationDetail> doInBackground() throws Exception {
-                return apiManager.loadQuotationDetail( quotation.id);
-            }
-
-            @Override
-            public void onResult(RemoteData<QuotationDetail> data) {
-
-                if(data.isSuccess()) {
-
-                      setQuotationDetail(data.datas.get(0));
-
-                }else {
-
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            close();
-                        }
-                    });
-
-                }
-            }
-        }.go();
-
-
-    }
 
 
 

@@ -67,6 +67,21 @@ public class QuotationXKDetailFrame extends BaseFrame implements  BasePanel.Pane
     }
 
 
+    public QuotationXKDetailFrame(final QuotationDetail quotationDetail)
+    {
+
+
+
+
+        super("报价详情[" + quotationDetail.quotation.qNumber + "]");
+
+
+        init();
+        setQuotationDetail(quotationDetail);
+
+
+    }
+
 
 
 
@@ -159,6 +174,12 @@ public class QuotationXKDetailFrame extends BaseFrame implements  BasePanel.Pane
 
             quotationDetail.quotation.quotationTypeName = "咸康报价";
         }
+
+        if (quotationDetail.equals(oldData)) {
+            JOptionPane.showMessageDialog(QuotationXKDetailFrame.this, "数据无改动" );
+            return;
+        }
+
         saveQuotationDetail(quotationDetail);
 
 

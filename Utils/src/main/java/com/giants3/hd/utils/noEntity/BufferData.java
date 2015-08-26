@@ -1,9 +1,12 @@
-package com.giants3.hd.utils.entity;
+package com.giants3.hd.utils.noEntity;
 
 /**
  * Created by davidleen29 on 2015/8/8.
  */
 
+import com.giants3.hd.utils.entity.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 /**
  * 本地缓存数据
  */
-public class BufferData {
+public class BufferData implements Serializable{
 
     public   List<PClass> pClasses;
     public   List<Customer> customers;

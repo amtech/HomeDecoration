@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
@@ -54,15 +55,31 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         if (!isStart) {
 
 
+      List< Module> moduleList=     Module.getInitDataList();
+            int newSize=moduleList.size();
 
-
+            int existSize=moduleRepository.findAll().size();
             //模块数据初始化
-            if(moduleRepository.findAll().size()==0)
+            if(existSize!=newSize)
             {
-                //无数据添加
+
+
+
+
                 for(Module module:Module.getInitDataList())
                 {
-                    moduleRepository.save(module);
+
+                    Module oldModule=moduleRepository.findFirstByNameEquals(module.name);
+                    if(oldModule==null)
+                    {
+                        oldModule=new Module();
+                        oldModule.name=module.name;
+                        oldModule.title=module.title;
+                        moduleRepository.save(module);
+
+                    }
+
+
 
                 }
 

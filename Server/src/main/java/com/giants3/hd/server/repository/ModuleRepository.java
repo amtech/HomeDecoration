@@ -17,4 +17,7 @@ public interface ModuleRepository extends JpaRepository<Module,Long> {
 
 
 
+
+    public Module findFirstByNameEquals(String name);
+
 }

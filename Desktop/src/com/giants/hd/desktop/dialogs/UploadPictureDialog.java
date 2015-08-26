@@ -1,91 +1,60 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_UploadPicture;
-import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
-import java.util.*;
-import java.util.List;
 
-/**
- * 图片批量上传对话框
- */
-public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.PanelListener {
+public abstract class UploadPictureDialog extends BaseDialog {
+    private JPanel contentPane;
+    private JButton uploadPicture;
+    private JButton syncPicture;
+    private JCheckBox pictureOverride;
 
-
-    @Inject
-    ApiManager apiManager;
-
-
-    @Inject
-    Panel_UploadPicture panel_uploadPicture;
-
-    public UploadPictureDialog(Window window)
-    {
-        super(window,"图片同步");
-        setMinimumSize(new Dimension(400,400));
-        setLocationRelativeTo(window);
-
-
-        setContentPane(   panel_uploadPicture.getRoot());
-        init();
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-    }
+    public UploadPictureDialog(Window window) {
+        super(window,"图片管理");
+        setContentPane(contentPane);
 
 
 
 
-    public void init()
-    {
 
-
-        panel_uploadPicture.btn_uploadMaterial.addActionListener(new ActionListener() {
+        uploadPicture.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
 
-
-                final    File file=  getSelectedFile();
-                if(file==null)
-                {
-
-                }else
-                {
+                final File file = getSelectedFile();
 
 
+                if (file == null) {
+
+                } else {
 
 
-                    final  boolean doesOverride=panel_uploadPicture.cb_MaterialReplace.isSelected();
+                    final boolean doesOverride = pictureOverride.isSelected();
 
 
-
-                    new HdSwingWorker<Void,String>(UploadPictureDialog.this)
-                    {
+                    new HdSwingWorker<Void, String>(UploadPictureDialog.this) {
 
                         @Override
                         protected RemoteData<Void> doInBackground() throws Exception {
 
-                             uploadFile(file,0,doesOverride,this);
+                            uploadFile(file, 1, doesOverride, this);
 
                             return new RemoteData<Void>();
+
+
                         }
 
                         @Override
-                        protected void process(List<String> chunks) {
+                        protected void process(java.util.List<String> chunks) {
 
                             dialog.setMessage(chunks.get(0));
                         }
@@ -93,7 +62,7 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
                         @Override
                         public void onResult(RemoteData<Void> data) {
 
-                            JOptionPane.showMessageDialog(UploadPictureDialog.this,"材料上传完毕");
+                            JOptionPane.showMessageDialog(UploadPictureDialog.this, "图片上传完毕");
 
                         }
                     }.go();
@@ -103,84 +72,35 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
             }
         });
 
-        panel_uploadPicture.btn_uploadProduct.addActionListener(new ActionListener() {
+
+        syncPicture.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-
-
-            final    File file=  getSelectedFile();
-
-
-                if(file==null)
-                {
-
-                }else
-                {
-
-
-
-
-                    final  boolean doesOverride=panel_uploadPicture.cb_productReplace.isSelected();
-
-
-                new HdSwingWorker<Void,String>(UploadPictureDialog.this)
+                new HdSwingWorker<Void,Object>(UploadPictureDialog.this)
                 {
 
                     @Override
                     protected RemoteData<Void> doInBackground() throws Exception {
 
-                           uploadFile(file, 1, doesOverride,this);
 
-                        return new RemoteData<Void>();
+                      return  syncPicture();
 
-
-                    }
-
-                    @Override
-                    protected void process(List<String> chunks) {
-
-                        dialog.setMessage(chunks.get(0));
                     }
 
                     @Override
                     public void onResult(RemoteData<Void> data) {
 
-                        JOptionPane.showMessageDialog(UploadPictureDialog.this,"产品图片上传完毕");
+                        JOptionPane.showMessageDialog(UploadPictureDialog.this,data.message);
 
                     }
                 }.go();
-
-                }
             }
         });
-    }
-
-
-
-
-    @Override
-    public void save() {
-
-
-
-
-
-
-
 
 
     }
 
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void close() {
-        dispose();
-    }
 
 
     private File getSelectedFile()
@@ -191,12 +111,12 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 //添加excel文件的过滤器
-         fileChooser.addChoosableFileFilter(new PictureFileFilter( ));
+        fileChooser.addChoosableFileFilter(new PictureFileFilter());
         int result = fileChooser.showOpenDialog(null);
 
         if (result == JFileChooser.APPROVE_OPTION) {
 
-           return fileChooser.getSelectedFile();
+            return fileChooser.getSelectedFile();
 
         }
         return null;
@@ -222,18 +142,15 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
 
 
 
-               if(ImageUtils.isPictureFile(childFiles[i].getName()))
+                if(ImageUtils.isPictureFile(childFiles[i].getName()))
                     uploadFile(childFiles[i],type,doesOverride,swingWorker);
 
             }
 
         }else
         {
-            RemoteData result=null;
-            if( type==1)
-                result=apiManager.uploadProductPicture(file,doesOverride);
-                else
-                result=apiManager.uploadMaterialPicture(file, doesOverride);
+            RemoteData result=uploadPicture(file,doesOverride);
+
 
             swingWorker.publishMessage(result.message);
 
@@ -245,5 +162,9 @@ public class UploadPictureDialog extends BaseDialog<Void>  implements BasePanel.
 
 
 
+    protected abstract RemoteData<Void> uploadPicture(File file,boolean doesOverride) throws HdException;
+
+
+    protected abstract  RemoteData<Void> syncPicture() throws HdException;
 
 }

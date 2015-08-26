@@ -78,6 +78,43 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/product/search?proName=" + productName + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 
+    public static String loadDeleteProducts(String value, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + "api/product/searchDelete?proName=" + value + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+
+
+    }
+
+
+    public static String loadDeleteQuotations(String value, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + "api/quotation/searchDelete?keyword=" + value + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+
+
+    }
+
+
+
+
+    /**
+     * 恢复被删除产品
+     * @param deleteProductId
+     * @return
+     */
+    public static String resumeDeleteProduct(long deleteProductId) {
+
+        return additionInfo(BaseUrl + "api/product/resumeDelete?deleteProductId=" + deleteProductId  );
+    }
+    /**
+     * 恢复被删除报价单
+     * @param deleteQuotationId
+     * @return
+     */
+    public static String resumeDeleteQuotation(long deleteQuotationId) {
+
+        return additionInfo(BaseUrl + "api/quotation/resumeDelete?deleteQuotationId=" + deleteQuotationId  );
+    }
+
     /**
      * 保存产品信息
      * @return
@@ -96,6 +133,28 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/product/detail?id=" + id);
     }
 
+
+
+
+    /**
+     * 读取已经删除产品详情
+     * @param deleteProductId
+     * @return
+     */
+    public static String productDetailDelete(long deleteProductId) {
+        return additionInfo(BaseUrl + "api/product/detailDelete?id=" + deleteProductId);
+    }
+
+
+
+    /**
+     * 读取已经删除报价详情
+     * @param quotationDeleteId
+     * @return
+     */
+    public static String quotationDetailDelete(long quotationDeleteId) {
+        return additionInfo(BaseUrl + "api/quotation/detailDelete?id=" + quotationDeleteId);
+    }
     /**
      * 生成读取产品图片的url
      * @param productName
@@ -386,7 +445,7 @@ public class HttpUrl {
      * 读取报价记录
 
      * @param searchValue
-     * @param userId
+     * @param salesmanId
      *@param pageIndex
      * @param pageSize   @return
      */
@@ -540,4 +599,12 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/authority/saveQuoteList");
     }
+
+    public static String readOperationLog(String className,long id) {
+
+        return additionInfo(BaseUrl + "api/operationLog/search?className=" + className +  "&recordId=" + id);
+    }
+
+
+
 }

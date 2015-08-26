@@ -123,10 +123,13 @@ public class FileController  extends BaseController{
             if(!parentFile.exists())
                 parentFile.mkdirs();
             bytes = file.getBytes();
+            FileOutputStream out = new FileOutputStream(newFile);
             BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(newFile));
+                    new BufferedOutputStream(out);
+
             stream.write(bytes);
             stream.close();
+            out.close();
             return  wrapMessageData("成功上传文件到" + newFilePath);
         } catch (IOException e) {
             e.printStackTrace();

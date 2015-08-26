@@ -4,6 +4,7 @@ import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants.hd.desktop.view.Panel_ProductDetail;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.entity.ProductDetail;
 
 import javax.swing.*;
@@ -39,16 +40,29 @@ public class HdSwingUtils {
      * @Param component
      *
      */
-    public static  void showDetailPanel(Component component,ProductDetail productDetail )
+    public static  void showDetailPanel(Window component,ProductDetail productDetail )
+    {
+
+        showDetailPanel(component,productDetail,null);
+
+    }
+
+
+    /**
+     * 显示产品详情
+     * @param productDetail
+     * @Param component
+     *
+     */
+    public static  void showDetailPanel(Window component,ProductDetail productDetail,ProductDelete productDelete )
     {
 
 
 
-        JFrame frame =new ProductDetailFrame(productDetail);
+        JFrame frame =new ProductDetailFrame(productDetail,productDelete);
         frame.setLocationRelativeTo(component);
         frame.setVisible(true);
     }
-
 
     /**
      * 生成适合JLable 展示的 多行文本

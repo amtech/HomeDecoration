@@ -143,7 +143,17 @@ public class AuthorityUtil {
     {
 
 
-        return viewProductList()||viewMaterialList();
+        return viewProductList()||viewMaterialList()||viewMaterialPicture()||viewProductPicture()||viewProductDelete();
+    }
+
+    public  boolean viewMaterialPicture() {
+
+       return isViewable(Module.NAME_MATERIAL_PICTURE);
+    }
+
+    public boolean viewProductPicture() {
+
+        return isViewable(Module.NAME_PRODUCT_PICTURE);
     }
 
     public boolean viewProductList()
@@ -177,7 +187,22 @@ public class AuthorityUtil {
 
 
 
-        return isViewable(Module.NAME_QUOTATION);
+        return viewQuotationList()||viewQuotationDeleteList();
+    }
+
+
+    public boolean viewQuotationList() {
+
+
+
+        return isViewable(Module.NAME_QUOTATION) ;
+    }
+
+    public boolean viewQuotationDeleteList() {
+
+
+
+        return isViewable(Module.NAME_QUOTATION_DELETE) ;
     }
 
 
@@ -378,5 +403,10 @@ public class AuthorityUtil {
     public boolean deleteMaterial() {
 
         return deletable(Module.NAME_MATERIAL);
+    }
+
+    public boolean viewProductDelete() {
+
+        return isViewable(Module.NAME_PRODUCT_DELETE);
     }
 }

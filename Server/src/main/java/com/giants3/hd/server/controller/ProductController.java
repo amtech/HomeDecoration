@@ -1,7 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
@@ -13,13 +15,15 @@ import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,26 +51,32 @@ public class ProductController extends BaseController {
 
     @Autowired
     private ProductLogRepository productLogRepository;
+
+
+    @Autowired
+    private OperationLogRepository operationLogRepository;
     @Value("${filepath}")
     private String rootFilePath;
+
+    @Value("${deleteProductFilePath}")
+    private String deleteProductPath;
 
     @Autowired
     private QuotationItemRepository quotationItemRepository;
 
     @Autowired
+    private QuotationXKItemRepository quotationXKItemRepository;
+
+    @Autowired
     private QuotationRepository quotationRepository;
+
+    @Autowired
+    private ProductDeleteRepository productDeleteRepository;
     //@PersistenceContext
     //private EntityManager entityManager;
 
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<Product> listPrdtJson() {
 
-
-        return wrapData(productRepository.findAll());
-    }
 
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
@@ -79,7 +89,7 @@ public class ProductController extends BaseController {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Product> pageValue = productRepository.findByNameLikeOrderByNameAsc("%" + prd_name + "%", pageable);
+        Page<Product> pageValue = productRepository.findByNameLikeOrderByNameAsc("%" + prd_name.trim() + "%", pageable);
 
         List<Product> products = pageValue.getContent();
 
@@ -675,6 +685,18 @@ public class ProductController extends BaseController {
         productLogRepository.save(productLog);
 
 
+
+
+        //增加历史操作记录
+        OperationLog   operationLog= OperationLog.createForProductModify(product,user);
+          operationLogRepository.save(operationLog);
+
+
+
+
+
+
+
     }
 
 
@@ -691,9 +713,12 @@ public class ProductController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData< Void> logicDelete(@RequestParam("id") long productId ) {
+    RemoteData< Void> logicDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam("id") long productId ) {
 
 
+
+
+        ProductDetail detail=findProductDetailById(productId);
 
 
         //查询是否有关联的报价单
@@ -714,6 +739,9 @@ public class ProductController extends BaseController {
         }
 
         productRepository.delete(productId);
+        //增加历史操作记录
+        operationLogRepository.save(OperationLog.createForProductDelete(product, user));
+
 
         int affectedRow=0;
         affectedRow=productWageRepository.deleteByProductIdEquals(productId);
@@ -728,7 +756,19 @@ public class ProductController extends BaseController {
 
 
 
-        return wrapData( );
+
+
+        //备份产品数据
+
+            ProductDelete productDelete = new ProductDelete();
+            productDelete.setProductAndUser(product, user);
+            ProductDelete newDelete = productDeleteRepository.save(productDelete);
+            BackDataHelper.backProduct(detail, deleteProductPath, newDelete);
+
+
+
+
+        return wrapData();
     }
 
 
@@ -740,6 +780,7 @@ public class ProductController extends BaseController {
 
     @RequestMapping(value="/syncPhoto", method={RequestMethod.GET,RequestMethod.POST})
 
+    @Transactional
     @ResponseBody
     public RemoteData<Void> asyncProduct( ) {
 
@@ -769,6 +810,7 @@ public class ProductController extends BaseController {
 
                     String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
                     long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
+                    boolean changedPhoto=false;
                     if(lastUpdateTime>0 )
                     {
                         if(product.photo==null||lastUpdateTime!=product.lastPhotoUpdateTime)
@@ -777,6 +819,7 @@ public class ProductController extends BaseController {
                             product.lastPhotoUpdateTime=lastUpdateTime;
 
                             productRepository.save(product);
+                            changedPhoto=true;
                             count++;
                         }
 
@@ -787,9 +830,18 @@ public class ProductController extends BaseController {
                             product.photo = null;
                             product.lastPhotoUpdateTime = lastUpdateTime;
                             productRepository.save(product);
+                            changedPhoto=true;
                             count++;
                         }
 
+                    }
+
+                    if(changedPhoto)
+                    {
+                        //更新报价表中的图片缩略图
+                        quotationItemRepository.updatePhotoByProductId(product.photo, product.id);
+                        quotationXKItemRepository.updatePhotoByProductId(product.photo, product.id);
+                        quotationXKItemRepository.updatePhoto2ByProductId(product.photo, product.id);
                     }
 
 
@@ -804,10 +856,131 @@ public class ProductController extends BaseController {
 
 
 
-        return wrapMessageData(count>0?"同步产品数据图片成功，共成功同步"+count+"款产品！":"所有产品图片已经都是最新的。");
+        return wrapMessageData(count > 0 ? "同步产品数据图片成功，共成功同步" + count + "款产品！" : "所有产品图片已经都是最新的。");
     }
 
 
+
+
+
+
+    @RequestMapping(value = "/searchDelete", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ProductDelete> listDelete(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name,@RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageCount) {
+
+
+
+        Pageable pageable = constructPageSpecification(pageIndex, pageCount);
+        Page<ProductDelete> pageValue = productDeleteRepository.findByProductNameLikeOrderByTimeDesc("%" + prd_name.trim() + "%", pageable);
+
+        List<ProductDelete> products = pageValue.getContent();
+
+
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+
+
+    }
+
+
+    @RequestMapping(value = "/detailDelete", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ProductDetail> detailDelete(@RequestParam(value = "id" )  long productDeleteId ) {
+
+
+
+        ProductDelete productDelete=productDeleteRepository.findOne(productDeleteId);
+
+        if(productDelete==null)
+        {
+            return wrapError("该产品已经不在删除列表中");
+        }
+
+
+        ProductDetail detail  =null;
+
+        detail= BackDataHelper.getProductDetail(deleteProductPath, productDelete);
+
+        if(detail==null)
+            return wrapError("备份文件读取失败");
+
+
+
+        return wrapData(detail);
+
+    }
+
+    @RequestMapping(value = "/resumeDelete", method = RequestMethod.GET)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<ProductDetail> resumeDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "deleteProductId" )  long deleteProductId ) {
+
+
+
+        ProductDelete productDelete=productDeleteRepository.findOne(deleteProductId);
+
+        if(productDelete==null)
+        {
+            return wrapError("该产品已经不在删除列表中");
+        }
+
+
+        ProductDetail detail  =BackDataHelper.getProductDetail(deleteProductPath,productDelete);
+
+        if(detail==null)
+            return wrapError("备份文件读取失败");
+
+
+        //新增记录
+        //移除id
+        detail.product.id=0;
+        detail.product.xiankang.setId(0);
+
+     RemoteData<ProductDetail> result=   saveProductDetail(user,detail);
+
+        if(result.isSuccess())
+        {
+
+
+            ProductDetail newProductDetail=result.datas.get(0);
+            long newProductId=newProductDetail.product.id;
+            //更新修改记录中所有旧productId 至新id；
+
+            if(detail.productLog!=null) {
+                detail.productLog.productId = newProductId;
+                productLogRepository.save(detail.productLog);
+                newProductDetail.productLog = detail.productLog;
+            }
+
+            //更新修改记录中所有旧productId 至新id；
+            operationLogRepository.updateProductId(productDelete.productId, Product.class.getSimpleName(), newProductId);
+
+            //添加恢复消息记录。
+            OperationLog operationLog=  OperationLog.createForProductResume(newProductDetail.product, user);
+            operationLogRepository.save(operationLog);
+
+
+            //移除删除记录
+            productDeleteRepository.delete(deleteProductId);
+
+            //移除备份的文件
+            BackDataHelper.deleteProduct(deleteProductPath,productDelete);
+
+        }
+
+
+
+
+
+
+
+
+
+        return wrapData(detail);
+
+    }
 
 
 }

@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
+import com.giants.hd.desktop.dialogs.OperationLogDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
 
@@ -13,6 +14,8 @@ import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.header.ColumnGroup;
+import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -24,6 +27,9 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
@@ -51,6 +57,8 @@ public class Panel_QuotationDetail extends BasePanel {
     private JPanel jp_log;
     private JLabel updator;
     private JLabel updateTime;
+    private JLabel viewLog;
+    private JButton btn_resume;
     public QuotationDetail data;
 
 
@@ -61,7 +69,7 @@ public class Panel_QuotationDetail extends BasePanel {
 
     QuotationItemTableModel model;
 
-
+    QuotationItemXKTableModel xkModel;
 
 
     public Panel_QuotationDetail() {
@@ -72,11 +80,15 @@ public class Panel_QuotationDetail extends BasePanel {
 
     private void init() {
         model=new QuotationItemTableModel();
-        tb.setModel(model);
+        xkModel=new QuotationItemXKTableModel();
+
+
+
+     //   tb.setModel(model);
 
 
         configTableEditor();
-
+        configProduct2Editor();
 
 
         btn_save.addActionListener(new ActionListener() {
@@ -159,6 +171,28 @@ public class Panel_QuotationDetail extends BasePanel {
 
 
 
+        viewLog.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+
+
+                    Window window = getWindow(Panel_QuotationDetail.this.getRoot());
+                    OperationLogDialog dialog = new OperationLogDialog(window, Quotation.class, data.quotation.id);
+                    dialog.setLocationRelativeTo(window);
+                    dialog.setVisible(true);
+
+
+                }
+
+            }
+        });
+
+
+
+        //恢复功能默认不显示
+        btn_resume.setVisible(false);
+
     }
 
 
@@ -212,6 +246,55 @@ public class Panel_QuotationDetail extends BasePanel {
     }
 
 
+
+    private void configProduct2Editor()
+    {
+
+        //定制表格的编辑功能 弹出物料选择单
+
+        final JTextField jtf_product2 = new JTextField();
+        jtf_product2.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Document object = e.getDocument();
+                if (!jtf_product2.hasFocus())
+                    jtf_product2.requestFocus();
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                Document object = e.getDocument();
+                if (!jtf_product2.hasFocus())
+                    jtf_product2.requestFocus();
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+
+            }
+        });
+
+
+
+        jtf_product2.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                final String text = ((JTextField) e.getSource()).getText().trim();
+                handleTableProduct2Input(tb, text);
+
+            }
+        });
+
+
+        DefaultCellEditor editor = new DefaultCellEditor(jtf_product2);
+        tb.setDefaultEditor(Product2.class, editor);
+    }
+
+
     /**
      * 处理表格的产品搜索
      * @param tb
@@ -245,7 +328,7 @@ public class Panel_QuotationDetail extends BasePanel {
 
                 if(data.isSuccess() && data.totalCount == 1) {
 
-                    productable .setProduct(data.datas.get(0), rowIndex);
+                    productable.setProduct(data.datas.get(0), rowIndex);
 
 
                 }else
@@ -280,17 +363,168 @@ public class Panel_QuotationDetail extends BasePanel {
 
     }
 
+
+    /**
+     * 处理表格的产品搜索
+     * @param tb
+     * @param text
+     */
+    private void handleTableProduct2Input(final JHdTable tb, final String text) {
+        if(!(tb.getModel() instanceof QuotationItemXKTableModel))
+        {
+            return;
+        }
+        final QuotationItemXKTableModel productable= (QuotationItemXKTableModel) tb.getModel();
+
+        final   int rowIndex = tb.convertRowIndexToModel(tb.getSelectedRow());
+        final  QuotationXKItem item=productable.getItem(rowIndex);
+        if(item.productId<=0)
+        {
+            JOptionPane.showMessageDialog(getRoot(),"请先挑选品名");
+            return;
+        }
+        //查询  单记录直接copy
+        new HdSwingWorker<Product,Object>(SwingUtilities.getWindowAncestor(getRoot()))
+        {
+            @Override
+            protected RemoteData<Product> doInBackground() throws Exception {
+
+                return    apiManager.readSameNameProductList(item.productName, item.productId)  ;
+
+            }
+
+            @Override
+            public void onResult(RemoteData<Product> data) {
+
+                if(data.isSuccess() && data.totalCount == 1) {
+
+                    productable.setProduct2(data.datas.get(0), rowIndex);
+
+                }else
+                {
+
+
+
+                    SearchDialog<Product> dialog = new SearchDialog.Builder().setWindow(getWindow(root)).setTableModel(new ProductTableModel()).setComonSearch(new ComonSearch<Product>() {
+                        @Override
+                        public RemoteData<Product> search(String value, int pageIndex, int pageCount) throws HdException {
+                            return apiManager.readProductList(value, pageIndex, pageCount);
+                        }
+                    }).setValue(item.productName).setSearchTextFixed(true).setRemoteData(data).createSearchDialog();
+                    dialog.setMinimumSize(new Dimension(800, 600));
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(tb);
+                    dialog.setVisible(true);
+                    Product product = dialog.getResult();
+                    if (product != null) {
+                        productable.setProduct2(product, rowIndex);
+
+                    }
+
+
+                }
+
+
+
+
+            }
+        }.go();
+
+    }
+
     @Override
     public JComponent getRoot() {
         return root;
     }
 
 
-    public void setData(QuotationDetail data) {
+    public void setQuotationDelete(final QuotationDelete quotationDelete)
+    {
+
+
+        btn_save.setVisible(quotationDelete==null);
+        btn_delete.setVisible(quotationDelete==null);
+        btn_export.setVisible(quotationDelete==null);
+        btn_resume.setVisible(quotationDelete != null);
+
+        if(quotationDelete!=null)
+
+        btn_resume.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                new HdSwingWorker<QuotationDetail, Void>(SwingUtilities.getWindowAncestor(getRoot())) {
+                    @Override
+                    protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                        return apiManager.resumeDeleteQuotation(quotationDelete.id);
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<QuotationDetail> data) {
+
+
+                        if(data.isSuccess())
+                        {
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),"数据恢复成功");
+                            if(listener!=null)
+                                listener.close();
+                        }else{
+
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),data.message);
+                        }
+
+
+                    }
+                }.go();
+
+
+
+
+
+            }
+        });
+
+
+    }
+
+    public void setData(QuotationDetail data ) {
 
 
         this.data=data;
+
+
+
+
         Quotation quotation=data.quotation;
+        switch ((int)quotation.quotationTypeId)
+        {
+
+            case Quotation.QUOTATION_TYPE_NORMAL:
+
+                tb.setModel(model);
+                break;
+            case Quotation.QUOTATION_TYPE_XK:
+
+                tb.setModel(xkModel);
+                TableColumnModel cm = tb.getColumnModel();
+                ColumnGroup g_name = new ColumnGroup("普通包装");
+                int startIndex=5;
+                for(int i=0;i<12;i++)
+                    g_name.add(cm.getColumn(startIndex+i));
+                ColumnGroup g_lang = new ColumnGroup("加强包装");
+                startIndex=17;
+                for(int i=0;i<12;i++)
+                    g_lang.add(cm.getColumn(startIndex+i));
+
+                GroupableTableHeader header = (GroupableTableHeader)tb.getTableHeader();
+                header.addColumnGroup(g_name);
+                header.addColumnGroup(g_lang);
+                break;
+        }
+
+
+
 
         jtf_number.setText(quotation.qNumber);
         qDate.getJFormattedTextField().setText(quotation.qDate);
@@ -341,6 +575,7 @@ public class Panel_QuotationDetail extends BasePanel {
         ta_memo.setText(quotation.memo);
 
         model.setDatas(data.items);
+        xkModel.setDatas(data.XKItems);
 
         bindLogData(data.quotationLog);
 
@@ -410,6 +645,8 @@ public class Panel_QuotationDetail extends BasePanel {
         quotation.memo=ta_memo.getText();
         data.items.clear();
         data.items.addAll(model.getValuableDatas());
+        data.XKItems.clear();
+        data.XKItems.addAll(xkModel.getValuableDatas());
 
 
     }
@@ -461,6 +698,24 @@ public class Panel_QuotationDetail extends BasePanel {
         for (User salesman : CacheManager.getInstance().bufferData.salesmans) {
             cb_salesman.addItem(salesman);
         }
+
+        //crate table  and addd table group header
+        tb = new JHdTable(   ) {
+            protected JTableHeader createDefaultTableHeader() {
+                return new GroupableTableHeader(columnModel);
+            }
+
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer,row,column);
+                if (comp instanceof JLabel) {
+                    ((JLabel) comp).setHorizontalAlignment(SwingConstants.CENTER);
+                }
+                return comp;
+            }
+        };
+        tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 
     }
 }

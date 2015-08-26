@@ -12,6 +12,7 @@ import java.util.List;
 public class Module implements Serializable{
 
 
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     public long id;
@@ -84,8 +85,26 @@ public class Module implements Serializable{
     public static final String NAME_PRODUCT="Product";
     public static final String TITLE_PRODUCT="产品模块";
 
+
+
+
+
+    public static final String NAME_MATERIAL_PICTURE="materialPicture";
+    public static final String TITLE_MATERIAL_PICTURE="材料图片";
+
+    public static final String NAME_PRODUCT_PICTURE="ProductPicture";
+    public static final String TITLE_PRODUCT_PICTURE="产品图片";
+
+
+
+    public static final String NAME_PRODUCT_DELETE = "ProductDelete";
+    public static final String TITLE_PRODUCT_DELETE  = "已删除产品";
     public static final String NAME_QUOTATION="Quotation";
     public static final String TITLE_QUOTATION="报价模块";
+
+
+    public static final String NAME_QUOTATION_DELETE="QuotationDelete";
+    public static final String TITLE_QUOTATION_DELETE="已删除报价单";
 
     public static final String NAME_AUTHORITY="Authority";
     public static final String TITLE_AUTHORITY="权限设置";
@@ -111,12 +130,12 @@ public class Module implements Serializable{
 
     public static final String NAME_MODULE = "MODULE";
     public static final String TITLE_MODULE = "模块列表";
-    public static String[] NAMES=new String[]{NAME_MATERIAL,NAME_PRODUCT,NAME_QUOTATION,NAME_AUTHORITY,NAME_SYNC_DATA,NAME_PICTURE_UPLOAD,NAME_MATERIAL_CLASS,NAME_CUSTOMER,NAME_PROCESS, NAME_USER
+    public static String[] NAMES=new String[]{NAME_MATERIAL,NAME_PRODUCT,NAME_PRODUCT_PICTURE,NAME_MATERIAL_PICTURE,NAME_QUOTATION,NAME_AUTHORITY,NAME_SYNC_DATA,NAME_PICTURE_UPLOAD,NAME_MATERIAL_CLASS,NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
-    ,NAME_MODULE};
+    ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE};
 
-    public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_QUOTATION,TITLE_AUTHORITY,TITLE_SYNC_DATA,TITLE_PICTURE_UPLOAD,TITLE_MATERIAL_CLASS,TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
+    public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,TITLE_QUOTATION,TITLE_AUTHORITY,TITLE_SYNC_DATA,TITLE_PICTURE_UPLOAD,TITLE_MATERIAL_CLASS,TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
-   , TITLE_MODULE};
+   , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE};
 
 }

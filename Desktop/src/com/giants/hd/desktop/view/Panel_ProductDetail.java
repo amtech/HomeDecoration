@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.dialogs.CopyProductDialog;
+import com.giants.hd.desktop.dialogs.OperationLogDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
@@ -126,6 +127,10 @@ public class Panel_ProductDetail extends BasePanel {
     private JLabel updator;
     private JLabel createTime;
     private JPanel jp_log;
+    private JLabel viewLog;
+    private JPanel panel_nomal;
+    private JButton btn_resume;
+    private JPanel panel_delete;
 
 
     /**
@@ -208,7 +213,7 @@ public class Panel_ProductDetail extends BasePanel {
     /**
      * 设置数据
      */
-    public void setProductDetail(ProductDetail productDetail)
+    public void setProductDetail(ProductDetail productDetail )
     {
 
 
@@ -217,7 +222,17 @@ public class Panel_ProductDetail extends BasePanel {
 
     }
 
+    /**
+     * 设置数据
+     */
+    public void setProductDetail(ProductDetail productDetail ,ProductDelete productDelete)
+    {
 
+
+        initPanel(productDetail,productDelete);
+
+
+    }
 
 
     /**
@@ -244,6 +259,8 @@ public class Panel_ProductDetail extends BasePanel {
     //    ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
 //        //修改规格监听
       // ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
+
+
 
 
     }
@@ -932,7 +949,13 @@ public class Panel_ProductDetail extends BasePanel {
      *
      * @param detail
      */
+
     private void initPanel(ProductDetail detail) {
+
+        initPanel(detail,null);
+    }
+
+    private void initPanel(ProductDetail detail,final ProductDelete productDelete) {
 
         removeListeners();
 
@@ -954,11 +977,57 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        bindLogData(detail==null?null:detail.productLog);
+        bindLogData(detail == null ? null : detail.productLog);
 
 
 
-        addListeners();
+        //非删除数据 添加对数据的监听。
+        if(productDelete!=null)
+          addListeners();
+
+
+        panel_nomal.setVisible(null==productDelete);
+        panel_delete.setVisible(productDelete != null);
+
+        for(ActionListener listener:btn_resume.getActionListeners())
+        {
+            btn_resume.removeActionListener(listener);
+        }
+        if(productDelete!=null)
+        btn_resume.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+
+                new HdSwingWorker<ProductDetail, Void>(SwingUtilities.getWindowAncestor(Panel_ProductDetail.this.getRoot())) {
+                    @Override
+                    protected RemoteData<ProductDetail> doInBackground() throws Exception {
+                        return apiManager.resumeDeleteProduct(productDelete.id);
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<ProductDetail> data) {
+
+
+                        if(data.isSuccess())
+                        {
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),"数据恢复成功");
+                            if(listener!=null)
+                            listener.close();
+                        }else{
+
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),data.message);
+                        }
+
+
+                    }
+                }.go();
+
+
+                }
+        });
 
     }
 
@@ -970,7 +1039,7 @@ public class Panel_ProductDetail extends BasePanel {
     private void bindLogData(ProductLog productLog) {
 
 
-        jp_log.setVisible(productLog!=null);
+        jp_log.setVisible(productLog != null);
 
 
         if(productLog==null)
@@ -983,6 +1052,8 @@ public class Panel_ProductDetail extends BasePanel {
         createTime.setText(productLog.createTimeString);
         updateTime.setText(productLog.updateTimeString);
         updator.setText(productLog.updatorCName);
+
+
 
     }
 
@@ -1021,6 +1092,9 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+
+        panel_delete.setVisible(false);
+        panel_nomal.setVisible(false);
 
 
 
@@ -1183,11 +1257,15 @@ public class Panel_ProductDetail extends BasePanel {
                 dialog.setVisible(true);
 
                 if (dialog.getResult() != null)
-                    HdSwingUtils.showDetailPanel(getRoot(), dialog.getResult());
+                    HdSwingUtils.showDetailPanel(getWindow(getRoot()), dialog.getResult());
 
 
             }
         });
+
+
+
+
 
 
         /**
@@ -1202,6 +1280,8 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         });
+
+
 
 
         photo.addMouseListener(new MouseInputAdapter() {
@@ -1264,7 +1344,23 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
+        viewLog.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()==2)
+                {
 
+
+
+                    Window window=getWindow(Panel_ProductDetail.this.getRoot());
+                    OperationLogDialog dialog=new OperationLogDialog(window,Product.class,productDetail.product.id);
+                    dialog.setLocationRelativeTo(window);
+                    dialog.setVisible(true);
+
+
+                }
+            }
+        });
 
 
         //配置表格的自定义编辑输入   //工序

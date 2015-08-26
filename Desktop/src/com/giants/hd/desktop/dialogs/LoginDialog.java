@@ -3,6 +3,7 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
@@ -14,6 +15,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class LoginDialog extends BaseDialog<User> {
     private JPanel contentPane;
@@ -102,6 +106,28 @@ public class LoginDialog extends BaseDialog<User> {
                         cb_user.addItem(user);
 
 
+                    User user= LocalFileHelper.get(User.class);
+                    int selectIndex=0;
+                    if(user!=null)
+                    {
+                        for (int i = 0,count= cb_user.getItemCount(); i <count; i++) {
+
+                            User temp= (User) cb_user.getItemAt(i);
+                            if(temp.id==user.id)
+                            {
+                                selectIndex=i;
+                                break;
+                            }
+
+
+                        }
+
+
+                    }
+
+
+                     cb_user.setSelectedIndex(selectIndex);
+
 
 
                 }else {
@@ -151,7 +177,13 @@ public class LoginDialog extends BaseDialog<User> {
                     //登录成功
 
                     HttpUrl.setToken(data.token);
-                    setResult(data.datas.get(0));
+                    User  user=data.datas.get(0);
+                    setResult(user);
+
+
+                    LocalFileHelper.set(user);
+
+
                     dispose();
 
 

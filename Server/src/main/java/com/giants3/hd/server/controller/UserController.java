@@ -5,6 +5,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 
 
+import com.giants3.hd.utils.noEntity.BufferData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * Created by Administrator on 2014/9/18.

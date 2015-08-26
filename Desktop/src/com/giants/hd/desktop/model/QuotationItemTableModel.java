@@ -24,7 +24,7 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> impl
     public static final String COLUMN_COST="cost";
     public static final String COLUMN_PRICE="price";
     public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号", "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注" };
-    public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,     50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    ConstantData.MAX_COLUMN_WIDTH};
+    public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,     50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   400};
 
     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"productPhoto", "productName", "pVersion", "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize","memo"};
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class};
