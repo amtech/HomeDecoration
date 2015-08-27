@@ -1,4 +1,4 @@
-package com.giants.hd.desktop;
+package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.CacheManager;
@@ -22,6 +22,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -29,7 +30,7 @@ import java.awt.event.*;
 /**
  * Created by davidleen29 on 2015/5/6.
  */
-public class Main extends JFrame {
+public class Main extends BaseFrame {
     private JPanel panel1;
     private JTextField tf_product;
     private JLabel lable2;
@@ -159,8 +160,7 @@ public class Main extends JFrame {
     private static final void  init()
     {
         final Main frame = new Main();
-
-      //  frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon_confused.gif"));
+        ;
 
 
 

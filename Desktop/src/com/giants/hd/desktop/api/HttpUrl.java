@@ -161,10 +161,7 @@ public class HttpUrl {
      * @return
      */
     public static String loadProductPicture(String productName,String version) {
-        String url= BaseUrl+"api/file/download/product/"+productName;
-
-        if(!StringUtils.isEmpty(version))
-            url+="_"+version.trim();
+        String url= BaseUrl+"api/file/download/product/"+productName+"/"+version;
         url+=  ".jpg";
         return  additionInfo(url);
     }

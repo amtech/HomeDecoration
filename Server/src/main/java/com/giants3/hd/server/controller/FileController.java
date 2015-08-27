@@ -141,12 +141,12 @@ public class FileController  extends BaseController{
 
 
 
-    @RequestMapping(value="/download/product/{name}", method=RequestMethod.GET)
+    @RequestMapping(value="/download/product/{name}/{pVersion}", method=RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductFile(@PathVariable  String name,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getProductFile(@PathVariable  String name,@PathVariable  String pVersion,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
 
-        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,"",type));
+        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,pVersion,type));
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;

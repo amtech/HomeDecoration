@@ -82,6 +82,7 @@ public class FileUtils {
     {
 
 
+        //找到文件夹
         //找到第一个英文单词。
         int len=productName.length();
         int firstCharIndex=-1;
@@ -94,9 +95,43 @@ public class FileUtils {
         }
 
 
+        //文件夹
+      String   directory=(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"");
 
 
-        String   fullFilePath=filePath+(firstCharIndex>=0?productName.substring(0,firstCharIndex+1):"")+ File.separator+productName+( StringUtils.isEmpty(pVersion)?"":"_"+pVersion) +"."+type;
+
+
+
+
+        //匹配的文件名
+        String productFileName ;
+
+        if(!StringUtils.isEmpty(pVersion))
+        {
+            //第四五位 如果为0 直接匹配原来的货号。
+             if(pVersion.length()==6&&pVersion.charAt(3)=='0'&&pVersion.charAt(4)=='0')
+             {
+
+
+
+
+                     productFileName= productName;
+
+             }else
+             {
+                 productFileName= productName+ "_"+pVersion ;
+             }
+
+
+        }else
+        {
+            productFileName=productName;
+        }
+
+
+
+
+        String   fullFilePath=filePath+directory+ File.separator+productFileName+"."+type;
 
 
         return fullFilePath;

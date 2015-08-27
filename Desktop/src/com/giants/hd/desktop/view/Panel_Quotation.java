@@ -4,24 +4,17 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.api.CacheManager;
-import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants.hd.desktop.frames.QuotationDetailFrame;
-import com.giants.hd.desktop.frames.QuotationXKDetailFrame;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.model.QuotationItemXKTableModel;
 import com.giants.hd.desktop.model.QuotationTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.widget.header.ColumnGroup;
-import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
 import java.awt.event.*;
 
 /**
