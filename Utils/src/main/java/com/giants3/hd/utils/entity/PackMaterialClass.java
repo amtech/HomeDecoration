@@ -1,5 +1,8 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.interf.Valuable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,25 +13,34 @@ import java.io.Serializable;
 
 
 @Entity(name="T_PackMaterialClass")
-public class PackMaterialClass   implements Serializable {
+public class PackMaterialClass   implements Serializable,Valuable {
 
 
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+    public long id;
 
 
     @Basic
     public String name;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
+
+
+    //匹配默认类型
+    @ManyToOne
+    public PackMaterialType type;
+
+
+    //匹配的默认位置。
+
+    @ManyToOne
+    public PackMaterialPosition position;
+
+
+
 
 
     public String getName() {
@@ -58,6 +70,12 @@ public class PackMaterialClass   implements Serializable {
     public static final String CLASS_CAIHE = "彩盒";
     //public static final String CLASS_BAOLILONG = "保丽隆";
     public static final String CLASS_TESHU_BAOLILONG = "特殊保丽隆";
+
+
+    public static final String [] PRESERVED_CLASS=new String[]
+            {CLASS_BOX,CLASS_INSIDE_BOX,CLASS_JIAODAI,CLASS_ZHANSHIHE,CLASS_QIPAODAI,CLASS_CAIHE,CLASS_TESHU_BAOLILONG};
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,12 +83,26 @@ public class PackMaterialClass   implements Serializable {
 
         PackMaterialClass that = (PackMaterialClass) o;
 
-        return !(id != null ? !id.equals(that.id) : that.id != null);
+        if (id != that.id) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        return !(position != null ? !position.equals(that.position) : that.position != null);
 
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean isEmpty() {
+
+        return id<=0&& StringUtils.isEmpty(name);
+
     }
 }

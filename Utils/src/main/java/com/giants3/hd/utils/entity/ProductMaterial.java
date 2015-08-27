@@ -439,6 +439,11 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 	public void setPackMaterialClass(PackMaterialClass packMaterialClass) {
 		this.packMaterialClass = packMaterialClass;
+
+		 packMaterialType=packMaterialClass.type;
+		 packMaterialPosition=packMaterialClass.position;
+
+
 	}
 
 	/**

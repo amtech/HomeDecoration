@@ -1,0 +1,5 @@
+Manifest-Version: 1.0.10
+Manifest-Version_Number: 10
+Manifest-Version_Spec: 1:增加报价数据删除与恢复 2:添加logo 3:修正产品图片匹配
+Main-Class: com.giants.hd.desktop.frames.Main
+

@@ -11,4 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface PackMaterialClassRepository extends JpaRepository<PackMaterialClass,Long> {
 
+
+    public PackMaterialClass findFirstByNameEquals(String name);
+
 }
