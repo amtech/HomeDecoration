@@ -9,6 +9,7 @@ import com.giants.hd.desktop.dialogs.*;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.utils.ShortcutHelper;
 import com.giants.hd.desktop.view.Panel_Material;
 import com.giants.hd.desktop.view.Panel_ProductList;
 import com.giants.hd.desktop.view.Panel_Quotation;
@@ -58,7 +59,7 @@ public class Main extends BaseFrame {
         super(TITLE);
 
 
-
+        ShortcutHelper.createShortcut();
 
 
 
@@ -629,7 +630,7 @@ public class Main extends BaseFrame {
 
 
         if(AuthorityUtil.getInstance().viewSyncData()) {
-            menuItem = new JMenuItem("数据同步");
+            menuItem = new JMenuItem(Module.TITLE_SYNC_DATA);
 
             menuItem.getAccessibleContext().setAccessibleDescription(
                     "当图片不能正常显示时候执行");
@@ -647,6 +648,21 @@ public class Main extends BaseFrame {
         }
 
 
+
+        if(AuthorityUtil.getInstance().viewSysParam()) {
+            menuItem = new JMenuItem(Module.TITLE_SYS_PARAM);
+            menu.add(menuItem);
+
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SysParamDialog  dialog  = new SysParamDialog(Main.this);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+            });
+        }
 
 
 

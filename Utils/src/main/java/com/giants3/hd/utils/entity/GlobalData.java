@@ -1,12 +1,23 @@
 package com.giants3.hd.utils.entity;
 
+
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * 配置数据  提供一些常量值
  */
 
-public class ConfigData {
+@Entity(name="T_GlobalData")
+public class GlobalData implements Serializable {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
     /**
      * 是稀释剂单价
      */
@@ -37,7 +48,7 @@ public class ConfigData {
      */
 
     public float price_of_export=95;
-    private static ConfigData instance=new ConfigData();
+     private static GlobalData instance=new GlobalData();
 
 
     /**
@@ -45,10 +56,10 @@ public class ConfigData {
      */
     public float extra_ratio_of_diluent=0.1f;
 
-    public static ConfigData getInstance() {
+    public static GlobalData getInstance() {
         return instance;
     }
 
 
-    public Material ingredient;
+
 }

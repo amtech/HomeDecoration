@@ -109,8 +109,21 @@ public class Module implements Serializable{
     public static final String NAME_AUTHORITY="Authority";
     public static final String TITLE_AUTHORITY="权限设置";
 
+
+
+    //系统功能
     public static final String NAME_SYNC_DATA="SyncData";
     public static final String TITLE_SYNC_DATA="数据同步";
+
+    public static final String NAME_SYS_PARAM="SYS_PARAM";
+    public static final String TITLE_SYS_PARAM="全局参数设定";
+
+
+
+
+
+
+
 
     public static final String NAME_PICTURE_UPLOAD="PictureUpload";
     public static final String TITLE_PICTURE_UPLOAD="图片上传";
@@ -140,12 +153,16 @@ public class Module implements Serializable{
             NAME_PACK_MATERIAL_CLASS,
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
-    ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE};
+    ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
+    ,NAME_SYS_PARAM
+    };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,TITLE_QUOTATION,TITLE_AUTHORITY,TITLE_SYNC_DATA,TITLE_PICTURE_UPLOAD,TITLE_MATERIAL_CLASS,
             TITLE_PACK_MATERIAL_CLASS,
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
-   , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE};
+   , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
+    ,TITLE_SYS_PARAM
+    };
 
 }

@@ -38,7 +38,9 @@ public class ProductPaintArrayList extends ArrayList<ProductPaint> {
         {
 
 
-            ingredientPaint.quantity=FloatHelper.scale(totalIngredientQuantity * ConfigData.getInstance().extra_ratio_of_diluent, 3);
+
+
+            ingredientPaint.quantity=FloatHelper.scale(totalIngredientQuantity * GlobalData.getInstance().extra_ratio_of_diluent, 3);
             ingredientPaint.updatePriceAndCostAndQuantity();
             int index=this.indexOf(ingredientPaint);
             return index;

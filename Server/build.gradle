@@ -34,7 +34,7 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.6.10.Final'
 
 
-    compile files('libs/sqljdbc4.jar')
+
 
 
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.13'

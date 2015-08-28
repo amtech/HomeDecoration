@@ -289,7 +289,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public  void updatePriceAndCostAndQuantity()
 	{
 
-		ConfigData configData=ConfigData.getInstance();
+		GlobalData configData= GlobalData.getInstance();
 		price=FloatHelper.scale((materialPrice + configData.price_of_diluent * ingredientRatio)/(1+ingredientRatio),3);
 		cost=FloatHelper.scale(quantity*price);
 

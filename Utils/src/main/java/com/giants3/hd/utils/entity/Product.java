@@ -5,7 +5,6 @@ import com.giants3.hd.utils.FloatHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * 产品表
@@ -660,14 +659,14 @@ public class Product implements Serializable {
 	public void calculateTotalCost()
 	{
 
-		//TODO  目前紧紧累加 油漆数据
+
 		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage);
 
 
 
 		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
 
-		 ConfigData configData= ConfigData.getInstance() ;
+		 GlobalData configData= GlobalData.getInstance() ;
 		cost=productCost;
 
 

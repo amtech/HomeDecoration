@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.giants.hd.desktop.dialogs.SysParamDialog">
+  <grid id="cbd77" binding="contentPane" layout-manager="FormLayout">
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:d:noGrow"/>
+    <rowspec value="top:m:noGrow"/>
+    <rowspec value="center:max(d;4px):grow"/>
+    <colspec value="fill:d:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:152px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:max(d;4px):grow"/>
+    <colspec value="left:4dlu:grow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
+    <constraints>
+      <xy x="48" y="54" width="436" height="297"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="ebe16" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="38725" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="c8a10" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <text value="成本价与出厂价比率"/>
+        </properties>
+      </component>
+      <component id="a6357" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <text value="美元汇率"/>
+        </properties>
+      </component>
+      <component id="4fbcc" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+        <constraints>
+          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties/>
+      </component>
+    </children>
+  </grid>
+</form>

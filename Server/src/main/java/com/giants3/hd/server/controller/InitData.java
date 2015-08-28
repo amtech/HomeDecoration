@@ -1,10 +1,12 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.AppVersionRepository;
+import com.giants3.hd.server.repository.GlobalDataRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.AppVersion;
+import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity.Module;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.logging.Log;
@@ -46,6 +48,10 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     AppVersionRepository appVersionRepository;
+
+
+    @Autowired
+    GlobalDataRepository globalDataRepository;
 
     @Value("${appfilepath}")
     private String appFilePath;
@@ -164,6 +170,14 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
 
+
+            //检查全局项目数据 不存在 则构建一份数据（使用默认值）
+       List<GlobalData> globalDatas=     globalDataRepository.findAll();
+        if(globalDatas.size()==0)
+        {
+            GlobalData globalData=new GlobalData();
+            globalDataRepository.save(globalData);
+        }
 
 
 

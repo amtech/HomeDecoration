@@ -35,4 +35,6 @@ public class BufferData implements Serializable{
     public QuoteAuth quoteAuth;
 
     public  User loginUser;
+
+    public  GlobalData globalData;
 }

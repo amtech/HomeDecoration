@@ -16,6 +16,7 @@ jar {
 }
 dependencies {
     compile project(":Utils")
+
     compile group: 'com.ning', name: 'async-http-client', version: '1.9.21'
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
     compile group: 'com.jgoodies', name: 'forms', version: '1.2.1'

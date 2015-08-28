@@ -316,7 +316,7 @@ public class AuthorityUtil {
      */
     public boolean viewSystemModule() {
 
-        return viewSyncData()||viewPictureUpload();
+        return viewSyncData() ||viewSysParam();
     }
 
     /**
@@ -420,5 +420,16 @@ public class AuthorityUtil {
     public boolean viewProductDelete() {
 
         return isViewable(Module.NAME_PRODUCT_DELETE);
+    }
+
+
+    /**
+     * 查看设置系统参数
+     * @return
+     */
+    public boolean viewSysParam() {
+
+        return isViewable(Module.NAME_SYS_PARAM);
+
     }
 }

@@ -51,6 +51,9 @@ public class UserController extends  BaseController{
 
     @Autowired
     private MaterialClassRepository   materialClassRepository;
+
+    @Autowired
+    private GlobalDataRepository   globalDataRepository;
     @Autowired
     private QuoteAuthRepository   quoteAuthRepository;
     @RequestMapping("/delete/{userId}")
@@ -155,6 +158,10 @@ public class UserController extends  BaseController{
         }
         bufferData.quoteAuth=quoteAuth;
 
+
+
+        //读取第一条数据   总共就一条
+        bufferData.globalData=globalDataRepository.findAll().get(0);
 
 
         return wrapData(bufferData);
