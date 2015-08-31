@@ -153,9 +153,10 @@ public class Panel_ProductList extends BasePanel {
 
 
                 pagePanel.bindRemoteData(data);
-
-
                 tableModel.setDatas(data.datas);
+                productTable.scrollRectToVisible(productTable.getCellRect(0 - 1, 0, true));
+
+
 
             }
         }.go();

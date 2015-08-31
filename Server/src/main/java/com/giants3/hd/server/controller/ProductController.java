@@ -1,7 +1,6 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
@@ -15,14 +14,11 @@ import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,7 +52,8 @@ public class ProductController extends BaseController {
     @Autowired
     private OperationLogRepository operationLogRepository;
     @Value("${filepath}")
-    private String rootFilePath;
+    private String productFilePath;
+
 
     @Value("${deleteProductFilePath}")
     private String deleteProductPath;
@@ -530,7 +527,7 @@ public class ProductController extends BaseController {
     private final void updateProductPhotoData(Product product) {
 
 
-        String filePath = FileUtils.getProductPicturePath(rootFilePath, product.name, product.pVersion);
+        String filePath = FileUtils.getProductPicturePath(productFilePath, product.name, product.pVersion);
 
         //如果tup图片文件不存在  则 设置photo为空。
         if (!new File(filePath).exists()) {
@@ -557,7 +554,7 @@ public class ProductController extends BaseController {
     private final void updateProductPhotoTime(Product product) {
 
 
-        String filePath = FileUtils.getProductPicturePath(rootFilePath, product.name, product.pVersion);
+        String filePath = FileUtils.getProductPicturePath(productFilePath, product.name, product.pVersion);
 
         long newLastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
         product.setLastPhotoUpdateTime(newLastUpdateTime);
@@ -603,6 +600,32 @@ public class ProductController extends BaseController {
         newProduct.id= -1;
         newProduct.name=newProductName;
         newProduct.pVersion=version;
+
+        //复制产品图片
+
+        String newproductPicturePath=FileUtils.getProductPicturePath(productFilePath,newProductName,version);
+        File newProductFile=new File(newproductPicturePath);
+        //如果文件不存在 则将原样图片复制为新图片
+        if(!newProductFile.exists())
+        {
+
+            String oldProductFilePath=FileUtils.getProductPicturePath(productFilePath,product.name,product.pVersion);
+
+            File oldProductFile=new File(oldProductFilePath);
+            if(oldProductFile.exists())
+            {
+                try {
+                    org.apache.commons.io.FileUtils.copyFile(oldProductFile,newProductFile);
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+
 
         updateProductPhotoData(newProduct);
         updateProductPhotoTime(newProduct);
@@ -660,6 +683,13 @@ public class ProductController extends BaseController {
             productWageRepository.save(productWage);
 
         }
+
+
+
+
+        //chap
+
+
 
         return returnFindProductDetailById(newProductId);
     }
@@ -808,7 +838,7 @@ public class ProductController extends BaseController {
                 {
 
 
-                    String filePath=FileUtils.getProductPicturePath(rootFilePath,product.name,product.pVersion);
+                    String filePath=FileUtils.getProductPicturePath(productFilePath,product.name,product.pVersion);
                     long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
                     boolean changedPhoto=false;
                     if(lastUpdateTime>0 )

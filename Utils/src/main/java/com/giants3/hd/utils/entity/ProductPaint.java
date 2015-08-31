@@ -249,7 +249,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	 * 更新材料数据
 	 * @param material
 	 */
-	public void updateMaterial(Material material) {
+	public void updateMaterial(Material material,GlobalData globalData) {
 
 
 
@@ -266,7 +266,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 
 
 
-		updatePriceAndCostAndQuantity();
+		updatePriceAndCostAndQuantity(globalData);
 
 
 
@@ -286,10 +286,10 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	/**
 	 * 更新材料费用与配料费用
 	 */
-	public  void updatePriceAndCostAndQuantity()
+	public  void updatePriceAndCostAndQuantity(GlobalData globalData)
 	{
 
-		GlobalData configData= GlobalData.getInstance();
+		GlobalData configData=globalData;
 		price=FloatHelper.scale((materialPrice + configData.price_of_diluent * ingredientRatio)/(1+ingredientRatio),3);
 		cost=FloatHelper.scale(quantity*price);
 

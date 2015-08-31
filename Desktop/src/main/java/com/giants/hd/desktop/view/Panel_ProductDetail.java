@@ -200,6 +200,10 @@ public class Panel_ProductDetail extends BasePanel {
     private ItemListener cb_packItemListener;
 
 
+
+    GlobalData globalData=CacheManager.getInstance().bufferData.globalData;
+
+
     public Panel_ProductDetail( ) {
     super();
 
@@ -310,7 +314,7 @@ public class Panel_ProductDetail extends BasePanel {
                 productDetail.paints=productPaintModel.getDatas();
                 productDetail.packMaterials=packMaterialTableModel.getDatas();
                 productDetail.packWages=packWageTableModel.getDatas();
-                productDetail.updateProductStatistics();
+                productDetail.updateProductStatistics(globalData);
                 bindStatisticsValue(productDetail.product);
 
             }
@@ -1556,7 +1560,7 @@ public class Panel_ProductDetail extends BasePanel {
 
                             if (name.equals(material.name)) {
 
-                                productPaint.updateMaterial(material);
+                                productPaint.updateMaterial(material,globalData);
 
 
                                 break;
@@ -1564,7 +1568,7 @@ public class Panel_ProductDetail extends BasePanel {
 
                         }
 
-                        productPaint.updatePriceAndCostAndQuantity();
+                        productPaint.updatePriceAndCostAndQuantity(globalData);
 
 
 

@@ -48,7 +48,6 @@ public class GlobalData implements Serializable {
      */
 
     public float price_of_export=95;
-     private static GlobalData instance=new GlobalData();
 
 
     /**
@@ -56,10 +55,37 @@ public class GlobalData implements Serializable {
      */
     public float extra_ratio_of_diluent=0.1f;
 
-    public static GlobalData getInstance() {
-        return instance;
+    //public static GlobalData getInstance() {
+    //    return instance;
+    //}
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GlobalData)) return false;
+
+        GlobalData that = (GlobalData) o;
+
+        if (id != that.id) return false;
+        if (Float.compare(that.price_of_diluent, price_of_diluent) != 0) return false;
+        if (Float.compare(that.exportRate, exportRate) != 0) return false;
+        if (Float.compare(that.cost_price_ratio, cost_price_ratio) != 0) return false;
+        if (Float.compare(that.addition, addition) != 0) return false;
+        if (Float.compare(that.price_of_export, price_of_export) != 0) return false;
+        return Float.compare(that.extra_ratio_of_diluent, extra_ratio_of_diluent) == 0;
+
     }
 
-
-
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (price_of_diluent != +0.0f ? Float.floatToIntBits(price_of_diluent) : 0);
+        result = 31 * result + (exportRate != +0.0f ? Float.floatToIntBits(exportRate) : 0);
+        result = 31 * result + (cost_price_ratio != +0.0f ? Float.floatToIntBits(cost_price_ratio) : 0);
+        result = 31 * result + (addition != +0.0f ? Float.floatToIntBits(addition) : 0);
+        result = 31 * result + (price_of_export != +0.0f ? Float.floatToIntBits(price_of_export) : 0);
+        result = 31 * result + (extra_ratio_of_diluent != +0.0f ? Float.floatToIntBits(extra_ratio_of_diluent) : 0);
+        return result;
+    }
 }

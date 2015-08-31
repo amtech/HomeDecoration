@@ -188,7 +188,7 @@ public class AuthorityController extends  BaseController{
     RemoteData<AppVersion> loadAppVersion( )   {
 
 
-        AppVersion appVersion=appVersionRepository.findFirstByAppNameLikeOrderByVersionCodeDesc("%%");
+        AppVersion appVersion=appVersionRepository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
         if(appVersion==null)
         {
             wrapError("无最新版本");

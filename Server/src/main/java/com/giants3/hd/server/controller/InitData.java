@@ -4,6 +4,7 @@ import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.GlobalDataRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.GlobalData;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
@@ -124,6 +126,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                             appVersion.versionName=attr.getValue("Manifest-Version");
                             String versionCodeString=attr.getValue("Manifest-Version_Number");
                             appVersion.updateTime= Calendar.getInstance().getTimeInMillis();
+                            appVersion.timeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date( appVersion.updateTime));
                             appVersion.versionCode= StringUtils.isEmpty(versionCodeString)?-1:Integer.valueOf(versionCodeString);
                             appVersion.appName=fileName;
                             appVersion.fileSize=aFile.length();
@@ -143,11 +146,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             if(appVersion!=null)
             {
-
                 //核对最新版本
 
-
-                AppVersion oldVersion=appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDesc(appVersion.appName);
+                AppVersion oldVersion=appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(appVersion.appName);
 
                 if(oldVersion==null)
                 {
@@ -157,7 +158,22 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
                 if(oldVersion.versionCode<appVersion.versionCode)
                 {
+                    //添加记录
                     appVersionRepository.save(appVersion);
+
+                }else
+                if(oldVersion.versionCode==appVersion.versionCode)
+                {
+                    //版本一致  文件大小不一致。  使用当前文件大小
+
+                    if(oldVersion.fileSize!=appVersion.fileSize)
+                    {
+                        appVersion.id=oldVersion.id;
+                        //修改当前记录
+                        appVersionRepository.save(appVersion);
+
+                    }
+
 
                 }
 

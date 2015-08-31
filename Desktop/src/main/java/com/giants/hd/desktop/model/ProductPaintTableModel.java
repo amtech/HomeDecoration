@@ -1,9 +1,11 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.api.CacheManager;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.ProductPaintArrayList;
 import com.google.inject.Inject;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
  */
 public class ProductPaintTableModel extends BaseTableModel<ProductPaint> implements Materialable {
 
-
+    GlobalData globalData= CacheManager.getInstance().bufferData.globalData;
 
     public static final String COLUMN_materialQuantity="materialQuantity";
     public static final String COLUMN_ingredientRatio="ingredientRatio";
@@ -79,7 +81,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
             //"配料比例"
             case 6:
                 item.ingredientRatio=Float.valueOf(aValue.toString());
-                item.updatePriceAndCostAndQuantity();
+                item.updatePriceAndCostAndQuantity(globalData);
                 updateQuantityOfIngredient();
                 break;
 
@@ -88,7 +90,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
                 item.quantity=  Float.valueOf(aValue.toString());
 
-                item.updatePriceAndCostAndQuantity();
+                item.updatePriceAndCostAndQuantity(globalData);
                 updateQuantityOfIngredient();
                 break;
 
@@ -119,7 +121,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         {
 
             ProductPaintArrayList list=(ProductPaintArrayList)datas;
-           int index= list.updateQuantityOfIngredient();
+           int index= list.updateQuantityOfIngredient(globalData);
             if(index>-1)
             fireTableRowsUpdated(index, index);
         }
@@ -137,7 +139,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         ProductPaint productPaint=getItem(rowIndex);
         if(productPaint!=null)
         {
-            productPaint.updateMaterial(material);
+            productPaint.updateMaterial(material,globalData);
         }
 
 

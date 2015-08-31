@@ -607,4 +607,16 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/packMaterialClass/saveList");
     }
+
+
+    /**
+     * 设置系统固定参数
+     * @return
+     */
+    public static String setGlobalData() {
+
+
+        return additionInfo(BaseUrl + "api/application/setGlobal");
+
+    }
 }

@@ -645,18 +645,18 @@ public class Product implements Serializable {
 	 * @param paintCost
 	 * @param paintWage
 	 */
-	public void updatePaintData(float paintCost, float paintWage) {
+	public void updatePaintData(float paintCost, float paintWage,GlobalData globalData) {
 
 		this.paintCost=FloatHelper.scale(paintCost);
 		this.paintWage=FloatHelper.scale(paintWage);
-		calculateTotalCost();
+		calculateTotalCost(globalData);
 	}
 
 
 	/**
 	 * 计算总成本
 	 */
-	public void calculateTotalCost()
+	public void calculateTotalCost(GlobalData globalData)
 	{
 
 
@@ -666,7 +666,7 @@ public class Product implements Serializable {
 
 		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
 
-		 GlobalData configData= GlobalData.getInstance() ;
+		 GlobalData configData= globalData ;
 		cost=productCost;
 
 

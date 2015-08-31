@@ -150,7 +150,7 @@ public class ImageViewDialog extends JDialog {
 
         String url=HttpUrl.loadProductPicture(productName, version);
 
-        showDialog(frame,url,productName+"_"+version);
+        showDialog(frame,url,productName+"-"+version);
 
     }
 
@@ -159,7 +159,7 @@ public class ImageViewDialog extends JDialog {
      * @param url
      */
     public static void showDialog(Window frame,String url) {
-        showDialog(frame,url,url);
+        showDialog(frame,url,url.substring(url.lastIndexOf("/")+1,url.lastIndexOf(".")));
 
     }
 

@@ -15,10 +15,10 @@ public interface AppVersionRepository extends JpaRepository<AppVersion,Long> {
 
 
 
-    public AppVersion findFirstByAppNameEqualsOrderByVersionCodeDesc(String appName);
+    public AppVersion findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(String appName);
 
 
 
-    public AppVersion findFirstByAppNameLikeOrderByVersionCodeDesc(String appName);
+    public AppVersion findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc(String appName);
 
 }

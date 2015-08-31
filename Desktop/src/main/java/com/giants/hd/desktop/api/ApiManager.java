@@ -1105,4 +1105,19 @@ public class ApiManager {
         return remoteData;
 
     }
+
+
+    /**设置全局参数
+     * @param globalData
+     * @return
+     */
+    public RemoteData<GlobalData> setGlobalData(GlobalData globalData) throws HdException {
+        String url=HttpUrl.setGlobalData();
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(globalData));
+
+        Type   generateType = new TypeToken<RemoteData<GlobalData>>() {
+        }.getType();
+        RemoteData<GlobalData> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
 }

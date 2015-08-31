@@ -119,7 +119,7 @@ public class FileUtils {
 
              }else
              {
-                 productFileName= productName+ "_"+pVersion ;
+                 productFileName= productName+ "-"+pVersion ;
              }
 
 

@@ -200,7 +200,7 @@ public class FileController  extends BaseController{
     public FileSystemResource getAppFile( )  {
 
 
-        AppVersion appVersion=repository.findFirstByAppNameLikeOrderByVersionCodeDesc("%%");
+        AppVersion appVersion=repository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
 
 
             FileSystemResource resource= new FileSystemResource(  appFilePath+appVersion.appName);

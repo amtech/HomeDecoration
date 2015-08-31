@@ -31,4 +31,5 @@ public class AppVersion implements Serializable{
 
     @Basic
     public long fileSize;
+    public String timeString;
 }

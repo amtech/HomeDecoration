@@ -76,7 +76,6 @@ public class UserController extends  BaseController{
     public
     @ResponseBody
     RemoteData<User> list( )   {
-
         return  wrapData(userRepository.findAll());
     }
 

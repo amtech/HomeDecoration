@@ -72,7 +72,7 @@ public class ProductDetail  implements Serializable {
     /**
      * 更新产品的统计数据
      */
-    public  void updateProductStatistics()
+    public  void updateProductStatistics(GlobalData globalData)
     {
 
 
@@ -85,7 +85,8 @@ public class ProductDetail  implements Serializable {
             paintCost += paint.cost  ;
 
         }
-        product.updatePaintData(paintCost, paintWage);
+        product.updatePaintData(paintCost, paintWage,
+                globalData);
 
 
         //汇总计算白胚材料
@@ -244,7 +245,7 @@ public class ProductDetail  implements Serializable {
         /**
          * 重新计算总成本
          */
-        product.calculateTotalCost();
+        product.calculateTotalCost(globalData);
 
 
 

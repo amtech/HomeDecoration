@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.xml.bind.annotation.XmlElementDecl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +72,9 @@ public class MaterialController extends BaseController {
     @Autowired
     private ProductController productController;
 
+ @Autowired
+    private GlobalDataRepository globalDataRepository;
+
 
     ObjectPool<Material> materialObjectPool;
 
@@ -79,6 +83,10 @@ public class MaterialController extends BaseController {
 
     @Value("${materialfilepath}")
     private String rootFilePath;
+
+
+
+
 
 
     public MaterialController() {
@@ -363,6 +371,9 @@ public class MaterialController extends BaseController {
      */
     private void updatePriceRelateData(  Material material) {
         Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
+        GlobalData globalData=globalDataRepository.findAll().get(0);
+
+
         //价格发生变动， 调整有用到该材料的费用
         long id=material.id;
 
@@ -403,7 +414,7 @@ public class MaterialController extends BaseController {
             productPaint.materialName=material.name;
             productPaint.materialPrice=material.price;
 
-            productPaint.updatePriceAndCostAndQuantity();
+            productPaint.updatePriceAndCostAndQuantity(globalData);
 
             //更新
             productPaintRepository.save(productPaint);
@@ -430,7 +441,7 @@ public class MaterialController extends BaseController {
 
              ProductDetail productDetail=   productController.findProductDetailById(productId);
                 if(productDetail!=null) {
-                    productDetail.updateProductStatistics();
+                    productDetail.updateProductStatistics(globalData);
                     productRepository.save(productDetail.product);
                 }
 
