@@ -2,10 +2,9 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.ProductPaintArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,10 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -38,8 +33,12 @@ public class ApplicationController extends  BaseController {
 
     @Autowired
     private OperationLogRepository operationLogRepository;
+
     @Autowired
-    private ProductController productController;
+    private ProductPaintRepository productPaintRepository;
+
+
+
 
     @RequestMapping(value = "/setGlobal", method = RequestMethod.POST)
     @Transactional
@@ -66,7 +65,7 @@ public class ApplicationController extends  BaseController {
 
 
 
-        //与材料相关的固定参数改变
+        //判断是否材料相关的固定参数改变
         boolean materialRelateChanged=Float.compare(oldData.extra_ratio_of_diluent,globalData.extra_ratio_of_diluent)!=0||Float.compare(oldData.price_of_diluent,globalData.price_of_diluent)!=0;
 
 
@@ -94,38 +93,65 @@ public class ApplicationController extends  BaseController {
 
 
 
-                ProductDetail productDetail=productController.findProductDetailById(product.id);
+
+                //如果有跟油漆材料相关
                 if(materialRelateChanged)
                 {
 
 
+                    List<ProductPaint> productPaints=productPaintRepository.findByProductIdEquals(product.id);
+
                     //更新油漆材料中稀释剂用量
                     list.clear();
-                    list.addAll(productDetail.paints);
+                    list.addAll(productPaints);
                     list.updateQuantityOfIngredient(globalData);
                     list.clear();
-                    // productDetail.paints
-                    for(ProductPaint paint:productDetail.paints)
+
+                    //重新计算各油漆的单价 金额
+                    for(ProductPaint paint:productPaints)
                     {
                         paint.updatePriceAndCostAndQuantity(globalData);
                     }
+
+
+
+                    //更新油漆数据
+                    productPaintRepository.save(productPaints);
+                    productPaintRepository.flush();
+
+                    //汇总计算油漆单价 金额
+                    float paintWage = 0;
+                    float paintCost = 0;
+                    for (ProductPaint paint : productPaints) {
+                        paintWage += paint.processPrice;
+                        paintCost += paint.cost  ;
+
+                    }
+                    //更新产品油漆统计数据 自动联动更新全局数据。
+                    product.updatePaintData(paintCost, paintWage,
+                            globalData);
+
+
+                }else
+                {
+                    product.calculateTotalCost(globalData);
                 }
 
 
-                //更新产品汇总信息
-                productDetail.updateProductStatistics(globalData);
+
 
 
 
 
                 //保存全部数据
-                productController.saveProductDetail(user,productDetail);
-
+                //重新保存数据
+                productRepository.save(product);
+                productRepository.flush();
 
 
                 //增加历史操作记录
                 OperationLog   operationLog= OperationLog.createForGloBalDataChange(product, user);
-                operationLogRepository.save(operationLog);
+                operationLogRepository.saveAndFlush(operationLog);
 
             }
 

@@ -5,6 +5,7 @@ import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import jxl.write.*;
 
 import java.io.IOException;

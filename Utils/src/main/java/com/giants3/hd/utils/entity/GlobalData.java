@@ -55,6 +55,24 @@ public class GlobalData implements Serializable {
      */
     public float extra_ratio_of_diluent=0.1f;
 
+
+    /**
+     * 修理单位工资  单位 元/立方米
+     */
+    public float repairPrice=25f;
+
+
+    /**
+     * 咸康产品管理费用
+     */
+    public float manageRatioXK=0.1f;
+
+
+    /**
+     * 普通产品管理费用
+     */
+    public float manageRatioNormal=0.15f;
+
     //public static GlobalData getInstance() {
     //    return instance;
     //}
@@ -73,7 +91,10 @@ public class GlobalData implements Serializable {
         if (Float.compare(that.cost_price_ratio, cost_price_ratio) != 0) return false;
         if (Float.compare(that.addition, addition) != 0) return false;
         if (Float.compare(that.price_of_export, price_of_export) != 0) return false;
-        return Float.compare(that.extra_ratio_of_diluent, extra_ratio_of_diluent) == 0;
+        if (Float.compare(that.extra_ratio_of_diluent, extra_ratio_of_diluent) != 0) return false;
+        if (Float.compare(that.repairPrice, repairPrice) != 0) return false;
+        if (Float.compare(that.manageRatioXK, manageRatioXK) != 0) return false;
+        return Float.compare(that.manageRatioNormal, manageRatioNormal) == 0;
 
     }
 
@@ -86,6 +107,9 @@ public class GlobalData implements Serializable {
         result = 31 * result + (addition != +0.0f ? Float.floatToIntBits(addition) : 0);
         result = 31 * result + (price_of_export != +0.0f ? Float.floatToIntBits(price_of_export) : 0);
         result = 31 * result + (extra_ratio_of_diluent != +0.0f ? Float.floatToIntBits(extra_ratio_of_diluent) : 0);
+        result = 31 * result + (repairPrice != +0.0f ? Float.floatToIntBits(repairPrice) : 0);
+        result = 31 * result + (manageRatioXK != +0.0f ? Float.floatToIntBits(manageRatioXK) : 0);
+        result = 31 * result + (manageRatioNormal != +0.0f ? Float.floatToIntBits(manageRatioNormal) : 0);
         return result;
     }
 }

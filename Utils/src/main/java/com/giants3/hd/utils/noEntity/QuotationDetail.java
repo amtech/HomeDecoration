@@ -1,8 +1,12 @@
-package com.giants3.hd.utils.entity;
+package com.giants3.hd.utils.noEntity;
+
+import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.entity.QuotationItem;
+import com.giants3.hd.utils.entity.QuotationLog;
+import com.giants3.hd.utils.entity.QuotationXKItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 /**
@@ -16,7 +20,7 @@ public class QuotationDetail implements Serializable {
     /**
      * 报价修改记录信息  不参与数据完整性比对
      */
-     public   QuotationLog quotationLog;
+     public QuotationLog quotationLog;
        public List<QuotationItem> items;
     public  List<QuotationXKItem> XKItems ;
 

@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.12
-Manifest-Version_Number: 12
-Manifest-Version_Spec: 1:增加翻样图片自动复制功能
+Manifest-Version: 1.0.15
+Manifest-Version_Number: 15
+Manifest-Version_Spec: 1:解决翻单报错问题 2:增加修理工资属性 3:成本价计算上增加上加成比例（管理费用）4:改进全局数据算法
 Main-Class: com.giants.hd.desktop.frames.Main
 

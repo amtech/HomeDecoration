@@ -2,7 +2,7 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
-import com.giants3.hd.utils.entity.QuotationDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import jxl.write.*;

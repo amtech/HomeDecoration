@@ -7,6 +7,7 @@ import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.*;
 
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.Product2;
 import com.google.inject.Inject;
 
 import javax.swing.*;

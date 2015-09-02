@@ -198,6 +198,13 @@ public class Product implements Serializable {
 
 
 	/**
+	 * 修理工资  独立计算
+	 */
+	@Basic
+	public  float repairCost;
+
+
+	/**
 	 * 是否咸康信息
 	 */
 	@Basic
@@ -660,17 +667,35 @@ public class Product implements Serializable {
 	{
 
 
-		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage);
+		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage);
 
 
 
+		//计算体积
 		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
 
+
+		//计算修理工资
+		repairCost=FloatHelper.scale(packQuantity<=0?0:packVolume*globalData.repairPrice/packQuantity);
+
+
 		 GlobalData configData= globalData ;
-		cost=productCost;
 
 
-		//TODO  make these value  configerrable
+		//获取管理系数  咸康跟普通不一致
+		float manageRatio=globalData.manageRatioNormal;
+		if(pack!=null&&pack.isXkPack())
+		{
+			manageRatio=globalData.manageRatioXK;
+		}
+
+
+		//计算成本价   (胚体成本+包装成本+修理工资)*（1+管理系数）
+		cost=FloatHelper.scale((productCost+packCost+packWage+repairCost)*(1+manageRatio));
+
+
+
+
 
 		price=FloatHelper.scale(cost/configData.cost_price_ratio);
 

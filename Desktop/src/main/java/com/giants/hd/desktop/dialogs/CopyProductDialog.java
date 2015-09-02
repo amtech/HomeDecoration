@@ -6,7 +6,7 @@ import com.giants.hd.desktop.view.Panel_CopyProduct;
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

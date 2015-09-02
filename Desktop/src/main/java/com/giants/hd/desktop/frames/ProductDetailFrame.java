@@ -2,13 +2,12 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.view.BasePanel;
 import com.giants.hd.desktop.view.Panel_ProductDetail;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDelete;
-import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -74,7 +73,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
             @Override
             public void windowClosing(WindowEvent e) {
 
-                try {
+
 
 
                     if(panel_productDetail.productDetail==null|| productDelete!=null)
@@ -100,10 +99,6 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
                         ProductDetailFrame.this.dispose();
                     }
-                } catch (HdUIException uiEx) {
-                    JOptionPane.showMessageDialog(uiEx.component, uiEx.message);
-                    uiEx.component.requestFocus();
-                }
 
 
             }

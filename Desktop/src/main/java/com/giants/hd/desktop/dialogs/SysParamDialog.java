@@ -24,6 +24,9 @@ public class SysParamDialog extends BaseDialog {
     private JTextField tf_fob_addtion;
     private JTextField tf_price_diluent;
     private JButton save;
+    private JTextField tf_repairePrice;
+    private JTextField tf_manageRatioXK;
+    private JTextField tf_manageRatioNormal;
     GlobalData oldData;
     GlobalData newData;
     @Inject
@@ -114,6 +117,9 @@ public class SysParamDialog extends BaseDialog {
             globalData.price_of_export = Float.valueOf(tf_price_transport.getText().trim());
             globalData.addition = Float.valueOf(tf_fob_addtion.getText().trim());
             globalData.cost_price_ratio = Float.valueOf(tf_cost_price_ratio.getText().trim());
+            globalData.manageRatioNormal= Float.valueOf(tf_manageRatioNormal.getText().trim());
+            globalData.manageRatioXK= Float.valueOf(tf_manageRatioXK.getText().trim());
+            globalData.repairPrice= Float.valueOf(tf_repairePrice.getText().trim());
         }catch (Throwable t)
         {
             throw   HdUIException.create("输入的数据有错， 请输入数字");
@@ -134,6 +140,9 @@ public class SysParamDialog extends BaseDialog {
         tf_fob_addtion.setText(String.valueOf(globalData.addition));
         tf_cost_price_ratio.setText(String.valueOf(globalData.cost_price_ratio));
 
+        tf_manageRatioNormal.setText(String.valueOf(globalData.manageRatioNormal))  ;
+        tf_manageRatioXK.setText(String.valueOf(globalData.manageRatioXK))  ;
+        tf_repairePrice.setText(String.valueOf(globalData.repairPrice))  ;
 
 
     }

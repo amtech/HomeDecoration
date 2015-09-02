@@ -7,6 +7,8 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Guice;
 import jxl.write.*;
 

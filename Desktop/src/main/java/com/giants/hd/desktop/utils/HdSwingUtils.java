@@ -4,7 +4,7 @@ import com.giants.hd.desktop.frames.ProductDetailFrame;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDelete;
-import com.giants3.hd.utils.entity.ProductDetail;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 
 import javax.swing.*;
 import java.awt.*;

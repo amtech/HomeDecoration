@@ -1,9 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.entity.QuotationDelete;
-import com.giants3.hd.utils.entity.QuotationDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

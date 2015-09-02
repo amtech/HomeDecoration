@@ -5,6 +5,8 @@ import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

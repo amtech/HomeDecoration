@@ -21,6 +21,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
 import jxl.write.WriteException;
@@ -131,6 +132,9 @@ public class Panel_ProductDetail extends BasePanel {
     private JPanel panel_nomal;
     private JButton btn_resume;
     private JPanel panel_delete;
+    private JTextField jtf_cost_repair;
+    private JTextField jtf_pack_wage;
+    private JTextField jtf_pack_cost;
 
 
     /**
@@ -1250,6 +1254,17 @@ public class Panel_ProductDetail extends BasePanel {
 
                 }
 
+
+
+
+
+                    if(isModified())
+                    {
+                        JOptionPane.showMessageDialog((Component) e.getSource(), "产品数据有改动，请先保存");
+                        return;
+                    }
+
+
                 //显示对话框
 
 
@@ -1614,12 +1629,17 @@ public class Panel_ProductDetail extends BasePanel {
         jtf_conceptus_cost.setText(String.valueOf(product.conceptusCost));
         jtf_conceptus_wage.setText(String.valueOf(product.conceptusWage));
 
+        jtf_pack_cost.setText(String.valueOf(product.packCost));
+        jtf_pack_wage.setText(String.valueOf(product.packWage));
+
         jtf_cost1.setText(String.valueOf(product.cost1));
         jtf_cost6.setText(String.valueOf(product.cost6));
         jtf_cost5.setText(String.valueOf(product.cost5));
         jtf_cost7.setText(String.valueOf(product.cost7));
         jtf_cost8.setText(String.valueOf(product.cost8));
         jtf_cost11_15.setText(String.valueOf(product.cost11_15));
+
+        jtf_cost_repair.setText(String.valueOf(product.repairCost));
 
         tf_unpack_cost.setText(String.valueOf(product.productCost));
         tf_cost4.setText(String.valueOf(product.cost4));
@@ -2021,7 +2041,7 @@ public class Panel_ProductDetail extends BasePanel {
      *
      * @return
      */
-    public boolean isModified( ) throws HdUIException {
+    public boolean isModified( )   {
 
 
 

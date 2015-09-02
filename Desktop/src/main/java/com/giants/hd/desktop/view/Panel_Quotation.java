@@ -12,6 +12,7 @@ import com.giants.hd.desktop.model.QuotationTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

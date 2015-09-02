@@ -91,4 +91,14 @@ public class Pack  implements Serializable {
 	public int hashCode() {
 		return (int) (id ^ (id >>> 32));
 	}
+
+
+	/**
+	 * 判断是否咸康包装
+	 * @return
+	 */
+	public boolean isXkPack()
+	{
+		return pIndex==PACK_XIANKANG_ZHEDIE||pIndex==PACK_XIANKANG_PUTONG_SHUAIXIANG||pIndex==PACK_XIANKANG_JIAQIANG_SHUAIXIANG;
+	}
 }

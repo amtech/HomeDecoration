@@ -11,6 +11,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
@@ -595,8 +596,10 @@ public class ProductController extends BaseController {
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
         Product newProduct= (Product)  ObjectUtils.deepCopy(product);
         Xiankang xiankang=(Xiankang)ObjectUtils.deepCopy(product.xiankang);
-        xiankang.setId(-1);
-        newProduct.xiankang=xiankang;
+        if(xiankang!=null) {
+            xiankang.setId(-1);
+            newProduct.xiankang = xiankang;
+        }
         newProduct.id= -1;
         newProduct.name=newProductName;
         newProduct.pVersion=version;

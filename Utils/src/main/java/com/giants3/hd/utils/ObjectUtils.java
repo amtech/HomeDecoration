@@ -1,11 +1,6 @@
 package com.giants3.hd.utils;
 
-import com.giants3.hd.utils.entity.ProductDetail;
-import com.giants3.hd.utils.entity.ProductPaint;
-import com.giants3.hd.utils.pools.ObjectPool;
-
 import java.io.*;
-import java.util.List;
 
 /**
  * java

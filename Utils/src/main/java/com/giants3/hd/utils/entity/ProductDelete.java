@@ -1,7 +1,6 @@
 package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.entity.ProductDetail;
 
 import javax.persistence.*;
 import java.io.Serializable;

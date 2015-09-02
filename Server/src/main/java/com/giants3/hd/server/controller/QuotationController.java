@@ -6,6 +6,7 @@ import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

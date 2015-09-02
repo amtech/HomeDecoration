@@ -1,6 +1,7 @@
-package com.giants3.hd.utils.entity;
+package com.giants3.hd.utils.noEntity;
 
 import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.entity.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class ProductDetail  implements Serializable {
 
         }
         product.updatePaintData(paintCost, paintWage,
-                globalData);
+            globalData);
 
 
         //汇总计算白胚材料

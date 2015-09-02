@@ -21,6 +21,8 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.Product2;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 import com.giants.hd.desktop.model.Productable;
 import com.giants.hd.desktop.model.QuotationItemXKTableModel;

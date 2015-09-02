@@ -6,7 +6,7 @@ import com.giants.hd.desktop.reports.ReportFactory;
 import com.giants.hd.desktop.reports.excels.ExcelReportor;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.QuotationDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

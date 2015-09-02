@@ -13,6 +13,7 @@ import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity_erp.Prdt;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.xml.bind.annotation.XmlElementDecl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;

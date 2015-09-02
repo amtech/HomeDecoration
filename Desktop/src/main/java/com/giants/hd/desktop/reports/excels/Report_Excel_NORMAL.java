@@ -4,7 +4,7 @@ import com.giants.hd.desktop.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.entity.QuotationDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import jxl.write.*;
 
