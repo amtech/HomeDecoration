@@ -644,7 +644,7 @@ public class ProductController extends BaseController {
 
 
         //更新产品材料信息
-    List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
+        List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
         //深度复制对象， 重新保存数据， 不能能直接使用源数据保存，会报错。
         List<ProductMaterial> newMaterials= (List<ProductMaterial>) ObjectUtils.deepCopy(materials);
         for(ProductMaterial material:newMaterials)
