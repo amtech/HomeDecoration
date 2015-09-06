@@ -472,6 +472,27 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/quotation/save");
     }
 
+
+    /**
+     * 保存并审核详细数据
+     * @return
+     */
+    public static String saveAndVerifyQuotationDetail() {
+        return additionInfo(BaseUrl + "api/quotation/verify");
+    }
+
+
+
+
+    /**
+     * 撤销报价单审核
+     * @return
+     */
+    public static String unVerifyQuotation(long quotationId) {
+        return additionInfo(BaseUrl + "api/quotation/unVerify?quotationId="+quotationId);
+    }
+
+
     public static String deleteQuotationLogic(long quotationId) {
 
             return additionInfo(BaseUrl + "api/quotation/logicDelete?id=" + quotationId) ;

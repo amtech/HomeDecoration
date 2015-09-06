@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.15
-Manifest-Version_Number: 15
-Manifest-Version_Spec: 1:解决翻单报错问题 2:增加修理工资属性 3:成本价计算上增加上加成比例（管理费用）4:改进全局数据算法
+Manifest-Version: 1.0.16
+Manifest-Version_Number: 16
+Manifest-Version_Spec: 1:增加报价单审核功能
 Main-Class: com.giants.hd.desktop.frames.Main
 

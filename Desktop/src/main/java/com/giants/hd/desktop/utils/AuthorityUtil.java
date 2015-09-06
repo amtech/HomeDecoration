@@ -45,6 +45,29 @@ public class AuthorityUtil {
     }
 
 
+
+    /**
+     * 查看模块是否有审核权限
+     * @param moduleName
+     * @return
+     */
+    private boolean isVerifiable(String moduleName)
+    {
+        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+            return true;
+        for(Authority authority:getAuthority())
+        {
+            if(moduleName.equals(authority.module.name)&&authority.checkable)
+            {
+                return true;
+            }
+
+        }
+
+
+        return false;
+    }
+
     /**
      * 查看模块是否有添加的权限
      * @param moduleName
@@ -430,6 +453,11 @@ public class AuthorityUtil {
     public boolean viewSysParam() {
 
         return isViewable(Module.NAME_SYS_PARAM);
+
+    }
+
+    public boolean verifyQuotation() {
+        return isVerifiable(Module.NAME_QUOTATION);
 
     }
 }

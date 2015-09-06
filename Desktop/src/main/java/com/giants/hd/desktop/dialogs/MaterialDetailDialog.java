@@ -152,4 +152,14 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
     public void close() {
         dispose();
     }
+
+    @Override
+    public void verify() {
+
+    }
+
+    @Override
+    public void unVerify() {
+
+    }
 }

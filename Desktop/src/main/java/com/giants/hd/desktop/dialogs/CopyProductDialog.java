@@ -105,4 +105,14 @@ public class CopyProductDialog extends BaseDialog<ProductDetail>  implements Bas
         dispose();
     }
 
+    @Override
+    public void verify() {
+
+    }
+
+    @Override
+    public void unVerify() {
+
+    }
+
 }

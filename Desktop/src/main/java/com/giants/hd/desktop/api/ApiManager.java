@@ -772,6 +772,49 @@ public class ApiManager {
 
     }
 
+
+
+    /**
+     * 保存并审核报价详情数据
+     * @param detail
+     * @return
+     */
+    public RemoteData<QuotationDetail> saveAndVerifyQuotationDetail(QuotationDetail detail) throws HdException {
+
+        String url=HttpUrl.saveAndVerifyQuotationDetail();
+
+        String result=     client.postWithStringReturned(url, GsonUtils.toJson(detail));
+        Type   generateType = new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType();
+
+        RemoteData<QuotationDetail> productRemoteData = GsonUtils.fromJson(result, generateType);
+
+        return productRemoteData;
+
+    }
+
+
+    /**
+     * 撤销报价单审核
+     * @param quotationId
+     * @return
+     */
+    public RemoteData<Void> unVerifyQuotation(long quotationId) throws HdException {
+
+
+        String url=HttpUrl.unVerifyQuotation(quotationId);
+
+        String result=     client.postWithStringReturned(url, null);
+
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+    }
+
+
+
     /**
      * 删除报价单
      * @param quotationId

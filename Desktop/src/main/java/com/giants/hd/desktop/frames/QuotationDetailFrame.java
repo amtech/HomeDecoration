@@ -20,7 +20,7 @@ import java.awt.event.WindowEvent;
 /**
  *  报价单详情模块
  */
-public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelListener {
+public class QuotationDetailFrame extends BaseFrame   {
 
 
 
@@ -28,6 +28,9 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
     ApiManager apiManager;
     @Inject
     Panel_QuotationDetail panel_QuotationDetail;
+
+
+    QuotationDetailAdapter adapter=new QuotationDetailAdapter();
 
     private QuotationDetail oldData;
     private QuotationDetail quotationDetail;
@@ -97,9 +100,7 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
 
         init();
         setQuotationDetail(quotationDetail);
-
-
-            panel_QuotationDetail.setQuotationDelete(quotationDelete);
+       panel_QuotationDetail.setQuotationDelete(quotationDelete);
 
 
     }
@@ -156,7 +157,7 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
 
 
 
-        panel_QuotationDetail.setListener(this);
+        panel_QuotationDetail.setListener(adapter);
 
 
 
@@ -174,106 +175,6 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
 
     }
 
-    @Override
-    public void save() {
-
-
-        try {
-            panel_QuotationDetail.checkData(quotationDetail);
-        } catch (HdUIException e)
-        {
-            JOptionPane.showMessageDialog(e.component,e.message);
-            e.component.requestFocus();
-            return;
-        }
-
-
-        panel_QuotationDetail.getData(quotationDetail);
-
-
-
-
-        if (quotationDetail.equals(oldData)) {
-          JOptionPane.showMessageDialog(QuotationDetailFrame.this, "数据无改动");
-            return;
-        }
-
-
-        saveQuotationDetail(quotationDetail);
-
-
-
-
-
-
-    }
-
-    @Override
-    public void delete() {
-
-
-
-
-        final QuotationDetail detail= quotationDetail;
-        if(detail==null)return;
-
-        if(detail.quotation.id<=0)
-        {
-
-            JOptionPane.showMessageDialog(this, "产品数据未建立，请先保存");
-            return;
-
-        }
-
-
-
-     int res=   JOptionPane.showConfirmDialog(this, "是否删除报价单？（导致数据无法恢复）", "删除", JOptionPane.OK_CANCEL_OPTION);
-        if(res==JOptionPane.YES_OPTION)
-        {
-        new HdSwingWorker<Void,Void>(this)
-        {
-
-            @Override
-            protected RemoteData<Void> doInBackground() throws Exception {
-
-               return     apiManager.deleteQuotationLogic(detail.quotation.id);
-
-
-            }
-
-            @Override
-            public void onResult(RemoteData<Void> data) {
-
-                if(data.isSuccess())
-                {
-
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,"删除成功！");
-
-                    QuotationDetailFrame.this.dispose();
-
-
-
-                }else
-                {
-                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
-                }
-
-            }
-        }.go();
-
-
-
-        }
-
-
-    }
-
-    @Override
-    public void close() {
-        setVisible(false);
-        dispose();
-    }
-
 
 
 
@@ -283,7 +184,7 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
 
 
     /**
-     * 加载产品详情信息
+     * 保存详情信息
      */
     private void saveQuotationDetail(final QuotationDetail quotationDetail) {
 
@@ -312,5 +213,223 @@ public class QuotationDetailFrame extends BaseFrame implements BasePanel.PanelLi
         }.go();
 
 
+    }
+
+    /**
+     * 保存详情信息
+     */
+    private void saveAndVerifyQuotationDetail(final QuotationDetail quotationDetail) {
+
+
+        new HdSwingWorker<QuotationDetail, Long>(this) {
+            @Override
+            protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                return apiManager.saveAndVerifyQuotationDetail(quotationDetail);
+            }
+
+            @Override
+            public void onResult(RemoteData<QuotationDetail> data) {
+
+                if(data.isSuccess()) {
+
+                    setQuotationDetail(data.datas.get(0));
+                    JOptionPane.showMessageDialog(QuotationDetailFrame.this, "保存/审核成功");
+
+                }else {
+
+                    JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+
+
+                }
+            }
+        }.go();
+
+
+    }
+
+
+    /**
+     * 面板监听适配类
+     */
+    private class QuotationDetailAdapter extends BasePanel.PanelAdapter
+    {
+
+
+        @Override
+        public void save() {
+
+
+            try {
+                panel_QuotationDetail.checkData(quotationDetail);
+            } catch (HdUIException e)
+            {
+                JOptionPane.showMessageDialog(e.component,e.message);
+                e.component.requestFocus();
+                return;
+            }
+
+
+            panel_QuotationDetail.getData(quotationDetail);
+
+
+
+
+            if (quotationDetail.equals(oldData)) {
+                JOptionPane.showMessageDialog(QuotationDetailFrame.this, "数据无改动");
+                return;
+            }
+
+
+            saveQuotationDetail(quotationDetail);
+
+
+
+
+
+
+        }
+
+        @Override
+        public void delete() {
+
+
+
+
+            final QuotationDetail detail= quotationDetail;
+            if(detail==null)return;
+
+            if(detail.quotation.id<=0)
+            {
+
+                JOptionPane.showMessageDialog(QuotationDetailFrame.this, "产品数据未建立，请先保存");
+                return;
+
+            }
+
+
+
+            int res=   JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "是否删除报价单？（导致数据无法恢复）", "删除", JOptionPane.OK_CANCEL_OPTION);
+            if(res==JOptionPane.YES_OPTION)
+            {
+                new HdSwingWorker<Void,Void>(QuotationDetailFrame.this)
+                {
+
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+
+                        return     apiManager.deleteQuotationLogic(detail.quotation.id);
+
+
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+                        if(data.isSuccess())
+                        {
+
+                            JOptionPane.showMessageDialog(QuotationDetailFrame.this,"删除成功！");
+
+                            QuotationDetailFrame.this.dispose();
+
+
+
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                        }
+
+                    }
+                }.go();
+
+
+
+            }
+
+
+        }
+
+        @Override
+        public void close() {
+            setVisible(false);
+            dispose();
+        }
+
+
+        @Override
+        public void verify() {
+
+
+
+            try {
+                panel_QuotationDetail.checkData(quotationDetail);
+            } catch (HdUIException e)
+            {
+                JOptionPane.showMessageDialog(e.component,e.message);
+                e.component.requestFocus();
+                return;
+            }
+
+
+            panel_QuotationDetail.getData(quotationDetail);
+
+
+
+            saveAndVerifyQuotationDetail(quotationDetail);
+
+
+
+
+        }
+
+        @Override
+        public void unVerify() {
+
+
+
+            int res=   JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "是否撤销报价单的审核？（未审核的报价单可以修改，但不能导出excel）", "撤销审核", JOptionPane.OK_CANCEL_OPTION);
+            if(res==JOptionPane.YES_OPTION)
+            {
+                new HdSwingWorker<Void,Void>(QuotationDetailFrame.this)
+                {
+
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+
+                        return     apiManager.unVerifyQuotation(oldData.quotation.id);
+
+
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+                        if(data.isSuccess())
+                        {
+
+                            JOptionPane.showMessageDialog(QuotationDetailFrame.this,"撤销成功！");
+
+                            QuotationDetailFrame.this.dispose();
+
+
+
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(QuotationDetailFrame.this,data.message);
+                        }
+
+                    }
+                }.go();
+
+
+
+            }
+
+
+
+
+
+
+        }
     }
 }

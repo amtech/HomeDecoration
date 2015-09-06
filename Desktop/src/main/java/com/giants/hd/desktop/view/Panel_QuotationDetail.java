@@ -64,6 +64,11 @@ public class Panel_QuotationDetail extends BasePanel {
     private JLabel updateTime;
     private JLabel viewLog;
     private JButton btn_resume;
+    private JButton btn_verify;
+    private JLabel icon_verify;
+    private JButton btn_unVerify;
+    private JPanel jp_verify;
+
     public QuotationDetail data;
 
 
@@ -195,9 +200,43 @@ public class Panel_QuotationDetail extends BasePanel {
 
 
 
+
+
+        //取消审核功能
+        btn_unVerify.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+
+                if (listener != null) {
+                    listener.unVerify();
+                }
+
+
+
+            }
+        });
+
+        //审核功能
+        btn_verify.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (listener != null) {
+                    listener.verify();
+                }
+            }
+        });
+
+
         //恢复功能默认不显示
         btn_resume.setVisible(false);
 
+        //审核状态默认不显示
+        icon_verify.setVisible(false);
+        jp_verify.setVisible(false);
     }
 
 
@@ -447,48 +486,46 @@ public class Panel_QuotationDetail extends BasePanel {
     {
 
 
-        btn_save.setVisible(quotationDelete==null);
-        btn_delete.setVisible(quotationDelete==null);
-        btn_export.setVisible(quotationDelete==null);
-        btn_resume.setVisible(quotationDelete != null);
+        if(quotationDelete!=null) {
 
-        if(quotationDelete!=null)
-
-        btn_resume.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-                new HdSwingWorker<QuotationDetail, Void>(SwingUtilities.getWindowAncestor(getRoot())) {
-                    @Override
-                    protected RemoteData<QuotationDetail> doInBackground() throws Exception {
-                        return apiManager.resumeDeleteQuotation(quotationDelete.id);
-                    }
-
-                    @Override
-                    public void onResult(RemoteData<QuotationDetail> data) {
+            btn_save.setVisible(false);
+            btn_delete.setVisible(false);
+            btn_export.setVisible(false);
+            btn_verify.setVisible(false);
+            btn_unVerify.setVisible(false);
+            btn_resume.setVisible(true);
+            btn_resume.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
-                        if(data.isSuccess())
-                        {
-                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),"数据恢复成功");
-                            if(listener!=null)
-                                listener.close();
-                        }else{
-
-                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),data.message);
+                    new HdSwingWorker<QuotationDetail, Void>(SwingUtilities.getWindowAncestor(getRoot())) {
+                        @Override
+                        protected RemoteData<QuotationDetail> doInBackground() throws Exception {
+                            return apiManager.resumeDeleteQuotation(quotationDelete.id);
                         }
 
-
-                    }
-                }.go();
-
+                        @Override
+                        public void onResult(RemoteData<QuotationDetail> data) {
 
 
+                            if (data.isSuccess()) {
+                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), "数据恢复成功");
+                                if (listener != null)
+                                    listener.close();
+                            } else {
+
+                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), data.message);
+                            }
 
 
-            }
-        });
+                        }
+                    }.go();
+
+
+                }
+            });
+        }
 
 
     }
@@ -581,6 +618,42 @@ public class Panel_QuotationDetail extends BasePanel {
 
         model.setDatas(data.items);
         xkModel.setDatas(data.XKItems);
+
+
+
+
+
+
+        jp_verify.setVisible(true);
+        icon_verify.setVisible(data.quotation.isVerified);
+
+
+        boolean isVerifiable=AuthorityUtil.getInstance().verifyQuotation();
+        boolean isEditable=AuthorityUtil.getInstance().editQuotation();
+
+
+        //非审核状态方可编辑
+        btn_save.setEnabled(!data.quotation.isVerified);
+
+        btn_delete.setEnabled(!data.quotation.isVerified);
+
+        //有编辑没有审核权限才可看见，
+        btn_save.setVisible(!isVerifiable && isEditable);
+
+        btn_delete.setVisible(!isVerifiable && isEditable);
+
+
+
+        btn_verify.setVisible(isVerifiable);
+        btn_unVerify.setVisible(isVerifiable);
+        btn_export.setVisible(true);
+
+
+
+        //未审核 撤销审核按钮不可用
+        btn_unVerify.setEnabled(data.quotation.isVerified);
+        //审核后方可导出
+        btn_export.setEnabled(data.quotation.isVerified);
 
         bindLogData(data.quotationLog);
 

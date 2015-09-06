@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 /**
  *  同步对话框
  */
-public class SyncDialog extends BaseDialog<Void>  implements BasePanel.PanelListener {
+public class SyncDialog extends BaseDialog<Void>  {
 
 
     @Inject
@@ -80,28 +80,5 @@ public class SyncDialog extends BaseDialog<Void>  implements BasePanel.PanelList
 
 
 
-    @Override
-    public void save() {
-
-
-
-
-
-
-
-
-
-    }
-
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void close() {
-
-        dispose();
-    }
 
 }

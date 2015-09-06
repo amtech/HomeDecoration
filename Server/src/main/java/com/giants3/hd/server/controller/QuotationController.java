@@ -59,7 +59,7 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Quotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue,@RequestParam(value = "salesmanId", required = false, defaultValue ="-1") long salesmanId
+    RemoteData<Quotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "salesmanId", required = false, defaultValue = "-1") long salesmanId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
@@ -67,11 +67,10 @@ public class QuotationController extends BaseController {
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         Page<Quotation> pageValue;
-        if(salesmanId<0) {
-             pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
-        }else
-        {
-            pageValue= quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQNumberDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
+        if (salesmanId < 0) {
+            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+        } else {
+            pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQNumberDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
 
         }
         List<Quotation> products = pageValue.getContent();
@@ -82,21 +81,17 @@ public class QuotationController extends BaseController {
     }
 
 
-
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<QuotationDetail> detail(@RequestParam(value = "id", required = false, defaultValue = "") long id)
-    {
+    RemoteData<QuotationDetail> detail(@RequestParam(value = "id", required = false, defaultValue = "") long id) {
 
 
-
-        QuotationDetail detail=loadDetailById(id);
-
+        QuotationDetail detail = loadDetailById(id);
 
 
-        if(detail==null)
-            return wrapError("未找到id="+id+"的报价记录数据");
+        if (detail == null)
+            return wrapError("未找到id=" + id + "的报价记录数据");
 
 
         return wrapData(detail);
@@ -105,25 +100,24 @@ public class QuotationController extends BaseController {
 
     /**
      * 读取详情数据
+     *
      * @param id
      * @return
      */
-    private QuotationDetail loadDetailById(long id)
-    {
+    private QuotationDetail loadDetailById(long id) {
 
 
-        Quotation quotation=   quotationRepository.findOne(id);
+        Quotation quotation = quotationRepository.findOne(id);
 
-        if(quotation==null)
-           return null;
+        if (quotation == null)
+            return null;
 
-        QuotationDetail detail=new QuotationDetail();
-        detail.quotation=quotation;
-        detail.quotationLog=quotationLogRepository.findFirstByQuotationIdEquals(id);
-        detail.items=  quotationItemRepository.findByQuotationIdEquals(id);
+        QuotationDetail detail = new QuotationDetail();
+        detail.quotation = quotation;
+        detail.quotationLog = quotationLogRepository.findFirstByQuotationIdEquals(id);
+        detail.items = quotationItemRepository.findByQuotationIdEquals(id);
 
-        detail.XKItems=quotationXKItemRepository.findByQuotationIdEquals(id);
-
+        detail.XKItems = quotationXKItemRepository.findByQuotationIdEquals(id);
 
 
         return detail;
@@ -141,67 +135,58 @@ public class QuotationController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<QuotationDetail> saveQuotationDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,   @RequestBody QuotationDetail quotationDetail) {
+    RemoteData<QuotationDetail> saveQuotationDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody QuotationDetail quotationDetail) {
 
 
-        Quotation newQuotation=quotationDetail.quotation;
+        Quotation newQuotation = quotationDetail.quotation;
 
-        if(!quotationRepository.exists(newQuotation.id))
-        {
+        if (!quotationRepository.exists(newQuotation.id)) {
             //检查单号唯一性
-            if(quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber)!=null)
-            {
+            if (quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber) != null) {
 
-                return   wrapError("报价单号:"+newQuotation.qNumber
-                        +"已经存在,请更换");
+                return wrapError("报价单号:" + newQuotation.qNumber
+                        + "已经存在,请更换");
             }
 
-            newQuotation.id=-1;
-        }else {
+            newQuotation.id = -1;
+        } else {
 
 
             Quotation oldQuotation = quotationRepository.findOne(newQuotation.id);
 
-            if(!oldQuotation.qNumber.equals(newQuotation.qNumber))
-            {
+            if (!oldQuotation.qNumber.equals(newQuotation.qNumber)) {
 
                 //检查单号唯一性
-                if(quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber)!=null)
-                {
+                if (quotationRepository.findFirstByqNumberEquals(newQuotation.qNumber) != null) {
 
-                    return   wrapError("报价单号:"+newQuotation.qNumber
-                            +"已经存在,请更换");
+                    return wrapError("报价单号:" + newQuotation.qNumber
+                            + "已经存在,请更换");
                 }
 
             }
 
 
-            newQuotation.id=oldQuotation.id;
+            newQuotation.id = oldQuotation.id;
         }
 
 
-     Quotation savedQuotation=   quotationRepository.save(newQuotation);
+        Quotation savedQuotation = quotationRepository.save(newQuotation);
 
 
+        updateQuotationLog(savedQuotation, user);
 
-        updateQuotationLog(savedQuotation,user);
-
-        long newId=savedQuotation.id;
-
+        long newId = savedQuotation.id;
 
 
+        for (QuotationItem item : quotationDetail.items) {
 
-        for(QuotationItem item:quotationDetail.items)
-        {
-
-            item.quotationId= newId;
+            item.quotationId = newId;
             quotationItemRepository.save(item);
         }
 
-        for(QuotationXKItem item:quotationDetail.XKItems)
-        {
+        for (QuotationXKItem item : quotationDetail.XKItems) {
 
-            item.quotationId= newId;
+            item.quotationId = newId;
             quotationXKItemRepository.save(item);
         }
 
@@ -212,23 +197,20 @@ public class QuotationController extends BaseController {
     }
 
 
-
     /**
      * 记录报价修改信息
      */
-    private void updateQuotationLog(Quotation quotation,User user)
-    {
+    private void updateQuotationLog(Quotation quotation, User user) {
 
         //记录数据当前修改着相关信息
-        QuotationLog quotationLog=quotationLogRepository.findFirstByQuotationIdEquals(quotation.id);
-        if(quotationLog==null)
-        {
-            quotationLog=new QuotationLog();
-            quotationLog.quotationId=quotation.id;
+        QuotationLog quotationLog = quotationLogRepository.findFirstByQuotationIdEquals(quotation.id);
+        if (quotationLog == null) {
+            quotationLog = new QuotationLog();
+            quotationLog.quotationId = quotation.id;
 
         }
 
-        quotationLog.quotationNumber=quotation.qNumber;
+        quotationLog.quotationNumber = quotation.qNumber;
         quotationLog.setUpdator(user);
         quotationLogRepository.save(quotationLog);
 
@@ -237,11 +219,10 @@ public class QuotationController extends BaseController {
         operationLogRepository.save(OperationLog.createForQuotationModify(quotation, user));
 
 
-
     }
+
     /**
-     *删除产品信息
-     *
+     * 删除产品信息
      *
      * @param quotationId
      * @return
@@ -250,43 +231,36 @@ public class QuotationController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData< Void> logicDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("id") long quotationId ) {
+    RemoteData<Void> logicDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("id") long quotationId) {
 
         //检查是否有关联数据
 
 
-        QuotationDetail detail=loadDetailById(quotationId);
-        if(detail==null)
-        {
+        QuotationDetail detail = loadDetailById(quotationId);
+        if (detail == null) {
             return wrapError(" 该报价单不存在，请刷新数据");
         }
 
 
-        Quotation quotation=quotationRepository.findOne(quotationId);
+        Quotation quotation = quotationRepository.findOne(quotationId);
 
         quotationRepository.delete(quotation.id);
 
-       int affectedRow= quotationItemRepository.deleteByQuotationIdEquals(quotationId);
+        int affectedRow = quotationItemRepository.deleteByQuotationIdEquals(quotationId);
         Logger.getLogger("TEST").info("quotationItemRepository delete affectedRow:" + affectedRow);
-          affectedRow= quotationXKItemRepository.deleteByQuotationIdEquals(quotationId);
+        affectedRow = quotationXKItemRepository.deleteByQuotationIdEquals(quotationId);
         Logger.getLogger("TEST").info("quotationXKItemRepository delete affectedRow:" + affectedRow);
-
 
 
         //增加历史操作记录
         operationLogRepository.save(OperationLog.createForQuotationDelete(quotation, user));
 
 
-
-
         //保存数据备份
-        QuotationDelete quotationDelete=new QuotationDelete();
-         quotationDelete.setQuotationAndUser(quotation, user);
-        quotationDelete=quotationDeleteRepository.save(quotationDelete);
+        QuotationDelete quotationDelete = new QuotationDelete();
+        quotationDelete.setQuotationAndUser(quotation, user);
+        quotationDelete = quotationDeleteRepository.save(quotationDelete);
         BackDataHelper.backQuotation(detail, deleteQuotationFilePath, quotationDelete);
-
-
-
 
 
         return wrapData();
@@ -294,19 +268,15 @@ public class QuotationController extends BaseController {
     }
 
 
-
-
-
     @RequestMapping(value = "/searchDelete", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<QuotationDelete> listDelete(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,@RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageCount) {
-
+    RemoteData<QuotationDelete> listDelete(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageCount) {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageCount);
-        String likeWord="%"+keyword.trim()+"%";
-        Page<QuotationDelete> pageValue = quotationDeleteRepository.findByQNumberLikeOrSaleManLikeOrCustomerLikeOrderByTimeDesc(likeWord,likeWord,likeWord, pageable);
+        String likeWord = "%" + keyword.trim() + "%";
+        Page<QuotationDelete> pageValue = quotationDeleteRepository.findByQNumberLikeOrSaleManLikeOrCustomerLikeOrderByTimeDesc(likeWord, likeWord, likeWord, pageable);
 
         List<QuotationDelete> products = pageValue.getContent();
 
@@ -318,25 +288,21 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/detailDelete", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<QuotationDetail> detailDelete(@RequestParam(value = "id" )  long quotationDeleteId) {
+    RemoteData<QuotationDetail> detailDelete(@RequestParam(value = "id") long quotationDeleteId) {
 
 
+        QuotationDelete quotationDelete = quotationDeleteRepository.findOne(quotationDeleteId);
 
-        QuotationDelete quotationDelete=quotationDeleteRepository.findOne(quotationDeleteId);
-
-        if(quotationDelete==null)
-        {
+        if (quotationDelete == null) {
             return wrapError("该报价单已经不在删除列表中");
         }
 
 
+        QuotationDetail detail = null;
 
+        detail = BackDataHelper.getQuotationDetail(deleteQuotationFilePath, quotationDelete);
 
-        QuotationDetail detail  =null;
-
-        detail= BackDataHelper.getQuotationDetail(deleteQuotationFilePath, quotationDelete);
-
-        if(detail==null)
+        if (detail == null)
             return wrapError("备份文件读取失败");
 
         return wrapData(detail);
@@ -347,38 +313,35 @@ public class QuotationController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<QuotationDetail> resumeDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "deleteQuotationId" )  long deleteQuotationId ) {
+    RemoteData<QuotationDetail> resumeDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "deleteQuotationId") long deleteQuotationId) {
 
 
+        QuotationDelete quotationDelete = quotationDeleteRepository.findOne(deleteQuotationId);
 
-        QuotationDelete quotationDelete=quotationDeleteRepository.findOne(deleteQuotationId);
-
-        if(quotationDelete==null)
-        {
+        if (quotationDelete == null) {
             return wrapError("该报价单已经不在删除列表中");
         }
 
 
-        QuotationDetail detail  =BackDataHelper.getQuotationDetail(deleteQuotationFilePath, quotationDelete);
+        QuotationDetail detail = BackDataHelper.getQuotationDetail(deleteQuotationFilePath, quotationDelete);
 
-        if(detail==null)
+        if (detail == null)
             return wrapError("备份文件读取失败");
 
 
         //新增记录
         //移除id
-        detail.quotation.id=0;
+        detail.quotation.id = 0;
 
-        RemoteData<QuotationDetail> result=   saveQuotationDetail(user, detail);
+        RemoteData<QuotationDetail> result = saveQuotationDetail(user, detail);
 
-        if(result.isSuccess())
-        {
+        if (result.isSuccess()) {
 
 
-            QuotationDetail newQuotationDetail=result.datas.get(0);
-            long newQuotationId=newQuotationDetail.quotation.id;
+            QuotationDetail newQuotationDetail = result.datas.get(0);
+            long newQuotationId = newQuotationDetail.quotation.id;
             //更新修改记录中所有旧productId 至新id；
-            if(detail.quotationLog!=null) {
+            if (detail.quotationLog != null) {
                 detail.quotationLog.quotationId = newQuotationId;
                 quotationLogRepository.save(detail.quotationLog);
                 newQuotationDetail.quotationLog = detail.quotationLog;
@@ -388,7 +351,7 @@ public class QuotationController extends BaseController {
             operationLogRepository.updateProductId(quotationDelete.quotationId, Quotation.class.getSimpleName(), newQuotationId);
 
             //添加恢复消息记录。
-            OperationLog operationLog=  OperationLog.createForQuotationResume(newQuotationDetail.quotation, user);
+            OperationLog operationLog = OperationLog.createForQuotationResume(newQuotationDetail.quotation, user);
             operationLogRepository.save(operationLog);
 
 
@@ -396,16 +359,9 @@ public class QuotationController extends BaseController {
             quotationDeleteRepository.delete(deleteQuotationId);
 
             //移除备份的文件
-            BackDataHelper.deleteQuotation(deleteQuotationFilePath,quotationDelete);
+            BackDataHelper.deleteQuotation(deleteQuotationFilePath, quotationDelete);
 
         }
-
-
-
-
-
-
-
 
 
         return wrapData(detail);
@@ -413,5 +369,84 @@ public class QuotationController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/unVerify", method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> unVerify(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "quotationId") long quotationId) {
 
+
+        Quotation quotation = quotationRepository.findOne(quotationId);
+        if (quotation == null) {
+            return wrapError("id：" + quotationId + "，对应的报价单不存在");
+        }
+
+        if (!quotation.isVerified) {
+
+            return wrapError("id" + quotationId + "，对应的报价单，状态已经为非审核，请刷新数据");
+        }
+
+        quotation.isVerified = false;
+        quotationRepository.save(quotation);
+
+
+        //记录修改
+        updateQuotationLog(quotation, user);
+
+
+        //添加取消审核记录。
+        OperationLog operationLog = OperationLog.createForQuotationUnVerify(quotation, user);
+        operationLogRepository.save(operationLog);
+
+
+        return detail(quotationId);
+
+    }
+
+    /**
+     * 产品完整信息的保存
+     *
+     * @param quotationDetail 报价单全部信息
+     * @return
+     */
+    @RequestMapping(value = "/verify", method = RequestMethod.POST)
+    @Transactional
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> verifyQuotationDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody QuotationDetail quotationDetail) {
+
+
+        Quotation newQuotation = quotationDetail.quotation;
+
+        if (!quotationRepository.exists(newQuotation.id)) {
+
+
+            return wrapError("报价单号:" + newQuotation.qNumber
+                    + "不存在,不能审核，请刷新数据");
+
+        } else {
+
+
+
+            //设定为已经审核
+            quotationDetail.quotation.isVerified = true;
+
+
+            RemoteData<QuotationDetail> result = saveQuotationDetail(user, quotationDetail);
+
+            //记录修改记录
+
+            //记录修改
+            updateQuotationLog(newQuotation, user);
+            //添加审核记录。
+            OperationLog operationLog = OperationLog.createForQuotationVerify(newQuotation, user);
+            operationLogRepository.save(operationLog);
+
+
+            return result;
+
+        }
+
+
+    }
 }

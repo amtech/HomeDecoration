@@ -98,6 +98,12 @@ public class Quotation  implements Serializable {
     @Basic
     public String quotationTypeName;
 
+    /**
+     * 是否已经审核
+     */
+    @Basic
+    public boolean isVerified;
+
 
     @Override
     public boolean equals(Object o) {
@@ -110,6 +116,7 @@ public class Quotation  implements Serializable {
         if (customerId != quotation.customerId) return false;
         if (salesmanId != quotation.salesmanId) return false;
         if (quotationTypeId != quotation.quotationTypeId) return false;
+        if (isVerified != quotation.isVerified) return false;
         if (customerCode != null ? !customerCode.equals(quotation.customerCode) : quotation.customerCode != null)
             return false;
         if (customerName != null ? !customerName.equals(quotation.customerName) : quotation.customerName != null)
@@ -139,6 +146,7 @@ public class Quotation  implements Serializable {
         result = 31 * result + (memo != null ? memo.hashCode() : 0);
         result = 31 * result + (int) (quotationTypeId ^ (quotationTypeId >>> 32));
         result = 31 * result + (quotationTypeName != null ? quotationTypeName.hashCode() : 0);
+        result = 31 * result + (isVerified ? 1 : 0);
         return result;
     }
 }

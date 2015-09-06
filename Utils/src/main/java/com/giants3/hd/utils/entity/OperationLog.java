@@ -25,7 +25,9 @@ public class OperationLog implements Serializable{
     public static final String TYPE_DELETE="删除";
     public static final String TYPE_RESUME="恢复";
     public static final String TYPE_GLOBAL_SET="系统参数修改";
-    public static final String[] OPERATION_TYPES = new String[]{TYPE_MODIFY,TYPE_DELETE,TYPE_RESUME,TYPE_GLOBAL_SET};
+    public static final String TYPE_VERIFY_QUOTATION="报价单审核";
+    public static final String TYPE_UNVERIFY_QUOTATION="报价单撤销审核";
+    public static final String[] OPERATION_TYPES = new String[]{TYPE_MODIFY,TYPE_DELETE,TYPE_RESUME,TYPE_GLOBAL_SET,TYPE_VERIFY_QUOTATION,TYPE_UNVERIFY_QUOTATION};
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
@@ -127,6 +129,14 @@ public class OperationLog implements Serializable{
 
     public static OperationLog createForQuotationResume(Quotation quotation, User user) {
            return createForQuotation(quotation, user, TYPE_RESUME);
+    }
+
+    public static OperationLog createForQuotationVerify(Quotation quotation, User user) {
+        return createForQuotation(quotation, user, TYPE_VERIFY_QUOTATION);
+    }
+
+    public static OperationLog createForQuotationUnVerify(Quotation quotation, User user) {
+        return createForQuotation(quotation, user, TYPE_UNVERIFY_QUOTATION);
     }
 
     public static OperationLog createForGloBalDataChange(Product product, User user) {

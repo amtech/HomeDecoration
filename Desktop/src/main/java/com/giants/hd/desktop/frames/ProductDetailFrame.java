@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 /**
  *  产品详细模块
  */
-public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelListener {
+public class ProductDetailFrame extends BaseFrame {
 
 
 
@@ -27,6 +27,9 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     @Inject
     Panel_ProductDetail panel_productDetail;
     ProductDelete productDelete =null;
+
+
+    private BasePanel.PanelAdapter adapter=new ProductDetailAdapter();
    public   ProductDetailFrame(ProductDetail productDetail )
     {
 
@@ -62,7 +65,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
 
 
 
-        panel_productDetail.setListener(this);
+        panel_productDetail.setListener(adapter);
         setContentPane(panel_productDetail.getRoot());
         setMinimumSize(new Dimension(1024, 768));
         pack();
@@ -118,7 +121,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
     {
 
         super("产品详情[" + (product == null ? "新增" : ("货号：" + product.getName() + "---版本号：" + product.getpVersion())) + "]");
-        init( );
+        init();
         if(product==null)
         {
 
@@ -138,78 +141,84 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
         }
     }
 
+    private class ProductDetailAdapter extends BasePanel.PanelAdapter
+    {
 
-    @Override
-    public void save() {
-
-
-    }
-
-    @Override
-    public void delete() {
-
-
-
-        if(productDelete!=null) return;
-
-
-        final ProductDetail detail=panel_productDetail.getData();
-
-        if(detail.product.id<=0)
-        {
-
-            JOptionPane.showMessageDialog(this, "产品数据未建立，请先保存");
-            return;
-
-        }
-
-
-
-     int res=   JOptionPane.showConfirmDialog(this, "是否删除产品？（导致数据无法恢复）", "删除产品", JOptionPane.OK_CANCEL_OPTION);
-        if(res==JOptionPane.YES_OPTION)
-        {
-        new HdSwingWorker<Void,Void>(this)
-        {
-
-            @Override
-            protected RemoteData<Void> doInBackground() throws Exception {
-
-                return     apiManager.deleteProductLogic(detail.product.id);
-
-            }
-
-            @Override
-            public void onResult(RemoteData<Void> data) {
-
-                if(data.isSuccess())
-                {
-
-                    JOptionPane.showMessageDialog(ProductDetailFrame.this,"删除成功！");
-
-                    ProductDetailFrame.this.dispose();
-
-
-
-                }else
-                {
-                    JOptionPane.showMessageDialog(ProductDetailFrame.this,data.message);
-                }
-
-            }
-        }.go();
-
+        @Override
+        public void save() {
 
 
         }
 
+        @Override
+        public void delete() {
+
+
+
+            if(productDelete!=null) return;
+
+
+            final ProductDetail detail=panel_productDetail.getData();
+
+            if(detail.product.id<=0)
+            {
+
+                JOptionPane.showMessageDialog(ProductDetailFrame.this, "产品数据未建立，请先保存");
+                return;
+
+            }
+
+
+
+            int res=   JOptionPane.showConfirmDialog(ProductDetailFrame.this, "是否删除产品？（导致数据无法恢复）", "删除产品", JOptionPane.OK_CANCEL_OPTION);
+            if(res==JOptionPane.YES_OPTION)
+            {
+                new HdSwingWorker<Void,Void>(ProductDetailFrame.this)
+                {
+
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+
+                        return     apiManager.deleteProductLogic(detail.product.id);
+
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+                        if(data.isSuccess())
+                        {
+
+                            JOptionPane.showMessageDialog(ProductDetailFrame.this,"删除成功！");
+
+                            ProductDetailFrame.this.dispose();
+
+
+
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(ProductDetailFrame.this,data.message);
+                        }
+
+                    }
+                }.go();
+
+
+
+            }
+
+
+        }
+
+        @Override
+        public void close() {
+            setVisible(false);
+            dispose();
+        }
+
 
     }
 
-    @Override
-    public void close() {
-        setVisible(false);
-        dispose();
-    }
 
 
 
@@ -241,7 +250,7 @@ public class ProductDetailFrame extends BaseFrame implements  BasePanel.PanelLis
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            close();
+                            adapter.close();
                         }
                     });
 

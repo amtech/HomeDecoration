@@ -14,6 +14,7 @@
     <rowspec value="center:d:grow"/>
     <rowspec value="center:m:noGrow"/>
     <rowspec value="top:m:noGrow"/>
+    <rowspec value="top:m:noGrow"/>
     <rowspec value="center:m:noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
@@ -25,8 +26,10 @@
     <colspec value="left:30px:grow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
+    <colspec value="left:4dlu:grow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="604" height="580"/>
+      <xy x="20" y="20" width="779" height="580"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -42,7 +45,7 @@
       </component>
       <component id="64b2f" class="javax.swing.JTextArea" binding="ta_memo">
         <constraints>
-          <grid row="8" column="2" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="8" column="2" row-span="1" col-span="9" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
@@ -105,7 +108,7 @@
       </component>
       <scrollpane id="66670">
         <constraints>
-          <grid row="10" column="2" row-span="1" col-span="6" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="2" row-span="1" col-span="10" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -168,36 +171,9 @@
         </constraints>
         <properties/>
       </component>
-      <component id="85f24" class="javax.swing.JButton" binding="btn_save">
-        <constraints>
-          <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="保存"/>
-        </properties>
-      </component>
-      <component id="b6a3c" class="javax.swing.JButton" binding="btn_delete">
-        <constraints>
-          <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms defaultalign-horz="false"/>
-        </constraints>
-        <properties>
-          <text value="删除"/>
-        </properties>
-      </component>
-      <component id="3a54e" class="javax.swing.JButton" binding="btn_export">
-        <constraints>
-          <grid row="11" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="导出"/>
-        </properties>
-      </component>
       <component id="36441" class="javax.swing.JSeparator">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="10" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="0" row-span="1" col-span="11" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -205,7 +181,7 @@
       <grid id="6bb7d" binding="jp_log" layout-manager="GridLayoutManager" row-count="1" column-count="17" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="13" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="14" column="0" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
@@ -335,15 +311,81 @@
           </hspacer>
         </children>
       </grid>
-      <component id="7649e" class="javax.swing.JButton" binding="btn_resume">
+      <component id="30df5" class="javax.swing.JLabel" binding="icon_verify">
         <constraints>
-          <grid row="11" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
+          <grid row="2" column="10" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
         </constraints>
         <properties>
-          <text value="恢复数据"/>
+          <icon value="icons/verify.png"/>
+          <text value=""/>
         </properties>
       </component>
+      <grid id="48a32" binding="jp_verify" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="12" column="2" row-span="1" col-span="9" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <hspacer id="ffec2">
+            <constraints/>
+          </hspacer>
+          <component id="85f24" class="javax.swing.JButton" binding="btn_save">
+            <constraints/>
+            <properties>
+              <text value="      保存     "/>
+              <toolTipText value="未审核的报价单方可编辑"/>
+            </properties>
+          </component>
+          <hspacer id="9e751">
+            <constraints/>
+          </hspacer>
+          <component id="7649e" class="javax.swing.JButton" binding="btn_resume">
+            <constraints/>
+            <properties>
+              <text value="恢复数据"/>
+            </properties>
+          </component>
+          <hspacer id="b10e7">
+            <constraints/>
+          </hspacer>
+          <component id="7aa" class="javax.swing.JButton" binding="btn_verify">
+            <constraints/>
+            <properties>
+              <text value="保存并通过审核"/>
+              <toolTipText value="通过审核后，可以到处报价单，但不能再修改报价内容"/>
+            </properties>
+          </component>
+          <component id="d2ce8" class="javax.swing.JButton" binding="btn_unVerify">
+            <constraints/>
+            <properties>
+              <text value="撤销审核"/>
+              <toolTipText value="撤销审核，报价人员可以修改报价内容"/>
+            </properties>
+          </component>
+          <hspacer id="46079">
+            <constraints/>
+          </hspacer>
+          <component id="b6a3c" class="javax.swing.JButton" binding="btn_delete">
+            <constraints/>
+            <properties>
+              <text value="      删除     "/>
+            </properties>
+          </component>
+          <hspacer id="2625f">
+            <constraints/>
+          </hspacer>
+          <component id="3a54e" class="javax.swing.JButton" binding="btn_export">
+            <constraints/>
+            <properties>
+              <text value="      导出      "/>
+              <toolTipText value="只有已经审核的报价单才可导出"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

@@ -61,8 +61,41 @@ public  abstract  class BasePanel {
 
 
        public  void close();
+
+        public void verify();
+
+        public void unVerify();
     }
 
+
+
+    public static class PanelAdapter implements PanelListener
+    {
+        @Override
+        public void save() {
+
+        }
+
+        @Override
+        public void delete() {
+
+        }
+
+        @Override
+        public void close() {
+
+        }
+
+        @Override
+        public void verify() {
+
+        }
+
+        @Override
+        public void unVerify() {
+
+        }
+    }
 
 
 
