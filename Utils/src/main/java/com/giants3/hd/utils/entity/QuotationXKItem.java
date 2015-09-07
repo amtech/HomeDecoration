@@ -264,7 +264,10 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         unit=product.pUnitName;
         cost= FloatHelper.scale(product.cost);
-        price=FloatHelper.scale(product.fob);
+
+        //默认不带动fob
+        price=0;
+        //price=FloatHelper.scale(product.fob);
 
         volumeSize=FloatHelper.scale(product.getPackVolume(),3);
         weight=FloatHelper.scale(product.weight);
@@ -293,7 +296,10 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         unit2=product==null?"":product.pUnitName;
         cost2=product==null?0:FloatHelper.scale(product.cost);
-        price2=product==null?0:FloatHelper.scale(product.fob);
+
+        //默认不带动fob
+        price2=0;
+       // price2=product==null?0:FloatHelper.scale(product.fob);
 
         volumeSize2=product==null?0:FloatHelper.scale(product.getPackVolume());
         weight2=product==null?0:FloatHelper.scale(product.weight);

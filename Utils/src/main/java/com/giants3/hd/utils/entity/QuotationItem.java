@@ -139,7 +139,10 @@ public class QuotationItem implements Serializable,Valuable {
 
         unit=product.pUnitName;
         cost= FloatHelper.scale(product.cost);
-        price=FloatHelper.scale(product.fob);
+
+        //默认不带动fob
+        price=0;
+        //price=FloatHelper.scale(product.fob);
 
         volumeSize=product.getPackVolume();
         weight=FloatHelper.scale(product.weight);

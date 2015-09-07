@@ -104,7 +104,8 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             int lastIndex=item.unit.lastIndexOf("/");
             addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 6, rowUpdate);
 
-
+            //FOb
+            addNumber(writableSheet, item.price, 7, rowUpdate);
 
             //包装尺寸
             //内盒数

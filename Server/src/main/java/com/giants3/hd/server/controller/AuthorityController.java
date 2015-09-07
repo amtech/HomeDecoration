@@ -111,6 +111,18 @@ public class AuthorityController extends  BaseController{
         for(Authority authority : authorities)
         {
             authority.user=user;
+
+         Authority findSameAuthority=   authorityRepository.findFirstByUser_IdEqualsAndModule_IdEquals(authority.user.id, authority.module.id);
+
+            //保证数据新增或者修改 不存在重复增加
+            if(findSameAuthority==null)
+            {
+                authority.id=-1;
+            }else
+            {
+                authority.id=findSameAuthority.id;
+            }
+
             newData.add( authorityRepository.save(authority));
         }
 

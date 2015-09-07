@@ -20,5 +20,5 @@ public interface AuthorityRepository extends JpaRepository<Authority,Long> {
 
 
    // public List<Authority> findByUser_idEqualsRightJointModule(long userId);
-
+   public  Authority  findFirstByUser_IdEqualsAndModule_IdEquals(long userId,long moduleId);
 }
