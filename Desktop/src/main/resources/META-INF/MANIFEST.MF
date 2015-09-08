@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.17
-Manifest-Version_Number: 17
-Manifest-Version_Spec: 1:修正普通报价单导出无fob价格错误  2 报价单默认无fob价格。
+Manifest-Version: 1.0.18
+Manifest-Version_Number: 18
+Manifest-Version_Spec: 1:报价单增加删除行，添加行。2: 报价单列表增加审核标记 3: 增加临时客户报价单公司名称录入
 Main-Class: com.giants.hd.desktop.frames.Main
 

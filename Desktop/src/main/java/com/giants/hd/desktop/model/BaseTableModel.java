@@ -359,4 +359,30 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
         }
     }
+
+
+    /**
+     * 追加新行
+     * @param appendCount
+     */
+    public   void appendRows(int appendCount)
+    {
+
+        for(int i=0;i<appendCount;i++) {
+            T newItem = null;
+            try {
+                newItem = itemClass.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            datas.add(newItem);
+        }
+        fireTableDataChanged();
+
+
+
+    }
 }

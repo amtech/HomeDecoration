@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -176,20 +177,69 @@ public class QuotationController extends BaseController {
         updateQuotationLog(savedQuotation, user);
 
         long newId = savedQuotation.id;
+        {
+
+        //find items that removed
+        List<QuotationItem> oldQuotationItems = quotationItemRepository.findByQuotationIdEquals(newId);
 
 
+        List<QuotationItem> removeItems = new ArrayList<>();
+        for (QuotationItem oldQuotationItem : oldQuotationItems) {
+            boolean find = false;
+            for (QuotationItem item : quotationDetail.items) {
+
+                if (oldQuotationItem.id == item.id) {
+                    find = true;
+                    break;
+                }
+            }
+
+            if (!find) {
+                removeItems.add(oldQuotationItem);
+            }
+        }
+        //移除被删除的记录
+        quotationItemRepository.deleteInBatch(removeItems);
+        removeItems.clear();
         for (QuotationItem item : quotationDetail.items) {
 
             item.quotationId = newId;
-            quotationItemRepository.save(item);
+
         }
+            quotationItemRepository.save( quotationDetail.items);
+    }
 
-        for (QuotationXKItem item : quotationDetail.XKItems) {
+        {
+            //find items that removed
+            List<QuotationXKItem> oldQuotationXKItems = quotationXKItemRepository.findByQuotationIdEquals(newId);
 
-            item.quotationId = newId;
-            quotationXKItemRepository.save(item);
+
+            List<QuotationXKItem> removeXKItems = new ArrayList<>();
+            for (QuotationXKItem oldQuotationXKItem : oldQuotationXKItems) {
+                boolean find = false;
+                for (QuotationXKItem item : quotationDetail.XKItems) {
+
+                    if (oldQuotationXKItem.id == item.id) {
+                        find = true;
+                        break;
+                    }
+                }
+
+                if (!find) {
+                    removeXKItems.add(oldQuotationXKItem);
+                }
+            }
+            //移除被删除的记录
+            quotationXKItemRepository.deleteInBatch(removeXKItems);
+            removeXKItems.clear();
+            for (QuotationXKItem item : quotationDetail.XKItems) {
+
+                item.quotationId = newId;
+
+            }
+
+            quotationXKItemRepository.save( quotationDetail.XKItems);
         }
-
 
         return detail(newId);
 

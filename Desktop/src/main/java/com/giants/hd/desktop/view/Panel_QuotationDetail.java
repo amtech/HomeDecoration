@@ -2,6 +2,7 @@ package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
+import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.api.ApiManager;
@@ -12,9 +13,9 @@ import com.giants.hd.desktop.interf.ComonSearch;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
-import com.giants.hd.desktop.model.ProductTableModel;
-import com.giants.hd.desktop.model.QuotationItemTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.widget.QuotationItemPopMenu;
+import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
 import com.giants3.hd.utils.RemoteData;
@@ -24,14 +25,14 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.Product2;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
-import com.giants.hd.desktop.model.Productable;
-import com.giants.hd.desktop.model.QuotationItemXKTableModel;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -257,6 +258,57 @@ public class Panel_QuotationDetail extends BasePanel {
         //审核状态默认不显示
         icon_verify.setVisible(false);
         jp_verify.setVisible(false);
+
+        tb.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            private void showMenu(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    JTable source = (JTable) e.getSource();
+
+                    JPopupMenu menu=new QuotationItemPopMenu(tb, new QuotationItemPopMenu.TableMenuLister() {
+                        @Override
+                        public void onTableMenuClick(int index, BaseTableModel tableModel, int[] rowIndex) {
+
+                            switch (index) {
+
+
+                                case QuotationItemPopMenu.ITEM_INSERT:
+
+                                    tableModel.addNewRow(rowIndex[0]);
+
+                                    break;
+                                case QuotationItemPopMenu.ITEM_DELETE:
+
+                                    tableModel.deleteRows(rowIndex);
+                                    break;
+                                case QuotationItemPopMenu.ITEM_APPEND:
+                                    tableModel.appendRows(10);
+
+                            }
+
+                        }
+                    });
+
+
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+
+                }
+            }
+        });
     }
 
 
