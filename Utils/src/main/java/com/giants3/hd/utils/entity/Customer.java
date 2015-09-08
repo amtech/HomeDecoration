@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity(name = "T_Customer")
 public class Customer implements Serializable ,Valuable{
+    public static final String CODE_TEMP = "000";
     /**
      * 单位 id
      */

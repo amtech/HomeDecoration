@@ -36,6 +36,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
+import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -68,7 +69,8 @@ public class Panel_QuotationDetail extends BasePanel {
     private JLabel icon_verify;
     private JButton btn_unVerify;
     private JPanel jp_verify;
-
+    private JTextField jtf_company;
+    private JLabel lb_company;
     public QuotationDetail data;
 
 
@@ -227,6 +229,24 @@ public class Panel_QuotationDetail extends BasePanel {
                 if (listener != null) {
                     listener.verify();
                 }
+            }
+        });
+
+
+        cb_customer.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange()==ItemEvent.SELECTED)
+                {
+                    Customer customer= (Customer)e.getItem();
+                    jtf_company.setVisible(customer.code.equals(Customer.CODE_TEMP));
+                    lb_company.setVisible(customer.code.equals(Customer.CODE_TEMP));
+                    getWindow(jtf_company).pack();
+
+                }
+
+
+
             }
         });
 
@@ -571,6 +591,7 @@ public class Panel_QuotationDetail extends BasePanel {
         jtf_number.setText(quotation.qNumber);
         qDate.getJFormattedTextField().setText(quotation.qDate);
         vDate.getJFormattedTextField().setText(quotation.vDate);
+        jtf_company.setText(quotation.companyName);
 
         int index=-1;
 
@@ -721,6 +742,7 @@ public class Panel_QuotationDetail extends BasePanel {
         quotation.qDate=qDate.getJFormattedTextField().getText().trim();
         quotation.vDate=vDate.getJFormattedTextField().getText().trim();
         quotation.memo=ta_memo.getText();
+        quotation.companyName=jtf_company.getText();
         data.items.clear();
         data.items.addAll(model.getValuableDatas());
         data.XKItems.clear();

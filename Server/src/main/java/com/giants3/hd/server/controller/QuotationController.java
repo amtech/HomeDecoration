@@ -68,9 +68,9 @@ public class QuotationController extends BaseController {
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         Page<Quotation> pageValue;
         if (salesmanId < 0) {
-            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQNumberDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
         } else {
-            pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQNumberDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
+            pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
 
         }
         List<Quotation> products = pageValue.getContent();

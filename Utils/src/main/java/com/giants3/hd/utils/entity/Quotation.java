@@ -38,6 +38,13 @@ public class Quotation  implements Serializable {
      */
     @Basic
     public String customerName ="" ;
+
+
+    /**
+     * 公司名称，当且仅当客户是临时客户时 手动录入  即customerCode=‘000’
+     */
+    @Basic
+    public String companyName="";
     /**
      * 报价日期
      */
@@ -121,6 +128,8 @@ public class Quotation  implements Serializable {
             return false;
         if (customerName != null ? !customerName.equals(quotation.customerName) : quotation.customerName != null)
             return false;
+        if (companyName != null ? !companyName.equals(quotation.companyName) : quotation.companyName != null)
+            return false;
         if (qDate != null ? !qDate.equals(quotation.qDate) : quotation.qDate != null) return false;
         if (qNumber != null ? !qNumber.equals(quotation.qNumber) : quotation.qNumber != null) return false;
         if (vDate != null ? !vDate.equals(quotation.vDate) : quotation.vDate != null) return false;
@@ -137,6 +146,7 @@ public class Quotation  implements Serializable {
         result = 31 * result + (int) (customerId ^ (customerId >>> 32));
         result = 31 * result + (customerCode != null ? customerCode.hashCode() : 0);
         result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
+        result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
         result = 31 * result + (qDate != null ? qDate.hashCode() : 0);
         result = 31 * result + (qNumber != null ? qNumber.hashCode() : 0);
         result = 31 * result + (vDate != null ? vDate.hashCode() : 0);
