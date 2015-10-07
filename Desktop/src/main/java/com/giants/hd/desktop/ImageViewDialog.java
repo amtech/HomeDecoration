@@ -1,6 +1,8 @@
 package com.giants.hd.desktop;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants.hd.desktop.interf.Iconable;
+import com.giants.hd.desktop.local.HdPictureWorker;
+import com.giants3.hd.domain.api.HttpUrl;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -46,80 +48,35 @@ public class ImageViewDialog extends JDialog {
 
         picture.setText("正在加载图片....");
 
-        new SwingWorker<BufferedImage,String>()
-        {
-
-            @Override
-            protected void done() {
-                super.done();
-
-                BufferedImage image= null;
-                try {
-                    image = get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                if(null!=image) {
-
-
-                    picture.setText("");
-                    Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
-
-                  int width=  image.getWidth();
-                    int height=image.getHeight();
-
-
-                    while (!(width<dimension.width&&height<dimension.height))
-                    {
-                        width= (int) (width/1.1f);height = (int) (height/1.1f);
-                    }
+       final Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
 
 
-                    try {
-                      BufferedImage  newImage= resizeImage (image, width, height, image.getType());
+       new HdPictureWorker(new Iconable() {
+           @Override
+           public void setIcon(ImageIcon icon) {
 
-                        image=newImage;
+               if(icon==null)
+               {
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    ImageIcon imageIcon=new ImageIcon(image);
-                    picture.setIcon(imageIcon);
+                   picture.setText("图片加载失败");
+
+               }else
+               {
+
+                   picture.setIcon(icon);
 
 
 
-                   setSize(new Dimension(width, height));
-                   setLocation((dimension.width - width) / 2, (dimension.height - height) / 2);
+                   setSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+                   setLocation((dimension.width - icon.getIconWidth()) / 2, (dimension.height -  icon.getIconHeight()) / 2);
+               }
 
 
 
 
-
-
-
-
-                }else
-                {
-                    picture.setText("图片加载失败");
-
-                }
-                //ImageViewDialog.this.pack();
-
-
-            }
-
-            @Override
-            protected BufferedImage doInBackground() throws Exception {
-                return ImageIO.read(new URL(url));
-            }
-        }.execute();
-
-
-
+           }
+       },dimension.getWidth(),dimension.getHeight(),url).execute();
 
 
 
@@ -159,7 +116,7 @@ public class ImageViewDialog extends JDialog {
      * @param url
      */
     public static void showDialog(Window frame,String url) {
-        showDialog(frame,url,url.substring(url.lastIndexOf("/")+1,url.lastIndexOf(".")));
+        showDialog(frame, url, url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf(".")));
 
     }
 
@@ -176,11 +133,5 @@ public class ImageViewDialog extends JDialog {
     }
 
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
-        BufferedImage resizedImage = new BufferedImage(width, height, type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width, height, null);
-        g.dispose();
-        return resizedImage;
-    }
+
 }

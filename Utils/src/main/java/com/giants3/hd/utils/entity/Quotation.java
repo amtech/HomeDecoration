@@ -1,7 +1,10 @@
 package com.giants3.hd.utils.entity;
 
+import com.giants3.hd.utils.DateFormats;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -158,5 +161,24 @@ public class Quotation  implements Serializable {
         result = 31 * result + (quotationTypeName != null ? quotationTypeName.hashCode() : 0);
         result = 31 * result + (isVerified ? 1 : 0);
         return result;
+    }
+
+
+    /**
+     * 判断是否过期
+     * @return
+     */
+    public  boolean isOverdue()
+    {
+
+        if(id<=1) return false;
+
+
+      String nowDate=  DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime());
+
+        return nowDate.compareTo(vDate)>=1;
+
+
+
     }
 }

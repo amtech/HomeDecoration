@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
@@ -21,7 +21,7 @@ public class Report_Excel_NORMAL extends ExcelReportor {
     }
 
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet) throws WriteException, IOException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException {
 
 
         int defaultRowCount=7;
@@ -68,6 +68,9 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
 
+
+
+
             int rowUpdate=startItemRow+i;
             QuotationItem item=quotationDetail.items.get(i);
 
@@ -79,7 +82,7 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
             //读取咸康数据
-            //  ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
+            //ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
 

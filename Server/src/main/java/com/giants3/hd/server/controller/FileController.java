@@ -2,8 +2,10 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
+import de.greenrobot.common.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -16,6 +18,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * 文件上传控制类
@@ -28,6 +31,16 @@ public class FileController  extends BaseController{
 
     @Value("${filepath}")
     private String productFilePath;
+
+
+
+    //临时文件夹
+    @Value("${tempfilepath}")
+    private String tempFilePath;
+
+    //附件文件夹
+    @Value("${attachfilepath}")
+    private String attachfilepath;
 
     @Value("${materialfilepath}")
     private String materialFilePath;
@@ -104,6 +117,10 @@ public class FileController  extends BaseController{
     }
 
 
+
+
+
+
     /**
      * 处理上传的文件  存放到文件中。
      *
@@ -130,6 +147,7 @@ public class FileController  extends BaseController{
             stream.write(bytes);
             stream.close();
             out.close();
+
             return  wrapMessageData("成功上传文件到" + newFilePath);
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,6 +165,43 @@ public class FileController  extends BaseController{
 
 
         FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,pVersion,type));
+        //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
+
+        return resource;
+    }
+
+
+    /**
+     * 读取临时文件
+     * @param name
+     * @param type
+     * @return
+     */
+
+    @RequestMapping(value="/download/temp/{name}", method=RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getTempFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+
+
+        FileSystemResource resource= new FileSystemResource( tempFilePath+name+"."+type);
+        //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
+
+        return resource;
+    }
+
+    /**
+     * 读取附件文件
+     * @param name
+     * @param type
+     * @return
+     */
+
+    @RequestMapping(value="/download/attach/{name}", method=RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getAttachFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+
+
+        FileSystemResource resource= new FileSystemResource( attachfilepath+name+"."+type);
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
@@ -259,4 +314,29 @@ public class FileController  extends BaseController{
         return message;
     }
 
+
+    /**
+     * 临时图片上传
+     * @param file
+     * @return
+     */
+    @RequestMapping(value="/uploadTemp", method=RequestMethod.POST)
+    public @ResponseBody
+    RemoteData<String> handleMaterialUpload(  @RequestParam("file") MultipartFile file){
+
+        if (!file.isEmpty()) {
+
+
+
+            String tempFileName="TEMP_"+Calendar.getInstance().getTimeInMillis();
+            String newPath=tempFilePath+tempFileName +".JPG";
+
+            RemoteData<Void> result= handleFileUpload(file, newPath);
+            if(result.isSuccess())
+                return wrapData(tempFileName);
+            return wrapError("上传失败");
+        } else {
+            return wrapError("You failed to upload " + file.getName() + " because the file was empty.");
+        }
+    }
 }

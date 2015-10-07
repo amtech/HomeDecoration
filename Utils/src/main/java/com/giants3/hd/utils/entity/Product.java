@@ -5,6 +5,7 @@ import com.giants3.hd.utils.FloatHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 产品表
@@ -299,9 +300,11 @@ public class Product implements Serializable {
 	public String  mirrorSize="";
 
 
-
-
-
+	/**
+	 * 附件列表   以分号隔开。
+	 */
+	@Basic
+	public String attaches="";
 
 
 
@@ -759,6 +762,8 @@ public class Product implements Serializable {
 		if (Float.compare(product.cost4, cost4) != 0) return false;
 		if (memo != null ? !memo.equals(product.memo) : product.memo != null) return false;
 
+		if (attaches != null ? !attaches.equals(product.attaches) : product.attaches != null) return false;
+
 		if (url != null ? !url.equals(product.url) : product.url != null) return false;
 		if (pClassName != null ? !pClassName.equals(product.pClassName) : product.pClassName != null) return false;
 		if (pUnitId != null ? !pUnitId.equals(product.pUnitId) : product.pUnitId != null) return false;
@@ -780,7 +785,7 @@ public class Product implements Serializable {
 	@Override
 	public int hashCode() {
 		int result = memo != null ? memo.hashCode() : 0;
-
+		result = 31 * result + (photo != null ? Arrays.hashCode(photo) : 0);
 		result = 31 * result + (url != null ? url.hashCode() : 0);
 		result = 31 * result + (int) (pClassId ^ (pClassId >>> 32));
 		result = 31 * result + (pClassName != null ? pClassName.hashCode() : 0);
@@ -802,7 +807,7 @@ public class Product implements Serializable {
 		result = 31 * result + (rDate != null ? rDate.hashCode() : 0);
 		result = 31 * result + (spec != null ? spec.hashCode() : 0);
 		result = 31 * result + (pVersion != null ? pVersion.hashCode() : 0);
-
+		result = 31 * result + (int) (lastPhotoUpdateTime ^ (lastPhotoUpdateTime >>> 32));
 		result = 31 * result + (constitute != null ? constitute.hashCode() : 0);
 		result = 31 * result + (paintCost != +0.0f ? Float.floatToIntBits(paintCost) : 0);
 		result = 31 * result + (paintWage != +0.0f ? Float.floatToIntBits(paintWage) : 0);
@@ -811,6 +816,8 @@ public class Product implements Serializable {
 		result = 31 * result + (assembleCost != +0.0f ? Float.floatToIntBits(assembleCost) : 0);
 		result = 31 * result + (conceptusCost != +0.0f ? Float.floatToIntBits(conceptusCost) : 0);
 		result = 31 * result + (conceptusWage != +0.0f ? Float.floatToIntBits(conceptusWage) : 0);
+		result = 31 * result + (repairCost != +0.0f ? Float.floatToIntBits(repairCost) : 0);
+		result = 31 * result + (isXK ? 1 : 0);
 		result = 31 * result + (xiankang != null ? xiankang.hashCode() : 0);
 		result = 31 * result + (packCost != +0.0f ? Float.floatToIntBits(packCost) : 0);
 		result = 31 * result + (packWage != +0.0f ? Float.floatToIntBits(packWage) : 0);
@@ -826,6 +833,7 @@ public class Product implements Serializable {
 		result = 31 * result + insideBoxQuantity;
 		result = 31 * result + (cost4 != +0.0f ? Float.floatToIntBits(cost4) : 0);
 		result = 31 * result + (mirrorSize != null ? mirrorSize.hashCode() : 0);
+		result = 31 * result + (attaches != null ? attaches.hashCode() : 0);
 		return result;
 	}
 }

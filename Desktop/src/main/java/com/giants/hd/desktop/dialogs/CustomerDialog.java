@@ -2,7 +2,7 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.model.CustomerModel;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Customer;

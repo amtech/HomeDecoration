@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.api.CacheManager;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants3.hd.utils.ObjectUtils;
@@ -10,7 +10,6 @@ import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 
-import javax.management.StringValueExp;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

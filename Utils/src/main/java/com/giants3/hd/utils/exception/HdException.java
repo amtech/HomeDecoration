@@ -1,9 +1,6 @@
 package com.giants3.hd.utils.exception;
 
-/**
- * 所有自定义异常的基类
- *
- */
+
 public class HdException extends  Exception {
 
 

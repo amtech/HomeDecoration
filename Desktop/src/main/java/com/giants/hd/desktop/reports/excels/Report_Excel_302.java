@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
@@ -8,6 +8,7 @@ import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class Report_Excel_302 extends ExcelReportor {
 
 
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet) throws WriteException, IOException, HdException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
 
 
 

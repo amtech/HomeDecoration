@@ -1,7 +1,5 @@
 package com.giants3.hd.utils;
 
-import com.giants3.hd.utils.entity.Unit;
-
 /**
  * 字符串的功能类。
  */
@@ -19,6 +17,8 @@ public class StringUtils {
     public static final String spec_separator="*";
 
     public static final String spec_separator_pattern="\\*";
+
+    public static final String STRING_SPLIT_COMMON =";";
 
 
     /**
@@ -216,6 +216,45 @@ public class StringUtils {
 
         }
         return -1;
+    }
+
+
+
+    public static final String[] split(String string)
+    {
+
+        if(StringUtils.isEmpty(string)) return new String[]{};
+        return string.split(STRING_SPLIT_COMMON);
+
+    }
+
+    public static final String combine(String[] strings )
+    {
+
+
+        StringBuilder stringBuilder=new StringBuilder();
+        for(String s:strings)
+            stringBuilder.append(s).append(STRING_SPLIT_COMMON);
+        if(stringBuilder.length()>0)
+            stringBuilder.setLength(stringBuilder.length()-1);
+
+        return stringBuilder.toString();
+    }
+
+
+    public static final <T> String combine(Iterable<T> strings )
+    {
+
+
+
+
+        StringBuilder stringBuilder=new StringBuilder();
+        for(T s:strings)
+            stringBuilder.append(s).append(STRING_SPLIT_COMMON);
+        if(stringBuilder.length()>0)
+            stringBuilder.setLength(stringBuilder.length()-1);
+
+        return stringBuilder.toString();
     }
 
 }

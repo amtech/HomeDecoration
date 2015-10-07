@@ -116,9 +116,9 @@ public class QuotationController extends BaseController {
         QuotationDetail detail = new QuotationDetail();
         detail.quotation = quotation;
         detail.quotationLog = quotationLogRepository.findFirstByQuotationIdEquals(id);
-        detail.items = quotationItemRepository.findByQuotationIdEquals(id);
+        detail.items = quotationItemRepository.findByQuotationIdEqualsOrderByIIndex(id);
 
-        detail.XKItems = quotationXKItemRepository.findByQuotationIdEquals(id);
+        detail.XKItems = quotationXKItemRepository.findByQuotationIdEqualsOrderByIIndex(id);
 
 
         return detail;
@@ -180,7 +180,7 @@ public class QuotationController extends BaseController {
         {
 
         //find items that removed
-        List<QuotationItem> oldQuotationItems = quotationItemRepository.findByQuotationIdEquals(newId);
+        List<QuotationItem> oldQuotationItems = quotationItemRepository.findByQuotationIdEqualsOrderByIIndex(newId);
 
 
         List<QuotationItem> removeItems = new ArrayList<>();
@@ -201,9 +201,11 @@ public class QuotationController extends BaseController {
         //移除被删除的记录
         quotationItemRepository.deleteInBatch(removeItems);
         removeItems.clear();
+            int newIndex=0;
         for (QuotationItem item : quotationDetail.items) {
 
             item.quotationId = newId;
+            item.iIndex=newIndex++;
 
         }
             quotationItemRepository.save( quotationDetail.items);
@@ -211,7 +213,7 @@ public class QuotationController extends BaseController {
 
         {
             //find items that removed
-            List<QuotationXKItem> oldQuotationXKItems = quotationXKItemRepository.findByQuotationIdEquals(newId);
+            List<QuotationXKItem> oldQuotationXKItems = quotationXKItemRepository.findByQuotationIdEqualsOrderByIIndex(newId);
 
 
             List<QuotationXKItem> removeXKItems = new ArrayList<>();
@@ -232,10 +234,13 @@ public class QuotationController extends BaseController {
             //移除被删除的记录
             quotationXKItemRepository.deleteInBatch(removeXKItems);
             removeXKItems.clear();
+
+
+            int newIndex=0;
             for (QuotationXKItem item : quotationDetail.XKItems) {
 
                 item.quotationId = newId;
-
+                item.iIndex=newIndex++;
             }
 
             quotationXKItemRepository.save( quotationDetail.XKItems);

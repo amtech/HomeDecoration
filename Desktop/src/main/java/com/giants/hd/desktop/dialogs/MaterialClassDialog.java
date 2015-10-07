@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.MaterialClassTableModel;

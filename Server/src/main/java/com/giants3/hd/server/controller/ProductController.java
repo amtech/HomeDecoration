@@ -8,6 +8,7 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +60,16 @@ public class ProductController extends BaseController {
 
     @Value("${deleteProductFilePath}")
     private String deleteProductPath;
+
+
+    //临时文件夹
+    @Value("${tempfilepath}")
+    private String tempFilePath;
+
+
+    //附件文件夹
+    @Value("${attachfilepath}")
+    private String attachfilepath;
 
     @Autowired
     private QuotationItemRepository quotationItemRepository;
@@ -98,7 +110,37 @@ public class ProductController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/loadByNameBetween", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<Product> loadByNameBetween(@RequestParam(value = "startName") String startName
+            , @RequestParam(value = "endName") String  endName , @RequestParam(value = "withCopy") boolean  withCopy
 
+    ) throws UnsupportedEncodingException {
+
+
+
+        List<Product> pageValue = productRepository.findByNameBetweenOrderByName(startName, endName);
+        if(withCopy) {
+            return wrapData( pageValue);
+        }
+
+
+        //！withcopy  表示版本号为空
+         List<Product> result=new ArrayList<>();
+
+        for(Product product:pageValue)
+        {
+           if(StringUtils.isEmpty( product.pVersion))
+           {
+               result.add(product);
+           }
+        }
+
+        return wrapData( result);
+
+
+    }
 
     @RequestMapping(value = "/searchByName", method = {RequestMethod.GET, RequestMethod.POST})
     public
@@ -127,6 +169,38 @@ public class ProductController extends BaseController {
 
 
         return wrapData( pageValue);
+
+
+    }
+
+
+
+    @RequestMapping(value = "/findByIds", method = {  RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<Product> searchByName(@RequestBody Set<Long> ids
+
+
+    ) throws UnsupportedEncodingException {
+
+
+        List<Product> products=new ArrayList<>();
+
+        for(Long id:ids)
+        {
+
+            Product product=productRepository.findOne(id);
+            if(product!=null)
+             products.add(product);
+        }
+
+
+
+
+
+
+
+        return wrapData( products);
 
 
     }
@@ -291,6 +365,9 @@ public class ProductController extends BaseController {
 
         long productId = productDetail.product.id;
 
+
+
+
         //新增加的产品数据
         Product newProduct = productDetail.product;
 
@@ -322,6 +399,18 @@ public class ProductController extends BaseController {
 
 
         updateProductPhotoTime(newProduct);
+
+
+
+        //检查附件数据是否有改变
+        Product oldProduct=productRepository.findOne(productId);
+        String oldAttachFiles=oldProduct==null?"":oldProduct.attaches;
+        if(!newProduct.attaches.equals(oldAttachFiles))
+        {
+
+            //更新附件文件
+            updateProductAttaches(newProduct,oldAttachFiles);
+        }
 
 
 
@@ -418,6 +507,70 @@ public class ProductController extends BaseController {
 
 
         return returnFindProductDetailById(productId);
+    }
+
+
+    /**
+     *  更新产品附件
+      */
+    private  void updateProductAttaches(Product product,String oldAttachFiles)
+    {
+
+            String[] oldAttaches= StringUtils.split(oldAttachFiles);
+            String[] newAttaches=StringUtils.split(product.attaches);
+            for(String oldAttach:oldAttaches)
+            {
+
+                boolean find=false;
+                for(String newAttach:newAttaches)
+                {
+                    if(oldAttach.equals(newAttach))
+                    {
+                        find=true;
+                        break;
+                    }
+                }
+                if(!find)
+                {
+                    //移除文件
+
+                    File file=new File(attachfilepath+oldAttach);
+                    if(file.exists())
+                    {
+                        file.delete();
+                    }
+                }
+
+            }
+
+
+        int length = newAttaches.length;
+        for (int i = 0; i < length; i++) {
+
+
+            String newAttach=newAttaches[i];
+            if(newAttach.startsWith("TEMP_"))
+            {
+                //移动至附件文件夹
+                File sourceFile=new File(tempFilePath+newAttach+".jpg");
+                if(sourceFile.exists())
+                {
+                    String newFileName=product.name+"_"+product.pVersion+"_"+Calendar.getInstance().getTimeInMillis();
+                    com.giants3.hd.utils.FileUtils.copyFile(new File(attachfilepath+newFileName+".jpg"),sourceFile);
+                    sourceFile.delete();
+                    newAttaches[i]=newFileName;
+                }
+
+            }
+
+
+        }
+        product.attaches=StringUtils.combine(newAttaches);
+
+
+
+
+
     }
 
 

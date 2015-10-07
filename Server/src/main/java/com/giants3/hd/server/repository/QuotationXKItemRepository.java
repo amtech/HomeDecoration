@@ -18,7 +18,7 @@ public interface QuotationXKItemRepository extends JpaRepository<QuotationXKItem
 
    public QuotationXKItem findFirstByProductIdEquals(long productId);
 
-   public List<QuotationXKItem>  findByQuotationIdEquals(long quotationId);
+   public List<QuotationXKItem> findByQuotationIdEqualsOrderByIIndex(long quotationId);
    int  deleteByQuotationIdEquals(long quotationId);
 
    @Modifying

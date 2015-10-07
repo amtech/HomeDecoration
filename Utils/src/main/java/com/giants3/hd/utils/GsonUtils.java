@@ -24,7 +24,6 @@ public class GsonUtils {
     {
 
         try{
-
             return gson.fromJson(json,typeOfT);}catch (Throwable  e)
         {
 

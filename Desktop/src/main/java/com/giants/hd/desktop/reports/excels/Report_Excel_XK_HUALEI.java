@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.reports.QuotationFile;
-import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.noEntity.ProductDetail;
@@ -26,7 +26,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
     }
 
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet) throws WriteException, IOException, HdException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
 
 
 
@@ -95,8 +95,8 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
             //读取咸康数据
             ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
-            //读取咸康数据
-            ProductDetail productDetail2=    apiManager.loadProductDetail(item.productId2).datas.get(0);
+//            //读取咸康数据
+//            ProductDetail productDetail2=    apiManager.loadProductDetail(item.productId2).datas.get(0);
 
             //行号
             label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
@@ -256,7 +256,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 
 
                 //加强包装描述
-            label1 = new Label(41, rowUpdate,  String.valueOf(productDetail2.product.xiankang.pack_memo) ,format);
+            label1 = new Label(41, rowUpdate,  String.valueOf(item.memo) ,format);
             writableSheet.addCell(label1);
 
             //几个装

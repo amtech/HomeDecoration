@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.api.CacheManager;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.PackMaterialClassTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 
 

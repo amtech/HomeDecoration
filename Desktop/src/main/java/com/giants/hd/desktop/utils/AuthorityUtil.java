@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.utils;
 
-import com.giants.hd.desktop.api.CacheManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.entity.Authority;
 import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity.User;
@@ -459,5 +459,10 @@ public class AuthorityUtil {
     public boolean verifyQuotation() {
         return isVerifiable(Module.NAME_QUOTATION);
 
+    }
+
+    public boolean viewProductReport() {
+
+        return isViewable(Module.NAME_PRODUCT_REPORT);
     }
 }

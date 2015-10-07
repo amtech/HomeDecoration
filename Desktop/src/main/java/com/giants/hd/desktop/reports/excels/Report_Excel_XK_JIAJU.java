@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.noEntity.ProductDetail;
@@ -25,7 +25,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
     }
 
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet) throws WriteException, IOException, HdException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
 
         int defaultRowCount=10;
 

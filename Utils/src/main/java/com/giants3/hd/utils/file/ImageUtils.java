@@ -4,6 +4,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -25,6 +26,11 @@ public class ImageUtils {
     //材料微缩图尺寸
     public static final int MAX_MATERIAL_MINIATURE_WIDTH =50;
     public static final int MAX_MATERIAL_MINIATURE_HEIGHT =50;
+
+
+
+    public static  ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    public static  MemoryCacheImageOutputStream memoryCacheImageOutputStream=new MemoryCacheImageOutputStream(buffer);
 
     /**
      * 微缩产品图片
@@ -184,15 +190,18 @@ public class ImageUtils {
             //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
             g.drawImage(img, 0, 0, newWidth, newHeight, null);
             g.dispose();
-
             img.flush();
 
 
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            ImageIO.write(imageBuff, preserveAlpha ? "png" : "jpg", buffer);
+            memoryCacheImageOutputStream.reset();
+            buffer.reset();
+            ImageIO.write(imageBuff, preserveAlpha ? "png" : "jpg", memoryCacheImageOutputStream);
             imageBuff.flush();
+            memoryCacheImageOutputStream.flush();
+            memoryCacheImageOutputStream.reset();
             byte[] result= buffer.toByteArray();
-            buffer.close();
+            buffer.flush();;
+            buffer.reset();
             return result;
         } catch (IOException e) {
             throw HdException.create(HdException.FAIL_SCALE_IMAGE,e);

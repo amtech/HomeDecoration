@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_CopyProduct;
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants.hd.desktop.viewImpl.BasePanel;
+import com.giants.hd.desktop.viewImpl.Panel_CopyProduct;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.noEntity.ProductDetail;

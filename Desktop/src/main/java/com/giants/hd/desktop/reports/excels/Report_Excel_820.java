@@ -2,7 +2,7 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants.hd.desktop.utils.AccumulateMap;
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -66,7 +66,7 @@ public class Report_Excel_820 extends ExcelReportor {
 
 //            Label       label;
 //
-//            jxl.write.Number num ;
+//            jxl.jxl.biff.biff.Number num ;
 //            WritableImage image;
             // 插入日期
 

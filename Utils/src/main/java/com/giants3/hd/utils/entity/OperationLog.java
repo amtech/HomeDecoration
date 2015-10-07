@@ -2,7 +2,7 @@ package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

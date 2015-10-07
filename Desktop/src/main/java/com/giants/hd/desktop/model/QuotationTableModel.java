@@ -31,6 +31,7 @@ public class QuotationTableModel extends BaseTableModel<Quotation> {
 
     private BufferedImage icon_verify_small;
     private BufferedImage icon_unverify_small=null;
+    private BufferedImage icon_overdue_small=null;
 
     @Inject
     public QuotationTableModel() {
@@ -39,6 +40,7 @@ public class QuotationTableModel extends BaseTableModel<Quotation> {
         try {
             icon_verify_small=ImageIO.read(((URLClassLoader)getClass().getClassLoader()).findResource("icons/verify_small.png"));
             icon_unverify_small=ImageIO.read(((URLClassLoader)getClass().getClassLoader()).findResource("icons/unverify_small.png"));
+            icon_overdue_small=ImageIO.read(((URLClassLoader)getClass().getClassLoader()).findResource("icons/overdue_small.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +72,7 @@ public class QuotationTableModel extends BaseTableModel<Quotation> {
         {
 
 
-                    return new ImageIcon(quotation.isVerified?icon_verify_small:icon_unverify_small);
+                    return new ImageIcon( quotation.isOverdue()?icon_overdue_small:quotation.isVerified?icon_verify_small:icon_unverify_small);
 
 
         }

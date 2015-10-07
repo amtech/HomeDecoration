@@ -8,9 +8,13 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
 dependencies {
 
-
+    testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
     compile 'de.greenrobot:java-common:2.0.0'
     compile 'com.google.code.gson:gson:1.7.2'

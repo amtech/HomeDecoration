@@ -122,8 +122,14 @@ public class QuotationItem implements Serializable,Valuable {
 
 
     @Basic
-
     public String memo;
+
+
+    /**
+     * 序号字段   该字段目前不参与equals
+     */
+    @Basic
+    public int  iIndex;
 
     public void updateProduct(Product product) {
 
@@ -141,7 +147,7 @@ public class QuotationItem implements Serializable,Valuable {
         cost= FloatHelper.scale(product.cost);
 
         //默认不带动fob
-        price=0;
+       // price=0;
         //price=FloatHelper.scale(product.fob);
 
         volumeSize=product.getPackVolume();

@@ -57,7 +57,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
 
         /**
-         * Sets the {@code Gson} for this view. If not set, a default
+         * Sets the {@code Gson} for this viewImpl. If not set, a default
          * {@link Gson#Gson() Gson} is used.
          * <p>
          * Setting a custom-configured {@code Gson} is one way to take further
@@ -80,7 +80,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         }
 
         /**
-         * Indicates whether the JSON output by this view should be prefixed with
+         * Indicates whether the JSON output by this viewImpl should be prefixed with
          * "{} &&". Default is false.
          * <p>
          * Prefixing the JSON string in this manner is used to help prevent JSON
@@ -176,7 +176,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
                 }
                 writer.close();
             } catch (JsonIOException ex) {
-                throw new HttpMessageNotWritableException("Could not write JSON: "
+                throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "
                         + ex.getMessage(), ex);
             }
         }

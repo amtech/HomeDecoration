@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants.hd.desktop.api.CacheManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.Product;

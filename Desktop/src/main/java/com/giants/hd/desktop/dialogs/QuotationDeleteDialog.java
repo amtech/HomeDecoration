@@ -1,12 +1,12 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.frames.QuotationDetailFrame;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.QuotationDeleteModel;
-import com.giants.hd.desktop.view.Panel_Page;
+import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.QuotationDelete;
 import com.giants3.hd.utils.noEntity.QuotationDetail;

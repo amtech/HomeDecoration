@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.dialogs.LoginDialog;
-import com.giants.hd.desktop.view.LoadingDialog;
+import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 

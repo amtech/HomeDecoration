@@ -22,6 +22,14 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
 
     /**
+     *
+     * @param startName
+     * @param endName
+     * @return
+     */
+    List<Product> findByNameBetweenOrderByName(String startName, String endName);
+
+    /**
      * 产品由产品名称与 产品版本号  共同作为识别码
      * @param proName
      * @param version

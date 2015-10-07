@@ -59,7 +59,7 @@
           </component>
         </children>
       </scrollpane>
-      <nested-form id="29d11" form-file="com/giants/hd/desktop/view/Panel_Page.form" binding="panel_page">
+      <nested-form id="29d11" form-file="com/giants/hd/desktop/viewImpl/Panel_Page.form" binding="panel_page">
         <constraints border-constraint="South"/>
       </nested-form>
     </children>

@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.api.ApiManager;
-import com.giants.hd.desktop.api.CacheManager;
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 
 
 import com.giants.hd.desktop.dialogs.*;
@@ -10,10 +10,11 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ShortcutHelper;
-import com.giants.hd.desktop.view.Panel_Material;
-import com.giants.hd.desktop.view.Panel_ProductList;
-import com.giants.hd.desktop.view.Panel_Quotation;
+import com.giants.hd.desktop.viewImpl.Panel_Material;
+import com.giants.hd.desktop.viewImpl.Panel_ProductList;
+import com.giants.hd.desktop.viewImpl.Panel_Quotation;
 import com.giants.hd.desktop.widget.BackgroundPainter;
+import com.giants3.hd.domain.repository.ProductRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
@@ -379,6 +380,27 @@ public class Main extends BaseFrame {
                     ProductDeleteDialog dialog = new ProductDeleteDialog(Main.this);
                     dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
+
+                }
+            });
+
+        }
+
+
+        if(AuthorityUtil.getInstance().viewProductReport()) {
+            menuItem = new JMenuItem(Module.TITLE_PRODUCT_REPORT );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    ProductReportDialog dialog = new ProductReportDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+
+
+
 
                 }
             });

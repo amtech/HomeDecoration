@@ -8,3 +8,4 @@ Utils/Utils.iml
 Server/Server.iml
 build/
 localFile/com.giants3.hd.utils.entity.User
+.gradle/

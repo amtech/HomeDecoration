@@ -250,7 +250,25 @@ public class QuotationXKItem implements Serializable,Valuable {
     @Basic
     public long quotationId;
 
+
+    /**
+     * 序号， 表示顺序 不参与equals
+     */
+    @Basic
+    public int iIndex;
+
+
+
+
     public void updateProduct(Product product) {
+
+        updateProduct(product,null);
+
+
+    }
+
+
+    public void updateProduct(Product product,Product product2) {
 
 
         productId=product.id;
@@ -266,7 +284,7 @@ public class QuotationXKItem implements Serializable,Valuable {
         cost= FloatHelper.scale(product.cost);
 
         //默认不带动fob
-        price=0;
+        // price=0;
         //price=FloatHelper.scale(product.fob);
 
         volumeSize=FloatHelper.scale(product.getPackVolume(),3);
@@ -276,7 +294,7 @@ public class QuotationXKItem implements Serializable,Valuable {
         mirrorSize=product.mirrorSize;
         memo=product.memo;
 
-        updateProduct2(null);
+        updateProduct2(product2);
 
 
     }
@@ -298,7 +316,7 @@ public class QuotationXKItem implements Serializable,Valuable {
         cost2=product==null?0:FloatHelper.scale(product.cost);
 
         //默认不带动fob
-        price2=0;
+       // price2=0;
        // price2=product==null?0:FloatHelper.scale(product.fob);
 
         volumeSize2=product==null?0:FloatHelper.scale(product.getPackVolume());

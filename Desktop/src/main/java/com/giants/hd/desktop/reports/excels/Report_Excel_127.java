@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants3.hd.utils.entity.Quotation;

@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.api.HttpUrl;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
@@ -8,12 +8,11 @@ import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.Number;
 import java.net.URL;
 
@@ -24,19 +23,23 @@ public   class ExcelReportor {
 
 
     protected QuotationFile file;
+    WorkbookSettings s;
     public ExcelReportor(QuotationFile file)
-    {this.file=file;}
+    {this.file=file;
+       s = new WorkbookSettings();
+        s.setUseTemporaryFileDuringWrite(true);
+
+    }
     public     void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
 
 
 
+         s.setTemporaryFileDuringWriteDirectory(new File(fileOutputDirectory ));
 
 
 
         String outputFilePath=fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber +"."+ file.appendix;
-
-
-        operation(quotationDetail,new URL(HttpUrl.loadQuotationFile(file.name, file.appendix)),outputFilePath);
+        operation(quotationDetail, new URL(HttpUrl.loadQuotationFile(file.name, file.appendix)), outputFilePath);
 
 
     }
@@ -48,7 +51,7 @@ public   class ExcelReportor {
         InputStream inputStream=url.openStream();
         Workbook existingWorkbook = Workbook.getWorkbook(inputStream);
         inputStream.close();
-        WritableWorkbook workbookCopy = Workbook.createWorkbook(new File(outputFile), existingWorkbook);
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(new File(outputFile), existingWorkbook,s);
         workbookCopy.write();
         workbookCopy.close();
 
@@ -60,8 +63,16 @@ public   class ExcelReportor {
 
     protected  void doOnLocalFile(QuotationDetail quotationDetail, File outputFile) throws IOException, BiffException, HdException, WriteException {
 
-        WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, Workbook.getWorkbook(outputFile));
+
+
+       Workbook inputWorkbook=  Workbook.getWorkbook(outputFile);
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, inputWorkbook, s);
+       inputWorkbook.close();
+
+         inputWorkbook=null;
+
         writeOnExcel(quotationDetail, workbookCopy);
+
         workbookCopy.write();
         workbookCopy.close();
 
@@ -70,7 +81,35 @@ public   class ExcelReportor {
 
     }
 
-    protected void writeOnExcel(QuotationDetail detail,WritableSheet  writableSheet) throws WriteException, IOException, HdException {
+
+    protected WritableWorkbook openWritableBook(File outFile) throws IOException, BiffException {
+
+
+
+        Workbook inputWorkbook=  Workbook.getWorkbook(outFile);
+        WritableWorkbook workbookCopy = Workbook.createWorkbook(outFile,inputWorkbook,s);
+        inputWorkbook.close();
+        inputWorkbook=null;
+        return workbookCopy;
+
+    }
+
+    protected  void closeWritableBook(WritableWorkbook workbook ) throws IOException, WriteException {
+
+
+
+        workbook.write();
+        workbook.close();
+
+
+
+    }
+
+
+
+
+    protected void writeOnExcel(QuotationDetail detail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
+
 
 
     }
@@ -87,37 +126,38 @@ public   class ExcelReportor {
     protected void writeOnExcel(QuotationDetail quotationDetail,WritableWorkbook  writableWorkbook) throws WriteException, IOException, HdException {
 
         WritableSheet writableSheet = writableWorkbook.getSheet(0);
-        writeOnExcel(quotationDetail,writableSheet);
+        writeOnExcel(quotationDetail,writableSheet, writableWorkbook);
     }
 
 
 
 
     protected void attachPicture(WritableSheet sheet,String url,float x, float y, float width,float height) throws IOException {
+
         //图片
 
-        sheet.getColumnView((int) y).getSize();
-
-        int cellWidth=0;
-        int cellHeight=0;
-
-
-
-        //1 character (X) = 8 pixel (X)   1 character (Y) = 16 pixel (Y)
-        for(int i=Math.round(x - 0.5f);i<Math.round(x + width + 0.5);i++)
-        {
-            cellWidth+= sheet.getColumnView(i).getSize() *8/256;;
-        }
-
-        for(int i=Math.round(y - 0.5f);i<Math.round(y + height + 0.5);i++)
-        {
-            cellHeight+= sheet.getRowView(i).getSize() /20/3*4;
-        }
+//        sheet.getColumnView((int) y).getSize();
+//
+//        int cellWidth=0;
+//        int cellHeight=0;
+//
+//
+//
+//        //1 character (X) = 8 pixel (X)   1 character (Y) = 16 pixel (Y)
+//        for(int i=Math.round(x - 0.5f);i<Math.round(x + width + 0.5);i++)
+//        {
+//            cellWidth+= sheet.getColumnView(i).getSize() *8/256;;
+//        }
+//
+//        for(int i=Math.round(y - 0.5f);i<Math.round(y + height + 0.5);i++)
+//        {
+//            cellHeight+= sheet.getRowView(i).getSize() /20/3*4;
+//        }
 
         byte[] data=null;
         try {
            // data=  ImageUtils.scale(new URL(url), cellWidth * 4, cellHeight * 4, true);
-            data=  ImageUtils.scale(new URL(url), 1280, 1280, true);
+            data=  ImageUtils.scale(new URL(url), 640, 640, true);
         } catch (HdException e) {
             e.printStackTrace();
         }

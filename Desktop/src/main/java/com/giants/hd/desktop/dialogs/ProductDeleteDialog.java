@@ -1,12 +1,12 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductDeleteModel;
 import com.giants.hd.desktop.utils.HdSwingUtils;
-import com.giants.hd.desktop.view.Panel_Page;
+import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.noEntity.ProductDetail;

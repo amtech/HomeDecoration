@@ -99,8 +99,19 @@ public class Module implements Serializable{
 
     public static final String NAME_PRODUCT_DELETE = "ProductDelete";
     public static final String TITLE_PRODUCT_DELETE  = "已删除产品";
+
+
+
+    public static final String NAME_PRODUCT_REPORT="ProductReport";
+    public static final String TITLE_PRODUCT_REPORT="产品报表";
+
+
+
+
+
     public static final String NAME_QUOTATION="Quotation";
     public static final String TITLE_QUOTATION="报价模块";
+
 
 
     public static final String NAME_QUOTATION_DELETE="QuotationDelete";
@@ -148,7 +159,9 @@ public class Module implements Serializable{
 
     public static final String NAME_MODULE = "MODULE";
     public static final String TITLE_MODULE = "模块列表";
-    public static String[] NAMES=new String[]{NAME_MATERIAL,NAME_PRODUCT,NAME_PRODUCT_PICTURE,NAME_MATERIAL_PICTURE,NAME_QUOTATION,NAME_AUTHORITY,NAME_SYNC_DATA,NAME_PICTURE_UPLOAD,NAME_MATERIAL_CLASS,
+    public static String[] NAMES=new String[]{NAME_MATERIAL,NAME_PRODUCT,NAME_PRODUCT_PICTURE,NAME_MATERIAL_PICTURE,
+            NAME_PRODUCT_REPORT,
+            NAME_QUOTATION,NAME_AUTHORITY,NAME_SYNC_DATA,NAME_PICTURE_UPLOAD,NAME_MATERIAL_CLASS,
 
             NAME_PACK_MATERIAL_CLASS,
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
@@ -157,7 +170,9 @@ public class Module implements Serializable{
     ,NAME_SYS_PARAM
     };
 
-    public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,TITLE_QUOTATION,TITLE_AUTHORITY,TITLE_SYNC_DATA,TITLE_PICTURE_UPLOAD,TITLE_MATERIAL_CLASS,
+    public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
+            TITLE_PRODUCT_REPORT,
+            TITLE_QUOTATION,TITLE_AUTHORITY,TITLE_SYNC_DATA,TITLE_PICTURE_UPLOAD,TITLE_MATERIAL_CLASS,
             TITLE_PACK_MATERIAL_CLASS,
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 

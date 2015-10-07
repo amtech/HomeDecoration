@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.api.ApiManager;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.view.BasePanel;
-import com.giants.hd.desktop.view.Panel_ProductDetail;
+import com.giants.hd.desktop.viewImpl.BasePanel;
+import com.giants.hd.desktop.viewImpl.Panel_ProductDetail;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDelete;
@@ -32,8 +32,6 @@ public class ProductDetailFrame extends BaseFrame {
     private BasePanel.PanelAdapter adapter=new ProductDetailAdapter();
    public   ProductDetailFrame(ProductDetail productDetail )
     {
-
-
         this(productDetail, null);
 
 
