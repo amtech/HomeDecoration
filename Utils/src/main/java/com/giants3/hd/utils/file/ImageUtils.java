@@ -178,7 +178,7 @@ public class ImageUtils {
             int newHeight= (int) (sourceHeight/ratio);
 
 
-            Logger.getLogger(TAG).info("scaleProduct Image----newWidth:"+newWidth+",newHeight:"+newHeight);
+           // Logger.getLogger(TAG).info("scaleProduct Image----newWidth:"+newWidth+",newHeight:"+newHeight);
             int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 
             BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, imageType);
@@ -215,5 +215,13 @@ public class ImageUtils {
         String lowerCaseValue=fileName.toLowerCase();
 
      return lowerCaseValue.endsWith(".jpg")||lowerCaseValue.endsWith(".jpeg")||lowerCaseValue.endsWith(".png")  ;
+    }
+
+    public static BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
     }
 }

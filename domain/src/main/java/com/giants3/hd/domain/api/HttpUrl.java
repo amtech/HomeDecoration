@@ -164,10 +164,10 @@ public class HttpUrl {
      * @param productName
      * @return
      */
-    public static String loadProductPicture(String productName,String version) {
-        String url= BaseUrl+"api/file/download/product/"+productName+"/"+version;
+    public static String loadProductPicture(String productName,String version ) {
+        String url= BaseUrl+"api/file/download/product/"+productName+"/"+version ;
         url+=  ".jpg";
-        return  additionInfo(url);
+        return  url ;
     }
 
     /**
@@ -371,7 +371,7 @@ public class HttpUrl {
         String url= BaseUrl+"api/file/download/material/"+materialCode;
         url+=  ".jpg";
         url+="?mClass="+classId;
-        return  additionInfo(url);
+        return   url ;
     }
 
 
@@ -526,7 +526,7 @@ public class HttpUrl {
         {
             url+="&appendix="+appendix;
         }
-        return additionInfo(url);
+        return url ;
     }
 
     public static String loadUsers() {
@@ -672,7 +672,7 @@ public class HttpUrl {
     public static String loadTempPicture(String name ) {
         String url= BaseUrl+"api/file/download/temp/"+name;
         url+=  ".jpg";
-        return  additionInfo(url);
+        return  url ;
     }
 
 
@@ -685,6 +685,6 @@ public class HttpUrl {
     public static String loadAttachPicture(String name ) {
         String url= BaseUrl+"api/file/download/attach/"+name;
         url+=  ".jpg";
-        return  additionInfo(url);
+        return  url ;
     }
 }

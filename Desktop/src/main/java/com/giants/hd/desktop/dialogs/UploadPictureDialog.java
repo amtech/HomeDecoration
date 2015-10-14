@@ -2,6 +2,7 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -63,6 +64,9 @@ public abstract class UploadPictureDialog extends BaseDialog {
                         public void onResult(RemoteData<Void> data) {
 
                             JOptionPane.showMessageDialog(UploadPictureDialog.this, "图片上传完毕");
+
+                            //清除本地缓存
+                            ImageLoader.getInstance().clearCache();
 
                         }
                     }.go();

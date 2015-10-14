@@ -846,8 +846,8 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         //未审核 撤销审核按钮不可用
         btn_unVerify.setEnabled(data.quotation.isVerified);
         //审核后方可导出
-        btn_export.setEnabled(data.quotation.isVerified);
-
+        //btn_export.setEnabled(data.quotation.isVerified);
+        btn_export.setEnabled(true);
         bindLogData(data.quotationLog);
 
 

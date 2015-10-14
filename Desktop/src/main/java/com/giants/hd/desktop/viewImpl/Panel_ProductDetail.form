@@ -31,16 +31,16 @@
         <colspec value="fill:50px:grow"/>
         <colspec value="fill:40px:grow"/>
         <colspec value="fill:40px:grow"/>
-        <colspec value="fill:21px:grow"/>
-        <colspec value="fill:60px:grow"/>
-        <colspec value="fill:88px:grow"/>
-        <colspec value="left:80px:grow"/>
-        <colspec value="fill:59px:grow"/>
-        <colspec value="fill:70px:grow"/>
-        <colspec value="fill:62px:grow"/>
-        <colspec value="fill:50px:grow"/>
-        <colspec value="fill:52px:grow"/>
-        <colspec value="left:46px:grow"/>
+        <colspec value="fill:46px:grow"/>
+        <colspec value="fill:31px:grow"/>
+        <colspec value="fill:94px:grow"/>
+        <colspec value="left:19px:grow"/>
+        <colspec value="fill:85px:grow"/>
+        <colspec value="fill:65px:grow"/>
+        <colspec value="fill:75px:grow"/>
+        <colspec value="fill:63px:grow"/>
+        <colspec value="fill:69px:grow"/>
+        <colspec value="left:64px:grow"/>
         <colspec value="fill:44px:grow"/>
         <colspec value="left:44px:grow"/>
         <colspec value="fill:44px:grow"/>
@@ -56,16 +56,6 @@
         </properties>
         <border type="etched"/>
         <children>
-          <component id="d5227" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="单位"/>
-            </properties>
-          </component>
           <tabbedpane id="38000" binding="tabbedPane1" default-binding="true">
             <constraints>
               <grid row="14" column="0" row-span="1" col-span="22" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -269,65 +259,11 @@
           </component>
           <component id="76191" class="javax.swing.JComboBox" binding="cb_class" custom-create="true">
             <constraints>
-              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
               <toolTipText value="产品类型选择"/>
-            </properties>
-          </component>
-          <component id="5942d" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="净重（KG）"/>
-            </properties>
-          </component>
-          <component id="166ae" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="成本"/>
-            </properties>
-          </component>
-          <component id="e72d1" class="javax.swing.JTextField" binding="tf_unpack_cost">
-            <constraints>
-              <grid row="2" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不含包装）"/>
-            </properties>
-          </component>
-          <component id="67202" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="5" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="（英寸）成品规格（厘米）"/>
-            </properties>
-          </component>
-          <component id="90814" class="javax.swing.JTextArea" binding="ta_spec_inch">
-            <constraints>
-              <grid row="6" column="0" row-span="5" col-span="4" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <lineWrap value="true"/>
-              <toolTipText value="成品规格描述"/>
             </properties>
           </component>
           <component id="fdeb2" class="javax.swing.JLabel">
@@ -348,18 +284,6 @@
             </constraints>
             <properties/>
           </component>
-          <component id="da85b" class="javax.swing.JLabel" binding="photo">
-            <constraints>
-              <grid row="2" column="10" row-span="9" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <background color="-2430750"/>
-              <horizontalAlignment value="0"/>
-              <horizontalTextPosition value="0"/>
-              <text value="产品图片"/>
-            </properties>
-          </component>
           <component id="1ec19" class="javax.swing.JTextField" binding="tf_version">
             <constraints>
               <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -369,16 +293,6 @@
             </constraints>
             <properties>
               <toolTipText value="产品版本号"/>
-            </properties>
-          </component>
-          <component id="9497f" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="1木料"/>
             </properties>
           </component>
           <component id="b9bf7" class="javax.swing.JLabel" binding="title">
@@ -394,18 +308,6 @@
               <text value="福州云飞家居有限公司产品成本分析表"/>
             </properties>
           </component>
-          <component id="c2c99" class="javax.swing.JTextField" binding="tf_unit">
-            <constraints>
-              <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <text value="S/1"/>
-              <toolTipText value=""/>
-            </properties>
-          </component>
           <component id="74999" class="net.sourceforge.jdatepicker.impl.JDatePickerImpl" binding="date" custom-create="true">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -419,241 +321,9 @@
               <forms/>
             </constraints>
           </nested-form>
-          <component id="4d787" class="javax.swing.JTextField" binding="jtf_cost1">
-            <constraints>
-              <grid row="3" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="1e2c3" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value=" 8板料"/>
-            </properties>
-          </component>
-          <component id="3d42f" class="javax.swing.JTextField" binding="jtf_cost8">
-            <constraints>
-              <grid row="3" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="3e1a3" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="6玻璃镜片"/>
-            </properties>
-          </component>
-          <component id="b4211" class="javax.swing.JTextField" binding="jtf_cost6">
-            <constraints>
-              <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="c4934" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="7配件"/>
-            </properties>
-          </component>
-          <component id="97c13" class="javax.swing.JTextField" binding="jtf_cost7">
-            <constraints>
-              <grid row="4" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value=""/>
-            </properties>
-          </component>
-          <component id="fbccc" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="6" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="(11-15)铁材料"/>
-            </properties>
-          </component>
-          <component id="460d2" class="javax.swing.JTextField" binding="jtf_cost11_15">
-            <constraints>
-              <grid row="6" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="73780" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="5木油漆"/>
-            </properties>
-          </component>
-          <component id="5d065" class="javax.swing.JTextField" binding="jtf_cost5">
-            <constraints>
-              <grid row="5" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="34132" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="修理工资"/>
-            </properties>
-          </component>
-          <component id="15a5e" class="javax.swing.JTextField" binding="jtf_cost_repair">
-            <constraints>
-              <grid row="5" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="包装体积/包装个数*修理工资，独立加入成本中"/>
-            </properties>
-          </component>
-          <component id="bfbc6" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="7" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="油漆工资"/>
-            </properties>
-          </component>
-          <component id="a591e" class="javax.swing.JTextField" binding="jtf_paint_wage">
-            <constraints>
-              <grid row="7" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="f99d2" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="7" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="油漆材料"/>
-            </properties>
-          </component>
-          <component id="f4a71" class="javax.swing.JTextField" binding="jtf_paint_cost">
-            <constraints>
-              <grid row="7" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="c852" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="白胚工资"/>
-            </properties>
-          </component>
-          <component id="5010e" class="javax.swing.JTextField" binding="jtf_conceptus_wage">
-            <constraints>
-              <grid row="8" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="4ef78" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="8" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="白胚材料"/>
-            </properties>
-          </component>
-          <component id="e9b04" class="javax.swing.JTextField" binding="jtf_conceptus_cost">
-            <constraints>
-              <grid row="8" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
           <component id="dbe67" class="javax.swing.JLabel">
             <constraints>
-              <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -662,7 +332,7 @@
           </component>
           <component id="514cf" class="javax.swing.JComboBox" binding="cb_pack" custom-create="true">
             <constraints>
-              <grid row="1" column="7" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties/>
@@ -675,18 +345,6 @@
             <properties>
               <text value="咸康货品"/>
               <toolTipText value="咸康货品有额外信息"/>
-            </properties>
-          </component>
-          <component id="1497a" class="javax.swing.JTextArea" binding="ta_spec_cm">
-            <constraints>
-              <grid row="6" column="4" row-span="5" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="true"/>
-              <lineWrap value="true"/>
             </properties>
           </component>
           <component id="b05ea" class="javax.swing.JLabel">
@@ -785,7 +443,7 @@
           </component>
           <component id="fe712" class="javax.swing.JTextField" binding="tf_gross_profit">
             <constraints>
-              <grid row="11" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="11" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
@@ -796,7 +454,7 @@
           </component>
           <component id="89ef5" class="javax.swing.JTextField" binding="tf_price_dollar">
             <constraints>
-              <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="12" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
@@ -807,7 +465,7 @@
           </component>
           <component id="d93d5" class="javax.swing.JTextField" binding="tf_volume">
             <constraints>
-              <grid row="13" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="13" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
@@ -818,7 +476,7 @@
           </component>
           <component id="ca2bc" class="javax.swing.JLabel">
             <constraints>
-              <grid row="12" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="12" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -847,7 +505,7 @@
           </component>
           <component id="62edf" class="javax.swing.JLabel">
             <constraints>
-              <grid row="13" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="13" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -867,7 +525,7 @@
           </component>
           <component id="2624f" class="javax.swing.JLabel">
             <constraints>
-              <grid row="11" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="11" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -990,15 +648,6 @@
             <properties>
               <editable value="false"/>
             </properties>
-          </component>
-          <component id="b1b39" class="javax.swing.JTextField" binding="tf_weight">
-            <constraints>
-              <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties/>
           </component>
           <grid id="73546" binding="jp_log" layout-manager="GridLayoutManager" row-count="1" column-count="17" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
@@ -1220,90 +869,6 @@
               </component>
             </children>
           </grid>
-          <component id="828d5" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="组装工资 "/>
-            </properties>
-          </component>
-          <component id="44c02" class="javax.swing.JTextField" binding="jtf_assemble_wage">
-            <constraints>
-              <grid row="9" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="fb48b" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="9" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="0"/>
-              <text value="组装材料"/>
-            </properties>
-          </component>
-          <component id="61d48" class="javax.swing.JTextField" binding="jtf_assemble_cost">
-            <constraints>
-              <grid row="9" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <toolTipText value="成本数值（不可输入）"/>
-            </properties>
-          </component>
-          <component id="c7bf0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="10" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <text value="包装工资"/>
-            </properties>
-          </component>
-          <component id="8ae1e" class="javax.swing.JTextField" binding="jtf_pack_wage">
-            <constraints>
-              <grid row="10" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-            </properties>
-          </component>
-          <component id="7a28f" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="10" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <text value="包装材料"/>
-            </properties>
-          </component>
-          <component id="4e092" class="javax.swing.JTextField" binding="jtf_pack_cost">
-            <constraints>
-              <grid row="10" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-            </properties>
-          </component>
           <component id="c8a81" class="javax.swing.JButton" binding="btn_attach_add">
             <constraints>
               <grid row="1" column="19" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -1319,6 +884,441 @@
               <forms/>
             </constraints>
             <properties/>
+          </component>
+          <component id="e72d1" class="javax.swing.JTextField" binding="tf_product_cost">
+            <constraints>
+              <grid row="2" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不含包装）"/>
+            </properties>
+          </component>
+          <component id="166ae" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="9" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="实际成本"/>
+            </properties>
+          </component>
+          <component id="3d42f" class="javax.swing.JTextField" binding="jtf_cost8">
+            <constraints>
+              <grid row="3" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="1e2c3" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value=" 8板料"/>
+            </properties>
+          </component>
+          <component id="4d787" class="javax.swing.JTextField" binding="jtf_cost1">
+            <constraints>
+              <grid row="3" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="9497f" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="1木料"/>
+            </properties>
+          </component>
+          <component id="97c13" class="javax.swing.JTextField" binding="jtf_cost7">
+            <constraints>
+              <grid row="4" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value=""/>
+            </properties>
+          </component>
+          <component id="c4934" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="7配件"/>
+            </properties>
+          </component>
+          <component id="3e1a3" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="6玻璃镜片"/>
+            </properties>
+          </component>
+          <component id="b4211" class="javax.swing.JTextField" binding="jtf_cost6">
+            <constraints>
+              <grid row="4" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="15a5e" class="javax.swing.JTextField" binding="jtf_cost_repair">
+            <constraints>
+              <grid row="5" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="包装体积/包装个数*修理工资，独立加入成本中"/>
+            </properties>
+          </component>
+          <component id="34132" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="修理工资"/>
+            </properties>
+          </component>
+          <component id="5d065" class="javax.swing.JTextField" binding="jtf_cost5">
+            <constraints>
+              <grid row="5" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="73780" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="5木油漆"/>
+            </properties>
+          </component>
+          <component id="460d2" class="javax.swing.JTextField" binding="jtf_cost11_15">
+            <constraints>
+              <grid row="6" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="fbccc" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="9" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="(11-15)铁材料"/>
+            </properties>
+          </component>
+          <component id="f4a71" class="javax.swing.JTextField" binding="jtf_paint_cost">
+            <constraints>
+              <grid row="7" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="f99d2" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="7" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="油漆材料"/>
+            </properties>
+          </component>
+          <component id="a591e" class="javax.swing.JTextField" binding="jtf_paint_wage">
+            <constraints>
+              <grid row="7" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="bfbc6" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="7" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="油漆工资"/>
+            </properties>
+          </component>
+          <component id="e9b04" class="javax.swing.JTextField" binding="jtf_conceptus_cost">
+            <constraints>
+              <grid row="8" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="4ef78" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="8" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="白胚材料"/>
+            </properties>
+          </component>
+          <component id="5010e" class="javax.swing.JTextField" binding="jtf_conceptus_wage">
+            <constraints>
+              <grid row="8" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="c852" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="8" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="白胚工资"/>
+            </properties>
+          </component>
+          <component id="61d48" class="javax.swing.JTextField" binding="jtf_assemble_cost">
+            <constraints>
+              <grid row="9" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="fb48b" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="9" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="组装材料"/>
+            </properties>
+          </component>
+          <component id="4e092" class="javax.swing.JTextField" binding="jtf_pack_cost">
+            <constraints>
+              <grid row="10" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="7a28f" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="10" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <text value="包装材料"/>
+            </properties>
+          </component>
+          <component id="8ae1e" class="javax.swing.JTextField" binding="jtf_pack_wage">
+            <constraints>
+              <grid row="10" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="c7bf0" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="10" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <text value="包装工资"/>
+            </properties>
+          </component>
+          <component id="44c02" class="javax.swing.JTextField" binding="jtf_assemble_wage">
+            <constraints>
+              <grid row="9" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="成本数值（不可输入）"/>
+            </properties>
+          </component>
+          <component id="828d5" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="9" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="组装工资 "/>
+            </properties>
+          </component>
+          <component id="67202" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="（英寸）成品规格（厘米）"/>
+            </properties>
+          </component>
+          <component id="1497a" class="javax.swing.JTextArea" binding="ta_spec_cm">
+            <constraints>
+              <grid row="6" column="7" row-span="4" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+              <lineWrap value="true"/>
+            </properties>
+          </component>
+          <component id="90814" class="javax.swing.JTextArea" binding="ta_spec_inch">
+            <constraints>
+              <grid row="6" column="4" row-span="4" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <lineWrap value="true"/>
+              <toolTipText value="成品规格描述"/>
+            </properties>
+          </component>
+          <component id="29d47" class="javax.swing.JLabel" binding="photo">
+            <constraints>
+              <grid row="4" column="0" row-span="6" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <background color="-2430750"/>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="产品图片"/>
+            </properties>
+          </component>
+          <component id="c2c99" class="javax.swing.JTextField" binding="tf_unit">
+            <constraints>
+              <grid row="3" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="S/1"/>
+              <toolTipText value=""/>
+            </properties>
+          </component>
+          <component id="b1b39" class="javax.swing.JTextField" binding="tf_weight">
+            <constraints>
+              <grid row="4" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="5942d" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="净重（KG）"/>
+            </properties>
+          </component>
+          <component id="d5227" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="单位"/>
+            </properties>
           </component>
         </children>
       </grid>

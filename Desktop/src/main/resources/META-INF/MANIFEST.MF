@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.22
-Manifest-Version_Number: 22
-Manifest-Version_Spec: 1:添加报表
+Manifest-Version: 1.0.28
+Manifest-Version_Number: 28
+Manifest-Version_Spec: 1:关闭报价导出权限 2: 产品清单详情界面调整
 Main-Class: com.giants.hd.desktop.frames.Main
 

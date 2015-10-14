@@ -5,7 +5,6 @@ import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
-import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.widget.AttachPanel;
@@ -19,7 +18,6 @@ import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
@@ -29,7 +27,6 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
-import jxl.write.WriteException;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -68,7 +65,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JTextField tf_unit;
     private JComboBox<PClass> cb_class;
     private JTextField tf_constitute;
-    private JTextField tf_unpack_cost;
+    private JTextField tf_product_cost;
     private JTextArea ta_spec_inch;
     private JTextArea ta_memo;
     private JPanel cellPanel;
@@ -858,8 +855,9 @@ public class Panel_ProductDetail extends BasePanel {
 
         tf_constitute.setText(product == null ? "" : product.getConstitute());
         tf_version.setText(product == null ? "" : product.getpVersion());
+
         //人工成本
-        tf_unpack_cost.setText(product == null ? "" : String.valueOf(product.getCost1()));
+        tf_product_cost.setText(product == null ? "" : String.valueOf(product.productCost));
 
 
         //设置产品分类
@@ -1706,7 +1704,7 @@ public class Panel_ProductDetail extends BasePanel {
 
         jtf_cost_repair.setText(String.valueOf(product.repairCost));
 
-        tf_unpack_cost.setText(String.valueOf(product.productCost));
+        tf_product_cost.setText(String.valueOf(product.productCost));
         tf_cost4.setText(String.valueOf(product.cost4));
         tf_fob.setText(String.valueOf(product.fob));
         tf_price.setText(String.valueOf(product.price));

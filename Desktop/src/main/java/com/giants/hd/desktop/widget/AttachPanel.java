@@ -2,8 +2,9 @@ package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.Iconable;
-import com.giants.hd.desktop.local.HdPictureWorker;
-import com.giants.hd.desktop.model.BaseTableModel;
+
+import com.giants.hd.desktop.local.ImageLoader;
+
 import com.giants3.hd.domain.api.HttpUrl;
 
 import javax.swing.*;
@@ -98,20 +99,33 @@ public class AttachPanel  extends JPanel {
 
         String url=getUrl(fileName);
 
-
-        new HdPictureWorker(new Iconable(){
+        ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
             public void setIcon(ImageIcon icon) {
-
-                if(icon==null)
-                {
-                    jLable.setText("图片读取失败");
-                }else {
-                    jLable.setIcon(icon);
-                }
-
+                jLable.setIcon(icon);
+                jLable.setText("");
             }
-        },120,120,url).execute();
+
+            @Override
+            public void onError(String message) {
+                jLable.setText(message);
+            }
+        },url,120,120);
+
+
+//        new HdPictureWorker(new Iconable(){
+//            @Override
+//            public void setIcon(ImageIcon icon) {
+//
+//                if(icon==null)
+//                {
+//                    jLable.setText("图片读取失败");
+//                }else {
+//                    jLable.setIcon(icon);
+//                }
+//
+//            }
+//        },120,120,url).execute();
 
         add(jLable);
 

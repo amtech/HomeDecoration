@@ -32,6 +32,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     public String UN_INTERCEPT_LOGIN="/api/authority/login";
 
+    public String UN_INTERCEPT_FILE="/api/file/download/";
+
     public long VALIDATE_TIME=24l*60*60*1000;
 
     @Autowired
@@ -42,7 +44,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         String url=request.getRequestURI();
         //非过滤的url
-        if(url.contains(UN_INTERCEPT_LOGIN)||url.contains(UN_INTERCEPT_USERLIST)||url.contains(UNLOGIN))
+        if(url.contains(UN_INTERCEPT_LOGIN)||url.contains(UN_INTERCEPT_USERLIST)||url.contains(UNLOGIN)||url.contains(UN_INTERCEPT_FILE))
             return true;
 
           else

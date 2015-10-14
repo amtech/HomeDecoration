@@ -169,7 +169,7 @@ public class Product implements Serializable {
 
 
 	/**
-	 * 产品成本 不含包装。 裸品
+	 * 产品实际成本 由 白胚 组装 油漆 包装 合成
 	 */
 	@Basic
 	public float productCost;
@@ -240,7 +240,7 @@ public class Product implements Serializable {
 	@Basic
 	public float fob;
 	/**
-	 * 成本价
+	 * 成本价     实际成本*(1+管理费用比例)
 	 */
 	@Basic
 	public float cost;
@@ -670,7 +670,7 @@ public class Product implements Serializable {
 	{
 
 
-		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage);
+		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage);
 
 
 
@@ -693,8 +693,8 @@ public class Product implements Serializable {
 		}
 
 
-		//计算成本价   (胚体成本+包装成本+修理工资)*（1+管理系数）
-		cost=FloatHelper.scale((productCost+packCost+packWage+repairCost)*(1+manageRatio));
+		//计算成本价   (实际成本+修理工资)*（1+管理系数）
+		cost=FloatHelper.scale((productCost+repairCost)*(1+manageRatio));
 
 
 

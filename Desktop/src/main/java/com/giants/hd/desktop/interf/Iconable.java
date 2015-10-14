@@ -9,4 +9,5 @@ public interface Iconable {
 
 
       void setIcon(ImageIcon icon);
+      void onError(String message);
 }

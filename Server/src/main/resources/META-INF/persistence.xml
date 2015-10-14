@@ -83,7 +83,7 @@
             <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
--->
+            -->
 
     <persistence-unit name="erpPersistenceUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>

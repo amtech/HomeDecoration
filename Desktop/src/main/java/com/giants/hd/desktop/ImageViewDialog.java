@@ -1,17 +1,13 @@
 package com.giants.hd.desktop;
 
 import com.giants.hd.desktop.interf.Iconable;
-import com.giants.hd.desktop.local.HdPictureWorker;
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ImageViewDialog extends JDialog {
     private JPanel contentPane;
@@ -47,36 +43,25 @@ public class ImageViewDialog extends JDialog {
 
 
         picture.setText("正在加载图片....");
-
        final Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
+        ImageLoader.getInstance().displayImage(new Iconable() {
+            @Override
+            public void setIcon(ImageIcon icon) {
+                picture.setText("");
+                picture.setIcon(icon);
+                setSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+                setLocation((dimension.width - icon.getIconWidth()) / 2, (dimension.height -  icon.getIconHeight()) / 2);
+
+            }
+
+            @Override
+            public void onError(String message) {
+                picture.setText(message);
+            }
+        },url,dimension.getWidth(),dimension.getHeight());
 
 
-       new HdPictureWorker(new Iconable() {
-           @Override
-           public void setIcon(ImageIcon icon) {
-
-               if(icon==null)
-               {
-
-                   picture.setText("图片加载失败");
-
-               }else
-               {
-
-                   picture.setIcon(icon);
-
-
-
-                   setSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-                   setLocation((dimension.width - icon.getIconWidth()) / 2, (dimension.height -  icon.getIconHeight()) / 2);
-               }
-
-
-
-
-           }
-       },dimension.getWidth(),dimension.getHeight(),url).execute();
 
 
 
