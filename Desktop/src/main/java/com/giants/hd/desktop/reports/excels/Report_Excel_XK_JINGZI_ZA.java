@@ -149,7 +149,7 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
                 writableSheet.addCell(label1);
 
                 //镜子尺寸	高
-                label1 = new Label(16, rowUpdate,  productDetail.product.xiankang.getJingzi_kuan(),format);
+                label1 = new Label(16, rowUpdate,  productDetail.product.xiankang.getJingzi_gao(),format);
                 writableSheet.addCell(label1);
 
 
@@ -170,19 +170,19 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
 
 
-
+            float[] specValue=  StringUtils.decouplePackageString(item.spec);
 
             //总长
-            label1 = new Label(18, rowUpdate, String.valueOf(item.spec),format);
+            label1 = new Label(18, rowUpdate, String.valueOf(specValue[0]),format);
             writableSheet.addCell(label1);
 
 
             //总宽
-            label1 = new Label(19, rowUpdate, String.valueOf(item.spec),format);
+            label1 = new Label(19, rowUpdate, String.valueOf(specValue[1]),format);
             writableSheet.addCell(label1);
 
             //总深
-            label1 = new Label(20, rowUpdate,  String.valueOf(item.spec) ,format);
+            label1 = new Label(20, rowUpdate,  String.valueOf(specValue[2]) ,format);
             writableSheet.addCell(label1);
 
 
