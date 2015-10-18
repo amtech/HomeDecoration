@@ -130,7 +130,7 @@ public class Report_Excel_127 extends ExcelReportor {
             addNumber(writableSheet, fob, 6, 41);
 
 
-             attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 0 + pictureGap/2, 8+ pictureGap, 6 - pictureGap, 40 - pictureGap);
+             attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0 + pictureGap/2, 8+ pictureGap, 6 - pictureGap, 40 - pictureGap);
 
 
 

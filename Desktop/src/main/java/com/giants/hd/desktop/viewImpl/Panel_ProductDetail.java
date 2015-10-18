@@ -1371,12 +1371,8 @@ public class Panel_ProductDetail extends BasePanel {
                 if (e.getClickCount() >= 2) {
 
 
-                    if (!StringUtils.isEmpty(tf_product.getText().trim())) {
-                        ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim());
-                    } else {
-
-
-                        JOptionPane.showMessageDialog(photo, "请输入货号...");
+                    if (productDetail.product!=null) {
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(),tf_version.getText().trim(), productDetail.product.url);
                     }
 
                 }

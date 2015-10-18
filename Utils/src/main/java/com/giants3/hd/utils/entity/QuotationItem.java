@@ -131,11 +131,15 @@ public class QuotationItem implements Serializable,Valuable {
     @Basic
     public int  iIndex;
 
+    @Basic
+    public String photoUrl;
+
     public void updateProduct(Product product) {
 
 
         productId=product.id;
         productPhoto=product.photo;
+        photoUrl=product.url;
         productName=product.name;
         pVersion=product.pVersion;
         inBoxCount=product.insideBoxQuantity;

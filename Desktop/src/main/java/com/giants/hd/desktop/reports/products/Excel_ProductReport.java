@@ -184,7 +184,8 @@ public class Excel_ProductReport {
 
 
             try{
-          String file=  ImageLoader.getInstance().cacheFile(HttpUrl.loadProductPicture(product.name,product.pVersion));
+                //缓存图片
+          String file=  ImageLoader.getInstance().cacheFile(HttpUrl.loadProductPicture(product.url));
             //存放图片绝对路径
             setCellValue(sheet, basePath+ File.separator+file, 100, writeRow);
             }catch (Throwable t)

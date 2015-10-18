@@ -146,6 +146,11 @@ public class Material  implements Serializable {
 	public byte[] photo;
 
 
+
+	@Basic
+	public String url;
+
+
 	public String getClassId() {
 		return classId;
 	}

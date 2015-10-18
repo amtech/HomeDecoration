@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
@@ -15,6 +16,7 @@ import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -138,7 +140,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
             XSSFSheet itemSheet=workbook.getSheet("Item ("+(i+1)+")");
 
 
-            addPicture(itemSheet,HttpUrl.loadProductPicture(item.productName,item.pVersion),6,19,14,34);
+            addPicture(itemSheet,HttpUrl.loadProductPicture(item.photoUrl),6,19,14,34);
 
 
 
@@ -187,11 +189,15 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
         byte[] photo=null;
 
 
+
         try {
-            photo=   ImageUtils.scale(new URL(url),1280, 1280,true);
+            BufferedImage bufferedImage=ImageLoader.getInstance().loadImage(url );
+            photo=   ImageUtils.scale(bufferedImage,1280, 1280,true);
         } catch (HdException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

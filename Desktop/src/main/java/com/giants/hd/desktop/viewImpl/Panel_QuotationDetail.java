@@ -135,9 +135,20 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                     //单击第一列 显示原图
                     if (column == 1) {
 
-                        QuotationItem item = model.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
-                        if (item.productId > 0) {
-                            ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion);
+                       Object object= ((BaseTableModel<Object>)tb.getModel()).getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
+
+                        if(object instanceof QuotationItem) {
+
+                            QuotationItem item =  (QuotationItem)object;
+                            if (item.productId > 0) {
+                                ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion, item.photoUrl);
+                            }
+                        }else
+                        {
+                            QuotationXKItem item =  (QuotationXKItem)object;
+                            if (item.productId > 0) {
+                                ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion, item.photoUrl);
+                            }
                         }
 
                     }

@@ -336,7 +336,12 @@ public class MaterialController extends BaseController {
 
 
 
+
+
+
         }
+
+
 
 
 
@@ -612,7 +617,7 @@ public class MaterialController extends BaseController {
     @RequestMapping(value="/syncPhoto", method={RequestMethod.GET,RequestMethod.POST})
     @Transactional
     @ResponseBody
-    public RemoteData<Void> asyncProduct( ) {
+    public RemoteData<Void> asyncMaterial( ) {
 
 
         int count=0;
@@ -630,20 +635,20 @@ public class MaterialController extends BaseController {
             materialPage= materialRepository.findAll(pageable);
 
             for(Material material
-                    :materialPage.getContent())
-            {
+                :materialPage.getContent())
+                    {
 
 
-                String filePath= FileUtils.getMaterialPicturePath(rootFilePath, material.code,material.classId);
-                long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
-                if(lastUpdateTime>0 )
-                {
+                        String filePath= FileUtils.getMaterialPicturePath(rootFilePath, material.code,material.classId);
+                        long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
+                        boolean isModified=false;
+                        if(lastUpdateTime>0 )
+                        {
                     if(lastUpdateTime!=material.lastPhotoUpdateTime||material.photo==null)
                     {
                         updateMaterialPhoto(material);
                         material.lastPhotoUpdateTime=lastUpdateTime;
-
-                        materialRepository.save(material);
+                        isModified=true;
                         count++;
                     }
 
@@ -653,10 +658,26 @@ public class MaterialController extends BaseController {
                     if(material.photo!=null) {
                         material.photo = null;
                         material.lastPhotoUpdateTime = lastUpdateTime;
-                        materialRepository.save(material);
+                        isModified=true;
                         count++;
                     }
 
+                }
+
+                       String newUrl=FileUtils.getMaterialPictureURL(material.code,material.classId,lastUpdateTime);
+                        if(!newUrl.equals(material.url))
+                        {
+                            material.url=newUrl;
+                            isModified=true;
+
+                        }
+
+
+                        //图片改变  或者 url 未赋予初值  则 更新新数据
+                if(isModified )
+                {
+
+                    materialRepository.save(material);
                 }
 
 
@@ -687,10 +708,13 @@ public class MaterialController extends BaseController {
 
         String filePath = FileUtils.getMaterialPicturePath(rootFilePath, material.code,material.classId);
 
+
+        String url;
         //如果tup图片文件不存在  则 设置photo为空。
         if (!new File(filePath).exists()) {
             material.setPhoto(null);
             material.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
+
 
         } else {
             try {
@@ -701,7 +725,11 @@ public class MaterialController extends BaseController {
             }
 
 
+
         }
+
+        url=FileUtils.getMaterialPictureURL(material.code,material.classId,material.lastPhotoUpdateTime);
+        material.url=url;
 
 
     }

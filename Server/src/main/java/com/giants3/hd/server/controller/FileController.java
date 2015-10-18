@@ -2,10 +2,8 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
-import de.greenrobot.common.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -26,7 +24,6 @@ import java.util.Calendar;
 @Controller
 @RequestMapping("/file")
 public class FileController  extends BaseController{
-
 
 
     @Value("${filepath}")
@@ -159,15 +156,28 @@ public class FileController  extends BaseController{
 
 
 
-    @RequestMapping(value="/download/product/{name}/{pVersion}", method=RequestMethod.GET)
+    @RequestMapping(value= "/download/product/{name}/{pVersion}/{updateTime}", method=RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getProductFile(@PathVariable  String name,@PathVariable  String pVersion,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+
+
+
 
 
         FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,pVersion,type));
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
+    }
+
+    @RequestMapping(value= "/download/product/{name}/{updateTime}", method=RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getProductFile(@PathVariable  String name, @RequestParam(value = "type",defaultValue = "jpg") String  type) {
+
+
+        return getProductFile(name,"",type);
+
+
     }
 
 
@@ -178,7 +188,7 @@ public class FileController  extends BaseController{
      * @return
      */
 
-    @RequestMapping(value="/download/temp/{name}", method=RequestMethod.GET)
+    @RequestMapping(value= "/download/temp/{name}", method=RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getTempFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
@@ -196,7 +206,7 @@ public class FileController  extends BaseController{
      * @return
      */
 
-    @RequestMapping(value="/download/attach/{name}", method=RequestMethod.GET)
+    @RequestMapping(value= "/download/attach/{name}", method=RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getAttachFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
 
@@ -214,7 +224,7 @@ public class FileController  extends BaseController{
      * @param type   图片类型  默认jpg
      * @return
      */
-    @RequestMapping(value="/download/material/{code}", method=RequestMethod.GET)
+    @RequestMapping(value= "/download/material/{code}/{updateTime}", method=RequestMethod.GET)
     @ResponseBody
 
     public FileSystemResource getMaterialFile(@PathVariable  String code,@RequestParam(value = "mClass",defaultValue = "") String mClass,@RequestParam(value = "type",defaultValue = "jpg") String  type) {

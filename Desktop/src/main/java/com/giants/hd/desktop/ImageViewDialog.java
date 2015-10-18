@@ -71,13 +71,13 @@ public class ImageViewDialog extends JDialog {
 
     /**
      * 显示图片显示框体框
-     * @param materialCode
+     * @param materialUrl
      */
-    public static void showMaterialDialog(Window frame,String materialCode,String classId) {
+    public static void showMaterialDialog(Window frame,String materialUrl) {
 
 
 
-        String url= HttpUrl.loadMaterialPicture(materialCode, classId);
+        String url= HttpUrl.loadMaterialPicture(  materialUrl);
          showDialog(frame, url);
 
     }
@@ -86,11 +86,11 @@ public class ImageViewDialog extends JDialog {
      * 显示图片显示框体框
      * @param productName
      */
-    public static void showProductDialog(Window frame,String productName,String version) {
+    public static void showProductDialog(Window frame,String productName,String version,String productUrl) {
 
 
 
-        String url=HttpUrl.loadProductPicture(productName, version);
+        String url=HttpUrl.loadProductPicture(productUrl);
 
         showDialog(frame,url,productName+"-"+version);
 

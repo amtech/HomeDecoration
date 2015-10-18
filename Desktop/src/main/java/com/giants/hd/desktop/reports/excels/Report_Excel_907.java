@@ -54,7 +54,7 @@ public class Report_Excel_907 extends ExcelReportor {
             //图片
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion ),3+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),3+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
 
 
 

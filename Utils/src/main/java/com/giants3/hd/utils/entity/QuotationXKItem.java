@@ -259,6 +259,14 @@ public class QuotationXKItem implements Serializable,Valuable {
 
 
 
+    @Basic
+    public String photoUrl;
+
+    @Basic
+    public String photo2Url;
+
+
+
 
     public void updateProduct(Product product) {
 
@@ -273,6 +281,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         productId=product.id;
         productPhoto=product.photo;
+        photoUrl=product.url;
         productName=product.name;
         pVersion=product.pVersion;
         inBoxCount=product.insideBoxQuantity;
@@ -294,6 +303,7 @@ public class QuotationXKItem implements Serializable,Valuable {
         mirrorSize=product.mirrorSize;
         memo=product.memo;
 
+
         updateProduct2(product2);
 
 
@@ -305,6 +315,8 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         productId2=product==null?0:product.id;
         productPhoto2=product==null?null:product.photo;
+        photo2Url=product.url;
+
         productName2=product==null?"":product.name;
         pVersion2=product==null?"":product.pVersion;
         inBoxCount2=product==null?0:product.insideBoxQuantity;

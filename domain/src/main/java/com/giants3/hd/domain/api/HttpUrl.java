@@ -159,14 +159,25 @@ public class HttpUrl {
     public static String quotationDetailDelete(long quotationDeleteId) {
         return additionInfo(BaseUrl + "api/quotation/detailDelete?id=" + quotationDeleteId);
     }
+//    /**
+//     * 生成读取产品图片的url
+//     * @param productName
+//     * @return
+//     */
+//    public static String loadProductPicture(String productName,String version ) {
+//        String url= BaseUrl+"api/file/download/product/"+productName+"/"+version ;
+//        url+=  ".jpg";
+//        return  url ;
+//    }
+
+
     /**
      * 生成读取产品图片的url
-     * @param productName
+     * @param productUrl
      * @return
      */
-    public static String loadProductPicture(String productName,String version ) {
-        String url= BaseUrl+"api/file/download/product/"+productName+"/"+version ;
-        url+=  ".jpg";
+    public static String loadProductPicture(String productUrl ) {
+        String url= BaseUrl+productUrl;
         return  url ;
     }
 
@@ -364,13 +375,11 @@ public class HttpUrl {
 
     /**
      * 读取材料图片
-     * @param materialCode
+     * @param materialUrl
      * @return
      */
-    public static String loadMaterialPicture(String materialCode,String classId) {
-        String url= BaseUrl+"api/file/download/material/"+materialCode;
-        url+=  ".jpg";
-        url+="?mClass="+classId;
+    public static String loadMaterialPicture(String materialUrl) {
+        String url= BaseUrl+materialUrl;
         return   url ;
     }
 

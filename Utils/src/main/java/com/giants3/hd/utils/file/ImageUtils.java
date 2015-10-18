@@ -148,43 +148,28 @@ public class ImageUtils {
     }
 
 
-    /**
-     * 生成缩略图的字节流
-     *
-     * 设定最高宽高， 等比例压缩
-     *
-     * @param inputStream
-     * @param maxWidth
-     * @param maxHeight
-     * @return
-     * @throws HdException
-     */
-    public static final byte[] scale(InputStream inputStream , int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
+
+    public static final byte[] scale(BufferedImage img,int maxWidth,int maxHeight,boolean preserveAlpha) throws  HdException {
+
 
         try {
-
-
-
-
-            BufferedImage img = ImageIO.read(inputStream);
-
-            int sourceWidth=img.getWidth();
-            int sourceHeight=img.getHeight();
+            int sourceWidth = img.getWidth();
+            int sourceHeight = img.getHeight();
             //计算缩放比例
-            float ratio=Math.max((float)sourceWidth/maxWidth,(float)sourceHeight/maxHeight);
+            float ratio = Math.max((float) sourceWidth / maxWidth, (float) sourceHeight / maxHeight);
 
-            ratio=Math.max(ratio,1);
-            int newWidth= (int) (sourceWidth/ratio);
-            int newHeight= (int) (sourceHeight/ratio);
+            ratio = Math.max(ratio, 1);
+            int newWidth = (int) (sourceWidth / ratio);
+            int newHeight = (int) (sourceHeight / ratio);
 
 
-           // Logger.getLogger(TAG).info("scaleProduct Image----newWidth:"+newWidth+",newHeight:"+newHeight);
+            // Logger.getLogger(TAG).info("scaleProduct Image----newWidth:"+newWidth+",newHeight:"+newHeight);
             int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 
             BufferedImage imageBuff = new BufferedImage(newWidth, newHeight, imageType);
 
             Graphics2D g = imageBuff.createGraphics();
-            if(preserveAlpha)
+            if (preserveAlpha)
                 g.setComposite(AlphaComposite.Src);
 
             //   g.drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
@@ -199,13 +184,39 @@ public class ImageUtils {
             imageBuff.flush();
             memoryCacheImageOutputStream.flush();
             memoryCacheImageOutputStream.reset();
-            byte[] result= buffer.toByteArray();
-            buffer.flush();;
+            byte[] result = buffer.toByteArray();
+            buffer.flush();
+            ;
             buffer.reset();
             return result;
+
         } catch (IOException e) {
-            throw HdException.create(HdException.FAIL_SCALE_IMAGE,e);
+            e.printStackTrace();
+
+            throw  HdException.create("图片读取失败");
         }
+
+
+    }
+    /**
+     * 生成缩略图的字节流
+     *
+     * 设定最高宽高， 等比例压缩
+     *
+     * @param inputStream
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     * @throws HdException
+     */
+    public static final byte[] scale(InputStream inputStream , int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException, IOException {
+
+
+
+            return       scale(ImageIO.read(inputStream),maxWidth,maxHeight,preserveAlpha);
+
+
+
     }
 
     public static boolean isPictureFile(String fileName) {

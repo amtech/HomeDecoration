@@ -15,6 +15,44 @@ import java.nio.file.attribute.FileTime;
 public class FileUtils {
 
 
+    public static final String IMAGE_JPG="jpg";
+    public static final String  DOWNLOAD_PATH="api/file/download/";
+    public static final String DOWNLOAD_MATERIAL_CODE =DOWNLOAD_PATH+"material/%s/%s.%s?type=%s&mClass=%s";
+    public static final String DOWNLOAD_PRODUCT_NAME_P_VERSION = DOWNLOAD_PATH+"product/%s/%s/%s.%s?type=%s";
+    public static final String DOWNLOAD_TEMP_NAME = "/download/temp/{name}";
+    public static final String DOWNLOAD_ATTACH_NAME = "/download/attach/{name}";
+
+
+
+    /**
+     * /**获取图片路径 url  相对路径 容器根目录
+     * @param productName
+     * @param pVersion
+     * @param updateTime 更新时间
+     * @return
+     */
+    public static  final String getProductPictureURL( String productName,String pVersion,long updateTime)
+    {
+
+
+       return updateTime<=0?"": String.format(DOWNLOAD_PRODUCT_NAME_P_VERSION,productName,pVersion,updateTime,IMAGE_JPG,IMAGE_JPG);
+    //   return updateTime<=0?"":API+DOWNLOAD_PRODUCT_NAME_P_VERSION.replace("{name}",productName).replace("{pVersion}", StringUtils.isEmpty(pVersion)?"":pVersion).replace("{updateTime}",String.valueOf(updateTime));
+
+    }
+
+    /**
+     * /**获取材料图片路径 url  相对路径 容器根目录
+     * @param materialCode
+     * @param lastUpdateTime 更新时间
+     * @return
+     */
+    public static  final String getMaterialPictureURL( String materialCode,String mClass,long lastUpdateTime)
+    {
+        return lastUpdateTime<=0?"": String.format(DOWNLOAD_MATERIAL_CODE,materialCode,lastUpdateTime,IMAGE_JPG,IMAGE_JPG,mClass);
+       // return lastUpdateTime<=0?"":DOWNLOAD_MATERIAL_CODE.replace("{materialCode}", materialCode).replace("{updateTime}", String.valueOf(lastUpdateTime));
+
+    }
+
     /**获取图片路径   根据规则  （第一个英文字母为之前的字符串 作为文件夹）   默认是jpg文件
      *
      * @param filePath           文件根目录

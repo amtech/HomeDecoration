@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.29
-Manifest-Version_Number: 29
-Manifest-Version_Spec: 1:
+Manifest-Version: 1.0.30
+Manifest-Version_Number: 30
+Manifest-Version_Spec: 1: 图片本地缓存添加，其他修改
 Main-Class: com.giants.hd.desktop.frames.Main
 

@@ -82,7 +82,7 @@ public class Panel_ProductList extends BasePanel {
                     int column = productTable.convertColumnIndexToModel(productTable.getSelectedColumn());
                     //单击第一列 显示原图
                     if (column == 0) {
-                        ImageViewDialog.showProductDialog(getWindow(getRoot()), product.getName(), product.getpVersion());
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()), product.getName(), product.getpVersion(),product.url);
                     } else {
 
                         HdSwingUtils.showDetailPanel(product, getRoot());

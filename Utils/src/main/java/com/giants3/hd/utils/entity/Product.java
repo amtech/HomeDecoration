@@ -23,11 +23,7 @@ public class Product implements Serializable {
 	 */
 	@Lob  @Basic
 	public byte[] photo;
-	/**
-	 * 图片路径 大图片存放地址
-	 */
-	@Basic
-	public String url="";
+
 	/**
 	 * 产品类别id
 	 */
@@ -305,6 +301,12 @@ public class Product implements Serializable {
 	 */
 	@Basic
 	public String attaches="";
+
+	/**
+	 * 图片url
+	 */
+	@Basic
+	public  String url;
 
 
 

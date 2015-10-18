@@ -115,7 +115,7 @@ public class Report_Excel_820 extends ExcelReportor {
 
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 0 + pictureGap, 10 + pictureGap, 5 - pictureGap, 13 - pictureGap);
+                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0 + pictureGap, 10 + pictureGap, 5 - pictureGap, 13 - pictureGap);
 
 
 

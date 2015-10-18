@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.reports.excels;
 
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
@@ -14,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,7 +88,7 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
             //图片
 
             if(item.productPhoto!=null)
-                addPicture(sheet, HttpUrl.loadProductPicture(item.productName, item.pVersion),1,rowUpdate,1,rowUpdate);
+                addPicture(sheet, HttpUrl.loadProductPicture(item.photoUrl),1,rowUpdate,1,rowUpdate);
 
 //            attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 1 + pictureGap / 2, rowUpdate + pictureGap / 2, 1 - pictureGap, 1 - pictureGap);
 
@@ -189,10 +191,15 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
 
         try {
-            photo=   ImageUtils.scale(new URL(url),(int)columnWidth*4, (int)rowHeight*4,true);
+
+
+            BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
+            photo=   ImageUtils.scale(bufferedImage,(int)columnWidth*4, (int)rowHeight*4,true);
         } catch (HdException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

@@ -81,7 +81,7 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
 
             //图片
-            attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+            attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
 
 
 

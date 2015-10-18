@@ -688,16 +688,19 @@ public class ProductController extends BaseController {
             product.setPhoto(null);
             product.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
 
+
         } else {
             try {
                 product.setPhoto(ImageUtils.scaleProduct(filePath));
 
             } catch (HdException e) {
                 e.printStackTrace();
+
             }
 
 
         }
+
 
 
     }
@@ -709,9 +712,9 @@ public class ProductController extends BaseController {
 
 
         String filePath = FileUtils.getProductPicturePath(productFilePath, product.name, product.pVersion);
-
         long newLastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
         product.setLastPhotoUpdateTime(newLastUpdateTime);
+        product.url=FileUtils.getProductPictureURL(product.name,product.pVersion,product.lastPhotoUpdateTime);
 
 
     }
@@ -996,6 +999,8 @@ public class ProductController extends BaseController {
 
                     String filePath=FileUtils.getProductPicturePath(productFilePath,product.name,product.pVersion);
                     long lastUpdateTime=FileUtils.getFileLastUpdateTime(new File(filePath));
+
+                    String newUrl=FileUtils.getProductPictureURL(product.name,product.pVersion,lastUpdateTime);
                     boolean changedPhoto=false;
                     if(lastUpdateTime>0 )
                     {
@@ -1003,10 +1008,8 @@ public class ProductController extends BaseController {
                         {
                             updateProductPhotoData(product);
                             product.lastPhotoUpdateTime=lastUpdateTime;
-
-                            productRepository.save(product);
                             changedPhoto=true;
-                            count++;
+
                         }
 
 
@@ -1015,19 +1018,31 @@ public class ProductController extends BaseController {
                         if(product.photo!=null||product.lastPhotoUpdateTime>0) {
                             product.photo = null;
                             product.lastPhotoUpdateTime = lastUpdateTime;
-                            productRepository.save(product);
+
                             changedPhoto=true;
-                            count++;
+
                         }
 
                     }
 
-                    if(changedPhoto)
+                    if(!newUrl.equals(product.url))
                     {
+                        product.url=newUrl;
+                        changedPhoto=true;
+                    }
+
+
+                    if(changedPhoto )
+                    {
+                        count++;
+                        productRepository.save(product);
+
+
+                        //TODO  更新报价表中的图片url
                         //更新报价表中的图片缩略图
-                        quotationItemRepository.updatePhotoByProductId(product.photo, product.id);
-                        quotationXKItemRepository.updatePhotoByProductId(product.photo, product.id);
-                        quotationXKItemRepository.updatePhoto2ByProductId(product.photo, product.id);
+                        quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.photo, product.url, product.id);
+                        quotationXKItemRepository.updatePhotoByProductId(product.photo,product.url,  product.id);
+                        quotationXKItemRepository.updatePhoto2ByProductId(product.photo, product.url, product.id);
                     }
 
 

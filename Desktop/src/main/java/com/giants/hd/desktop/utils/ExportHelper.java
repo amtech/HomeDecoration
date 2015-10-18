@@ -288,7 +288,7 @@ public class ExportHelper {
                 //图片
                 if(item.productPhoto!=null) {
                     baos.reset();
-                    BufferedImage bufferedImage=ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName,item.pVersion)));
+                    BufferedImage bufferedImage=ImageIO.read(new URL(HttpUrl.loadProductPicture(item.photoUrl)));
                     ImageIO.write(bufferedImage, "PNG", baos);
                     image = new WritableImage(0+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
                     image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);
@@ -460,7 +460,7 @@ public class ExportHelper {
             if(item.productPhoto!=null) {
 
                 baos.reset();
-                BufferedImage bufferedImage=ImageIO.read(new URL(HttpUrl.loadProductPicture(item.productName,item.pVersion)));
+                BufferedImage bufferedImage=ImageIO.read(new URL(HttpUrl.loadProductPicture(item.photoUrl)));
                 ImageIO.write(bufferedImage, "PNG", baos);
                 image = new WritableImage(4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap, baos.toByteArray());
                 image.setImageAnchor(WritableImage.MOVE_AND_SIZE_WITH_CELLS);

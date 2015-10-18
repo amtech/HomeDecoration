@@ -1,10 +1,13 @@
 package com.giants.hd.desktop.reports;
 
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import jxl.write.*;
 import jxl.write.biff.RowsExceededException;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -67,11 +70,15 @@ public class JXLOperator implements ExcelOperator {
         try {
             // data=  ImageUtils.scale(new URL(url), cellWidth * 4, cellHeight * 4, true);
 
-                data=  ImageUtils.scale(new URL(url), 640, 640, true);
+              //data=  ImageUtils.scale(new URL(url), 640, 640, true);
 
+            BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
+            data=   ImageUtils.scale(bufferedImage,640, 640,true);
         } catch (HdException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         WritableImage image;

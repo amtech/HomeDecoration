@@ -122,7 +122,7 @@ public class Panel_Material  extends  BasePanel{
                     if (column == 0) {
 
 
-                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material), material.code, material.classId);
+                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material), material.url );
 
                     }else {
 
