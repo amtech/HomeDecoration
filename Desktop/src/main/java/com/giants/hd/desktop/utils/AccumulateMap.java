@@ -5,17 +5,17 @@ import java.util.HashMap;
 /**
  * Created by davidleen29 on 2015/8/18.
  */
-public class AccumulateMap extends HashMap<Object , Integer> {
+public class AccumulateMap extends HashMap<String, Integer> {
 
 
-    @Override
-    public Integer get(Object key) {
+
+    public Integer get(String key) {
         Integer integer= super.get(key);
         return integer==null?0:integer.intValue();
     }
 
 
-    public void accumulate(Object key)
+    public void accumulate(String key)
     {
      int value=   get(key);
 

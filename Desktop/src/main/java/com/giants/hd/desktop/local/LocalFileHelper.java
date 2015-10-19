@@ -51,7 +51,7 @@ public class LocalFileHelper {
 
             FileInputStream fos=new FileInputStream(new File(path,tClass.getName()));
             ObjectInputStream ois=new ObjectInputStream(fos);
-          result= (T) ois.readObject( );
+           result= (T) ois.readObject( );
             ois.close();
             fos.close();
 

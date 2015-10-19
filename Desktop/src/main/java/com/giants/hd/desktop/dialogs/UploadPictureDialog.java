@@ -66,7 +66,7 @@ public abstract class UploadPictureDialog extends BaseDialog {
                             JOptionPane.showMessageDialog(UploadPictureDialog.this, "图片上传完毕");
 
                             //清除本地缓存
-                            ImageLoader.getInstance().clearCache();
+                           // ImageLoader.getInstance().clearCache();
 
                         }
                     }.go();

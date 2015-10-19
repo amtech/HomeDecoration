@@ -170,4 +170,10 @@ public class ImageLoader {
     }
 
 
+    public void close() {
+
+
+
+        manager.close();
+    }
 }

@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.local;
 
+import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.exception.HdException;
@@ -8,6 +9,9 @@ import com.google.inject.Singleton;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -18,6 +22,33 @@ public class DownloadFileManager {
 
     private static final String TAG="DownloadFileManager";
     String localFilePath=LocalFileHelper.path+"/temp/files/";
+    String localCachePath=LocalFileHelper.path+"/temp/";
+
+    public static final int CACHE_MAX_SIZE=100;
+    public static final int MAX_HIT_COUNT=10000;
+
+
+    private AccumulateMap cacheTable ;
+
+
+
+    public DownloadFileManager() {
+
+
+        File f=  new  File(localFilePath);
+        if(!f.exists())
+        {
+            f.mkdirs();
+        }
+
+        //初始化cacheTable
+        cacheTable=LocalFileHelper.get(AccumulateMap.class);
+        if(cacheTable==null)
+        {
+            cacheTable=new AccumulateMap();
+        }
+
+    }
 
     /**
      * 缓存文件至本地路径
@@ -36,23 +67,87 @@ public class DownloadFileManager {
         if(cached)
         {
 
+            accumulateCache(fileName);
             return fileName;
         }
         download(url,fileName);
+        accumulateCache(fileName);
         return fileName;
 
     }
 
 
-    public DownloadFileManager() {
+    public void accumulateCache(String fileName)
+    {
+
+        cacheTable.accumulate(fileName);
+        int cacheSize = cacheTable.size();
+        boolean needDownCacheCount=cacheTable.get(fileName)>=MAX_HIT_COUNT ;
+
+        boolean overCount=cacheSize>CACHE_MAX_SIZE;
+        //淘汰算法
+       if(overCount||needDownCacheCount)
+       {
 
 
-     File f=  new  File(localFilePath);
-        if(!f.exists())
-        {
-            f.mkdirs();
+
+
+
+            Iterator iterable = cacheTable.keySet().iterator();
+           int minCacheCount=Integer.MAX_VALUE;
+           String outKey=null;
+            while (iterable.hasNext())
+            {
+                String key= (String) iterable.next();
+                int cacheCount=cacheTable.get(key);
+
+                if(needDownCacheCount)
+                {
+                    //所有命中开平方
+                    cacheTable.put(key,(int)Math.sqrt(cacheCount));
+                }
+                if(overCount)
+                {
+                    if(cacheCount<minCacheCount)
+                    {
+                        minCacheCount=cacheCount;
+                        outKey=key;
+                    }
+                }
+
+
+
+            }
+           if(overCount&&outKey!=null)
+           {
+
+               //removetempFile;
+
+               File file=   new     File(outKey);
+               if(file.exists())
+               {
+                   file.delete();
+               }
+              // remove this key;
+               cacheTable.remove(outKey);
+
+
+
+
+           }
+
         }
+
+
+
+
+
+
+
     }
+
+
+
 
     public  String  map(String url)
     {
@@ -75,8 +170,7 @@ public class DownloadFileManager {
 
 
 
-        //TODO
-        //加上淘汰算法
+
 
 
 
@@ -155,5 +249,17 @@ public class DownloadFileManager {
                 childFile.delete();
             }
         }
+    }
+
+    public int getHitCount(String fileName) {
+
+      return   cacheTable.get(fileName);
+    }
+
+    public void close() {
+
+
+        LocalFileHelper.set(cacheTable);
+
     }
 }

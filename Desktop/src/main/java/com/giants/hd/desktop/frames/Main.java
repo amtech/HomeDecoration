@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
@@ -169,7 +170,7 @@ public class Main extends BaseFrame {
 
         frame.setExtendedState(MAXIMIZED_BOTH);
       //  frame.generateMenu();
-        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
         frame.addWindowListener(new WindowAdapter() {
@@ -179,6 +180,7 @@ public class Main extends BaseFrame {
                 int option = JOptionPane.showConfirmDialog(frame, "确定要退出吗？", " 提示", JOptionPane.OK_CANCEL_OPTION);
                 if (JOptionPane.OK_OPTION == option) {
                     //点击了确定按钮
+                    frame.dispose();
                     System.exit(0);
                 }
             }
@@ -833,8 +835,14 @@ public class Main extends BaseFrame {
     public void dispose() {
 
 
+        ImageLoader.getInstance().close();
 
         super.dispose();
 
     }
+
+
+
+
+
 }
