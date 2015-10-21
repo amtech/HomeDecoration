@@ -571,7 +571,7 @@ public class QuotationDetailFrame extends BaseFrame  implements QuotationDetailP
 
 
 
-        int res=   JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "是否撤销报价单的审核？（未审核的报价单可以修改，但不能导出excel）", "撤销审核", JOptionPane.OK_CANCEL_OPTION);
+        int res=   JOptionPane.showConfirmDialog(QuotationDetailFrame.this, "是否撤销报价单的审核？ ", "撤销审核", JOptionPane.OK_CANCEL_OPTION);
         if(res==JOptionPane.YES_OPTION)
         {
             new HdSwingWorker<Void,Void>(QuotationDetailFrame.this)

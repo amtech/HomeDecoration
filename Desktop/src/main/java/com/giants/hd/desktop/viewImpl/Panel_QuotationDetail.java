@@ -837,20 +837,20 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
         //非审核状态方可编辑
-        btn_save.setEnabled(!data.quotation.isVerified);
+       // btn_save.setEnabled(!data.quotation.isVerified);
 
-        btn_delete.setEnabled(!data.quotation.isVerified);
+        //btn_delete.setEnabled(!data.quotation.isVerified);
 
         //有编辑没有审核权限才可看见，
-        btn_save.setVisible(!isVerifiable && isEditable);
+       // btn_save.setVisible(!isVerifiable && isEditable);
 
-        btn_delete.setVisible(!isVerifiable && isEditable);
+        //btn_delete.setVisible(!isVerifiable && isEditable);
 
 
 
         btn_verify.setVisible(isVerifiable);
         btn_unVerify.setVisible(isVerifiable);
-        btn_export.setVisible(true);
+        btn_export.setVisible(AuthorityUtil.getInstance().exportQuotation());
 
 
 
@@ -858,7 +858,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         btn_unVerify.setEnabled(data.quotation.isVerified);
         //审核后方可导出
         //btn_export.setEnabled(data.quotation.isVerified);
-        btn_export.setEnabled(true);
+
         bindLogData(data.quotationLog);
 
 
