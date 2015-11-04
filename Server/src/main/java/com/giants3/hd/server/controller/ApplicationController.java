@@ -74,7 +74,7 @@ public class ApplicationController extends  BaseController {
 
 
 
-        //
+        //临时缓存数据
         ProductPaintArrayList list=new ProductPaintArrayList();
         //遍历所有产品数据
         int pageIndex          =0;
@@ -93,6 +93,13 @@ public class ApplicationController extends  BaseController {
 
 
 
+                boolean isForeignProduct=!Factory.CODE_LOCAl.equals(product.factoryCode);
+
+                //外厂数据 只需更新 成本值
+                if(isForeignProduct)
+                {
+                    product.updateForeignFactoryRelate(globalData);
+                }else
 
                 //如果有跟油漆材料相关
                 if(materialRelateChanged)
@@ -134,7 +141,14 @@ public class ApplicationController extends  BaseController {
 
                 }else
                 {
-                    product.calculateTotalCost(globalData);
+
+
+
+
+                        product.calculateTotalCost(globalData);
+
+
+
                 }
 
 

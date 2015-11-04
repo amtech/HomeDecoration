@@ -1,6 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
+
+
+
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
@@ -13,6 +16,8 @@ import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.giants3.hd.utils.noEntity.ProductDetail;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
@@ -26,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+
 
 /**
  * 产品信息
@@ -70,6 +75,9 @@ public class ProductController extends BaseController {
     //附件文件夹
     @Value("${attachfilepath}")
     private String attachfilepath;
+
+
+
 
     @Autowired
     private QuotationItemRepository quotationItemRepository;
@@ -391,11 +399,30 @@ public class ProductController extends BaseController {
         } else {
             //找出旧的记录
             Product oldData = productRepository.findOne(productId);
+
+
+
+            //检查一致性  最近更新时间是否一致。
+            if(oldData.lastUpdateTime!=newProduct.lastUpdateTime)
+            {
+                return   wrapError("货号："+newProduct.name +",版本号："+newProduct.pVersion
+                        +" 已经被改变，请刷新数据重新保存。");
+            }
+
+
+
+
+
             //如果产品名称修改  则修正缩略图
             if (!(oldData.name.equals(newProduct.name)&&oldData.pVersion.equals(newProduct.pVersion))) {
                 updateProductPhotoData(newProduct);
             }
         }
+
+
+        //赋于最新的 更新时间
+
+        newProduct.lastUpdateTime=Calendar.getInstance().getTimeInMillis();
 
 
         updateProductPhotoTime(newProduct);
@@ -934,11 +961,11 @@ public class ProductController extends BaseController {
 
         int affectedRow=0;
         affectedRow=productWageRepository.deleteByProductIdEquals(productId);
-        Logger.getLogger("TEST").info("productWageRepository delete affectedRow:"+affectedRow);
+       // logger.info("productWageRepository delete affectedRow:" + affectedRow);
         affectedRow= productMaterialRepository.deleteByProductIdEquals(productId);
-        Logger.getLogger("TEST").info("productMaterialRepository delete affectedRow:" + affectedRow);
+      //  logger.info("productMaterialRepository delete affectedRow:" + affectedRow);
         affectedRow=  productPaintRepository.deleteByProductIdEquals(productId);
-        Logger.getLogger("TEST").info("productPaintRepository delete affectedRow:" + affectedRow);
+      //  logger.info("productPaintRepository delete affectedRow:" + affectedRow);
 
          //TODO   save the delete item to the wareHouse .
 

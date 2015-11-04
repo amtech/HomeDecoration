@@ -134,6 +134,19 @@ public class Product implements Serializable {
 	@Basic
 	public String pVersion="";
 
+
+	/**
+	 * 最近基本数据更新时间
+	 * 不参与数据一致比较
+	 */
+	@Basic
+	public long lastUpdateTime=0;
+
+
+	/**
+	 * 最近图片更新时间
+	 * 不参与数据一致比较
+	 */
 	@Basic
 	public long lastPhotoUpdateTime;
 
@@ -170,6 +183,13 @@ public class Product implements Serializable {
 	@Basic
 	public float productCost;
 
+
+
+	/**
+	 * 港杂费用
+	 */
+	@Basic
+	public float gangza;
 	/**
 	 * 组装工资汇总
 	 */
@@ -308,6 +328,17 @@ public class Product implements Serializable {
 	@Basic
 	public  String url;
 
+
+	/**
+	 * 工厂编号
+	 */
+	@Basic
+	public String  factoryCode;
+	/**
+	 * 工厂名称
+	 */
+	@Basic
+	public String factoryName;
 
 
 
@@ -751,6 +782,7 @@ public class Product implements Serializable {
 		if (Float.compare(product.conceptusWage, conceptusWage) != 0) return false;
 		if (Float.compare(product.packCost, packCost) != 0) return false;
 		if (Float.compare(product.packWage, packWage) != 0) return false;
+		if (Float.compare(product.gangza, gangza) != 0) return false;
 		if (Float.compare(product.fob, fob) != 0) return false;
 		if (Float.compare(product.cost, cost) != 0) return false;
 		if (Float.compare(product.price, price) != 0) return false;
@@ -763,7 +795,7 @@ public class Product implements Serializable {
 		if (insideBoxQuantity != product.insideBoxQuantity) return false;
 		if (Float.compare(product.cost4, cost4) != 0) return false;
 		if (memo != null ? !memo.equals(product.memo) : product.memo != null) return false;
-
+		if (factoryCode != null ? !factoryCode.equals(product.factoryCode) : product.factoryCode != null) return false;
 		if (attaches != null ? !attaches.equals(product.attaches) : product.attaches != null) return false;
 
 		if (url != null ? !url.equals(product.url) : product.url != null) return false;
@@ -810,6 +842,7 @@ public class Product implements Serializable {
 		result = 31 * result + (spec != null ? spec.hashCode() : 0);
 		result = 31 * result + (pVersion != null ? pVersion.hashCode() : 0);
 		result = 31 * result + (int) (lastPhotoUpdateTime ^ (lastPhotoUpdateTime >>> 32));
+		result = 31 * result + (int) (lastUpdateTime ^ (lastUpdateTime >>> 32));
 		result = 31 * result + (constitute != null ? constitute.hashCode() : 0);
 		result = 31 * result + (paintCost != +0.0f ? Float.floatToIntBits(paintCost) : 0);
 		result = 31 * result + (paintWage != +0.0f ? Float.floatToIntBits(paintWage) : 0);
@@ -819,6 +852,7 @@ public class Product implements Serializable {
 		result = 31 * result + (conceptusCost != +0.0f ? Float.floatToIntBits(conceptusCost) : 0);
 		result = 31 * result + (conceptusWage != +0.0f ? Float.floatToIntBits(conceptusWage) : 0);
 		result = 31 * result + (repairCost != +0.0f ? Float.floatToIntBits(repairCost) : 0);
+		result = 31 * result + (gangza != +0.0f ? Float.floatToIntBits(gangza) : 0);
 		result = 31 * result + (isXK ? 1 : 0);
 		result = 31 * result + (xiankang != null ? xiankang.hashCode() : 0);
 		result = 31 * result + (packCost != +0.0f ? Float.floatToIntBits(packCost) : 0);
@@ -836,6 +870,96 @@ public class Product implements Serializable {
 		result = 31 * result + (cost4 != +0.0f ? Float.floatToIntBits(cost4) : 0);
 		result = 31 * result + (mirrorSize != null ? mirrorSize.hashCode() : 0);
 		result = 31 * result + (attaches != null ? attaches.hashCode() : 0);
+		result = 31 * result + (factoryCode != null ? factoryCode.hashCode() : 0);
 		return result;
+	}
+
+
+	/**
+	 * 更新包装相关数据 影响到volume值
+	 * @param inboxCount
+	 * @param quantity
+	 * @param packLong
+	 * @param packWidth
+	 * @param packHeight
+	 */
+	public void updatePackData(GlobalData globalData,int inboxCount, int quantity, float packLong, float packWidth, float packHeight) {
+
+
+
+		this.insideBoxQuantity=inboxCount;
+		this.packQuantity=quantity;
+		this.packLong=packLong;
+		this.packWidth=packWidth;
+		this.packHeight=packHeight;
+
+
+		//计算体积
+		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
+
+
+		//外厂才计算港杂
+		//计算出港杂      立方数* 出口运费/装箱数
+		gangza=calculateGangza(globalData);
+		updateCostOnForignFactory(globalData,productCost);
+
+
+	}
+
+
+	public void updateForeignFactoryRelate(GlobalData globalData)
+	{
+
+			calculateGangza(globalData);
+		updateCostOnForignFactory(globalData,productCost);
+
+	}
+
+
+	/**
+	 * 根据外厂实际成本值 港杂费用 更新到 成本价 出厂价，美金价格
+	 * @param productCost  实际成本
+	 *
+	 */
+	public void updateCostOnForignFactory(GlobalData globalData,float productCost ) {
+
+
+		this.productCost=productCost;
+
+
+//		计算外厂港杂
+
+//		calculateForeignGangza();
+//		this.gangza=gangza;
+
+
+
+
+
+
+
+		//更新成本价格
+		cost=FloatHelper.scale(productCost+gangza);
+
+
+
+
+		//更新出厂价格(加上管理费用  即 除以换算比率)
+		price=FloatHelper.scale(cost*(1+globalData.manageRatioForeign));
+
+
+		//更新美金价格
+		fob=FloatHelper.scale(price/globalData.exportRate);
+
+
+
+	}
+
+
+	private float calculateGangza(GlobalData globalData)
+	{
+
+		gangza=FloatHelper.scale(packQuantity>0?globalData.price_of_export*packVolume/packQuantity:0);
+		return gangza;
 	}
 }

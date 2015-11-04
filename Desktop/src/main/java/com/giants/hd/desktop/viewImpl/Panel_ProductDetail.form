@@ -22,7 +22,7 @@
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
         <rowspec value="fill:25px:noGrow"/>
-        <rowspec value="fill:311px:grow(10.0)"/>
+        <rowspec value="fill:m:grow(10.0)"/>
         <rowspec value="fill:m:grow"/>
         <rowspec value="fill:m:noGrow"/>
         <rowspec value="top:m:noGrow"/>
@@ -56,7 +56,7 @@
         </properties>
         <border type="etched"/>
         <children>
-          <tabbedpane id="38000" binding="tabbedPane1" default-binding="true">
+          <tabbedpane id="38000" binding="tab_list">
             <constraints>
               <grid row="14" column="0" row-span="1" col-span="22" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="200" height="200"/>
@@ -282,7 +282,9 @@
               </grid>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <lineWrap value="true"/>
+            </properties>
           </component>
           <component id="1ec19" class="javax.swing.JTextField" binding="tf_version">
             <constraints>
@@ -625,6 +627,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
+              <text value=""/>
             </properties>
           </component>
           <component id="95f10" class="javax.swing.JTextField" binding="tf_width">
@@ -916,6 +919,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
+              <enabled value="true"/>
               <toolTipText value="成本数值（不可输入）"/>
             </properties>
           </component>
@@ -1318,6 +1322,46 @@
             <properties>
               <horizontalAlignment value="0"/>
               <text value="单位"/>
+            </properties>
+          </component>
+          <component id="11951" class="javax.swing.JComboBox" binding="cb_factory" custom-create="true">
+            <constraints>
+              <grid row="1" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="557a9" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="厂家"/>
+            </properties>
+          </component>
+          <component id="95003" class="javax.swing.JLabel" binding="lb_gangza">
+            <constraints>
+              <grid row="11" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="港杂费"/>
+              <toolTipText value="只有外厂有这项目"/>
+            </properties>
+          </component>
+          <component id="28458" class="javax.swing.JTextField" binding="tf_gangza">
+            <constraints>
+              <grid row="11" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <toolTipText value="外厂自动计算港杂费，本厂无"/>
             </properties>
           </component>
         </children>

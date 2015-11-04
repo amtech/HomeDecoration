@@ -77,7 +77,11 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
         int startRow=11;
 
+        int defaultRow=20;
         int dataSize=detail.items.size();
+        duplicateRow(workbook,sheet,startRow,defaultRow,dataSize);
+
+
         for (int i = 0; i < dataSize; i++) {
 
             QuotationItem item=detail.items.get(i);
@@ -110,7 +114,7 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
             //产品尺寸
 
-            String[]  specValue= cmToInchSpec(StringUtils.decoupleSpecString(item.spec));
+            String[]  specValue= groupSpec(StringUtils.decoupleSpecString(item.spec));
             setCellValue(sheet, specValue[0], 7, rowUpdate);
             setCellValue(sheet, specValue[1], 8, rowUpdate);
             setCellValue(sheet, specValue[2], 9, rowUpdate);
@@ -194,6 +198,7 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
 
             BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
+            if(bufferedImage!=null)
             photo=   ImageUtils.scale(bufferedImage,(int)columnWidth*4, (int)rowHeight*4,true);
         } catch (HdException e) {
             e.printStackTrace();

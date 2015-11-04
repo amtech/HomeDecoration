@@ -80,7 +80,7 @@ public class UpgradeDialog extends BaseDialog {
                         initValue(currentVersion,version);
                     }else
                     {
-                        JOptionPane.showMessageDialog(UpgradeDialog.this, "目前已经是最新版本");
+                        JOptionPane.showMessageDialog(UpgradeDialog.this, "目前版本["+currentVersion.versionName+"]已经是最新版本");
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {

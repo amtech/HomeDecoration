@@ -120,6 +120,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                             Manifest manifest=jarInputStream.getManifest();
                             jarInputStream.close();
                             fileInputStream.close();
+                            //未读到配置文件 掠过
+                            if(null==manifest) continue;
                               appVersion=new AppVersion();
                             Attributes attr= manifest.getMainAttributes();
                             appVersion.memo=attr.getValue("Manifest-Version_Spec");

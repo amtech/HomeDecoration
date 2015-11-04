@@ -78,6 +78,12 @@ public class GlobalData implements Serializable {
     //}
 
 
+    /**
+     * 外厂产品管理费用
+     */
+    public float manageRatioForeign=0.15f;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -94,6 +100,7 @@ public class GlobalData implements Serializable {
         if (Float.compare(that.extra_ratio_of_diluent, extra_ratio_of_diluent) != 0) return false;
         if (Float.compare(that.repairPrice, repairPrice) != 0) return false;
         if (Float.compare(that.manageRatioXK, manageRatioXK) != 0) return false;
+        if (Float.compare(that.manageRatioForeign, manageRatioForeign) != 0) return false;
         return Float.compare(that.manageRatioNormal, manageRatioNormal) == 0;
 
     }
@@ -110,6 +117,7 @@ public class GlobalData implements Serializable {
         result = 31 * result + (repairPrice != +0.0f ? Float.floatToIntBits(repairPrice) : 0);
         result = 31 * result + (manageRatioXK != +0.0f ? Float.floatToIntBits(manageRatioXK) : 0);
         result = 31 * result + (manageRatioNormal != +0.0f ? Float.floatToIntBits(manageRatioNormal) : 0);
+        result = 31 * result + (manageRatioForeign != +0.0f ? Float.floatToIntBits(manageRatioForeign) : 0);
         return result;
     }
 }

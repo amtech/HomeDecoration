@@ -65,7 +65,7 @@ public class ProductDetailFrame extends BaseFrame {
 
         panel_productDetail.setListener(adapter);
         setContentPane(panel_productDetail.getRoot());
-        setMinimumSize(new Dimension(1024, 768));
+        setMinimumSize(new Dimension(1024, 600));
         pack();
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

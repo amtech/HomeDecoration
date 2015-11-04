@@ -9,3 +9,5 @@ Server/Server.iml
 build/
 .gradle/
 localFile/
+classes/
+gradle/

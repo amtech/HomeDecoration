@@ -12,10 +12,14 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.Number;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -71,7 +75,7 @@ public   class ExcelReportor {
         WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, inputWorkbook, s);
        inputWorkbook.close();
 
-         inputWorkbook=null;
+
 
         writeOnExcel(quotationDetail, workbookCopy);
 
@@ -162,7 +166,9 @@ public   class ExcelReportor {
           //  data=  ImageUtils.scale(new URL(url), 640, 640, true);
 
             BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
+            if(bufferedImage!=null)
             data=   ImageUtils.scale(bufferedImage,640, 640,true);
+
         } catch (HdException e) {
             e.printStackTrace();
         }
@@ -233,11 +239,69 @@ public   class ExcelReportor {
 
 
     /**
+     * 复制空行
+     * @param sheet
+     * @param startRow
+     * @param defaultRowCount
+     * @param dataSize
+     */
+    protected void  duplicateRow(org.apache.poi.ss.usermodel.Workbook workbook,Sheet sheet, int startRow,int defaultRowCount,int dataSize) {
+
+
+
+
+        //实际数据超出范围 插入空行
+        if(dataSize>defaultRowCount)
+        {
+            //插入空行
+            int rowNumToInsert=dataSize-defaultRowCount;
+
+            if(startRow+defaultRowCount<sheet.getLastRowNum())
+            sheet.shiftRows(startRow+defaultRowCount  , sheet.getLastRowNum(), rowNumToInsert ,true,true);
+
+            Row rowForCopy=sheet.getRow(startRow);
+            for(int j=0;j<rowNumToInsert;j++) {
+
+                int rowToInsert=startRow+defaultRowCount+j ;
+
+               Row row= sheet.createRow(rowToInsert);
+
+
+                POIUtils.copyRow(workbook,rowForCopy,row,true);
+
+            }
+        }
+
+
+
+
+
+
+    }
+
+
+
+    /**
      * 产品规格转换成inch类型  并分段显示
      * @param spec
      * @return
      */
-    public  String[] cmToInchSpec(float[][] spec)
+    public  String[] groupSpec(float[][] spec)
+    {
+
+
+        return groupSpec(spec, false);
+
+
+
+    }
+
+    /**
+     * 产品规格转换成inch类型  并分段显示
+     * @param spec
+     * @return
+     */
+    public  String[] groupSpec(float[][] spec, boolean toInch)
     {
 
 
@@ -247,7 +311,7 @@ public   class ExcelReportor {
         for (int i = 0; i < length; i++) {
 
             for(int j=0;j<3;j++) {
-                result[j] += UnitUtils.cmToInch(spec[i][j]);
+                result[j] +=toInch? UnitUtils.cmToInch(spec[i][j]):spec[i][j];
 
                 if (i < length-1)
                     result[j] += StringUtils.row_separator;
@@ -260,5 +324,86 @@ public   class ExcelReportor {
 
     }
 
+
+    protected void addString(Sheet sheet,String value, int column ,int rowUpdate)
+    {
+        Cell cell = sheet.getRow(rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
+        cell.setCellValue(value);
+
+    }
+
+    protected void addNumber(Sheet sheet,double value, int column,int rowUpdate)
+    {
+        Row row=sheet.getRow(rowUpdate);
+        Cell cell = row.getCell(column, Row.CREATE_NULL_AS_BLANK);
+
+        cell.setCellValue(value);
+
+    }
+
+
+
+    protected void attachPicture(org.apache.poi.ss.usermodel.Workbook workbook,Sheet sheet,String url,int column, int row,int column2, int row2)  {
+
+
+
+
+        float columnWidth=sheet.getColumnWidthInPixels(column) ;
+        float rowHeight=sheet.getRow(row).getHeightInPoints()  ;
+
+
+        byte[] photo=null;
+
+
+        try {
+
+
+            BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
+            if(bufferedImage!=null)
+                photo=   ImageUtils.scale(bufferedImage,(int)columnWidth*10, (int)rowHeight*10,true);
+        } catch (HdException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        if(photo!=null ) {
+            int pictureIdx = workbook.addPicture(photo, org.apache.poi.ss.usermodel.Workbook.PICTURE_TYPE_PNG);
+            Drawing drawing = sheet.createDrawingPatriarch();
+            CreationHelper helper = workbook.getCreationHelper();
+            //add a picture shape
+            ClientAnchor anchor = helper.createClientAnchor();
+            //set top-left corner of the picture,
+            //subsequent call of Picture#resize() will operate relative to it
+            anchor.setCol1(column);
+            anchor.setRow1(row);
+
+            anchor.setCol2(column2);
+            anchor.setRow2(row2);
+
+            anchor.setDx1(50);
+           anchor.setDy1(50);
+            anchor.setDx2(-20);
+            anchor.setDy2(-20);
+            anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+
+
+            Picture pict = drawing.createPicture(anchor, pictureIdx);
+            pict.resize(1);
+
+            //auto-size picture relative to its top-left corner
+
+//            float columnWidth=sheet.getColumnWidthInPixels(column);
+//            float rowHeight=sheet.getRow(row).getHeightInPoints()/3*4;
+
+//            pict.resize( columnWidth/pictureWidth,(float)rowHeight/pictureHeight);
+        }
+
+
+
+    }
 
 }

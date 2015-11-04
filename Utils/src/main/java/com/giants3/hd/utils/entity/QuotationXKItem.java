@@ -270,13 +270,8 @@ public class QuotationXKItem implements Serializable,Valuable {
 
     public void updateProduct(Product product) {
 
-        updateProduct(product,null);
 
 
-    }
-
-
-    public void updateProduct(Product product,Product product2) {
 
 
         productId=product.id;
@@ -304,7 +299,6 @@ public class QuotationXKItem implements Serializable,Valuable {
         memo=product.memo;
 
 
-        updateProduct2(product2);
 
 
     }
@@ -315,7 +309,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         productId2=product==null?0:product.id;
         productPhoto2=product==null?null:product.photo;
-        photo2Url=product.url;
+        photo2Url=product==null?"":product.url;
 
         productName2=product==null?"":product.name;
         pVersion2=product==null?"":product.pVersion;
@@ -343,7 +337,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
     @Override
     public boolean isEmpty() {
-        return productId<=0||StringUtils.isEmpty(productName);
+        return productId<=0&&productId2<=0 ;
     }
 
 

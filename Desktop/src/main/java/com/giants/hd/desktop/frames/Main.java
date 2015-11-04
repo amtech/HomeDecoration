@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.MyLogger;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
@@ -23,6 +24,8 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+//import org.apache.commons.logging.Log;
+
 
 
 import javax.swing.*;
@@ -210,14 +213,20 @@ public class Main extends BaseFrame {
 
 
 
-
-
-
+        sayHello();
 
 
 
     }
 
+
+    private static void sayHello() {
+//      Log logger=  MyLogger.Logger(Main.class);
+//        logger.info("hello");
+//        logger.warn("testtesttetstt");
+
+
+    }
 
     /**
      * 生成菜单
@@ -806,7 +815,8 @@ public class Main extends BaseFrame {
                 CacheManager.getInstance().bufferData=data.datas.get(0);
                 CacheManager.getInstance().bufferData.loginUser=user;
                 generateMenu();
-                setTitle(TITLE+"       ("+user.toString()+")");
+                AppVersion currentVersion = PropertyWorker.getVersion();
+                setTitle(TITLE+"       ("+user.toString()+")                     "+"当前版本"+currentVersion.versionName+"("+currentVersion.versionCode+")");
 
 
 

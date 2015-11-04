@@ -4,11 +4,21 @@ import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
+import jxl.read.biff.BiffException;
 import jxl.write.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /** 通用报价模板
  * Created by davidleen29 on 2015/8/6.
@@ -16,12 +26,47 @@ import java.io.IOException;
 public class Report_Excel_NORMAL extends ExcelReportor {
 
 
+
+
+    Workbook workbook;
     public Report_Excel_NORMAL(QuotationFile modelName) {
         super(modelName);
     }
 
+
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException {
+
+
+
+
+        //Create Workbook instance holding reference to .xlsx file
+        InputStream inputStream=url.openStream();
+        workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+        writeOnExcel(workbook.getSheetAt(0), quotationDetail);
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+
+
+
+    protected void writeOnExcel(Sheet writableSheet,QuotationDetail quotationDetail) throws   IOException {
 
 
         int defaultRowCount=7;
@@ -30,7 +75,13 @@ public class Report_Excel_NORMAL extends ExcelReportor {
         int dataSize=quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(writableSheet,startItemRow,defaultRowCount,dataSize);
+        duplicateRow(workbook,writableSheet,startItemRow,defaultRowCount,dataSize);
+
+
+
+
+
+
 
 
 
@@ -61,7 +112,7 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
 
-        float pictureGap=0.1f;
+
 
 
         for (int i = 0; i <dataSize; i++) {
@@ -77,7 +128,7 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             //图片
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0 , rowUpdate ,1 , rowUpdate );
 
 
 
@@ -94,29 +145,30 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             addString(writableSheet, item.productName.trim(), 2, rowUpdate);
 
 
-
+            //货号
+            addString(writableSheet, item.pVersion , 3, rowUpdate);
 
 
 
             //材料比重
-            addString(writableSheet, item.constitute.trim(), 4, rowUpdate);
+            addString(writableSheet, item.constitute.trim(), 5, rowUpdate);
 
 
 
             //单位
             int lastIndex=item.unit.lastIndexOf("/");
-            addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 6, rowUpdate);
+            addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 7, rowUpdate);
 
             //FOb
-            addNumber(writableSheet, item.price, 7, rowUpdate);
+            addNumber(writableSheet, item.price, 8, rowUpdate);
 
             //包装尺寸
             //内盒数
-            addNumber(writableSheet, item.inBoxCount, 8, rowUpdate);
+            addNumber(writableSheet, item.inBoxCount, 9, rowUpdate);
 
 
             //包装数
-            addNumber(writableSheet, item.packQuantity, 9, rowUpdate);
+            addNumber(writableSheet, item.packQuantity, 10, rowUpdate);
 
 
 
@@ -126,36 +178,36 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
             //包装长
-            addNumber(writableSheet, result[0], 11, rowUpdate);
+            addNumber(writableSheet, result[0], 12, rowUpdate);
 
             //包装宽
-            addNumber(writableSheet, result[1], 13, rowUpdate);
+            addNumber(writableSheet, result[1], 14, rowUpdate);
 
 
             //包装高
-            addNumber(writableSheet, result[2], 15, rowUpdate);
+            addNumber(writableSheet, result[2], 16, rowUpdate);
 
 
 
             //包装体积
-            addNumber(writableSheet, item.volumeSize, 16, rowUpdate);
+            addNumber(writableSheet, item.volumeSize, 17, rowUpdate);
 
 
 
             //产品规格
-            addString(writableSheet, item.spec.trim(), 17, rowUpdate);
+            addString(writableSheet, item.spec.trim(), 18, rowUpdate);
 
 
             //镜面尺寸
-            addString(writableSheet, item.mirrorSize.trim(), 19, rowUpdate);
+            addString(writableSheet, item.mirrorSize.trim(), 20, rowUpdate);
 
 
             //净重
-            addNumber(writableSheet, item.weight, 20, rowUpdate);
+            addNumber(writableSheet, item.weight, 21, rowUpdate);
 
 
             //备注
-            addString(writableSheet, item.memo.trim(), 22, rowUpdate);
+            addString(writableSheet, item.memo.trim(), 23, rowUpdate);
 
 
         }

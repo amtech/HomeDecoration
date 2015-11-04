@@ -148,7 +148,11 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                             QuotationXKItem item =  (QuotationXKItem)object;
                             if (item.productId > 0) {
                                 ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion, item.photoUrl);
-                            }
+                            }else
+                                if(item.productId2>0)
+                                {
+                                    ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName2, item.pVersion2, item.photo2Url);
+                                }
                         }
 
                     }
@@ -336,7 +340,8 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                                 Product product2=  findProduct(productList,item.productId2 );
                                 if(product!=null)
                                 {
-                                    item.updateProduct(product,product2);
+                                            item.updateProduct(product);
+                                            item.updateProduct2(product2);
                                 }
 
                             }
@@ -622,11 +627,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
         final   int rowIndex = tb.convertRowIndexToModel(tb.getSelectedRow());
         final  QuotationXKItem item=productable.getItem(rowIndex);
-        if(item.productId<=0)
-        {
-            JOptionPane.showMessageDialog(getRoot(),"请先挑选品名");
-            return;
-        }
+
         //查询  单记录直接copy
         new HdSwingWorker<Product,Object>(SwingUtilities.getWindowAncestor(getRoot()))
         {

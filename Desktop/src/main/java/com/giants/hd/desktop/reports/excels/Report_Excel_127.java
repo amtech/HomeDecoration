@@ -17,7 +17,7 @@ import jxl.write.WriteException;
 import java.io.File;
 import java.io.IOException;
 
-/**802 �ͻ� ģ��
+/**802 ??? ???
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_127 extends ExcelReportor {
@@ -88,39 +88,39 @@ public class Report_Excel_127 extends ExcelReportor {
             WritableSheet writableSheet = writableWorkbook.getSheet(i+1);
 
 
-            //��������
+            //????????
             addString(writableSheet, quotation.qDate, 5, 2);
 
-            //����
+            //????
             addString(writableSheet, item.productName, 1, 3);
 
 
 
-            //��Ҫ�ɷ�
+            //??????
             addString(writableSheet, item.memo, 1, 4);
 
 
-            //�ߴ�
+            //???
             addString(writableSheet, item.spec, 1, 6);
 
 
-            //����
+            //????
             addNumber(writableSheet, item.weight, 6, 18);
 
 
-            //�ں���
+            //?????
             addNumber(writableSheet, item.inBoxCount, 6, 22);
 
-            //��װ��
+            //?????
             addNumber(writableSheet, item.packQuantity, 6, 23);
 
 
-            //��װ���
+            //??????
             addString(writableSheet, item.packageSize, 6, 26);
 
 
 
-            //cbm ���
+            //cbm ???
             addNumber(writableSheet, item.volumeSize, 6, 27);
 
 
@@ -135,7 +135,7 @@ public class Report_Excel_127 extends ExcelReportor {
 
 
 //
-//            //������Ʒ����
+//            //???????????
 //             addString(writableSheet, "", 5, 25);
 //            addString(writableSheet, "", 13, 18);
 //            addString(writableSheet, "", 13, 19);

@@ -9,22 +9,57 @@ import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
 import jxl.write.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /** 报价导出咸康灯具模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
+    Workbook workbook;
 
     public Report_Excel_XK_DENGJU(QuotationFile modelName) {
         super(modelName);
     }
 
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
 
+
+
+
+        //Create Workbook instance holding reference to .xlsx file
+        InputStream inputStream=url.openStream();
+        workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+        writeOnExcel(workbook.getSheetAt(0), quotationDetail);
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+
+    protected void writeOnExcel(Sheet writableSheet,QuotationDetail quotationDetail) throws IOException, HdException {
         int defaultRowCount=10;
 
         int startRow=4;
@@ -36,7 +71,7 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         int dataSize=quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(writableSheet,startRow,defaultRowCount,dataSize);
+        duplicateRow(workbook,writableSheet,startRow,defaultRowCount,dataSize);
 
 
 
@@ -49,17 +84,12 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         jxl.write.Number num;
         WritableImage  image;
 
-        int rowCount=  writableSheet.getRows();
-        int columnCount=  writableSheet.getColumns();
-        WritableCellFormat format=new WritableCellFormat();
-        format.setAlignment(jxl.format.Alignment.CENTRE);
-        format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-        format.setWrap(true);
-        format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
         //报价日期
         //设计号  版本号
-        label1 = new Label(7, 1, quotationDetail.quotation.qDate,format);
-        writableSheet.addCell(label1);
+//        label1 = new Label(7, 1, quotationDetail.quotation.qDate,format);
+//        writableSheet.addCell(label1);
+        addString(writableSheet,quotationDetail.quotation.qDate,7,1);
 
 
 
@@ -77,7 +107,7 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             //图片
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,5, rowUpdate);
 
 
 
@@ -87,17 +117,22 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
             //行号
             //设计号  版本号
-            label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
-            writableSheet.addCell(label1);
+//            label1 = new Label(0, rowUpdate,String.valueOf(i+1),format);
+//            writableSheet.addCell(label1);
+
+            addNumber(writableSheet, i + 1, 0, rowUpdate);
+
 
             //设计号  版本号
-            label1 = new Label(1, rowUpdate, item.pVersion,format);
-            writableSheet.addCell(label1);
+//            label1 = new Label(1, rowUpdate, item.pVersion,format);
+//            writableSheet.addCell(label1);
+
+            addString(writableSheet, item.pVersion, 1, rowUpdate);
 
             //货号
-            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
-            writableSheet.addCell(label1);
-
+//            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
+//            writableSheet.addCell(label1);
+            addString(writableSheet,item.productName,2,rowUpdate);
             //读取咸康数据
             ProductDetail productDetail= apiManager.loadProductDetail(item.productId).datas.get(0);
 
@@ -105,24 +140,30 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
             //材料比重
             //货号
-            label1 = new Label(8, rowUpdate,  productDetail.product.constitute);
-            writableSheet.addCell(label1);
+//            label1 = new Label(8, rowUpdate,  productDetail.product.constitute);
+//            writableSheet.addCell(label1);
+            addString(writableSheet,productDetail.product.constitute,8,rowUpdate);
 
             if(productDetail.product.xiankang!=null)
             {
 
 
                 //同款货号
-                label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
-                writableSheet.addCell(label1);
+//                label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,productDetail.product.xiankang.getQitahuohao(),3,rowUpdate);
 
                 //甲醛标示
-                label1 = new Label(9, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
-                writableSheet.addCell(label1);
+//                label1 = new Label(9, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,productDetail.product.xiankang.getJiaquan(),9,rowUpdate);
 
                 //材质
-                label1 = new Label(10, rowUpdate,  productDetail.product.xiankang.getCaizhi(),format);
-                writableSheet.addCell(label1);
+//                label1 = new Label(10, rowUpdate,  productDetail.product.xiankang.getCaizhi(),format);
+//                writableSheet.addCell(label1);
+                addString(writableSheet,productDetail.product.xiankang.getCaizhi(),10,rowUpdate);
             }
 
         }

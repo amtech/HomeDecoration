@@ -1,37 +1,74 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Guice;
-import jxl.write.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /** 报价导出咸康灯具模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_XK_JIAJU extends ExcelReportor {
 
-
+    Workbook workbook;
     public Report_Excel_XK_JIAJU(QuotationFile modelName) {
         super(modelName);
     }
 
+
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
+
+
+
+
+        //Create Workbook instance holding reference to .xlsx file
+        InputStream inputStream=url.openStream();
+        workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+        writeOnExcel( quotationDetail,workbook.getSheetAt(0));
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+
+
+
+
+    protected void writeOnExcel(QuotationDetail quotationDetail, Sheet writableSheet ) throws   IOException, HdException {
 
         int defaultRowCount=10;
-
         int startRow=4;
         int dataSize=quotationDetail.items.size();
-        duplicateRow(writableSheet,startRow,defaultRowCount,dataSize);
+        duplicateRow(workbook,writableSheet,startRow,defaultRowCount,dataSize);
 
 
 
@@ -48,7 +85,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
         addString(writableSheet,quotationDetail.quotation.qDate,5,1);
 
         ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
-        float pictureGap=0.1f;
+
 
         for(int i=0;i<dataSize;i++)
         {
@@ -60,7 +97,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
             //图片
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,5, rowUpdate);
 
 
 

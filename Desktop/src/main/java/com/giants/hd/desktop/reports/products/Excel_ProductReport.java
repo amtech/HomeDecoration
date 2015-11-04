@@ -65,8 +65,9 @@ public class Excel_ProductReport {
             //单位
             int unitSize = 1;
             try {
-                unitSize = Integer.valueOf(product.pUnitName.substring(product.pUnitName.lastIndexOf("/")));
+                unitSize = Integer.valueOf(product.pUnitName.substring(product.pUnitName.lastIndexOf("/")+1).trim());
             } catch (Throwable t) {
+                t.printStackTrace();
 
             }
             setCellValue(sheet, unitSize, 6, rowUpdate);

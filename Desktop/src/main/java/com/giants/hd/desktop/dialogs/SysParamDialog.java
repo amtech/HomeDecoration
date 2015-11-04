@@ -26,6 +26,7 @@ public class SysParamDialog extends BaseDialog {
     private JTextField tf_repairePrice;
     private JTextField tf_manageRatioXK;
     private JTextField tf_manageRatioNormal;
+    private JTextField tf_manageRatioForeign;
     GlobalData oldData;
     GlobalData newData;
     @Inject
@@ -119,9 +120,10 @@ public class SysParamDialog extends BaseDialog {
             globalData.manageRatioNormal= Float.valueOf(tf_manageRatioNormal.getText().trim());
             globalData.manageRatioXK= Float.valueOf(tf_manageRatioXK.getText().trim());
             globalData.repairPrice= Float.valueOf(tf_repairePrice.getText().trim());
+            globalData.manageRatioForeign= Float.valueOf(tf_manageRatioForeign.getText().trim());
         }catch (Throwable t)
         {
-            throw   HdUIException.create("输入的数据有错， 请输入数字");
+            throw   HdUIException.create("输入的数据有错， 请输入数字,不能为空");
         }
 
     }
@@ -142,6 +144,7 @@ public class SysParamDialog extends BaseDialog {
         tf_manageRatioNormal.setText(String.valueOf(globalData.manageRatioNormal))  ;
         tf_manageRatioXK.setText(String.valueOf(globalData.manageRatioXK))  ;
         tf_repairePrice.setText(String.valueOf(globalData.repairPrice))  ;
+        tf_manageRatioForeign.setText(String.valueOf(globalData.manageRatioForeign))  ;
 
 
     }

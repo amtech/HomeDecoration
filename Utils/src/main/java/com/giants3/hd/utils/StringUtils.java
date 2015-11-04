@@ -161,9 +161,9 @@ public class StringUtils {
         float[] result=new float[3];
 
         try {
-            result[0] = Float.valueOf(packageString.substring(0, firstIndex));
-            result[1] = Float.valueOf(packageString.substring(firstIndex + 1, lastIndex));
-            result[2] = Float.valueOf(packageString.substring(lastIndex + 1));
+            result[0] =FloatHelper.scale( Float.valueOf(packageString.substring(0, firstIndex)));
+            result[1] = FloatHelper.scale(Float.valueOf(packageString.substring(firstIndex + 1, lastIndex)));
+            result[2] = FloatHelper.scale(Float.valueOf(packageString.substring(lastIndex + 1)));
         }catch (Throwable t)
         {
             t.printStackTrace();

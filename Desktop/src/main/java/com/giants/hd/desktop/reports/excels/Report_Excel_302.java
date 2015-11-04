@@ -10,8 +10,14 @@ import com.giants3.hd.utils.exception.HdException;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**802 客户 模板
  * Created by davidleen29 on 2015/8/6.
@@ -19,14 +25,42 @@ import java.io.IOException;
 public class Report_Excel_302 extends ExcelReportor {
 
 
+    Workbook workbook;
     public Report_Excel_302(QuotationFile modelName) throws HdException {
         super(modelName);
 
     }
 
-
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableSheet writableSheet, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
+
+
+
+
+        //Create Workbook instance holding reference to .xlsx file
+        InputStream inputStream=url.openStream();
+        workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+        writeOnExcel(quotationDetail,workbook.getSheetAt(0)  );
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+    protected void writeOnExcel(QuotationDetail quotationDetail, Sheet writableSheet ) throws   IOException, HdException {
 
 
 
@@ -36,7 +70,7 @@ public class Report_Excel_302 extends ExcelReportor {
 
         int dataSize=quotationDetail.items.size();
         //实际数据超出范围 插入空行
-        duplicateRow(writableSheet,startItemRow,defaultRowCount,dataSize);
+        duplicateRow(workbook,writableSheet,startItemRow,defaultRowCount,dataSize);
 
 
         Quotation quotation=quotationDetail.quotation;
@@ -54,7 +88,7 @@ public class Report_Excel_302 extends ExcelReportor {
             //图片
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl),6+pictureGap/2, rowUpdate+pictureGap/2,1-pictureGap, 1-pictureGap);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),6 , rowUpdate ,7, rowUpdate);
 
 
 
@@ -77,7 +111,7 @@ public class Report_Excel_302 extends ExcelReportor {
 
             //产品尺寸
 
-          String[]  specValue= cmToInchSpec(StringUtils.decoupleSpecString(item.spec));
+          String[]  specValue= groupSpec(StringUtils.decoupleSpecString(item.spec));
             addString(writableSheet, specValue[0], 10, rowUpdate);
 
 

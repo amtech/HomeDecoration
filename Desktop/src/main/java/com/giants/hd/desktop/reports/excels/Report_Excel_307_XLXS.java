@@ -124,7 +124,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
             //产品尺寸
 
-            String[]  specValue= cmToInchSpec(StringUtils.decoupleSpecString(item.spec));
+            String[]  specValue= groupSpec(StringUtils.decoupleSpecString(item.spec));
             setCellValue(sheet, specValue[0], 17, rowUpdate);
             setCellValue(sheet, specValue[1], 18, rowUpdate);
             setCellValue(sheet, specValue[2], 19, rowUpdate);
@@ -135,7 +135,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
             //重量  英镑
             setCellValue(sheet,UnitUtils.kgToPound(item.weight), 22, rowUpdate);
 
-
+            setCellValue(sheet,item.constitute, 24, rowUpdate);
             //插入图片
             XSSFSheet itemSheet=workbook.getSheet("Item ("+(i+1)+")");
 
@@ -153,7 +153,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
 
 
-    private void setCellValue(XSSFSheet sheet,String value, int column ,int rowUpdate)
+    protected void setCellValue(XSSFSheet sheet,String value, int column ,int rowUpdate)
     {
         Cell cell = sheet.getRow(rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
         cell.setCellStyle(CellUtil.getCell(CellUtil.getRow(styleRow,sheet),column).getCellStyle());
@@ -161,7 +161,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
     }
 
-    private void setCellValue(XSSFSheet sheet,double value, int column,int rowUpdate)
+    protected void setCellValue(XSSFSheet sheet,double value, int column,int rowUpdate)
     {
         Row row=sheet.getRow(rowUpdate);
         Cell cell = row.getCell(column);
@@ -177,7 +177,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
 
 
-    private void addPicture(XSSFSheet sheet,String url,int column, int row,int column2, int row2)  {
+    protected void addPicture(XSSFSheet sheet,String url,int column, int row,int column2, int row2)  {
 
 
 
@@ -192,6 +192,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
         try {
             BufferedImage bufferedImage=ImageLoader.getInstance().loadImage(url );
+            if(bufferedImage!=null)
             photo=   ImageUtils.scale(bufferedImage,1280, 1280,true);
         } catch (HdException e) {
             e.printStackTrace();

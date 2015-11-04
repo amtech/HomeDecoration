@@ -37,4 +37,7 @@ public class BufferData implements Serializable{
     public  User loginUser;
 
     public  GlobalData globalData;
+
+
+    public List<Factory> factories;
 }

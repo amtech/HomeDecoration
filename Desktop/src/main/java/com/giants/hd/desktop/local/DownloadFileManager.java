@@ -3,6 +3,7 @@ package com.giants.hd.desktop.local;
 import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FileUtils;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Singleton;
 
@@ -24,7 +25,7 @@ public class DownloadFileManager {
     String localFilePath=LocalFileHelper.path+"/temp/files/";
     String localCachePath=LocalFileHelper.path+"/temp/";
 
-    public static final int CACHE_MAX_SIZE=100;
+    public static final int CACHE_MAX_SIZE=5000;
     public static final int MAX_HIT_COUNT=10000;
 
 
@@ -56,6 +57,13 @@ public class DownloadFileManager {
      * @return   文件路径
      */
     public  String cacheFile(String url) throws IOException {
+
+
+
+            if(StringUtils.isEmpty(url))
+            {
+                throw new IOException("file no found");
+            }
            String fileName=map(url);
 
 
