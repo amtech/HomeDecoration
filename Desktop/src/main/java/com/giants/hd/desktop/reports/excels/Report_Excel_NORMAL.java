@@ -7,8 +7,7 @@ import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
-import jxl.read.biff.BiffException;
-import jxl.write.*;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -128,12 +127,11 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             //图片
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0 , rowUpdate ,1 , rowUpdate );
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0 , rowUpdate ,0 , rowUpdate );
 
 
 
             //读取咸康数据
-            //ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
 

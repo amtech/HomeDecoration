@@ -77,18 +77,33 @@ public class POIUtils {
             copyRow(wb,tmpRow,newRow,copyValueFlag);
         }
     }
+
     /**
      * 行复制功能
      * @param fromRow
      * @param toRow
      */
-    public static void copyRow(Workbook wb,Row fromRow,Row toRow,boolean copyValueFlag){
+    public static void copyRow(Workbook wb,Row fromRow,Row toRow,boolean copyValueFlag)
+    {
+
+        copyRow(  wb,  fromRow,  toRow,  copyValueFlag,  true);
+
+    }
+    /**
+     * 行复制功能
+     * @param fromRow
+     * @param toRow
+      * @param copyValueFlag
+     * @param useSourceStyle  是否使用源格子的 style
+     *
+     */
+    public static void copyRow(Workbook wb,Row fromRow,Row toRow,boolean copyValueFlag,boolean useSourceStyle){
         for (Iterator cellIt = fromRow.cellIterator(); cellIt.hasNext();) {
             Cell tmpCell =  (Cell) cellIt.next();
             Cell newCell = toRow.createCell(tmpCell.getColumnIndex());
             toRow.setHeight(fromRow.getHeight());
 
-            copyCell(wb, tmpCell, newCell, copyValueFlag);
+            copyCell(wb, tmpCell, newCell, copyValueFlag,useSourceStyle);
         }
     }
     /**
@@ -104,6 +119,14 @@ public class POIUtils {
             toSheet.addMergedRegion(mergedRegionAt);
         }
     }
+    public static void copyCell(Workbook wb,Cell srcCell, Cell distCell,
+                                boolean copyValueFlag) {
+
+
+        copyCell(  wb,  srcCell,   distCell,
+          copyValueFlag,false);
+    }
+
     /**
      * 复制单元格
      *
@@ -113,15 +136,26 @@ public class POIUtils {
      *            true则连同cell的内容一起复制
      */
     public static void copyCell(Workbook wb,Cell srcCell, Cell distCell,
-                                boolean copyValueFlag) {
-        CellStyle newstyle=wb.createCellStyle();
+                                boolean copyValueFlag,boolean useFromStyle) {
 
         CellStyle oldCellStyle = srcCell.getCellStyle();
-        copyCellStyle(oldCellStyle, newstyle);
 
-       // distCell.setEncoding(srcCell.getEncoding());
-        //样式
-        distCell.setCellStyle(newstyle);
+        if(useFromStyle)
+        {
+
+            distCell.setCellStyle(oldCellStyle);
+        }else
+        {
+
+            CellStyle newstyle=wb.createCellStyle();
+
+
+
+            copyCellStyle(oldCellStyle, newstyle);
+            //样式
+            distCell.setCellStyle(newstyle);
+        }
+
         //评论
         if (srcCell.getCellComment() != null) {
             distCell.setCellComment(srcCell.getCellComment());

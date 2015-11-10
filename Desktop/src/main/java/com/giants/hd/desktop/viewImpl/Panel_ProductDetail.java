@@ -101,7 +101,7 @@ public class Panel_ProductDetail extends BasePanel {
 
     private JDatePickerImpl date;
     private JCheckBox cb_xiankang;
-    private Panel_XK panel_xiankang;
+    private Panel_Xiankang panel_xiankang;
     private JButton btn_export;
     private JTextField jtf_cost1;
     private JTextField jtf_cost8;

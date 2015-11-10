@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.reports.EXCEL_TYPE;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
@@ -11,10 +12,12 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
 import com.google.inject.Inject;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 
@@ -126,16 +129,29 @@ public class Panel_ImportMaterial extends BasePanel {
 
         {
 
-            InputStream is = new FileInputStream(path);
+        String fileType=path.substring(path.lastIndexOf(".")+1);
 
-            Workbook rwb = Workbook.getWorkbook(is);
+
+        InputStream is = new FileInputStream(path);
+        Workbook rwb;
+        if(EXCEL_TYPE.XLSX.equals(fileType))
+        {
+            rwb=new XSSFWorkbook(is);
+        }else {
+            rwb=new HSSFWorkbook(is);
+        }
+
+
+
+
+
 
             //这里有两种方法获取sheet表:名字和下标（从0开始）
 
             Sheet st = rwb.getSheet(sheetName);
 
-            int rsColumns = st.getColumns();
-            int rsRows = st.getRows();
+
+            int rsRows = st.getLastRowNum();
 
 
             List<Material> materials=new ArrayList<>();
@@ -147,8 +163,12 @@ public class Panel_ImportMaterial extends BasePanel {
 
 
 
-                Cell cell = st.getCell(0, i);
-                String value = cell.getContents();
+                Row row=st.getRow(i);
+
+                Cell cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
+
+
+                String value = cell.getStringCellValue();
 
                 if(StringUtils.isEmpty(value))
                 {
@@ -160,56 +180,56 @@ public class Panel_ImportMaterial extends BasePanel {
 
                 //复制值。
                 material.code = value;
-                material.name = st.getCell(1, i).getContents();
+                material.name = row.getCell(1, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
                 try {
-                    material.wLong =FloatHelper.scale(Float.valueOf(st.getCell(2, i).getContents()));
+                    material.wLong =FloatHelper.scale(row.getCell(2, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.wLong=0;
                 }
                 try {
-                    material.wWidth = FloatHelper.scale(Float.valueOf(st.getCell(3, i).getContents()));
+                    material.wWidth = FloatHelper.scale(row.getCell(3, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.wWidth=0;
                 }
                 try {
-                    material.wHeight = FloatHelper.scale(Float.valueOf(st.getCell(4, i).getContents()));
+                    material.wHeight = FloatHelper.scale(row.getCell(4, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.wHeight=0;
                 }
 
                 try {
-                    material.available = FloatHelper.scale(Float.valueOf(st.getCell(5, i).getContents())) ;
+                    material.available = FloatHelper.scale(row.getCell(5, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.available=0;
                 }
 
                 try {
-                    material.discount = FloatHelper.scale(Float.valueOf(st.getCell(6, i).getContents()));
+                    material.discount = FloatHelper.scale(row.getCell(6, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.discount=0;
                 }
 
                 try {
-                    material.price = FloatHelper.scale(Float.valueOf(st.getCell(7, i).getContents()),5);
+                    material.price = FloatHelper.scale(row.getCell(7, Row.RETURN_BLANK_AS_NULL).getNumericCellValue());
                 } catch (Throwable t) {
                     material.price=0;
                 }
 
                 try {
-                    material.typeId = Integer.valueOf(st.getCell(8, i).getContents());
+                    material.typeId = (int )row.getCell(8, Row.RETURN_BLANK_AS_NULL).getNumericCellValue() ;
                 } catch (Throwable t) {
                     material.typeId=0;
                 }
 
                 material.typeName = String.valueOf(material.typeId);
 
-                material.classId = st.getCell(9, i).getContents();
+                material.classId = row.getCell(9, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
 
-                material.spec = st.getCell(10, i).getContents();
+                material.spec =row.getCell(10, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
 
-                material.unitName = st.getCell(11, i).getContents();
+                material.unitName = row.getCell(11, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
 
-                material.className = st.getCell(12, i).getContents();
+                material.className = row.getCell(12, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
 
 
 
@@ -247,9 +267,7 @@ public class Panel_ImportMaterial extends BasePanel {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         } catch (HdException e) {
             e.printStackTrace();

@@ -56,7 +56,8 @@ public class ProductController extends BaseController {
     @Autowired
     private ProductLogRepository productLogRepository;
 
-
+    @Autowired
+    private XiankangRepository xiankangRepository;
     @Autowired
     private OperationLogRepository operationLogRepository;
     @Value("${filepath}")
@@ -156,7 +157,7 @@ public class ProductController extends BaseController {
     RemoteData<Product> searchByName(@RequestParam(value = "proName" ) String prd_name
             , @RequestParam(value = "productId") int productId
 
-    ) throws UnsupportedEncodingException {
+    )   {
 
 
 
@@ -177,6 +178,30 @@ public class ProductController extends BaseController {
 
 
         return wrapData( pageValue);
+
+
+    }
+
+
+    @RequestMapping(value = "/findXiankang", method = {RequestMethod.GET })
+    public
+    @ResponseBody
+    RemoteData<Xiankang> findXiankang(@RequestParam(value = "productId" ) long productId    )   {
+
+
+
+        Xiankang xiankang=null;
+        Product   product = productRepository.findOne(productId);
+        if(product!=null)
+        {
+            xiankang=product.xiankang;
+        }
+
+
+
+        if(xiankang==null)
+            return wrapData();
+        return wrapData( xiankang);
 
 
     }
@@ -282,7 +307,7 @@ public class ProductController extends BaseController {
 
 
         //读取材料列表信息
-        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEquals(productId);
+        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
 
         List<ProductMaterial> conceptusCost = new ArrayList<>();
         List<ProductMaterial> assemblesCost = new ArrayList<>();
@@ -318,7 +343,7 @@ public class ProductController extends BaseController {
 
 
         //读取工资数据
-        List<ProductWage> productWages = productWageRepository.findByProductIdEquals(productId);
+        List<ProductWage> productWages = productWageRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
         List<ProductWage> conceptusWage = new ArrayList<>();
         List<ProductWage> assemblesWage = new ArrayList<>();
         List<ProductWage> packWages=new ArrayList<>();
@@ -350,7 +375,7 @@ public class ProductController extends BaseController {
         detail.packWages=packWages;
 
         //读取油漆列表信息
-        detail.paints = productPaintRepository.findByProductIdEquals(productId);
+        detail.paints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
 
 
         return detail;
@@ -465,7 +490,7 @@ public class ProductController extends BaseController {
 
         if (productDetail.paints != null) {
             //保存油漆数据
-             List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEquals(productId);
+             List<ProductPaint> oldPaints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
             //查找旧记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
             for (ProductPaint oldPaint : oldPaints) {
                 boolean exist = false;
@@ -484,6 +509,7 @@ public class ProductController extends BaseController {
             }
 
             //添加或者修改记录
+            int newIndex=0;
             for (ProductPaint newPaint : productDetail.paints) {
                 //过滤空白记录 工序编码 跟名称都为空的情况下 也为设定材料情况下  为空记录。
                 if(newPaint.isEmpty())
@@ -494,6 +520,7 @@ public class ProductController extends BaseController {
                 newPaint.setProductId(product.id);
                 newPaint.setProductName(product.name);
                 newPaint.setFlowId(Flow.FLOW_PAINT);
+                newPaint.itemIndex=newIndex++;
                 productPaintRepository.save(newPaint);
             }
 
@@ -609,6 +636,8 @@ public class ProductController extends BaseController {
      */
     private void saveProductWage(List<ProductWage> wages, long productId, long flowId) {
 
+
+
         //保存油漆数据
         List<ProductWage> oldDatas = productWageRepository.findByProductIdEqualsAndFlowIdEquals(productId, flowId);
         //查找就记录是否存在新纪录中  如果不存在就删除。删除旧记录操作。
@@ -628,6 +657,9 @@ public class ProductController extends BaseController {
 
         }
 
+
+        int newItemIndex=0;
+
         //添加或者修改记录
         for (ProductWage newData
                 : wages) {
@@ -639,6 +671,7 @@ public class ProductController extends BaseController {
 
             newData.setProductId(productId);
             newData.setFlowId(flowId);
+            newData.itemIndex=newItemIndex++;
             productWageRepository.save(newData);
         }
 
@@ -675,6 +708,7 @@ public class ProductController extends BaseController {
         }
 
         //添加或者修改记录
+        int newItemIndex=0;
         for (ProductMaterial newData
                 : materials) {
 
@@ -683,6 +717,7 @@ public class ProductController extends BaseController {
             {continue;}
             newData.setProductId(productId);
             newData.setFlowId(flowId);
+            newData.itemIndex=newItemIndex++;
             productMaterialRepository.save(newData);
         }
 
@@ -827,7 +862,7 @@ public class ProductController extends BaseController {
 
 
         //更新产品材料信息
-        List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEquals(productId);
+        List<ProductMaterial> materials=  productMaterialRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
         //深度复制对象， 重新保存数据， 不能能直接使用源数据保存，会报错。
         List<ProductMaterial> newMaterials= (List<ProductMaterial>) ObjectUtils.deepCopy(materials);
         for(ProductMaterial material:newMaterials)
@@ -843,8 +878,8 @@ public class ProductController extends BaseController {
 
         //更新油漆表信息
         //更新产品材料信息
-        List<ProductPaint> productPaints=   productPaintRepository.findByProductIdEquals(productId);
-        //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
+        List<ProductPaint> productPaints=   productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
+        //深度复制对象， 重新保存数据， 不能直接使用源数据保存，会报错。
         List<ProductPaint> newProductPaints = (List<ProductPaint>) ObjectUtils.deepCopy(productPaints);
 
 
@@ -858,7 +893,7 @@ public class ProductController extends BaseController {
 
         //复制工资
 
-        List<ProductWage> productWages=   productWageRepository.findByProductIdEquals(productId);
+        List<ProductWage> productWages=   productWageRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
         List<ProductWage> newProductWages= (List<ProductWage>)  ObjectUtils.deepCopy(productWages);
         for(ProductWage productWage

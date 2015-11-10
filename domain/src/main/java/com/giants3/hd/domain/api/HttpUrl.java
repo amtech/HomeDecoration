@@ -696,4 +696,10 @@ public class HttpUrl {
         url+=  ".jpg";
         return  url ;
     }
+
+    public static String loadXiankangDataByProductId(long productId) {
+
+        return additionInfo(BaseUrl + "api/product/findXiankang?productId=" + productId  );
+
+    }
 }

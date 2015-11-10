@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.35
-Manifest-Version_Number: 35
-Manifest-Version_Spec: 1 修改报价单excel导出功能，127，802 客户，数据量大时会报错。
+Manifest-Version: 1.0.37
+Manifest-Version_Number: 37
+Manifest-Version_Spec: 1 修正报价导出功能 2 产品分析表中加入顺序
 Main-Class: com.giants.hd.desktop.frames.Main
 

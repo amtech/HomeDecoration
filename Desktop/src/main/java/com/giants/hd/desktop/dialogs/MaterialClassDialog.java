@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.reports.EXCEL_TYPE;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.model.BaseTableModel;
@@ -11,10 +12,13 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,21 +119,27 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
      * @param path
      * @return
      */
-    private  List<MaterialClass> readDataFromXLS(String path) throws IOException, BiffException {
+    private  List<MaterialClass> readDataFromXLS(String path) throws IOException {
 
+        String fileType=path.substring(path.lastIndexOf(".")+1);
 
 
         InputStream is = new FileInputStream(path);
+        Workbook rwb;
+        if(EXCEL_TYPE.XLSX.equals(fileType))
+        {
+            rwb=new XSSFWorkbook(is);
+        }else {
+            rwb=new HSSFWorkbook(is);
+        }
 
-
-        Workbook rwb = Workbook.getWorkbook(is);
 
         //这里有两种方法获取sheet表:名字和下标（从0开始）
 
         Sheet st = rwb.getSheet("参数");
 
-        int rsColumns = st.getColumns();
-        int rsRows = st.getRows();
+
+        int rsRows = st.getLastRowNum();
 
 
         List<MaterialClass> materials=new ArrayList<>();
@@ -139,11 +149,12 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
 
         for (int i = 1; i < rsRows; i++) {
 
+            Row row=st.getRow(i);
+            if(row==null)
+                continue;
 
-
-            Cell cell = st.getCell(0, i);
-            String value = cell.getContents();
-
+            Cell cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
+            String value = cell.getStringCellValue();
             if(StringUtils.isEmpty(value))
             {
                 //如果编码为空 直接跳过
@@ -156,36 +167,36 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
             materialClass.code = value;
 
             try {
-                materialClass.wLong = FloatHelper.scale(Float.valueOf(st.getCell(1, i).getContents()));
+                materialClass.wLong = (float) row.getCell(1, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
                 materialClass.wLong=0;
             }
             try {
-                materialClass.wWidth = FloatHelper.scale(Float.valueOf(st.getCell(2, i).getContents()));
+                materialClass.wWidth =(float) row.getCell(2, Row.RETURN_BLANK_AS_NULL).getNumericCellValue()  ;
             } catch (Throwable t) {
                 materialClass.wWidth=0;
             }
             try {
-                materialClass.wHeight = FloatHelper.scale(Float.valueOf(st.getCell(3, i).getContents()));
+                materialClass.wHeight = (float) row.getCell(3, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
                 materialClass.wHeight=0;
             }
 
             try {
-                materialClass.available = FloatHelper.scale(Float.valueOf(st.getCell(4, i).getContents())) ;
+                materialClass.available =(float) row.getCell(4, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
                 materialClass.available=1;
             }
 
             try {
-                materialClass.discount = FloatHelper.scale(Float.valueOf(st.getCell(5, i).getContents()));
+                materialClass.discount =(float) row.getCell(5, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
                 materialClass.discount=0;
             }
 
             try {
                 materialClass.type
-                        = Integer.valueOf( st.getCell(6, i).getContents());
+                        = (int) row.getCell(6, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
                 materialClass.type=-1;
             }
@@ -193,7 +204,7 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
 
 
 
-            materialClass.name = st.getCell(7, i).getContents();
+            materialClass.name =  row.getCell(7, Row.RETURN_BLANK_AS_NULL).getStringCellValue()  ;
 
             materials.add(materialClass);
 

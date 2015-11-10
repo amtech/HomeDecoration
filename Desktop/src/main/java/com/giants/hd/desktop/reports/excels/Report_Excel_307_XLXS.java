@@ -9,8 +9,7 @@ import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -44,14 +43,14 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
 
 
     @Override
-    public     void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException, BiffException, WriteException, HdException {
+    public     void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException,   HdException {
 
         int dataSize = quotationDetail.items.size();
 
 
         URL url = new URL(HttpUrl.loadQuotationFile(file.name, file.appendix));
 
-        int totalPages=(quotationDetail.items.size()-1)/PAGE_ITEM_COUNT+1;
+        int totalPages=(dataSize-1)/PAGE_ITEM_COUNT+1;
 
 
         String outputFilePath;
@@ -140,7 +139,7 @@ public class Report_Excel_307_XLXS extends ExcelReportor {
             XSSFSheet itemSheet=workbook.getSheet("Item ("+(i+1)+")");
 
 
-            addPicture(itemSheet,HttpUrl.loadProductPicture(item.photoUrl),6,19,14,34);
+            attachPicture(workbook,itemSheet,HttpUrl.loadProductPicture(item.photoUrl),6,19,14,34);
 
 
 

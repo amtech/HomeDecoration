@@ -4,7 +4,6 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.ProductPaintArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -106,7 +105,7 @@ public class ApplicationController extends  BaseController {
                 {
 
 
-                    List<ProductPaint> productPaints=productPaintRepository.findByProductIdEquals(product.id);
+                    List<ProductPaint> productPaints=productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(product.id);
 
                     //更新油漆材料中稀释剂用量
                     list.clear();

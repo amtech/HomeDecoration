@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductWageRepository extends JpaRepository<ProductWage,Long> {
 
 
-    public List<ProductWage> findByProductIdEquals(long productId);
+    public List<ProductWage> findByProductIdEqualsOrderByItemIndexAsc(long productId);
     public List<ProductWage> findByProductIdEqualsAndFlowIdEquals(long productId, long flowId);
 
     public int deleteByProductIdEquals(long productId);

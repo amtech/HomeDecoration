@@ -1226,4 +1226,25 @@ public class ApiManager {
 
 
     }
+
+
+    /**
+     * 根据产品读取其咸康数据
+     * @param productId
+     * @return
+     */
+    public RemoteData<Xiankang> loadXiankangDataByProductId(long productId) throws HdException {
+
+
+
+        String url=HttpUrl.loadXiankangDataByProductId(productId);
+
+        String result=  client.getWithStringReturned(url);
+        Type   generateType = new TypeToken<RemoteData<Xiankang>>() {
+        }.getType();
+        RemoteData<Xiankang> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+
+    }
 }

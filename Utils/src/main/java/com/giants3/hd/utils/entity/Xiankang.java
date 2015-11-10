@@ -146,6 +146,30 @@ public class Xiankang implements Serializable {
 
 
 
+    /////////////////////////家具数据相关//////////////////
+    /**
+     *木的材料
+     */
+    public String woodMaterial;
+
+
+    /**
+     * 木皮
+     */
+    public String verneer;
+
+    /**
+     * 大理石
+     */
+    public String marble;
+
+
+    /**
+     * Glass/Mirror
+     */
+
+
+
 
     public Xiankang() {
     }

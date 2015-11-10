@@ -62,10 +62,10 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Produ
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
-        if(quoteAuth.fobEditable)
+        if(quoteAuth.fobEditable&&( fieldName[columnIndex].equals(COLUMN_PRICE) ||fieldName[columnIndex].equals(COLUMN_PRICE2)))
         {
 
-                return  fieldName[columnIndex].equals(COLUMN_PRICE) ||fieldName[columnIndex].equals(COLUMN_PRICE2) ;
+                return  true ;
         }
 
 

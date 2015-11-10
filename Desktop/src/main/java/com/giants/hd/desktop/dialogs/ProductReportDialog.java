@@ -3,27 +3,19 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
-import com.giants.hd.desktop.utils.ExportHelper;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
-import jxl.write.WriteException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import rx.Subscriber;
-import rx.functions.Action1;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 public class ProductReportDialog extends BaseDialog {
     private JPanel contentPane;

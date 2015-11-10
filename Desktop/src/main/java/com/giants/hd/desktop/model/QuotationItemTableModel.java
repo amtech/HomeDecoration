@@ -47,10 +47,10 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem> impl
 
 
         //如果有修改fob的权限   其他都不可以修改
-        if(quoteAuth.fobEditable)
+        if(quoteAuth.fobEditable&&fieldName[columnIndex].equals(COLUMN_PRICE))
         {
 
-            return  fieldName[columnIndex].equals(COLUMN_PRICE) ;
+            return  true ;
 
         }
 

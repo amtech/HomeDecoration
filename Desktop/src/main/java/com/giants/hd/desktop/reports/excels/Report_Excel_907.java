@@ -76,7 +76,7 @@ public class Report_Excel_907 extends ExcelReportor {
         //报价日期
         addString(writableSheet, quotation.qDate, 2, 1);
 
-        float pictureGap=0.1f;
+
         for(int i=0;i<dataSize;i++)
         {
             int rowUpdate=startItemRow+i;
@@ -87,7 +87,7 @@ public class Report_Excel_907 extends ExcelReportor {
             //图片
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),3 , rowUpdate ,4, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),3 , rowUpdate ,3, rowUpdate);
 
 
 

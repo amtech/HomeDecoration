@@ -19,6 +19,10 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	public long id;
 	public long productId;
+
+
+	@Basic
+	public int itemIndex;
 	/**
 	 * 工序id
 	 */
@@ -336,6 +340,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		if (Float.compare(that.processPrice, processPrice) != 0) return false;
 		if (Float.compare(that.ingredientRatio, ingredientRatio) != 0) return false;
 		if (Float.compare(that.quantity, quantity) != 0) return false;
+		if (Float.compare(that.itemIndex, itemIndex) != 0) return false;
 		if (Float.compare(that.materialQuantity, materialQuantity) != 0) return false;
 		if (Float.compare(that.cost, cost) != 0) return false;
 		if (Float.compare(that.ingredientQuantity, ingredientQuantity) != 0) return false;
@@ -369,6 +374,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		result = 31 * result + (processPrice != +0.0f ? Float.floatToIntBits(processPrice) : 0);
 		result = 31 * result + (ingredientRatio != +0.0f ? Float.floatToIntBits(ingredientRatio) : 0);
 		result = 31 * result + (quantity != +0.0f ? Float.floatToIntBits(quantity) : 0);
+		result = 31 * result +itemIndex;
 		result = 31 * result + (materialQuantity != +0.0f ? Float.floatToIntBits(materialQuantity) : 0);
 		result = 31 * result + (cost != +0.0f ? Float.floatToIntBits(cost) : 0);
 		result = 31 * result + (ingredientQuantity != +0.0f ? Float.floatToIntBits(ingredientQuantity) : 0);

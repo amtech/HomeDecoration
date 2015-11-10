@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductPaintRepository extends JpaRepository<ProductPaint,Long> {
 
 
-    public List<ProductPaint> findByProductIdEquals(long productId);
+    public List<ProductPaint> findByProductIdEqualsOrderByItemIndexAsc(long productId);
 
     public List<ProductPaint>   findByMaterialIdEquals(long materialId);
 

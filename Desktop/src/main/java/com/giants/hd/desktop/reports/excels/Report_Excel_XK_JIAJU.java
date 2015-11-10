@@ -3,9 +3,11 @@ package com.giants.hd.desktop.reports.excels;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.QuotationItem;
+import com.giants3.hd.utils.entity.Xiankang;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -125,17 +127,25 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
              //材料比重
             addString(writableSheet, item.constitute.trim() ,27,rowUpdate);
 
+           
+
+
+
             //读取咸康数据
-            ProductDetail productDetail= apiManager.loadProductDetail(item.productId).datas.get(0);
-            if(productDetail.product.xiankang!=null)
+//            ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
+            RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
+
+
+            if(xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
             {
 
+                Xiankang xiankang=xiankangRemoteData.datas.get(0);
 
                 //同款货号
-                addString(writableSheet, productDetail.product.xiankang.getQitahuohao().trim(), 3, rowUpdate);
+                addString(writableSheet,  xiankang.getQitahuohao().trim(), 3, rowUpdate);
 
                 //甲醛标示
-                addString(writableSheet, productDetail.product.xiankang.getJiaquan().trim(), 28, rowUpdate);
+                addString(writableSheet,  xiankang.getJiaquan().trim(), 28, rowUpdate);
 
 
 

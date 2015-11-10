@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductMaterialRepository extends JpaRepository<ProductMaterial,Long> {
 
 
-    public List<ProductMaterial> findByProductIdEquals(long productId);
+    public List<ProductMaterial> findByProductIdEqualsOrderByItemIndexAsc(long productId);
     public List<ProductMaterial> findByProductIdEqualsAndFlowIdEquals(long productId,long flowId);
 
 

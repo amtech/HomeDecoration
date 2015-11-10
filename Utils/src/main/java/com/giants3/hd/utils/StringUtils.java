@@ -154,11 +154,14 @@ public class StringUtils {
      */
     public static float[] decouplePackageString(String packageString)
     {
+        float[] result=new float[3];
+        if(StringUtils.isEmpty(packageString))
+            return result;
 
         int firstIndex=packageString.indexOf(spec_separator);
         int lastIndex=packageString.lastIndexOf(spec_separator);
 
-        float[] result=new float[3];
+
 
         try {
             result[0] =FloatHelper.scale( Float.valueOf(packageString.substring(0, firstIndex)));

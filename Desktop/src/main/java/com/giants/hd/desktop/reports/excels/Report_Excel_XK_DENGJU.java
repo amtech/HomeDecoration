@@ -3,12 +3,14 @@ package com.giants.hd.desktop.reports.excels;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Xiankang;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
-import jxl.write.*;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -80,10 +82,6 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
         //填充数据
 
-        Label label1;
-        jxl.write.Number num;
-        WritableImage  image;
-
 
         //报价日期
         //设计号  版本号
@@ -95,7 +93,6 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
 
         ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
-        float pictureGap=0.1f;
 
         for(int i=0;i<dataSize;i++)
         {
@@ -107,7 +104,7 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             //图片
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,5, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
 
 
 
@@ -133,37 +130,42 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 //            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
 //            writableSheet.addCell(label1);
             addString(writableSheet,item.productName,2,rowUpdate);
-            //读取咸康数据
-            ProductDetail productDetail= apiManager.loadProductDetail(item.productId).datas.get(0);
 
 
 
             //材料比重
             //货号
-//            label1 = new Label(8, rowUpdate,  productDetail.product.constitute);
+//            label1 = new Label(8, rowUpdate,   constitute);
 //            writableSheet.addCell(label1);
-            addString(writableSheet,productDetail.product.constitute,8,rowUpdate);
+            addString(writableSheet,item.constitute,8,rowUpdate);
 
-            if(productDetail.product.xiankang!=null)
+
+            //读取咸康数据
+            RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
+
+
+            if(xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
             {
+
+                Xiankang xiankang=xiankangRemoteData.datas.get(0);
 
 
                 //同款货号
-//                label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
+//                label1 = new Label(3, rowUpdate,  xiankang.getQitahuohao() ,format);
 //                writableSheet.addCell(label1);
 
-                addString(writableSheet,productDetail.product.xiankang.getQitahuohao(),3,rowUpdate);
+                addString(writableSheet, xiankang.getQitahuohao(),3,rowUpdate);
 
                 //甲醛标示
-//                label1 = new Label(9, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
+//                label1 = new Label(9, rowUpdate,   xiankang.getJiaquan(),format);
 //                writableSheet.addCell(label1);
 
-                addString(writableSheet,productDetail.product.xiankang.getJiaquan(),9,rowUpdate);
+                addString(writableSheet, xiankang.getJiaquan(),9,rowUpdate);
 
                 //材质
-//                label1 = new Label(10, rowUpdate,  productDetail.product.xiankang.getCaizhi(),format);
+//                label1 = new Label(10, rowUpdate,   xiankang.getCaizhi(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet,productDetail.product.xiankang.getCaizhi(),10,rowUpdate);
+                addString(writableSheet, xiankang.getCaizhi(),10,rowUpdate);
             }
 
         }

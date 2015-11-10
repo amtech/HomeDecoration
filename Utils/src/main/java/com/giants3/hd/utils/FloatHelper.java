@@ -22,4 +22,19 @@ public class FloatHelper {
 
     }
 
+
+    public static float scale(double doubleValue)
+    {
+
+
+        return   scale(doubleValue,DEFAULT_SCALE_SIZE);
+    }
+
+    public static float scale(double doubleValue,int scaleSize)
+    {
+
+        return new BigDecimal(doubleValue).setScale(scaleSize,BigDecimal.ROUND_HALF_UP).floatValue();
+
+    }
+
 }

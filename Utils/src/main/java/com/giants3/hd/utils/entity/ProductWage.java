@@ -17,7 +17,8 @@ public class ProductWage  implements Serializable,Valuable {
 
     @Basic
     public long productId;
-
+    @Basic
+    public int itemIndex;
 
     @Basic
     public long flowId;
@@ -158,6 +159,7 @@ public class ProductWage  implements Serializable,Valuable {
         if (processId != that.processId) return false;
         if (Float.compare(that.price, price) != 0) return false;
         if (Float.compare(that.amount, amount) != 0) return false;
+        if (Float.compare(that.itemIndex, itemIndex) != 0) return false;
         if (flowName != null ? !flowName.equals(that.flowName) : that.flowName != null) return false;
         if (processCode != null ? !processCode.equals(that.processCode) : that.processCode != null) return false;
         if (processName != null ? !processName.equals(that.processName) : that.processName != null) return false;
@@ -175,6 +177,7 @@ public class ProductWage  implements Serializable,Valuable {
         result = 31 * result + (processCode != null ? processCode.hashCode() : 0);
         result = 31 * result + (processName != null ? processName.hashCode() : 0);
         result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+        result = 31 * result +itemIndex;
         result = 31 * result + (amount != +0.0f ? Float.floatToIntBits(amount) : 0);
         result = 31 * result + (memo != null ? memo.hashCode() : 0);
         return result;

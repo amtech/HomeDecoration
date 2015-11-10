@@ -7,17 +7,18 @@ import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-/**802 ??? ???
+/**127 客户报价模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_127 extends ExcelReportor {
@@ -28,16 +29,53 @@ public class Report_Excel_127 extends ExcelReportor {
     }
 
 
-
-
     @Override
-    protected  void doOnLocalFile(QuotationDetail quotationDetail, File outputFile) throws IOException, BiffException, HdException, WriteException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
 
 
-        Workbook workbook=Workbook.getWorkbook(outputFile);
-        WritableWorkbook workbookCopy = Workbook.createWorkbook(outputFile, Workbook.getWorkbook(outputFile));
+
+
+
+        InputStream inputStream=url.openStream();
+         Workbook workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+
+        writeOnExcel(quotationDetail,workbook);
+
+
+
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+
+
+
+    protected void writeOnExcel(QuotationDetail quotationDetail, Workbook writableWorkbook) throws  IOException, HdException {
+
+
         int size = quotationDetail.items.size();
+
         AccumulateMap names=new AccumulateMap();
+
+
+        Quotation quotation=quotationDetail.quotation;
+
+        Sheet sampleSheet = writableWorkbook.getSheetAt(0);
         for(int i=0;i< size;i++) {
             QuotationItem item = quotationDetail.items.get(i);
 
@@ -46,46 +84,16 @@ public class Report_Excel_127 extends ExcelReportor {
 
             int duplicateCount = names.get(item.productName).intValue();
 
-            Sheet sampleSheet = workbook.getSheet(0);
-            workbookCopy.importSheet(item.productName + (duplicateCount > 1 ? ("_" + (duplicateCount - 1)) : ""), i + 1, sampleSheet);
 
-        }
-        workbookCopy.write();
-        workbookCopy.close();
-        workbook.close();
-       super.doOnLocalFile(quotationDetail,outputFile);
+
+
+            Sheet writableSheet = writableWorkbook.createSheet(item.productName + (duplicateCount > 1 ? ("_" + (duplicateCount - 1)) : ""));
+            POIUtils.copySheet(writableWorkbook, sampleSheet, writableSheet, true);
 
 
 
 
-    }
 
-    @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
-
-
-
-
-        int size = quotationDetail.items.size();
-
-
-
-
-        Quotation quotation=quotationDetail.quotation;
-
-        float pictureGap=0.3f;
-        for(int i=0;i< size;i++)
-        {
-            QuotationItem item=quotationDetail.items.get(i);
-
-//            names.accumulate(item.productName);
-//
-//
-//          int duplicateCount=  names.get(item.productName).intValue();
-//
-//            Sheet sampleSheet=writableWorkbook.getSheet(0);
-//            writableWorkbook.importSheet(item.productName + (duplicateCount > 1 ? ("_" + (duplicateCount - 1)) : ""), i + 1, sampleSheet);
-            WritableSheet writableSheet = writableWorkbook.getSheet(i+1);
 
 
             //????????
@@ -130,7 +138,7 @@ public class Report_Excel_127 extends ExcelReportor {
             addNumber(writableSheet, fob, 6, 41);
 
 
-             attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0 + pictureGap/2, 8+ pictureGap, 6 - pictureGap, 40 - pictureGap);
+             attachPicture(writableWorkbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0  , 8 , 5  , 48  );
 
 
 

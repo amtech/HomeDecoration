@@ -25,6 +25,11 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 	 */
 	@Basic
 	public long productId;
+
+
+
+	@Basic
+	public int itemIndex;
 	/**
 	 * 配给额度。  重要字段。
 	 */
@@ -905,6 +910,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 		if (Float.compare(that.price, price) != 0) return false;
 		if (Float.compare(that.amount, amount) != 0) return false;
 		if (flowId != that.flowId) return false;
+		if (itemIndex != that.itemIndex) return false;
 		if (Float.compare(that.unitRatio, unitRatio) != 0) return false;
 		if (materialCode != null ? !materialCode.equals(that.materialCode) : that.materialCode != null) return false;
 		if (materialName != null ? !materialName.equals(that.materialName) : that.materialName != null) return false;
@@ -943,6 +949,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 		result = 31 * result + (available != +0.0f ? Float.floatToIntBits(available) : 0);
 		result = 31 * result + (unitName != null ? unitName.hashCode() : 0);
 		result = 31 * result + type;
+		result = 31 * result + itemIndex;
 		result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
 		result = 31 * result + (amount != +0.0f ? Float.floatToIntBits(amount) : 0);
 		result = 31 * result + (memo != null ? memo.hashCode() : 0);

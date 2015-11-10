@@ -51,8 +51,8 @@ public class QuotationFile {
 
     };
 
-    public static final String XLS="xls";
-    public static final String XLSX="xlsx";
+    public static final String XLS=EXCEL_TYPE.XLS;
+    public static final String XLSX=EXCEL_TYPE.XLSX;
     public static  final String[] APPENDIXS=new String[]{
             XLS,XLS,XLS,XLS,XLS,
             XLS,XLS,XLS,XLS,XLS,

@@ -6,9 +6,15 @@ import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
-import jxl.write.*;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**802 客户 模板
  * Created by davidleen29 on 2015/8/6.
@@ -21,8 +27,40 @@ public class Report_Excel_820 extends ExcelReportor {
     }
 
 
+
     @Override
-    protected void writeOnExcel(QuotationDetail quotationDetail, WritableWorkbook writableWorkbook) throws WriteException, IOException, HdException {
+    protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
+
+
+
+
+
+        InputStream inputStream=url.openStream();
+     Workbook workbook = new HSSFWorkbook(inputStream);
+
+
+
+
+        writeOnExcel(quotationDetail,workbook  );
+
+
+        FileOutputStream fos=    new FileOutputStream(outputFile);
+
+        workbook.write(fos);
+        workbook.close();
+
+        fos.close();
+
+
+
+
+
+
+    }
+
+
+
+    protected void writeOnExcel(QuotationDetail quotationDetail, Workbook writableWorkbook) throws  IOException, HdException {
 
 
         int size = quotationDetail.items.size();
@@ -32,7 +70,7 @@ public class Report_Excel_820 extends ExcelReportor {
 
         Quotation quotation=quotationDetail.quotation;
 
-        float pictureGap=0.1f;
+
         for(int i=0;i< size;i++)
         {
             QuotationItem item=quotationDetail.items.get(i);
@@ -40,9 +78,20 @@ public class Report_Excel_820 extends ExcelReportor {
             names.accumulate(item.productName);
 
 
-          int duplicateCount=  names.get(item.productName).intValue();
-            writableWorkbook.copySheet(0,item.productName+(duplicateCount>1?("_"+(duplicateCount-1)):""),i+1);
-            WritableSheet writableSheet=  writableWorkbook.getSheet(i+1);
+            int duplicateCount=  names.get(item.productName).intValue();
+
+
+            Sheet fromSheet=writableWorkbook.getSheetAt(0);
+
+            Sheet   writableSheet=writableWorkbook.createSheet(item.productName+(duplicateCount>1?("_"+(duplicateCount-1)):""));
+            POIUtils.copySheet(writableWorkbook,fromSheet,writableSheet,true);
+
+
+
+
+
+
+
 
 
 
@@ -115,7 +164,7 @@ public class Report_Excel_820 extends ExcelReportor {
 
 
 
-                attachPicture(writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0 + pictureGap, 10 + pictureGap, 5 - pictureGap, 13 - pictureGap);
+                attachPicture(writableWorkbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0  , 10  , 4  , 23  );
 
 
 

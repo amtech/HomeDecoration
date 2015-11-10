@@ -7,9 +7,6 @@ import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -88,7 +85,7 @@ public class Report_Excel_302 extends ExcelReportor {
             //图片
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),6 , rowUpdate ,7, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),6 , rowUpdate ,6, rowUpdate);
 
 
 
