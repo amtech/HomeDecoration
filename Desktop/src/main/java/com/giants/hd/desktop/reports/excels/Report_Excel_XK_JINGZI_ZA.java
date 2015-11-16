@@ -8,6 +8,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.entity.Xiankang_Jingza;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -109,7 +110,11 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
             //图片
 
             String photoUrl=item.productId>0?item.photoUrl:item.photo2Url;
-            attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(photoUrl),4, rowUpdate ,5, rowUpdate);
+            String productName=item.productId>0?item.productName:item.productName2;
+            String pVersion=item.productId>0?item.pVersion:item.pVersion2;
+            String unit=item.productId>0?item.unit:item.unit;
+
+            attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(photoUrl),4, rowUpdate ,4, rowUpdate);
 
 
 
@@ -117,9 +122,9 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
             //读取咸康数据
 //            ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
-            RemoteData<Xiankang> remoteData1=apiManager.loadXiankangDataByProductId(item.productId);
+            RemoteData<Xiankang> remoteData1=item.productId>0?apiManager.loadXiankangDataByProductId(item.productId):null;
 
-            RemoteData<Xiankang>  remoteData2=apiManager.loadXiankangDataByProductId(item.productId2);
+            RemoteData<Xiankang>  remoteData2=item.productId2>0?apiManager.loadXiankangDataByProductId(item.productId2):null;
 
 //            //读取咸康数据
 //            ProductDetail productDetail2=    apiManager.loadProductDetail(item.productId2).datas.get(0);
@@ -133,13 +138,13 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            label1 = new Label(1, rowUpdate, item.pVersion,format);
 //            writableSheet.addCell(label1);
 
-            addString(writableSheet,item.pVersion,1,rowUpdate);
+            addString(writableSheet,pVersion,1,rowUpdate);
 
             //货号
 //            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
 //            writableSheet.addCell(label1);
 
-            addString(writableSheet,item.productName,2,rowUpdate);
+            addString(writableSheet,productName,2,rowUpdate);
 
 
 
@@ -149,67 +154,33 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            label1 = new Label(8, rowUpdate,  item.unit ,format);
 //            writableSheet.addCell(label1);
 
-            addString(writableSheet,item.unit,8,rowUpdate);
-
-            if(remoteData1.isSuccess()&&remoteData1.datas.size()>0)
+            addString(writableSheet,unit,8,rowUpdate);
+            Xiankang_Jingza xiankang_jingza=null;
+            if(remoteData1!=null&&remoteData1.isSuccess()&&remoteData1.datas.size()>0)
             {
 
 
 
-                Xiankang item1=remoteData1.datas.get(0);
+                Xiankang xiankang=remoteData1.datas.get(0);
+                 xiankang_jingza=xiankang.xiankang_jingza;
                 //同款货号
 //                label1 = new Label(3, rowUpdate, productDetail.product.xiankang.getQitahuohao() ,format);
 //                writableSheet.addCell(label1);
 
-                addString(writableSheet,item1.getQitahuohao(),3,rowUpdate);
+                addString(writableSheet,xiankang.getQitahuohao(),3,rowUpdate);
                 //材料比重
 
 //                label1 = new Label(6, rowUpdate,  productDetail.product.xiankang.getCaizhibaifenbi(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet,item1.getCaizhibaifenbi(),6,rowUpdate);
+                addString(writableSheet,xiankang.getCaizhibaifenbi(),6,rowUpdate);
                 //甲醛标示
 //                label1 = new Label(7, rowUpdate,  productDetail.product.xiankang.getJiaquan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet,item1.getJiaquan(),7,rowUpdate);
+                addString(writableSheet,xiankang.getJiaquan(),7,rowUpdate);
 
-                //边框
-//                label1 = new Label(12, rowUpdate,  productDetail.product.xiankang.getBiankuang(),format);
-//                writableSheet.addCell(label1);
-
-                addString(writableSheet,item1.getBiankuang(),12,rowUpdate);
-                //槽宽
-
-//                label1 = new Label(13, rowUpdate,  productDetail.product.xiankang.getCaokuan(),format);
-//                writableSheet.addCell(label1);
-
-                addString(writableSheet,item1.getCaokuan(),13,rowUpdate);
-
-                //槽深
-//                label1 = new Label(14, rowUpdate,  productDetail.product.xiankang.getCaoshen(),format);
-//                writableSheet.addCell(label1);
-
-                addString(writableSheet,item1.getCaoshen(),14,rowUpdate);
-
-                //镜子尺寸	宽
-//                label1 = new Label(15, rowUpdate,  productDetail.product.xiankang.getJingzi_kuan(),format);
-//                writableSheet.addCell(label1);
-
-                addString(writableSheet,item1.getJingzi_kuan(),15,rowUpdate);
-
-                //镜子尺寸	高
-//                label1 = new Label(16, rowUpdate,  productDetail.product.xiankang.getJingzi_gao(),format);
-//                writableSheet.addCell(label1);
-                addString(writableSheet,item1.getJingzi_gao(),16,rowUpdate);
-
-
-                //磨边
-//                label1 = new Label(17, rowUpdate,  productDetail.product.xiankang.getMobian(),format);
-//                writableSheet.addCell(label1);
-                addString(writableSheet,item1.getMobian(),17,rowUpdate);
 
                 //折盒包装描述
-
-                addString(writableSheet, item1.pack_memo, 22, rowUpdate);
+                addString(writableSheet, xiankang.pack_memo, 22, rowUpdate);
             }
 
 
@@ -304,9 +275,13 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 
 
 
-            if(remoteData2.isSuccess()&&remoteData2.datas.size()>0) {
+            if(remoteData2!=null&&remoteData2.isSuccess()&&remoteData2.datas.size()>0) {
 
                 Xiankang item2=remoteData2.datas.get(0);
+
+                if(xiankang_jingza==null)
+
+                  xiankang_jingza=item2.xiankang_jingza;
                 //加强包装描述
                 addString(writableSheet, item2.pack_memo, 37, rowUpdate);
 
@@ -314,7 +289,7 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            label1 = new Label(49, rowUpdate,  String.valueOf(productDetail.product.xiankang.getGuaju()) ,format);
 //            writableSheet.addCell(label1);
 
-                addString(writableSheet, item2.getGuaju(), 49, rowUpdate);
+                addString(writableSheet, item2.xiankang_jingza.getGuaju(), 49, rowUpdate);
 
             }
 
@@ -366,7 +341,54 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            writableSheet.addCell(label1);
             addString(writableSheet, item.memo, 57, rowUpdate);
 
+
+
+
+
+            //镜子相关描述，
+            if(xiankang_jingza!=null)
+            {
+                //边框
+//                label1 = new Label(12, rowUpdate,  productDetail.product.xiankang.getBiankuang(),format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,xiankang_jingza.getBiankuang(),12,rowUpdate);
+                //槽宽
+
+//                label1 = new Label(13, rowUpdate,  productDetail.product.xiankang.getCaokuan(),format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,xiankang_jingza.getCaokuan(),13,rowUpdate);
+
+                //槽深
+//                label1 = new Label(14, rowUpdate,  productDetail.product.xiankang.getCaoshen(),format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,xiankang_jingza.getCaoshen(),14,rowUpdate);
+
+                //镜子尺寸	宽
+//                label1 = new Label(15, rowUpdate,  productDetail.product.xiankang.getJingzi_kuan(),format);
+//                writableSheet.addCell(label1);
+
+                addString(writableSheet,xiankang_jingza.getJingzi_kuan(),15,rowUpdate);
+
+                //镜子尺寸	高
+//                label1 = new Label(16, rowUpdate,  productDetail.product.xiankang.getJingzi_gao(),format);
+//                writableSheet.addCell(label1);
+                addString(writableSheet,xiankang_jingza.getJingzi_gao(),16,rowUpdate);
+
+
+                //磨边
+//                label1 = new Label(17, rowUpdate,  productDetail.product.xiankang.getMobian(),format);
+//                writableSheet.addCell(label1);
+                addString(writableSheet,xiankang_jingza.getMobian(),17,rowUpdate);
+
+
+            }
+
         }
+
+
 
 
 

@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
 
 
-    Page<Product> findByNameLikeOrderByNameAsc(String proName, Pageable pageable);
+    Page<Product> findByNameLikeOrPVersionLikeOrderByNameAsc(String proName,String pVersion, Pageable pageable);
 
 
     /**

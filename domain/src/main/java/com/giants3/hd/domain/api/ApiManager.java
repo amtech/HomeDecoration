@@ -1247,4 +1247,24 @@ public class ApiManager {
 
 
     }
+
+
+    /**
+     * 更新咸康数据  数据库结构变动，产生的调整接口 临时使用
+     * @return
+     */
+    public RemoteData<Void> updateXiankang() throws HdException {
+
+
+
+        String url=HttpUrl.updateXiankang();
+
+        String result=  client.getWithStringReturned(url);
+        Type   generateType = new TypeToken<RemoteData<Void>>() {
+        }.getType();
+        RemoteData<Void> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+
+
+    }
 }

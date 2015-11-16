@@ -243,10 +243,7 @@ public class Panel_ImportMaterial extends BasePanel {
 
 
                     apiManager.saveMaterials(materials);
-
-
                     for (int j = 0; j < size; j++) {
-
                         Material temp=materials.get(j);
                         materialObjectPool.release(temp);
                     }

@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.37
-Manifest-Version_Number: 37
-Manifest-Version_Spec: 1 修正报价导出功能 2 产品分析表中加入顺序
+Manifest-Version: 1.0.40
+Manifest-Version_Number: 40
+Manifest-Version_Spec: 1 分析表咸康相关数据调整 2 报价格式导出调整
 Main-Class: com.giants.hd.desktop.frames.Main
 

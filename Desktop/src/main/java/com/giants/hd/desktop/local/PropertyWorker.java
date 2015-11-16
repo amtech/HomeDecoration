@@ -34,8 +34,6 @@ public class PropertyWorker {
 	 */
 	public static String readData(String key) {
 
-
-
         //以包起始的地方开始   jar 根目录开始。
 		InputStream inputStream=	PropertyWorker.class.getClassLoader().getResourceAsStream(PROPERTY_FILE) ;
 
@@ -51,8 +49,6 @@ public class PropertyWorker {
 		Properties props = new Properties();
 		try {
 			InputStream in = new BufferedInputStream(inputStream);
-
-
 			props.load(in);
 			in.close();
 			String value = props.getProperty(key);

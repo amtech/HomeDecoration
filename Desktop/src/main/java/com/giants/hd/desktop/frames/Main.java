@@ -2,6 +2,7 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.MyLogger;
 import com.giants.hd.desktop.local.ImageLoader;
+import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
@@ -16,6 +17,8 @@ import com.giants.hd.desktop.viewImpl.Panel_Material;
 import com.giants.hd.desktop.viewImpl.Panel_ProductList;
 import com.giants.hd.desktop.viewImpl.Panel_Quotation;
 import com.giants.hd.desktop.widget.BackgroundPainter;
+import com.giants3.hd.domain.interractor.UseCase;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.domain.repository.ProductRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
@@ -24,6 +27,7 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+import rx.Subscriber;
 //import org.apache.commons.logging.Log;
 
 
@@ -698,7 +702,48 @@ public class Main extends BaseFrame {
         }
 
 
+        menuItem = new JMenuItem("咸康数据调整");
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+
+
+           final     LoadingDialog     dialog=new LoadingDialog(Main.this, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                    }
+                });
+
+
+                UseCaseFactory.createUpdateXiankang().execute(new Subscriber() {
+                     @Override
+                     public void onCompleted() {
+                         dialog.setVisible(false);
+                         dialog.dispose();
+                         JOptionPane.showMessageDialog(Main.this,"调整成功");
+
+
+                     }
+
+                     @Override
+                     public void onError(Throwable e) {
+                         dialog.setVisible(false);
+                         dialog.dispose();
+                         JOptionPane.showMessageDialog(Main.this,e.getMessage());
+                     }
+
+                     @Override
+                     public void onNext(Object o) {
+
+                     }
+                 });
+
+                dialog.setVisible(true);
+            }
+        });
 
         return menu;
     }

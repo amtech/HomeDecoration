@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.DataChangeListener;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Xiankang;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class Panel_XK_Pack  extends BasePanel {
 
     private Xiankang data;
     private DocumentListener documentListener;
+    private DocumentListener memoDocumentListener;
 
     public DataChangeListener<Xiankang> dataChangeListener;
 
@@ -30,6 +32,8 @@ public class Panel_XK_Pack  extends BasePanel {
     public Panel_XK_Pack(   ) {
 
         documentListener=new DocumentListener() {
+
+            public StringBuilder stringBuilder=new StringBuilder();
             @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
@@ -52,12 +56,81 @@ public class Panel_XK_Pack  extends BasePanel {
 
                 if(dataChangeListener!=null)
                 {
+
+
+                    stringBuilder.setLength(0);
                     Xiankang xiankang=getData();
+
+                    if(  xiankang.pack_front>0)
+                    {
+
+                        stringBuilder.append("前 ：").append(xiankang.pack_front).append("\n");
+
+                    }
+                    if(  xiankang.pack_perimeter>0)
+                    {
+                        stringBuilder.append("四周：").append(xiankang.pack_perimeter).append("\n");
+                    }
+                    if(  xiankang.pack_front_back>0)
+                    {
+                        stringBuilder.append("前后：").append(xiankang.pack_front_back).append("\n");
+                    }
+                    if(  xiankang.pack_cube>0)
+                    {
+                        stringBuilder.append("六面：").append(xiankang.pack_cube).append("\n");
+                    }
+                    if(  xiankang.pack_middle>0)
+                    {
+                        stringBuilder.append("中间：").append(xiankang.pack_middle).append("\n");
+                    }
+
+
+                    ta_pack_memo.setText(stringBuilder.toString());
+
+
+                }
+
+            }
+        };
+
+
+        memoDocumentListener=new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update()
+            {
+
+
+
+                if(dataChangeListener!=null)
+                {
+
+
+                    Xiankang xiankang=getData();
+
+
+
                     dataChangeListener.onDataChanged(xiankang);
                 }
 
             }
         };
+
+
+
 
 
 
@@ -71,9 +144,11 @@ public class Panel_XK_Pack  extends BasePanel {
         tf_pack_cube.getDocument().addDocumentListener(documentListener);
         tf_pack_front_back.getDocument().addDocumentListener(documentListener);
         tf_pack_middle.getDocument().addDocumentListener(documentListener);
-        ta_pack_memo.getDocument().addDocumentListener(documentListener);
         tf_pack_perimeter.getDocument().addDocumentListener(documentListener);
         tf_pack_front.getDocument().addDocumentListener(documentListener);
+
+        ta_pack_memo.getDocument().addDocumentListener(memoDocumentListener);
+
     }
 
     private void detachDocumentListener() {
@@ -81,9 +156,11 @@ public class Panel_XK_Pack  extends BasePanel {
         tf_pack_cube.getDocument().removeDocumentListener(documentListener);
         tf_pack_front_back.getDocument().removeDocumentListener(documentListener);
         tf_pack_middle.getDocument().removeDocumentListener(documentListener);
-        ta_pack_memo.getDocument().removeDocumentListener(documentListener);
+
         tf_pack_perimeter.getDocument().removeDocumentListener(documentListener);
         tf_pack_front.getDocument().removeDocumentListener(documentListener);
+
+        ta_pack_memo.getDocument().removeDocumentListener(memoDocumentListener);
     }
 
     /**

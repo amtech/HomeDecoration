@@ -634,8 +634,8 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
             @Override
             protected RemoteData<Product> doInBackground() throws Exception {
 
-                return    apiManager.readSameNameProductList(item.productName, item.productId)  ;
-
+                //return    apiManager.readSameNameProductList(item.productName, item.productId)  ;
+                return apiManager.readProductList(text, 0, 100);
             }
 
             @Override
@@ -655,7 +655,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                         public RemoteData<Product> search(String value, int pageIndex, int pageCount) throws HdException {
                             return apiManager.readProductList(value, pageIndex, pageCount);
                         }
-                    }).setValue(item.productName).setSearchTextFixed(true).setRemoteData(data).createSearchDialog();
+                    }).setValue(text).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));
                     dialog.pack();
                     dialog.setLocationRelativeTo(tb);
@@ -751,7 +751,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
                 tb.setModel(xkModel);
                 TableColumnModel cm = tb.getColumnModel();
-                ColumnGroup g_name = new ColumnGroup("普通包装");
+                ColumnGroup g_name = new ColumnGroup("折叠包装");
                 int startIndex=5;
                 for(int i=0;i<12;i++)
                     g_name.add(cm.getColumn(startIndex+i));

@@ -8,6 +8,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.entity.Xiankang_Jingza;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -121,7 +122,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
             //读取咸康数据
 
 
-            RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
+            RemoteData<Xiankang> xiankangRemoteData=item.productId>0?apiManager.loadXiankangDataByProductId(item.productId):null;
 
 
           
@@ -155,7 +156,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
             addString(writableSheet,item.unit ,7,rowUpdate);
 
 
-                if(xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
+                if(xiankangRemoteData!=null&&xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
                 {
 
                     Xiankang xiankang=xiankangRemoteData.datas.get(0);
@@ -179,45 +180,51 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
                 //边框
 //                label1 = new Label(11, rowUpdate,   xiankang.getBiankuang(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getBiankuang(),11,rowUpdate);
+
+
+
+
+
+                    Xiankang_Jingza xiankang_jingza = xiankang.xiankang_jingza;
+                    addString(writableSheet, xiankang_jingza.getBiankuang(),11,rowUpdate);
 
                 //槽宽
 
 //                label1 = new Label(12, rowUpdate,   xiankang.getCaokuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getCaokuan(),12,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getCaokuan(),12,rowUpdate);
                 //槽深
 //                label1 = new Label(13, rowUpdate,   xiankang.getCaokuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getCaoshen(),13,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getCaoshen(),13,rowUpdate);
                 //画尺寸	宽
 //                label1 = new Label(16, rowUpdate,   xiankang.getHuangui_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getHuangui_kuan(),16,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getHuangui_kuan(),16,rowUpdate);
 
                 //画尺寸	高
 //                label1 = new Label(17, rowUpdate,   xiankang.getJingzi_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getHuangui_gao(),17,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getHuangui_gao(),17,rowUpdate);
 
                 //玻璃尺寸	宽
 //                label1 = new Label(18, rowUpdate,   xiankang.getJingzi_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getBoliguige_kuan(),18,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getBoliguige_kuan(),18,rowUpdate);
                 //玻璃尺寸	高
 //                label1 = new Label(19, rowUpdate,   xiankang.getJingzi_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getBoliguige_gao(),19,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getBoliguige_gao(),19,rowUpdate);
 
                 //正面开口尺寸	宽
 //                label1 = new Label(20, rowUpdate,   xiankang.getJingzi_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getJingzi_kuan(),20,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getJingzi_kuan(),20,rowUpdate);
 
                 //正面开口尺寸	高
 //                label1 = new Label(21, rowUpdate,   xiankang.getJingzi_kuan(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getJingzi_gao(),21,rowUpdate);
+                addString(writableSheet, xiankang_jingza.getJingzi_gao(),21,rowUpdate);
 
 //                //磨边
 //                label1 = new Label(17, rowUpdate,   xiankang.getMobian(),format);
@@ -231,22 +238,22 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
                     //挂钩距离
 //            label1 = new Label(53, rowUpdate,  String.valueOf( xiankang.getGuaju()) ,format);
 //            writableSheet.addCell(label1);
-                    addString(writableSheet, xiankang.getGuaju(),53,rowUpdate);
+                    addString(writableSheet, xiankang_jingza.getGuaju(),53,rowUpdate);
 
                     //画芯号
 //            label1 = new Label(57, rowUpdate,  String.valueOf( xiankang.getHuaxinbianhao()) ,format);
 //            writableSheet.addCell(label1);
-                    addString(writableSheet, xiankang.getHuaxinbianhao(),57,rowUpdate);
+                    addString(writableSheet, xiankang_jingza.getHuaxinbianhao(),57,rowUpdate);
 
                     //画芯厂商
 //            label1 = new Label(58, rowUpdate,  String.valueOf( xiankang.getHuaxinchangshang()) ,format);
 //            writableSheet.addCell(label1);
-                    addString(writableSheet, xiankang.getHuaxinchangshang(),58,rowUpdate);
+                    addString(writableSheet, xiankang_jingza.getHuaxinchangshang(),58,rowUpdate);
 
                     //画芯效果
 //            label1 = new Label(59, rowUpdate,  String.valueOf( xiankang.getHuaxinxiaoguo()) ,format);
 //            writableSheet.addCell(label1);
-                    addString(writableSheet, xiankang.getHuaxinxiaoguo(),59,rowUpdate);
+                    addString(writableSheet, xiankang_jingza.getHuaxinxiaoguo(),59,rowUpdate);
 
                 }
 

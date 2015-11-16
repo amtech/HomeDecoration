@@ -5,6 +5,7 @@ import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.entity.Xiankang_Dengju;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
@@ -140,15 +141,27 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             addString(writableSheet,item.constitute,8,rowUpdate);
 
 
+
+
+            //净重
+            addNumber(writableSheet, item.weight, 39, rowUpdate);
+            addString(writableSheet, item.memo, 58, rowUpdate);
+
+
+
             //读取咸康数据
             RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
+
+
+
+
 
 
             if(xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
             {
 
                 Xiankang xiankang=xiankangRemoteData.datas.get(0);
-
+                Xiankang_Dengju xiankang_dengju = xiankang.xiankang_dengju;
 
                 //同款货号
 //                label1 = new Label(3, rowUpdate,  xiankang.getQitahuohao() ,format);
@@ -156,16 +169,69 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 
                 addString(writableSheet, xiankang.getQitahuohao(),3,rowUpdate);
 
+                //材料百分比
+                addString(writableSheet, xiankang.getQitahuohao(),8,rowUpdate);
+
                 //甲醛标示
-//                label1 = new Label(9, rowUpdate,   xiankang.getJiaquan(),format);
-//                writableSheet.addCell(label1);
 
                 addString(writableSheet, xiankang.getJiaquan(),9,rowUpdate);
+
+                //包装描述
+                addString(writableSheet, xiankang.getPack_memo(),50,rowUpdate);
+
 
                 //材质
 //                label1 = new Label(10, rowUpdate,   xiankang.getCaizhi(),format);
 //                writableSheet.addCell(label1);
-                addString(writableSheet, xiankang.getCaizhi(),10,rowUpdate);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if(xiankang_dengju!=null) {
+
+
+                    addString(writableSheet, xiankang_dengju.getCaizhi(), 10, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengyongtu(), 7, rowUpdate);
+
+                    addString(writableSheet, xiankang_dengju.getDengtichangshang(), 13, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengzhaochangshang(), 14, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getFeiniuhao(), 15, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getFeiniukuan(), 16, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getFeiniuchang(), 17, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getFeiniugao(), 18, rowUpdate);
+
+
+                    addString(writableSheet, xiankang_dengju.getDengdikuan(), 27, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengdichang(), 28, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengzhaochicun(), 29, rowUpdate);
+
+                    addString(writableSheet, xiankang_dengju.getDengpaoleixing(), 31, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengtouleixing(), 32, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getWashu(), 33, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengtoukaiguangleixing(), 34, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getHafujia(), 35, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getHafujiayanse(), 36, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengzhaobaozhuang(), 43, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengzhaobaozhuang(), 45, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getDengzhaobuliao(), 49, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.get_8dtt(), 51, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getKdyn(), 52, rowUpdate);
+                    addString(writableSheet, xiankang_dengju.getULApproval(), 53, rowUpdate);
+
+                }
+
+
             }
 
         }

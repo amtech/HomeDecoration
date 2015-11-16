@@ -8,6 +8,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.entity.Xiankang_Jiaju;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -99,7 +100,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
             //图片
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,5, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
 
 
 
@@ -109,7 +110,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
             addNumber(writableSheet, i + 1, 0, rowUpdate);
 
             //设计号  版本号
-           // addString(writableSheet, item.productName.trim(),2,rowUpdate);
+           addString(writableSheet, item.pVersion.trim(),1,rowUpdate);
 
             //货号
             addString(writableSheet, item.productName.trim(), 2, rowUpdate);
@@ -118,21 +119,18 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
             //产品描述
             addString(writableSheet, item.memo, 5, rowUpdate);
 
-            //产品总尺寸
+
             addString(writableSheet, item.spec, 6, rowUpdate);
 
-            //产品总尺寸
+
             addNumber(writableSheet, item.price, 7, rowUpdate);
 
-             //材料比重
-            addString(writableSheet, item.constitute.trim() ,27,rowUpdate);
 
-           
 
 
 
             //读取咸康数据
-//            ProductDetail productDetail=    apiManager.loadProductDetail(item.productId).datas.get(0);
+
             RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
 
 
@@ -141,11 +139,37 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
 
                 Xiankang xiankang=xiankangRemoteData.datas.get(0);
 
+                Xiankang_Jiaju xiankang_jiaju=xiankang.xiankang_jiaju;
+
                 //同款货号
                 addString(writableSheet,  xiankang.getQitahuohao().trim(), 3, rowUpdate);
 
                 //甲醛标示
-                addString(writableSheet,  xiankang.getJiaquan().trim(), 28, rowUpdate);
+                addString(writableSheet,  xiankang.getJiaquan().trim(), 16, rowUpdate);
+                //材料比重
+                addString(writableSheet, xiankang.getCaizhibaifenbi() ,15, rowUpdate);
+                addString(writableSheet, xiankang.getPack_memo() ,20,rowUpdate);
+                if(xiankang_jiaju!=null)
+                {
+
+
+                    addString(writableSheet, xiankang_jiaju.getMucailiao() ,8,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getMupi() ,9,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getDalishi() ,10,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getBolijingzi() ,11,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getBolijingziguige_kuan() ,12,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getBolijingziguige_gao() ,13,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getChoutichicun() ,17,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getMenkaikouchicun() ,18,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getChucangchicun() ,19,rowUpdate);
+                    addString(writableSheet, xiankang_jiaju.getGandu() ,31,rowUpdate);
+
+
+
+
+
+
+                }
 
 
 
@@ -159,7 +183,7 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
             addNumber(writableSheet, packValue[1], 26, rowUpdate);
             addNumber(writableSheet, packValue[2], 27, rowUpdate);
 
-            //折盒包装h inch
+            //  inch
             addNumber(writableSheet, UnitUtils.cmToInch(packValue[0]), 22, rowUpdate);
             addNumber(writableSheet, UnitUtils.cmToInch(packValue[1]), 23, rowUpdate);
             addNumber(writableSheet, UnitUtils.cmToInch(packValue[2]), 24, rowUpdate);

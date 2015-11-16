@@ -658,6 +658,18 @@ public class HttpUrl {
     }
 
 
+
+    /**
+     * 更新咸康数据  数据库结构变动，产生的调整接口 临时使用
+     * @return
+     */
+    public static String updateXiankang() {
+
+
+        return additionInfo(BaseUrl + "api/application/updateXiankang");
+
+    }
+
     /**
      * 读取指定ids的产品数据
      * @return

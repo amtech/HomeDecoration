@@ -108,7 +108,8 @@ public class ProductController extends BaseController {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<Product> pageValue = productRepository.findByNameLikeOrderByNameAsc("%" + prd_name.trim() + "%", pageable);
+        String likeValue="%" + prd_name.trim() + "%";
+        Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue,likeValue, pageable);
 
         List<Product> products = pageValue.getContent();
 
@@ -813,10 +814,23 @@ public class ProductController extends BaseController {
 
         //深度复制对象， 重新保存数据， 能直接使用源数据保存，会报错。
         Product newProduct= (Product)  ObjectUtils.deepCopy(product);
-        Xiankang xiankang=(Xiankang)ObjectUtils.deepCopy(product.xiankang);
+       Xiankang xiankang=(Xiankang)ObjectUtils.deepCopy(product.xiankang);
+
         if(xiankang!=null) {
             xiankang.setId(-1);
-            newProduct.xiankang = xiankang;
+            if(xiankang.xiankang_dengju!=null)
+            {
+                xiankang.xiankang_dengju.setId(-1);
+            }
+            if(xiankang.xiankang_jiaju!=null)
+            {
+                xiankang.xiankang_jiaju.setId(-1);
+            }
+            if(xiankang.xiankang_jingza!=null)
+            {
+                xiankang.xiankang_jingza.setId(-1);
+            }
+           newProduct.xiankang = xiankang;
         }
         newProduct.id= -1;
         newProduct.name=newProductName;

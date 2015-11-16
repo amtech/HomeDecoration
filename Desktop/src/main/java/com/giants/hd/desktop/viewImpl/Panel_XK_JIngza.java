@@ -1,13 +1,14 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.entity.Xiankang_Jingza;
 
 import javax.swing.*;
 
 /**
  * 咸康产品信息面板
  */
-public class Panel_XK {
+public class Panel_XK_JIngza {
     private JPanel panel1;
     private JTextField jingzi_gao;
     private JTextField jingzi_kuan;
@@ -22,18 +23,22 @@ public class Panel_XK {
     private JTextField biankuang;
     private JTextField mobian;
     private JTextField beizhu;
-    private JTextField qitahuohao;
-    private JTextField caizhibaifenbi;
 
     private JTextField huaxinbianhao;
     private JTextField huaxinchangshang;
     private JTextField huaxinxiaoguo;
-    private JComboBox cb_jiaqian;
 
-    private Xiankang data;
 
-    public void setData(Xiankang data) {
-        this.data=data;
+    public void setData(Xiankang_Jingza  data) {
+
+
+
+
+
+
+
+
+
         if(data==null) return;
         jingzi_gao.setText(data.getJingzi_gao());
         jingzi_kuan.setText(data.getJingzi_kuan());
@@ -48,16 +53,17 @@ public class Panel_XK {
         caizhi.setText(data.getCaizhi());
         biankuang.setText(data.getBiankuang());
         mobian.setText(data.getMobian());
-        qitahuohao.setText(data.getQitahuohao());
-        caizhibaifenbi.setText(data.getCaizhibaifenbi());
-        cb_jiaqian.setSelectedItem(data.getJiaquan());
+
         huaxinbianhao.setText(data.getHuaxinbianhao());
         huaxinchangshang.setText(data.getHuaxinchangshang());
         huaxinxiaoguo.setText(data.getHuaxinxiaoguo());
     }
 
-    public Xiankang getData( ) {
-        if(data==null) data=new Xiankang();
+    public void getData( Xiankang_Jingza data) {
+
+
+
+        if(data==null) data=new Xiankang_Jingza();
         data.setJingzi_gao(jingzi_gao.getText());
         data.setJingzi_kuan(jingzi_kuan.getText());
         data.setBeizhu(beizhu.getText());
@@ -71,16 +77,14 @@ public class Panel_XK {
         data.setCaizhi(caizhi.getText());
         data.setBiankuang(biankuang.getText());
         data.setMobian(mobian.getText());
-        data.setQitahuohao(qitahuohao.getText());
-        data.setCaizhibaifenbi(caizhibaifenbi.getText());
-        data.setJiaquan(cb_jiaqian.getSelectedItem().toString());
+
         data.setHuaxinbianhao(huaxinbianhao.getText());
         data.setHuaxinchangshang(huaxinchangshang.getText());
         data.setHuaxinxiaoguo(huaxinxiaoguo.getText());
-        return data;
+
     }
 
-    public boolean isModified(Xiankang data) {
+    public boolean isModified(Xiankang_Jingza data) {
         if (jingzi_gao.getText() != null ? !jingzi_gao.getText().equals(data.getJingzi_gao()) : data.getJingzi_gao() != null)
             return true;
         if (jingzi_kuan.getText() != null ? !jingzi_kuan.getText().equals(data.getJingzi_kuan()) : data.getJingzi_kuan() != null)
@@ -106,12 +110,7 @@ public class Panel_XK {
             return true;
         if (mobian.getText() != null ? !mobian.getText().equals(data.getMobian()) : data.getMobian() != null)
             return true;
-        if (qitahuohao.getText() != null ? !qitahuohao.getText().equals(data.getQitahuohao()) : data.getQitahuohao() != null)
-            return true;
-        if (caizhibaifenbi.getText() != null ? !caizhibaifenbi.getText().equals(data.getCaizhibaifenbi()) : data.getCaizhibaifenbi() != null)
-            return true;
-        if (cb_jiaqian.getSelectedItem() != null ? !cb_jiaqian.getSelectedItem().equals(data.getJiaquan()) : data.getJiaquan() != null)
-            return true;
+
         if (huaxinbianhao.getText() != null ? !huaxinbianhao.getText().equals(data.getHuaxinbianhao()) : data.getHuaxinbianhao() != null)
             return true;
         if (huaxinchangshang.getText() != null ? !huaxinchangshang.getText().equals(data.getHuaxinchangshang()) : data.getHuaxinchangshang() != null)

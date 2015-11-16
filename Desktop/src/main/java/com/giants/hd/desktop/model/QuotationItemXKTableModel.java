@@ -31,7 +31,7 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
     public static final String COLUMN_PRODUCT="productName";
     public static final String COLUMN_PRODUCT_PHOTO="productPhoto";
     QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
-    public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号",   "配方号(加强)",  "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
+    public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号(折叠)",   "配方号(加强)",  "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
                                                             ,                                                                            "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
@@ -44,9 +44,9 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
                                                                                                                             "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,COLUMN_PRICE2, "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2","memo2"};
 
 
-public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class,Product2.class};
+public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, String.class,Product.class,Product2.class};
 
-    public  static boolean[] editables = new boolean[]{false,false,                                   true,           true, true,false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
+    public  static boolean[] editables = new boolean[]{false,false,                                   false,           true, true,false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
 
                                                                                                                                   false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true };
 
