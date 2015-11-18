@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.giants.hd.desktop.viewImpl.Panel_ProductDetail">
   <scrollpane id="99b00" binding="contentPane">
     <constraints>
-      <xy x="0" y="0" width="1096" height="889"/>
+      <xy x="0" y="0" width="1364" height="889"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -273,17 +273,6 @@
             </constraints>
             <properties>
               <text value="备注"/>
-            </properties>
-          </component>
-          <component id="f4d51" class="javax.swing.JTextArea" binding="ta_memo">
-            <constraints>
-              <grid row="3" column="13" row-span="8" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <lineWrap value="true"/>
             </properties>
           </component>
           <component id="1ec19" class="javax.swing.JTextField" binding="tf_version">
@@ -1364,6 +1353,23 @@
               <forms/>
             </constraints>
           </nested-form>
+          <scrollpane id="dd23e">
+            <constraints>
+              <grid row="3" column="13" row-span="8" col-span="6" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="f4d51" class="javax.swing.JTextArea" binding="ta_memo">
+                <constraints/>
+                <properties>
+                  <lineWrap value="true"/>
+                  <wrapStyleWord value="true"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
     </children>

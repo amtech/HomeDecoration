@@ -38,7 +38,10 @@
           </grid>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <lineWrap value="true"/>
+          <wrapStyleWord value="false"/>
+        </properties>
       </component>
       <component id="bc5fe" class="javax.swing.JLabel">
         <constraints>

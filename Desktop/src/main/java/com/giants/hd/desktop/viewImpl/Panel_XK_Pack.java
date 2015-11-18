@@ -2,7 +2,10 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.entity.Xiankang;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -28,6 +31,10 @@ public class Panel_XK_Pack  extends BasePanel {
 
     public DataChangeListener<Xiankang> dataChangeListener;
 
+  public static final    String keyString = "护角";
+
+
+    ProductDetail productDetiail;
 
     public Panel_XK_Pack(   ) {
 
@@ -58,30 +65,69 @@ public class Panel_XK_Pack  extends BasePanel {
                 {
 
 
-                    stringBuilder.setLength(0);
+
                     Xiankang xiankang=getData();
 
-                    if(  xiankang.pack_front>0)
-                    {
 
-                        stringBuilder.append("前 ：").append(xiankang.pack_front).append("\n");
 
-                    }
-                    if(  xiankang.pack_perimeter>0)
+
+
+                    stringBuilder.setLength(0);
+                    if(productDetiail.product!=null)
                     {
-                        stringBuilder.append("四周：").append(xiankang.pack_perimeter).append("\n");
-                    }
-                    if(  xiankang.pack_front_back>0)
-                    {
-                        stringBuilder.append("前后：").append(xiankang.pack_front_back).append("\n");
-                    }
-                    if(  xiankang.pack_cube>0)
-                    {
-                        stringBuilder.append("六面：").append(xiankang.pack_cube).append("\n");
-                    }
-                    if(  xiankang.pack_middle>0)
-                    {
-                        stringBuilder.append("中间：").append(xiankang.pack_middle).append("\n");
+                        Product product=productDetiail.product;
+
+
+
+                        if(product.packQuantity>0)
+                        {
+
+                            String head="";
+                            if (hasHujiao(productDetiail)) {
+
+                                head= "加" + keyString + ",";
+                            }
+
+                            stringBuilder.append(product.packQuantity).append("(");
+
+
+                            if(xiankang.pack_perimeter>0&&xiankang.pack_front_back>0&&xiankang.pack_middle>0) {
+
+                                    stringBuilder.append(head);
+
+
+
+
+                                    stringBuilder.append("四周各").append(xiankang.pack_perimeter).append("”   ");
+                                if (xiankang.pack_front_back > 0)
+                                    stringBuilder.append("前后各").append(xiankang.pack_front_back).append("”   ");
+                                if (xiankang.pack_middle > 0)
+                                    stringBuilder.append("中间各").append(xiankang.pack_middle).append("”   ");
+                            }else
+                            if (xiankang.pack_perimeter > 0  &&xiankang.pack_front_back > 0)
+                            {
+                                stringBuilder.append(head);
+                                stringBuilder.append("四周各").append(xiankang.pack_perimeter).append("”   ");
+                                stringBuilder.append("前后各").append(xiankang.pack_front_back).append("”   ");
+                            }
+                            else
+                            if(xiankang.pack_middle>0&&xiankang.pack_cube>0)
+                            {
+
+                                stringBuilder.append(head);
+                                stringBuilder.append("六面各").append(xiankang.pack_cube).append("”   ");
+
+                                stringBuilder.append("中间各").append(xiankang.pack_middle).append("”   ");
+                            }else
+                                if(xiankang.pack_cube>0) {
+                                    stringBuilder.append(head);
+                                    stringBuilder.append("六面各").append(xiankang.pack_middle).append("”   ");
+                                }
+
+
+                        }
+
+                        stringBuilder.append(" )");
                     }
 
 
@@ -137,6 +183,31 @@ public class Panel_XK_Pack  extends BasePanel {
 
 
 
+    }
+
+    /**
+     * 检查包装材料中是否有护角材料
+     * @param productDetail
+     * @return
+     */
+    private boolean hasHujiao(ProductDetail productDetail)
+    {
+
+
+        if(null!=productDetail&&null!=productDetail.packMaterials)
+        {
+            for(ProductMaterial material:productDetail.packMaterials)
+            {
+                if(material.packMaterialClass!=null&&material.packMaterialClass.name.indexOf(keyString)>-1)
+                {
+                    return true;
+                }
+            }
+        }
+
+
+
+        return false;
     }
 
     private void attachDocumentListener() {

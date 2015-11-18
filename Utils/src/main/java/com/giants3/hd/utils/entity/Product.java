@@ -16,8 +16,14 @@ public class Product implements Serializable {
 	/**
 	 * 备注
 	 */
-	@Basic
+	@Basic @Lob
 	public String memo="";
+
+	/**
+	 * 备注
+	 */
+	@Basic @Lob
+	public String testmemo="";
 	/**
 	 * 图片，存放缩略图
 	 */

@@ -998,6 +998,7 @@ public class Panel_ProductDetail extends BasePanel {
         bindTableDatas(tb_pack_cost, packMaterialTableModel, productDetail.packMaterials);
         bindTableDatas(tb_pack_wage, packWageTableModel, productDetail.packWages);
 
+        jp_pack.productDetiail=productDetail;
 
 
     }
