@@ -3,7 +3,7 @@ package com.giants3.hd.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
+/**数字签名工具类
  * Created by davidleen29 on 2015/8/13.
  */
 public class DigestUtils {

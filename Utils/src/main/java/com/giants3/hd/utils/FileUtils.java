@@ -2,7 +2,7 @@ package com.giants3.hd.utils;
 
 import java.io.*;
 
-/**
+/**文件辅助类
  * Created by davidleen29 on 2015/8/14.
  */
 public class FileUtils {

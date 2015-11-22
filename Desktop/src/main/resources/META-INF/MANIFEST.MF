@@ -1,5 +1,5 @@
-Manifest-Version: 1.0.41
-Manifest-Version_Number: 41
-Manifest-Version_Spec: 1 分析表咸康包装描述自动生成 2 分析表产品描述大数据支持。
+Manifest-Version: 1.0.42
+Manifest-Version_Number: 42
+Manifest-Version_Spec: 1 分析表咸康包装描述自动生成 2 咸康镜子报价完善
 Main-Class: com.giants.hd.desktop.frames.Main
 

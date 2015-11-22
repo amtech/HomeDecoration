@@ -119,7 +119,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
 
 
-    @Basic
+    @Basic @Lob
 
     public String memo;
 
@@ -229,7 +229,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
 
 
-    @Basic
+    @Basic @Lob
 
     public String memo2;
 

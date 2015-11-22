@@ -1,6 +1,8 @@
 package com.giants.hd.desktop;
 
 import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyVetoException;
 
 /**
  * Created by david on 2015/11/17.
@@ -48,14 +50,28 @@ public class MyDesktopManager extends DefaultDesktopManager {
 
     @Override
     public void maximizeFrame(JInternalFrame f) {
-        super.maximizeFrame(f);
+        //super.maximizeFrame(f);
+
+        f.setNormalBounds(f.getBounds());
+        Rectangle desktopBounds = f.getParent().getBounds();
+        setBoundsForFrame(f, 0, 0,
+                desktopBounds.width, desktopBounds.height-iconHeight);
+
+        // Set the maximized frame as selected.
+        try {
+            f.setSelected(true);
+        } catch (PropertyVetoException e2) {
+        }
     }
 
 
     /** This moves the <code>JComponent</code> and repaints the damaged areas. */
     @Override
     public void setBoundsForFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
-        super.setBoundsForFrame(f, newX, newY, newWidth,newHeight - iconHeight);
+        super.setBoundsForFrame(f, newX, newY, newWidth,newHeight );
 
     }
+
+
+
 }

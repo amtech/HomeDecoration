@@ -121,7 +121,7 @@ public class QuotationItem implements Serializable,Valuable {
     public long quotationId;
 
 
-    @Basic
+    @Basic @Lob
     public String memo;
 
 

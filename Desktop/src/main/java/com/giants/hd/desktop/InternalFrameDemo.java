@@ -35,6 +35,7 @@ package com.giants.hd.desktop;
 
 
         import com.sun.java.swing.plaf.motif.MotifDesktopPaneUI;
+        import com.sun.java.swing.plaf.windows.WindowsDesktopManager;
 
         import javax.swing.JDesktopPane;
         import javax.swing.JMenu;
@@ -67,7 +68,7 @@ public class InternalFrameDemo extends JFrame
 
         //Set up the GUI.
         desktop = new JDesktopPane(); //a specialized layered pane
-       desktop.setDesktopManager(new MyDesktopManager(desktop));
+       desktop.setDesktopManager(new MyDesktopManager(  desktop));
 
         createFrame(); //create first "window"
         setContentPane(desktop);
@@ -122,6 +123,7 @@ public class InternalFrameDemo extends JFrame
         MyInternalFrame frame = new MyInternalFrame();
         frame.setVisible(true); //necessary as of 1.3
         desktop.add(frame);
+
 
         try {
             frame.setSelected(true);

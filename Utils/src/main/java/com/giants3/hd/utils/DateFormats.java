@@ -3,6 +3,7 @@ package com.giants3.hd.utils;
 import java.text.SimpleDateFormat;
 
 /**
+ * 日期格式
  * Created by davidleen29 on 2015/8/21.
  */
 public class DateFormats {

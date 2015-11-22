@@ -121,7 +121,7 @@ public class Panel_XK_Pack  extends BasePanel {
                             }else
                                 if(xiankang.pack_cube>0) {
                                     stringBuilder.append(head);
-                                    stringBuilder.append("六面各").append(xiankang.pack_middle).append("”   ");
+                                    stringBuilder.append("六面各").append(xiankang.pack_cube).append("”   ");
                                 }
 
 
