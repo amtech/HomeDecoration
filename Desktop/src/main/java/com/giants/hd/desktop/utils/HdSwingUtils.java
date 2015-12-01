@@ -88,6 +88,7 @@ public class HdSwingUtils {
         for (int i = 0; i < arrayString.length; i++) {
             resultToString+=arrayString[i]+"<br>";
         }
+        resultToString+="</html>";
 
         return  resultToString;
 

@@ -171,9 +171,38 @@ public class QuotationController extends BaseController {
         }
 
 
+
+
+        //空白行过滤
+        if(quotationDetail.quotation.quotationTypeId== Quotation.QUOTATION_TYPE_NORMAL)
+        {
+            List<QuotationItem> valuableItem=new ArrayList<>();
+            for(QuotationItem item:quotationDetail.items)
+            {
+                if(!item.isEmpty())
+                valuableItem.add(item);
+            }
+            quotationDetail.items.clear();
+            quotationDetail.items.addAll(valuableItem);
+
+
+        }else
+        {
+            List<QuotationXKItem> valuableItem=new ArrayList<>();
+            for(QuotationXKItem item:quotationDetail.XKItems)
+            {
+                if(!item.isEmpty())
+                    valuableItem.add(item);
+            }
+            quotationDetail.XKItems.clear();
+            quotationDetail.XKItems.addAll(valuableItem);
+        }
+
+        //保存基本数据
         Quotation savedQuotation = quotationRepository.save(newQuotation);
 
 
+        //更新修改记录
         updateQuotationLog(savedQuotation, user);
 
         long newId = savedQuotation.id;

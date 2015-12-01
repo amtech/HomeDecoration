@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.MyDesktopManager;
 import com.giants.hd.desktop.MyLogger;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.viewImpl.LoadingDialog;
@@ -40,10 +41,7 @@ import java.awt.event.*;
  * Created by davidleen29 on 2015/5/6.
  */
 public class Main extends BaseFrame {
-    private JPanel panel1;
-    private JTextField tf_product;
-    private JLabel lable2;
-    private JLabel photo;
+    JDesktopPane   desktop  ;
 
 
     public static final String TITLE="报价系统";
@@ -67,6 +65,17 @@ public class Main extends BaseFrame {
     {
         super(TITLE);
 
+
+        //Set up the GUI.
+        desktop = new JDesktopPane(); //a specialized layered pane
+        desktop.setDesktopManager(new MyDesktopManager(  desktop));
+
+
+        setContentPane(desktop);
+
+
+        //Make dragging a little faster but perhaps uglier.
+        desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
 
         ShortcutHelper.createShortcut();
 
@@ -173,7 +182,9 @@ public class Main extends BaseFrame {
 
 
 
-        frame.setContentPane(frame.panel1);
+
+
+
 
         frame.setExtendedState(MAXIMIZED_BOTH);
       //  frame.generateMenu();
@@ -313,7 +324,20 @@ public class Main extends BaseFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    Main.this.setContentPane(new Panel_ProductList().getRoot());
+
+
+
+                    ProductListInternalFrame productListInternalFrame=new ProductListInternalFrame();
+
+                    productListInternalFrame.setVisible(true); //necessary as of 1.3
+                    desktop.add(productListInternalFrame);
+
+
+                    try {
+                        productListInternalFrame.setSelected(true);
+                    } catch (java.beans.PropertyVetoException exception) {}
+//                    desktop.add()
+//                    Main.this.setContentPane(new Panel_ProductList().getRoot());
 
 
                 }
@@ -355,7 +379,19 @@ public class Main extends BaseFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                   Main.this.setContentPane(new Panel_Material("").getRoot());
+
+
+
+
+
+                    MaterialListInternalFrame materialListInternalFrame=new MaterialListInternalFrame();
+
+                    materialListInternalFrame.setVisible(true); //necessary as of 1.3
+                    desktop.add(materialListInternalFrame);
+                    try {
+                        materialListInternalFrame.setSelected(true);
+                    } catch (java.beans.PropertyVetoException exception) {}
+                  // Main.this.setContentPane(new Panel_Material("").getRoot());
 
 
                 }
@@ -455,7 +491,17 @@ public class Main extends BaseFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    setContentPane(new Panel_Quotation().getRoot());
+
+
+                    QuotationInternalFrame quotationInternalFrame=new QuotationInternalFrame();
+
+                    quotationInternalFrame.setVisible(true); //necessary as of 1.3
+                    desktop.add(quotationInternalFrame);
+                    try {
+                        quotationInternalFrame.setSelected(true);
+                    } catch (java.beans.PropertyVetoException exception) {}
+
+                   // setContentPane(new Panel_Quotation().getRoot());
 
                 }
             });
@@ -702,48 +748,48 @@ public class Main extends BaseFrame {
         }
 
 
-        menuItem = new JMenuItem("咸康数据调整");
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-
-           final     LoadingDialog     dialog=new LoadingDialog(Main.this, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-
-                    }
-                });
-
-
-                UseCaseFactory.createUpdateXiankang().execute(new Subscriber() {
-                     @Override
-                     public void onCompleted() {
-                         dialog.setVisible(false);
-                         dialog.dispose();
-                         JOptionPane.showMessageDialog(Main.this,"调整成功");
-
-
-                     }
-
-                     @Override
-                     public void onError(Throwable e) {
-                         dialog.setVisible(false);
-                         dialog.dispose();
-                         JOptionPane.showMessageDialog(Main.this,e.getMessage());
-                     }
-
-                     @Override
-                     public void onNext(Object o) {
-
-                     }
-                 });
-
-                dialog.setVisible(true);
-            }
-        });
+//        menuItem = new JMenuItem("咸康数据调整");
+//        menu.add(menuItem);
+//        menuItem.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//
+//
+//           final     LoadingDialog     dialog=new LoadingDialog(Main.this, new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//
+//                    }
+//                });
+//
+//
+//                UseCaseFactory.createUpdateXiankang().execute(new Subscriber() {
+//                     @Override
+//                     public void onCompleted() {
+//                         dialog.setVisible(false);
+//                         dialog.dispose();
+//                         JOptionPane.showMessageDialog(Main.this,"调整成功");
+//
+//
+//                     }
+//
+//                     @Override
+//                     public void onError(Throwable e) {
+//                         dialog.setVisible(false);
+//                         dialog.dispose();
+//                         JOptionPane.showMessageDialog(Main.this,e.getMessage());
+//                     }
+//
+//                     @Override
+//                     public void onNext(Object o) {
+//
+//                     }
+//                 });
+//
+//                dialog.setVisible(true);
+//            }
+//        });
 
         return menu;
     }

@@ -170,6 +170,18 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
     }
 
+    /**
+     * 使用外部数据源  以便不同model可以共享数据
+     * @param datas
+     */
+    public void setExternalData(List<T> datas)
+    {
+
+        this.datas=datas;
+        adjustRowCount();
+        fireTableDataChanged();
+    }
+
     @Override
     public int getRowCount() {
         return datas.size();

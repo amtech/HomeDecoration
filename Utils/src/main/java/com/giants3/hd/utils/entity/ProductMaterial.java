@@ -402,7 +402,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 		mLong =material.wLong;
 		classId=material.classId;
 		className=material.className;
-		memo=material.spec;
+		memo=material.memo;
 		unitRatio=material.unitRatio;
 		update();
 

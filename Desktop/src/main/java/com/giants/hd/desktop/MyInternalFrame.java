@@ -52,6 +52,7 @@ public class MyInternalFrame extends JInternalFrame {
         //...Create the GUI and put it in the window...
 
         //...Then set the window size or call pack...
+        //setContentPane();
         setSize(1920/2,1080/2);
 
 

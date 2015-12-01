@@ -260,4 +260,19 @@ public class StringUtils {
         return stringBuilder.toString();
     }
 
+    /**
+     * 比较字符串是否相同
+     * @param memo
+     * @param rem
+     * @return
+     */
+    public static boolean compare(String memo, String rem) {
+
+        if(memo==null&&rem==null)
+            return true;
+        if(memo==null) return false;
+        return
+                memo.equalsIgnoreCase(rem);
+
+    }
 }

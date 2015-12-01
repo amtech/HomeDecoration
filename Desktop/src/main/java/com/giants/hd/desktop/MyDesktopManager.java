@@ -50,18 +50,18 @@ public class MyDesktopManager extends DefaultDesktopManager {
 
     @Override
     public void maximizeFrame(JInternalFrame f) {
-        //super.maximizeFrame(f);
+         super.maximizeFrame(f);
 
-        f.setNormalBounds(f.getBounds());
-        Rectangle desktopBounds = f.getParent().getBounds();
-        setBoundsForFrame(f, 0, 0,
-                desktopBounds.width, desktopBounds.height-iconHeight);
-
-        // Set the maximized frame as selected.
-        try {
-            f.setSelected(true);
-        } catch (PropertyVetoException e2) {
-        }
+//        f.setNormalBounds(f.getBounds());
+//        Rectangle desktopBounds = f.getParent().getBounds();
+//        setBoundsForFrame(f, 0, 0,
+//                desktopBounds.width, desktopBounds.height-iconHeight);
+//
+//        // Set the maximized frame as selected.
+//        try {
+//            f.setSelected(true);
+//        } catch (PropertyVetoException e2) {
+//        }
     }
 
 

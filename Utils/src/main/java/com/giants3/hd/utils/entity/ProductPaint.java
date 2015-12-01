@@ -267,6 +267,7 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 		this.unitName=material.unitName;
 		this.materialType=material.typeId;
 		this.ingredientRatio=material.ingredientRatio;
+		 this.memo=material.memo;
 
 
 

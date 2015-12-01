@@ -88,9 +88,9 @@ public class QuotationItemPopMenu extends JPopupMenu {
 
                 if (table.getModel() instanceof BaseTableModel) {
                     BaseTableModel model = (BaseTableModel) table.getModel();
-
+                    int rowCount=     model.getRowCount();
                     if (lister != null)
-                        lister.onTableMenuClick(ITEM_APPEND, model, null);
+                        lister.onTableMenuClick(ITEM_APPEND, model, new int[]{rowCount,rowCount+10});
                 }
 
 

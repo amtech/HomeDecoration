@@ -32,6 +32,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -48,6 +49,8 @@ import java.util.List;
  */
 public class Panel_QuotationDetail extends BasePanel  implements QuotationDetailView{
     private JHdTable tb;
+    private JHdTable fixedTable;
+  private   JViewport viewport;
     private JPanel root;
     private JTextArea ta_memo;
     private JTextField jtf_number;
@@ -74,6 +77,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
     private JLabel lb_company;
     private JButton btn_reimport;
     private JLabel icon_overdue;
+    private JScrollPane jtScroll;
     public QuotationDetail data;
 
 
@@ -86,8 +90,17 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
     QuotationItemXKTableModel xkModel;
 
+    QuotationItemFixColumnTableModel fixColumnModel;
+
+      QuotationItemFixColumnXKTableModel  fixColumnXkModel;
 
 
+
+
+
+    //model 对应操作这两个数组
+    private List<QuotationItem> quotationItems=new ArrayList<>();
+    private List<QuotationXKItem>  quotationXKItems=new ArrayList<>();
 
     QuotationDetailPresenter presenter;
 
@@ -105,6 +118,9 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         model=new QuotationItemTableModel();
         xkModel=new QuotationItemXKTableModel();
 
+        fixColumnModel=new QuotationItemFixColumnTableModel();
+
+        fixColumnXkModel=new QuotationItemFixColumnXKTableModel();
 
 
      //   tb.setModel(model);
@@ -123,29 +139,31 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         });
 
 
-        tb.addMouseListener(new MouseAdapter() {
+        fixedTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-
                 if (e.getClickCount() == 2) {
 
 
-                    int column = tb.convertColumnIndexToModel(tb.getSelectedColumn());
+                    int column = fixedTable.convertColumnIndexToModel(fixedTable.getSelectedColumn());
+                    int selectRow=fixedTable.convertRowIndexToModel(fixedTable.getSelectedRow());
                     //单击第一列 显示原图
                     if (column == 1) {
 
-                       Object object= ((BaseTableModel<Object>)tb.getModel()).getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
 
-                        if(object instanceof QuotationItem) {
+                        if(data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+                        {
 
-                            QuotationItem item =  (QuotationItem)object;
+
+                            QuotationItem item =  quotationItems.get(selectRow);
                             if (item.productId > 0) {
                                 ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion, item.photoUrl);
                             }
                         }else
                         {
-                            QuotationXKItem item =  (QuotationXKItem)object;
+
+
+                            QuotationXKItem item =  quotationXKItems.get(selectRow);
                             if (item.productId > 0) {
                                 ImageViewDialog.showProductDialog(getWindow(getRoot()), item.productName, item.pVersion, item.photoUrl);
                             }else
@@ -260,7 +278,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                     Customer customer = (Customer) e.getItem();
                     jtf_company.setVisible(customer.code.equals(Customer.CODE_TEMP));
                     lb_company.setVisible(customer.code.equals(Customer.CODE_TEMP));
-                    getWindow(jtf_company).pack();
+                    getWindow(jtf_company).invalidate();
 
                 }
 
@@ -278,6 +296,8 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
         //过期状态默认不显示
         icon_overdue.setVisible(false);
+
+
 
 
         //重新导入
@@ -341,7 +361,11 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                                 if(product!=null)
                                 {
                                             item.updateProduct(product);
-                                            item.updateProduct2(product2);
+
+                                }
+                                if(product2!=null)
+                                {
+                                    item.updateProduct2(product2);
                                 }
 
                             }
@@ -350,7 +374,9 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                             //数据源改变
 
                             model.fireTableDataChanged();
+                            fixColumnModel.fireTableDataChanged();
                             xkModel.fireTableDataChanged();
+                            fixColumnXkModel.fireTableDataChanged();
 
 
                         }else
@@ -376,9 +402,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
 
-
-
-        tb.addMouseListener(new MouseAdapter() {
+        MouseAdapter adapter=    new MouseAdapter() {
 
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -398,24 +422,27 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                 if (e.isPopupTrigger()) {
                     JTable source = (JTable) e.getSource();
 
-                    JPopupMenu menu = new QuotationItemPopMenu(tb, new QuotationItemPopMenu.TableMenuLister() {
+                    JPopupMenu menu = new QuotationItemPopMenu(source, new QuotationItemPopMenu.TableMenuLister() {
                         @Override
                         public void onTableMenuClick(int index, BaseTableModel tableModel, int[] rowIndex) {
 
                             switch (index) {
-
-
                                 case QuotationItemPopMenu.ITEM_INSERT:
 
-                                    tableModel.addNewRow(rowIndex[0]);
+
+                                    notifyModelRowInsert(rowIndex[0],rowIndex[0]);
 
                                     break;
                                 case QuotationItemPopMenu.ITEM_DELETE:
+                                    notifyModelRowDelete(rowIndex[0],rowIndex[0]);
 
-                                    tableModel.deleteRows(rowIndex);
                                     break;
                                 case QuotationItemPopMenu.ITEM_APPEND:
-                                    tableModel.appendRows(10);
+
+                                    notifyModelRowInsert(rowIndex[0],rowIndex[1]);
+
+
+                                    break;
 
                             }
 
@@ -427,10 +454,111 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
                 }
             }
-        });
+        };
+
+        tb.addMouseListener(adapter);
+        fixedTable.addMouseListener(adapter);
+
+
+        fixedTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     }
 
 
+
+    private void notifyAllModel()
+    {
+
+        if(data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+        {
+            model.fireTableDataChanged();
+            fixColumnModel.fireTableDataChanged();
+        }else
+        {
+
+
+            xkModel.fireTableDataChanged( );
+            fixColumnXkModel.fireTableDataChanged();
+
+        }
+
+
+
+    }
+
+
+    private void notifyModelRowInsert(int startRow,int endRow)
+    {
+
+
+        if(data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+        {
+
+            for(int i=startRow;i<=endRow;i++)
+                quotationItems.add(i,new QuotationItem());
+            model.fireTableRowsInserted(startRow,endRow);
+            fixColumnModel.fireTableRowsInserted(startRow,endRow);
+        }else
+        {
+
+            for(int i=startRow;i<=endRow;i++)
+                quotationXKItems.add(i,new QuotationXKItem());
+            xkModel.fireTableRowsInserted(startRow,endRow);
+            fixColumnXkModel.fireTableRowsInserted(startRow,endRow);
+
+        }
+
+        viewport.setPreferredSize(fixedTable.getPreferredSize());
+
+        fixedTable.setRowSelectionInterval(startRow,startRow);
+
+    }
+
+    private void notifyModelRowDelete(int startRow,int endRow)
+    {
+
+
+        if(data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+        {
+
+            for(int i=endRow;i>=startRow;i--)
+            quotationItems.remove(i);
+
+            model.fireTableRowsDeleted(startRow,endRow);
+            fixColumnModel.fireTableRowsDeleted(startRow,endRow);
+        }else
+        {
+            for(int i=endRow;i>=startRow;i--)
+                quotationXKItems.remove(i);
+            xkModel.fireTableRowsDeleted(startRow,endRow);
+            fixColumnXkModel.fireTableRowsDeleted(startRow,endRow);
+
+        }
+        viewport.setPreferredSize(fixedTable.getPreferredSize());
+
+    }
+
+
+    private void notifyModelRowUpdate(int startRow,int endRow)
+    {
+
+
+        if(data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+        {
+
+            fixColumnModel.fireTableRowsUpdated(startRow,endRow);
+
+            model.fireTableRowsUpdated(startRow,endRow);
+              }else
+        {
+
+            fixColumnXkModel.fireTableRowsUpdated(startRow,endRow);
+
+            xkModel.fireTableRowsUpdated(startRow,endRow);
+
+        }
+      //  viewport.setPreferredSize(fixedTable.getPreferredSize());
+
+    }
 
     private Product findProduct(List<Product> products,long id)
     {
@@ -456,7 +584,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         jtf.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                Document object = e.getDocument();
+
                 if (!jtf.hasFocus())
                     jtf.requestFocus();
 
@@ -464,7 +592,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                Document object = e.getDocument();
+
                 if (!jtf.hasFocus())
                     jtf.requestFocus();
 
@@ -491,7 +619,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf);
-        tb.setDefaultEditor(Product.class, editor);
+        fixedTable.setDefaultEditor(Product.class, editor);
     }
 
 
@@ -533,14 +661,14 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
                 final String text = ((JTextField) e.getSource()).getText().trim();
-                handleTableProduct2Input(tb, text);
+                handleTableProduct2Input(fixedTable, text);
 
             }
         });
 
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf_product2);
-        tb.setDefaultEditor(Product2.class, editor);
+        fixedTable.setDefaultEditor(Product2.class, editor);
     }
 
 
@@ -554,11 +682,6 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
 
-        if(!(tb.getModel() instanceof Productable))
-        {
-            return;
-        }
-        final Productable productable= (Productable) tb.getModel();
 
         final   int rowIndex = tb.convertRowIndexToModel(tb.getSelectedRow());
         //查询  单记录直接copy
@@ -575,9 +698,15 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
             @Override
             public void onResult(RemoteData<Product> data) {
 
+
+                Product product=null;
                 if(data.isSuccess() && data.totalCount == 1) {
 
-                    productable.setProduct(data.datas.get(0), rowIndex);
+
+                    product=data.datas.get(0);
+
+
+
 
 
                 }else
@@ -595,12 +724,26 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                     dialog.pack();
                     dialog.setLocationRelativeTo(tb);
                     dialog.setVisible(true);
-                    Product product = dialog.getResult();
-                    if (product != null) {
-                        productable.setProduct(product, rowIndex);
+                      product = dialog.getResult();
 
+
+
+                }
+
+                if(product!=null)
+                {
+
+
+                    if(Panel_QuotationDetail.this.data.quotation.quotationTypeId==Quotation.QUOTATION_TYPE_NORMAL)
+                    {
+                        Panel_QuotationDetail.this.quotationItems.get(rowIndex).updateProduct(product);
+
+                    }else
+                    {
+                        Panel_QuotationDetail.this.quotationXKItems.get(rowIndex).updateProduct(product);
                     }
 
+                    notifyModelRowUpdate(rowIndex,rowIndex);
 
                 }
 
@@ -619,14 +762,8 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
      * @param text
      */
     private void handleTableProduct2Input(final JHdTable tb, final String text) {
-        if(!(tb.getModel() instanceof QuotationItemXKTableModel))
-        {
-            return;
-        }
-        final QuotationItemXKTableModel productable= (QuotationItemXKTableModel) tb.getModel();
 
         final   int rowIndex = tb.convertRowIndexToModel(tb.getSelectedRow());
-        final  QuotationXKItem item=productable.getItem(rowIndex);
 
         //查询  单记录直接copy
         new HdSwingWorker<Product,Object>(SwingUtilities.getWindowAncestor(getRoot()))
@@ -641,9 +778,12 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
             @Override
             public void onResult(RemoteData<Product> data) {
 
+
+                Product product;
                 if(data.isSuccess() && data.totalCount == 1) {
 
-                    productable.setProduct2(data.datas.get(0), rowIndex);
+                    product=data.datas.get(0);
+
 
                 }else
                 {
@@ -660,13 +800,16 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                     dialog.pack();
                     dialog.setLocationRelativeTo(tb);
                     dialog.setVisible(true);
-                    Product product = dialog.getResult();
-                    if (product != null) {
-                        productable.setProduct2(product, rowIndex);
-
-                    }
+                      product = dialog.getResult();
 
 
+
+                }
+                if(product!=null)
+                {
+
+                  quotationXKItems.get(rowIndex).updateProduct2(product);
+                    notifyModelRowUpdate(rowIndex,rowIndex);
                 }
 
 
@@ -736,6 +879,11 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
         this.data=data;
 
+        quotationItems.clear();
+        quotationItems.addAll(data.items);
+        quotationXKItems.clear();
+        quotationXKItems.addAll(data.XKItems);
+
 
 
 
@@ -746,17 +894,19 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
             case Quotation.QUOTATION_TYPE_NORMAL:
 
                 tb.setModel(model);
+                fixedTable.setModel(fixColumnModel);
                 break;
             case Quotation.QUOTATION_TYPE_XK:
 
                 tb.setModel(xkModel);
+                fixedTable.setModel(fixColumnXkModel);
                 TableColumnModel cm = tb.getColumnModel();
                 ColumnGroup g_name = new ColumnGroup("折叠包装");
-                int startIndex=5;
+                int startIndex=0;
                 for(int i=0;i<12;i++)
                     g_name.add(cm.getColumn(startIndex+i));
                 ColumnGroup g_lang = new ColumnGroup("加强包装");
-                startIndex=17;
+                startIndex=12;
                 for(int i=0;i<12;i++)
                     g_lang.add(cm.getColumn(startIndex+i));
 
@@ -818,12 +968,16 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
         ta_memo.setText(quotation.memo);
 
-        model.setDatas(data.items);
-        xkModel.setDatas(data.XKItems);
+        model.setExternalData(quotationItems);
+        xkModel.setExternalData(quotationXKItems);
+
+        fixColumnModel.setExternalData(quotationItems);
+        fixColumnXkModel.setExternalData(quotationXKItems);
 
 
 
-
+        //设置固定列表的宽度
+        viewport.setPreferredSize(fixedTable.getPreferredSize());
 
 
         jp_verify.setVisible(true);
@@ -906,6 +1060,10 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
     }
 
+    /**
+     * 获取数据
+     * @param data
+     */
     public void getData(QuotationDetail data) {
 
         Quotation quotation=data.quotation;
@@ -927,10 +1085,34 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         quotation.vDate=vDate.getJFormattedTextField().getText().trim();
         quotation.memo=ta_memo.getText();
         quotation.companyName=jtf_company.getText();
-        data.items.clear();
-        data.items.addAll(model.getValuableDatas());
-        data.XKItems.clear();
-        data.XKItems.addAll(xkModel.getValuableDatas());
+
+
+        //空白行过滤
+        if(data.quotation.quotationTypeId== Quotation.QUOTATION_TYPE_NORMAL)
+        {
+            List<QuotationItem> valuableItem=new ArrayList<>();
+            for(QuotationItem item:quotationItems)
+            {
+                if(!item.isEmpty())
+                valuableItem.add(item);
+            }
+            data.items.clear();
+            data.items.addAll(valuableItem);
+
+
+        }else
+        {
+            List<QuotationXKItem> valuableItem=new ArrayList<>();
+            for(QuotationXKItem item:quotationXKItems)
+            {
+                if(!item.isEmpty())
+                    valuableItem.add(item);
+            }
+            data.XKItems.clear();
+            data.XKItems.addAll(valuableItem);
+
+        }
+
 
 
     }
@@ -984,7 +1166,59 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         }
 
         //crate table  and addd table group header
-        tb = new JHdTable(   ) {
+        tb = createCustomTable(false);
+        fixedTable = createCustomTable(true);
+
+        fixedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        fixedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        jtScroll=new JScrollPane(tb);
+          viewport = new JViewport();
+        viewport.setView(fixedTable);
+        viewport.setPreferredSize(fixedTable.getPreferredSize());
+        jtScroll.setRowHeaderView(viewport);
+        jtScroll.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedTable
+                .getTableHeader());
+
+
+
+
+
+
+
+
+    }
+
+
+    /**
+     * 设置表主从表关联
+     * @param isFixedTable
+     */
+    private void checkSelection(boolean isFixedTable) {
+        int fixedSelectedIndex = fixedTable.getSelectedRow();
+        int selectedIndex = tb.getSelectedRow();
+        if (fixedSelectedIndex != selectedIndex) {
+            if (isFixedTable) {
+                if(fixedSelectedIndex<0||fixedSelectedIndex>=tb.getRowCount())
+                    tb.clearSelection();
+                else
+                tb.setRowSelectionInterval(fixedSelectedIndex,
+                        fixedSelectedIndex);
+            } else {
+                if(selectedIndex<0||selectedIndex>=fixedTable.getRowCount())
+                    fixedTable.clearSelection();
+                else
+                fixedTable
+                        .setRowSelectionInterval(selectedIndex, selectedIndex);
+            }
+        }
+    }
+
+    private JHdTable createCustomTable(final boolean   isFixTable)
+    {
+       return new JHdTable(   ) {
             protected JTableHeader createDefaultTableHeader() {
                 return new GroupableTableHeader(columnModel);
             }
@@ -997,10 +1231,13 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
                 }
                 return comp;
             }
+
+
+           public void valueChanged(ListSelectionEvent e) {
+               super.valueChanged(e);
+               checkSelection(isFixTable);
+           }
         };
-        tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-
     }
 
     @Override

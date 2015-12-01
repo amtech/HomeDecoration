@@ -197,6 +197,20 @@ public class MaterialController extends BaseController {
                 oldData.price=prdt.price;
                 updatePriceRelateData(oldData);
             }
+
+
+            /**
+             * 备注是否相同，不同则更新到分析表中
+             */
+
+        //TODO v1.0.43 关闭判断  强制更新分析表材料备注， v1.0.45 之后打开。
+          if(!StringUtils.compare(oldData.memo,prdt.rem))
+            {
+
+                productMaterialRepository.updateMemoOnMaterialId(prdt.rem,oldData.id);
+                productPaintRepository.updateMemoOnMaterialId(prdt.rem,oldData.id);
+            }
+
             convert(oldData,prdt);
             materialRepository.save(oldData);
 
@@ -213,6 +227,7 @@ public class MaterialController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/syncERP",method ={ RequestMethod.GET,RequestMethod.POST})
+    @Transactional
     public
     @ResponseBody
     RemoteData<Void> syncERP( )   {
@@ -259,6 +274,7 @@ public class MaterialController extends BaseController {
                     prdt.classId=materialClass.code;
                     prdt.className=materialClass.name;
                     prdt.type=materialClass.type;
+
                     foundClass=true;
                     break;
                 }
