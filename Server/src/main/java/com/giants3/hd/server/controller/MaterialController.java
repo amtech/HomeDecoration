@@ -5,6 +5,7 @@ import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -30,6 +31,7 @@ import javax.persistence.EntityManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -359,7 +361,15 @@ public class MaterialController extends BaseController {
 
 
 
+        //更新停用相关信息
+         boolean outOfService=material.outOfService;
+        if(outOfService&&(oldData==null||!oldData.outOfService))
+        {
 
+            Date date=    Calendar.getInstance().getTime();
+            material.outOfServiceDate=date.getTime();
+            material.outOfServiceDateString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(date);
+        }
 
 
 

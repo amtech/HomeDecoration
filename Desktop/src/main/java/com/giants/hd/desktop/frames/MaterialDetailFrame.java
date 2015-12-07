@@ -1,13 +1,14 @@
-package com.giants.hd.desktop.dialogs;
+package com.giants.hd.desktop.frames;
 
-import com.giants3.hd.domain.api.ApiManager;
+import com.giants.hd.desktop.dialogs.BaseDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.viewImpl.BasePanel;
+import com.giants.hd.desktop.viewImpl.Panel_Material_Detail;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.google.inject.Inject;
-import com.giants.hd.desktop.viewImpl.Panel_Material_Detail;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ import java.awt.event.WindowEvent;
 /**
  * 材料详细面板
  */
-public class MaterialDetailDialog extends BaseDialog<Material>implements BasePanel.PanelListener {
+public class MaterialDetailFrame extends BaseFrame implements BasePanel.PanelListener {
 
 
     @Inject
@@ -30,9 +31,9 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
     Material oldMaterial;
 
     public  boolean changeAndSaved=false;
-    public MaterialDetailDialog(Window window,Material material)
+    public MaterialDetailFrame(Window window, Material material)
     {
-        super(window,"材料详情");
+        super("材料详情");
         setContentPane(   material_detail.getRoot());
         init(  material);
     }
@@ -45,13 +46,13 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
 
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//        addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//
-//                close();
-//
-//            }});
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                close();
+
+            }});
 
         material_detail.setListener(this);
 
@@ -92,14 +93,14 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
 
                 if(data.isSuccess())
                 {
-                    JOptionPane.showMessageDialog(MaterialDetailDialog.this,"保存成功");
+                    JOptionPane.showMessageDialog(MaterialDetailFrame.this,"保存成功");
                     changeAndSaved=true;
                     bindMaterial(data.datas.get(0));
 
 
                 }else {
 
-                    JOptionPane.showMessageDialog(MaterialDetailDialog.this,data.message);
+                    JOptionPane.showMessageDialog(MaterialDetailFrame.this,data.message);
                 }
 
 
@@ -158,15 +159,15 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
                     if(data.isSuccess())
                     {
 
-                        JOptionPane.showMessageDialog(MaterialDetailDialog.this,"删除成功！");
+                        JOptionPane.showMessageDialog(MaterialDetailFrame.this,"删除成功！");
 
-                        MaterialDetailDialog.this.dispose();
+                        MaterialDetailFrame.this.dispose();
 
 
 
                     }else
                     {
-                        JOptionPane.showMessageDialog(MaterialDetailDialog.this,data.message);
+                        JOptionPane.showMessageDialog(MaterialDetailFrame.this,data.message);
                     }
 
                 }
@@ -187,12 +188,12 @@ public class MaterialDetailDialog extends BaseDialog<Material>implements BasePan
         if(oldMaterial==null||!oldMaterial.equals(material)) {
 
 
-            int option=   JOptionPane.showConfirmDialog(MaterialDetailDialog.this,"数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+            int option=   JOptionPane.showConfirmDialog(MaterialDetailFrame.this,"数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
 
             if (JOptionPane.OK_OPTION == option) {
                 //点击了确定按钮
 
-                MaterialDetailDialog.this.dispose();
+                MaterialDetailFrame.this.dispose();
             }
 
         }else

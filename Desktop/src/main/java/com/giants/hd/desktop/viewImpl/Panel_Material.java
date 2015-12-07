@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
+import com.giants.hd.desktop.frames.MaterialDetailFrame;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
@@ -122,7 +123,7 @@ public class Panel_Material  extends  BasePanel{
                     if (column == 0) {
 
 
-                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material), material.url );
+                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material),material.code, material.url );
 
                     }else {
 
@@ -181,13 +182,12 @@ public class Panel_Material  extends  BasePanel{
     private void showDetailDialog(Material material)
     {
 
-        MaterialDetailDialog dialog=new MaterialDetailDialog(SwingUtilities.getWindowAncestor(getRoot()),material);
+        MaterialDetailFrame dialog=new MaterialDetailFrame(SwingUtilities.getWindowAncestor(getRoot()),material);
         dialog.pack();
         dialog.setMinimumSize(new Dimension(400, 600));
         dialog.setLocationByPlatform(true);
-        dialog.setModal(true);
         dialog.setVisible(true);
-        search(jtf_value.getText().trim());
+
 
 
     }

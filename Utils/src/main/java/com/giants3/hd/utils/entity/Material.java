@@ -6,6 +6,10 @@ import com.sun.jmx.mbeanserver.ModifiableClassLoaderRepository;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * 材料数据
+ *
+ */
 @Entity(name="T_Material")
 public class Material  implements Serializable {
 
@@ -149,6 +153,25 @@ public class Material  implements Serializable {
 
 	@Basic
 	public String url;
+
+
+	/**
+	 * 是否停用
+	 */
+	@Basic
+	public boolean outOfService;
+
+
+	/**
+	 * 停用日期
+	 */
+	public long outOfServiceDate;
+
+	/**
+	 * 停用日期字符串
+	 */
+	public String outOfServiceDateString;
+
 
 
 	public String getClassId() {
@@ -335,5 +358,71 @@ public class Material  implements Serializable {
 		 * 	胶带类型
 		 */
 		public static final String C_BZAE = "BZAE";
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Material)) return false;
+
+		Material material = (Material) o;
+
+		if (id != material.id) return false;
+		if (Float.compare(material.price, price) != 0) return false;
+		if (typeId != material.typeId) return false;
+		if (Float.compare(material.wWidth, wWidth) != 0) return false;
+		if (Float.compare(material.wLong, wLong) != 0) return false;
+		if (Float.compare(material.wHeight, wHeight) != 0) return false;
+		if (Float.compare(material.available, available) != 0) return false;
+		if (Float.compare(material.discount, discount) != 0) return false;
+		if (Float.compare(material.unitRatio, unitRatio) != 0) return false;
+		if (equationId != material.equationId) return false;
+		if (lastPhotoUpdateTime != material.lastPhotoUpdateTime) return false;
+		if (Float.compare(material.ingredientRatio, ingredientRatio) != 0) return false;
+		if (outOfService != material.outOfService) return false;
+		if (outOfServiceDate != material.outOfServiceDate) return false;
+		if (name != null ? !name.equals(material.name) : material.name != null) return false;
+		if (unitId != null ? !unitId.equals(material.unitId) : material.unitId != null) return false;
+		if (unitName != null ? !unitName.equals(material.unitName) : material.unitName != null) return false;
+		if (typeName != null ? !typeName.equals(material.typeName) : material.typeName != null) return false;
+		if (memo != null ? !memo.equals(material.memo) : material.memo != null) return false;
+		if (code != null ? !code.equals(material.code) : material.code != null) return false;
+		if (spec != null ? !spec.equals(material.spec) : material.spec != null) return false;
+		if (classId != null ? !classId.equals(material.classId) : material.classId != null) return false;
+		if (className != null ? !className.equals(material.className) : material.className != null) return false;
+		if (url != null ? !url.equals(material.url) : material.url != null) return false;
+		return !(outOfServiceDateString != null ? !outOfServiceDateString.equals(material.outOfServiceDateString) : material.outOfServiceDateString != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (int) (id ^ (id >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+		result = 31 * result + (unitId != null ? unitId.hashCode() : 0);
+		result = 31 * result + (unitName != null ? unitName.hashCode() : 0);
+		result = 31 * result + typeId;
+		result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
+		result = 31 * result + (memo != null ? memo.hashCode() : 0);
+		result = 31 * result + (wWidth != +0.0f ? Float.floatToIntBits(wWidth) : 0);
+		result = 31 * result + (wLong != +0.0f ? Float.floatToIntBits(wLong) : 0);
+		result = 31 * result + (wHeight != +0.0f ? Float.floatToIntBits(wHeight) : 0);
+		result = 31 * result + (available != +0.0f ? Float.floatToIntBits(available) : 0);
+		result = 31 * result + (code != null ? code.hashCode() : 0);
+		result = 31 * result + (discount != +0.0f ? Float.floatToIntBits(discount) : 0);
+		result = 31 * result + (spec != null ? spec.hashCode() : 0);
+		result = 31 * result + (classId != null ? classId.hashCode() : 0);
+		result = 31 * result + (className != null ? className.hashCode() : 0);
+		result = 31 * result + (unitRatio != +0.0f ? Float.floatToIntBits(unitRatio) : 0);
+		result = 31 * result + equationId;
+		result = 31 * result + (int) (lastPhotoUpdateTime ^ (lastPhotoUpdateTime >>> 32));
+		result = 31 * result + (ingredientRatio != +0.0f ? Float.floatToIntBits(ingredientRatio) : 0);
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		result = 31 * result + (outOfService ? 1 : 0);
+		result = 31 * result + (int) (outOfServiceDate ^ (outOfServiceDate >>> 32));
+		result = 31 * result + (outOfServiceDateString != null ? outOfServiceDateString.hashCode() : 0);
+		return result;
 	}
 }

@@ -11,6 +11,8 @@ import com.giants3.hd.utils.entity.MaterialType;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.*;
 
@@ -38,6 +40,7 @@ public class Panel_Material_Detail extends  BasePanel {
     private JLabel lb_photo;
     private JTextField jtf_ingredientRatio;
     private JTextField jtf_discount;
+    private JComboBox cb_outofservice;
 
 
 
@@ -89,6 +92,9 @@ public class Panel_Material_Detail extends  BasePanel {
                 }
             }
         };
+
+
+
     }
 
 
@@ -123,6 +129,9 @@ public class Panel_Material_Detail extends  BasePanel {
 //            cb_equation.addItem(equation);
 //        }
 
+        cb_outofservice.addItem("使用");
+        cb_outofservice.addItem("停用");
+
          lb_photo  .addMouseListener(new MouseInputAdapter() {
              @Override
              public void mouseClicked(MouseEvent e) {
@@ -131,7 +140,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
                      if (data!=null) {
-                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()), data.url);
+                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()),data.code, data.url);
                      }
 
                  }
@@ -161,6 +170,10 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
     }
+
+
+
+
 
 
 
@@ -218,6 +231,7 @@ public class Panel_Material_Detail extends  BasePanel {
         lb_photo.setIcon(data.photo == null ? null : new ImageIcon(data.photo));
 
 
+        cb_outofservice.setSelectedIndex(data.outOfService?1:0);
 
 //        selectedItem=-1;
 //        for(int i=0,count=cb_equation.getItemCount();i<count;i++)
@@ -283,15 +297,12 @@ public class Panel_Material_Detail extends  BasePanel {
             data.discount=0;
         }
 
+        data.outOfService=cb_outofservice.getSelectedIndex()==0?false:true;
+
     }
 
     public boolean isModified(Material data) {
-        if (tf_code.getText() != null ? !tf_code.getText().equals(data.getCode()) : data.getCode() != null) return true;
-        if (tf_name.getText() != null ? !tf_name.getText().equals(data.getName()) : data.getName() != null) return true;
-        if (tf_unit.getText() != null ? !tf_unit.getText().equals(data.getUnitName()) : data.getUnitName() != null)
-            return true;
-        if (tf_spec.getText() != null ? !tf_spec.getText().equals(data.getSpec()) : data.getSpec() != null) return true;
-        if (tf_memo.getText() != null ? !tf_memo.getText().equals(data.getMemo()) : data.getMemo() != null) return true;
+
         return false;
     }
 
