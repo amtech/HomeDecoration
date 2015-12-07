@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  *
- * ÏÌ¿µ¼Ò¾ß²¿·Ö ¸½¼ÓÊı¾İ
+ * å’¸åº·å®¶å…·éƒ¨åˆ† é™„åŠ æ•°æ®
  * Created by david on 2015/11/14.
  */
 @Entity(name="T_Xiankang_Jiaju")
@@ -22,66 +22,66 @@ public class Xiankang_Jiaju implements Serializable{
 
 
 
-    //µÆ¾ßÀàÏà¹ØĞÅÏ¢
+    //ç¯å…·ç±»ç›¸å…³ä¿¡æ¯
     /**
-     *²£Á§/¾µ×Ó
+     *ç»ç’ƒ/é•œå­
      */
     public String bolijingzi;
     /**
-     *²£Á§/¾µ×Ó¹æ¸ñ ¿í
+     *ç»ç’ƒ/é•œå­è§„æ ¼ å®½
      */
     public String bolijingziguige_kuan;
 
 
 
     /**
-     *²£Á§/¾µ×Ó¹æ¸ñ ¸ß
+     *ç»ç’ƒ/é•œå­è§„æ ¼ é«˜
      */
     public String bolijingziguige_gao;
 
     /**
-     * ²Û¿í
+     * æ§½å®½
      */
     public String caokuan;
     /**
-     * ²ÛÉî
+     * æ§½æ·±
      */
     public String caoshen;
     /**
-     * Ä¾²ÄÁÏ
+     * æœ¨ææ–™
      */
     public String mucailiao;
     /**
-     * Ä¾Æ¤
+     * æœ¨çš®
      */
     public String   mupi;
     /**
-     * ´óÀíÊ¯
+     * å¤§ç†çŸ³
      */
     public String  dalishi;
     /**
-     * ¸É¶È
+     * å¹²åº¦
      */
     public String gandu;
 
     /**
-     * ³éÌë³ß´ç
+     * æŠ½å±‰å°ºå¯¸
      */
     public String choutichicun;
 
     /**
-     * ÃÅ¿ª¿Ú³ß´ç
+     * é—¨å¼€å£å°ºå¯¸
      */
     public String menkaikouchicun;
 
 
     /**
-     * ´¢²Ø³ß´ç
+     * å‚¨è—å°ºå¯¸
      */
     public String chucangchicun;
 
     /**
-     * ±¸×¢
+     * å¤‡æ³¨
      */
     private String memo;
 

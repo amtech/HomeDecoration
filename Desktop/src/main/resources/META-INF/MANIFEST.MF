@@ -1,5 +1,3 @@
-Manifest-Version: 1.0.44
-Manifest-Version_Number: 44
-Manifest-Version_Spec: 1 报价界面，前几个列固定可见。
+Manifest-Version: 1
 Main-Class: com.giants.hd.desktop.frames.Main
 

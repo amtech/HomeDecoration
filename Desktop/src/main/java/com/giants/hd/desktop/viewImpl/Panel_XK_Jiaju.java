@@ -1,13 +1,13 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants3.hd.utils.entity.Xiankang_Jiaju;
-import com.sun.istack.internal.Nullable;
+
 
 import javax.swing.*;
 
 /**
  *
- * 咸康家具数据面板
+ * 鍜稿悍瀹跺叿鏁版嵁闈㈡澘
  * Created by david on 2015/11/15.
  */
 public class Panel_XK_Jiaju {
@@ -97,7 +97,7 @@ public class Panel_XK_Jiaju {
     }
 
     /**
-     * 设置面板是否可见
+     * 璁剧疆闈㈡澘鏄惁鍙
      * @param visible
      */
     public void setVisible(boolean visible) {

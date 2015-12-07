@@ -25,7 +25,10 @@ public class PropertyWorker {
 	 * 指定property文件
 	 */
 	private static final String PROPERTY_FILE = "config.properties";
-
+	/**
+	 * 版本相关信息文件
+	 */
+	private static final String VERSION_FILE = "version.properties";
 	/**
 	 * 根据Key 读取Value
 	 * 
@@ -97,27 +100,32 @@ public class PropertyWorker {
 
 	public static AppVersion getVersion()
 	{
-		URLClassLoader cl = (URLClassLoader)PropertyWorker.class.getClassLoader();
+
 		AppVersion appVersion=new AppVersion();
-
+		InputStream inputStream=null;
 		try {
-			URL url = cl.findResource("META-INF/MANIFEST.MF");
-			InputStream inputStream=url.openStream();
-			Manifest manifest = new Manifest(inputStream);
+			  inputStream=	PropertyWorker.class.getClassLoader().getResourceAsStream(VERSION_FILE);
+			Properties props = new Properties();
+			props.load(inputStream);
 			inputStream.close();
-			// do stuff with it
-			Attributes attributes=   manifest.getMainAttributes();
-			String   version=attributes.getValue("Manifest-Version");
 
-			int    versionCode=Integer.valueOf(attributes.getValue("Manifest-Version_Number"));
+			int    versionCode=Integer.valueOf(props.getProperty("Version_Number"));
 
 			appVersion.versionCode=versionCode;
-			appVersion.versionName=attributes.getValue("Manifest-Version");
-			appVersion.memo=attributes.getValue("Manifest-Version_Spec");
+			appVersion.versionName=props.getProperty("Version_Name");
+			appVersion.memo=props.getProperty("Version_Spec");
 
 		} catch (Throwable E) {
 			// handle
 			E.printStackTrace();
+		}finally {
+
+			if(inputStream!=null)
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		return appVersion;
 	}

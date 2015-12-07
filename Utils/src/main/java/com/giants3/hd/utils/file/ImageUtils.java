@@ -2,8 +2,6 @@ package com.giants3.hd.utils.file;
 
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
-import com.sun.istack.internal.Nullable;
-import com.sun.javafx.beans.annotations.NonNull;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
@@ -151,7 +149,7 @@ public class ImageUtils {
 
 
 
-    public static final byte[] scale(@NonNull BufferedImage img,int maxWidth,int maxHeight,boolean preserveAlpha) throws  HdException {
+    public static final byte[] scale(  BufferedImage img,int maxWidth,int maxHeight,boolean preserveAlpha) throws  HdException {
 
 
         try {

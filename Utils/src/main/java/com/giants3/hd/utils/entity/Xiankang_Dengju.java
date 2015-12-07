@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  *
- * ÏÌ¿µµÆ¾ß²¿·Ö ¸½¼ÓÊı¾İ
+ * å’¸åº·ç¯å…·éƒ¨åˆ† é™„åŠ æ•°æ®
  * Created by david on 2015/11/14.
  */
 @Entity(name="T_Xiankang_Dengju")
@@ -22,7 +22,7 @@ public class Xiankang_Dengju implements Serializable{
 
 
 
-    //µÆ¾ßÀàÏà¹ØĞÅÏ¢
+    //ç¯å…·ç±»ç›¸å…³ä¿¡æ¯
     /**
      *
      */

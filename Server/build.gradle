@@ -2,10 +2,16 @@
 apply plugin: 'war'
 apply plugin: 'java'
 
-
+/**
+ * 由于hiernate 不能解析其他模块中的entity 文件。  utils模块并非以jar形式参与编译的。
+ * gradle 生成包 目前不能用。
+ *
+ */
 
 version = '1.0'
-
+tasks.withType(org.gradle.api.tasks.compile.JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 repositories {
     mavenCentral()
 }

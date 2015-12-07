@@ -3,7 +3,7 @@ package com.giants3.hd.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**Êı×ÖÇ©Ãû¹¤¾ßÀà
+/**æ•°å­—ç­¾åå·¥å…·ç±»
  * Created by davidleen29 on 2015/8/13.
  */
 public class DigestUtils {

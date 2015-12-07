@@ -8,7 +8,7 @@ import com.giants3.hd.utils.entity.Xiankang_Jingza;
 import javax.swing.*;
 
 /**
- * ÏÌ¿µ»ã×ÜÃæ°å
+ * å’¸åº·æ±‡æ€»é¢æ¿
  */
 public class Panel_Xiankang {
     private JTabbedPane tabbedPane1;
@@ -81,7 +81,7 @@ public class Panel_Xiankang {
 
 
     /**
-     * ÉèÖÃÃæ°åÊÇ·ñ¿É¼û
+     * è®¾ç½®é¢æ¿æ˜¯å¦å¯è§
      * @param visible
      */
     public void setVisible(boolean visible) {

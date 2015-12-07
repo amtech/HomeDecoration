@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 public class POIUtils {
 //	/**
-//	 * °ÑÒ»¸öexcelÖĞµÄcellstyletable¸´ÖÆµ½ÁíÒ»¸öexcel£¬ÕâÀï»á±¨´í£¬²»ÄÜÓÃÕâÖÖ·½·¨£¬²»Ã÷°×Ñ½£¿£¿£¿£¿£¿
+//	 * æŠŠä¸€ä¸ªexcelä¸­çš„cellstyletableå¤åˆ¶åˆ°å¦ä¸€ä¸ªexcelï¼Œè¿™é‡Œä¼šæŠ¥é”™ï¼Œä¸èƒ½ç”¨è¿™ç§æ–¹æ³•ï¼Œä¸æ˜ç™½å‘€ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
 //	 * @param fromBook
 //	 * @param toBook
 //	 */
@@ -28,14 +28,14 @@ public class POIUtils {
 //		}
 //	}
     /**
-     * ¸´ÖÆÒ»¸öµ¥Ôª¸ñÑùÊ½µ½Ä¿µÄµ¥Ôª¸ñÑùÊ½
+     * å¤åˆ¶ä¸€ä¸ªå•å…ƒæ ¼æ ·å¼åˆ°ç›®çš„å•å…ƒæ ¼æ ·å¼
      * @param fromStyle
      * @param toStyle
      */
     public static void copyCellStyle(CellStyle fromStyle,
                                      CellStyle toStyle) {
         toStyle.setAlignment(fromStyle.getAlignment());
-        //±ß¿òºÍ±ß¿òÑÕÉ«
+        //è¾¹æ¡†å’Œè¾¹æ¡†é¢œè‰²
         toStyle.setBorderBottom(fromStyle.getBorderBottom());
         toStyle.setBorderLeft(fromStyle.getBorderLeft());
         toStyle.setBorderRight(fromStyle.getBorderRight());
@@ -45,7 +45,7 @@ public class POIUtils {
         toStyle.setRightBorderColor(fromStyle.getRightBorderColor());
         toStyle.setLeftBorderColor(fromStyle.getLeftBorderColor());
 
-        //±³¾°ºÍÇ°¾°
+        //èƒŒæ™¯å’Œå‰æ™¯
         toStyle.setFillBackgroundColor(fromStyle.getFillBackgroundColor());
         toStyle.setFillForegroundColor(fromStyle.getFillForegroundColor());
 
@@ -53,33 +53,33 @@ public class POIUtils {
         toStyle.setFillPattern(fromStyle.getFillPattern());
 //		toStyle.setFont(fromStyle.getFont(null));
         toStyle.setHidden(fromStyle.getHidden());
-        toStyle.setIndention(fromStyle.getIndention());//Ê×ĞĞËõ½ø
+        toStyle.setIndention(fromStyle.getIndention());//é¦–è¡Œç¼©è¿›
         toStyle.setLocked(fromStyle.getLocked());
-        toStyle.setRotation(fromStyle.getRotation());//Ğı×ª
+        toStyle.setRotation(fromStyle.getRotation());//æ—‹è½¬
         toStyle.setVerticalAlignment(fromStyle.getVerticalAlignment());
         toStyle.setWrapText(fromStyle.getWrapText());
 
     }
     /**
-     * Sheet¸´ÖÆ
+     * Sheetå¤åˆ¶
      * @param fromSheet
      * @param toSheet
      * @param copyValueFlag
      */
     public static void copySheet(Workbook wb,Sheet fromSheet, Sheet toSheet,
                                  boolean copyValueFlag) {
-        //ºÏ²¢ÇøÓò´¦Àí
+        //åˆå¹¶åŒºåŸŸå¤„ç†
         mergerRegion(fromSheet, toSheet);
         for (Iterator rowIt = fromSheet.rowIterator(); rowIt.hasNext();) {
             Row tmpRow = (Row) rowIt.next();
             Row newRow = toSheet.createRow(tmpRow.getRowNum());
-            //ĞĞ¸´ÖÆ
+            //è¡Œå¤åˆ¶
             copyRow(wb,tmpRow,newRow,copyValueFlag);
         }
     }
 
     /**
-     * ĞĞ¸´ÖÆ¹¦ÄÜ
+     * è¡Œå¤åˆ¶åŠŸèƒ½
      * @param fromRow
      * @param toRow
      */
@@ -90,11 +90,11 @@ public class POIUtils {
 
     }
     /**
-     * ĞĞ¸´ÖÆ¹¦ÄÜ
+     * è¡Œå¤åˆ¶åŠŸèƒ½
      * @param fromRow
      * @param toRow
       * @param copyValueFlag
-     * @param useSourceStyle  ÊÇ·ñÊ¹ÓÃÔ´¸ñ×ÓµÄ style
+     * @param useSourceStyle  æ˜¯å¦ä½¿ç”¨æºæ ¼å­çš„ style
      *
      */
     public static void copyRow(Workbook wb,Row fromRow,Row toRow,boolean copyValueFlag,boolean useSourceStyle){
@@ -107,10 +107,10 @@ public class POIUtils {
         }
     }
     /**
-     * ¸´ÖÆÔ­ÓĞsheetµÄºÏ²¢µ¥Ôª¸ñµ½ĞÂ´´½¨µÄsheet
+     * å¤åˆ¶åŸæœ‰sheetçš„åˆå¹¶å•å…ƒæ ¼åˆ°æ–°åˆ›å»ºçš„sheet
      *
-     * @param fromSheet ĞÂ´´½¨sheet
-     * @param toSheet      Ô­ÓĞµÄsheet
+     * @param fromSheet æ–°åˆ›å»ºsheet
+     * @param toSheet      åŸæœ‰çš„sheet
      */
     public static void mergerRegion(Sheet fromSheet, Sheet toSheet) {
         int sheetMergerCount = fromSheet.getNumMergedRegions();
@@ -128,12 +128,12 @@ public class POIUtils {
     }
 
     /**
-     * ¸´ÖÆµ¥Ôª¸ñ
+     * å¤åˆ¶å•å…ƒæ ¼
      *
      * @param srcCell
      * @param distCell
      * @param copyValueFlag
-     *            trueÔòÁ¬Í¬cellµÄÄÚÈİÒ»Æğ¸´ÖÆ
+     *            trueåˆ™è¿åŒcellçš„å†…å®¹ä¸€èµ·å¤åˆ¶
      */
     public static void copyCell(Workbook wb,Cell srcCell, Cell distCell,
                                 boolean copyValueFlag,boolean useFromStyle) {
@@ -152,16 +152,16 @@ public class POIUtils {
 
 
             copyCellStyle(oldCellStyle, newstyle);
-            //ÑùÊ½
+            //æ ·å¼
             distCell.setCellStyle(newstyle);
         }
 
-        //ÆÀÂÛ
+        //è¯„è®º
         if (srcCell.getCellComment() != null) {
             distCell.setCellComment(srcCell.getCellComment());
         }
 
-        // ²»Í¬Êı¾İÀàĞÍ´¦Àí
+        // ä¸åŒæ•°æ®ç±»å‹å¤„ç†
         int srcCellType = srcCell.getCellType();
         distCell.setCellType(srcCellType);
         if (copyValueFlag) {

@@ -1,26 +1,17 @@
 package com.giants3.hd.server.interceptor;
 
 
+import com.giants3.hd.server.repository.SessionRepository;
+import com.giants3.hd.server.utils.Constraints;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Session;
+import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
-
-        import com.giants3.hd.server.repository.SessionRepository;
-        import com.giants3.hd.server.repository.UserRepository;
-        import com.giants3.hd.server.utils.Constraints;
-        import com.giants3.hd.utils.RemoteData;
-        import com.giants3.hd.utils.entity.Session;
-        import com.giants3.hd.utils.entity.User;
-        import com.google.gson.Gson;
-
-
-        import com.sun.org.apache.xml.internal.security.c14n.implementations.UtfHelpper;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.web.method.HandlerMethod;
-        import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-        import sun.util.resources.CalendarData;
-
-        import java.util.Calendar;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
 
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {

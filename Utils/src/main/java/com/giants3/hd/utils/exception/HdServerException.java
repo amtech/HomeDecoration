@@ -1,7 +1,7 @@
 package com.giants3.hd.utils.exception;
 
 /**
- *  服务端异常类
+ *  鏈嶅姟绔紓甯哥被
  */
 
 public class HdServerException extends HdException {

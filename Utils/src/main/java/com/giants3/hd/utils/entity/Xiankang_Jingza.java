@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  *
- * ÏÌ¿µ¾µ×ÓÔÓÀà²¿·Ö ¸½¼ÓÊı¾İ
+ * å’¸åº·é•œå­æ‚ç±»éƒ¨åˆ† é™„åŠ æ•°æ®
  * Created by david on 2015/11/14.
  */
 @Entity(name="T_Xiankang_Jingza")
@@ -22,69 +22,69 @@ public class Xiankang_Jingza implements Serializable{
 
 
     /**
-     * ¾µ×Ó¿í
+     * é•œå­å®½
      */
     private String jingzi_kuan;
     /**
-     * ‚äÔ]
+     * å‚™è¨»
      */
     private String beizhu;
     /**
-     * ²Û¿í
+     * æ§½å®½
      */
     private String caokuan;
     /**
-     * ²ÛÉî
+     * æ§½æ·±
      */
     private String caoshen;
     /**
-     * ¹Ò¾à
+     * æŒ‚è·
      */
     private String guaju;
     /**
-     * »­¹æ  ¸ß
+     * ç”»è§„  é«˜
      */
     private String huangui_gao;
     /**
-     * »­¹æ  ¿í
+     * ç”»è§„  å®½
      */
     private String huangui_kuan;
 
     /**
-     * ²£Á§¹æ¸ñ  ¸ß
+     * ç»ç’ƒè§„æ ¼  é«˜
      */
     private String boliguige_gao;
     /**
-     * ²£Á§¹æ¸ñ ¿í
+     * ç»ç’ƒè§„æ ¼ å®½
      */
     private String boliguige_kuan;
 
     /**
-     * ²ÄÖÊ
+     * æè´¨
      */
     private String caizhi;
     /**
-     * ±ß¿ò
+     * è¾¹æ¡†
      */
     private String biankuang;
     /**
-     * Ä¥±ß
+     * ç£¨è¾¹
      */
     private String mobian;
     /**
-     * »­Ğ¾±àºÅ
+     * ç”»èŠ¯ç¼–å·
      */
     private String huaxinbianhao;
     /**
-     * »­Ğ¾³§ÉÌ
+     * ç”»èŠ¯å‚å•†
      */
     private String huaxinchangshang;
     /**
-     * »­Ğ¾Ğ§¹û
+     * ç”»èŠ¯æ•ˆæœ
      */
     private String huaxinxiaoguo;
     /**
-     * ¾µ×Ó¹æ¸ñ	¸ß
+     * é•œå­è§„æ ¼	é«˜
      */
     private String jingzi_gao;
 
