@@ -53,18 +53,22 @@ public class SyncDialog extends BaseDialog<Void>  {
 
 
                 new HdSwingWorker<Void, Void>(SyncDialog.this) {
+
+                    private  long time=System.currentTimeMillis();
                     @Override
                     protected RemoteData<Void> doInBackground() throws Exception {
+
+
+
                         return apiManager.syncErpMaterial();
                     }
 
                     @Override
                     public void onResult(RemoteData<Void> data) {
 
-
                         if(data.isSuccess())
                         {
-                            JOptionPane.showMessageDialog(SyncDialog.this,"ERP材料同步成功");
+                            JOptionPane.showMessageDialog(SyncDialog.this,"ERP材料同步成功,耗时："+((System.currentTimeMillis()-time)/1000)+"秒");
                         }else
                         {
                             JOptionPane.showMessageDialog(SyncDialog.this,data.message);

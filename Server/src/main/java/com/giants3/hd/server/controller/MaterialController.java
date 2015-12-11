@@ -827,6 +827,14 @@ public class MaterialController extends BaseController {
         material.wHeight=prdt.wHeight;
 
 
+        //停用消息
+        material.outOfService=prdt.nouse_dd >0;
+        material.outOfServiceDate=prdt.nouse_dd;
+        material.outOfServiceDateString=prdt.nouse_dd <=0?"":DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(prdt.nouse_dd));
+
+
+
+
 
     }
 }

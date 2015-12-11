@@ -8,6 +8,7 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity.Module;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * 应用程序启动初始化
@@ -108,19 +107,12 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                     if(aFile.getName().endsWith(".jar"))
                     {
                         String fileName=aFile.getName();
-                        try {
-                            FileInputStream fileInputStream=new FileInputStream(aFile);
-                            JarInputStream jarInputStream=new JarInputStream(fileInputStream);
-                            Manifest manifest=jarInputStream.getManifest();
-                            jarInputStream.close();
-                            fileInputStream.close();
-                            //未读到配置文件 掠过
-                            if(null==manifest) continue;
-                              appVersion=new AppVersion();
-                            Attributes attr= manifest.getMainAttributes();
-                            appVersion.memo=attr.getValue("Manifest-Version_Spec");
-                            appVersion.versionName=attr.getValue("Manifest-Version");
-                            String versionCodeString=attr.getValue("Manifest-Version_Number");
+                        //读取相关的版本配置文件
+                        Properties properties=    readZipFile(aFile.getAbsolutePath(),"version.properties");
+                        appVersion=new AppVersion();
+                            appVersion.memo=properties.getProperty("Version_Spec");
+                            appVersion.versionName=properties.getProperty("Version_Name");
+                            String versionCodeString=properties.getProperty("Version_Number");
                             appVersion.updateTime= Calendar.getInstance().getTimeInMillis();
                             appVersion.timeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date( appVersion.updateTime));
                             appVersion.versionCode= StringUtils.isEmpty(versionCodeString)?-1:Integer.valueOf(versionCodeString);
@@ -129,9 +121,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                             break;
 
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
 
 
                     }
@@ -207,5 +197,37 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
         System.out.println("spring 容器初始化完毕================================================");
 
+    }
+
+
+
+    public static Properties readZipFile(String zipFilePath, String relativeFilePath) {
+
+        Properties
+                properties=new Properties();
+        try {
+            ZipFile zipFile = new ZipFile(zipFilePath);
+            Enumeration<? extends ZipEntry> e = zipFile.entries();
+
+            while (e.hasMoreElements()) {
+                ZipEntry entry =  e.nextElement();
+                // if the entry is not directory and matches relative file then extract it
+                if (!entry.isDirectory() && entry.getName().equals(relativeFilePath)) {
+                    InputStream bis = zipFile.getInputStream(entry);
+                    Reader reader=new InputStreamReader(bis,"UTF-8");
+                    properties.load(reader);
+                    reader.close();
+                    bis.close();
+                    break;
+
+                } else {
+                    continue;
+                }
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return properties;
     }
 }

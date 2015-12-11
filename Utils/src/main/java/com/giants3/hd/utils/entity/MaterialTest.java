@@ -1,8 +1,6 @@
 package com.giants3.hd.utils.entity;
 
 
-import com.sun.jmx.mbeanserver.ModifiableClassLoaderRepository;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,13 +8,13 @@ import java.io.Serializable;
  * 材料数据
  *
  */
-@Entity(name="T_Material")
+@Entity(name="T_MaterialTEST")
 @Table(
-		indexes = {@Index(name = "codeIndex",  columnList="code", unique = true),
-				@Index(name = "nameIndex", columnList="name",     unique = false)}
+		indexes = {@Index(name = "indexOfCode",  columnList="code", unique = true),
+				@Index(name = "indexOfName", columnList="name",      unique = false)}
 )
 
-public class Material  implements Serializable {
+public class MaterialTest implements Serializable {
 
 	/**
 	 * 材料id
@@ -369,9 +367,9 @@ public class Material  implements Serializable {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Material)) return false;
+		if (!(o instanceof MaterialTest)) return false;
 
-		Material material = (Material) o;
+		MaterialTest material = (MaterialTest) o;
 
 		if (id != material.id) return false;
 		if (Float.compare(material.price, price) != 0) return false;

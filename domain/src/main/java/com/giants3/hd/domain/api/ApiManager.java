@@ -10,6 +10,7 @@ import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import rx.Observable;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -1266,5 +1267,54 @@ public class ApiManager {
         return remoteData;
 
 
+    }
+
+    /**
+     * 读取定时任务列表
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<HdTask> loadTaskList() throws HdException{
+
+        String url=HttpUrl.loadTaskList( );
+        String result=  client.getWithStringReturned(url);
+        Type   generateType = new TypeToken<RemoteData<HdTask>>() {
+        }.getType();
+        RemoteData<HdTask> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+
+    /**
+     * 添加定时任务 并返回现有任务列表
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<HdTask> addHdTask(HdTask task) throws HdException{
+
+        String url=HttpUrl.addHdTask( );
+        String result=  client.postWithStringReturned(url, GsonUtils.toJson(task));
+        Type   generateType = new TypeToken<RemoteData<HdTask>>() {
+        }.getType();
+        RemoteData<HdTask> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
+
+
+
+    /**
+     * 删除定时任务 并返回现有任务列表
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<HdTask> deleteHdTask(long taskId) throws HdException{
+
+        String url=HttpUrl.deleteHdTask(  taskId);
+        String result=  client.postWithStringReturned(url, null);
+        Type   generateType = new TypeToken<RemoteData<HdTask>>() {
+        }.getType();
+        RemoteData<HdTask> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
     }
 }

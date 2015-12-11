@@ -9,8 +9,11 @@ import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants3.hd.utils.RemoteData;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.WritableRaster;
 
 public class SearchDialog<T> extends BaseDialog<T> {
     private JPanel contentPane;
@@ -23,11 +26,16 @@ public class SearchDialog<T> extends BaseDialog<T> {
     private BaseTableModel<T> tableModel;
     private ComonSearch<T> comonSearch;
 
+    private ResultChecker<T> checker;
 
     public SearchDialog(Window window, final BaseTableModel<T> tableModel,ComonSearch<T> comonSearch,String value,RemoteData<T> remoteData,boolean searchTextFixed) {
+        this(window,tableModel,comonSearch,value,remoteData,searchTextFixed,null);
+    }
+    public SearchDialog(Window window, final BaseTableModel<T> tableModel, ComonSearch<T> comonSearch, String value, RemoteData<T> remoteData, boolean searchTextFixed, final ResultChecker<T> checker) {
         super(window);
         setContentPane(contentPane);
         setModal(true);
+        this.checker=checker;
 
 
         this.tableModel=tableModel;
@@ -63,14 +71,36 @@ public class SearchDialog<T> extends BaseDialog<T> {
 
                     int modelRowId = table.convertRowIndexToModel(table.getSelectedRow());
                     T material = tableModel.getItem(modelRowId);
-                    setResult(material);
-                    setVisible(false);
-                    dispose();
+
+                    if(checker!=null)
+                    {
+
+                        if(checker.isValid(material))
+                        {
+                            setResult(material);
+                            setVisible(false);
+                            dispose();
+                        }else
+                        {
+
+                            checker.warn(material);
+                        }
+                    }else{
+
+
+                        setResult(material);
+                        setVisible(false);
+                        dispose();
+                    }
+
 
 
                 }
             }
         });
+
+//        if(checker!=null)
+//        table.setDefaultRenderer(Object.class,new ValidTableCellRender(checker,tableModel));
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -153,6 +183,8 @@ public class SearchDialog<T> extends BaseDialog<T> {
         private RemoteData<T> remoteData;
         private boolean searchTextFixed=false;
 
+        private ResultChecker<T> checker;
+
         public Builder setWindow(Window window) {
             this.window = window;
             return this;
@@ -182,7 +214,84 @@ public class SearchDialog<T> extends BaseDialog<T> {
         }
 
         public SearchDialog createSearchDialog() {
-            return new SearchDialog(window, tableModel, comonSearch, value, remoteData,searchTextFixed);
+            SearchDialog dialog = new SearchDialog(window, tableModel, comonSearch, value, remoteData,searchTextFixed,checker);
+            return dialog;
+        }
+
+        public Builder setResultChecker(ResultChecker<T> checker) {
+            this.checker = checker;
+            return this;
+        }
+
+    }
+
+
+
+
+    public interface  ResultChecker<T>
+    {
+
+
+        public  boolean isValid(T result);
+
+        void warn(T material);
+    }
+
+
+    /**
+     * 自定义表格生成
+     * @param <T>
+     */
+    static class ValidTableCellRender<T> extends DefaultTableCellRenderer {
+
+        public ResultChecker<T> checker;
+        public BaseTableModel<T> model;
+
+        Color transparent=   new Color(0 ,0, 0,0);
+        Color veryLightGray=new Color(22 ,22, 22,22);
+
+
+        public ValidTableCellRender(ResultChecker<T> checker, BaseTableModel<T> model)
+        {
+            this.checker=checker;
+            this.model=model;
+
+
+
+        }
+
+        public Component getTableCellRendererComponent(
+                JTable table, Object data,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+
+
+
+         Component component=   super.getTableCellRendererComponent(table,data,isSelected,hasFocus,row ,column);
+
+
+
+            if(!isSelected&& !hasFocus) {
+                if (checker != null) {
+                    int modelRow = table.convertRowIndexToModel(row
+                    );
+                    T modelItem = model.getItem(modelRow);
+
+
+                    if (!checker.isValid(modelItem)  )
+                    {
+
+                        component.setBackground(veryLightGray);
+                    }else
+                    {
+                        component.setBackground(transparent);
+                    }
+
+                }
+
+            }
+
+            return component;
         }
     }
 }

@@ -24,6 +24,13 @@ public class Prdt implements Serializable{
     public String rem;
 
     public float price;
+    /**
+     * 停用日期
+     */
+    public long nouse_dd;
+
+
+
 
 
     public float wLong;
@@ -32,6 +39,7 @@ public class Prdt implements Serializable{
     public float available=1;
     public float discount=0;
     public int type;
+
 
 
     public String classId;

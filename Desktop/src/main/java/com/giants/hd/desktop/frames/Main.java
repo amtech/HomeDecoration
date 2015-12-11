@@ -715,8 +715,6 @@ public class Main extends BaseFrame {
         if(AuthorityUtil.getInstance().viewSyncData()) {
             menuItem = new JMenuItem(Module.TITLE_SYNC_DATA);
 
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    "当图片不能正常显示时候执行");
             menu.add(menuItem);
 
 
@@ -743,6 +741,40 @@ public class Main extends BaseFrame {
                     SysParamDialog  dialog  = new SysParamDialog(Main.this);
                     dialog.pack();
                     dialog.setVisible(true);
+                }
+            });
+
+
+
+
+
+
+        }
+
+
+        //任务定时面板
+
+        if(AuthorityUtil.getInstance().viewTaskManage()) {
+            menuItem = new JMenuItem(Module.TITLE_TASK_MANAGE);
+            menu.add(menuItem);
+
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    TaskListInternalFrame taskListInternalFrame = new TaskListInternalFrame();
+
+                    taskListInternalFrame.setVisible(true); //necessary as of 1.3
+                    desktop.add(taskListInternalFrame);
+                    try {
+                        taskListInternalFrame.setSelected(true);
+                    } catch (java.beans.PropertyVetoException exception) {
+                    }
+
+                    // setContentPane(new Panel_Quotation().getRoot());
+
                 }
             });
         }

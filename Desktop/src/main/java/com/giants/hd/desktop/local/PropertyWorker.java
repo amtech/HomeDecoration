@@ -2,13 +2,7 @@ package com.giants.hd.desktop.local;
 
 import com.giants3.hd.utils.entity.AppVersion;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
@@ -106,7 +100,10 @@ public class PropertyWorker {
 		try {
 			  inputStream=	PropertyWorker.class.getClassLoader().getResourceAsStream(VERSION_FILE);
 			Properties props = new Properties();
-			props.load(inputStream);
+			Reader reader=new InputStreamReader(inputStream,"UTF-8");
+
+			props.load(reader);
+			reader.close();
 			inputStream.close();
 
 			int    versionCode=Integer.valueOf(props.getProperty("Version_Number"));

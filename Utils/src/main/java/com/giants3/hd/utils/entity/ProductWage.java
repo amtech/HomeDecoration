@@ -10,6 +10,12 @@ import java.io.Serializable;
  * 产品工资信息
  */
 @Entity(name="T_ProductWage")
+@Table(
+        indexes = {@Index(name = "processIdIndex",  columnList="processId", unique = false),
+                @Index(name = "productIdIndex", columnList="productId",     unique = false)
+                ,@Index(name = "flowIdIndex", columnList="flowId",     unique = false)}
+)
+
 public class ProductWage  implements Serializable,Valuable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

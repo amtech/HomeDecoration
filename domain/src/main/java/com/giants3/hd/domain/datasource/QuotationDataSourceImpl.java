@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class QuotationDataSourceImpl implements  QuotationDataStore{
     @Inject
-
-
     public Observable<List<Quotation>> userEntityList() {
         return null;
     }

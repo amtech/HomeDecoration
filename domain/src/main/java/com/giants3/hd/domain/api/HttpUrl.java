@@ -714,4 +714,22 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/product/findXiankang?productId=" + productId  );
 
     }
+
+    public static String loadTaskList() {
+        return additionInfo(BaseUrl + "api/task/list"  );
+
+    }
+
+
+
+    public static String addHdTask() {
+        return additionInfo(BaseUrl + "api/task/schedule"  );
+
+    }
+
+
+    public static String deleteHdTask(long  hdTaskId) {
+        return additionInfo(BaseUrl + "api/task/delete?id="+ hdTaskId );
+
+    }
 }

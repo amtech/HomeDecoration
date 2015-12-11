@@ -2043,7 +2043,7 @@ public class Panel_ProductDetail extends BasePanel {
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
                 final String text = ((JTextField) e.getSource()).getText().trim();
-                Logger.getLogger("TAG").info("focusLost" + e.toString());
+
                 handleTableMaterialInput(table, text);
 
             }
@@ -2194,7 +2194,8 @@ public class Panel_ProductDetail extends BasePanel {
             @Override
             public void onResult(RemoteData<Material> data) {
 
-                if(data.isSuccess()&&data.totalCount==1)
+                //只有一条记录 ，并且该材料未被停用
+                if(data.isSuccess()&&data.totalCount==1&&!data.datas.get(0).outOfService)
                 {
 
                     materialable.setMaterial(data.datas.get(0), rowIndex);
@@ -2209,6 +2210,24 @@ public class Panel_ProductDetail extends BasePanel {
                         @Override
                         public RemoteData<Material> search(String value, int pageIndex, int pageCount) throws HdException {
                             return apiManager.loadMaterialByCodeOrName(value, pageIndex, pageCount);
+                        }
+                    }).setResultChecker(new SearchDialog.ResultChecker<Material>() {
+                        @Override
+                        public boolean isValid(Material result) {
+
+
+                            if(result.outOfService)
+                            {
+//
+                                return false;
+
+                            }else
+                                return true;
+                        }
+
+                        @Override
+                        public void warn(Material material) {
+                            JOptionPane.showMessageDialog(getWindow(contentPane), "材料：【"+material.code+"】  已经被停用，请选择其他材料");
                         }
                     }).setValue(text).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));

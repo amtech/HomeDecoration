@@ -14,6 +14,12 @@ import java.io.Serializable;
 
 
 @Entity(name="T_ProductPaint")
+@Table(
+		indexes = {@Index(name = "materialIdIndex",  columnList="materialId", unique = false),
+				@Index(name = "productIdIndex", columnList="productId",     unique = false)
+				,@Index(name = "flowIdIndex", columnList="flowId",     unique = false)}
+)
+
 public class ProductPaint  implements Serializable,Summariable,Valuable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

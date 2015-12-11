@@ -11,6 +11,13 @@ import java.util.logging.Logger;
  * 产品材料列表
  */
 @Entity(name="T_ProductMaterial")
+
+@Table(
+		indexes = {@Index(name = "materialIdIndex",  columnList="materialId", unique = false),
+				@Index(name = "productIdIndex", columnList="productId",     unique = false)
+		,@Index(name = "flowIdIndex", columnList="flowId",     unique = false)}
+)
+
 public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 

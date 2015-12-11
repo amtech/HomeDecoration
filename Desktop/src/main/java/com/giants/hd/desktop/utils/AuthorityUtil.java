@@ -465,4 +465,8 @@ public class AuthorityUtil {
 
         return isViewable(Module.NAME_PRODUCT_REPORT);
     }
+
+    public boolean viewTaskManage() {
+        return isViewable(Module.NAME_TASK_MANAGE);
+    }
 }

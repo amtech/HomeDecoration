@@ -132,6 +132,9 @@ public class Module implements Serializable{
 
 
 
+    //系统功能
+    public static final String NAME_TASK_MANAGE="TaskManage";
+    public static final String TITLE_TASK_MANAGE="任务管理";
 
 
 
@@ -167,7 +170,7 @@ public class Module implements Serializable{
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
     ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
-    ,NAME_SYS_PARAM
+    ,NAME_SYS_PARAM,NAME_TASK_MANAGE
     };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
@@ -177,7 +180,7 @@ public class Module implements Serializable{
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
    , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
-    ,TITLE_SYS_PARAM
+    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE
     };
 
 }

@@ -17,7 +17,7 @@ public class MaterialTableModel extends BaseTableModel<Material> {
 
 
     public static String[] columnNames = new String[]{                         "图片",    "物料代码", "材料名称", "毛长", "毛宽", "毛高", "利用率","损耗率", "单价", "类型", "缓冲", "规格", "单位","类别","状态","备注"};
-    public static int[] columnWidth=new int[]{ ImageUtils.MAX_MATERIAL_MINIATURE_WIDTH,     100,        120,        40,     40,    40,     60,     60   ,   60,     40,    50,      120,    40,    60,60, ConstantData.MAX_COLUMN_WIDTH};
+    public static int[] columnWidth=new int[]{ ImageUtils.MAX_MATERIAL_MINIATURE_WIDTH,     100,        120,        40,     40,    40,     60,     60   ,   60,     40,    50,      120,    40,    60,140, ConstantData.MAX_COLUMN_WIDTH};
 
     public static final String OUT_OF_SERVICE = "outOfService";
     public static String[] fieldName = new String[]{"photo","code", "name", "wLong", "wWidth", "wHeight", "available","discount", "price", "typeId", "classId", "spec","unitName","className", OUT_OF_SERVICE,"memo"};
@@ -51,7 +51,7 @@ public class MaterialTableModel extends BaseTableModel<Material> {
 
 
         if(OUT_OF_SERVICE.equals(fieldName[columnIndex]))
-            return getItem(rowIndex).outOfService?"停用":" ";
+            return getItem(rowIndex).outOfService?getItem(rowIndex).outOfServiceDateString+" 停用":" ";
 
 
         return super.getValueAt(rowIndex, columnIndex);
