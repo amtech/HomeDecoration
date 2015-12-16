@@ -2,7 +2,7 @@ package com.giants3.hd.server.repository;
 //
 
 import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.HdTaskLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,13 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 /**
- * 用户
+ * 任务执行状态列表
 * Created by davidleen29 on 2014/9/17.
 */
-public interface TaskRepository extends JpaRepository<HdTask,Long> {
+public interface TaskLogRepository extends JpaRepository<HdTaskLog,Long> {
 
 
-
-        Page<HdTask> findByTaskNameLikeOrderByStartDateDesc( String name, Pageable pageable);
+    Page<HdTask> findByTaskIdEqualsOrderByExecuteTimeDesc( long  taskId, Pageable pageable);
 
 }

@@ -123,6 +123,7 @@ public class UpgradeDialog extends BaseDialog {
                 //启动应用程序
                 try {
                 JOptionPane.showMessageDialog(UpgradeDialog.this, "重新启动应用程序");
+
                  Thread.sleep(500);
                   Process p = Runtime.getRuntime().exec("java -jar " + newAppVersion.appName);
 

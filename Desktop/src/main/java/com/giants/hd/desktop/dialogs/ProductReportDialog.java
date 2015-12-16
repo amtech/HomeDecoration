@@ -59,7 +59,7 @@ public class ProductReportDialog extends BaseDialog {
                 boolean withCopy = include.isSelected();
 
 
-                UseCaseFactory.createProductByNameBetween(startNum, endNum, withCopy).execute(new Subscriber<java.util.List<Product>>() {
+                UseCaseFactory.getInstance().createProductByNameBetween(startNum, endNum, withCopy).execute(new Subscriber<java.util.List<Product>>() {
                     @Override
                     public void onCompleted() {
 
