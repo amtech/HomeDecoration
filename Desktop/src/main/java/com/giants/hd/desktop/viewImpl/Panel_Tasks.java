@@ -10,8 +10,10 @@ import com.giants3.hd.utils.entity.HdTask;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class Panel_Tasks  extends BasePanel{
     private JComboBox cbTaskType;
     private JSpinner timePicker;
     private JTextField memo;
+    private JComboBox cb_repeat;
+    private JSpinner timeSpinner;
     @Inject
     HdTaskModel taskModel;
 
@@ -47,7 +51,85 @@ public class Panel_Tasks  extends BasePanel{
         this.frame = frame;
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setModel(taskModel);
+        jtable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+        cb_repeat.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+                timeSpinner.setEnabled(cb_repeat.getSelectedIndex()==3);
+
+            }});
+
+
+        cb_repeat.setSelectedIndex(0);
+
+
+        jtable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if(e.getClickCount()==2)
+                {
+                    //显示执行记录
+
+                    int[] modelRows=JTableUtils.getSelectedRowSOnModel(jtable);
+                    if(modelRows!=null&&modelRows.length==1)
+                    {
+                        HdTask data=taskModel.getItem(modelRows[0]);
+
+                        frame.findTaskLog(data);
+                    }
+
+
+
+                }
+            }
+        });
+
+
+//        jtable.setDefaultRenderer(Object.class,new DefaultTableCellRenderer(){
+//
+//
+//                    @Override
+//                    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//                        Component component =super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//
+//
+//                        if(component instanceof  JLabel)
+//                        {
+//
+//                            JLabel jLabel=(JLabel)component;
+//
+//                            int rowIndexToModel=  table.convertRowIndexToModel(row);
+//
+//                            HdTask data=      taskModel.getItem(rowIndexToModel);
+//
+//                            switch (data.state)
+//                            {
+//
+//                                case HdTask.STATE_SUCCESS:
+//                                    jLabel.setForeground(Color.GREEN);
+//                                    break;
+//                                case HdTask.STATE_FAIL:
+//                                    jLabel.setForeground(Color.RED);
+//                                    break;
+//                                default:
+//                                    long time=
+//                                    Calendar.getInstance().getTimeInMillis();
+//
+//                                    jLabel.setForeground(data.startDate>time?Color.DARK_GRAY:Color.LIGHT_GRAY);
+//
+//                            }
+//
+//
+//
+//                        }
+//
+//                        return component;
+//                    }
+//                }
+//        );
 
         timePicker.setModel(new SpinnerDateModel());
 
@@ -94,11 +176,13 @@ public class Panel_Tasks  extends BasePanel{
                 int selectIndex=cbTaskType.getSelectedIndex();
                 task.taskType=taskTypes[selectIndex];
                 task.taskName=taskTypeNames[selectIndex];
-                task.date=date.getTime();
+                task.startDate =date.getTime();
                 task.memo=memo.getText().trim();
                 task.dateString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(date);
 
 
+                int repeatIndex=cb_repeat.getSelectedIndex();
+                task.repeatCount=repeatIndex==0?Integer.MAX_VALUE:Integer.valueOf(timeSpinner.getValue().toString());
                 frame.addHdTask(task);
 
 
@@ -121,7 +205,7 @@ public class Panel_Tasks  extends BasePanel{
                 }
 
 
-                if(showConfirmMessage("确定删除选中任务？")) {
+                if(showConfirmMessage("确定删除选中任务？","确认信息")) {
 
 
                     HdTask item = taskModel.getItem(modelRow[0]);

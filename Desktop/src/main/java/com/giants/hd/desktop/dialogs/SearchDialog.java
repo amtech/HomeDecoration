@@ -10,6 +10,7 @@ import com.giants3.hd.utils.RemoteData;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -99,8 +100,11 @@ public class SearchDialog<T> extends BaseDialog<T> {
             }
         });
 
-//        if(checker!=null)
-//        table.setDefaultRenderer(Object.class,new ValidTableCellRender(checker,tableModel));
+
+   if(checker!=null) {
+          TableCellRenderer renderer = table.getDefaultRenderer(Object.class);
+          table.setDefaultRenderer(Object.class, new ValidTableCellRender(checker, tableModel,renderer));
+     }
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -246,18 +250,16 @@ public class SearchDialog<T> extends BaseDialog<T> {
 
         public ResultChecker<T> checker;
         public BaseTableModel<T> model;
-
-        Color transparent=   new Color(0 ,0, 0,0);
-        Color veryLightGray=new Color(22 ,22, 22,22);
+        private TableCellRenderer renderer;
 
 
-        public ValidTableCellRender(ResultChecker<T> checker, BaseTableModel<T> model)
+        public ValidTableCellRender(ResultChecker<T> checker, BaseTableModel<T> model, TableCellRenderer renderer)
         {
             this.checker=checker;
             this.model=model;
 
 
-
+            this.renderer = renderer;
         }
 
         public Component getTableCellRendererComponent(
@@ -267,29 +269,31 @@ public class SearchDialog<T> extends BaseDialog<T> {
 
 
 
-         Component component=   super.getTableCellRendererComponent(table,data,isSelected,hasFocus,row ,column);
+         Component component=   renderer.getTableCellRendererComponent(table,data,isSelected,hasFocus,row ,column);
 
 
 
-            if(!isSelected&& !hasFocus) {
+
                 if (checker != null) {
                     int modelRow = table.convertRowIndexToModel(row
                     );
                     T modelItem = model.getItem(modelRow);
 
 
-                    if (!checker.isValid(modelItem)  )
+
+
+                    if (checker.isValid(modelItem)  )
                     {
 
-                        component.setBackground(veryLightGray);
+                        component.setForeground(Color.DARK_GRAY);
                     }else
                     {
-                        component.setBackground(transparent);
+                        component.setForeground(Color.LIGHT_GRAY);
                     }
 
                 }
 
-            }
+
 
             return component;
         }

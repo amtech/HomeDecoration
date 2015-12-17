@@ -1317,4 +1317,18 @@ public class ApiManager {
         RemoteData<HdTask> remoteData = GsonUtils.fromJson(result ,generateType);
         return remoteData;
     }
+
+    /**
+     * 返回任务执行记录列表
+     * @return
+     */
+    public RemoteData<HdTaskLog> loadTaskLogList(long taskId) throws HdException {
+
+        String url=HttpUrl.loadHdTaskLogList(taskId);
+        String result=  client.getWithStringReturned(url );
+        Type   generateType = new TypeToken<RemoteData<HdTaskLog>>() {
+        }.getType();
+        RemoteData<HdTaskLog> remoteData = GsonUtils.fromJson(result ,generateType);
+        return remoteData;
+    }
 }

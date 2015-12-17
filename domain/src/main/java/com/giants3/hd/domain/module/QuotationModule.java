@@ -11,13 +11,6 @@ import com.google.inject.AbstractModule;
  */
 public class QuotationModule extends AbstractModule {
 
-    private long quotationId;
-
-
-    public QuotationModule(long quotationId) {
-        this.quotationId = quotationId;
-    }
-
 
 
 

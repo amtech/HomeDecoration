@@ -732,4 +732,8 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/task/delete?id="+ hdTaskId );
 
     }
+
+    public static String loadHdTaskLogList(long taskId) {
+        return additionInfo(BaseUrl + "api/task/listLog?taskId="+taskId );
+    }
 }
