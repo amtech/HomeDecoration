@@ -79,6 +79,8 @@ public class MaterialController extends BaseController {
 
     ObjectPool<Material> materialObjectPool;
 
+    private GlobalData globalData;
+
   //  ErpPrdtRepository repository;
 
 
@@ -187,7 +189,7 @@ public class MaterialController extends BaseController {
             material.id=-1;
             convert(material,prdt);
             materialRepository.save(material);
-          materialObjectPool.release(material);
+            materialObjectPool.release(material);
 
         }else
         {
@@ -205,7 +207,7 @@ public class MaterialController extends BaseController {
              * 备注是否相同，不同则更新到分析表中
              */
 
-        //TODO v1.0.43 关闭判断  强制更新分析表材料备注， v1.0.45 之后打开。
+
           if(!StringUtils.compare(oldData.memo,prdt.rem))
             {
 
@@ -236,6 +238,9 @@ public class MaterialController extends BaseController {
 
 //       EntityManager manager= Persistence.createEntityManagerFactory("erpPersistenceUnit").createEntityManager();
 //       ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
+
+        //重置全局参数
+        globalData=globalDataRepository.findAll().get(0);
 
         EntityManagerHelper helper=EntityManagerHelper.getErp();
         EntityManager manager=helper.getEntityManager();
@@ -334,6 +339,9 @@ public class MaterialController extends BaseController {
             if(Float.compare(oldData.price,material.price)!=0)
             {
 
+
+                //重置全局参数
+                globalData=globalDataRepository.findAll().get(0);
                 updatePriceRelateData(material);
 
             }
@@ -401,7 +409,8 @@ public class MaterialController extends BaseController {
      */
     private void updatePriceRelateData(  Material material) {
         Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
-        GlobalData globalData=globalDataRepository.findAll().get(0);
+        if(globalData==null)
+          globalData=globalDataRepository.findAll().get(0);
 
 
         //价格发生变动， 调整有用到该材料的费用
