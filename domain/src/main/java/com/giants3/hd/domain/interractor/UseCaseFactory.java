@@ -1,8 +1,5 @@
 package com.giants3.hd.domain.interractor;
 
-import com.giants3.hd.domain.module.HdTaskModule;
-import com.giants3.hd.domain.module.QuotationModule;
-import com.giants3.hd.domain.repository.HdTaskLogRepository;
 import com.giants3.hd.domain.repository.HdTaskRepository;
 import com.giants3.hd.domain.repositoryImpl.HdTaskRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.ProductRepositoryImpl;
@@ -10,13 +7,10 @@ import com.giants3.hd.domain.repositoryImpl.QuotationRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.XiankangRepositoryImpl;
 import com.giants3.hd.utils.entity.HdTask;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
-import java.util.concurrent.ForkJoinPool;
 
-
-/**   用例工厂类
+/**
  * Created by david on 2015/9/16.
  */
 public class UseCaseFactory  {
@@ -24,39 +18,11 @@ public class UseCaseFactory  {
 
 
 
-    @Inject
-    HdTaskRepository  taskRepository;
-
-    @Inject
-    HdTaskLogRepository taskLogRepository;
-
-    private    UseCaseFactory()
-    {
-
-
-        Guice.createInjector(new HdTaskModule(),new QuotationModule()).injectMembers(this);
-
-    }
-
-
-    public static   UseCaseFactory factory=null;
-
-
-    public synchronized static UseCaseFactory getInstance() {
 
 
 
-        if (factory == null) {
 
-            factory = new UseCaseFactory();
-
-        }
-        return factory;
-    }
-
-
-
-    public   UseCase createQuotationDetail(long qutationId )
+    public static UseCase createQuotationDetail(long qutationId )
     {
 
 
@@ -64,7 +30,7 @@ public class UseCaseFactory  {
     }
 
 
-    public   UseCase createProductByNameBetween(String startName,String endName,boolean withCopy)
+    public static UseCase createProductByNameBetween(String startName,String endName,boolean withCopy)
     {
 
 
@@ -74,7 +40,7 @@ public class UseCaseFactory  {
     }
 
 
-    public   UseCase createUpdateXiankang()
+    public static UseCase createUpdateXiankang()
     {
 
         return new UpdateXiankangUseCase(Schedulers.newThread(),Schedulers.immediate(),new XiankangRepositoryImpl());
@@ -82,29 +48,23 @@ public class UseCaseFactory  {
 
 
 
-    public   UseCase readTaskListUseCase()
+    public static UseCase readTaskListUseCase()
     {
 
-        return new HdTaskListUseCase(Schedulers.newThread(),Schedulers.immediate(),taskRepository);
+        return new HdTaskListUseCase(Schedulers.newThread(),Schedulers.immediate(),new HdTaskRepositoryImpl());
     }
 
-    public   UseCase addHdTaskUseCase(HdTask hdTask)
+    public static UseCase addHdTaskUseCase(HdTask hdTask)
     {
 
-        return new HdTaskAddUseCase(Schedulers.newThread(),Schedulers.immediate(),hdTask,taskRepository);
+        return new HdTaskAddUseCase(Schedulers.newThread(),Schedulers.immediate(),hdTask,new HdTaskRepositoryImpl());
     }
 
 
-    public   UseCase deleteHdTaskUseCase(long taskId)
+    public static UseCase deleteHdTaskUseCase(long taskId)
     {
+        Guice.createInjector().getInstance(HdTaskRepositoryImpl.class);
 
-
-        return new HdTaskDeleteUseCase(Schedulers.newThread(),Schedulers.immediate(),  taskId,taskRepository);
-    }
-
-    public   UseCase findTaskLogUseCase(long taskId) {
-
-        return new HdTaskLogListUseCase(Schedulers.newThread(),Schedulers.immediate(),  taskId,taskLogRepository);
-
+        return new HdTaskDeleteUseCase(Schedulers.newThread(),Schedulers.immediate(),  taskId,new HdTaskRepositoryImpl());
     }
 }

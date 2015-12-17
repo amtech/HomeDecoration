@@ -130,7 +130,7 @@ public class Panel_Quotation extends BasePanel{
                                         final Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
 
 
-                                        UseCaseFactory.getInstance().createQuotationDetail(quotation.id).execute(new Subscriber<QuotationDetail>() {
+                                        UseCaseFactory.createQuotationDetail(quotation.id).execute(new Subscriber<QuotationDetail>() {
                                             @Override
                                             public void onCompleted() {
 

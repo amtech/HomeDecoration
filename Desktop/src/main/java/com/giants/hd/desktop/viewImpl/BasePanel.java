@@ -94,13 +94,10 @@ public  abstract  class BasePanel {
     }
 
 
+
     public boolean showConfirmMessage(String message) {
 
-        return showConfirmMessage(message,null);
-    }
-    public boolean showConfirmMessage(String message,String title) {
-
-        return JOptionPane.showConfirmDialog(getWindow(),message,title, JOptionPane.OK_CANCEL_OPTION)== JOptionPane.OK_OPTION;
+        return JOptionPane.showConfirmDialog(getWindow(),message)== JOptionPane.YES_OPTION;
     }
 
     public void showLoadingDialog() {

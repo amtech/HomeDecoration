@@ -2,9 +2,6 @@ package com.giants3.hd.server.repository;
 //
 
 import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,7 +13,8 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<HdTask,Long> {
 
 
+    //List<HdTask> findByTaskTypeEqualsAndDateBiggerThan(int  type, long time);
+    List<HdTask> findByDateGreaterThan(long time);
 
-        Page<HdTask> findByTaskNameLikeOrderByStartDateDesc( String name, Pageable pageable);
 
 }

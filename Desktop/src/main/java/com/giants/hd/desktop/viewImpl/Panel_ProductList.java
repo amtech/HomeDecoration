@@ -45,7 +45,7 @@ public class Panel_ProductList extends BasePanel {
     public Panel_ProductList() {
         super();
 
-        //productTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
         btn_search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

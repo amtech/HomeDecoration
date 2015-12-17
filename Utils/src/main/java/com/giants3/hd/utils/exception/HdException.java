@@ -36,11 +36,9 @@ public class HdException extends  Exception {
     public static HdException create(String message
     )
     {
-        HdException hdException= new HdException(message,null);
+        HdException hdException= new HdException();
         hdException.errorCode=-1;
         hdException.message=message;
-
-
         return hdException;
     }
 

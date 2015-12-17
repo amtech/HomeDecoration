@@ -33,6 +33,7 @@ public class PackMaterialClassController extends BaseController {
     @ResponseBody
     RemoteData<PackMaterialClass> list( )   {
 
+
         return wrapData(packMaterialClassRepository.findAll());
     }
 
@@ -58,6 +59,8 @@ public class PackMaterialClassController extends BaseController {
             }else
             {
                 materialClass.id=oldData.id;
+
+
 
             }
             packMaterialClassRepository.save(materialClass);

@@ -48,19 +48,12 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     GlobalDataRepository globalDataRepository;
 
-
-    @Autowired
-    TaskController taskController;
-
     @Value("${appfilepath}")
     private String appFilePath;
 
 
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
-
-
-
 
 
       List< Module> moduleList=     Module.getInitDataList();
@@ -197,12 +190,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
 
-
-
-
-        //定时任务启动
-
-        taskController.resume();
 
 
             isStart = true;

@@ -40,7 +40,7 @@
       </grid>
       <grid id="b2ab3" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -65,24 +65,10 @@
             <constraints/>
             <properties/>
           </component>
-          <component id="4e52f" class="javax.swing.JComboBox" binding="cb_repeat">
-            <constraints/>
-            <properties>
-              <model>
-                <item value="每日"/>
-                <item value="固定次数"/>
-              </model>
-            </properties>
-          </component>
-          <component id="f3b65" class="javax.swing.JSpinner" binding="timeSpinner">
-            <constraints/>
-            <properties/>
-          </component>
           <component id="6546d" class="javax.swing.JTextField" binding="memo">
             <constraints/>
             <properties>
               <columns value="8"/>
-              <toolTipText value="备注"/>
             </properties>
           </component>
           <component id="c747c" class="javax.swing.JButton" binding="add">

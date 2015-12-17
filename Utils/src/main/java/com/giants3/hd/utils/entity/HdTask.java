@@ -1,6 +1,9 @@
 package com.giants3.hd.utils.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -13,51 +16,21 @@ import java.io.Serializable;
 @Entity(name="T_HDTask")
 public class HdTask implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
     public int taskType;
     public String taskName;
-    public long startDate;
+    public long date;
     public String dateString;
     public String activator;
     public String activateTime;
-    @Lob
     public String memo;
-
-
-
-
-    /**
-     * 重复次数
-     * -2 每月
-     *-1 每星期
-     * 0 表示每天
-     * 1-n 表示重复N次
-     *
-     */
-    public int repeatCount;
-
-    /**
-     * 执行次数
-     *
-     */
-    public int executeCount;
-
-
-
-
-
 
 
 
     public static final int TYPE_SYNC_ERP=100;
     public static final String NAME_SYNC_ERP="ERP材料同步";
-
-
-
-
 
 }
