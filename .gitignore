@@ -11,3 +11,6 @@ build/
 localFile/
 classes/
 gradle/
+sae/sae.iml
+appData/appData.iml
+domain/domain.iml
