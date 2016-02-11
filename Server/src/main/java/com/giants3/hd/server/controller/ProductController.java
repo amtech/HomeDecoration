@@ -4,6 +4,9 @@ package com.giants3.hd.server.controller;
 
 
 
+import com.giants3.hd.appdata.AProduct;
+import com.giants3.hd.server.parser.RemoteDataParser;
+import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
@@ -19,6 +22,7 @@ import com.giants3.hd.utils.noEntity.ProductDetail;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -94,6 +98,9 @@ public class ProductController extends BaseController {
     //@PersistenceContext
     //private EntityManager entityManager;
 
+    @Autowired
+    @Qualifier("productParser")
+    private DataParser<Product,AProduct>  dataParser ;
 
 
 
@@ -107,14 +114,54 @@ public class ProductController extends BaseController {
     ) throws UnsupportedEncodingException {
 
 
+        return searchProductList(prd_name,pageIndex,pageSize);
+
+
+
+    }
+
+
+    /**
+     * 提供移动端接口  查询
+     * @param name
+     * @param pageIndex
+     * @Param pageSize
+     *
+     * @return
+     */
+    @RequestMapping(value = "/appSearch", method = {RequestMethod.GET })
+    public
+    @ResponseBody
+    RemoteData<AProduct> appSearch(@RequestParam(value = "name", required = false, defaultValue = "") String name
+            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
+
+    ) throws UnsupportedEncodingException {
+
+
+
+        RemoteData<Product> productRemoteData=searchProductList(name,pageIndex,pageSize);
+        RemoteData<AProduct> result= RemoteDataParser.parse(productRemoteData, dataParser);
+
+
+        return result;
+
+
+
+    }
+
+
+    private  RemoteData<Product>  searchProductList(String name,int pageIndex,int pageSize)
+    {
+
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        String likeValue="%" + prd_name.trim() + "%";
+        String likeValue="%" + name.trim() + "%";
         Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue,likeValue, pageable);
 
         List<Product> products = pageValue.getContent();
 
 
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+
 
 
     }
@@ -182,6 +229,8 @@ public class ProductController extends BaseController {
 
 
     }
+
+
 
 
     @RequestMapping(value = "/findXiankang", method = {RequestMethod.GET })

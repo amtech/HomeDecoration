@@ -111,7 +111,10 @@ public class BaseController {
         remoteData.pageCount=pageCount;
         remoteData.totalCount=totalCount;
 
-        remoteData.datas                =datas;
+        int defaultSize=datas==null||datas.size()<10?10:datas.size();
+        remoteData.datas  =new ArrayList<T>(defaultSize);
+        if(datas!=null)
+        remoteData.datas.addAll(datas);
         remoteData.code=RemoteData.CODE_SUCCESS;
 
         remoteData.message="operation sucessed";

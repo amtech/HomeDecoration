@@ -9,6 +9,8 @@ import com.ning.http.client.multipart.FilePart;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -45,8 +47,11 @@ public class Client {
                 @Override
                 public String onCompleted(Response response) throws Exception {
 
-                    String result= response.getResponseBody(BODY_ENCODING);
+//                    String result= response.getResponseBody(BODY_ENCODING);
+
+                    String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
                     return result;
+
 
 
                 }
@@ -63,6 +68,7 @@ public class Client {
 
 
 
+
     public String getWithStringReturned(String url ) throws HdException {
 
         Logger.getLogger(TAG).info(url);
@@ -70,7 +76,14 @@ public class Client {
             @Override
             public String onCompleted(Response response) throws Exception {
 
-                String result = response.getResponseBody(BODY_ENCODING);
+                //String result = response.getResponseBody(BODY_ENCODING);
+
+
+
+                String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
+
+
+
                 return result;
 
 
@@ -87,6 +100,24 @@ public class Client {
 
 
     /**
+     * 对返回的数据进行 解密
+     * @param data
+     * @return
+     */
+    public String  encryptResult(byte[] data,String encode) throws IOException {
+
+
+        try {
+            return new String(data,encode);
+        } catch (UnsupportedEncodingException e) {
+            throw new IOException(e);
+        }
+    }
+
+
+
+
+    /**
      * 上传文件
      * @param url
      * @param file
@@ -98,7 +129,9 @@ public class Client {
             @Override
             public String onCompleted(Response response) throws Exception {
 
-                String result = response.getResponseBody(BODY_ENCODING);
+//                String result = response.getResponseBody(BODY_ENCODING);
+
+                String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
                 return result;
 
 

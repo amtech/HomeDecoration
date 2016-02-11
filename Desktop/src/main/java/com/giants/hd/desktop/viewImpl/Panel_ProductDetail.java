@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.dialogs.ProductQRDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.*;
@@ -18,6 +19,7 @@ import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 
@@ -142,6 +145,8 @@ public class Panel_ProductDetail extends BasePanel {
     private JComboBox<Factory> cb_factory;
     private JTextField tf_gangza;
     private JLabel lb_gangza;
+    private JLabel lb_qr;
+    private JButton btn_export_pic;
 
 
     /**
@@ -200,7 +205,7 @@ public class Panel_ProductDetail extends BasePanel {
     private TablePopMenu.TableMenuLister tableMenuLister;
 
 
-   private  DocumentListener tf_quantityListener;
+    private DocumentListener tf_quantityListener;
     /**
      * 单位改变的监听器
      */
@@ -208,14 +213,13 @@ public class Panel_ProductDetail extends BasePanel {
 
 
     /**
-     *   外厂模式下包装长度改变的监听器
+     * 外厂模式下包装长度改变的监听器
      */
     private DocumentListener tf_packSizeDocumentListener;
     /**
-     *  外厂模式下实际成本改变监听器
+     * 外厂模式下实际成本改变监听器
      */
     private DocumentListener tf_foreign_relate_documentListener;
-
 
 
     /**
@@ -228,14 +232,13 @@ public class Panel_ProductDetail extends BasePanel {
      */
     private ItemListener cb_factoryItemListener;
 
-    GlobalData globalData=CacheManager.getInstance().bufferData.globalData;
+    GlobalData globalData = CacheManager.getInstance().bufferData.globalData;
 
 
-    public Panel_ProductDetail( ) {
-    super();
+    public Panel_ProductDetail() {
+        super();
 
         initComponent();
-
 
 
     }
@@ -244,8 +247,7 @@ public class Panel_ProductDetail extends BasePanel {
     /**
      * 设置数据
      */
-    public void setProductDetail(ProductDetail productDetail )
-    {
+    public void setProductDetail(ProductDetail productDetail) {
 
 
         initPanel(productDetail);
@@ -256,8 +258,7 @@ public class Panel_ProductDetail extends BasePanel {
     /**
      * 设置数据
      */
-    public void setProductDetail(ProductDetail productDetail ,ProductDelete productDelete)
-    {
+    public void setProductDetail(ProductDetail productDetail, ProductDelete productDelete) {
 
 
         initPanel(productDetail, productDelete);
@@ -269,8 +270,7 @@ public class Panel_ProductDetail extends BasePanel {
     /**
      * 将产品信息 关联到包装表模型
      */
-    private void setProductInfoToPackageModel()
-    {
+    private void setProductInfoToPackageModel() {
 
         //设置包装材料的 产品引用数据
         packMaterialTableModel.setProduct(productDetail.product);
@@ -284,22 +284,18 @@ public class Panel_ProductDetail extends BasePanel {
     private void addListeners() {
 
         //数量改变
-         tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+        tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
 
 //        //修改规格监听
-    //    ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
+        //    ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
 //        //修改规格监听
-      // ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
-
-
+        // ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
 
 
     }
 
 
-
-    public void removeListeners()
-    {
+    public void removeListeners() {
         //数量改变
         tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
 
@@ -307,8 +303,6 @@ public class Panel_ProductDetail extends BasePanel {
         ta_spec_cm.getDocument().removeDocumentListener(ta_spec_cmListener);
 //        //修改规格监听
         ta_spec_inch.getDocument().removeDocumentListener(ta_spec_inchListener);
-
-
 
 
 //
@@ -323,9 +317,7 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-
-    private void initListeners()
-    {
+    private void initListeners() {
         //定义表格模型数据改变监听对象
         allTableModelListener = new TableModelListener() {
             @Override
@@ -333,20 +325,19 @@ public class Panel_ProductDetail extends BasePanel {
                 //数据改变  更新统计数据
                 //汇总计算油漆工资与材料费用
 
-                productDetail.conceptusMaterials=conceptusMaterialTableModel.getDatas();
-                productDetail.conceptusWages=conceptusWageTableModel.getDatas();
+                productDetail.conceptusMaterials = conceptusMaterialTableModel.getDatas();
+                productDetail.conceptusWages = conceptusWageTableModel.getDatas();
 
-                productDetail.assembleMaterials=assembleMaterialTableModel.getDatas();
-                productDetail.assembleWages=assembleWageTableModel.getDatas();
-                productDetail.paints=productPaintModel.getDatas();
-                productDetail.packMaterials=packMaterialTableModel.getDatas();
-                productDetail.packWages=packWageTableModel.getDatas();
+                productDetail.assembleMaterials = assembleMaterialTableModel.getDatas();
+                productDetail.assembleWages = assembleWageTableModel.getDatas();
+                productDetail.paints = productPaintModel.getDatas();
+                productDetail.packMaterials = packMaterialTableModel.getDatas();
+                productDetail.packWages = packWageTableModel.getDatas();
                 productDetail.updateProductStatistics(globalData);
                 bindStatisticsValue(productDetail.product);
 
             }
         };
-
 
 
 //        //注册表模型的监听
@@ -359,15 +350,12 @@ public class Panel_ProductDetail extends BasePanel {
 //        packWageTableModel.addTableModelListener(allTableModelListener);
 
 
-
         //装箱数量 修改监听器
-        tf_quantityListener=new DocumentListener() {
-
+        tf_quantityListener = new DocumentListener() {
 
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-
 
 
                 SwingUtilities.invokeLater(new Runnable() {
@@ -403,23 +391,19 @@ public class Panel_ProductDetail extends BasePanel {
             }
 
 
-
-            private void update()
-            {
+            private void update() {
 
 
+                int newValue = 0;
+                try {
 
-                int newValue=0;
-                try{
-
-                    newValue= Integer.valueOf(tf_quantity.getText().trim());
-                    productDetail.product.packQuantity=newValue;
+                    newValue = Integer.valueOf(tf_quantity.getText().trim());
+                    productDetail.product.packQuantity = newValue;
                     packMaterialTableModel.updateProduct();
                     packWageTableModel.fireTableDataChanged();
 
 
-                }catch (Throwable t)
-                {
+                } catch (Throwable t) {
 
                 }
 
@@ -428,10 +412,8 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
-
         //英寸输入监听
-        ta_spec_inchListener=new DocumentListener() {
+        ta_spec_inchListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
 
@@ -451,12 +433,10 @@ public class Panel_ProductDetail extends BasePanel {
             }
 
 
-
-            public void updateCm()
-            {
+            public void updateCm() {
 
 
-                String cmString= StringUtils.convertInchStringToCmString( ta_spec_inch.getText().trim());
+                String cmString = StringUtils.convertInchStringToCmString(ta_spec_inch.getText().trim());
                 bindProductSpecCmData(cmString);
 
 
@@ -464,19 +444,18 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
         //厘米输入监听
-        ta_spec_cmListener=new DocumentListener() {
+        ta_spec_cmListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
 
 
-                updateInch( );
+                updateInch();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                updateInch() ;
+                updateInch();
             }
 
             @Override
@@ -484,11 +463,10 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
 
-            public void updateInch( )
-            {
+            public void updateInch() {
 
 
-                String inchString=StringUtils.convertCmStringToInchString(ta_spec_cm.getText().trim());
+                String inchString = StringUtils.convertCmStringToInchString(ta_spec_cm.getText().trim());
 
                 bindProductSpecInchData(inchString);
 
@@ -496,14 +474,13 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
         //包材选择切换监听
-        cb_packItemListener=new ItemListener() {
+        cb_packItemListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
 
 
-                if(e.getStateChange()==ItemEvent.SELECTED) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
                     productDetail.product.pack = (Pack) e.getItem();
                     packMaterialTableModel.updateProduct();
                 }
@@ -511,20 +488,19 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
         //packDataListener=new
 
         //厂家选择切换监听
-        cb_factoryItemListener=new ItemListener() {
+        cb_factoryItemListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
 
 
-                if(e.getStateChange()==ItemEvent.SELECTED) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
 
 
                     //TODO   update view   show or hide some items
-                    boolean isSelfProduct=((Factory)e.getItem()).code.equals(Factory.CODE_LOCAl);
+                    boolean isSelfProduct = ((Factory) e.getItem()).code.equals(Factory.CODE_LOCAl);
                     //设置港杂费是否显示
 
                     lb_gangza.setVisible(!isSelfProduct);
@@ -538,47 +514,39 @@ public class Panel_ProductDetail extends BasePanel {
                     //包装内盒，长宽高是否可输入
                     tf_inboxCount.setEditable(!isSelfProduct);
                     tf_inboxCount.setEnabled(!isSelfProduct);
-                   tf_long.setEnabled(!isSelfProduct);
+                    tf_long.setEnabled(!isSelfProduct);
                     tf_long.setEditable(!isSelfProduct);
-                   tf_width.setEnabled(!isSelfProduct);
+                    tf_width.setEnabled(!isSelfProduct);
                     tf_width.setEditable(!isSelfProduct);
                     tf_height.setEnabled(!isSelfProduct);
                     tf_height.setEditable(!isSelfProduct);
-
-
-
 
 
                     tab_list.setVisible(isSelfProduct);
                     panel_xiankang.setVisible(isSelfProduct);
 
 
-
-
-                    if(isSelfProduct)
-                    {
+                    if (isSelfProduct) {
 
                         tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
-                        tf_inboxCount.getDocument().removeDocumentListener( tf_packSizeDocumentListener);
-                        tf_quantity.getDocument().removeDocumentListener( tf_packSizeDocumentListener);
-                        tf_long.getDocument().removeDocumentListener( tf_packSizeDocumentListener);
-                        tf_width.getDocument().removeDocumentListener( tf_packSizeDocumentListener);
+                        tf_inboxCount.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+                        tf_quantity.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+                        tf_long.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+                        tf_width.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
                         tf_height.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
                         tf_product_cost.getDocument().removeDocumentListener(tf_foreign_relate_documentListener);
 
-                    }else
-                    {
+                    } else {
                         tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
-                        tf_inboxCount.getDocument().addDocumentListener( tf_packSizeDocumentListener);
-                        tf_quantity.getDocument().addDocumentListener( tf_packSizeDocumentListener);
-                        tf_long.getDocument().addDocumentListener( tf_packSizeDocumentListener);
-                        tf_width.getDocument().addDocumentListener( tf_packSizeDocumentListener);
-                        tf_height.getDocument().addDocumentListener( tf_packSizeDocumentListener);
-                        tf_product_cost.getDocument().addDocumentListener( tf_foreign_relate_documentListener);
+                        tf_inboxCount.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+                        tf_quantity.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+                        tf_long.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+                        tf_width.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+                        tf_height.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+                        tf_product_cost.getDocument().addDocumentListener(tf_foreign_relate_documentListener);
 
                     }
                     getWindow(getRoot()).pack();
-
 
 
                 }
@@ -586,9 +554,7 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
-
-        tf_unitDocumentListener=new DocumentListener() {
+        tf_unitDocumentListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
@@ -605,20 +571,17 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
 
-            private void update()
-            {
+            private void update() {
 
-                productDetail.product.pUnitName=tf_unit.getText().trim();
+                productDetail.product.pUnitName = tf_unit.getText().trim();
                 packMaterialTableModel.updateProduct();
 
             }
         };
 
 
-
-
         //外厂模式下  包装数据改变监听器
-        tf_packSizeDocumentListener =new DocumentListener() {
+        tf_packSizeDocumentListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
@@ -642,14 +605,7 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
 
-            private void update()
-            {
-
-
-
-
-
-
+            private void update() {
 
 
                 try {
@@ -658,15 +614,14 @@ public class Panel_ProductDetail extends BasePanel {
                     float packLong = Float.valueOf(tf_long.getText().trim());
                     float packWidth = Float.valueOf(tf_width.getText().trim());
                     float packHeight = Float.valueOf(tf_height.getText().trim());
-                    productDetail.product.updatePackData(globalData,inboxCount, quantity, packLong, packWidth, packHeight);
+                    productDetail.product.updatePackData(globalData, inboxCount, quantity, packLong, packWidth, packHeight);
 
                     tf_volume.setText(String.valueOf(productDetail.product.packVolume));
                     tf_gangza.setText(String.valueOf(productDetail.product.gangza));
                     tf_fob.setText(String.valueOf(productDetail.product.fob));
                     tf_price.setText(String.valueOf(productDetail.product.price));
                     tf_cost.setText(String.valueOf(productDetail.product.cost));
-                }catch (Throwable t)
-                {
+                } catch (Throwable t) {
                     t.printStackTrace();
                 }
 
@@ -674,9 +629,8 @@ public class Panel_ProductDetail extends BasePanel {
         };
 
 
-
         //外厂模式下  实际成本数据改变监听器
-        tf_foreign_relate_documentListener =new DocumentListener() {
+        tf_foreign_relate_documentListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
@@ -700,24 +654,21 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
 
-            private void update()
-            {
+            private void update() {
 
-                float productCost=0;
+                float productCost = 0;
                 try {
-                      productCost = Float.valueOf(tf_product_cost.getText().trim());
-                }catch (Throwable t)
-                {
+                    productCost = Float.valueOf(tf_product_cost.getText().trim());
+                } catch (Throwable t) {
                     t.printStackTrace();
                 }
 
 
-                    productDetail.product.updateCostOnForignFactory(globalData,productCost);
+                productDetail.product.updateCostOnForignFactory(globalData, productCost);
 
-                    tf_fob.setText(String.valueOf(productDetail.product.fob));
-                    tf_price.setText(String.valueOf(productDetail.product.price));
-                    tf_cost.setText(String.valueOf(productDetail.product.cost));
-
+                tf_fob.setText(String.valueOf(productDetail.product.fob));
+                tf_price.setText(String.valueOf(productDetail.product.price));
+                tf_cost.setText(String.valueOf(productDetail.product.cost));
 
 
             }
@@ -747,6 +698,67 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
+        //TODO 导出图片
+
+        btn_export_pic.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (productDetail == null) return;
+                if (productDetail.product == null)
+                    return;
+
+                if (StringUtils.isEmpty(productDetail.product.url)) {
+                    JOptionPane.showMessageDialog(getRoot(), "图片不存在");
+                    return;
+                }
+
+
+                final File file = SwingFileUtils.getSelectedDirectory();
+                if (file == null) return;
+
+
+                final String url = HttpUrl.loadProductPicture(productDetail.product.url);
+                SwingWorker worker = new SwingWorker<String, Object>() {
+                    @Override
+                    protected String doInBackground() throws Exception {
+
+                        Product product = productDetail.product;
+                        String fileName = file.getAbsolutePath() + File.separator + product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion)) + ".JPG";
+                        DownloadFileManager.download(url, fileName);
+                        return fileName;
+                    }
+
+                    @Override
+                    protected void done() {
+
+                        hideLoadingDialog();
+                        String result = null;
+                        try {
+                            result = get();
+
+
+                            JOptionPane.showMessageDialog(getRoot(), "导出图片成功，路径在：" + result);
+                        } catch (InterruptedException e) {
+
+                            e.printStackTrace();
+                            JOptionPane.showMessageDialog(getRoot(), "导出图片失败，原因：" + e.getMessage());
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                            JOptionPane.showMessageDialog(getRoot(), "导出图片失败，原因：" + e.getMessage());
+                        }
+
+
+                    }
+
+
+                };
+                worker.execute();
+                showLoadingDialog();
+
+
+            }
+        });
+
 
         //咸康包装描述数据改变监听接口。
         jp_pack.setDataChangeListener(new DataChangeListener<Xiankang>() {
@@ -763,14 +775,12 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-
-
     /**
      * 收集数据   将各当前数据 存入数据中
      *
      * @see
      */
-    private void collectionData()  {
+    private void collectionData() {
 
 
         Product product = productDetail.product;
@@ -796,25 +806,23 @@ public class Panel_ProductDetail extends BasePanel {
 
         //产品分类
         PClass pClassData = (PClass) cb_class.getSelectedItem();
-        if(pClassData!=null) {
+        if (pClassData != null) {
             product.setpClassId(pClassData.id);
             product.setpClassName(pClassData.name);
         }
 
 
-
         //厂家分类
         Factory pFactory = (Factory) cb_factory.getSelectedItem();
-        if(pFactory!=null) {
-            product.factoryCode=pFactory.code;
-            product.factoryName=pFactory.name;
+        if (pFactory != null) {
+            product.factoryCode = pFactory.code;
+            product.factoryName = pFactory.name;
         }
 
 
         //包装类型
-        Pack pack= (Pack) cb_pack.getSelectedItem();
-        product.pack=pack;
-
+        Pack pack = (Pack) cb_pack.getSelectedItem();
+        product.pack = pack;
 
 
         //产品版本号
@@ -833,18 +841,16 @@ public class Panel_ProductDetail extends BasePanel {
 
         //镜面尺寸
 
-        String mirrorSizeValue=jtf_mirror_size.getText();
-        product.mirrorSize=mirrorSizeValue;
+        String mirrorSizeValue = jtf_mirror_size.getText();
+        product.mirrorSize = mirrorSizeValue;
 
 
         //是否咸康数据
 
         boolean isXiangkang = cb_xiankang.isSelected();
-        product.isXK=isXiangkang;
+        product.isXK = isXiangkang;
 
-         product.xiankang=    panel_xiankang.getData();
-
-
+        product.xiankang = panel_xiankang.getData();
 
 
         //产品净重
@@ -853,7 +859,7 @@ public class Panel_ProductDetail extends BasePanel {
             float tf_weightValue = Float.valueOf(tf_weight.getText().trim());
             product.setWeight(tf_weightValue);
         } catch (Throwable t) {
-           // t.printStackTrace();
+            // t.printStackTrace();
             product.setWeight(0);
         }
 
@@ -876,9 +882,7 @@ public class Panel_ProductDetail extends BasePanel {
         //附件
 
 
-        product.attaches=StringUtils.combine(panel_attach.getAttachFiles());
-
-
+        product.attaches = StringUtils.combine(panel_attach.getAttachFiles());
 
 
         //产品油漆数据
@@ -950,10 +954,7 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-
-
-    private void checkData(ProductDetail productDetail) throws HdUIException
-    {
+    private void checkData(ProductDetail productDetail) throws HdUIException {
 
         //检验输入
 
@@ -961,8 +962,7 @@ public class Panel_ProductDetail extends BasePanel {
             throw HdUIException.create(tf_product, "请输入货号。。。");
         }
 
-        if(productDetail.product.pack==null)
-        {
+        if (productDetail.product.pack == null) {
             throw HdUIException.create(cb_pack, "请选择包装类型。。。");
         }
 
@@ -987,9 +987,9 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         bindTableDatas(tb_assemble_cost, assembleMaterialTableModel, productDetail.assembleMaterials);
-        bindTableDatas(tb_assemble_wage,assembleWageTableModel, productDetail.assembleWages);
+        bindTableDatas(tb_assemble_wage, assembleWageTableModel, productDetail.assembleWages);
 
-        bindTableDatas(tb_conceptus_cost,conceptusMaterialTableModel, productDetail.conceptusMaterials);
+        bindTableDatas(tb_conceptus_cost, conceptusMaterialTableModel, productDetail.conceptusMaterials);
         bindTableDatas(tb_conceptus_wage, conceptusWageTableModel, productDetail.conceptusWages);
 
         bindTableDatas(tb_product_paint, productPaintModel, productDetail.paints);
@@ -998,7 +998,7 @@ public class Panel_ProductDetail extends BasePanel {
         bindTableDatas(tb_pack_cost, packMaterialTableModel, productDetail.packMaterials);
         bindTableDatas(tb_pack_wage, packWageTableModel, productDetail.packWages);
 
-        jp_pack.productDetiail=productDetail;
+        jp_pack.productDetiail = productDetail;
 
 
     }
@@ -1011,12 +1011,12 @@ public class Panel_ProductDetail extends BasePanel {
      * @param datas
      * @param <T>
      */
-    private <T> void bindTableDatas(JTable table,BaseTableModel<T> model, List<T> datas) {
+    private <T> void bindTableDatas(JTable table, BaseTableModel<T> model, List<T> datas) {
         //为了避免触发监听，先移除后添加
         model.removeTableModelListener(allTableModelListener);
         model.setDatas(datas);
-         table.setModel(model);
-         model.addTableModelListener(allTableModelListener);
+        table.setModel(model);
+        model.addTableModelListener(allTableModelListener);
 
     }
 
@@ -1030,27 +1030,21 @@ public class Panel_ProductDetail extends BasePanel {
     private void bindProductBaseInfo(Product product) {
 
 
-
-
-
-
-        if(product==null) return;
+        if (product == null) return;
 
         tf_product.setText(product == null ? "" : product.getName());
 
 
         //产品 版本号 一旦保存就不能再修改
-        tf_product.setEditable(product.id<=0);
+        tf_product.setEditable(product.id <= 0);
         tf_version.setEditable(product.id <= 0);
 
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
 
-
         photo.setIcon(product.photo == null ? null : new ImageIcon(product.photo));
 
         photo.setText(product == null ? "产品图片" : "");
-
 
 
         bindProductSpecInchData(product == null ? "" : product.getSpec());
@@ -1060,12 +1054,11 @@ public class Panel_ProductDetail extends BasePanel {
         date.getJFormattedTextField().setText(product == null ? "" : product.getrDate());
 
 
-
         tf_unit.getDocument().removeDocumentListener(tf_unitDocumentListener);
         tf_unit.setText(product == null ? "S/1" : product.pUnitName);
         tf_unit.getDocument().addDocumentListener(tf_unitDocumentListener);
 
-        tf_weight.setText(product.getWeight() > 0.0f ? String.valueOf(product.getWeight() ): "");
+        tf_weight.setText(product.getWeight() > 0.0f ? String.valueOf(product.getWeight()) : "");
 
         tf_constitute.setText(product == null ? "" : product.getConstitute());
         tf_version.setText(product == null ? "" : product.getpVersion());
@@ -1075,7 +1068,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         //港杂费用
-        tf_gangza.setText(String.valueOf(product==null?0:product.gangza));
+        tf_gangza.setText(String.valueOf(product == null ? 0 : product.gangza));
 
         //设置产品分类
         int selectClassIndex = -1;
@@ -1092,14 +1085,13 @@ public class Panel_ProductDetail extends BasePanel {
         cb_class.setSelectedIndex(selectClassIndex);
 
 
-
         //设置厂家分类
         cb_factory.removeItemListener(cb_factoryItemListener);
         int selectedFactory = 0;
         if (product != null)
             for (int i = 0, count = cb_factory.getItemCount(); i < count; i++) {
 
-                if (cb_factory.getItemAt(i).code .equals( product.factoryCode)) {
+                if (cb_factory.getItemAt(i).code.equals(product.factoryCode)) {
 
                     selectedFactory = i;
                     break;
@@ -1112,33 +1104,21 @@ public class Panel_ProductDetail extends BasePanel {
 
         //设置包装信息
         cb_pack.removeItemListener(cb_packItemListener);
-        if(product.pack!=null)
+        if (product.pack != null)
             cb_pack.setSelectedItem(product.pack);
         else
             cb_pack.setSelectedIndex(0);
         cb_pack.addItemListener(cb_packItemListener);
 
 
-
-
-
-
-
-
-        boolean isXiangkang = product != null && product.isXK  ;
+        boolean isXiangkang = product != null && product.isXK;
 
 
         cb_xiankang.setSelected(isXiangkang);
         panel_xiankang.setVisible(isXiangkang);
         jp_pack.setVisible(isXiangkang);
-         panel_xiankang.setData(product.xiankang);
-          jp_pack.setData(product.xiankang);
-
-
-
-
-
-
+        panel_xiankang.setData(product.xiankang);
+        jp_pack.setData(product.xiankang);
 
 
         tf_fob.setText(product == null ? "" : String.valueOf(product.fob));
@@ -1146,11 +1126,8 @@ public class Panel_ProductDetail extends BasePanel {
         tf_price.setText(product == null ? "" : String.valueOf(product.price));
 
 
-
-        String[] fileNames=StringUtils.isEmpty(product.attaches)?new String[]{}:product.attaches.split(";");
+        String[] fileNames = StringUtils.isEmpty(product.attaches) ? new String[]{} : product.attaches.split(";");
         panel_attach.setAttachFiles(fileNames);
-
-
 
 
     }
@@ -1183,16 +1160,14 @@ public class Panel_ProductDetail extends BasePanel {
                     initPanel(data.datas.get(0));
 
 
-                }else
-                {
-                    JOptionPane.showMessageDialog(contentPane,data.message);
+                } else {
+                    JOptionPane.showMessageDialog(contentPane, data.message);
                 }
             }
         }.go();
 
 
     }
-
 
 
     /**
@@ -1203,23 +1178,21 @@ public class Panel_ProductDetail extends BasePanel {
 
     private void initPanel(ProductDetail detail) {
 
-        initPanel(detail,null);
+        initPanel(detail, null);
     }
 
-    private void initPanel(ProductDetail detail,final ProductDelete productDelete) {
+    private void initPanel(ProductDetail detail, final ProductDelete productDelete) {
 
         removeListeners();
 
-        if(detail==null)
-        {
+        if (detail == null) {
 
-            productDetail=new ProductDetail();
+            productDetail = new ProductDetail();
 
-            oldData=(ProductDetail) ObjectUtils.deepCopy(productDetail);
+            oldData = (ProductDetail) ObjectUtils.deepCopy(productDetail);
 
-        }else
-        {
-             oldData= (ProductDetail) ObjectUtils.deepCopy(detail);
+        } else {
+            oldData = (ProductDetail) ObjectUtils.deepCopy(detail);
             productDetail = detail;
 
         }
@@ -1227,64 +1200,59 @@ public class Panel_ProductDetail extends BasePanel {
         bindData();
 
 
-
         bindLogData(detail == null ? null : detail.productLog);
 
 
-
         //非删除数据 添加对数据的监听。
-        if(productDelete!=null)
-          addListeners();
+        if (productDelete != null)
+            addListeners();
 
 
-        panel_nomal.setVisible(null==productDelete);
+        panel_nomal.setVisible(null == productDelete);
         panel_delete.setVisible(productDelete != null);
 
-        for(ActionListener listener:btn_resume.getActionListeners())
-        {
+        for (ActionListener listener : btn_resume.getActionListeners()) {
             btn_resume.removeActionListener(listener);
         }
-        if(productDelete!=null)
-        btn_resume.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        if (productDelete != null)
+            btn_resume.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
-
-
-                new HdSwingWorker<ProductDetail, Void>(SwingUtilities.getWindowAncestor(Panel_ProductDetail.this.getRoot())) {
-                    @Override
-                    protected RemoteData<ProductDetail> doInBackground() throws Exception {
-                        return apiManager.resumeDeleteProduct(productDelete.id);
-                    }
-
-                    @Override
-                    public void onResult(RemoteData<ProductDetail> data) {
-
-
-                        if(data.isSuccess())
-                        {
-                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),"数据恢复成功");
-                            if(listener!=null)
-                            listener.close();
-                        }else{
-
-                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()),data.message);
+                    new HdSwingWorker<ProductDetail, Void>(SwingUtilities.getWindowAncestor(Panel_ProductDetail.this.getRoot())) {
+                        @Override
+                        protected RemoteData<ProductDetail> doInBackground() throws Exception {
+                            return apiManager.resumeDeleteProduct(productDelete.id);
                         }
 
+                        @Override
+                        public void onResult(RemoteData<ProductDetail> data) {
 
-                    }
-                }.go();
+
+                            if (data.isSuccess()) {
+                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), "数据恢复成功");
+                                if (listener != null)
+                                    listener.close();
+                            } else {
+
+                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), data.message);
+                            }
+
+
+                        }
+                    }.go();
 
 
                 }
-        });
+            });
 
     }
 
 
     /**
      * 绑定修改记录信息
+     *
      * @param productLog
      */
     private void bindLogData(ProductLog productLog) {
@@ -1293,8 +1261,7 @@ public class Panel_ProductDetail extends BasePanel {
         jp_log.setVisible(productLog != null);
 
 
-        if(productLog==null)
-        {
+        if (productLog == null) {
             return;
         }
 
@@ -1305,13 +1272,12 @@ public class Panel_ProductDetail extends BasePanel {
         updator.setText(productLog.updatorCName);
 
 
-
     }
 
 
     private void createUIComponents() {
 
-       // cellPanel = new APanel();
+        // cellPanel = new APanel();
         //cellPanel.setGridColor(Color.GRAY);
         // cellPanel.setPaintInBackground(false);
         cb_class = new JComboBox<PClass>();
@@ -1319,23 +1285,20 @@ public class Panel_ProductDetail extends BasePanel {
             cb_class.addItem(pClass);
         }
 
-        cb_pack=  new JComboBox<Pack>();
+        cb_pack = new JComboBox<Pack>();
         for (Pack pack : CacheManager.getInstance().bufferData.packs) {
             cb_pack.addItem(pack);
         }
 
-     //  cb_pack.setSelectedIndex(0);
+        //  cb_pack.setSelectedIndex(0);
 
 
-
-
-        cb_factory=  new JComboBox<Factory>();
+        cb_factory = new JComboBox<Factory>();
         for (Factory factory : CacheManager.getInstance().bufferData.factories) {
             cb_factory.addItem(factory);
         }
         JDatePanelImpl picker = new JDatePanelImpl(null);
         date = new JDatePickerImpl(picker, new HdDateComponentFormatter());
-
 
 
     }
@@ -1347,12 +1310,8 @@ public class Panel_ProductDetail extends BasePanel {
     public void initComponent() {
 
 
-
-
-
         panel_delete.setVisible(false);
         panel_nomal.setVisible(false);
-
 
 
         //咸康信息 默认不显示
@@ -1379,20 +1338,16 @@ public class Panel_ProductDetail extends BasePanel {
                     case TablePopMenu.ITEM_PAST:
 
 
-
-
                         try {
                             tableModel.insertNewRows(TableDuplicateHelper.getBufferData(), rowIndex.length == 0 ? 0 : rowIndex[0]);
                             TableDuplicateHelper.clear();
-                        }catch(Throwable t)
-                        {
+                        } catch (Throwable t) {
                             t.printStackTrace();
-                            JOptionPane.showMessageDialog(getRoot(),"数据格式不对， 不能黏贴。");
+                            JOptionPane.showMessageDialog(getRoot(), "数据格式不对， 不能黏贴。");
                         }
 
 
-
-                       // handleCopyTableData(tableModel, rowIndex[0]);
+                        // handleCopyTableData(tableModel, rowIndex[0]);
                         break;
 
                     case TablePopMenu.ITEM_COPY:
@@ -1400,14 +1355,14 @@ public class Panel_ProductDetail extends BasePanel {
                         ObjectUtils.deepCopy(tableModel.getValuableDatas());
                         TableDuplicateHelper.saveBufferData((List<Object>) ObjectUtils.deepCopy(tableModel.getValuableDatas()));
 //                        JOptionPane.showMessageDialog(getRoot(),"成功");
-                       // handleClipBordDataToTable(tableModel, rowIndex[0]);
+                        // handleClipBordDataToTable(tableModel, rowIndex[0]);
                         break;
                 }
             }
         };
 
 
-        TableMouseAdapter adapter=new TableMouseAdapter(tableMenuLister);
+        TableMouseAdapter adapter = new TableMouseAdapter(tableMenuLister);
         //设置表格点击监听
         tb_conceptus_cost.addMouseListener(adapter);
         tb_conceptus_wage.addMouseListener(adapter);
@@ -1419,22 +1374,20 @@ public class Panel_ProductDetail extends BasePanel {
         tb_pack_wage.addMouseListener(adapter);
 
 
-
-
-        KeyListener keyListener=new KeyAdapter() {
+        KeyListener keyListener = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getSource() instanceof  JTable) {
+                if (e.getSource() instanceof JTable) {
 
-                    JTable table=(JTable)e.getSource();
+                    JTable table = (JTable) e.getSource();
 
                     //黏贴
                     if (e.isControlDown()) {
 
                         if (e.getKeyCode() == KeyEvent.VK_V) {
 
-                            handleClipBordDataToTable((BaseTableModel) table.getModel(),table.convertRowIndexToModel(table.getSelectedRow()));
+                            handleClipBordDataToTable((BaseTableModel) table.getModel(), table.convertRowIndexToModel(table.getSelectedRow()));
                         }
 
                     }
@@ -1445,17 +1398,9 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         tb_conceptus_cost.addKeyListener(keyListener);
-        tb_assemble_cost .addKeyListener(keyListener);
+        tb_assemble_cost.addKeyListener(keyListener);
         tb_pack_cost.addKeyListener(keyListener);
         tb_product_paint.addKeyListener(keyListener);
-
-
-
-
-
-
-
-
 
 
         /**
@@ -1491,7 +1436,6 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
-
         //添加附件
         btn_attach_add.addActionListener(new ActionListener() {
             @Override
@@ -1505,7 +1449,7 @@ public class Panel_ProductDetail extends BasePanel {
 
                 if (result == JFileChooser.APPROVE_OPTION) {
 
-                    final File file= fileChooser.getSelectedFile();
+                    final File file = fileChooser.getSelectedFile();
                     //上传文件
                     new HdSwingWorker<String, String>(getWindow(getRoot())) {
 
@@ -1522,33 +1466,22 @@ public class Panel_ProductDetail extends BasePanel {
                         public void onResult(RemoteData<String> data) {
 
 
-
-                            if(data.isSuccess())
-                            {
-                               panel_attach.addUrl(data.datas.get(0));
+                            if (data.isSuccess()) {
+                                panel_attach.addUrl(data.datas.get(0));
 
 
                             }
-
 
 
                         }
                     }.go();
 
 
-
-
-
-
-
                 }
-
-
 
 
             }
         });
-
 
 
         btn_copy.addActionListener(new ActionListener() {
@@ -1564,17 +1497,10 @@ public class Panel_ProductDetail extends BasePanel {
                 }
 
 
-
-
-
-                    if(isModified())
-                    {
-                        JOptionPane.showMessageDialog((Component) e.getSource(), "产品数据有改动，请先保存");
-                        return;
-                    }
-
-
-
+                if (isModified()) {
+                    JOptionPane.showMessageDialog((Component) e.getSource(), "产品数据有改动，请先保存");
+                    return;
+                }
 
 
                 //显示对话框
@@ -1594,10 +1520,6 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
-
-
-
-
         /**
          * 删除
          */
@@ -1612,6 +1534,24 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
+        /**
+         *
+         */
+        lb_qr.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+
+                if (e.getClickCount() == 2) {
+
+                    if (productDetail.product != null) {
+                        ProductQRDialog dialog = new ProductQRDialog(getWindow(getRoot()), productDetail.product);
+                        dialog.setVisible(true);
+                    }
+
+                }
+            }
+        });
 
 
         photo.addMouseListener(new MouseInputAdapter() {
@@ -1621,8 +1561,8 @@ public class Panel_ProductDetail extends BasePanel {
                 if (e.getClickCount() >= 2) {
 
 
-                    if (productDetail.product!=null) {
-                        ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(),tf_version.getText().trim(), productDetail.product.url);
+                    if (productDetail.product != null) {
+                        ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim(), productDetail.product.url);
                     }
 
                 }
@@ -1651,11 +1591,9 @@ public class Panel_ProductDetail extends BasePanel {
         configTableCellMaterialEditor(tb_assemble_wage);
 
 
-
-
         //配置权限  是否修改  是否可以删除
 
-        boolean modifiable= AuthorityUtil.getInstance().editProduct()||AuthorityUtil.getInstance().addProduct();
+        boolean modifiable = AuthorityUtil.getInstance().editProduct() || AuthorityUtil.getInstance().addProduct();
 
         bn_save.setVisible(modifiable);
 
@@ -1669,19 +1607,17 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         btn_export.setVisible(AuthorityUtil.getInstance().exportProduct());
-
+        btn_export_pic.setVisible(AuthorityUtil.getInstance().exportProduct());
 
 
         viewLog.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2)
-                {
+                if (e.getClickCount() == 2) {
 
 
-
-                    Window window=getWindow(Panel_ProductDetail.this.getRoot());
-                    OperationLogDialog dialog=new OperationLogDialog(window,Product.class,productDetail.product.id);
+                    Window window = getWindow(Panel_ProductDetail.this.getRoot());
+                    OperationLogDialog dialog = new OperationLogDialog(window, Product.class, productDetail.product.id);
                     dialog.setLocationRelativeTo(window);
                     dialog.setVisible(true);
 
@@ -1696,11 +1632,6 @@ public class Panel_ProductDetail extends BasePanel {
 
         initListeners();
     }
-
-
-
-
-
 
 
     /**
@@ -1718,38 +1649,28 @@ public class Panel_ProductDetail extends BasePanel {
         String[] rows = clipboardText.split("[\n]+");
 
         final List<String> codes = new ArrayList<String>();
-        final List<String> names=new ArrayList<>();
+        final List<String> names = new ArrayList<>();
         int length = rows.length;
         final String[][] tableData = new String[length][];
         for (int i = 0; i < length; i++) {
             tableData[i] = rows[i].split("\t");
 
 
+            //油漆表
+            if (tableModel instanceof ProductPaintTableModel) {
 
-                //油漆表
-                if(tableModel instanceof  ProductPaintTableModel)
-                {
-
-                    //复制数据油漆名称在第四例
-                   if( tableData[i].length>3 && !StringUtils.isEmpty(tableData[i][3]))
-                   {
-                       names.add(tableData[i][3]);
-                   }
-
+                //复制数据油漆名称在第四例
+                if (tableData[i].length > 3 && !StringUtils.isEmpty(tableData[i][3])) {
+                    names.add(tableData[i][3]);
                 }
 
-                else
-                {
-                    if (tableData[i].length > 0 && !StringUtils.isEmpty(tableData[i][0])) {
+            } else {
+                if (tableData[i].length > 0 && !StringUtils.isEmpty(tableData[i][0])) {
 
-                        codes.add(tableData[i][0]);
+                    codes.add(tableData[i][0]);
 
-                    }
                 }
-
-
-
-
+            }
 
 
         }
@@ -1766,19 +1687,14 @@ public class Panel_ProductDetail extends BasePanel {
                 for (String[] row : tableData) {
 
 
-
-
                     Object object = tableModel.addNewRow(firstRow++);
                     if (object instanceof ProductMaterial) {
-
 
 
                         String code = row == null || row.length == 0 ? "" : row[0].trim();
                         if (StringUtils.isEmpty(code))
                             continue;
                         ProductMaterial productMaterial = (ProductMaterial) object;
-
-
 
 
                         for (Material material : data.datas) {
@@ -1828,15 +1744,14 @@ public class Panel_ProductDetail extends BasePanel {
                         }
 
 
-                    }else
-                    if(object instanceof  ProductPaint){
+                    } else if (object instanceof ProductPaint) {
 
 
-                        ProductPaint productPaint=(ProductPaint) object;
-                        String name = row == null || row.length <=3   ? "" : row[3].trim();
+                        ProductPaint productPaint = (ProductPaint) object;
+                        String name = row == null || row.length <= 3 ? "" : row[3].trim();
 
 
-                        String processCode ="";
+                        String processCode = "";
                         try {
                             processCode = row[0];
                         } catch (Throwable t) {
@@ -1845,7 +1760,7 @@ public class Panel_ProductDetail extends BasePanel {
                         productPaint.setProcessCode(processCode);
 
 
-                        String processName ="";
+                        String processName = "";
                         try {
                             processName = row[1];
                         } catch (Throwable t) {
@@ -1868,7 +1783,8 @@ public class Panel_ProductDetail extends BasePanel {
                         } catch (Throwable t) {
 
                         }
-                        productPaint.ingredientRatio=ingredientRatio; ;
+                        productPaint.ingredientRatio = ingredientRatio;
+                        ;
 
 
                         float materialQuantity = 0;
@@ -1877,14 +1793,14 @@ public class Panel_ProductDetail extends BasePanel {
                         } catch (Throwable t) {
 
                         }
-                        productPaint.quantity=materialQuantity;
+                        productPaint.quantity = materialQuantity;
 
                         //查找匹配材料   油漆表中 材料不是必须
                         for (Material material : data.datas) {
 
                             if (name.equals(material.name)) {
 
-                                productPaint.updateMaterial(material,globalData);
+                                productPaint.updateMaterial(material, globalData);
 
 
                                 break;
@@ -1893,8 +1809,6 @@ public class Panel_ProductDetail extends BasePanel {
                         }
 
                         productPaint.updatePriceAndCostAndQuantity(globalData);
-
-
 
 
                     }
@@ -1909,13 +1823,11 @@ public class Panel_ProductDetail extends BasePanel {
             protected RemoteData<Material> doInBackground() throws Exception {
 
 
-                 if(codes.size()>0)
-                 {
-                     return apiManager.readMaterialListByCodeEquals(codes);
+                if (codes.size() > 0) {
+                    return apiManager.readMaterialListByCodeEquals(codes);
 
-                 }else
-                     return  apiManager.readMaterialListByNameEquals(names);
-
+                } else
+                    return apiManager.readMaterialListByNameEquals(names);
 
 
             }
@@ -1929,7 +1841,7 @@ public class Panel_ProductDetail extends BasePanel {
      * 绑定汇总数据
      */
     private void bindStatisticsValue(Product product) {
-        if(product==null) return;
+        if (product == null) return;
         jtf_paint_cost.setText(String.valueOf(product.paintCost));
         jtf_paint_wage.setText(String.valueOf(product.paintWage));
         jtf_assemble_cost.setText(String.valueOf(product.assembleCost));
@@ -1962,11 +1874,8 @@ public class Panel_ProductDetail extends BasePanel {
         tf_inboxCount.setText(String.valueOf(product.insideBoxQuantity));
 
 
-
-
-
         //to avoid fire listener  first check value changed or not  and remove listener and rebind.
-        if(!tf_quantity.getText().trim().equals(String.valueOf(product.packQuantity))) {
+        if (!tf_quantity.getText().trim().equals(String.valueOf(product.packQuantity))) {
             tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
             tf_quantity.setText(String.valueOf(product.packQuantity));
             tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
@@ -1976,10 +1885,10 @@ public class Panel_ProductDetail extends BasePanel {
 
     /**
      * 绑定英寸规格数据
+     *
      * @param inchString
      */
-    private void bindProductSpecInchData(String inchString)
-    {
+    private void bindProductSpecInchData(String inchString) {
 
 
         ta_spec_inch.getDocument().removeDocumentListener(ta_spec_inchListener);
@@ -1991,10 +1900,10 @@ public class Panel_ProductDetail extends BasePanel {
 
     /**
      * 绑定厘米规格数据
+     *
      * @param cmString
      */
-    private void bindProductSpecCmData(String cmString)
-    {
+    private void bindProductSpecCmData(String cmString) {
 
 
         ta_spec_cm.getDocument().removeDocumentListener(ta_spec_cmListener);
@@ -2037,7 +1946,6 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
-
         jtf.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -2052,9 +1960,6 @@ public class Panel_ProductDetail extends BasePanel {
 
         DefaultCellEditor editor = new DefaultCellEditor(jtf);
         table.setDefaultEditor(Material.class, editor);
-
-
-
 
 
         final JTextField processjtf = new JTextField();
@@ -2083,7 +1988,6 @@ public class Panel_ProductDetail extends BasePanel {
         });
 
 
-
         processjtf.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -2093,7 +1997,6 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         });
-
 
 
         table.setDefaultEditor(ProductProcess.class, new DefaultCellEditor(processjtf));
@@ -2119,27 +2022,26 @@ public class Panel_ProductDetail extends BasePanel {
         table.setDefaultEditor(PackMaterialClass.class, new DefaultCellEditor(packMaterialClassComboBox));
 
 
-
-
-
         //让浮点数去除尾吧0
-         DefaultTableCellRenderer renderer=new DefaultTableCellRenderer(){
-            private DecimalFormat format=new DecimalFormat("#.#####");
-             @Override
-             protected void setValue(Object value) {
-                 if(value instanceof  Float) {
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            private DecimalFormat format = new DecimalFormat("#.#####");
+
+            @Override
+            protected void setValue(Object value) {
+                if (value instanceof Float) {
 
                     super.setValue(format.format(((Float) value).floatValue()));
                     // super.setValue( FloatHelper.scale(((Float) value).floatValue(), 10));
-                 }else
-                 super.setValue(value);
-             }
-         };
+                } else
+                    super.setValue(value);
+            }
+        };
 
-        table.setDefaultRenderer( Object.class,renderer);
+        table.setDefaultRenderer(Object.class, renderer);
 
 
     }
+
     /**
      * 配置表格的 弹出选择框  工序选择
      */
@@ -2149,45 +2051,34 @@ public class Panel_ProductDetail extends BasePanel {
         //定制表格的编辑功能 弹出物料选择单
 
 
-
-
-
-
-
-
-
-
     }
 
     /**
      * 处理表格的 材料输入时间
-     * @return
+     *
      * @param table
      * @param text
+     * @return
      */
 
 
-    private void  handleTableMaterialInput(final JTable table,final  String text)
-    {
+    private void handleTableMaterialInput(final JTable table, final String text) {
 
-        final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
+        final int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
         final Materialable materialable;
         if (table.getModel() instanceof Materialable) {
 
-            materialable=       ((Materialable) table.getModel());
-        }
-        else
-        {
-            return ;
+            materialable = ((Materialable) table.getModel());
+        } else {
+            return;
         }
         //查询  单记录直接copy
-        new HdSwingWorker<Material,Object>(SwingUtilities.getWindowAncestor(getRoot()))
-        {
+        new HdSwingWorker<Material, Object>(SwingUtilities.getWindowAncestor(getRoot())) {
             @Override
             protected RemoteData<Material> doInBackground() throws Exception {
 
 
-                return   apiManager.loadMaterialByCodeOrName(text, 0, 100);
+                return apiManager.loadMaterialByCodeOrName(text, 0, 100);
 
             }
 
@@ -2195,15 +2086,12 @@ public class Panel_ProductDetail extends BasePanel {
             public void onResult(RemoteData<Material> data) {
 
                 //只有一条记录 ，并且该材料未被停用
-                if(data.isSuccess()&&data.totalCount==1&&!data.datas.get(0).outOfService)
-                {
+                if (data.isSuccess() && data.totalCount == 1 && !data.datas.get(0).outOfService) {
 
                     materialable.setMaterial(data.datas.get(0), rowIndex);
 
 
-                }else
-                {
-
+                } else {
 
 
                     SearchDialog<Material> dialog = new SearchDialog.Builder().setWindow(getWindow(contentPane)).setTableModel(new MaterialTableModel()).setComonSearch(new ComonSearch<Material>() {
@@ -2216,18 +2104,17 @@ public class Panel_ProductDetail extends BasePanel {
                         public boolean isValid(Material result) {
 
 
-                            if(result.outOfService)
-                            {
+                            if (result.outOfService) {
 //
                                 return false;
 
-                            }else
+                            } else
                                 return true;
                         }
 
                         @Override
                         public void warn(Material material) {
-                            JOptionPane.showMessageDialog(getWindow(contentPane), "材料：【"+material.code+"】  已经被停用，请选择其他材料");
+                            JOptionPane.showMessageDialog(getWindow(contentPane), "材料：【" + material.code + "】  已经被停用，请选择其他材料");
                         }
                     }).setValue(text).setRemoteData(data).createSearchDialog();
                     dialog.setMinimumSize(new Dimension(800, 600));
@@ -2248,8 +2135,6 @@ public class Panel_ProductDetail extends BasePanel {
                 }
 
 
-
-
             }
         }.go();
 
@@ -2259,49 +2144,40 @@ public class Panel_ProductDetail extends BasePanel {
 
     /**
      * 处理工序输入检索
+     *
      * @param table
      * @param text
      */
-    private  void handleTableProcessInput(final JTable table,final String text)
-    {
+    private void handleTableProcessInput(final JTable table, final String text) {
 
 
-
-
-
-
-        final   int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
+        final int rowIndex = table.convertRowIndexToModel(table.getSelectedRow());
         final Processable processable;
         if (table.getModel() instanceof Processable) {
 
-            processable=       ((Processable) table.getModel());
-        }
-        else
-        {
-            return ;
+            processable = ((Processable) table.getModel());
+        } else {
+            return;
         }
         //查询  单记录直接copy
-        new HdSwingWorker<ProductProcess,Object>(SwingUtilities.getWindowAncestor(getRoot()))
-        {
+        new HdSwingWorker<ProductProcess, Object>(SwingUtilities.getWindowAncestor(getRoot())) {
             @Override
             protected RemoteData<ProductProcess> doInBackground() throws Exception {
 
 
-                return   apiManager.loadProcessByCodeOrName(text, 0, 100);
+                return apiManager.loadProcessByCodeOrName(text, 0, 100);
 
             }
 
             @Override
             public void onResult(RemoteData<ProductProcess> data) {
 
-                if(data.isSuccess()&&data.totalCount==1)
-                {
+                if (data.isSuccess() && data.totalCount == 1) {
 
                     processable.setProcess(data.datas.get(0), rowIndex);
 
 
-                }else
-                {
+                } else {
 
 
                     SearchDialog<ProductProcess> dialog = new SearchDialog.Builder().setWindow(getWindow(contentPane)).setTableModel(new ProductProcessModel(false)).setComonSearch(new ComonSearch<ProductProcess>() {
@@ -2327,20 +2203,8 @@ public class Panel_ProductDetail extends BasePanel {
                 }
 
 
-
-
             }
         }.go();
-
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -2356,28 +2220,24 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
-
     /**
      * 预留方法
+     *
      * @param data
      */
     public void getData(ProductDetail data) {
     }
 
     /**
-     *
-     *
      * @return
      */
-    public boolean isModified( )   {
+    public boolean isModified() {
 
 
+        collectionData();
 
 
-            collectionData();
-
-
-       return !productDetail.equals(oldData);
+        return !productDetail.equals(oldData);
 
     }
 

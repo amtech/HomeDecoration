@@ -175,7 +175,7 @@ public class UserController extends  BaseController{
     @Transactional
     public
     @ResponseBody
-    RemoteData<Void> initData(@RequestBody String[] map )   {
+    RemoteData<Void> updatePassword(@RequestBody String[] map )   {
 
 
         long userId= Long.valueOf(map[0]);

@@ -173,7 +173,7 @@ public class DownloadFileManager {
      * @param filePath
      * @throws IOException
      */
-    private void download(String remoteUrl,String filePath) throws IOException {
+    public  static void download(String remoteUrl,String filePath) throws IOException {
 
 
 

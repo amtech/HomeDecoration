@@ -3,24 +3,31 @@ package com.giants3.hd.server.interceptor;
 
 import com.giants3.hd.server.repository.SessionRepository;
 import com.giants3.hd.server.utils.Constraints;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Session;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
-
+    private static  final String TAG="AuthInterceptor";
+    private static final CharSequence WEIXIN = "weixin";
+    public static final String TOKEN = "token";
     public String UNLOGIN="api/authority/unLogin";
 
     public String UN_INTERCEPT_USERLIST="/api/user/list";
-
+    public String UN_INTERCEPT_ALOGIN="/api/authority/aLogin";
     public String UN_INTERCEPT_LOGIN="/api/authority/login";
 
     public String UN_INTERCEPT_FILE="/api/file/download/";
@@ -33,14 +40,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+
+        Logger.getLogger(TAG).info("AuthInterceptor" );
         String url=request.getRequestURI();
+        HttpServletRequestWrapper wrapper;
         //非过滤的url
-        if(url.contains(UN_INTERCEPT_LOGIN)||url.contains(UN_INTERCEPT_USERLIST)||url.contains(UNLOGIN)||url.contains(UN_INTERCEPT_FILE))
+        if(url.contains(UN_INTERCEPT_LOGIN)||url.contains(UN_INTERCEPT_ALOGIN)||url.contains(UN_INTERCEPT_USERLIST)||url.contains(UNLOGIN)||url.contains(UN_INTERCEPT_FILE)||url.contains(WEIXIN))
             return true;
 
           else
             {
-            String token=request.getParameter("token");
+            String token=request.getParameter(TOKEN);
             Session session= sessionRepository.findFirstByTokenEquals(token);
 
             if(session!=null)
@@ -49,9 +59,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
               long currentTime=  Calendar.getInstance().getTimeInMillis();
                 if(currentTime-session.loginTime<VALIDATE_TIME)
                 {
-
-
-
                     request.setAttribute(Constraints.ATTR_LOGIN_USER,session.user);
                     return true;
                 }
@@ -64,12 +71,18 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     //返回到登录界面
                 RemoteData<Void> data=new RemoteData<>();
                 data.code=RemoteData.CODE_UNLOGIN;
-                data.message="update client to newest version.";
-                response.getWriter().print(new Gson().toJson(data));
+                data.message="用户未登录，或者登录超时失效";
+
+                response.getWriter().print(GsonUtils.toJson(data));
                  return false;
 
 
             }
 
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        super.postHandle(request, response, handler, modelAndView);
     }
 }

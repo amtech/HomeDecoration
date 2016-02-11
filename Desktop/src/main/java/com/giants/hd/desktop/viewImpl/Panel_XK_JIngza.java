@@ -61,9 +61,10 @@ public class Panel_XK_JIngza {
 
     public void getData( Xiankang_Jingza data) {
 
+        if(data==null)
+            throw new IllegalArgumentException(" Xiankang_Jingza must not be null");
 
 
-        if(data==null) data=new Xiankang_Jingza();
         data.setJingzi_gao(jingzi_gao.getText());
         data.setJingzi_kuan(jingzi_kuan.getText());
         data.setBeizhu(beizhu.getText());

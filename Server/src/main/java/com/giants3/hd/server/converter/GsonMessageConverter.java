@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import com.giants3.hd.server.crypt.AESUtil;
 import com.google.gson.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -129,6 +130,9 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
                 throws IOException, HttpMessageNotReadableException {
 
+
+            //解密
+            //String jsonC = AESUtil.decrypt(inputMessage.getBody());
             Reader json = new InputStreamReader(inputMessage.getBody(),
                     getCharset(inputMessage.getHeaders()));
 
@@ -157,8 +161,12 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         protected void writeInternal(Object o, HttpOutputMessage outputMessage)
                 throws IOException, HttpMessageNotWritableException {
 
+
+
+            ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+
             OutputStreamWriter writer = new OutputStreamWriter(
-                    outputMessage.getBody(), getCharset(outputMessage.getHeaders()));
+                    byteArrayOutputStream, getCharset(outputMessage.getHeaders()));
 
             try {
                 if (this._prefixJson) {
@@ -174,7 +182,11 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
                     _gson.toJson(o, writer);
                 }
+
                 writer.close();
+
+                outputMessage.getBody().write(byteArrayOutputStream.toByteArray());
+                byteArrayOutputStream.close();
             } catch (JsonIOException ex) {
                 throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "
                         + ex.getMessage(), ex);

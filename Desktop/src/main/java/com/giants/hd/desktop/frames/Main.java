@@ -954,7 +954,7 @@ public class Main extends BaseFrame {
             public void onHandleError(HdException exception)
             {
 
-                JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。");
+                JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。"+exception.getLocalizedMessage());
                 System.exit(0);
 
             }

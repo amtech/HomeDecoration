@@ -29,6 +29,10 @@
 
     </servlet-mapping>
 
+    <filter>
+        <filter-name>HttpWrapperFilter</filter-name>
+        <filter-class>com.giants3.hd.server.filter.HttpRequestWrapFilter</filter-class>
+    </filter>
 
     <!--<context-param>-->
         <!--<param-name>log4jConfigLocation</param-name>-->
@@ -40,9 +44,14 @@
         <!--<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>-->
     <!--</listener>-->
 
-    <!--  <servlet-mapping>
+     <!--<servlet-mapping>
           <servlet-name>file-dispatcher</servlet-name>
           <url-pattern>/file/*</url-pattern>
       </servlet-mapping>-->
+    <filter-mapping>
+        <filter-name>HttpWrapperFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
 
 </web-app>

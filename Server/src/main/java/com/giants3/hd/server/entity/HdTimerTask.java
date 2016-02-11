@@ -78,7 +78,7 @@ public class HdTimerTask extends TimerTask{
 
         }
 
-        if(errorMessage==null)
+        if(errorMessage!=null)
             transactionManager.rollback(status);
         else
             transactionManager.commit(status);

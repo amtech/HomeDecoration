@@ -14,7 +14,8 @@ public class HdTaskLogModel extends  BaseTableModel<HdTaskLog> {
     public static int[] columnWidth=new int[]{   150,        150 ,150, 120,200};
 
 
-    public static String[] fieldName = new String[]{ "taskTypeName", "executeTimeString", "timeSpend", "stateName","memo"  };
+    public static final String TIME_SPEND = "timeSpend";
+    public static String[] fieldName = new String[]{ "taskTypeName", "executeTimeString", TIME_SPEND, "stateName","memo"  };
 
     public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class };
 
@@ -43,6 +44,17 @@ public class HdTaskLogModel extends  BaseTableModel<HdTaskLog> {
 
         HdTaskLog task=getItem(rowIndex);
         if(task.id<=0) return "";
+
+
+        if(TIME_SPEND.equals(fieldName[columnIndex]))
+        {
+            long timeSpend=task.timeSpend;
+
+            int hour= (int) (timeSpend/3600);
+            int minute= (int) (timeSpend%3600/60);
+            int second= (int) (timeSpend%60);
+            return hour+" 时 "+minute+" 分 "+second+" 秒 ";
+        }
 
 
 

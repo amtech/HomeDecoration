@@ -244,7 +244,7 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            label1 = new Label(33, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue[0])) ,format);
 //            writableSheet.addCell(label1);
             if(!StringUtils.isEmpty(item.spec)) {
-                String[] specString = StringUtils.groupSpec(StringUtils.decoupleSpecString(item.spec));
+                String[] specString = StringUtils.groupSpec(StringUtils.decoupleSpecString(item.spec),true);
                 addString(writableSheet, (specString[0]), 33, rowUpdate);
                 //折盒包装w cm
 //            label1 = new Label(34, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue[1])) ,format);
@@ -311,13 +311,13 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
 //            writableSheet.addCell(label1);
 
             if(!StringUtils.isEmpty(item.spec2)) {
-                String[] specString = StringUtils.groupSpec(StringUtils.decoupleSpecString(item.spec2));
+                String[] specString = StringUtils.groupSpec(StringUtils.decoupleSpecString(item.spec2),true);
                 addString(writableSheet, specString[0], 45, rowUpdate);
 
                 //加强包装w cm
 //            label1 = new Label(46, rowUpdate,  String.valueOf(UnitUtils.cmToInch(packValue2[1])) ,format);
 //            writableSheet.addCell(label1);
-                addString(writableSheet, specString[1], 46, rowUpdate);
+                addString(writableSheet,specString[1], 46, rowUpdate);// specString[1]
 
 
                 //加强包装h cm

@@ -1,18 +1,22 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.appdata.AUser;
+import com.giants3.hd.server.parser.RemoteDataParser;
+import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -48,6 +52,11 @@ public class AuthorityController extends  BaseController{
 
     @Autowired
     UserRepository userRepository;
+
+
+    @Qualifier("CustomImplName")
+    DataParser<User,AUser>  dataParser;
+
     @RequestMapping(value="/findByUser", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -131,14 +140,56 @@ public class AuthorityController extends  BaseController{
     }
 
 
+    /**
+     * 提供给移动端调用的接口
+     * @param request
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/aLogin", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<AUser> aLogin(HttpServletRequest request, @RequestBody Map<String,String> params)  {
+
+
+          String userName=params.get("userName");
+        String password=params.get("password");
+        String client=params.get("client");
+        String version=params.get("version");
+
+        RemoteData<User> userRemoteData= doLogin(request,userName,password,client,version);
+        RemoteData<AUser> result= RemoteDataParser.parse(userRemoteData, dataParser);
+
+
+        if(result.isSuccess())
+        {
+
+            AUser loginUser=result.datas.get(0);
+            loginUser.token=result.token;
+        }
+
+
+        return  result;
+
+
+    }
+
+
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<User> login( HttpServletRequest request, @RequestBody User user)   {
+    RemoteData<User> login( HttpServletRequest request, @RequestBody User user,@RequestParam(value="appVersion",required = false,defaultValue = "")String appVersion)   {
 
 
-        List<User> userList=userRepository.findByNameEquals(user.name);
+       return doLogin(request,user.name,user.password,"DESKTOP",appVersion);
+    }
+
+
+   private  RemoteData<User> doLogin( HttpServletRequest request, String userName, String password,String client,String version)   {
+
+
+        List<User> userList=userRepository.findByNameEquals(userName);
 
         int size=userList.size();
         if(size<=0)
@@ -147,7 +198,7 @@ public class AuthorityController extends  BaseController{
             return     wrapError("存在重名用户，请联系管理员");
 
         User findUser=userList.get(0);
-        if(!findUser.password.equals(user.password))
+        if(!findUser.password.equals(password))
         {
             return     wrapError("密码错误");
         }

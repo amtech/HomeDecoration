@@ -55,8 +55,21 @@ public class Panel_Xiankang {
         {
             xiankang=new Xiankang();
         }
+
+        if(xiankang.xiankang_jingza==null)
+        {
+            xiankang.xiankang_jingza=new Xiankang_Jingza();
+        }
         panel_xk_jingza.getData(xiankang.xiankang_jingza) ;
+        if(xiankang.xiankang_jiaju==null)
+        {
+            xiankang.xiankang_jiaju=new Xiankang_Jiaju();
+        }
         panel_xk_jiaju.getData(xiankang.getXiankang_jiaju());
+        if(xiankang.xiankang_dengju==null)
+        {
+            xiankang.xiankang_dengju=new Xiankang_Dengju();
+        }
         panel_xk_dengju.getData(xiankang.getXiankang_dengju());
 
 

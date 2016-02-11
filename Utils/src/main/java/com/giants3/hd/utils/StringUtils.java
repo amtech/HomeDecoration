@@ -299,10 +299,10 @@ public class StringUtils {
     /**
      * 产品规格转  并分段显示
      * @param spec
-     * @param  toInch  是否转换成inch
+     * @param  toCm  是否转换成cm
      * @return
      */
-    public  static String[] groupSpec(float[][] spec, boolean toInch)
+    public  static String[] groupSpec(float[][] spec, boolean toCm)
     {
 
 
@@ -312,7 +312,7 @@ public class StringUtils {
         for (int i = 0; i < length; i++) {
 
             for(int j=0;j<3;j++) {
-                result[j] +=toInch? UnitUtils.cmToInch(spec[i][j]):spec[i][j];
+                result[j] +=toCm? UnitUtils.inchToCm(spec[i][j]):spec[i][j];
 
                 if (i < length-1)
                     result[j] += StringUtils.row_separator;
