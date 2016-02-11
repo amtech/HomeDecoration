@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.giants3.hd.server.crypt.AESUtil;
+import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.crypt.CryptUtils;
 import com.google.gson.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -185,7 +187,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
                 writer.close();
 
-                outputMessage.getBody().write(byteArrayOutputStream.toByteArray());
+                outputMessage.getBody().write(CryptUtils.encryptDES(byteArrayOutputStream.toByteArray(), ConstantData.DES_KEY));
                 byteArrayOutputStream.close();
             } catch (JsonIOException ex) {
                 throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "

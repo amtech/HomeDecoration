@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 /**
  * 所有请求封装类，   对于所有远程请求
  */
+@Deprecated
 public class HttpRequestWrapper extends HttpServletRequestWrapper {
     private static  final String TAG="HttpRequestWrapper";
     private String key;

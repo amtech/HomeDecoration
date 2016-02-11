@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 /**
  * Created by david on 2016/2/11.
  */
+@Deprecated
 public class HttpRequestWrapFilter implements Filter {
 
 
@@ -26,8 +27,8 @@ public class HttpRequestWrapFilter implements Filter {
         HttpResponseWrapper  httpResponseWrapper=new HttpResponseWrapper((HttpServletResponse)response);
 
         chain.doFilter(httpRequestWrapper, httpResponseWrapper);
-        OutputStream  ops= httpResponseWrapper.getOutputStream();
-    Logger.getLogger(TAG).info("zzz"+ httpResponseWrapper.getContent());
+
+
 
 
     }

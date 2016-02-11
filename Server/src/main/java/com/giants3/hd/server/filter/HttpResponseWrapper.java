@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 /**
  * 所有请求封装类，   对于所有远程请求
  */
+@Deprecated
 public class HttpResponseWrapper extends HttpServletResponseWrapper {
     private static  final String TAG="HttpResponseWrapper";
     private MyPrintWriter tmpWriter;
@@ -35,7 +36,7 @@ public class HttpResponseWrapper extends HttpServletResponseWrapper {
     public ServletOutputStream getOutputStream() throws IOException {
         ServletOutputStream outputStream= super.getOutputStream();
 
-      //Logger.getLogger(TAG).info(outputStream.toString());
+
         return outputStream;
     }
 
@@ -64,12 +65,12 @@ public class HttpResponseWrapper extends HttpServletResponseWrapper {
 
 
 
-    //覆盖getWriter()方法，使用我们自己定义的Writer
-    @Override
-    public PrintWriter getWriter() throws IOException
-    {
-        return tmpWriter;
-    }
+//    //覆盖getWriter()方法，使用我们自己定义的Writer
+//    @Override
+//    public PrintWriter getWriter() throws IOException
+//    {
+//        return tmpWriter;
+//    }
 
     public void close() throws IOException
     {

@@ -1,5 +1,7 @@
 package com.giants3.hd.domain.api;
 
+import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.crypt.CryptUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -49,7 +51,7 @@ public class Client {
 
 //                    String result= response.getResponseBody(BODY_ENCODING);
 
-                    String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
+                    String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
                     return result;
 
 
@@ -80,7 +82,7 @@ public class Client {
 
 
 
-                String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
+                String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
 
 
 
@@ -104,9 +106,10 @@ public class Client {
      * @param data
      * @return
      */
-    public String  encryptResult(byte[] data,String encode) throws IOException {
+    public String descryptResult(byte[] data, String encode) throws IOException {
 
 
+        data= CryptUtils.decryptDES(data, ConstantData.DES_KEY);
         try {
             return new String(data,encode);
         } catch (UnsupportedEncodingException e) {
@@ -131,7 +134,7 @@ public class Client {
 
 //                String result = response.getResponseBody(BODY_ENCODING);
 
-                String result =  encryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
+                String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
                 return result;
 
 
