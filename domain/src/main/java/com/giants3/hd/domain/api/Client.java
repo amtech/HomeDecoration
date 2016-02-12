@@ -1,6 +1,7 @@
 package com.giants3.hd.domain.api;
 
 import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.crypt.CryptUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
@@ -17,16 +18,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 /**
- *  提供远程请求的客户端类
+ * 提供远程请求的客户端类
  */
 @Singleton
 public class Client {
 
 
-    public static final String BODY_ENCODING="UTF-8";
+    public static final String BODY_ENCODING = "UTF-8";
     private static final String TAG = "HTTPCLIENT";
     //客户端连接
     public AsyncHttpClient client;
+
     @Inject
     public Client() {//设置链接参数   默认超时时间6秒
         client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectTimeout(3000).setRequestTimeout(Integer.MAX_VALUE).setReadTimeout(Integer.MAX_VALUE).build());
@@ -36,56 +38,20 @@ public class Client {
     MimetypesFileTypeMap mimetypesFileTypeMap;
 
 
-    public void put()
-    {}
-
-
-
-    public String postWithStringReturned(String url,String body) throws HdException {
-        Logger.getLogger(TAG).info(url);
-
-       String result= post(url,body,     new AsyncCompletionHandler<String>()
-            {
-                @Override
-                public String onCompleted(Response response) throws Exception {
-
-//                    String result= response.getResponseBody(BODY_ENCODING);
-
-                    String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
-                    return result;
-
-
-
-                }
-            });
-
-
-        Logger.getLogger(TAG).info(result);
-
-
-
-        return result;
-
+    public void put() {
     }
 
 
-
-
-    public String getWithStringReturned(String url ) throws HdException {
-
+    public String postWithStringReturned(String url, String body) throws HdException {
         Logger.getLogger(TAG).info(url);
-        String result= get(url, new AsyncCompletionHandler<String>() {
+
+        String result = post(url, body, new AsyncCompletionHandler<String>() {
             @Override
             public String onCompleted(Response response) throws Exception {
 
-                //String result = response.getResponseBody(BODY_ENCODING);
+//                    String result= response.getResponseBody(BODY_ENCODING);
 
-
-
-                String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
-
-
-
+                String result = descryptResult(response.getResponseBodyAsBytes(), BODY_ENCODING);
                 return result;
 
 
@@ -93,6 +59,32 @@ public class Client {
         });
 
 
+        Logger.getLogger(TAG).info(result);
+
+
+        return result;
+
+    }
+
+
+    public String getWithStringReturned(String url) throws HdException {
+
+        Logger.getLogger(TAG).info(url);
+        String result = get(url, new AsyncCompletionHandler<String>() {
+            @Override
+            public String onCompleted(Response response) throws Exception {
+
+                //String result = response.getResponseBody(BODY_ENCODING);
+
+
+                String result = descryptResult(response.getResponseBodyAsBytes(), BODY_ENCODING);
+
+
+                return result;
+
+
+            }
+        });
 
 
         Logger.getLogger(TAG).info(result);
@@ -103,38 +95,38 @@ public class Client {
 
     /**
      * 对返回的数据进行 解密
+     *
      * @param data
      * @return
      */
     public String descryptResult(byte[] data, String encode) throws IOException {
 
 
-        data= ConstantData.IS_CRYPT_RESPONSE?CryptUtils.decryptDES(data, ConstantData.DES_KEY):data;
+        data = ConstantData.IS_CRYPT_JSON ? CryptUtils.decryptDES(data, ConstantData.DES_KEY) : data;
         try {
-            return new String(data,encode);
+            return new String(data, encode);
         } catch (UnsupportedEncodingException e) {
             throw new IOException(e);
         }
     }
 
 
-
-
     /**
      * 上传文件
+     *
      * @param url
      * @param file
      * @return
      */
-    public String uploadWidthStringReturned(String url,File file ) throws HdException {
+    public String uploadWidthStringReturned(String url, File file) throws HdException {
         Logger.getLogger(TAG).info(url);
-        String result= upload(url,file, new AsyncCompletionHandler<String>() {
+        String result = upload(url, file, new AsyncCompletionHandler<String>() {
             @Override
             public String onCompleted(Response response) throws Exception {
 
 //                String result = response.getResponseBody(BODY_ENCODING);
 
-                String result =  descryptResult(   response.getResponseBodyAsBytes(),BODY_ENCODING);
+                String result = descryptResult(response.getResponseBodyAsBytes(), BODY_ENCODING);
                 return result;
 
 
@@ -148,26 +140,36 @@ public class Client {
     }
 
 
-    public <T> T get(String url,   AsyncHandler<T> handler)throws HdException
-    {
+    public <T> T get(String url, AsyncHandler<T> handler) throws HdException {
 
         AsyncHttpClient.BoundRequestBuilder builder;
         builder = client.prepareGet(url);
-        builder.addHeader("Content-Type","application/json");
+        builder.addHeader("Content-Type", "application/json");
         return execute(handler, builder);
     }
 
-    public <T> T post(String url, String body, AsyncHandler<T> handler)throws HdException
-    {
+    public <T> T post(String url, String body, AsyncHandler<T> handler) throws HdException {
 
         AsyncHttpClient.BoundRequestBuilder builder;
         builder = client.preparePost(url);
-        builder.addHeader("Content-Type","application/json");
+        builder.addHeader("Content-Type", "application/json");
         builder.setBodyEncoding(BODY_ENCODING);
+        byte[] data = null;
+        try {
+            if (!StringUtils.isEmpty(body))
+                data = body.getBytes(BODY_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (data != null && ConstantData.IS_CRYPT_JSON) {
+
+            data = CryptUtils.encryptDES(data, ConstantData.DES_KEY);
+
+        }
 
 
-        if (null != body)
-            builder.setBody(body);
+        if (null != data)
+            builder.setBody(data);
 
         return execute(handler, builder);
 
@@ -176,6 +178,7 @@ public class Client {
 
     /**
      * 上传文件
+     *
      * @param url
      * @param file
      * @param handler
@@ -183,12 +186,12 @@ public class Client {
      * @return
      * @throws HdException
      */
-    public <T> T upload(String url,File file,AsyncHandler<T> handler) throws HdException {
+    public <T> T upload(String url, File file, AsyncHandler<T> handler) throws HdException {
 
         AsyncHttpClient.BoundRequestBuilder builder;
         builder = client.preparePost(url);
-        builder.addHeader("Content-Type","multipart/*");
-        builder.addBodyPart(new FilePart("file",file,mimetypesFileTypeMap.getContentType(file)));
+        builder.addHeader("Content-Type", "multipart/*");
+        builder.addBodyPart(new FilePart("file", file, mimetypesFileTypeMap.getContentType(file)));
 
         return execute(handler, builder);
 
@@ -199,7 +202,7 @@ public class Client {
             T result = builder.execute(handler).get();
 
 
-          //  Log.d(TAG, "接收数据 ：     " + result);
+            //  Log.d(TAG, "接收数据 ：     " + result);
             return result
                     ;
         } catch (InterruptedException e) {
@@ -215,11 +218,10 @@ public class Client {
         }
     }
 
-    public void get()
-    {}
+    public void get() {
+    }
 
-    public void delete()
-    {
+    public void delete() {
 
     }
 

@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by david on 2016/2/12.
  */
@@ -54,7 +52,7 @@ public class ClientTest {
             invoke(url);
 
 
-        Logger.getLogger(TAG).info("time use "+(System.currentTimeMillis()-time )+" with crypt:"+ ConstantData.IS_CRYPT_RESPONSE);
+        Logger.getLogger(TAG).info("time use "+(System.currentTimeMillis()-time )+" with crypt:"+ ConstantData.IS_CRYPT_JSON);
 
     }
     private void invoke(String url) throws HdException {

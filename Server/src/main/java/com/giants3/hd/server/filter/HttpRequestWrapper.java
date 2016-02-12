@@ -1,7 +1,5 @@
 package com.giants3.hd.server.filter;
 
-import sun.rmi.runtime.Log;
-
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -11,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * 所有请求封装类，   对于所有远程请求
  */
-@Deprecated
+
 public class HttpRequestWrapper extends HttpServletRequestWrapper {
     private static  final String TAG="HttpRequestWrapper";
     private String key;

@@ -6,10 +6,11 @@ import java.nio.charset.Charset;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import com.giants3.hd.server.crypt.AESUtil;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.crypt.CryptUtils;
 import com.google.gson.*;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -33,7 +34,7 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         private Gson _gson;
         private Type _type = null;
         private boolean _prefixJson = false;
-    private ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+    private static ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
 
     /**
          * Construct a new {@code GsonMessageConverter} with a default
@@ -134,30 +135,47 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
                 throws IOException, HttpMessageNotReadableException {
 
 
-            //解密
-            //String jsonC = AESUtil.decrypt(inputMessage.getBody());
-            Reader json = new InputStreamReader(inputMessage.getBody(),
-                    getCharset(inputMessage.getHeaders()));
 
-            try {
-                Type typeOfT = getType();
-                if (typeOfT != null) {
-                    return _gson.fromJson(json, typeOfT);
-                } else {
-                    return _gson.fromJson(json, clazz);
+
+            InputStream inputStream=inputMessage.getBody();
+            if(ConstantData.IS_CRYPT_JSON) {
+                synchronized (byteArrayOutputStream) {
+                    byteArrayOutputStream.reset();
+                    IOUtils.copy(inputStream, byteArrayOutputStream);
+                    inputStream.close();
+
+                    byte[] data = byteArrayOutputStream.toByteArray();
+                    byteArrayOutputStream.reset();
+                    data=CryptUtils.decryptDES(data, ConstantData.DES_KEY);
+
+                    inputStream = new ByteArrayInputStream(data);
+
                 }
-            } catch (JsonSyntaxException ex) {
-                throw new HttpMessageNotReadableException("Could not read JSON: "
-                        + ex.getMessage(), ex);
-            } catch (JsonIOException ex) {
-                throw new HttpMessageNotReadableException("Could not read JSON: "
-                        + ex.getMessage(), ex);
-            } catch (JsonParseException ex) {
-                throw new HttpMessageNotReadableException("Could not read JSON: "
-                        + ex.getMessage(), ex);
-            } finally {
-                setType(null);
             }
+                Reader json = new InputStreamReader(inputStream,
+                        getCharset(inputMessage.getHeaders()));
+
+                try {
+                    Type typeOfT = getType();
+                    if (typeOfT != null) {
+                        return _gson.fromJson(json, typeOfT);
+                    } else {
+                        return _gson.fromJson(json, clazz);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    throw new HttpMessageNotReadableException("Could not read JSON: "
+                            + ex.getMessage(), ex);
+                } catch (JsonIOException ex) {
+                    throw new HttpMessageNotReadableException("Could not read JSON: "
+                            + ex.getMessage(), ex);
+                } catch (JsonParseException ex) {
+                    throw new HttpMessageNotReadableException("Could not read JSON: "
+                            + ex.getMessage(), ex);
+                } finally {
+                    setType(null);
+                }
+
+
         }
 
         @Override
@@ -190,8 +208,10 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
                     writer.close();
 
-                    outputMessage.getBody().write(ConstantData.IS_CRYPT_RESPONSE?CryptUtils.encryptDES(byteArrayOutputStream.toByteArray(), ConstantData.DES_KEY):byteArrayOutputStream.toByteArray());
+                    byte[] data=byteArrayOutputStream.toByteArray();
                     byteArrayOutputStream.reset();
+                    outputMessage.getBody().write(ConstantData.IS_CRYPT_JSON ?CryptUtils.encryptDES(data, ConstantData.DES_KEY):data);
+
                 } catch (JsonIOException ex) {
                     throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "
                             + ex.getMessage(), ex);

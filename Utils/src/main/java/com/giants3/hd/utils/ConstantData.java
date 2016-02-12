@@ -18,5 +18,6 @@ public class ConstantData {
     /**
      * 是否对网络返回的结果 加密处理
      */
-    public static final boolean IS_CRYPT_RESPONSE=true;
+    public static final boolean IS_CRYPT_JSON =true;
+
 }

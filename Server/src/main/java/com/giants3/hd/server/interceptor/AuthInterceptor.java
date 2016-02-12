@@ -8,9 +8,7 @@ import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.crypt.CryptUtils;
 import com.giants3.hd.utils.entity.Session;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -76,7 +74,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 data.message="用户未登录，或者登录超时失效";
 
 
-                if(ConstantData.IS_CRYPT_RESPONSE)
+                if(ConstantData.IS_CRYPT_JSON)
                 {
 
                     response.getOutputStream().write(  CryptUtils.encryptDES(GsonUtils.toJson(data ).getBytes(GsonUtils.UTF_8), ConstantData.DES_KEY) );
