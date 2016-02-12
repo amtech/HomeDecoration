@@ -3,8 +3,10 @@ package com.giants3.hd.server.interceptor;
 
 import com.giants3.hd.server.repository.SessionRepository;
 import com.giants3.hd.server.utils.Constraints;
+import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.crypt.CryptUtils;
 import com.giants3.hd.utils.entity.Session;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 data.code=RemoteData.CODE_UNLOGIN;
                 data.message="用户未登录，或者登录超时失效";
 
-                response.getWriter().print(GsonUtils.toJson(data));
+
+                if(ConstantData.IS_CRYPT_RESPONSE)
+                {
+
+                    response.getOutputStream().write(  CryptUtils.encryptDES(GsonUtils.toJson(data ).getBytes(GsonUtils.UTF_8), ConstantData.DES_KEY) );
+                }else
+                {
+
+                    response.getOutputStream().write(GsonUtils.toJson(data ).getBytes(GsonUtils.UTF_8));
+                }
+
                  return false;
 
 

@@ -88,9 +88,11 @@ public class GsonUtils {
 //                 CHARSET_ISO );
     }
 
+    public static final String UTF_8="UTF-8";
 
-
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = Charset.forName(UTF_8);
 
     public static final Charset  CHARSET_ISO = Charset.forName("ISO-8859-1");
+
+
 }

@@ -109,7 +109,7 @@ public class Client {
     public String descryptResult(byte[] data, String encode) throws IOException {
 
 
-        data= CryptUtils.decryptDES(data, ConstantData.DES_KEY);
+        data= ConstantData.IS_CRYPT_RESPONSE?CryptUtils.decryptDES(data, ConstantData.DES_KEY):data;
         try {
             return new String(data,encode);
         } catch (UnsupportedEncodingException e) {

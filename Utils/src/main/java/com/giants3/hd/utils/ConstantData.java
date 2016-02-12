@@ -13,4 +13,10 @@ public class ConstantData {
 
 
     public static final String DES_KEY="d5b417051ca087f5a068f93b4769f654";
+
+
+    /**
+     * 是否对网络返回的结果 加密处理
+     */
+    public static final boolean IS_CRYPT_RESPONSE=true;
 }

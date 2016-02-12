@@ -222,7 +222,7 @@ public class CryptUtils {
      * @param bytes 字节数组
      * @return 十六进制字符串
      */
-    private static String byteArrayToHexString(byte[] bytes) {
+    public static String byteArrayToHexString(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             sb.append(byteToHexString(bytes[i]));
@@ -269,7 +269,7 @@ public class CryptUtils {
         String key= ConstantData.DES_KEY;
         System.out.println("DES密钥:\n" + key);
 
-        String word = "123";
+        String word = "{\"code\":2,\"message\":\"用户未登录，或者登录超时失效\",\"pageIndex\":0,\"pageCount\":1,\"pageSize\":1,\"datas\":[],\"totalCount\":0}";
 
 
         String encWord = encryptDES(word, key);

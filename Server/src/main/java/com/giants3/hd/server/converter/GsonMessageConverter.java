@@ -33,8 +33,9 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         private Gson _gson;
         private Type _type = null;
         private boolean _prefixJson = false;
+    private ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
 
-        /**
+    /**
          * Construct a new {@code GsonMessageConverter} with a default
          * {@link Gson#Gson() Gson}.
          */
@@ -165,33 +166,36 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
 
 
-            ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
 
-            OutputStreamWriter writer = new OutputStreamWriter(
-                    byteArrayOutputStream, getCharset(outputMessage.getHeaders()));
+            synchronized (byteArrayOutputStream) {
 
-            try {
-                if (this._prefixJson) {
-                    writer.append("{} && ");
+
+                byteArrayOutputStream.reset();
+                OutputStreamWriter writer = new OutputStreamWriter(
+                        byteArrayOutputStream, getCharset(outputMessage.getHeaders()));
+
+                try {
+                    if (this._prefixJson) {
+                        writer.append("{} && ");
+                    }
+                    Type typeOfSrc = getType();
+
+
+                    if (typeOfSrc != null) {
+                        _gson.toJson(o, typeOfSrc, writer);
+                    } else {
+
+                        _gson.toJson(o, writer);
+                    }
+
+                    writer.close();
+
+                    outputMessage.getBody().write(ConstantData.IS_CRYPT_RESPONSE?CryptUtils.encryptDES(byteArrayOutputStream.toByteArray(), ConstantData.DES_KEY):byteArrayOutputStream.toByteArray());
+                    byteArrayOutputStream.reset();
+                } catch (JsonIOException ex) {
+                    throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "
+                            + ex.getMessage(), ex);
                 }
-                Type typeOfSrc = getType();
-
-
-
-                if (typeOfSrc != null) {
-                    _gson.toJson(o, typeOfSrc, writer);
-                } else {
-
-                    _gson.toJson(o, writer);
-                }
-
-                writer.close();
-
-                outputMessage.getBody().write(CryptUtils.encryptDES(byteArrayOutputStream.toByteArray(), ConstantData.DES_KEY));
-                byteArrayOutputStream.close();
-            } catch (JsonIOException ex) {
-                throw new HttpMessageNotWritableException("Could not jxl.biff.biff JSON: "
-                        + ex.getMessage(), ex);
             }
         }
 
