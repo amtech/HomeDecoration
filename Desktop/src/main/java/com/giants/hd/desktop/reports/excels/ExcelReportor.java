@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.Number;
 import java.net.MalformedURLException;
 import java.net.URL;
 

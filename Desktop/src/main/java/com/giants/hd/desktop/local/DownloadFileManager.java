@@ -1,18 +1,12 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.utils.AccumulateMap;
-import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Singleton;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**

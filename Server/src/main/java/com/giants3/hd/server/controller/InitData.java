@@ -8,7 +8,6 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity.Module;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
-import java.util.jar.Attributes;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 

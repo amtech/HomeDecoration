@@ -14,3 +14,5 @@ gradle/
 sae/sae.iml
 appData/appData.iml
 domain/domain.iml
+common/common.iml
+domain/domain.iml

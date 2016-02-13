@@ -31,7 +31,7 @@ public class ClientTest {
     public void testGetWithStringReturned() throws Exception {
 
 
-     String url="http://127.0.0.1:8080/api/product/detail?id=4618&token=a55dbf9d9ec4716a5fd487f0b569829d&appVersion=55";
+        String url="http://127.0.0.1:8080/api/product/detail?id=4618&token=a55dbf9d9ec4716a5fd487f0b569829d&appVersion=55";
 
         invoke(url);
         invoke("http://127.0.0.1:8080/api/quotation/detail?id=100");

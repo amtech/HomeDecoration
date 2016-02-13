@@ -6,7 +6,6 @@ import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.MaterialClassTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.MaterialClass;

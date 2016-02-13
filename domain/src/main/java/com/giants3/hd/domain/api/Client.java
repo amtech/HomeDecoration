@@ -2,7 +2,7 @@ package com.giants3.hd.domain.api;
 
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.crypt.CryptUtils;
+import com.giants3.crypt.CryptUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

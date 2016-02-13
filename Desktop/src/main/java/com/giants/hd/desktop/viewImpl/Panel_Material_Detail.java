@@ -11,8 +11,6 @@ import com.giants3.hd.utils.entity.MaterialType;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.*;
 

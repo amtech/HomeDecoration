@@ -10,7 +10,6 @@ import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.entity.Xiankang;
 import com.giants3.hd.utils.entity.Xiankang_Jingza;
 import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Guice;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

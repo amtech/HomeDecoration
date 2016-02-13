@@ -1,11 +1,13 @@
-package com.giants3.hd.utils.crypt;
+package com.giants3.crypt;
 
 /**
+ *
+ * 加解密工具类
+ *
  * Created by david on 2016/2/11.
  */
 
-import com.giants3.hd.utils.ConstantData;
-import com.giants3.hd.utils.StringUtils;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -116,7 +118,7 @@ public class CryptUtils {
      */
     public static String decryptDES(String data, String key) {
         // 验证传入的字符串
-        if (StringUtils.isEmpty(data)) {
+        if ( isEmpty(data)) {
             return "";
         }
         // 调用解密方法完成解密
@@ -152,7 +154,7 @@ public class CryptUtils {
      */
     public static String encryptDES(String data, String key) {
         // 验证传入的字符串
-        if (StringUtils.isEmpty(data)) {
+        if ( isEmpty(data)) {
             return "";
         }
         // 调用加密方法完成加密
@@ -265,8 +267,8 @@ public class CryptUtils {
      * @param args
      */
     public static void main(String[] args) {
-       // String key = CryptUtils.init();
-        String key= ConstantData.DES_KEY;
+         String key = CryptUtils.init();
+
         System.out.println("DES密钥:\n" + key);
 
         String word = "{\"code\":2,\"message\":\"用户未登录，或者登录超时失效\",\"pageIndex\":0,\"pageCount\":1,\"pageSize\":1,\"datas\":[],\"totalCount\":0}";
@@ -276,5 +278,11 @@ public class CryptUtils {
 
         System.out.println(word + "\n加密后：\n" + encWord);
         System.out.println(word + "\n解密后：\n" + decryptDES(encWord, key));
+    }
+
+
+    private static boolean isEmpty(String data)
+    {
+        return data==null||data.trim().equals("");
     }
 }

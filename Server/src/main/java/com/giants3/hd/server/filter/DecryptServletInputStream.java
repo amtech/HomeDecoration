@@ -1,8 +1,7 @@
 package com.giants3.hd.server.filter;
 
 import com.giants3.hd.utils.ConstantData;
-import com.giants3.hd.utils.FileUtils;
-import com.giants3.hd.utils.crypt.CryptUtils;
+import com.giants3.crypt.CryptUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletInputStream;

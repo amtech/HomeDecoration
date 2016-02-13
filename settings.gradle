@@ -1,5 +1,4 @@
 rootProject.name = 'HomeDecoration'
 include ':Server',':Desktop',':Utils'
 include 'domain','appData'
-include 'sae'
-
+include 'sae','common'

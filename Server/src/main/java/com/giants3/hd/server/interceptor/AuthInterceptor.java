@@ -6,7 +6,7 @@ import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.crypt.CryptUtils;
+import com.giants3.crypt.CryptUtils;
 import com.giants3.hd.utils.entity.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
