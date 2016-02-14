@@ -53,7 +53,7 @@ public class AuthorityController extends  BaseController{
     @Autowired
     UserRepository userRepository;
 
-
+    @Autowired
     @Qualifier("CustomImplName")
     DataParser<User,AUser>  dataParser;
 

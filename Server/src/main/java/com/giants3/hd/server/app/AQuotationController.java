@@ -1,8 +1,8 @@
-package com.giants3.hd.server.controller;
+package com.giants3.hd.server.app;
 
 
+import com.giants3.hd.server.controller.BaseController;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.service.QuotationService;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,16 +25,12 @@ import java.util.logging.Logger;
  * 报价
  */
 @Controller
-@RequestMapping("/quotation")
-public class QuotationController extends BaseController {
+@RequestMapping("/app/quotation")
+public class AQuotationController extends BaseController {
 
 
     @Autowired
     private QuotationRepository quotationRepository;
-
-
-    @Autowired
-    private QuotationService quotationService;
     @Autowired
     private ProductRepository productRepository;
 
@@ -71,20 +67,17 @@ public class QuotationController extends BaseController {
     ) throws UnsupportedEncodingException {
 
 
-        return quotationService.search(searchValue,salesmanId,pageIndex,pageSize);
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        Page<Quotation> pageValue;
+        if (salesmanId < 0) {
+            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+        } else {
+            pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
 
+        }
+        List<Quotation> products = pageValue.getContent();
 
-//        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-//        Page<Quotation> pageValue;
-//        if (salesmanId < 0) {
-//            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
-//        } else {
-//            pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
-//
-//        }
-//        List<Quotation> products = pageValue.getContent();
-//
-//        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 
 
     }
