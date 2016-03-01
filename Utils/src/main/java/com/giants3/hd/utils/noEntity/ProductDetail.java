@@ -292,4 +292,67 @@ public class ProductDetail  implements Serializable {
         result = 31 * result + (packWages != null ? packWages.hashCode() : 0);
         return result;
     }
+
+
+    /**
+     * 擦除相关记录id 信息 使其处于新增状态
+     */
+    public void swipe()
+    {
+        product.id=0;
+        productLog=null;
+
+
+        product.xiankang.setId(0);
+        product.xiankang.xiankang_dengju.setId(0);
+        product.xiankang.xiankang_jiaju.setId(0);
+        product.xiankang.xiankang_jingza.setId(0);
+
+
+
+        for(ProductMaterial productMaterial:conceptusMaterials)
+        {
+            productMaterial.productId=0;
+            productMaterial.id=0;
+        }
+
+
+        for(ProductMaterial productMaterial:assembleMaterials)
+        {
+            productMaterial.productId=0;
+            productMaterial.id=0;
+        }
+
+        for(ProductPaint productPaint:paints)
+        {
+            productPaint.productId=0;
+            productPaint.id=0;
+        }
+
+
+        for(ProductWage productWage:conceptusWages)
+        {
+            productWage.productId=0;
+            productWage.id=0;
+        }
+
+        for(ProductWage productWage:assembleWages)
+        {
+            productWage.productId=0;
+            productWage.id=0;
+        }
+
+        for(ProductMaterial productMaterial:packMaterials)
+        {
+            productMaterial.productId=0;
+            productMaterial.id=0;
+        }
+
+        for(ProductWage productWage:packWages)
+        {
+            productWage.productId=0;
+            productWage.id=0;
+        }
+
+    }
 }

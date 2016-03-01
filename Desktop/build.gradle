@@ -1,8 +1,9 @@
 apply plugin: 'java'
+ apply plugin: 'application'
 
 compileJava.options.encoding = 'UTF-8'
 
-
+ mainClassName="com.giants.hd.desktop.frames.Main"
 tasks.withType(org.gradle.api.tasks.compile.JavaCompile) {
     options.encoding = 'UTF-8'
 }

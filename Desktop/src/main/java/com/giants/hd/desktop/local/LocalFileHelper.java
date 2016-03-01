@@ -1,6 +1,9 @@
 package com.giants.hd.desktop.local;
 
+import com.giants3.hd.utils.DateFormats;
+
 import java.io.*;
+import java.util.Calendar;
 
 /**
  *
@@ -67,6 +70,28 @@ public class LocalFileHelper {
         return result;
     }
 
+
+    public static final void printThrowable(Throwable e)
+    {
+
+        FileOutputStream fos= null;
+        try {
+            fos = new FileOutputStream(new File(path, ("log_"+DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS_LOG.format(Calendar.getInstance().getTime())+".txt")));
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        if(fos!=null) {
+            PrintStream printStream = new PrintStream(fos);
+            e.printStackTrace(printStream);
+            printStream.close();
+            try {
+                fos.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+        }
+    }
 
 
 }

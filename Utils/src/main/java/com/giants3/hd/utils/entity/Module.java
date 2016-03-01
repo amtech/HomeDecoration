@@ -150,6 +150,10 @@ public class Module implements Serializable{
 
     public static final String NAME_PACK_MATERIAL_CLASS="PackMaterialClass";
     public static final String TITLE_PACK_MATERIAL_CLASS="包装材料类型";
+
+    public static final String NAME_PACK_MATERIAL_TEMPLATE="PackMaterialTemplate";
+    public static final String TITLE_PACK_MATERIAL_TEMPLATE="包装默认模板";
+
     public static final String NAME_CUSTOMER="Customer";
     public static final String TITLE_CUSTOMER="客户";
 

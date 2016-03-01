@@ -32,7 +32,7 @@ public class PackMaterialClassDialog extends BaseSimpleDialog<PackMaterialClass>
     public PackMaterialClassDialog(Window window) {
         super(window);
 
-        setTitle("包装材料类型");
+        setTitle("包装录入模板");
         setContentPane(contentPane);
         model=new PackMaterialClassTableModel();
         jt.setModel(model);

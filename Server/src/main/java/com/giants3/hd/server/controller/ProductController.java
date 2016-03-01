@@ -8,6 +8,7 @@ import com.giants3.hd.appdata.AProduct;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.server.utils.FileUtils;
@@ -71,6 +72,9 @@ public class ProductController extends BaseController {
     @Value("${deleteProductFilePath}")
     private String deleteProductPath;
 
+    @Autowired
+    ProductService productService;
+
 
     //临时文件夹
     @Value("${tempfilepath}")
@@ -114,7 +118,7 @@ public class ProductController extends BaseController {
     ) throws UnsupportedEncodingException {
 
 
-        return searchProductList(prd_name,pageIndex,pageSize);
+        return productService.searchProductList(prd_name,pageIndex,pageSize);
 
 
 
@@ -139,7 +143,7 @@ public class ProductController extends BaseController {
 
 
 
-        RemoteData<Product> productRemoteData=searchProductList(name,pageIndex,pageSize);
+        RemoteData<Product> productRemoteData=productService.searchProductList(name,pageIndex,pageSize);
         RemoteData<AProduct> result= RemoteDataParser.parse(productRemoteData, dataParser);
 
 
@@ -150,21 +154,7 @@ public class ProductController extends BaseController {
     }
 
 
-    private  RemoteData<Product>  searchProductList(String name,int pageIndex,int pageSize)
-    {
 
-        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        String likeValue="%" + name.trim() + "%";
-        Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue,likeValue, pageable);
-
-        List<Product> products = pageValue.getContent();
-
-
-        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
-
-
-
-    }
 
 
     @RequestMapping(value = "/loadByNameBetween", method = {RequestMethod.GET, RequestMethod.POST})
@@ -315,7 +305,7 @@ public class ProductController extends BaseController {
 
 
 
-        ProductDetail detail=findProductDetailById(productId);
+        ProductDetail detail=productService.findProductDetailById(productId);
 
         if(detail==null)
         {
@@ -329,108 +319,6 @@ public class ProductController extends BaseController {
     }
 
 
-    /**
-     * 根据产品id 查询产品详情
-     * @param productId
-     * @return
-     */
-    public   ProductDetail  findProductDetailById(  long productId) {
-
-
-
-        //读取产品信息
-        Product product = productRepository.findOne(productId);
-        if (product == null) {
-            return null;
-
-
-        }
-
-        ProductDetail detail = new ProductDetail();
-
-
-        detail.product = product;
-
-        detail.productLog=productLogRepository.findFirstByProductIdEquals(productId);
-
-
-
-
-        //读取材料列表信息
-        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-
-        List<ProductMaterial> conceptusCost = new ArrayList<>();
-        List<ProductMaterial> assemblesCost = new ArrayList<>();
-        List<ProductMaterial> packCost = new ArrayList<>();
-
-
-        for (ProductMaterial productMaterial : productMaterials) {
-
-            switch ((int) productMaterial.flowId) {
-                case Flow.FLOW_CONCEPTUS:
-                    conceptusCost.add(productMaterial);
-                    break;
-
-                case Flow.FLOW_PAINT:
-
-                    break;
-
-                case Flow.FLOW_ASSEMBLE:
-                    assemblesCost.add(productMaterial);
-                    break;
-
-                case Flow.FLOW_PACK:
-                    packCost.add(productMaterial);
-                    break;
-            }
-
-        }
-        detail.conceptusMaterials = conceptusCost;
-        detail.assembleMaterials = assemblesCost;
-        detail.packMaterials=packCost;
-
-
-
-
-        //读取工资数据
-        List<ProductWage> productWages = productWageRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-        List<ProductWage> conceptusWage = new ArrayList<>();
-        List<ProductWage> assemblesWage = new ArrayList<>();
-        List<ProductWage> packWages=new ArrayList<>();
-        for (ProductWage productWage : productWages) {
-
-            switch ((int) productWage.flowId) {
-                case Flow.FLOW_CONCEPTUS:
-                    conceptusWage.add(productWage);
-                    break;
-
-                case Flow.FLOW_PAINT:
-
-                    break;
-
-                case Flow.FLOW_ASSEMBLE:
-                    assemblesWage.add(productWage);
-                    break;
-
-                case Flow.FLOW_PACK:
-                    packWages.add(productWage);
-                    break;
-            }
-
-        }
-
-
-        detail.conceptusWages = conceptusWage;
-        detail.assembleWages = assemblesWage;
-        detail.packWages=packWages;
-
-        //读取油漆列表信息
-        detail.paints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-
-
-        return detail;
-
-    }
 
 
     /**
@@ -1032,7 +920,7 @@ public class ProductController extends BaseController {
 
 
 
-        ProductDetail detail=findProductDetailById(productId);
+        ProductDetail detail=productService.findProductDetailById(productId);
 
 
         //查询是否有关联的报价单
@@ -1308,5 +1196,30 @@ public class ProductController extends BaseController {
 
     }
 
+
+    /**
+     * 读取包装模板数据
+     *
+     * @return
+     */
+    @RequestMapping(value = "/listProductPackTemplate", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ProductMaterial> listProductPackTemplate(  ) {
+
+
+
+        List<ProductMaterial> productMaterials=productMaterialRepository.findByProductIdEqualsAndFlowIdEquals(0, Flow.FLOW_PACK);
+
+        if(productMaterials==null)
+        {
+            return wrapError("数据异常");
+        }
+
+
+
+        return wrapData(productMaterials);
+
+    }
 
 }

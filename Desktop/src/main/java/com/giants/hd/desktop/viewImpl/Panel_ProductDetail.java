@@ -20,11 +20,9 @@ import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.*;
+import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
@@ -1311,6 +1309,8 @@ public class Panel_ProductDetail extends BasePanel {
 
         panel_delete.setVisible(false);
         panel_nomal.setVisible(false);
+
+        tf_product.setToolTipText("以【"+ConstantData.DEMO_PRODUCT_NAME+"】开头的货号，将会默认选为套版使用。");
 
 
         //咸康信息 默认不显示

@@ -3,6 +3,7 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.server.repository.QuotationRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,14 @@ public class QuotationService extends AbstractService implements InitializingBea
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 
 
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public QuotationDetail loadAQuotationDetail(long id) {
+        return null;
     }
 }

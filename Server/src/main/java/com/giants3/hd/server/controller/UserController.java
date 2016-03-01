@@ -1,25 +1,31 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 
 
 import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.Remote;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
-* Created by Administrator on 2014/9/18.
-*/
+ * Created by Administrator on 2014/9/18.
+ */
 @Controller
 @RequestMapping("/user")
-public class UserController extends  BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     private UserRepository userRepository;
@@ -44,22 +50,24 @@ public class UserController extends  BaseController{
     private PackMaterialTypeRepository packMaterialTypeRepository;
 
     @Autowired
-    private PackRepository   packRepository;
+    private PackRepository packRepository;
 
     @Autowired
-    private ProductClassRepository   productClassRepository;
+    private ProductClassRepository productClassRepository;
 
     @Autowired
-    private MaterialClassRepository   materialClassRepository;
+    private MaterialClassRepository materialClassRepository;
 
     @Autowired
-    private GlobalDataRepository   globalDataRepository;
-
+    private GlobalDataRepository globalDataRepository;
 
     @Autowired
-    private FactoryRepository   factoryRepository;
+    private ProductService productService;
     @Autowired
-    private QuoteAuthRepository   quoteAuthRepository;
+    private FactoryRepository factoryRepository;
+    @Autowired
+    private QuoteAuthRepository quoteAuthRepository;
+
     @RequestMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId) {
 
@@ -76,47 +84,38 @@ public class UserController extends  BaseController{
         return "redirect:/";
     }
 
-    @RequestMapping(value="/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<User> list( )   {
-        return  wrapData(userRepository.findAll());
+    RemoteData<User> list() {
+        return wrapData(userRepository.findAll());
     }
 
 
-    @RequestMapping(value = "/saveList",method = RequestMethod.POST)
+    @RequestMapping(value = "/saveList", method = RequestMethod.POST)
     @Transactional
     public
     @ResponseBody
-    RemoteData<User> saveList(@RequestBody List<User> users )   {
+    RemoteData<User> saveList(@RequestBody List<User> users) {
 
-        for(User user :users)
-        {
-
+        for (User user : users) {
 
 
-
-            User oldData=userRepository.findOne(user.id);
-            if(oldData==null)
-            {
-                user.id=-1;
+            User oldData = userRepository.findOne(user.id);
+            if (oldData == null) {
+                user.id = -1;
 
 
                 //如果是空数据  略过添加
-                if(user.isEmpty())
-                {
+                if (user.isEmpty()) {
                     continue;
                 }
 
 
-
-            }else
-            {
+            } else {
 
 
-
-
-                user.id=oldData.id;
+                user.id = oldData.id;
 
             }
 
@@ -126,86 +125,92 @@ public class UserController extends  BaseController{
         }
 
 
-
         return list();
     }
 
 
-
-
-    @RequestMapping(value = "/initData",method = RequestMethod.POST)
+    @RequestMapping(value = "/initData", method = RequestMethod.POST)
     @Transactional
     public
     @ResponseBody
-    RemoteData<BufferData> initData(@RequestBody User user )   {
+    RemoteData<BufferData> initData(@RequestBody User user) {
 
 
-        BufferData bufferData=new BufferData();
-        bufferData.authorities=authorityRepository.findByUser_IdEquals(user.id);
-        bufferData.customers=customerRepository.findAll();
+        BufferData bufferData = new BufferData();
+        bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
+        bufferData.customers = customerRepository.findAll();
 
-        bufferData.materialClasses=materialClassRepository.findAll();
-        bufferData.packMaterialClasses=packMaterialClassRepository.findAll();
-        bufferData.packMaterialPositions=packMaterialPositionRepository.findAll();
+        bufferData.materialClasses = materialClassRepository.findAll();
+        bufferData.packMaterialClasses = packMaterialClassRepository.findAll();
+        bufferData.packMaterialPositions = packMaterialPositionRepository.findAll();
 
-        bufferData.materialTypes=materialTypeRepository.findAll();
-        bufferData.packMaterialTypes=packMaterialTypeRepository.findAll();
-        bufferData.packs=packRepository.findAll();
-        bufferData.pClasses=productClassRepository.findAll();
-        bufferData.salesmans=userRepository.findByIsSalesman(true);
-        QuoteAuth quoteAuth=quoteAuthRepository.findFirstByUser_IdEquals(user.id);
-        if(quoteAuth==null)
-        {
-            quoteAuth=new QuoteAuth();
-            quoteAuth.user=user;
+        bufferData.materialTypes = materialTypeRepository.findAll();
+        bufferData.packMaterialTypes = packMaterialTypeRepository.findAll();
+        bufferData.packs = packRepository.findAll();
+        bufferData.pClasses = productClassRepository.findAll();
+        bufferData.salesmans = userRepository.findByIsSalesman(true);
+        QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
+        if (quoteAuth == null) {
+            quoteAuth = new QuoteAuth();
+            quoteAuth.user = user;
         }
-        bufferData.quoteAuth=quoteAuth;
-
+        bufferData.quoteAuth = quoteAuth;
 
 
         //读取第一条数据   总共就一条
-        bufferData.globalData=globalDataRepository.findAll().get(0);
-        bufferData.factories=factoryRepository.findAll();
+        bufferData.globalData = globalDataRepository.findAll().get(0);
+        bufferData.factories = factoryRepository.findAll();
+        List<ProductDetail> demos = new ArrayList<>();
+        ProductDetail productDetail = null;
+        RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);
+        if (result.isSuccess() && result.totalCount > 0) {
+
+            int size = result.datas.size();
+            for (int i = 0; i < size; i++) {
+                productDetail = productService.findProductDetailById(result.datas.get(i).id);
+                if (productDetail != null) {
+                    //擦除去记录信息
+                    productDetail= (ProductDetail)ObjectUtils.deepCopy(productDetail);
+                    productDetail.swipe();
+                    demos.add(productDetail);
+                }
+
+            }
+
+        }
+        bufferData.demos = demos;
 
 
         return wrapData(bufferData);
     }
 
-    @RequestMapping(value = "/updatePassword",method = RequestMethod.POST)
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     @Transactional
     public
     @ResponseBody
-    RemoteData<Void> updatePassword(@RequestBody String[] map )   {
+    RemoteData<Void> updatePassword(@RequestBody String[] map) {
 
 
-        long userId= Long.valueOf(map[0]);
-        String oldPassword  = map[1];
-        String newPassword= map[2];
-     User user=userRepository.findOne(userId);
-        if(user!=null)
-        {
+        long userId = Long.valueOf(map[0]);
+        String oldPassword = map[1];
+        String newPassword = map[2];
+        User user = userRepository.findOne(userId);
+        if (user != null) {
 
-            if(user.password.equals(oldPassword))
-            {
+            if (user.password.equals(oldPassword)) {
 
-                user.password=newPassword;
+                user.password = newPassword;
                 userRepository.save(user);
-                return wrapData( );
-            }else
-            {
-                return   wrapError("旧密码错误");
+                return wrapData();
+            } else {
+                return wrapError("旧密码错误");
             }
 
 
-        }else
-        {
+        } else {
 
-          return   wrapError("要修改的员工不存在");
+            return wrapError("要修改的员工不存在");
         }
-
-
-
-
 
 
     }

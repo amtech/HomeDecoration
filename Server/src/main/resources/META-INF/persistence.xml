@@ -27,7 +27,7 @@
             <property name="hibernate.connection.username" value="sa" />
             <property name="hibernate.connection.password" value="11111111" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
-            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
 

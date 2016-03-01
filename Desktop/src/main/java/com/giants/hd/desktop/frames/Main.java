@@ -3,6 +3,7 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.MyDesktopManager;
 import com.giants.hd.desktop.MyLogger;
 import com.giants.hd.desktop.local.ImageLoader;
+import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
@@ -28,6 +29,7 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+import org.slf4j.LoggerFactory;
 import rx.Subscriber;
 //import org.apache.commons.logging.Log;
 
@@ -97,9 +99,18 @@ public class Main extends BaseFrame {
         Guice.createInjector().injectMembers(this);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread t, Throwable e) {
+
+                LocalFileHelper.printThrowable(e);
+                e.printStackTrace();
+                System.exit(1);
+            }
+        });
+        //throw new RuntimeException("aaaaaaaaaaaaaaaa");
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -110,6 +121,8 @@ public class Main extends BaseFrame {
 
             }
         });
+
+
 
 
 
@@ -617,6 +630,23 @@ public class Main extends BaseFrame {
         }
 
 
+
+
+//       // if(AuthorityUtil.getInstance().viewPackMaterialClassList()) {
+//            menuItem = new JMenuItem(Module.TITLE_PACK_MATERIAL_TEMPLATE
+//            );
+//            menu.add(menuItem);
+//
+//
+//            menuItem.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    PackMaterialTemplateDialog dialog = new PackMaterialTemplateDialog(Main.this);
+//                    dialog.setLocationRelativeTo(getRootPane());
+//                    dialog.setVisible(true);
+//                }
+//            });
+//      //   }
 
         return menu;
     }

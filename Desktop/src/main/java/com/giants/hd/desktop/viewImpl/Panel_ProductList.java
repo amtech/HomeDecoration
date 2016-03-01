@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.dialogs.ProductTemplateDialog;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
@@ -7,8 +8,11 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,7 +38,7 @@ public class Panel_ProductList extends BasePanel {
     private JLabel product_title;
     private JTextField productName;
     private JTable productTable;
-    private JButton bn_add;
+    private JButton btn_add;
     private Panel_Page pagePanel;
 
 
@@ -63,7 +67,51 @@ public class Panel_ProductList extends BasePanel {
             }
         });
 
+        //添加按钮事件
+        btn_add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+
+
+                if(CacheManager.getInstance().bufferData.demos!=null&& CacheManager.getInstance().bufferData.demos.size()>0)
+                {
+                    int size= CacheManager.getInstance().bufferData.demos.size();
+                    if(size==1)
+                    {
+                        ProductDetail detail=CacheManager.getInstance().bufferData.demos.get(0);
+                        detail=  (ProductDetail) ObjectUtils.deepCopy(detail);
+                        detail.product.name="";
+                        HdSwingUtils.showDetailPanel(SwingUtilities.getWindowAncestor(getRoot()),detail );
+                    }else
+                    {
+
+                        ProductTemplateDialog dialog=    new ProductTemplateDialog(getWindow()) ;
+
+                        dialog.setVisible(true);
+                        ProductDetail detail=dialog.getResult();
+                        if(detail!=null)
+                        {
+                            detail=  (ProductDetail) ObjectUtils.deepCopy(detail);
+                            detail.product.name="";
+                            HdSwingUtils.showDetailPanel(SwingUtilities.getWindowAncestor(getRoot()),detail );
+                        }
+
+                    }
+
+
+
+                }else
+                {
+                    HdSwingUtils.showDetailPanel(null, getRoot());
+                }
+
+
+
+
+
+            }
+        });
         productTable.setModel(tableModel);
 
 
@@ -96,17 +144,7 @@ public class Panel_ProductList extends BasePanel {
         });
 
 
-        //添加按钮事件
-        bn_add.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-
-                HdSwingUtils.showDetailPanel(null, getRoot());
-
-
-            }
-        });
 
 
         pagePanel.setListener(new PageListener() {
@@ -125,7 +163,7 @@ public class Panel_ProductList extends BasePanel {
         });
 
 
-        bn_add.setVisible(AuthorityUtil.getInstance().addProduct());
+        btn_add.setVisible(AuthorityUtil.getInstance().addProduct());
 
 
     }

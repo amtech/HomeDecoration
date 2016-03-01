@@ -38,6 +38,10 @@ public class BufferData implements Serializable{
 
     public  GlobalData globalData;
 
+    /**
+     * 产品录入的模板数据
+     */
+    public List<ProductDetail> demos;
 
     public List<Factory> factories;
 }

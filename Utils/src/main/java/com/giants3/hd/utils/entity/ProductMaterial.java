@@ -782,6 +782,7 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 	public void updateBAOLILONGQuota(Product product,ProductMaterial waixiang )
 	{
 
+		if(product==null) return;
 		float waixiangLong=waixiang.pLong;
 		float waixiangWidth=waixiang.pWidth;
 		float waixiangHeight=waixiang.pHeight;

@@ -28,6 +28,8 @@ public class RemoteData<T> implements Serializable{
     public int totalCount;
 
 
+
+    public boolean isTest=ConstantData.FOR_TEST;
     public String token;
 
 

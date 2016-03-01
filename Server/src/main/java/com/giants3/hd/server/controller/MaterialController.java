@@ -4,6 +4,7 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 
+import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
@@ -70,7 +71,7 @@ public class MaterialController extends BaseController {
 
 
     @Autowired
-    private ProductController productController;
+    private ProductService productService;
 
  @Autowired
     private GlobalDataRepository globalDataRepository;
@@ -451,7 +452,7 @@ public class MaterialController extends BaseController {
             for(long productId:productIds) {
 
 
-                ProductDetail productDetail=   productController.findProductDetailById(productId);
+                ProductDetail productDetail=   productService.findProductDetailById(productId);
                 if(productDetail!=null) {
                     productDetail.updateProductStatistics(globalData);
                     productRepository.save(productDetail.product);
