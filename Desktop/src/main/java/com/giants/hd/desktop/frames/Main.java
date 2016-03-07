@@ -1,10 +1,8 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.MyDesktopManager;
-import com.giants.hd.desktop.MyLogger;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.local.LocalFileHelper;
-import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
@@ -15,13 +13,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ShortcutHelper;
-import com.giants.hd.desktop.viewImpl.Panel_Material;
-import com.giants.hd.desktop.viewImpl.Panel_ProductList;
-import com.giants.hd.desktop.viewImpl.Panel_Quotation;
 import com.giants.hd.desktop.widget.BackgroundPainter;
-import com.giants3.hd.domain.interractor.UseCase;
-import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.domain.repository.ProductRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
@@ -29,8 +21,6 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-import org.slf4j.LoggerFactory;
-import rx.Subscriber;
 //import org.apache.commons.logging.Log;
 
 
@@ -460,7 +450,7 @@ public class Main extends BaseFrame {
                 public void actionPerformed(ActionEvent e) {
 
                     ProductReportDialog dialog = new ProductReportDialog(Main.this);
-                    dialog.setLocationRelativeTo(getRootPane());
+//                    dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
 
 

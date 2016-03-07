@@ -107,4 +107,9 @@ public class UseCaseFactory  {
         return new HdTaskLogListUseCase(Schedulers.newThread(),Schedulers.immediate(),  taskId,taskLogRepository);
 
     }
+
+    public UseCase createProductByNameRandom(String productList) {
+
+        return new ProductRandomUseCase( Schedulers.newThread()    ,Schedulers.immediate(),productList, new ProductRepositoryImpl());
+    }
 }

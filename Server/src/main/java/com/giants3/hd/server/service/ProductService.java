@@ -2,6 +2,7 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -13,8 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * quotation 业务处理 类
@@ -24,10 +24,8 @@ import java.util.List;
 public class ProductService extends AbstractService implements InitializingBean, DisposableBean {
 
 
-
     @Autowired
     private ProductRepository productRepository;
-
 
 
     @Autowired
@@ -44,6 +42,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     private XiankangRepository xiankangRepository;
     @Autowired
     private OperationLogRepository operationLogRepository;
+
     @Override
     public void destroy() throws Exception {
 
@@ -55,12 +54,11 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-    public  RemoteData<Product>  searchProductList(String name, int pageIndex, int pageSize)
-    {
+    public RemoteData<Product> searchProductList(String name, int pageIndex, int pageSize) {
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        String likeValue="%" + name.trim() + "%";
-        Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue,likeValue, pageable);
+        String likeValue = "%" + name.trim() + "%";
+        Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue, likeValue, pageable);
 
         List<Product> products = pageValue.getContent();
 
@@ -68,17 +66,16 @@ public class ProductService extends AbstractService implements InitializingBean,
         return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
 
 
-
     }
 
 
     /**
      * 根据产品id 查询产品详情
+     *
      * @param productId
      * @return
      */
     public ProductDetail findProductDetailById(long productId) {
-
 
 
         //读取产品信息
@@ -94,9 +91,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         detail.product = product;
 
-        detail.productLog=productLogRepository.findFirstByProductIdEquals(productId);
-
-
+        detail.productLog = productLogRepository.findFirstByProductIdEquals(productId);
 
 
         //读取材料列表信息
@@ -130,16 +125,14 @@ public class ProductService extends AbstractService implements InitializingBean,
         }
         detail.conceptusMaterials = conceptusCost;
         detail.assembleMaterials = assemblesCost;
-        detail.packMaterials=packCost;
-
-
+        detail.packMaterials = packCost;
 
 
         //读取工资数据
         List<ProductWage> productWages = productWageRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
         List<ProductWage> conceptusWage = new ArrayList<>();
         List<ProductWage> assemblesWage = new ArrayList<>();
-        List<ProductWage> packWages=new ArrayList<>();
+        List<ProductWage> packWages = new ArrayList<>();
         for (ProductWage productWage : productWages) {
 
             switch ((int) productWage.flowId) {
@@ -165,7 +158,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         detail.conceptusWages = conceptusWage;
         detail.assembleWages = assemblesWage;
-        detail.packWages=packWages;
+        detail.packWages = packWages;
 
         //读取油漆列表信息
         detail.paints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
@@ -175,4 +168,39 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     }
 
+    /**
+     * 随机读取
+     * @param productNames
+     * @return
+     */
+    public RemoteData<Product> loadProductByNameRandom(String productNames) {
+
+        String[] productNameArray = productNames.split(",|，");
+        //保证不重复
+        Set<Product> products = new HashSet<>();
+        for (String s : productNameArray) {
+            String trimS = s.trim();
+            if (StringUtils.isEmpty(trimS))
+                continue;
+
+            if (trimS.contains("_") || trimS.contains("-")) {
+                String[] dividerParts = trimS.split("_|-");
+                Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(dividerParts[0], dividerParts[1]);
+                if (product != null) {
+                    products.add(product);
+                }
+
+            } else {
+                List<Product> subProductSet = productRepository.findByNameEquals(trimS);
+                products.addAll(subProductSet);
+            }
+
+
+
+
+        }
+        List<Product> result = new ArrayList<>(products.size());
+        result.addAll(products);
+        return wrapData(result);
+    }
 }

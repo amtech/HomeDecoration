@@ -1687,4 +1687,20 @@ public class ApiManager {
         return remoteData;
 
     }
+
+    /**
+     * 随机读取产品列表。
+     * @param productNames 产品名称，以逗号隔开。
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Product> loadProductListByNameRandom(String productNames) throws HdException {
+
+        String url = HttpUrl.loadProductListByNameRandom( );
+        String result = client.postWithStringReturned(url,GsonUtils.toJson(productNames));
+        RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
+
+        return productRemoteData;
+
+    }
 }

@@ -24,7 +24,7 @@ public class ConstantData {
     public static final String  DEMO_PRODUCT_NAME="产品套版";
 
 
-    public static final boolean FOR_TEST=true;
+    public static final boolean FOR_TEST=false;
     ;
 
 }

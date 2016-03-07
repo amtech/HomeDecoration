@@ -3,25 +3,19 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Flow;
 import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductMaterial;
-import com.giants3.hd.utils.entity.ProductWage;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * quotation 业务处理 类
+ * Erp 业务处理 类
  * Created by david on 2016/2/15.
  */
 @Service
@@ -31,6 +25,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     ErpOrderRepository repository;
 
     EntityManager manager;
+
+    @Autowired
+    ProductRepository productRepository;
 
 
     @Override
@@ -52,8 +49,35 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<ErpOrder> findByKey(String key,int pageIndex,int pageSize)
     {
 
-      List<ErpOrder> orders=  repository.findOrders(key,pageIndex,pageSize);
-        return wrapData(orders);
+
+        List<ErpOrder>  result=  repository.findOrders(key,pageIndex,pageSize);
+
+        int totalCount=  repository.getOrderCountByKey(key );
+        return wrapData(pageIndex,pageSize,(totalCount-1)/pageSize+1,totalCount, result );
+
+    }
+
+
+    public RemoteData<ErpOrderItem> findItemsByOrderNo(String orderNo )
+    {
+
+        List<ErpOrderItem> orderItems=  repository.findItemsByOrderNo(orderNo);
+        //从报价系统读取产品的单位信息，图片信息
+        for(ErpOrderItem item:orderItems)
+        {
+
+
+            Product  product=   productRepository.findFirstByNameEqualsAndPVersionEquals(item.prd_name,"");
+          //  item.prd_no
+
+            if(product!=null)
+            {
+                item.ut=product.pUnitName;
+                item.url=product.url;
+            }
+        }
+
+        return wrapData(orderItems);
 
     }
 

@@ -52,4 +52,38 @@ public class ProductRepositoryImpl implements ProductRepository {
             }
         });
     }
+
+    @Override
+    public Observable<List<Product>> loadByProductNameRandom(final String productNames) {
+        return Observable.create(new Observable.OnSubscribe<List<Product>>() {
+            @Override
+            public void call(Subscriber<? super List<Product>> subscriber) {
+
+
+
+                ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
+                try {
+                    RemoteData<Product> remoteData= apiManager.loadProductListByNameRandom(productNames);
+
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData.datas );
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
 }

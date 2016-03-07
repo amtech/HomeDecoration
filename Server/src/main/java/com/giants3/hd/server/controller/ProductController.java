@@ -189,6 +189,22 @@ public class ProductController extends BaseController {
 
     }
 
+
+    @RequestMapping(value = "/loadByNameRandom", method = { RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<Product> loadByNameBetween(@RequestBody String productNames
+
+    )  {
+
+      return  productService.loadProductByNameRandom(productNames);
+
+
+
+
+
+    }
+
     @RequestMapping(value = "/searchByName", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody

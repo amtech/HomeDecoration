@@ -772,4 +772,8 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/product/saveProductPackTemplate");
     }
+
+    public static String loadProductListByNameRandom() {
+        return additionInfo(BaseUrl + "api/product/loadByNameRandom");
+    }
 }
