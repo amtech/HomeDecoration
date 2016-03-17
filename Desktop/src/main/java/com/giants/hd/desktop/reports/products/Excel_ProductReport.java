@@ -3,6 +3,7 @@ package com.giants.hd.desktop.reports.products;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
@@ -18,6 +19,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,6 +104,18 @@ public class Excel_ProductReport {
 
             setCellValue(sheet, product.price, 21, rowUpdate);
 
+
+
+            try{
+                //缓存图片
+                if(!StringUtils.isEmpty(product.url)) {
+                    String file = ImageLoader.getInstance().cacheFile(HttpUrl.loadProductPicture(product.url));
+                    String basePath=new File("").getAbsolutePath();
+                    FileUtils.copyFile(new File(path + File.separator + product.name + (StringUtils.isEmpty(product.pVersion) ? "" : "_" + product.pVersion) + ".JPG"), new File(basePath + File.separator + file));
+                }
+            }catch (Throwable t)
+            {}
+
         }
 
         String fileName= DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime())+".xls";
@@ -128,7 +142,10 @@ public class Excel_ProductReport {
 
 
 
-        String fileName=path + File.separator + DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime())+".xls";
+        Date time=Calendar.getInstance().getTime();
+        String fileName=path + File.separator + DateFormats.FORMAT_YYYY_MM_DD.format(time)+"_"+time.getTime()+".xls";
+
+
 
         write(workbook, new File( fileName));
 
@@ -186,11 +203,16 @@ public class Excel_ProductReport {
 
             try{
                 //缓存图片
-          String file=  ImageLoader.getInstance().cacheFile(HttpUrl.loadProductPicture(product.url));
-            //存放图片绝对路径
-            setCellValue(sheet, basePath+ File.separator+file, 100, writeRow);
-            }catch (Throwable t)
+                if(!StringUtils.isEmpty(product.url)) {
+                    String file = ImageLoader.getInstance().cacheFile(HttpUrl.loadProductPicture(product.url));
+                    //存放图片绝对路径
+                    setCellValue(sheet, basePath + File.separator + file, 100, writeRow);
+
+                    FileUtils.copyFile(new File(path + File.separator + product.name + (StringUtils.isEmpty(product.pVersion) ? "" : "_" + product.pVersion) + ".JPG"), new File(basePath + File.separator + file));
+                }
+           }catch (Throwable t)
             {}
+
 
 
          //  boolean added=product.photo==null?false: addPicture(workbook,sheet,HttpUrl.loadProductPicture(product.name,product.pVersion),0,rowUpdate,1,rowUpdate+1,400);

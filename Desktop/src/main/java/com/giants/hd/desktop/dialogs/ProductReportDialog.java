@@ -2,12 +2,15 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.HdSwingUtils;
+import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.viewImpl.LoadingDialog;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -21,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ProductReportDialog extends BaseDialog<Void> {
     private JPanel contentPane;
@@ -32,7 +36,8 @@ public class ProductReportDialog extends BaseDialog<Void> {
     private JHdTable jt;
     private JButton export1;
     private JTextField tf_random;
-    private JButton search_random;
+
+    private JTabbedPane tabbedPane1;
     ProductTableModel model;
 
 
@@ -81,7 +86,71 @@ public class ProductReportDialog extends BaseDialog<Void> {
                 }
 
             }
-        });
+
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e);
+            showMenu(e);
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mouseReleased(e);
+            showMenu(e);
+
+        }
+
+    private void showMenu(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+         final   JTable table = (JTable) e.getSource();
+            JPopupMenu menu = new JPopupMenu();
+
+
+            JMenuItem deleteItem = new JMenuItem("删除 ");
+            deleteItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(products==null) return;
+                    int tableRow[]= JTableUtils.getSelectedRowSOnModel(table);
+
+                    if(tableRow.length==0 )
+                    {
+                        JOptionPane.showMessageDialog(table,"请选择行进行删除。");
+                        return;
+                    }
+
+
+
+                    if (table.getModel() instanceof BaseTableModel) {
+                        BaseTableModel model = (BaseTableModel) table.getModel();
+                        for(int i:tableRow)
+                        {
+                            products.remove(model.getItem(i));
+                        }
+                        model.setDatas(products);
+
+
+                    }
+
+
+                }
+            });
+            menu.add(deleteItem);
+
+
+            menu.show(e.getComponent(), e.getX(), e.getY());
+
+        }
+    }
+                            }
+        );
+
+
+
+        //添加行删除。
+
 
         search.addActionListener(new ActionListener() {
             @Override
@@ -96,7 +165,6 @@ public class ProductReportDialog extends BaseDialog<Void> {
                 UseCaseFactory.getInstance().createProductByNameBetween(startNum, endNum, withCopy).execute(new Subscriber<java.util.List<Product>>() {
                     @Override
                     public void onCompleted() {
-
 
                     }
 
@@ -195,7 +263,7 @@ public class ProductReportDialog extends BaseDialog<Void> {
         });
 
 
-        search_random.addActionListener(new ActionListener() {
+        tf_random.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -223,9 +291,24 @@ public class ProductReportDialog extends BaseDialog<Void> {
 
                     @Override
                     public void onNext(java.util.List<Product> newProducts) {
-
-                        products=newProducts;
                         dialog.setVisible(false);
+                        if(newProducts.size()==0)
+                        {
+                            JOptionPane.showMessageDialog(ProductReportDialog.this, "未查到产品记录");
+                            tf_random.requestFocus();
+                            return;
+
+                        }
+
+                        if(products==null)
+                        {
+                            products=new ArrayList<Product>();
+
+                        }
+
+                        //最新查询的追加到最前。
+                        products.addAll(0,newProducts);
+
                         model.setDatas(products);
 
 

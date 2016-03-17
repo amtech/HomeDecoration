@@ -94,4 +94,141 @@ public class ErpOrderItem {
      * 图片路径
      */
     public String url;
+
+
+    public String getOs_no() {
+        return os_no;
+    }
+
+    public void setOs_no(String os_no) {
+        this.os_no = os_no;
+    }
+
+    public int getItm() {
+        return itm;
+    }
+
+    public void setItm(int itm) {
+        this.itm = itm;
+    }
+
+    public String getBat_no() {
+        return bat_no;
+    }
+
+    public void setBat_no(String bat_no) {
+        this.bat_no = bat_no;
+    }
+
+    public String getPrd_no() {
+        return prd_no;
+    }
+
+    public void setPrd_no(String prd_no) {
+        this.prd_no = prd_no;
+    }
+
+    public String getPrd_name() {
+        return prd_name;
+    }
+
+    public void setPrd_name(String prd_name) {
+        this.prd_name = prd_name;
+    }
+
+    public String getId_no() {
+        return id_no;
+    }
+
+    public void setId_no(String id_no) {
+        this.id_no = id_no;
+    }
+
+    public String getUt() {
+        return ut;
+    }
+
+    public void setUt(String ut) {
+        this.ut = ut;
+    }
+
+    public float getUp() {
+        return up;
+    }
+
+    public void setUp(float up) {
+        this.up = up;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public float getAmt() {
+        return amt;
+    }
+
+    public void setAmt(float amt) {
+        this.amt = amt;
+    }
+
+    public int getHtxs() {
+        return htxs;
+    }
+
+    public void setHtxs(int htxs) {
+        this.htxs = htxs;
+    }
+
+    public int getSo_zxs() {
+        return so_zxs;
+    }
+
+    public void setSo_zxs(int so_zxs) {
+        this.so_zxs = so_zxs;
+    }
+
+    public String getKhxg() {
+        return khxg;
+    }
+
+    public void setKhxg(String khxg) {
+        this.khxg = khxg;
+    }
+
+    public float getXgtj() {
+        return xgtj;
+    }
+
+    public void setXgtj(float xgtj) {
+        this.xgtj = xgtj;
+    }
+
+    public float getZxgtj() {
+        return zxgtj;
+    }
+
+    public void setZxgtj(float zxgtj) {
+        this.zxgtj = zxgtj;
+    }
+
+    public String getHpgg() {
+        return hpgg;
+    }
+
+    public void setHpgg(String hpgg) {
+        this.hpgg = hpgg;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
