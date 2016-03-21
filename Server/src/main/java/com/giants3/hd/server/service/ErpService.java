@@ -1,9 +1,11 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.server.controller.SalesmanController;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import org.springframework.beans.factory.DisposableBean;
@@ -29,6 +31,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public void destroy() throws Exception {
@@ -51,6 +56,17 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
         List<ErpOrder>  result=  repository.findOrders(key,pageIndex,pageSize);
+        //进行业务员配对。
+
+        for(ErpOrder order:result)
+        {
+        User user= userRepository.findFirstByIsSalesmanAndCodeEquals(true,order.sal_no);
+
+            order.sal_name=user==null?(order.sal_no+"()"):(("(")+user.name+")"+user.chineseName);
+
+        }
+
+
 
         int totalCount=  repository.getOrderCountByKey(key );
         return wrapData(pageIndex,pageSize,(totalCount-1)/pageSize+1,totalCount, result );

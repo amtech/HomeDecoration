@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     User  findFirstByCodeEqualsAndNameEquals(String code, String name);
 
     List<User> findByIsSalesman(boolean isSalesman);
+
+    User findFirstByIsSalesmanAndCodeEquals(boolean isSalman, String sal_no);
 }

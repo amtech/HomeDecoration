@@ -1,6 +1,9 @@
 package com.giants.hd.desktop.reports.jasper;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.jfree.util.Log;
 
 import java.util.Collection;
 
@@ -14,5 +17,17 @@ public class CustomBeanDataSource extends JRBeanCollectionDataSource {
 
     public CustomBeanDataSource(Collection beanCollection, boolean isUseFieldDescription) {
         super(beanCollection, isUseFieldDescription);
+    }
+
+    @Override
+    protected String getPropertyName(JRField field) {
+
+        return super.getPropertyName(field);
+    }
+
+    @Override
+    public Object getFieldValue(JRField field) throws JRException {
+        System.out.print("field:"+field.getName());
+        return super.getFieldValue(field);
     }
 }
