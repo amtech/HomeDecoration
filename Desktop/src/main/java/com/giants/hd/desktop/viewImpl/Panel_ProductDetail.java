@@ -145,7 +145,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JLabel lb_gangza;
     private JLabel lb_qr;
     private JButton btn_export_pic;
-    private JButton exportReport;
+    private JButton printReport;
 
 
     /**
@@ -698,22 +698,17 @@ public class Panel_ProductDetail extends BasePanel {
 
 
 
-        exportReport.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        printReport.addActionListener(new ActionListener() {
+                                           @Override
+                                           public void actionPerformed(ActionEvent e) {
 
 
-                File file = SwingFileUtils.getSelectedDirectory();
-                if (file == null) return;
+                                               //ExportHelper.export(productDetail, file.getPath());
+                                               new ProductPaintReport().export(productDetail, "15YF090", 100);
 
 
-                    //ExportHelper.export(productDetail, file.getPath());
-                   new ProductPaintReport().export();
-
-
-
-            }
-        });
+                                           }
+                                       });
 
         //TODO 导出图片
 
@@ -1626,7 +1621,7 @@ public class Panel_ProductDetail extends BasePanel {
 
 
         btn_export.setVisible(AuthorityUtil.getInstance().exportProduct());
-        exportReport.setVisible(AuthorityUtil.getInstance().exportProduct());
+        printReport.setVisible(AuthorityUtil.getInstance().exportProduct());
         btn_export_pic.setVisible(AuthorityUtil.getInstance().exportProduct());
 
 
