@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 //import org.apache.commons.logging.Log;
 
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -33,10 +32,10 @@ import java.awt.event.*;
  * Created by davidleen29 on 2015/5/6.
  */
 public class Main extends BaseFrame {
-    JDesktopPane   desktop  ;
+    JDesktopPane desktop;
 
 
-    public static final String TITLE="报价系统";
+    public static final String TITLE = "报价系统";
 
 
     @Inject
@@ -53,14 +52,13 @@ public class Main extends BaseFrame {
     }
 
 
-    public Main()
-    {
+    public Main() {
         super(TITLE);
 
 
         //Set up the GUI.
         desktop = new JDesktopPane(); //a specialized layered pane
-        desktop.setDesktopManager(new MyDesktopManager(  desktop));
+        desktop.setDesktopManager(new MyDesktopManager(desktop));
 
 
         setContentPane(desktop);
@@ -72,24 +70,20 @@ public class Main extends BaseFrame {
         ShortcutHelper.createShortcut();
 
 
+        String baseUrl = PropertyWorker.readData("BaseUrl");
+
+        if (null != baseUrl)
+            HttpUrl.iniBaseUrl(baseUrl);
 
 
-        String baseUrl= PropertyWorker.readData("BaseUrl");
-
-        if(null!=baseUrl)
-        HttpUrl.iniBaseUrl(baseUrl);
-
-
-        int version= PropertyWorker.getVersion().versionCode;
+        int version = PropertyWorker.getVersion().versionCode;
         HttpUrl.setVersionCode(version);
-
-
 
 
         Guice.createInjector().injectMembers(this);
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
 
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -113,22 +107,13 @@ public class Main extends BaseFrame {
         });
 
 
-
-
-
-
-
-
-
-
     }
 
 
     /**
      * 配置界面的样式
      */
-    private static void initLookAndFeel()
-    {
+    private static void initLookAndFeel() {
 
 
         try {
@@ -140,7 +125,6 @@ public class Main extends BaseFrame {
 //            // Set System L&F
 //            UIManager.setLookAndFeel(
 //                    UIManager.getSystemLookAndFeelClassName());
-
 
 
             UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
@@ -178,19 +162,13 @@ public class Main extends BaseFrame {
     /**
      * 应用程序初始化
      */
-    private static final void  init()
-    {
+    private static final void init() {
         final Main frame = new Main();
         ;
 
 
-
-
-
-
-
         frame.setExtendedState(MAXIMIZED_BOTH);
-      //  frame.generateMenu();
+        //  frame.generateMenu();
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
@@ -211,28 +189,21 @@ public class Main extends BaseFrame {
         frame.setVisible(true);
 
 
-
         //ask for login
 
-        LoginDialog dialog=new LoginDialog(frame);
+        LoginDialog dialog = new LoginDialog(frame);
         dialog.setModal(true);
         dialog.setVisible(true);
 
-        if(dialog.getResult()==null)
-        {
+        if (dialog.getResult() == null) {
             System.exit(0);
-        }
-        else
-        {
+        } else {
             frame.preLoadData(dialog.getResult());
 
         }
 
 
-
-
         sayHello();
-
 
 
     }
@@ -252,9 +223,6 @@ public class Main extends BaseFrame {
     public void generateMenu() {
 
 
-
-
-
         JMenuBar menuBar;
 
 
@@ -264,25 +232,27 @@ public class Main extends BaseFrame {
         menuBar = new JMenuBar();
 
 
-        if(AuthorityUtil.getInstance().viewProductModule())
-             menuBar.add(createProduct());
+        if (AuthorityUtil.getInstance().viewProductModule())
+            menuBar.add(createProduct());
 
 
-
-        if(AuthorityUtil.getInstance().viewQuotationModule())
-             menuBar.add(createReport());
-
+        if (AuthorityUtil.getInstance().viewQuotationModule())
+            menuBar.add(createReport());
 
 
-        if(AuthorityUtil.getInstance().viewBaseDataModule())
-        menuBar.add(createBaseData());
+        if (AuthorityUtil.getInstance().viewOrderMenu())
+            menuBar.add(createOrder());
 
 
-        if(AuthorityUtil.getInstance().viewAuthorityModule())
-        menuBar.add(createAuthority());
+        if (AuthorityUtil.getInstance().viewBaseDataModule())
+            menuBar.add(createBaseData());
 
-        if(AuthorityUtil.getInstance().viewSystemModule())
-        menuBar.add(createSysetm());
+
+        if (AuthorityUtil.getInstance().viewAuthorityModule())
+            menuBar.add(createAuthority());
+
+        if (AuthorityUtil.getInstance().viewSystemModule())
+            menuBar.add(createSysetm());
 
 
         menuBar.add(createPersonal());
@@ -293,21 +263,15 @@ public class Main extends BaseFrame {
         setJMenuBar(menuBar);
 
 
-
-
-
     }
 
 
+    public JMenu createProduct() {
 
-    public JMenu createProduct()
-    {
-
-        JMenu     menu;
+        JMenu menu;
 
 
-
-              menu = new JMenu("产品模块");
+        menu = new JMenu("产品模块");
         menu.setMnemonic(KeyEvent.VK_A);
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
@@ -316,8 +280,8 @@ public class Main extends BaseFrame {
 //a group of JMenuItems
         JMenuItem menuItem;
 
-        if(AuthorityUtil.getInstance().viewProductList()) {
-              menuItem = new JMenuItem("产品列表",
+        if (AuthorityUtil.getInstance().viewProductList()) {
+            menuItem = new JMenuItem("产品列表",
                     KeyEvent.VK_P);
             menuItem.setAccelerator(KeyStroke.getKeyStroke(
                     KeyEvent.VK_P, ActionEvent.ALT_MASK));
@@ -328,9 +292,7 @@ public class Main extends BaseFrame {
                 public void actionPerformed(ActionEvent e) {
 
 
-
-
-                    ProductListInternalFrame productListInternalFrame=new ProductListInternalFrame();
+                    ProductListInternalFrame productListInternalFrame = new ProductListInternalFrame();
 
                     productListInternalFrame.setVisible(true); //necessary as of 1.3
                     desktop.add(productListInternalFrame);
@@ -338,7 +300,8 @@ public class Main extends BaseFrame {
 
                     try {
                         productListInternalFrame.setSelected(true);
-                    } catch (java.beans.PropertyVetoException exception) {}
+                    } catch (java.beans.PropertyVetoException exception) {
+                    }
 //                    desktop.add()
 //                    Main.this.setContentPane(new Panel_ProductList().getRoot());
 
@@ -347,19 +310,19 @@ public class Main extends BaseFrame {
             });
 
 
-         //   menu.addSeparator();
+            //   menu.addSeparator();
 
         }
 
 
-        if(AuthorityUtil.getInstance().viewProductPicture()) {
-            menuItem = new JMenuItem("产品图片" );
+        if (AuthorityUtil.getInstance().viewProductPicture()) {
+            menuItem = new JMenuItem("产品图片");
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                   // Main.this.setContentPane(new Panel_Material("").getRoot());
+                    // Main.this.setContentPane(new Panel_Material("").getRoot());
                     ProductPictureDialog dialog = new ProductPictureDialog(Main.this);
                     dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
@@ -370,8 +333,7 @@ public class Main extends BaseFrame {
         }
 
 
-
-        if(AuthorityUtil.getInstance().viewMaterialList()) {
+        if (AuthorityUtil.getInstance().viewMaterialList()) {
             menuItem = new JMenuItem("材料列表",
                     KeyEvent.VK_M);
             menuItem.setAccelerator(KeyStroke.getKeyStroke(
@@ -383,18 +345,15 @@ public class Main extends BaseFrame {
                 public void actionPerformed(ActionEvent e) {
 
 
-
-
-
-
-                    MaterialListInternalFrame materialListInternalFrame=new MaterialListInternalFrame();
+                    MaterialListInternalFrame materialListInternalFrame = new MaterialListInternalFrame();
 
                     materialListInternalFrame.setVisible(true); //necessary as of 1.3
                     desktop.add(materialListInternalFrame);
                     try {
                         materialListInternalFrame.setSelected(true);
-                    } catch (java.beans.PropertyVetoException exception) {}
-                  // Main.this.setContentPane(new Panel_Material("").getRoot());
+                    } catch (java.beans.PropertyVetoException exception) {
+                    }
+                    // Main.this.setContentPane(new Panel_Material("").getRoot());
 
 
                 }
@@ -403,8 +362,8 @@ public class Main extends BaseFrame {
         }
 
 
-        if(AuthorityUtil.getInstance().viewMaterialPicture()) {
-            menuItem = new JMenuItem(Module.TITLE_MATERIAL_PICTURE );
+        if (AuthorityUtil.getInstance().viewMaterialPicture()) {
+            menuItem = new JMenuItem(Module.TITLE_MATERIAL_PICTURE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -422,8 +381,8 @@ public class Main extends BaseFrame {
         }
 
 
-        if(AuthorityUtil.getInstance().viewProductDelete()) {
-            menuItem = new JMenuItem(Module.TITLE_PRODUCT_DELETE );
+        if (AuthorityUtil.getInstance().viewProductDelete()) {
+            menuItem = new JMenuItem(Module.TITLE_PRODUCT_DELETE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -441,8 +400,8 @@ public class Main extends BaseFrame {
         }
 
 
-        if(AuthorityUtil.getInstance().viewProductReport()) {
-            menuItem = new JMenuItem(Module.TITLE_PRODUCT_REPORT );
+        if (AuthorityUtil.getInstance().viewProductReport()) {
+            menuItem = new JMenuItem(Module.TITLE_PRODUCT_REPORT);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -452,8 +411,6 @@ public class Main extends BaseFrame {
                     ProductReportDialog dialog = new ProductReportDialog(Main.this);
 //                    dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
-
-
 
 
                 }
@@ -472,18 +429,16 @@ public class Main extends BaseFrame {
      * @return
      */
 
-    private JMenu createReport()
-    {
+    private JMenu createReport() {
 
 
-
-        JMenu    menu = new JMenu("报价管理");
+        JMenu menu = new JMenu("报价管理");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
                 "This menu does nothing");
 
 
-        if(AuthorityUtil.getInstance().viewQuotationList()) {
+        if (AuthorityUtil.getInstance().viewQuotationList()) {
             JMenuItem menuItem = new JMenuItem("报价列表"
             );
 
@@ -495,25 +450,24 @@ public class Main extends BaseFrame {
                 public void actionPerformed(ActionEvent e) {
 
 
-
-                    QuotationInternalFrame quotationInternalFrame=new QuotationInternalFrame();
+                    QuotationInternalFrame quotationInternalFrame = new QuotationInternalFrame();
 
                     quotationInternalFrame.setVisible(true); //necessary as of 1.3
                     desktop.add(quotationInternalFrame);
                     try {
                         quotationInternalFrame.setSelected(true);
-                    } catch (java.beans.PropertyVetoException exception) {}
+                    } catch (java.beans.PropertyVetoException exception) {
+                    }
 
-                   // setContentPane(new Panel_Quotation().getRoot());
+                    // setContentPane(new Panel_Quotation().getRoot());
 
                 }
             });
         }
 
 
-        if(AuthorityUtil.getInstance().viewQuotationDeleteList())
-        {
-            JMenuItem   menuItem = new JMenuItem(Module.TITLE_QUOTATION_DELETE );
+        if (AuthorityUtil.getInstance().viewQuotationDeleteList()) {
+            JMenuItem menuItem = new JMenuItem(Module.TITLE_QUOTATION_DELETE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -530,7 +484,6 @@ public class Main extends BaseFrame {
         }
 
 
-
         return menu;
 
 
@@ -539,16 +492,16 @@ public class Main extends BaseFrame {
 
     /**
      * 添加测试菜单
+     *
      * @return
      */
-    private JMenu createBaseData()
-    {
+    private JMenu createBaseData() {
 
-        JMenu  menu = new JMenu("基础数据");
+        JMenu menu = new JMenu("基础数据");
 
-        JMenuItem  menuItem;
+        JMenuItem menuItem;
 
-        if(AuthorityUtil.getInstance().viewMaterialClassList()) {
+        if (AuthorityUtil.getInstance().viewMaterialClassList()) {
             menuItem = new JMenuItem("材质类型列表"
             );
 
@@ -565,7 +518,7 @@ public class Main extends BaseFrame {
             });
         }
 
-        if(AuthorityUtil.getInstance().viewCustomerList()) {
+        if (AuthorityUtil.getInstance().viewCustomerList()) {
             menuItem = new JMenuItem("客户列表");
 
             menu.add(menuItem);
@@ -582,8 +535,7 @@ public class Main extends BaseFrame {
         }
 
 
-
-        if(AuthorityUtil.getInstance().viewProcessList()) {
+        if (AuthorityUtil.getInstance().viewProcessList()) {
 
             menuItem = new JMenuItem("工序列表");
             menu.add(menuItem);
@@ -602,7 +554,7 @@ public class Main extends BaseFrame {
 
         }
 
-        if(AuthorityUtil.getInstance().viewPackMaterialClassList()) {
+        if (AuthorityUtil.getInstance().viewPackMaterialClassList()) {
             menuItem = new JMenuItem(Module.TITLE_PACK_MATERIAL_CLASS
             );
 
@@ -618,8 +570,6 @@ public class Main extends BaseFrame {
                 }
             });
         }
-
-
 
 
 //       // if(AuthorityUtil.getInstance().viewPackMaterialClassList()) {
@@ -644,18 +594,16 @@ public class Main extends BaseFrame {
 
     /**
      * 权限菜单
+     *
      * @return
      */
-    public  JMenu createAuthority()
-    {
+    public JMenu createAuthority() {
         //Build second menu in the menu bar.
-        JMenu  menu = new JMenu("权限管理");
-
-
+        JMenu menu = new JMenu("权限管理");
 
 
         //
-        JMenuItem  menuItem = new JMenuItem("用户列表" );
+        JMenuItem menuItem = new JMenuItem("用户列表");
 
 
         menu.add(menuItem);
@@ -671,7 +619,7 @@ public class Main extends BaseFrame {
         });
 
         //
-        menuItem = new JMenuItem("模块列表" );
+        menuItem = new JMenuItem("模块列表");
 
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
@@ -684,7 +632,7 @@ public class Main extends BaseFrame {
         });
 
         //
-        menuItem = new JMenuItem("权限设置" );
+        menuItem = new JMenuItem("权限设置");
 
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
@@ -697,9 +645,8 @@ public class Main extends BaseFrame {
         });
 
 
-
         //
-        menuItem = new JMenuItem("报价细分权限" );
+        menuItem = new JMenuItem("报价细分权限");
 
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
@@ -717,22 +664,57 @@ public class Main extends BaseFrame {
     }
 
     /**
-     * 添加测试菜单
+     * 订单菜单
+     *
      * @return
      */
-    private JMenu createSysetm()
-    {
+    public JMenu createOrder() {
+
+        JMenu menu = new JMenu(Module.TITLE_ORDER);
+        //
+        JMenuItem menuItem = new JMenuItem("订单列表");
+        menu.add(menuItem);
+
+
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+
+                OrderListInternalFrame productListInternalFrame = new OrderListInternalFrame();
+
+                productListInternalFrame.setVisible(true); //necessary as of 1.3
+                desktop.add(productListInternalFrame);
+
+
+                try {
+                    productListInternalFrame.setSelected(true);
+                } catch (java.beans.PropertyVetoException exception) {
+                }
+            }
+        });
+
+
+        return menu;
+
+    }
+
+    /**
+     * 添加测试菜单
+     *
+     * @return
+     */
+    private JMenu createSysetm() {
         //Build second menu in the menu bar.
-        JMenu  menu = new JMenu("系统功能");
+        JMenu menu = new JMenu("系统功能");
 
 
+        JMenuItem menuItem;
 
 
-
-        JMenuItem  menuItem;
-
-
-        if(AuthorityUtil.getInstance().viewSyncData()) {
+        if (AuthorityUtil.getInstance().viewSyncData()) {
             menuItem = new JMenuItem(Module.TITLE_SYNC_DATA);
 
             menu.add(menuItem);
@@ -749,8 +731,7 @@ public class Main extends BaseFrame {
         }
 
 
-
-        if(AuthorityUtil.getInstance().viewSysParam()) {
+        if (AuthorityUtil.getInstance().viewSysParam()) {
             menuItem = new JMenuItem(Module.TITLE_SYS_PARAM);
             menu.add(menuItem);
 
@@ -758,15 +739,11 @@ public class Main extends BaseFrame {
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    SysParamDialog  dialog  = new SysParamDialog(Main.this);
+                    SysParamDialog dialog = new SysParamDialog(Main.this);
                     dialog.pack();
                     dialog.setVisible(true);
                 }
             });
-
-
-
-
 
 
         }
@@ -774,7 +751,7 @@ public class Main extends BaseFrame {
 
         //任务定时面板
 
-        if(AuthorityUtil.getInstance().viewTaskManage()) {
+        if (AuthorityUtil.getInstance().viewTaskManage()) {
             menuItem = new JMenuItem(Module.TITLE_TASK_MANAGE);
             menu.add(menuItem);
 
@@ -849,20 +826,17 @@ public class Main extends BaseFrame {
 
     /**
      * 个人设置模块
-     *
      */
 
 
-    private JMenu createPersonal()
-    {
+    private JMenu createPersonal() {
 
 
-
-        JMenu    menu = new JMenu("个人模块");
+        JMenu menu = new JMenu("个人模块");
 
         //
-        JMenuItem  menuItem = new JMenuItem("修改密码"
-                );
+        JMenuItem menuItem = new JMenuItem("修改密码"
+        );
 
         menu.add(menuItem);
 
@@ -881,7 +855,6 @@ public class Main extends BaseFrame {
         });
 
 
-
         return menu;
 
 
@@ -890,19 +863,16 @@ public class Main extends BaseFrame {
 
     /**
      * 帮助菜单
-     *
      */
 
 
-    private JMenu createHelp()
-    {
+    private JMenu createHelp() {
 
 
-
-        JMenu    menu = new JMenu("帮助");
+        JMenu menu = new JMenu("帮助");
 
         //
-        JMenuItem  menuItem = new JMenuItem("检查更新"
+        JMenuItem menuItem = new JMenuItem("检查更新"
         );
 
         menu.add(menuItem);
@@ -922,7 +892,6 @@ public class Main extends BaseFrame {
         });
 
 
-
         return menu;
 
 
@@ -934,13 +903,7 @@ public class Main extends BaseFrame {
     private void preLoadData(final User user) {
 
 
-        new HdSwingWorker<BufferData, Object>(this,"数据预加载处理 请稍后。。。") {
-
-
-
-
-
-
+        new HdSwingWorker<BufferData, Object>(this, "数据预加载处理 请稍后。。。") {
 
 
             @Override
@@ -955,26 +918,20 @@ public class Main extends BaseFrame {
             public void onResult(RemoteData<BufferData> data) {
 
 
-                CacheManager.getInstance().bufferData=data.datas.get(0);
-                CacheManager.getInstance().bufferData.loginUser=user;
+                CacheManager.getInstance().bufferData = data.datas.get(0);
+                CacheManager.getInstance().bufferData.loginUser = user;
                 generateMenu();
                 AppVersion currentVersion = PropertyWorker.getVersion();
-                setTitle(TITLE+"       ("+user.toString()+")                     "+"当前版本"+currentVersion.versionName+"("+currentVersion.versionCode+")");
-
-
-
+                setTitle(TITLE + "       (" + user.toString() + ")                     " + "当前版本" + currentVersion.versionName + "(" + currentVersion.versionCode + ")");
 
 
             }
 
 
+            @Override
+            public void onHandleError(HdException exception) {
 
-
-           @Override
-            public void onHandleError(HdException exception)
-            {
-
-                JOptionPane.showMessageDialog(Main.this,"数据初始化失败，请检查网络，重新打开。"+exception.getLocalizedMessage());
+                JOptionPane.showMessageDialog(Main.this, "数据初始化失败，请检查网络，重新打开。" + exception.getLocalizedMessage());
                 System.exit(0);
 
             }
@@ -993,9 +950,6 @@ public class Main extends BaseFrame {
         super.dispose();
 
     }
-
-
-
 
 
 }

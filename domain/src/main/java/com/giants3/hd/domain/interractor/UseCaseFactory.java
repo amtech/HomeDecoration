@@ -1,9 +1,13 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.module.HdTaskModule;
+import com.giants3.hd.domain.module.OrderModule;
+import com.giants3.hd.domain.module.ProductModule;
 import com.giants3.hd.domain.module.QuotationModule;
 import com.giants3.hd.domain.repository.HdTaskLogRepository;
 import com.giants3.hd.domain.repository.HdTaskRepository;
+import com.giants3.hd.domain.repository.OrderRepository;
+import com.giants3.hd.domain.repository.ProductRepository;
 import com.giants3.hd.domain.repositoryImpl.HdTaskRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.ProductRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.QuotationRepositoryImpl;
@@ -13,6 +17,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
+import java.sql.Statement;
 import java.util.concurrent.ForkJoinPool;
 
 
@@ -30,11 +35,16 @@ public class UseCaseFactory  {
     @Inject
     HdTaskLogRepository taskLogRepository;
 
+    @Inject
+    OrderRepository orderRepository;
+    @Inject
+    ProductRepository productRepository;
+
     private    UseCaseFactory()
     {
 
 
-        Guice.createInjector(new HdTaskModule(),new QuotationModule()).injectMembers(this);
+        Guice.createInjector(new HdTaskModule(),new QuotationModule(),new OrderModule(),new ProductModule()).injectMembers(this);
 
     }
 
@@ -70,7 +80,7 @@ public class UseCaseFactory  {
 
 
 
-        return new ProductUseCase( Schedulers.newThread()    ,Schedulers.immediate(),startName,endName,withCopy, new ProductRepositoryImpl());
+        return new ProductUseCase( Schedulers.newThread()    ,Schedulers.immediate(),startName,endName,withCopy,productRepository);
     }
 
 
@@ -110,6 +120,19 @@ public class UseCaseFactory  {
 
     public UseCase createProductByNameRandom(String productList) {
 
-        return new ProductRandomUseCase( Schedulers.newThread()    ,Schedulers.immediate(),productList, new ProductRepositoryImpl());
+        return new ProductRandomUseCase( Schedulers.newThread()    ,Schedulers.immediate(),productList, productRepository);
+    }
+
+
+
+    public UseCase createOrderListUseCase(String key,int pageIndex,int pageSize) {
+
+        return new GetOrderListUseCase( Schedulers.newThread()    ,Schedulers.immediate(),key,pageIndex,pageSize, orderRepository);
+    }
+
+    public UseCase createOrderItemListUseCase(String os_no) {
+
+
+        return new GetOrderItemListUseCase( Schedulers.newThread()    ,Schedulers.immediate(),os_no, orderRepository);
     }
 }

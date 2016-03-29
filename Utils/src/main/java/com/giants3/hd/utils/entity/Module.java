@@ -113,6 +113,9 @@ public class Module implements Serializable{
     public static final String TITLE_QUOTATION="报价模块";
 
 
+    public static final String NAME_ORDER = "HD_ORDER";
+    public static final String TITLE_ORDER = "订单模块";
+
 
     public static final String NAME_QUOTATION_DELETE="QuotationDelete";
     public static final String TITLE_QUOTATION_DELETE="已删除报价单";
@@ -174,7 +177,7 @@ public class Module implements Serializable{
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
     ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
-    ,NAME_SYS_PARAM,NAME_TASK_MANAGE
+    ,NAME_SYS_PARAM,NAME_TASK_MANAGE,NAME_ORDER
     };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
@@ -184,7 +187,7 @@ public class Module implements Serializable{
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
    , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
-    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE
+    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,TITLE_ORDER
     };
 
 }

@@ -776,4 +776,23 @@ public class HttpUrl {
     public static String loadProductListByNameRandom() {
         return additionInfo(BaseUrl + "api/product/loadByNameRandom");
     }
+
+    /**
+     * 读取订单列表
+     *
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static String loadOrderList(String key, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + "api/order/list?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+    }
+
+    public static String loadOrderItemList(String or_no) {
+
+        return additionInfo(BaseUrl + "api/order/findOrderItems?orderNo=" + or_no);
+
+    }
 }

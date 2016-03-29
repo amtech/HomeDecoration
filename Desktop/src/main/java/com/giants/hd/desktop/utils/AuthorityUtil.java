@@ -469,4 +469,8 @@ public class AuthorityUtil {
     public boolean viewTaskManage() {
         return isViewable(Module.NAME_TASK_MANAGE);
     }
+
+    public boolean viewOrderMenu() {
+        return isViewable(Module.NAME_ORDER);
+    }
 }

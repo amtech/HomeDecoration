@@ -2,6 +2,8 @@ package com.giants3.hd.domain.api;
 
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.noEntity.BufferData;
@@ -140,7 +142,11 @@ public class ApiManager {
 
         tokenMaps.put(AppVersion.class, new TypeToken<RemoteData<AppVersion>>() {
         }.getType());
+        tokenMaps.put(ErpOrder.class, new TypeToken<RemoteData<ErpOrder>>() {
+        }.getType());
 
+        tokenMaps.put(ErpOrderItem.class, new TypeToken<RemoteData<ErpOrderItem>>() {
+        }.getType());
 
     }
 
@@ -1483,5 +1489,33 @@ public class ApiManager {
 
         return productRemoteData;
 
+    }
+
+    /**
+     * 读取订单列表
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<ErpOrder> getOrderList(String key, int pageIndex, int pageSize)  throws HdException {
+
+        String url = HttpUrl.loadOrderList(key,pageIndex,pageSize );
+        String result = client.getWithStringReturned(url );
+        RemoteData<ErpOrder> remoteData = invokeByReflect(result, ErpOrder.class);
+        return remoteData;
+    }
+
+    /**
+     * 读取订单明细列表
+     * @param or_no
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<ErpOrderItem> getOrderItemList(String or_no) throws HdException  {
+        String url = HttpUrl.loadOrderItemList(or_no );
+        String result = client.getWithStringReturned(url );
+        RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
+        return remoteData;
     }
 }
