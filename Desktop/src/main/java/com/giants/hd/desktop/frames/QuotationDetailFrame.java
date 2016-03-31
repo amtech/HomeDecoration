@@ -1,15 +1,15 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.presenter.QuotationDetailPresenter;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_QuotationDetail;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.entity.QuotationDelete;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 

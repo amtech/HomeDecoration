@@ -2,9 +2,7 @@ package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.Iconable;
-
 import com.giants.hd.desktop.local.ImageLoader;
-
 import com.giants3.hd.domain.api.HttpUrl;
 
 import javax.swing.*;
@@ -12,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.local.TableDuplicateHelper;
-import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants.hd.desktop.utils.JTableUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

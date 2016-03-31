@@ -1,7 +1,6 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
@@ -41,8 +40,4 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
         return ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT;
     }
 
-
-
-
-//
 }

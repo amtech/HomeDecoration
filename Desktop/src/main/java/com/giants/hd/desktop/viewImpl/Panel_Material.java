@@ -2,14 +2,12 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.frames.MaterialDetailFrame;
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants.hd.desktop.dialogs.MaterialDetailDialog;
-import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants.hd.desktop.interf.PageListener;
-
+import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;

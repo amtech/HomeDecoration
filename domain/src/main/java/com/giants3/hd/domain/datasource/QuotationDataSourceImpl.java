@@ -1,7 +1,6 @@
 package com.giants3.hd.domain.datasource;
 
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.exception.CustomException;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.exception.HdException;

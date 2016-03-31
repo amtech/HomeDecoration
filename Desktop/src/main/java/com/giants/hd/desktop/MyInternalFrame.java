@@ -31,10 +31,7 @@
 
 package com.giants.hd.desktop;
 
-import javax.swing.JInternalFrame;
-
-import java.awt.event.*;
-import java.awt.*;
+import javax.swing.*;
 
 /* Used by InternalFrameDemo.java. */
 public class MyInternalFrame extends JInternalFrame {

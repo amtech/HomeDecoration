@@ -1,7 +1,6 @@
 package com.giants3.hd.server.app;
 
 
-import com.giants3.hd.appdata.AProduct;
 import com.giants3.hd.appdata.AQuotation;
 import com.giants3.hd.appdata.AQuotationDetail;
 import com.giants3.hd.server.controller.BaseController;
@@ -9,24 +8,18 @@ import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.QuotationService;
-import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.noEntity.QuotationDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * 报价

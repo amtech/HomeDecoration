@@ -3,9 +3,8 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.noEntity.ProductDetail;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**

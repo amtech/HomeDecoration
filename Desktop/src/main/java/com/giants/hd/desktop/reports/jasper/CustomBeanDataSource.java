@@ -3,7 +3,6 @@ package com.giants.hd.desktop.reports.jasper;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.jfree.util.Log;
 
 import java.util.Collection;
 

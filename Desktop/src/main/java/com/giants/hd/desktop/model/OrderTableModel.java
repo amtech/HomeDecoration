@@ -1,14 +1,9 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * 订单表格模型

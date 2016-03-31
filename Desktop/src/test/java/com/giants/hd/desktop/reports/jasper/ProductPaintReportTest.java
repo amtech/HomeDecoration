@@ -1,9 +1,6 @@
 package com.giants.hd.desktop.reports.jasper;
 
-import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by david on 2016/3/13.

@@ -12,7 +12,7 @@ import java.util.List;
 public interface QuotationDataStore {
 
     /**
-     * Get an {@link rx.Observable} which will emit a List of {@link com.giants3.hd.utils.entity.Quotation}.
+     * Get an {@link rx.Observable} which will emit a List of {@link com.giants3.hd.server.entity.Quotation}.
      */
     Observable<List<Quotation>> userEntityList();
 

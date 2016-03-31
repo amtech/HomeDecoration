@@ -1,7 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.DataChangeListener;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductMaterial;
 import com.giants3.hd.utils.entity.Xiankang;

@@ -1,8 +1,8 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.noEntity.ProductDetail;
+import com.giants3.hd.server.noEntity.QuotationDetail;
 
 import java.io.*;
 

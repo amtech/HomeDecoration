@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.CustomerModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Customer;
 import com.giants3.hd.utils.exception.HdException;
@@ -11,7 +11,8 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class CustomerDialog extends BaseSimpleDialog<Customer>

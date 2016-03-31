@@ -1,7 +1,6 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -2,10 +2,6 @@ package com.giants.hd.desktop.reports.jasper;
 
 import com.giants3.hd.utils.entity.ProductPaint;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**订单产品输出报表
  * Created by david on 2016/3/27.

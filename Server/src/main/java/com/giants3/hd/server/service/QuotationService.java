@@ -2,8 +2,8 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.repository.QuotationRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.server.entity.Quotation;
+import com.giants3.hd.server.noEntity.QuotationDetail;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

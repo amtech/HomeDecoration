@@ -1,17 +1,14 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.FactoryRepository;
 import com.giants3.hd.server.service.ErpService;
+import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Factory;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.server.entity_erp.ErpOrder;
+import com.giants3.hd.server.entity_erp.ErpOrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
 * 产品类别
@@ -42,9 +39,10 @@ public class OrderController extends BaseController{
     @RequestMapping(value="/findOrderItems", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> findOrderItems( @RequestParam(value = "orderNo") String orderNo)   {
+    RemoteData<ErpOrderItem> findOrderItems( @RequestParam(value = "orderNo") String orderNo,@RequestParam(value = "client",required = false,defaultValue ="") String client)   {
 
-        return  erpService.findItemsByOrderNo(orderNo) ;
+        boolean isFromDesk= ConstantData.CLIENT_DESK.equals(client);
+        return  erpService.findItemsByOrderNo(orderNo,isFromDesk) ;
     }
 
 }

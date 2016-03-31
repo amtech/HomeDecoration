@@ -1,20 +1,21 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.viewImpl.Panel_Page;
+import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.WritableRaster;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SearchDialog<T> extends BaseDialog<T> {
     private JPanel contentPane;

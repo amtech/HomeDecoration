@@ -3,11 +3,7 @@ package com.giants.hd.desktop.local;
 import com.giants3.hd.utils.entity.AppVersion;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Properties;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 
 /**

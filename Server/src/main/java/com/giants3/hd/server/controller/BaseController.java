@@ -3,7 +3,7 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.server.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -5,18 +5,17 @@ import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.server.entity.*;
 
 
-import com.giants3.hd.utils.noEntity.BufferData;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.server.noEntity.BufferData;
+import com.giants3.hd.server.noEntity.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.List;
 

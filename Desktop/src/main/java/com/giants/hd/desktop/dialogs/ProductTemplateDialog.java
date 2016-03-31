@@ -5,7 +5,6 @@ import com.giants.hd.desktop.model.ProductTemplateModel;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 

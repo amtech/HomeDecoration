@@ -1,10 +1,8 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants.hd.desktop.utils.AuthorityUtil;
-
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.entity.MaterialType;

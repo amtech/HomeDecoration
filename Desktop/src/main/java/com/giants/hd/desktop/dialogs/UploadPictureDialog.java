@@ -2,14 +2,14 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 public abstract class UploadPictureDialog extends BaseDialog {

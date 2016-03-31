@@ -5,15 +5,12 @@ import com.giants.hd.desktop.model.HdTaskModel;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.DateFormats;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
 import java.awt.event.*;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

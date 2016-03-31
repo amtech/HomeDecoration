@@ -2,7 +2,6 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.viewImpl.Panel_ProductList;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**

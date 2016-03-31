@@ -4,14 +4,11 @@ import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
-import com.sun.imageio.plugins.common.ImageUtil;
-import sun.swing.ImageIconUIResource;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 import java.net.URLClassLoader;
 
 /**

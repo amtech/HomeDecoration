@@ -2,8 +2,7 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.PackMaterialType;
+import com.giants3.hd.server.entity.PackMaterialPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;

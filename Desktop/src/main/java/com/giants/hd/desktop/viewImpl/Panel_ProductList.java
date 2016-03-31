@@ -1,17 +1,17 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.dialogs.ProductTemplateDialog;
-import com.giants3.hd.domain.api.ApiManager;
+import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.ProductTableModel;
-import com.giants.hd.desktop.utils.HdSwingUtils;
-import com.giants.hd.desktop.ImageViewDialog;
-import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.utils.HdSwingUtils;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

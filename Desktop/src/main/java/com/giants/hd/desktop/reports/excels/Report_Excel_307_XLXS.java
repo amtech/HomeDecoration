@@ -1,15 +1,14 @@
 package com.giants.hd.desktop.reports.excels;
 
 import com.giants.hd.desktop.local.ImageLoader;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

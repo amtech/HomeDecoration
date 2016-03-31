@@ -25,6 +25,9 @@ public class ConstantData {
 
 
     public static final boolean FOR_TEST=false;
+
+
+    public  static final String  CLIENT_DESK="DESK";
     ;
 
 }

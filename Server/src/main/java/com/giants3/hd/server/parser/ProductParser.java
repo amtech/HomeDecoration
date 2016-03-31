@@ -1,11 +1,8 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AProduct;
-import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.server.entity.Product;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**  桌面端Product 转换成app 端AProduct数据
  *

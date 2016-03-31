@@ -16,10 +16,10 @@ import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.server.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.server.noEntity.ProductDetail;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

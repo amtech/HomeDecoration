@@ -1,23 +1,18 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.frames.BaseFrame;
 import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
-import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.util.*;
 
 /**订单详情界面
  * Created by davidleen29 on 2015/8/24.

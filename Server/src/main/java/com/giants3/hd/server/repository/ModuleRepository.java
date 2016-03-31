@@ -1,11 +1,8 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.Authority;
-import com.giants3.hd.utils.entity.Module;
+import com.giants3.hd.server.entity.Module;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  *

@@ -1,32 +1,31 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.MyDesktopManager;
-import com.giants.hd.desktop.local.ImageLoader;
-import com.giants.hd.desktop.local.LocalFileHelper;
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.domain.api.HttpUrl;
-
-
 import com.giants.hd.desktop.dialogs.*;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.ImageLoader;
+import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ShortcutHelper;
 import com.giants.hd.desktop.widget.BackgroundPainter;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity.AppVersion;
+import com.giants3.hd.utils.entity.Module;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.exception.HdException;
-
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-//import org.apache.commons.logging.Log;
-
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+//import org.apache.commons.logging.Log;
 
 /**
  * Created by davidleen29 on 2015/5/6.

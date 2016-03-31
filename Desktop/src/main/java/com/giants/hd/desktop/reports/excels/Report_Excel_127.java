@@ -1,18 +1,16 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants.hd.desktop.utils.AccumulateMap;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
-
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

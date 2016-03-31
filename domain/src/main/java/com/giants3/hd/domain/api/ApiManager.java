@@ -1,18 +1,17 @@
 package com.giants3.hd.domain.api;
 
 import com.giants3.hd.utils.GsonUtils;
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import rx.Observable;
 
 import java.io.File;
 import java.lang.reflect.Type;

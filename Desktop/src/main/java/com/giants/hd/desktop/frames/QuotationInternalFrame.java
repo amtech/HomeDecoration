@@ -1,6 +1,5 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.viewImpl.Panel_Material;
 import com.giants.hd.desktop.viewImpl.Panel_Quotation;
 
 import java.awt.*;

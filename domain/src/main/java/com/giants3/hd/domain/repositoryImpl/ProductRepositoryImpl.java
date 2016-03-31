@@ -7,7 +7,6 @@ import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 
 import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;

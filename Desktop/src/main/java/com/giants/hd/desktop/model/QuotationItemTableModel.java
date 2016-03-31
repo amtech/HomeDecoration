@@ -1,16 +1,12 @@
 package com.giants.hd.desktop.model;
 
-import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.entity.QuoteAuth;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
-
-import javax.swing.*;
 
 /**
  * 报价明细项数据模型

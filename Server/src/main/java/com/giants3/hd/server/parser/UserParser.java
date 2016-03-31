@@ -1,11 +1,8 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.utils.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import com.giants3.hd.server.entity.User;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**  桌面端User 转换成app 端User 数据
  *

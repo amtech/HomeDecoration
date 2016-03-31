@@ -1,26 +1,27 @@
 package com.giants.hd.desktop.viewImpl;
 
 
-
+import com.giants.hd.desktop.frames.QuotationDetailFrame;
+import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.model.QuotationTableModel;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants.hd.desktop.frames.QuotationDetailFrame;
-import com.giants.hd.desktop.interf.PageListener;
-import com.giants.hd.desktop.model.QuotationTableModel;
-import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 import rx.Subscriber;
-import rx.functions.Action1;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * 报价列表界面

@@ -10,8 +10,6 @@ import com.google.inject.Guice;
 import rx.Observable;
 import rx.Subscriber;
 
-import java.util.List;
-
 /**
  * Created by david on 2015/10/6.
  */

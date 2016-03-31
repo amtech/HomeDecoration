@@ -3,7 +3,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.FactoryRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Factory;
+import com.giants3.hd.server.entity.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

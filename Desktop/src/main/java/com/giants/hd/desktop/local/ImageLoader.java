@@ -1,13 +1,8 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.interf.Iconable;
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -19,7 +14,6 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * 图片加载类

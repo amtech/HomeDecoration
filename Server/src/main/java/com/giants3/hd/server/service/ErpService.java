@@ -1,13 +1,12 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.controller.SalesmanController;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.server.entity.Product;
+import com.giants3.hd.server.entity.User;
+import com.giants3.hd.server.entity_erp.ErpOrder;
+import com.giants3.hd.server.entity_erp.ErpOrderItem;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,48 +49,43 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
-
-    public RemoteData<ErpOrder> findByKey(String key,int pageIndex,int pageSize)
-    {
+    public RemoteData<ErpOrder> findByKey(String key, int pageIndex, int pageSize) {
 
 
-        List<ErpOrder>  result=  repository.findOrders(key,pageIndex,pageSize);
+        List<ErpOrder> result = repository.findOrders(key, pageIndex, pageSize);
         //进行业务员配对。
 
-        for(ErpOrder order:result)
-        {
-        User user= userRepository.findFirstByIsSalesmanAndCodeEquals(true,order.sal_no);
+        for (ErpOrder order : result) {
+            User user = userRepository.findFirstByIsSalesmanAndCodeEquals(true, order.sal_no);
 
-            order.sal_name=user==null?(order.sal_no+"()"):(("(")+user.name+")"+user.chineseName);
+            order.sal_name = user == null ? (order.sal_no + "()") : (("(") + user.name + ")" + user.chineseName);
 
         }
 
 
-
-        int totalCount=  repository.getOrderCountByKey(key );
-        return wrapData(pageIndex,pageSize,(totalCount-1)/pageSize+1,totalCount, result );
+        int totalCount = repository.getOrderCountByKey(key);
+        return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, result);
 
     }
 
 
-    public RemoteData<ErpOrderItem> findItemsByOrderNo(String orderNo )
-    {
+    public RemoteData<ErpOrderItem> findItemsByOrderNo(String orderNo, boolean isFromDesk) {
 
-        List<ErpOrderItem> orderItems=  repository.findItemsByOrderNo(orderNo);
+        List<ErpOrderItem> orderItems = repository.findItemsByOrderNo(orderNo);
         //从报价系统读取产品的单位信息，图片信息
-        for(ErpOrderItem item:orderItems)
-        {
+        for (ErpOrderItem item : orderItems) {
 
 
-            Product  product=   productRepository.findFirstByNameEqualsAndPVersionEquals(item.prd_name,"");
-          //  item.prd_no
+            Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(item.prd_name, "");
+            //  item.prd_no
 
-            if(product!=null)
-            {
-                item.ut=product.pUnitName;
-                item.photo=product.photo;
-                item.productId=product.id;
-                item.url=product.url;
+            if (product != null) {
+                item.ut = product.pUnitName;
+                //来自桌面端的请求才返回缩微图片，减少传输数据量。
+                if (isFromDesk)
+                    item.photo = product.photo;
+                item.productId = product.id;
+                item.url = product.url;
             }
         }
 

@@ -1,10 +1,7 @@
 package com.giants.hd.desktop.widget;
 
+import javax.swing.*;
 import java.awt.*;
-
-
-
-        import javax.swing.*;
 
 /**
  * 背景绘制类， 主要用户绘制 分页标签的选中状态背景

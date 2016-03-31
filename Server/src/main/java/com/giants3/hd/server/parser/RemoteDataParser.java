@@ -1,9 +1,6 @@
 package com.giants3.hd.server.parser;
 
-import com.giants3.hd.appdata.AUser;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.User;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;

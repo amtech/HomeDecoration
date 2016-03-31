@@ -1,9 +1,9 @@
 package com.giants3.hd.server.repository;
 
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
-import com.giants3.hd.utils.entity_erp.Prdt;
+import com.giants3.hd.server.entity_erp.ErpOrder;
+import com.giants3.hd.server.entity_erp.ErpOrderItem;
+import com.giants3.hd.server.entity_erp.Prdt;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.*;

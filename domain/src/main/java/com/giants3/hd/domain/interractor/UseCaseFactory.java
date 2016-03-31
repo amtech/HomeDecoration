@@ -8,17 +8,12 @@ import com.giants3.hd.domain.repository.HdTaskLogRepository;
 import com.giants3.hd.domain.repository.HdTaskRepository;
 import com.giants3.hd.domain.repository.OrderRepository;
 import com.giants3.hd.domain.repository.ProductRepository;
-import com.giants3.hd.domain.repositoryImpl.HdTaskRepositoryImpl;
-import com.giants3.hd.domain.repositoryImpl.ProductRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.QuotationRepositoryImpl;
 import com.giants3.hd.domain.repositoryImpl.XiankangRepositoryImpl;
 import com.giants3.hd.utils.entity.HdTask;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
-
-import java.sql.Statement;
-import java.util.concurrent.ForkJoinPool;
 
 
 /**   用例工厂类

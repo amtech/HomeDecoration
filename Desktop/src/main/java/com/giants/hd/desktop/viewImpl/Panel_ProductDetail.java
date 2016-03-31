@@ -1,36 +1,33 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.ImageViewDialog;
+import com.giants.hd.desktop.dialogs.CopyProductDialog;
+import com.giants.hd.desktop.dialogs.OperationLogDialog;
 import com.giants.hd.desktop.dialogs.ProductQRDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
+import com.giants.hd.desktop.interf.ComonSearch;
+import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.widget.AttachPanel;
+import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
-import com.giants.hd.desktop.ImageViewDialog;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants.hd.desktop.dialogs.CopyProductDialog;
-import com.giants.hd.desktop.dialogs.OperationLogDialog;
-import com.giants.hd.desktop.interf.ComonSearch;
-import com.giants.hd.desktop.interf.DataChangeListener;
-import com.giants.hd.desktop.utils.AuthorityUtil;
-import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
-
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -230,12 +227,12 @@ public class Panel_ProductDetail extends BasePanel {
      */
     private ItemListener cb_factoryItemListener;
 
-    GlobalData globalData = CacheManager.getInstance().bufferData.globalData;
+    GlobalData globalData;
 
 
     public Panel_ProductDetail() {
         super();
-
+        globalData = CacheManager.getInstance().bufferData.globalData;
         initComponent();
 
 
@@ -694,10 +691,6 @@ public class Panel_ProductDetail extends BasePanel {
 
             }
         });
-
-
-
-
 
 
         btn_export_pic.addActionListener(new ActionListener() {
@@ -1290,8 +1283,6 @@ public class Panel_ProductDetail extends BasePanel {
             cb_pack.addItem(pack);
         }
 
-        //  cb_pack.setSelectedIndex(0);
-
 
         cb_factory = new JComboBox<Factory>();
         for (Factory factory : CacheManager.getInstance().bufferData.factories) {
@@ -1313,7 +1304,7 @@ public class Panel_ProductDetail extends BasePanel {
         panel_delete.setVisible(false);
         panel_nomal.setVisible(false);
 
-        tf_product.setToolTipText("以【"+ConstantData.DEMO_PRODUCT_NAME+"】开头的货号，将会默认选为套版使用。");
+        tf_product.setToolTipText("以【" + ConstantData.DEMO_PRODUCT_NAME + "】开头的货号，将会默认选为套版使用。");
 
 
         //咸康信息 默认不显示
@@ -1388,7 +1379,6 @@ public class Panel_ProductDetail extends BasePanel {
                     if (e.isControlDown()) {
 
                         if (e.getKeyCode() == KeyEvent.VK_V) {
-
                             handleClipBordDataToTable((BaseTableModel) table.getModel(), table.convertRowIndexToModel(table.getSelectedRow()));
                         }
 
@@ -1411,8 +1401,6 @@ public class Panel_ProductDetail extends BasePanel {
         bn_save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
                 try {
                     //非新增数据
                     if (!isModified()) {
@@ -1472,6 +1460,8 @@ public class Panel_ProductDetail extends BasePanel {
                                 panel_attach.addUrl(data.datas.get(0));
 
 
+                            } else {
+
                             }
 
 
@@ -1492,10 +1482,8 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                 if (productDetail.product.id <= 0) {
-
                     JOptionPane.showMessageDialog((Component) e.getSource(), "产品数据未建立，请先保存");
                     return;
-
                 }
 
 

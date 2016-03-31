@@ -1,11 +1,8 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.ProductLog;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.server.entity.ProductLog;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * 用户

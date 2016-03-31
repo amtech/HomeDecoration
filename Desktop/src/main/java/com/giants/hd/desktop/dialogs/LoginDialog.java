@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.User;
 import com.google.inject.Inject;

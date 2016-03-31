@@ -1,6 +1,5 @@
 package com.giants3.hd.domain.repositoryImpl;
 
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import org.junit.After;

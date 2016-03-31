@@ -1,8 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.PackMaterialType;
+import com.giants3.hd.server.entity.PackMaterialPosition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

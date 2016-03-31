@@ -1,5 +1,6 @@
 package com.giants3.hd.domain.api;
 
+import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.StringUtils;
 import com.ning.http.util.UTF8UrlEncoder;
 
@@ -20,6 +21,8 @@ public class HttpUrl {
 
     // public  static     String BaseUrl="http://192.168.10.198:8080/Server/";
     public static String BaseUrl = "http://127.0.0.1:8080/";
+    //表示桌面端请求
+
     private static int versionCode;
 
     public static final void iniBaseUrl
@@ -53,6 +56,12 @@ public class HttpUrl {
             url += "&appVersion=" + versionCode;
         } else {
             url += "?appVersion=" + versionCode;
+        }
+
+        if (url.contains("?")) {
+            url += "&client=" + ConstantData.CLIENT_DESK;
+        } else {
+            url += "?client=" +  ConstantData.CLIENT_DESK;
         }
 
         return url;

@@ -1,17 +1,15 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.entity.Xiankang;
 import com.giants3.hd.utils.entity.Xiankang_Dengju;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
-import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.google.inject.Guice;
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;

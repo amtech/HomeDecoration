@@ -1,6 +1,5 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.dialogs.BaseDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_Material_Detail;

@@ -1,10 +1,10 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.AuthorityModel;
-import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.model.UserModel;
+import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Authority;
@@ -13,7 +13,10 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * 权限设置

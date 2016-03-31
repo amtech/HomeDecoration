@@ -1,7 +1,7 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AQuotationDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.server.noEntity.QuotationDetail;
 import org.springframework.stereotype.Component;
 
 /**

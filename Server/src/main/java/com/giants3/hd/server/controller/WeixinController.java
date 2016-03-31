@@ -2,30 +2,16 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.entity.WxTxtMsg;
-import com.giants3.hd.server.repository.CustomerRepository;
 import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.service.WeixinService;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.StringReader;
-import java.util.List;
 
 /**
 * 产品类别

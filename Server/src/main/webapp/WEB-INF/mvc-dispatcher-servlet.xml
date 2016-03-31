@@ -54,7 +54,7 @@
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="packagesToScan" >
             <list>
-                <value>com.giants3.hd.utils.entity</value>
+                <value>com.giants3.hd.server.entity</value>
 
             </list>
          </property>

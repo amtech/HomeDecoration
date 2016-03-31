@@ -1,24 +1,23 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
-import com.giants.hd.desktop.local.HdDateComponentFormatter;
-import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.presenter.QuotationDetailPresenter;
-import com.giants.hd.desktop.view.QuotationDetailView;
-import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.ImageViewDialog;
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.CacheManager;
+import com.giants.hd.desktop.dialogs.ExportQuotationDialog;
 import com.giants.hd.desktop.dialogs.OperationLogDialog;
 import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.interf.ComonSearch;
-
+import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
+import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.presenter.QuotationDetailPresenter;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.view.QuotationDetailView;
+import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.QuotationItemPopMenu;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
 import com.giants.hd.desktop.widget.header.GroupableTableHeader;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
@@ -39,8 +38,10 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 报价单详情

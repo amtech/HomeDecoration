@@ -1,8 +1,6 @@
 package com.giants.hd.desktop;
 
 import javax.swing.*;
-import java.awt.*;
-import java.beans.PropertyVetoException;
 
 /**
  * Created by david on 2015/11/17.

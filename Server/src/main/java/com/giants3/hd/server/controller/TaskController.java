@@ -1,11 +1,11 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.HdTimerTask;
+import com.giants3.hd.server.service.HdTimerTask;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.server.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

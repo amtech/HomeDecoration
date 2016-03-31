@@ -1,6 +1,5 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants3.hd.utils.entity.Xiankang;
 import com.giants3.hd.utils.entity.Xiankang_Jingza;
 
 import javax.swing.*;

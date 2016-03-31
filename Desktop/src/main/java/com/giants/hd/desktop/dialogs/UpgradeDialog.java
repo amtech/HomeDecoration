@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.PropertyWorker;
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
@@ -12,7 +12,8 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;

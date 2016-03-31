@@ -1,10 +1,10 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.viewImpl.Panel_ProductProcess;
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants.hd.desktop.viewImpl.Panel_ProductProcess;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ProductProcess;
 import com.giants3.hd.utils.exception.HdException;
