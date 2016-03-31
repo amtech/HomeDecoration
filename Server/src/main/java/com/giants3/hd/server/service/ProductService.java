@@ -203,4 +203,24 @@ public class ProductService extends AbstractService implements InitializingBean,
         result.addAll(products);
         return wrapData(result);
     }
+
+
+    /**
+     * 根据产品no找到产品详细信息
+     * @param prdNo
+     * @return
+     */
+    public   ProductDetail findProductDetailByPrdNo(String prdNo)
+    {
+
+
+        Product product=productRepository.findFirstByNameEqualsAndPVersionEquals(prdNo,"");
+        if(product!=null)
+        {
+            return findProductDetailById(product.getId());
+
+        }
+        return null;
+
+    }
 }

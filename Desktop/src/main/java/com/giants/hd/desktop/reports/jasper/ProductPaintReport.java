@@ -1,9 +1,12 @@
 package com.giants.hd.desktop.reports.jasper;
 
+import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.entity.ProductPaint;
+import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import de.greenrobot.common.io.FileUtils;
 import net.sf.jasperreports.engine.*;
@@ -12,10 +15,7 @@ import org.eclipse.jdt.internal.compiler.util.FloatUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,19 +32,22 @@ public class ProductPaintReport {
 
 
 
-    public void export(ProductDetail productDetail,String orderName, int qty)
+    public void export(ProductDetail productDetail, ErpOrder order, ErpOrderItem orderItem)
     {
         String fileName="F:\\hd\\jasper\\Blank_A4.jrxml";
 
 
-
         try {
-            JasperReport jr= JasperCompileManager.compileReport( fileName);
+            InputStream inputStream= ProductPaintReport.class.getClassLoader().getResourceAsStream("jasper/Blank_A4.jrxml");
+
+
+            JasperReport jr= JasperCompileManager.compileReport( inputStream);
             OrderItemReportData orderItemReportData=new OrderItemReportData();
-            orderItemReportData.orderName=orderName;
+            orderItemReportData.orderName=order.os_no;
+            int qty=orderItem.qty;
             orderItemReportData.itemQty=qty;
             orderItemReportData.amount= FloatHelper.scale((productDetail.product.paintCost+productDetail.product.paintWage)*qty);
-            orderItemReportData.deliverDate="2016-07-08";
+            orderItemReportData.deliverDate=order.est_dd;
             orderItemReportData.unit=productDetail.product.pUnitName;
             orderItemReportData.pcAmount=FloatHelper.scale(productDetail.product.paintCost+productDetail.product.paintWage);
             orderItemReportData.materialCost=FloatHelper.scale(productDetail.product.paintCost);
@@ -75,6 +78,7 @@ public class ProductPaintReport {
 
         } catch (JRException e) {
             e.printStackTrace();
+            LocalFileHelper.printThrowable(e);
         }
     }
 }

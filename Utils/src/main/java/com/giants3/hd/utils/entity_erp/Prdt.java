@@ -1,9 +1,5 @@
 package com.giants3.hd.utils.entity_erp;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**

@@ -21,6 +21,7 @@ public class BaseDialog<T> extends JDialog{
         this(window, "默认对话框");
         setLocationRelativeTo(window);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
         dialogInit();
     }
 

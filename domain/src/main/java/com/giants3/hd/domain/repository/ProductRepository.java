@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repository;
 
 
 import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Observable;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface ProductRepository {
 
 
     Observable<List<Product>> loadByProductNameRandom(String productNames);
+
+    Observable<ProductDetail> loadByProductNo(String prdNo);
 }

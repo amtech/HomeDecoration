@@ -27,6 +27,25 @@
           </component>
         </children>
       </scrollpane>
+      <grid id="a5ea9" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="4d70c" class="javax.swing.JButton" binding="printPaint">
+            <constraints/>
+            <properties>
+              <text value="打印油漆数据"/>
+            </properties>
+          </component>
+          <component id="243bf" class="javax.swing.JButton" binding="showDetail">
+            <constraints/>
+            <properties>
+              <text value="查看分析表"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

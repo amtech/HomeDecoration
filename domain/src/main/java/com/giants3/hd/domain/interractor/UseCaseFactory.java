@@ -135,4 +135,8 @@ public class UseCaseFactory  {
 
         return new GetOrderItemListUseCase( Schedulers.newThread()    ,Schedulers.immediate(),os_no, orderRepository);
     }
+
+    public UseCase createGetProductByPrdNo(String prdNo) {
+        return new GetProductByPrdNoUseCase(Schedulers.newThread()    ,Schedulers.immediate(),prdNo, productRepository);
+    }
 }

@@ -1518,4 +1518,17 @@ public class ApiManager {
         RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
         return remoteData;
     }
+
+
+    /**
+     * 根据产品no 读取产品详情
+     * @param prdNo
+     * @return
+     */
+    public RemoteData<ProductDetail> loadProductDetailByPrdNo(String prdNo) throws HdException {
+        String url = HttpUrl.loadProductDetailByPrdNo(prdNo);
+        String result = client.postWithStringReturned(url, null);
+        RemoteData<ProductDetail> productRemoteData = invokeByReflect(result, ProductDetail.class);
+        return productRemoteData;
+    }
 }

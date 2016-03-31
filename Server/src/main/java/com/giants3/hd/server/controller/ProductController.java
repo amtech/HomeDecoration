@@ -335,6 +335,36 @@ public class ProductController extends BaseController {
     }
 
 
+    /**根据产品编号 prdno
+     * 查询产品的详细信息
+     * 包括 包装信息
+     * 物料清单（胚体，油漆，包装）
+     *
+     * @param prdNo
+     * @return
+     */
+    @RequestMapping(value = "/detailByPrdNo", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<ProductDetail> productDetailByPrdNo(@RequestParam("prdNo") String  prdNo) {
+
+
+
+        ProductDetail detail=productService.findProductDetailByPrdNo(prdNo);
+
+        if(detail==null)
+        {
+            return  wrapError("未能根据"+prdNo+"找到产品");
+        }
+
+
+        return wrapData(detail);
+
+
+    }
+
+
+
 
 
     /**

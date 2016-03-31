@@ -89,6 +89,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             if(product!=null)
             {
                 item.ut=product.pUnitName;
+                item.photo=product.photo;
+                item.productId=product.id;
                 item.url=product.url;
             }
         }

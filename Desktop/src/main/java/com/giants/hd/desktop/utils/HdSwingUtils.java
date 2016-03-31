@@ -52,14 +52,22 @@ public class HdSwingUtils {
      * @Param component
      *
      */
-    public static  void showDetailPanel(Window component,ProductDetail productDetail,ProductDelete productDelete )
+    public static  void showDetailPanel(final Window component, final ProductDetail productDetail, final ProductDelete productDelete )
     {
 
 
 
-        JFrame frame =new ProductDetailFrame(productDetail,productDelete);
-        frame.setLocationRelativeTo(component);
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame =new ProductDetailFrame(productDetail,productDelete);
+                frame.setLocationRelativeTo(component);
+
+                frame.setVisible(true);
+
+            }
+        });
+
     }
 
     /**

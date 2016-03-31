@@ -795,4 +795,13 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/order/findOrderItems?orderNo=" + or_no);
 
     }
+
+    /**
+     * 根据产品no 读取产品详情
+     * @param prdNo
+     * @return
+     */
+    public static String loadProductDetailByPrdNo(String prdNo) {
+        return additionInfo(BaseUrl + "api/product/detailByPrdNo?prdNo=" + prdNo);
+    }
 }
