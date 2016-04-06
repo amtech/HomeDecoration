@@ -91,10 +91,15 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
             //"用量"
             case 8:
 
-                item.quantity=  Float.valueOf(aValue.toString());
+                try {
+                    item.quantity = Float.valueOf(aValue.toString());
 
-                item.updatePriceAndCostAndQuantity(globalData);
-                updateQuantityOfIngredient();
+                    item.updatePriceAndCostAndQuantity(globalData);
+                    updateQuantityOfIngredient();
+                }catch (Throwable throwable)
+                {
+                    throwable.printStackTrace();
+                }
                 break;
 
             //"备注说明"

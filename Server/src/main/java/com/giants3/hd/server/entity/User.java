@@ -2,6 +2,7 @@ package com.giants3.hd.server.entity;
 
 /**
 * 用户列表
+ * @see com.giants3.hd.server.entity.Authority
 */
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
@@ -38,6 +39,9 @@ public class User implements Serializable,Valuable {
 
     @Basic
     public String  tel;
+
+    @Basic
+    public boolean deleted;
 
 
     @Override

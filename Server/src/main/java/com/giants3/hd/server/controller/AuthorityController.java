@@ -4,6 +4,7 @@ import com.giants3.hd.appdata.AUser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity.*;
@@ -52,7 +53,8 @@ public class AuthorityController extends  BaseController{
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    UserService userService;
     @Autowired
     @Qualifier("CustomImplName")
     DataParser<User,AUser>  dataParser;
@@ -285,7 +287,7 @@ public class AuthorityController extends  BaseController{
 
 
 
-        List<User> users=userRepository.findAll();
+        List<User> users=userService.list();
 
 
         List<QuoteAuth> quoteAuths=quoteAuthRepository.findAll();

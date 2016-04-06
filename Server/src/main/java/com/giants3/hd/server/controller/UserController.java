@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
@@ -10,6 +11,7 @@ import com.giants3.hd.server.entity.*;
 
 import com.giants3.hd.server.noEntity.BufferData;
 import com.giants3.hd.server.noEntity.ProductDetail;
+import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,10 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserRepository userRepository;
+
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -75,6 +81,8 @@ public class UserController extends BaseController {
         return "redirect:/";
     }
 
+
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addUser(@ModelAttribute("user") User user, BindingResult result) {
 
@@ -87,44 +95,23 @@ public class UserController extends BaseController {
     public
     @ResponseBody
     RemoteData<User> list() {
-        return wrapData(userRepository.findAll());
+        return wrapData(userService.list());
     }
 
 
     @RequestMapping(value = "/saveList", method = RequestMethod.POST)
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<User> saveList(@RequestBody List<User> users) {
 
-        for (User user : users) {
 
-
-            User oldData = userRepository.findOne(user.id);
-            if (oldData == null) {
-                user.id = -1;
-
-
-                //如果是空数据  略过添加
-                if (user.isEmpty()) {
-                    continue;
-                }
-
-
-            } else {
-
-
-                user.id = oldData.id;
-
-            }
-
-            userRepository.save(user);
-
-
+        try {
+            return userService.saveUserList(users);
+        } catch (HdException e) {
+           return wrapError(e.getMessage());
         }
 
-
-        return list();
     }
 
 

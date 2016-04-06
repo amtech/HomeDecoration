@@ -1316,6 +1316,11 @@ public class Panel_ProductDetail extends BasePanel {
         tableMenuLister = new TablePopMenu.TableMenuLister() {
             @Override
             public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex[]) {
+
+                if (index < 0 || rowIndex == null || rowIndex.length == 0) return;
+
+                if (index >= rowIndex.length) return;
+
                 switch (index) {
 
 

@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findByIsSalesman(boolean isSalesman);
 
     User findFirstByIsSalesmanAndCodeEquals(boolean isSalman, String sal_no);
+
+    List<User> findByDeletedEquals(boolean deleted  );
 }

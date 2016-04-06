@@ -3,6 +3,7 @@ package com.giants.hd.desktop.local;
 import com.giants3.hd.utils.entity.AppVersion;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 
 
@@ -94,6 +95,8 @@ public class PropertyWorker {
 		AppVersion appVersion=new AppVersion();
 		InputStream inputStream=null;
 		try {
+			URL url=PropertyWorker.class.getClassLoader().getResource("");
+			System.out.println(String.valueOf(url));
 			  inputStream=	PropertyWorker.class.getClassLoader().getResourceAsStream(VERSION_FILE);
 			Properties props = new Properties();
 			Reader reader=new InputStreamReader(inputStream,"UTF-8");

@@ -20,10 +20,10 @@ repositories {
 //sourceSets {
 //    main {
 //        java {
-//            srcDir 'src/java'
+//            srcDir 'src/main/java'
 //        }
 //        resources {
-//            srcDir 'src/resources'
+//            srcDir 'src/main/resources'
 //        }
 //    }
 //}

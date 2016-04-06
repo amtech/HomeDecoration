@@ -72,8 +72,13 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> implemen
 
             case 3:
 
-                data.setPrice(Float.valueOf(aValue.toString()));
-                data.setAmount(data.price);
+              try {
+                  data.setPrice(Float.valueOf(aValue.toString()));
+                  data.setAmount(data.price);
+              }catch(Throwable t)
+              {
+                  t.printStackTrace();
+              }
                 break;
 
 

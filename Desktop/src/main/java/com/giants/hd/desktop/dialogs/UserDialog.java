@@ -3,6 +3,7 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.RemoteData;
@@ -58,5 +59,20 @@ public class UserDialog extends BaseSimpleDialog<User> {
                 doSaveWork();
             }
         });
+        String[] menu=new String[]{"删除"};
+        jt.addMouseListener(new TableMenuAdapter(jt, menu, new TableMenuAdapter.TableMenuListener() {
+            @Override
+            public void onMenuClick(JTable table, int index) {
+
+                if(index==0)
+                {int row=table.getSelectedRow();
+                  int modelRow=  table.convertRowIndexToModel(row);
+
+                    model.deleteRow(modelRow);
+
+                }
+
+            }
+        }));
     }
 }
