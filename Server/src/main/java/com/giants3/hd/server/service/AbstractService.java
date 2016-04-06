@@ -1,6 +1,8 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.utils.RemoteData;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,9 +13,17 @@ import java.util.List;
 /**
  * Created by david on 2016/2/15.
  */
-public  abstract  class AbstractService {
+public  abstract  class AbstractService implements InitializingBean, DisposableBean {
 
+    @Override
+    public void destroy() throws Exception {
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+    }
     /**
      * 构造分页数据
      * @param pageIndex

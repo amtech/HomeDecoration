@@ -18,6 +18,5 @@ public interface QuotationRepository extends JpaRepository<Quotation,Long> {
     Page<Quotation> findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc(String customerName, String qNumber, Pageable pageable);
 
     Quotation findFirstByqNumberEquals(String qNumber);
-
-
+    Quotation findFirstByCustomerIdEquals(long customer);
 }

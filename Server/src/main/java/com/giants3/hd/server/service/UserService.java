@@ -2,7 +2,7 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.Authority;
 import com.giants3.hd.server.entity.QuoteAuth;
-import com.giants3.hd.server.entity.Session;
+
 import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.repository.AuthorityRepository;
 import com.giants3.hd.server.repository.QuoteAuthRepository;

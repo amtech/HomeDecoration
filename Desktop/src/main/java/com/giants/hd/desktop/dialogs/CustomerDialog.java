@@ -3,6 +3,7 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.CustomerModel;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Customer;
@@ -47,7 +48,21 @@ public class CustomerDialog extends BaseSimpleDialog<Customer>
                 doSaveWork();
             }
         });
+        String[] menu=new String[]{"删除"};
+        tb.addMouseListener(new TableMenuAdapter(tb, menu, new TableMenuAdapter.TableMenuListener() {
+            @Override
+            public void onMenuClick(JTable table, int index) {
 
+                if(index==0)
+                {int row=table.getSelectedRow();
+                    int modelRow=  table.convertRowIndexToModel(row);
+
+                    model.deleteRow(modelRow);
+
+                }
+
+            }
+        }));
     }
 
 
@@ -66,5 +81,10 @@ public class CustomerDialog extends BaseSimpleDialog<Customer>
     @Override
     protected RemoteData<Customer> saveData(List<Customer> datas) throws HdException {
         return apiManager.saveCustomers(datas);
+    }
+
+    @Override
+    public void doSomethingOnError(RemoteData<Customer> data) {
+        doLoadWork();
     }
 }

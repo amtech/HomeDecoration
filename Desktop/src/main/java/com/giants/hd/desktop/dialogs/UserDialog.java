@@ -5,6 +5,7 @@ import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.utils.entity.Customer;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
@@ -74,5 +75,9 @@ public class UserDialog extends BaseSimpleDialog<User> {
 
             }
         }));
+    }
+    @Override
+    public void doSomethingOnError(RemoteData<User> data) {
+        doLoadWork();
     }
 }

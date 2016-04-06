@@ -66,6 +66,7 @@ public abstract class BaseSimpleDialog
                 }else
                 {
                     JOptionPane.showMessageDialog(BaseSimpleDialog.this, data.message);
+
                 }
 
 
@@ -123,6 +124,7 @@ public abstract class BaseSimpleDialog
                     }else
                     {
                         JOptionPane.showMessageDialog(BaseSimpleDialog.this, data.message);
+                        doSomethingOnError(data);
                     }
 
 
@@ -133,6 +135,11 @@ public abstract class BaseSimpleDialog
             }.go();
     }
 
+
+    public void doSomethingOnError(RemoteData<T> data)
+    {
+
+    }
 
     private void setNewData(RemoteData<T>  newData) {
         oldData = (java.util.List<T>) ObjectUtils.deepCopy(newData.datas);
