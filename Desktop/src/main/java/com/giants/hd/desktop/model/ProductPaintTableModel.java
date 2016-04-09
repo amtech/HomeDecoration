@@ -79,13 +79,23 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 break;
                 //"工价"
             case 3:
+                try {
                 item.setProcessPrice(Float.valueOf(aValue.toString()));
+                }catch (Throwable throwable)
+                {
+                    throwable.printStackTrace();
+                }
                 break;
             //"配料比例"
             case 6:
-                item.ingredientRatio=Float.valueOf(aValue.toString());
+                try {
+                item.ingredientRatio= Float.valueOf(aValue.toString());
                 item.updatePriceAndCostAndQuantity(globalData);
                 updateQuantityOfIngredient();
+                }catch (Throwable throwable)
+                {
+                    throwable.printStackTrace();
+                }
                 break;
 
             //"用量"

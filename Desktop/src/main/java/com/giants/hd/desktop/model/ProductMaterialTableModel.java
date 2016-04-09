@@ -96,8 +96,10 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
             case 12:
                 //设置利用率
-                material.setAvailable(Float.valueOf(aValue.toString()));
-                material.update();
+
+                    material.setAvailable(floatValue);
+                    material.update();
+
 
                 break;
 

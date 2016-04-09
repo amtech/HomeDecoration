@@ -160,7 +160,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
         //检查包装
 
-        if(material.getPackMaterialClass()!=null) {
+        if(material!=null&&material.getPackMaterialClass()!=null) {
             switch (material.getPackMaterialClass().name) {
 
                 //如果是内盒
