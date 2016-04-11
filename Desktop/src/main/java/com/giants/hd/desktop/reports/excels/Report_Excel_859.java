@@ -109,7 +109,7 @@ public class Report_Excel_859 extends ExcelReportor {
 
 
             //产品重量
-            addNumber(writableSheet, item.weight, 6, rowUpdate);
+            addNumber(writableSheet, UnitUtils.kgToPound( item.weight), 6, rowUpdate);
 
             //单价
             addNumber(writableSheet, item.price, 9, rowUpdate);

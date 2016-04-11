@@ -154,6 +154,12 @@ public class TablePopMenu extends JPopupMenu {
 
     public  interface  TableMenuLister
     {
+        /**
+         *
+         * @param index  菜单项目序列号
+         * @param tableModel  表格模型
+         * @param rowIndex  选中行的序号
+         */
         public void onTableMenuClick(int index, BaseTableModel tableModel,int rowIndex[]);
     }
 
