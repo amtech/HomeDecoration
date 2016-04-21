@@ -71,9 +71,11 @@ public abstract class HdSwingWorker<T, V> extends SwingWorker<RemoteData<T>, V> 
             //   exception=HdException.create(e.getCause());
             e.printStackTrace();
         } catch (CancellationException e) {
+
             e.printStackTrace();
 
         } catch (Throwable e) {
+            exception = getCauseException(e);
             e.printStackTrace();
 
         }
@@ -83,6 +85,12 @@ public abstract class HdSwingWorker<T, V> extends SwingWorker<RemoteData<T>, V> 
         dialog.dispose();
 
         if (exception == null) {
+
+            if(result==null)
+            {
+                //操作取消
+                return;
+            }
             if (result != null && result.code == RemoteData.CODE_UNLOGIN) {
 
 

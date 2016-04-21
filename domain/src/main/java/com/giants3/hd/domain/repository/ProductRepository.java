@@ -22,7 +22,7 @@ public interface ProductRepository {
     Observable<List<Product>> loadByProductNameBetween(String startName,String endName,boolean withCopy);
 
 
-    Observable<List<Product>> loadByProductNameRandom(String productNames);
+    Observable<List<Product>> loadByProductNameRandom(String productNames, boolean withCopy);
 
     Observable<ProductDetail> loadByProductNo(String prdNo);
 }

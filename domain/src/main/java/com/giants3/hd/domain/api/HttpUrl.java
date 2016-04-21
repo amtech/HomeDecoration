@@ -781,11 +781,19 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/product/saveProductPackTemplate");
     }
+    /**
 
-    public static String loadProductListByNameRandom() {
-        return additionInfo(BaseUrl + "api/product/loadByNameRandom");
+
+
+    /**
+     * 随机查询货号   loadProductListByNameRandom 的兼容接口
+     * @param prdName
+     * @param withCopy
+     * @return
+     */
+    public static String loadProductListByNameRandom(String prdName,boolean withCopy) {
+        return additionInfo(BaseUrl + "api/product/loadByNameRandom2?productNames="+prdName+"&withCopy="+withCopy);
     }
-
     /**
      * 读取订单列表
      *

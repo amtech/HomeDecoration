@@ -197,7 +197,28 @@ public class ProductController extends BaseController {
 
     )  {
 
-      return  productService.loadProductByNameRandom(productNames);
+      return  productService.loadProductByNameRandom(productNames,true);
+
+
+
+
+
+    }
+
+    /**
+     * 随机查询货号
+     * @param productNames
+     * @param withCopy 是否包含翻单
+     * @return
+     */
+    @RequestMapping(value = "/loadByNameRandom2", method = { RequestMethod.GET})
+    public
+    @ResponseBody
+    RemoteData<Product> loadByNameBetween(@RequestParam(value = "productNames" ) String productNames,@RequestParam(value = "withCopy",required = false,defaultValue = "false") boolean  withCopy
+
+    )  {
+
+        return  productService.loadProductByNameRandom(productNames,withCopy);
 
 
 

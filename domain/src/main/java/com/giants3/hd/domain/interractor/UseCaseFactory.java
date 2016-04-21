@@ -113,9 +113,9 @@ public class UseCaseFactory  {
 
     }
 
-    public UseCase createProductByNameRandom(String productList) {
+    public UseCase createProductByNameRandom(String productList,boolean withCopy) {
 
-        return new ProductRandomUseCase( Schedulers.newThread()    ,Schedulers.immediate(),productList, productRepository);
+        return new ProductRandomUseCase( Schedulers.newThread()    ,Schedulers.immediate(),productList,withCopy, productRepository);
     }
 
 

@@ -3,6 +3,7 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.GlobalDataRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
+import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.server.entity.AppVersion;
@@ -51,6 +52,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Value("${appfilepath}")
     private String appFilePath;
 
+
+    @Autowired
+    MaterialController materialController;
 
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
@@ -199,6 +203,18 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         //定时任务启动
 
         taskController.resume();
+
+
+
+
+
+        //开启检查是否有未完成的产品统计数据计算
+
+
+                materialController.updateProductData(null);
+
+
+
 
 
             isStart = true;

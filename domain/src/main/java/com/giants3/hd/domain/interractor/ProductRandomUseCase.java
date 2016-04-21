@@ -12,16 +12,21 @@ public class ProductRandomUseCase extends UseCase {
 
     private String productNames;
     private ProductRepository productRepository;
+    /**
+     * 是否包含翻单
+     */
+    private boolean withCopy;
 
-    public ProductRandomUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String productNames, ProductRepository productRepository) {
+    public ProductRandomUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String productNames,boolean withCopy, ProductRepository productRepository) {
         super(threadExecutor, postExecutionThread);
 
+        this.withCopy=withCopy;
         this.productNames = productNames;
         this.productRepository = productRepository;
     }
 
     @Override
     protected Observable buildUseCaseObservable() {
-        return productRepository.loadByProductNameRandom(productNames);
+        return productRepository.loadByProductNameRandom(productNames,withCopy);
     }
 }

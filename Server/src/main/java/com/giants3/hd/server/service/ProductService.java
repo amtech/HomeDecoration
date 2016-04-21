@@ -1,10 +1,13 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.server.entity.Flow;
+import com.giants3.hd.server.entity.Product;
+import com.giants3.hd.server.entity.ProductMaterial;
+import com.giants3.hd.server.entity.ProductWage;
+import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.noEntity.ProductDetail;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * quotation 业务处理 类
@@ -168,10 +174,11 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     /**
      * 随机读取
-     * @param productNames
+     *
+     * @param productNames  货号必须绾完全匹配。
      * @return
      */
-    public RemoteData<Product> loadProductByNameRandom(String productNames) {
+    public RemoteData<Product> loadProductByNameRandom(String productNames, boolean withCopy) {
 
         String[] productNameArray = productNames.split(",|，");
         //保证不重复
@@ -189,11 +196,19 @@ public class ProductService extends AbstractService implements InitializingBean,
                 }
 
             } else {
-                List<Product> subProductSet = productRepository.findByNameEquals(trimS);
-                products.addAll(subProductSet);
+
+                if (withCopy) {
+                    List<Product> subProductSet = productRepository.findByNameEquals(trimS);
+                    products.addAll(subProductSet);
+                } else {
+
+                    Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(trimS, "");
+                    if (product != null) {
+                        products.add(product);
+                    }
+                }
+
             }
-
-
 
 
         }
@@ -205,16 +220,15 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     /**
      * 根据产品no找到产品详细信息
+     *
      * @param prdNo
      * @return
      */
-    public   ProductDetail findProductDetailByPrdNo(String prdNo)
-    {
+    public ProductDetail findProductDetailByPrdNo(String prdNo) {
 
 
-        Product product=productRepository.findFirstByNameEqualsAndPVersionEquals(prdNo,"");
-        if(product!=null)
-        {
+        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(prdNo, "");
+        if (product != null) {
             return findProductDetailById(product.getId());
 
         }

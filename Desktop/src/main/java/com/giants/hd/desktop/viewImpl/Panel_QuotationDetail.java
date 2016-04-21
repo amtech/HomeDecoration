@@ -701,6 +701,12 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
                 Product product=null;
+                if(data==null)
+                {
+                    //表示操作取消
+                    return;
+                }
+
                 if(data.isSuccess() && data.totalCount == 1) {
 
 

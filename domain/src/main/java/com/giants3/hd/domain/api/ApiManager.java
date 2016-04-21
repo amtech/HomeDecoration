@@ -1477,13 +1477,14 @@ public class ApiManager {
     /**
      * 随机读取产品列表。
      * @param productNames 产品名称，以逗号隔开。
+     * @param withCopy
      * @return
      * @throws HdException
      */
-    public RemoteData<Product> loadProductListByNameRandom(String productNames) throws HdException {
+    public RemoteData<Product> loadProductListByNameRandom(String productNames, boolean withCopy) throws HdException {
 
-        String url = HttpUrl.loadProductListByNameRandom( );
-        String result = client.postWithStringReturned(url,GsonUtils.toJson(productNames));
+        String url = HttpUrl.loadProductListByNameRandom(productNames,withCopy );
+        String result = client.getWithStringReturned(url);
         RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
 
         return productRemoteData;

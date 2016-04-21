@@ -6,6 +6,7 @@ import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
@@ -74,10 +75,14 @@ public class MaterialController extends BaseController {
  @Autowired
     private GlobalDataRepository globalDataRepository;
 
+    @Autowired
+    private MaterialService materialService;
 
     ObjectPool<Material> materialObjectPool;
 
     private GlobalData globalData;
+    @Autowired
+    private ProductToUpdateRepository productToUpdateRepository;
 
   //  ErpPrdtRepository repository;
 
@@ -188,7 +193,7 @@ public class MaterialController extends BaseController {
         {
             Material material=materialObjectPool.newObject();
             material.id=-1;
-            convert(material,prdt);
+            materialService.convert(material,prdt, this);
             materialRepository.save(material);
           //  materialObjectPool.release(material);
 
@@ -200,10 +205,12 @@ public class MaterialController extends BaseController {
 
 
 
-            boolean priceChange=Float.compare(oldData.price,prdt.price)!=0;
+            //单价比较调整
+            boolean priceChange=Math.abs(oldData.price-prdt.price)>0.01f;
+//            boolean priceChange=Float.compare(oldData.price,prdt.price)!=0;
 
             boolean memoChange=!StringUtils.compare(oldData.memo,prdt.rem);
-            isSameData=convert(oldData,prdt);
+            isSameData= materialService.convert(oldData,prdt, this);
             if(priceChange )
             {
                 updatePriceRelateData(oldData,productIds);
@@ -308,9 +315,10 @@ public class MaterialController extends BaseController {
            // Logger.getLogger(TAG).info("material :"+prdt.prd_no+",index="+i);
             savePrdt(prdt,relateProductIds);
 
+            materialRepository.flush();
 
-
-
+            productMaterialRepository.flush();
+            productPaintRepository.flush();
 
 
 
@@ -326,6 +334,7 @@ public class MaterialController extends BaseController {
             Logger.getLogger(TAG).info("   relateProduct Count :"+relateProductIds.size());
 
 
+
             updateProductData(relateProductIds);
         }
 
@@ -337,6 +346,8 @@ public class MaterialController extends BaseController {
 
         return wrapData();
     }
+
+
 
 
 
@@ -439,33 +450,69 @@ public class MaterialController extends BaseController {
     /**
      * 更新产品统计数据信息  与材料单价 数量相关
      */
-    private void updateProductData(Collection<Long> productIds)
+    public void updateProductData(final Collection<Long> productIds)
     {
 
-        //修正关联产品的统计数据
-        int size = productIds.size();
-        if(size >0)
-        {
+        //保存到数据库
+        //去除重复数据
+        if(productIds!=null) {
+            ProductToUpdate productToUpdate;
+            for (long productId : productIds) {
 
-            for(long productId:productIds) {
+//                productToUpdate = productToUpdateRepository.findFirstByProductIdEquals(productId);
+//                if (productToUpdate == null) {
+                    productToUpdate = new ProductToUpdate();
+//                }
 
-
-                ProductDetail productDetail=   productService.findProductDetailById(productId);
-                if(productDetail!=null) {
-                    productDetail.updateProductStatistics(globalData);
-                    productRepository.save(productDetail.product);
-                    Logger.getLogger(TAG).info("productId:"+productId+" has Update!");
-                }
-
-
-
+                productToUpdate.productId = productId;
+                productToUpdateRepository.save(productToUpdate);
             }
-
         }
+
+        long count=productToUpdateRepository.count();
+        if(count<=0 ) return;
+        Logger.getLogger(TAG).info("product to update for statis data, count:"+count
+        );
+
+        //异步启动
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                materialService.updateProductData();
+            }
+        }).start();
+
+
+//        //修正关联产品的统计数据
+//        int size = productIds.size();
+//        if(size >0)
+//        {
+//
+//            int index=0;
+//            for(long productId:productIds) {
+//
+//                index++;
+//                ProductDetail productDetail=   productService.findProductDetailById(productId);
+//                if(productDetail!=null) {
+//
+//                    productDetail.updateProductStatistics(globalData);
+//                    productRepository.save(productDetail.product);
+//                    Logger.getLogger(TAG).info("productId:"+productId+" has Update! index:"+index
+//                    +",size:"+size);
+//                }
+//
+//
+//
+//            }
+//
+//        }
 
     }
 
 
+
+    private Set<Long> materialPriceRelateProduct=new HashSet<>();
     /**
      * 更新该材料相关的单价信息  必须在单价有变动的情况下调用。
      * @param material
@@ -473,6 +520,7 @@ public class MaterialController extends BaseController {
      */
     private void updatePriceRelateData(  Material material,Set<Long > productIds) {
         Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
+        materialPriceRelateProduct.clear();
         if(globalData==null)
           globalData=globalDataRepository.findAll().get(0);
 
@@ -498,7 +546,7 @@ public class MaterialController extends BaseController {
             //更新
             productMaterialRepository.save(productMaterial);
             //搜集关联的产品
-            productIds.add(productMaterial.productId);
+            materialPriceRelateProduct.add(productMaterial.productId);
 
 
 
@@ -520,7 +568,7 @@ public class MaterialController extends BaseController {
             //更新
             productPaintRepository.save(productPaint);
             //搜集关联的产品
-            productIds.add(productPaint.productId);
+            materialPriceRelateProduct.add(productPaint.productId);
 
 
 
@@ -528,7 +576,10 @@ public class MaterialController extends BaseController {
         }
 
 
+        Logger.getLogger("TEST").info(" material:"+material.code+",new Price : "+material.price+" has related product count:"+materialPriceRelateProduct.size());
 
+        productIds.addAll(materialPriceRelateProduct);
+        materialPriceRelateProduct.clear();
 
 
 
@@ -570,14 +621,9 @@ public class MaterialController extends BaseController {
         List<Material> materials=new ArrayList<>();
         for(String name:names)
         {
-
-
-            Material data=materialRepository.findFirstByNameEquals(name);
+             Material data=materialRepository.findFirstByNameEquals(name);
             if(null!=data)
                 materials.add(data);
-
-
-
         }
 
 
@@ -598,9 +644,6 @@ public class MaterialController extends BaseController {
     public
     @ResponseBody
     RemoteData<MaterialClass> listClass( )   {
-
-
-
         return wrapData(materialClassRepository.findAll());
     }
 
@@ -615,9 +658,6 @@ public class MaterialController extends BaseController {
     public
     @ResponseBody
     RemoteData<MaterialType> listType( )   {
-
-
-
         return wrapData(materialTypeRepository.findAll());
     }
 
@@ -851,140 +891,4 @@ public class MaterialController extends BaseController {
     }
 
 
-    /**
-     * erp 数据转换成材料数据
-     * @param material
-     * @param prdt
-     */
-    private  boolean   convert(Material material,Prdt prdt)
-    {
-
-
-
-
-        if(compare(material,prdt))
-        {
-
-            return true;
-        }
-        //todo 数据转化  更详细的数据
-
-
-
-            material.code=prdt.prd_no;
-
-
-
-        material.name=prdt.name;
-        material.unitName=prdt.ut;
-
-        material.spec=prdt.spec;
-        material.price=prdt.price;
-        material.memo=prdt.rem;
-        material.typeId=prdt.type;
-
-
-        material.classId=prdt.classId;
-        material.className=prdt.className;
-
-        material.available=prdt.available;
-        material.discount=prdt.discount;
-        material.wLong=prdt.wLong;
-        material.wWidth=prdt.wWidth;
-        material.wHeight=prdt.wHeight;
-
-
-        //停用消息
-        material.outOfService=prdt.nouse_dd >0;
-        material.outOfServiceDate=prdt.nouse_dd;
-        material.outOfServiceDateString=prdt.nouse_dd <=0?"":DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(prdt.nouse_dd));
-
-
-
-
-
-        return false;
-
-
-
-
-    }
-
-
-    /**
-     * 判断数据是否一致
-     * @param material
-     * @param prdt
-     * @return
-     */
-    private boolean compare(Material material,Prdt prdt)
-    {
-
-        if(material.id<=0) return false;
-        if( !material.code.equals(prdt.prd_no ))
-            return false;
-
-
-        if( !material.name.equals(prdt.name ))
-            return false;
-        if( !material.unitName.equals(prdt.ut ))
-            return false;
-        if( !material.spec.equals(prdt.spec ))
-            return false;
-       if(  Float.compare(material.price,prdt.price)!=0)
-            return false;
-        if(material.memo==null&&prdt.rem!=null )
-        {
-
-                return false;
-        }else
-        if(material.memo!=null&&prdt.rem==null )
-        {
-            return false;
-        } else
-        if (material.memo!=null &&!material.memo.equals(prdt.rem ))
-                return false;
-
-        if(  Float.compare(material.typeId,prdt.type)!=0)
-            return false;
-        if( material.classId==null||!material.classId.equals(prdt.classId ))
-            return false;
-        if(material.className==null|| !material.className.equals(prdt.className ))
-            return false;
-
-
-
-
-        if( material.available!=prdt.available )
-            return false;
-
-
-
-
-
-        if(  Float.compare(material.discount,prdt.discount)!=0)
-            return false;
-
-
-        if(  Float.compare(material.wLong,prdt.wLong)!=0)
-            return false;
-
-
-        if(  Float.compare(material.wWidth,prdt.wWidth)!=0)
-            return false;
-
-        if(  Float.compare(material.wHeight,prdt.wHeight)!=0)
-            return false;
-
-        if( material.outOfService!=(prdt.nouse_dd >0))
-        {
-
-            return false;
-        }
-
-
-        return true;
-
-
-    }
 }

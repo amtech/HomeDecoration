@@ -37,6 +37,8 @@ public class ProductReportDialog extends BaseDialog<Void> {
     private JTextField tf_random;
 
     private JTabbedPane tabbedPane1;
+    private JCheckBox random_include;
+    private JButton btn_random_search;
     ProductTableModel model;
 
 
@@ -249,7 +251,6 @@ public class ProductReportDialog extends BaseDialog<Void> {
                     @Override
                     public void onResult(RemoteData<Void> data) {
 
-
                         JOptionPane.showMessageDialog(ProductReportDialog.this, "导出成功");
                     }
                 }.go();
@@ -262,7 +263,8 @@ public class ProductReportDialog extends BaseDialog<Void> {
         });
 
 
-        tf_random.addActionListener(new ActionListener() {
+        //查询动作
+        ActionListener randomSearchActionListener=new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -274,7 +276,9 @@ public class ProductReportDialog extends BaseDialog<Void> {
                     tf_random.requestFocus();
                     return ;
                 }
-                UseCaseFactory.getInstance().createProductByNameRandom(s).execute(new Subscriber<java.util.List<Product>>() {
+
+                boolean withCopy=random_include.isSelected();
+                UseCaseFactory.getInstance().createProductByNameRandom(s,withCopy).execute(new Subscriber<java.util.List<Product>>() {
                     @Override
                     public void onCompleted() {
 
@@ -319,7 +323,11 @@ public class ProductReportDialog extends BaseDialog<Void> {
 
 
 
-        });
+        };
+
+        btn_random_search.addActionListener(randomSearchActionListener );
+
+        tf_random.addActionListener(randomSearchActionListener);
     }
 
 

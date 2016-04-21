@@ -60,7 +60,7 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
     }
 
     @Override
-    public Observable<List<Product>> loadByProductNameRandom(final String productNames) {
+    public Observable<List<Product>> loadByProductNameRandom(final String productNames, final boolean withCopy) {
         return Observable.create(new Observable.OnSubscribe<List<Product>>() {
             @Override
             public void call(Subscriber<? super List<Product>> subscriber) {
@@ -69,7 +69,7 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
 
 
                 try {
-                    RemoteData<Product> remoteData= apiManager.loadProductListByNameRandom(productNames);
+                    RemoteData<Product> remoteData= apiManager.loadProductListByNameRandom(productNames,withCopy);
 
                     if(remoteData.isSuccess())
                     {
