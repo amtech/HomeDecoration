@@ -13,10 +13,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public abstract class UploadPictureDialog extends BaseDialog {
-    private JPanel contentPane;
-    private JButton uploadPicture;
-    private JButton syncPicture;
-    private JCheckBox pictureOverride;
+    protected JPanel contentPane;
+    protected JButton uploadPicture;
+    protected JButton syncPicture;
+    protected JCheckBox pictureOverride;
 
     public UploadPictureDialog(Window window) {
         super(window,"图片管理");
@@ -139,6 +139,7 @@ public abstract class UploadPictureDialog extends BaseDialog {
 
             File[] childFiles=file.listFiles();
 
+            //每张图片独立上传
             for (int i = 0; i < childFiles.length; i++) {
 
 

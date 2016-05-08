@@ -67,10 +67,7 @@ public class QuotationTableModel extends BaseTableModel<Quotation> {
 
         if(COLUMN_VERIFY.equals(fieldName[columnIndex]))
         {
-
-
                     return new ImageIcon( quotation.isOverdue()?icon_overdue_small:quotation.isVerified?icon_verify_small:icon_unverify_small);
-
 
         }
 

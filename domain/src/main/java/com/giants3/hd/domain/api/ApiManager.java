@@ -1,5 +1,6 @@
 package com.giants3.hd.domain.api;
 
+import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
@@ -1032,7 +1033,8 @@ public class ApiManager {
         String url = HttpUrl.login();
         User user = new User();
         user.name = userName;
-        user.password = password;
+        //  user.password =  password ;
+        user.password = DigestUtils.md5( password);
 
         String result = client.postWithStringReturned(url, GsonUtils.toJson(user));
 

@@ -711,9 +711,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
                     product=data.datas.get(0);
-
-
-
+ 
 
 
                 }else

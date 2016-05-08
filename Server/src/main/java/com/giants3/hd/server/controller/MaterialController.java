@@ -69,8 +69,6 @@ public class MaterialController extends BaseController {
     private ProductRepository productRepository;
 
 
-    @Autowired
-    private ProductService productService;
 
  @Autowired
     private GlobalDataRepository globalDataRepository;

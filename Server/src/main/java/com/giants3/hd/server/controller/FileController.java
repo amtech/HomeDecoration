@@ -1,9 +1,13 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.repository.AppVersionRepository;
-import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity.AppVersion;
+import com.giants3.hd.server.repository.AppVersionRepository;
+import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.RemoteData;
+import de.greenrobot.common.io.IoUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -12,10 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Calendar;
 
 /**
@@ -23,14 +24,14 @@ import java.util.Calendar;
  */
 @Controller
 @RequestMapping("/file")
-public class FileController  extends BaseController{
+public class FileController extends BaseController {
 
 
     @Value("${filepath}")
     private String productFilePath;
 
-
-
+    @Value("${deletedProductPhotoFilePath}")
+    private String deleteProductFilePath;
     //临时文件夹
     @Value("${tempfilepath}")
     private String tempFilePath;
@@ -49,47 +50,86 @@ public class FileController  extends BaseController{
 
     @Autowired
     AppVersionRepository repository;
+    @Autowired
+    ProductService productService;
 
-    @RequestMapping(value="/upload", method= RequestMethod.GET)
-    public @ResponseBody
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public
+    @ResponseBody
     String provideUploadInfo() {
         return "You can upload a file by posting to this same URL.";
     }
 
-    @RequestMapping(value = "/testFile",method = RequestMethod.GET)
+    @RequestMapping(value = "/testFile", method = RequestMethod.GET)
     public String printWelcome(ModelMap model) {
         model.addAttribute("message", "Hello world!");
         return "uploadfile";
     }
-    @RequestMapping(value="/uploadProduct", method=RequestMethod.POST)
-    public @ResponseBody
-    RemoteData<Void> handleProductUpload(@RequestParam("name") String name,@RequestParam("doesOverride") boolean doesOverride,
-                                                 @RequestParam("file") MultipartFile file){
+
+    @RequestMapping(value = "/uploadProduct", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Void> handleProductUpload(@RequestParam("name") String name, @RequestParam("doesOverride") boolean doesOverride,
+                                         @RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
+            int indexOfDot = name.indexOf(".");
+            String productName = name.substring(0, indexOfDot);
+            String suffix = name.substring(indexOfDot + 1);
+            String filePath = FileUtils.getProductPicturePath(productFilePath, productName, "", suffix);
 
 
-            int indexOfDot=name.indexOf(".");
-
-            String filePath=FileUtils.getProductPicturePath(productFilePath,name.substring(0,indexOfDot),"",name.substring(indexOfDot+1));
-
-
-            if (new File(filePath).exists() && !doesOverride)
-            {
-                return wrapMessageData(filePath+" 已经存在 ，并且要求不覆盖。");
+            File newFile = new File(filePath);
+            if (newFile.exists() && !doesOverride) {
+                return wrapMessageData(filePath + " 已经存在 ，并且要求不覆盖。");
             }
 
-         return   handleFileUpload(file,filePath);
+            backUpProductPhoto(productName,suffix);
 
+
+            RemoteData<Void> remoteData = handleFileUpload(file, filePath);
+            if (remoteData.isSuccess()) {
+                //同步产品图片
+                productService.updateProductPhoto(productName);
+
+            }
+
+
+            return remoteData;
         } else {
             return wrapError("You failed to upload " + name + " because the file was empty.");
         }
     }
 
 
-    @RequestMapping(value="/uploadMaterial", method=RequestMethod.POST)
-    public @ResponseBody
-    RemoteData<Void> handleMaterialUpload(@RequestParam("name") String name,@RequestParam("doesOverride") boolean doesOverride,
-                                         @RequestParam("file") MultipartFile file){
+
+    private void backUpProductPhoto( String productName,String suffix)
+    {
+        String filePath = FileUtils.getProductPicturePath(productFilePath, productName, "", suffix);
+        File newFile=new File(filePath);
+        //防止图片被误删  备份图片
+        if (newFile.exists()) {
+            String coveredPath = FileUtils.getProductPicturePath(deleteProductFilePath, productName+ "_back_" + DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS_LOG.format( Calendar.getInstance().getTime()), "", suffix) ;
+            File coverFile = new File(coveredPath);
+            //构建文件路径
+            File parentFile = coverFile.getParentFile();
+            if (!parentFile.exists()) {
+                boolean makeDir = parentFile.mkdirs();
+            }
+            //复制文件
+            try {
+                de.greenrobot.common.io.FileUtils.copyFile(newFile, coverFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @RequestMapping(value = "/uploadMaterial", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Void> handleMaterialUpload(@RequestParam("name") String name, @RequestParam("doesOverride") boolean doesOverride,
+                                          @RequestParam("file") MultipartFile file) {
 
 //        try {
 //            Thread.sleep(1000);
@@ -100,22 +140,17 @@ public class FileController  extends BaseController{
 
 
             String newPath = FileUtils.getMaterialPicturePath(materialFilePath, name);
-            if (new File(newPath).exists() && !doesOverride)
-            {
-                return wrapMessageData(newPath+" 已经存在 ，并且要求不覆盖。");
+            if (new File(newPath).exists() && !doesOverride) {
+                return wrapMessageData(newPath + " 已经存在 ，并且要求不覆盖。");
             }
 
 
-            return   handleFileUpload(file,newPath);
+            return handleFileUpload(file, newPath);
 
         } else {
             return wrapError("You failed to upload " + name + " because the file was empty.");
         }
     }
-
-
-
-
 
 
     /**
@@ -125,57 +160,56 @@ public class FileController  extends BaseController{
      * @param newFilePath
      * @return
      */
-    private  RemoteData<Void> handleFileUpload( MultipartFile file,String newFilePath)
-    {
+    private RemoteData<Void> handleFileUpload(MultipartFile file, String newFilePath) {
 
 
-        byte[] bytes  ;
+        FileOutputStream fileOutputStream = null;
+        InputStream inputStream = null;
         try {
 
-            File newFile=new File(newFilePath);
-            File parentFile=newFile.getParentFile();
-            if(!parentFile.exists())
+            File newFile = new File(newFilePath);
+            File parentFile = newFile.getParentFile();
+            if (!parentFile.exists())
                 parentFile.mkdirs();
-            bytes = file.getBytes();
-            FileOutputStream out = new FileOutputStream(newFile);
-            BufferedOutputStream stream =
-                    new BufferedOutputStream(out);
 
-            stream.write(bytes);
-            stream.close();
-            out.close();
+            fileOutputStream = new FileOutputStream(newFile);
+            inputStream = file.getInputStream();
+            IOUtils.copy(inputStream, fileOutputStream);
+            fileOutputStream.flush();
 
-            return  wrapMessageData("成功上传文件到" + newFilePath);
+
+            return wrapMessageData("成功上传文件到" + newFilePath);
         } catch (IOException e) {
             e.printStackTrace();
-            return  wrapError("You failed to upload " + newFilePath + " => " + e.getMessage());
+            return wrapError("You failed to upload " + newFilePath + " => " + e.getMessage());
+        } finally {
+
+            IoUtils.safeClose(inputStream);
+            IoUtils.safeClose(fileOutputStream);
+
         }
 
 
     }
 
 
-
-    @RequestMapping(value= "/download/product/{name}/{pVersion}/{updateTime}", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/product/{name}/{pVersion}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductFile(@PathVariable  String name,@PathVariable  String pVersion,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getProductFile(@PathVariable String name, @PathVariable String pVersion, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-
-
-
-        FileSystemResource resource= new FileSystemResource( FileUtils.getProductPicturePath(productFilePath,name,pVersion,type));
+        FileSystemResource resource = new FileSystemResource(FileUtils.getProductPicturePath(productFilePath, name, pVersion, type));
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
     }
 
-    @RequestMapping(value= "/download/product/{name}/{updateTime}", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/product/{name}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductFile(@PathVariable  String name, @RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getProductFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-        return getProductFile(name,"",type);
+        return getProductFile(name, "", type);
 
 
     }
@@ -183,17 +217,18 @@ public class FileController  extends BaseController{
 
     /**
      * 读取临时文件
+     *
      * @param name
      * @param type
      * @return
      */
 
-    @RequestMapping(value= "/download/temp/{name}", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/temp/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getTempFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getTempFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-        FileSystemResource resource= new FileSystemResource( tempFilePath+name+"."+type);
+        FileSystemResource resource = new FileSystemResource(tempFilePath + name + "." + type);
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
@@ -201,39 +236,36 @@ public class FileController  extends BaseController{
 
     /**
      * 读取附件文件
+     *
      * @param name
      * @param type
      * @return
      */
 
-    @RequestMapping(value= "/download/attach/{name}", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/attach/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getAttachFile(@PathVariable  String name ,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getAttachFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-        FileSystemResource resource= new FileSystemResource( attachfilepath+name+"."+type);
+        FileSystemResource resource = new FileSystemResource(attachfilepath + name + "." + type);
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;
     }
 
     /**
-     *
-     * @param code  材料编码
+     * @param code   材料编码
      * @param mClass 材料类别   类别即为文件归类的文件夹
      * @param type   图片类型  默认jpg
      * @return
      */
-    @RequestMapping(value= "/download/material/{code}/{updateTime}", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/material/{code}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
 
-    public FileSystemResource getMaterialFile(@PathVariable  String code,@RequestParam(value = "mClass",defaultValue = "") String mClass,@RequestParam(value = "type",defaultValue = "jpg") String  type) {
+    public FileSystemResource getMaterialFile(@PathVariable String code, @RequestParam(value = "mClass", defaultValue = "") String mClass, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-
-
-
-        FileSystemResource resource= new FileSystemResource( FileUtils.getMaterialPicturePath(materialFilePath, code, mClass, type));
+        FileSystemResource resource = new FileSystemResource(FileUtils.getMaterialPicturePath(materialFilePath, code, mClass, type));
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;
@@ -244,36 +276,28 @@ public class FileController  extends BaseController{
      *
      *
      */
-    @RequestMapping(value="/download/quotation", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/quotation", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getQuotationFile(@RequestParam(value = "name",defaultValue = "") String name, @RequestParam(value = "appendix",defaultValue = "xls") String appendix) {
+    public FileSystemResource getQuotationFile(@RequestParam(value = "name", defaultValue = "") String name, @RequestParam(value = "appendix", defaultValue = "xls") String appendix) {
 
 
-
-
-
-        FileSystemResource resource= new FileSystemResource(  FileUtils.getQuotationFile(quotationfilepath, name,appendix));
+        FileSystemResource resource = new FileSystemResource(FileUtils.getQuotationFile(quotationfilepath, name, appendix));
         //  FileSystemResource resource= new FileSystemResource("F://materials//lintw.jpg");
 
         return resource;
     }
 
 
-
-    @RequestMapping(value="/download/app", method=RequestMethod.GET)
+    @RequestMapping(value = "/download/app", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getAppFile( )  {
+    public FileSystemResource getAppFile() {
 
 
-        AppVersion appVersion=repository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
+        AppVersion appVersion = repository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
 
 
-            FileSystemResource resource= new FileSystemResource(  appFilePath+appVersion.appName);
-            return resource;
-
-
-
-
+        FileSystemResource resource = new FileSystemResource(appFilePath + appVersion.appName);
+        return resource;
 
 
     }
@@ -284,7 +308,8 @@ public class FileController  extends BaseController{
      */
     @Deprecated
     @RequestMapping(value = "/uploadMultipleFile", method = RequestMethod.POST)
-    public @ResponseBody
+    public
+    @ResponseBody
     String uploadMultipleFileHandler(@RequestParam("name") String[] names,
                                      @RequestParam("file") MultipartFile[] files) {
 
@@ -327,22 +352,23 @@ public class FileController  extends BaseController{
 
     /**
      * 临时图片上传
+     *
      * @param file
      * @return
      */
-    @RequestMapping(value="/uploadTemp", method=RequestMethod.POST)
-    public @ResponseBody
-    RemoteData<String> handleMaterialUpload(  @RequestParam("file") MultipartFile file){
+    @RequestMapping(value = "/uploadTemp", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<String> handleMaterialUpload(@RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
 
 
+            String tempFileName = "TEMP_" + Calendar.getInstance().getTimeInMillis();
+            String newPath = tempFilePath + tempFileName + ".JPG";
 
-            String tempFileName="TEMP_"+Calendar.getInstance().getTimeInMillis();
-            String newPath=tempFilePath+tempFileName +".JPG";
-
-            RemoteData<Void> result= handleFileUpload(file, newPath);
-            if(result.isSuccess())
+            RemoteData<Void> result = handleFileUpload(file, newPath);
+            if (result.isSuccess())
                 return wrapData(tempFileName);
             return wrapError("上传失败");
         } else {

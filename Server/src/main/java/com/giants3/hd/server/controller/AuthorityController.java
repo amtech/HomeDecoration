@@ -175,9 +175,50 @@ public class AuthorityController extends  BaseController{
 
 
     }
+    /**
+     * 提供给移动端调用的接口
+     * @param request
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/aLogin2", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<AUser> aLogin2(HttpServletRequest request, @RequestBody Map<String,String> params)  {
 
 
+        String userName=params.get("userName");
+        String password=params.get("password");
+        String client=params.get("client");
+        String version=params.get("version");
 
+        RemoteData<User> userRemoteData= doLogin2(userName,password,client,version,request.getRemoteAddr());
+        RemoteData<AUser> result= RemoteDataParser.parse(userRemoteData, dataParser);
+
+
+        if(result.isSuccess())
+        {
+
+            AUser loginUser=result.datas.get(0);
+            loginUser.token=result.token;
+        }
+
+
+        return  result;
+
+
+    }
+
+    /**
+     *
+     * @param request
+     * @param user
+     * @param appVersion
+     * @return
+     * @see AuthorityController#
+     *
+     */
+    @Deprecated
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -188,7 +229,82 @@ public class AuthorityController extends  BaseController{
     }
 
 
-   private  RemoteData<User> doLogin( HttpServletRequest request, String userName, String password,String client,String version)   {
+    /**
+     * 登录接口2  密码加密
+     * @param request
+     * @param user
+     * @param appVersion
+     * @return
+     */
+    @RequestMapping(value="/login2", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<User> login2( HttpServletRequest request, @RequestBody User user,@RequestParam(value="appVersion",required = false,defaultValue = "")String appVersion,@RequestParam(value="client",required = false,defaultValue = "DESKTOP")String client)   {
+
+        return doLogin2(user.name,user.password,client,appVersion,request.getRemoteAddr());
+    }
+
+    /**
+     * 登录逻辑
+     *
+     * @param userName
+     * @param password
+     * @param client
+     * @param version
+     * @param  loginIp
+     * @return
+     */
+    private  RemoteData<User> doLogin2(   String userName, String password,String client,String version, String loginIp)   {
+
+
+        List<User> userList=userRepository.findByNameEquals(userName);
+
+        int size=userList.size();
+        if(size<=0)
+            return     wrapError("用户账户不存在");
+        if(size>1)
+            return     wrapError("存在重名用户，请联系管理员");
+
+        User findUser=userList.get(0);
+
+        if(! DigestUtils.md5(findUser.password).equals(password))
+        {
+            return     wrapError("密码错误");
+        }
+
+
+
+
+
+
+
+        findUser.password="***";
+
+        RemoteData<User>  data= wrapData(findUser);
+        long loginTime=Calendar.getInstance().getTimeInMillis();
+        data.token= DigestUtils.md5(findUser.toString()+loginTime);
+
+
+        //Session session= sessionRepository.findFirstByUser_IdEqualsEqualsOrderByLoginTimeDesc(findUser.id);
+
+        Session     session=new Session();
+        session.user
+                =findUser;
+
+
+        session.loginTime=loginTime;
+        session.token= data.token;
+        session.loginIp=loginIp;
+
+        sessionRepository.save(session);
+
+
+        return data;
+    }
+
+
+    @Deprecated
+    private  RemoteData<User> doLogin( HttpServletRequest request, String userName, String password,String client,String version)   {
 
 
         List<User> userList=userRepository.findByNameEquals(userName);

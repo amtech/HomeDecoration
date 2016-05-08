@@ -595,7 +595,7 @@ public class HttpUrl {
     }
 
     public static String login() {
-        return additionInfo(BaseUrl + "api/authority/login");
+        return additionInfo(BaseUrl + "api/authority/login2");
 
     }
 

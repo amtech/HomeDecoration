@@ -17,6 +17,8 @@ public class ProductPictureDialog extends UploadPictureDialog {
     public ProductPictureDialog(Window window) {
         super(window);
         setTitle("产品图片管理");
+        uploadPicture.setText("上传图片并同步");
+        syncPicture.setText("所有产品图片同步");
     }
 
 
