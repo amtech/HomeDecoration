@@ -17,6 +17,14 @@ public class Panel_CopyProduct  extends BasePanel
     private JTextField tf_newName;
     private JTextField tf_newVersion;
     private JButton btn_confirm;
+    private JCheckBox copyPicture;
+
+
+    public boolean isCopyPicture()
+    {
+
+        return copyPicture.isSelected();
+    }
 
     @Override
     public JComponent getRoot() {

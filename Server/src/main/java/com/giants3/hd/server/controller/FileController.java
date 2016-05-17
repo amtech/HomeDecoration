@@ -1,11 +1,15 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.entity.AppVersion;
+import com.giants3.hd.server.entity.Material;
 import com.giants3.hd.server.repository.AppVersionRepository;
+import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.file.ImageUtils;
 import de.greenrobot.common.io.IoUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +57,10 @@ public class FileController extends BaseController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    MaterialService materialService;
+
+
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -83,7 +91,7 @@ public class FileController extends BaseController {
                 return wrapMessageData(filePath + " 已经存在 ，并且要求不覆盖。");
             }
 
-            backUpProductPhoto(productName,suffix);
+            backUpProductPhoto(productName, suffix);
 
 
             RemoteData<Void> remoteData = handleFileUpload(file, filePath);
@@ -101,14 +109,12 @@ public class FileController extends BaseController {
     }
 
 
-
-    private void backUpProductPhoto( String productName,String suffix)
-    {
+    private void backUpProductPhoto(String productName, String suffix) {
         String filePath = FileUtils.getProductPicturePath(productFilePath, productName, "", suffix);
-        File newFile=new File(filePath);
+        File newFile = new File(filePath);
         //防止图片被误删  备份图片
         if (newFile.exists()) {
-            String coveredPath = FileUtils.getProductPicturePath(deleteProductFilePath, productName+ "_back_" + DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS_LOG.format( Calendar.getInstance().getTime()), "", suffix) ;
+            String coveredPath = FileUtils.getProductPicturePath(deleteProductFilePath, productName + "_back_" + DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS_LOG.format(Calendar.getInstance().getTime()), "", suffix);
             File coverFile = new File(coveredPath);
             //构建文件路径
             File parentFile = coverFile.getParentFile();
@@ -131,11 +137,7 @@ public class FileController extends BaseController {
     RemoteData<Void> handleMaterialUpload(@RequestParam("name") String name, @RequestParam("doesOverride") boolean doesOverride,
                                           @RequestParam("file") MultipartFile file) {
 
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
         if (!file.isEmpty()) {
 
 
@@ -152,6 +154,58 @@ public class FileController extends BaseController {
         }
     }
 
+    /**
+     * 上传一条材料图片 并同步数据库缩略图， url
+     *
+     * @param data
+     * @return
+     */
+    @RequestMapping(value = "/uploadMaterialPicture", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Void> uploadMaterialPicture(@RequestParam("materialId") long materialId,
+                                           @RequestBody byte[] data) {
+
+        Material material = materialService.findMaterial(materialId);
+        if (material == null) {
+            return wrapError("当前材料不存在");
+        }
+
+        String newPath = FileUtils.getMaterialPicturePath(materialFilePath, material.code, material.classId);
+
+        File file = new File(newPath);
+        if (!file.exists()) {
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
+        }
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(data);
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        long lastUpdatePhotoTime = FileUtils.getFileLastUpdateTime(new File(newPath));
+        String newUrl = FileUtils.getMaterialPictureURL(material.code, material.classId, lastUpdatePhotoTime);
+        material.url = newUrl;
+        try {
+            material.photo = ImageUtils.scaleMaterial(newPath) ;
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+        material.lastPhotoUpdateTime = lastUpdatePhotoTime;
+        materialService.save(material);
+        //RemoteData<Void> result= handleFileUpload(new File(""), newPath);
+        return wrapData();
+
+    }
 
     /**
      * 处理上传的文件  存放到文件中。
@@ -161,23 +215,17 @@ public class FileController extends BaseController {
      * @return
      */
     private RemoteData<Void> handleFileUpload(MultipartFile file, String newFilePath) {
-
-
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
         try {
-
             File newFile = new File(newFilePath);
             File parentFile = newFile.getParentFile();
             if (!parentFile.exists())
                 parentFile.mkdirs();
-
             fileOutputStream = new FileOutputStream(newFile);
             inputStream = file.getInputStream();
             IOUtils.copy(inputStream, fileOutputStream);
             fileOutputStream.flush();
-
-
             return wrapMessageData("成功上传文件到" + newFilePath);
         } catch (IOException e) {
             e.printStackTrace();

@@ -6,14 +6,18 @@ import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.widget.ImageView;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.google.inject.Inject;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -142,7 +146,25 @@ public class Panel_Material  extends  BasePanel{
             }
         });
 
-
+//        tb_material.setDefaultRenderer(ImageView.class,new DefaultTableCellRenderer(){
+//
+//
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//               // return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//                ImageView image=new ImageView();
+//
+//                if(value!=null&&!StringUtils.isEmpty(value.toString()))
+//               image.setImageUrl( HttpUrl.loadMaterialPicture(value.toString()));
+//
+//                return image;
+//
+//
+//
+//
+//
+//            }
+//        });
 
         //初始化下拉框
         MaterialClass aMaterialClass=new MaterialClass();

@@ -353,8 +353,8 @@ public class HttpUrl {
      *
      * @return
      */
-    public static String copyProductDetail(long id, String productName, String version) {
-        return additionInfo(BaseUrl + "api/product/copy?id=" + id + "&name=" + productName + "&version=" + version);
+    public static String copyProductDetail(long id, String productName, String version,boolean copyPicture) {
+        return additionInfo(BaseUrl + "api/product/copy?id=" + id + "&name=" + productName + "&version=" + version+"&copyPicture="+copyPicture);
     }
 
     public static String deleteProductLogic(long productId) {

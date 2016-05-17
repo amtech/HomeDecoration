@@ -115,13 +115,13 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 
             //图片
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 4  , rowUpdate  ,4, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(!StringUtils.isEmpty(item.photoUrl)?item.photoUrl:item.photo2Url), 4  , rowUpdate  ,4, rowUpdate);
 
 
             //读取咸康数据
 
 
-            RemoteData<Xiankang> xiankangRemoteData=item.productId>0?apiManager.loadXiankangDataByProductId(item.productId):null;
+            RemoteData<Xiankang> xiankangRemoteData=item.productId>0?apiManager.loadXiankangDataByProductId(item.productId):item.productId2>0?apiManager.loadXiankangDataByProductId(item.productId2):null;
 
 
           
@@ -137,13 +137,13 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
             //设计号  版本号
 //            label1 = new Label(1, rowUpdate, item.pVersion,format);
 //            writableSheet.addCell(label1);
-            addString(writableSheet,item.pVersion ,1,rowUpdate);
+            addString(writableSheet,!StringUtils.isEmpty(item.pVersion)?item.pVersion:item.pVersion2 ,1,rowUpdate);
             //货号
 //            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
 //            writableSheet.addCell(label1);
 
 
-            addString(writableSheet,item.productName ,2,rowUpdate);
+            addString(writableSheet,!StringUtils.isEmpty(item.productName)?item.pVersion:item.productName2 ,2,rowUpdate);
 
 
 
@@ -152,7 +152,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 //            label1 = new Label(7, rowUpdate,  item.unit ,format);
 //            writableSheet.addCell(label1);
 
-            addString(writableSheet,item.unit ,7,rowUpdate);
+            addString(writableSheet,!StringUtils.isEmpty(item.unit)?item.pVersion:item.unit2,7,rowUpdate);
 
 
                 if(xiankangRemoteData!=null&&xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
@@ -396,7 +396,9 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 //            label1 = new Label(64, rowUpdate,  String.valueOf(item.memo) ,format);
 //            writableSheet.addCell(label1);
 
-            addString(writableSheet,item.memo,64,rowUpdate);
+            String memo=!StringUtils.isEmpty(item.memo)?item.memo:item.memo2;
+
+            addString(writableSheet,memo,64,rowUpdate);
 
         }
 

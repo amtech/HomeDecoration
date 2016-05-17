@@ -150,5 +150,24 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
     }
 
+    /**
+     * 封装错误信息类。
+     * @param message
+     * @param <T>
+     * @return
+     */
 
+    protected  <T> RemoteData<T> wrapError(String message) {
+
+
+        RemoteData<T> remoteData=new RemoteData<T>();
+
+
+
+        remoteData.code=RemoteData.CODE_FAIL;
+
+        remoteData.message=message;
+        return remoteData;
+
+    }
 }

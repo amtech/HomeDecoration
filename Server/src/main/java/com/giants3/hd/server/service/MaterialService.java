@@ -7,10 +7,7 @@ import com.giants3.hd.server.entity.ProductToUpdate;
 import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ProductDetail;
-import com.giants3.hd.server.repository.ErpPrdtRepository;
-import com.giants3.hd.server.repository.GlobalDataRepository;
-import com.giants3.hd.server.repository.ProductRepository;
-import com.giants3.hd.server.repository.ProductToUpdateRepository;
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.DateFormats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,7 +50,8 @@ public class MaterialService extends AbstractService {
     @Autowired
     private ProductToUpdateRepository productToUpdateRepository;
 
-
+    @Autowired
+    private MaterialRepository materialRepository;
     @Resource
     private PlatformTransactionManager transactionManager;
 
@@ -279,4 +277,13 @@ public class MaterialService extends AbstractService {
 
     }
 
+    public Material findMaterial(long materialId) {
+
+        return materialRepository.findOne(materialId);
+    }
+
+    public void save(Material material) {
+
+        materialRepository.save(material);
+    }
 }

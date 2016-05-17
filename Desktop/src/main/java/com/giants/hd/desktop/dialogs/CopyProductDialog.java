@@ -60,6 +60,7 @@ public class CopyProductDialog extends BaseDialog<ProductDetail>  implements Bas
 
         panel_copyProduct.getData(newProduct);
 
+        final boolean copyPicture=panel_copyProduct.isCopyPicture();
 
         new HdSwingWorker<ProductDetail,Object>(this)
         {
@@ -68,7 +69,7 @@ public class CopyProductDialog extends BaseDialog<ProductDetail>  implements Bas
             protected RemoteData<ProductDetail> doInBackground() throws Exception {
 
 
-                return   apiManager.copyProductDetail(product.id,newProduct.name,newProduct.pVersion);
+                return   apiManager.copyProductDetail(product.id,newProduct.name,newProduct.pVersion,copyPicture);
 
             }
 

@@ -683,9 +683,9 @@ public class ApiManager {
      * @param id
      * @return
      */
-    public RemoteData<ProductDetail> copyProductDetail(long id, String productName, String version) throws HdException {
+    public RemoteData<ProductDetail> copyProductDetail(long id, String productName, String version,boolean copyPicture) throws HdException {
 
-        String url = HttpUrl.copyProductDetail(id, productName, version);
+        String url = HttpUrl.copyProductDetail(id, productName, version,copyPicture);
 
         String result = client.postWithStringReturned(url, null);
 
