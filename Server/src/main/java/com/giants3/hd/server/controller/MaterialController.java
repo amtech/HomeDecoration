@@ -134,6 +134,26 @@ public class MaterialController extends BaseController {
         List<Material> materials=pageValue.getContent();
         return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),materials);
     }
+    @RequestMapping(value = "/searchInService", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Material> searchInService(@RequestParam(value = "codeOrName",required = false,defaultValue ="") String codeOrName,@RequestParam(value = "classId",required = false,defaultValue ="") String classId
+            ,@RequestParam(value = "pageIndex",required = false,defaultValue ="0") int pageIndex,@RequestParam(value = "pageSize",required = false,defaultValue =  "20") int pageSize)   {
+
+        Pageable pageable=constructPageSpecification(pageIndex, pageSize,sortByParam(Sort.Direction.ASC,"code"));
+        String searchValue="%" + codeOrName.trim() + "%";
+        Page<Material>  pageValue;
+        if(StringUtils.isEmpty(classId)) {
+
+            pageValue = materialRepository.findByCodeLikeAndOutOfServiceNotOrNameLikeAndOutOfServiceNot(searchValue,true, searchValue,true, pageable);
+        }else
+        {
+            pageValue = materialRepository.findByCodeLikeAndClassIdOrNameLikeAndClassIdEquals(searchValue,classId, searchValue,classId, pageable);
+        }
+
+        List<Material> materials=pageValue.getContent();
+        return  wrapData(pageIndex,pageable.getPageSize(),pageValue.getTotalPages(), (int) pageValue.getTotalElements(),materials);
+    }
 
 
     @RequestMapping(value = "/saveList",method = RequestMethod.POST)

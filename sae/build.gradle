@@ -25,5 +25,5 @@ dependencies {
     compile "com.google.code.gson:gson:${gsonVersion}"
     compile "com.squareup.okhttp:okhttp:${okHttpVersion}"
     compile project(":Utils")
-    compile project(":appData")
+
 }

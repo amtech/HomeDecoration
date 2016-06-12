@@ -1,7 +1,8 @@
 package com.giants.hd.desktop.utils;
 
-import com.giants3.hd.appdata.QRProduct;
+
 import com.giants3.hd.utils.GsonUtils;
+import com.giants3.hd.utils.noEntity.QRProduct;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;

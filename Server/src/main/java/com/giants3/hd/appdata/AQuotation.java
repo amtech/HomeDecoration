@@ -1,13 +1,12 @@
 package com.giants3.hd.appdata;
 
-import java.io.*;
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * Created by david on 2016/2/16.
+ * 移动端使用的数据 报价
+ * Created by david on 2016/1/2.
  */
-public class AQuotationDetail implements Serializable {
-
+public class AQuotation implements Serializable{
 
     public String qName;
 
@@ -16,6 +15,9 @@ public class AQuotationDetail implements Serializable {
     public String salesman;
     public String vDate;
     public String qDate;
-    List<AQuotationItem> itemList;
+
+
+
+
 
 }

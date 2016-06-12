@@ -170,6 +170,12 @@ public class UserController extends BaseController {
         return wrapData(bufferData);
     }
 
+
+    /**
+     * 提供移动端  省略很多数据
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/getInitData", method = RequestMethod.GET)
     @Transactional
     public
@@ -184,9 +190,7 @@ public class UserController extends BaseController {
            return wrapError("未找到用户");
         }
         BufferData bufferData = new BufferData();
-        bufferData.authorities = authorityRepository.findByUser_IdEquals(userId);
         bufferData.customers = customerRepository.findAll();
-
         bufferData.materialClasses = materialClassRepository.findAll();
         bufferData.packMaterialClasses = packMaterialClassRepository.findAll();
         bufferData.packMaterialPositions = packMaterialPositionRepository.findAll();
@@ -196,36 +200,28 @@ public class UserController extends BaseController {
         bufferData.packs = packRepository.findAll();
         bufferData.pClasses = productClassRepository.findAll();
         bufferData.salesmans = userRepository.findByIsSalesman(true);
-        QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(userId);
-        if (quoteAuth == null) {
-            quoteAuth = new QuoteAuth();
-            quoteAuth.user = user;
-        }
-        bufferData.quoteAuth = quoteAuth;
-
-
         //读取第一条数据   总共就一条
         bufferData.globalData = globalDataRepository.findAll().get(0);
         bufferData.factories = factoryRepository.findAll();
-        List<ProductDetail> demos = new ArrayList<>();
-        ProductDetail productDetail = null;
-        RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);
-        if (result.isSuccess() && result.totalCount > 0) {
-
-            int size = result.datas.size();
-            for (int i = 0; i < size; i++) {
-                productDetail = productService.findProductDetailById(result.datas.get(i).id);
-                if (productDetail != null) {
-                    //擦除去记录信息
-                    productDetail= (ProductDetail)ObjectUtils.deepCopy(productDetail);
-                    productDetail.swipe();
-                    demos.add(productDetail);
-                }
-
-            }
-
-        }
-        bufferData.demos = demos;
+//        List<ProductDetail> demos = new ArrayList<>();
+//        ProductDetail productDetail = null;
+//        RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);
+//        if (result.isSuccess() && result.totalCount > 0) {
+//
+//            int size = result.datas.size();
+//            for (int i = 0; i < size; i++) {
+//                productDetail = productService.findProductDetailById(result.datas.get(i).id);
+//                if (productDetail != null) {
+//                    //擦除去记录信息
+//                    productDetail= (ProductDetail)ObjectUtils.deepCopy(productDetail);
+//                    productDetail.swipe();
+//                    demos.add(productDetail);
+//                }
+//
+//            }
+//
+//        }
+//        bufferData.demos = demos;
 
 
         return wrapData(bufferData);

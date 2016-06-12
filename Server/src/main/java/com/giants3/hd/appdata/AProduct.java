@@ -2,7 +2,6 @@ package com.giants3.hd.appdata;
 
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * 产品数据

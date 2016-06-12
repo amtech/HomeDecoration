@@ -1,6 +1,6 @@
 package com.giants3.hd.sae.service;
 
-import com.giants3.hd.appdata.AProduct;
+
 import com.giants3.hd.sae.api.ApiManager;
 import com.giants3.hd.sae.api.HttpUrl;
 import com.giants3.hd.sae.entity.*;

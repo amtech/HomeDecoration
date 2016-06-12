@@ -168,6 +168,9 @@ public class AuthorityController extends  BaseController{
 
             AUser loginUser=result.datas.get(0);
             loginUser.token=result.token;
+
+
+
         }
 
 
@@ -201,6 +204,10 @@ public class AuthorityController extends  BaseController{
 
             AUser loginUser=result.datas.get(0);
             loginUser.token=result.token;
+            List<Authority>  authorities  =authorityRepository.findByUser_IdEquals(loginUser.id);
+            QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+            loginUser.authorities=authorities;
+            loginUser.quoteAuth=quoteAuth;
         }
 
 
