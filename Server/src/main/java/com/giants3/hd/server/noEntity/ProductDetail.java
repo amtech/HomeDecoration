@@ -2,6 +2,7 @@ package com.giants3.hd.server.noEntity;
 
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.server.entity.*;
+import com.giants3.hd.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -355,4 +356,234 @@ public class ProductDetail  implements Serializable {
         }
 
     }
+
+
+    /**
+     * 更新配料洗刷枪的费用的数据量值。
+     *
+     * @return 被更新的index
+     */
+    public int updateQuantityOfIngredient(GlobalData globalData) {
+
+
+        ProductPaint ingredientPaint = null;
+        float totalIngredientQuantity = 0;
+        for (ProductPaint paint : paints) {
+
+            if (paint.processName == null || !paint.processName.contains(ProductProcess.XISHUA)) {
+                if (paint.materialId > 0)
+                    totalIngredientQuantity += paint.ingredientQuantity;
+            } else
+                ingredientPaint = paint;
+
+        }
+
+        if (ingredientPaint != null) {
+
+
+            ingredientPaint.quantity = FloatHelper.scale(totalIngredientQuantity * globalData.extra_ratio_of_diluent, 3);
+            ingredientPaint.updatePriceAndCostAndQuantity(globalData);
+            int index = paints.indexOf(ingredientPaint);
+            return index;
+
+        }
+
+        return -1;
+
+
+    }
+
+
+    /**
+     * 更新相关产品包装数据
+     */
+    public void updateProductPackRelateData() {
+
+
+        //更新数据
+        List<ProductMaterial> datas = packMaterials;
+
+
+        //胶带信息 与产品的包装类型相关
+
+        //找出胶带
+        int size = datas.size();
+
+        //找出内盒数据
+        ProductMaterial neihe = null;
+
+        //找出外箱数据
+        ProductMaterial waixiang = null;
+
+
+        //找出胶带
+        List<ProductMaterial> jiaodais = new ArrayList<>();
+
+        //找出保丽隆
+        List<ProductMaterial> baolilongs = new ArrayList<>();
+
+
+        for (int i = 0; i < size; i++) {
+            ProductMaterial material = datas.get(i);
+            PackMaterialClass packMaterialClass = material.getPackMaterialClass();
+            String packMaterialClassName = packMaterialClass == null ? "" : packMaterialClass.name;
+            if (!StringUtils.isEmpty(packMaterialClassName))
+                switch (packMaterialClassName) {
+
+
+                    case PackMaterialClass.CLASS_BOX:
+                        if (waixiang == null)
+                            waixiang = material;
+                        break;
+                    case PackMaterialClass.CLASS_INSIDE_BOX:
+                        if (neihe == null)
+                            neihe = material;
+                        break;
+                    case PackMaterialClass.CLASS_JIAODAI:
+
+                        jiaodais.add(material);
+                        break;
+
+                    case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+
+                        baolilongs.add(material);
+                        break;
+
+                }
+
+
+        }
+
+        if (neihe != null)
+            for (ProductMaterial jiaodai : jiaodais)
+                jiaodai.updateJiaodaiQuota(product, neihe);
+
+
+        if (waixiang != null)
+            for (ProductMaterial baolilong : baolilongs) {
+                baolilong.updateBAOLILONGQuota(product, waixiang);
+            }
+
+
+    }
+
+
+    /**
+     * 根据产品材料的包装大类别 ，调整相应的包装数据
+     */
+    public void updatePackDataOnPackMaterialClass(ProductMaterial material) {
+
+
+        //检查包装
+
+        if (material != null && material.getPackMaterialClass() != null&&!StringUtils.isEmpty(material.getPackMaterialClass().name)) {
+            switch (material.getPackMaterialClass().name) {
+
+                //如果是内盒
+                //找出胶带 更新胶带信息
+                case PackMaterialClass.CLASS_INSIDE_BOX:
+
+                    for (ProductMaterial productMaterial : packMaterials) {
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
+
+                                productMaterial.updateJiaodaiQuota(product, material);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+
+
+                    break;
+
+
+                case PackMaterialClass.CLASS_JIAODAI:
+
+
+                    //找出内盒  更新胶带信息
+                    ProductMaterial foundNeihe = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_INSIDE_BOX)) {
+
+                                foundNeihe = productMaterial;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+                    //找出内盒  更新胶带信息
+                    material.updateJiaodaiQuota(product, foundNeihe);
+
+
+                    break;
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_BOX:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundBaolilong = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_TESHU_BAOLILONG)) {
+                                foundBaolilong = productMaterial;
+                                foundBaolilong.updateBAOLILONGQuota(product, material);
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+
+                    break;
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundWaixiang = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_BOX)) {
+                                foundWaixiang = productMaterial;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                    if (foundWaixiang != null)
+                        material.updateBAOLILONGQuota(product, foundWaixiang);
+
+
+                    break;
+
+            }
+
+        }
+
+    }
+
 }

@@ -214,7 +214,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         String[] productNameArray = productNames.split(",|，| ");
         //保证不重复
-        Set<Product> products = new HashSet<>();
+        List<Product> products = new ArrayList<>();
         for (String s : productNameArray) {
             String trimS = s.trim();
             if (StringUtils.isEmpty(trimS))

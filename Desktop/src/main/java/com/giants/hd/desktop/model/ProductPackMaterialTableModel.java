@@ -98,7 +98,6 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 //设置材料类型
                 material.setPackMaterialType((PackMaterialType) aValue);
 
-
                 break;
 
 

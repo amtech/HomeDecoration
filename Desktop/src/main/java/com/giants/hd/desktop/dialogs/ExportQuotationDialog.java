@@ -133,7 +133,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
 
             //    ExportHelper.exportQuotation(detail, modelName, exportPath);
 
-                return null;
+                return new RemoteData<Void>();
             }
 
             @Override

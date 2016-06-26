@@ -10,6 +10,7 @@ import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
@@ -142,6 +143,7 @@ public class Panel_ProductDetail extends BasePanel {
     private JLabel lb_gangza;
     private JLabel lb_qr;
     private JButton btn_export_pic;
+    private JButton exportList;
 
 
     /**
@@ -687,6 +689,32 @@ public class Panel_ProductDetail extends BasePanel {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(getRoot(), e1.getLocalizedMessage());
+                }
+
+            }
+        });
+
+
+
+        exportList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                final File file = SwingFileUtils.getSelectedDirectory();
+                if (file == null) return;
+
+
+                try {
+                    new Report_Excel_ProductMaterialList().report(productDetail,file.getAbsolutePath());
+                    JOptionPane.showMessageDialog(getRoot(), "导出成功");
+                    return;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(getRoot(),e1.getMessage());
+                } catch (HdException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(getRoot(),e1.getMessage());
+
                 }
 
             }

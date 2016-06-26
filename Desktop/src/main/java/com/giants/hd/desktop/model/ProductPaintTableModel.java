@@ -28,7 +28,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
 
 
-    public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "quantity", "price", "cost", "materialQuantity","ingredientQuantity","memo"};
+        public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "quantity", "price", "cost", "materialQuantity","ingredientQuantity","memo"};
     public static Class[] classes = new Class[]{Object.class,String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
 
     public static boolean[] editables = new boolean[]{false,true, true, true, true,true,  true, false, true, false, false, false,false, true };
