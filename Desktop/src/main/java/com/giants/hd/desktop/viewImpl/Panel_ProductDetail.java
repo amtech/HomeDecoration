@@ -464,7 +464,6 @@ public class Panel_ProductDetail extends BasePanel {
 
 
                 String inchString = StringUtils.convertCmStringToInchString(ta_spec_cm.getText().trim());
-
                 bindProductSpecInchData(inchString);
 
             }

@@ -59,12 +59,12 @@ public class AQuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<AQuotation> search(@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "salesmanId", required = false, defaultValue = "-1") long salesmanId
+    RemoteData<AQuotation> search(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "salesmanId", required = false, defaultValue = "-1") long salesmanId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
-        RemoteData<Quotation> result = quotationService.search(searchValue, salesmanId, pageIndex, pageSize);
+        RemoteData<Quotation> result = quotationService.search(user,searchValue, salesmanId, pageIndex, pageSize);
 
 
         RemoteData<AQuotation> aResult = RemoteDataParser.parse(result, dataParser);

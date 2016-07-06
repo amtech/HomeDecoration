@@ -153,8 +153,6 @@ public class ProductDetail  implements Serializable {
 
 
 
-
-
         }
 
 
@@ -584,5 +582,13 @@ public class ProductDetail  implements Serializable {
         }
 
     }
+
+
+    /**
+     * 设置产品单位  s/2 类型的单位   影响到包装材料的比如气泡袋的数量 ==
+     * @param productUnit
+     */
+    public void setProductUnit(String productUnit)
+    {}
 
 }

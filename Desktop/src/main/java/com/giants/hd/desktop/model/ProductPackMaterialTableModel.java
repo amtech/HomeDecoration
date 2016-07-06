@@ -19,10 +19,10 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
       static final String COLUMN_AMOUNT = "amount";
-
+    static final String COLUMN_QTY = "quantity";
     public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ",   "  物料编码   ", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
     public static int[] columnWidths = new int []{       40 ,   80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
-     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
+     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName",COLUMN_QTY, "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
     public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class, Material.class, Material.class };
 
     public  static boolean[] editables = new boolean[]{false,true, true, true,  true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
@@ -38,6 +38,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+
+
+   //     ProductMaterial productMaterial=getItem(rowIndex);
+//        //气泡袋类型  数量不可输入， 由系统自动生成
+//        if(COLUMN_QTY.equals(fieldName[columnIndex])&&productMaterial.getPackMaterialClass()!=null&&PackMaterialClass.CLASS_QIPAODAI.equalsIgnoreCase(productMaterial.getPackMaterialClass().name))
+//            return false;
         return editables[columnIndex];
     }
 

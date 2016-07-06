@@ -600,18 +600,19 @@ public class ProductService extends AbstractService implements InitializingBean,
         //新增加的产品数据
         Product newProduct = productDetail.product;
 
+
+        Product  sameNameAndVersionProduct=productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name, newProduct.pVersion);
+        //新增加数据
+        //检查唯一性 货号版本号形成唯一的索引
+        if ( sameNameAndVersionProduct!= null&&sameNameAndVersionProduct.id!=newProduct.id) {
+            return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
+                    + "已经存在,请更换");
+        }
+
         /**
          * 未生成id 添加记录
          */
         if (!productRepository.exists(productId)) {
-
-
-            //检查唯一性
-            if (productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name, newProduct.pVersion) != null) {
-                return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
-                        + "已经存在,请更换");
-            }
-
 
             //更新缩略图
             updateProductPhotoData(newProduct);

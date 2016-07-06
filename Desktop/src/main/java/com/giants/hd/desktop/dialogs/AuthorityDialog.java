@@ -95,6 +95,7 @@ public class AuthorityDialog extends BaseDialog<Authority> {
                 if(data.isSuccess())
                 {
                     userModel.setDatas(data.datas);
+
                 }else
                 {
                     JOptionPane.showMessageDialog(AuthorityDialog.this, data.message);

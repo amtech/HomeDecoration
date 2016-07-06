@@ -38,6 +38,11 @@ public class QuoteAuth  implements Serializable,Valuable{
      */
     public  boolean limitSelf;
 
+    /**
+     * 可以查看的业务员的编码  字符串组， 以 逗号隔开。
+     */
+    public String relatedSales;
+
 
     @Override
     public boolean equals(Object o) {
@@ -51,7 +56,8 @@ public class QuoteAuth  implements Serializable,Valuable{
         if (fobEditable != quoteAuth.fobEditable) return false;
         if (costVisible != quoteAuth.costVisible) return false;
         if (limitSelf != quoteAuth.limitSelf) return false;
-        return !(user != null ? !user.equals(quoteAuth.user) : quoteAuth.user != null);
+        if (user != null ? !user.equals(quoteAuth.user) : quoteAuth.user != null) return false;
+        return relatedSales != null ? relatedSales.equals(quoteAuth.relatedSales) : quoteAuth.relatedSales == null;
 
     }
 
@@ -63,6 +69,7 @@ public class QuoteAuth  implements Serializable,Valuable{
         result = 31 * result + (fobEditable ? 1 : 0);
         result = 31 * result + (costVisible ? 1 : 0);
         result = 31 * result + (limitSelf ? 1 : 0);
+        result = 31 * result + (relatedSales != null ? relatedSales.hashCode() : 0);
         return result;
     }
 

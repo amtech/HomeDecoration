@@ -1,9 +1,13 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.server.entity.QuoteAuth;
+import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.repository.QuotationRepository;
+import com.giants3.hd.server.repository.QuoteAuthRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity.Quotation;
 import com.giants3.hd.server.noEntity.QuotationDetail;
+import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ public class QuotationService extends AbstractService implements InitializingBea
     @Autowired
     private QuotationRepository quotationRepository;
 
+    @Autowired
+    QuoteAuthRepository quoteAuthRepository;
+
     @Override
     public void destroy() throws Exception {
 
@@ -36,7 +43,7 @@ public class QuotationService extends AbstractService implements InitializingBea
     }
 
 
-    public RemoteData<Quotation> search(String searchValue, long salesmanId
+    public RemoteData<Quotation> search(User loginUser, String searchValue, long salesmanId
             , int pageIndex, int pageSize
 
     ) throws UnsupportedEncodingException {
@@ -44,9 +51,30 @@ public class QuotationService extends AbstractService implements InitializingBea
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         Page<Quotation> pageValue;
+
+
+
         if (salesmanId < 0) {
-            pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
-        } else {
+
+         List<QuoteAuth> quoteAuths= quoteAuthRepository.findByUser_IdEquals(loginUser.id);
+            if(quoteAuths.size()>0&&!StringUtils.isEmpty(quoteAuths.get(0).relatedSales))
+            {
+
+               String[] ids=quoteAuths.get(0).relatedSales.split(",|，");
+                long[] longIds=new long[ids.length];
+                for (int i = 0; i < ids.length; i++) {
+                    longIds[i]=Long.valueOf(ids[i]);
+                }
+
+                 pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdInOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%",longIds, "%" + searchValue + "%", salesmanId, pageable);
+
+
+
+            }else {
+                //表示所有人
+                pageValue = quotationRepository.findByCustomerNameLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+            }
+            } else {
             pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdEqualsOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%", salesmanId, "%" + searchValue + "%", salesmanId, pageable);
 
         }

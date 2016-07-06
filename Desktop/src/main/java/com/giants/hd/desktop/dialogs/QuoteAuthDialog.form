@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.giants.hd.desktop.dialogs.QuoteAuthDialog">
-  <grid id="cbd77" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+  <grid id="cbd77" binding="contentPane" layout-manager="FormLayout">
+    <rowspec value="center:d:grow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:d:noGrow"/>
+    <colspec value="fill:d:grow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:min(p;200px):noGrow"/>
     <constraints>
       <xy x="48" y="54" width="436" height="297"/>
     </constraints>
@@ -8,7 +14,10 @@
     <border type="none"/>
     <children>
       <scrollpane id="494d0">
-        <constraints border-constraint="Center"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
         <properties/>
         <border type="none"/>
         <children>
@@ -20,18 +29,23 @@
           </component>
         </children>
       </scrollpane>
-      <grid id="c3404" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-        <constraints border-constraint="South"/>
+      <component id="1d9a4" class="javax.swing.JButton" binding="save">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <text value="保存"/>
+        </properties>
+      </component>
+      <grid id="e1d11" binding="panel_relateSales" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="1">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <forms top="10" left="0" bottom="0" right="0" defaultalign-vert="false"/>
+        </constraints>
         <properties/>
-        <border type="none"/>
-        <children>
-          <component id="1d9a4" class="javax.swing.JButton" binding="save">
-            <constraints/>
-            <properties>
-              <text value="保存"/>
-            </properties>
-          </component>
-        </children>
+        <border type="none" title="允许查看的业务员报价单"/>
+        <children/>
       </grid>
     </children>
   </grid>

@@ -11,6 +11,7 @@ import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
@@ -26,7 +27,7 @@ import java.awt.event.MouseEvent;
 /**
  * 报价列表界面
  */
-public class Panel_Quotation extends BasePanel{
+public class Panel_Quotation extends BasePanel {
     private JPanel panel1;
     private JTextField jtf_product;
     private JButton btn_search;
@@ -35,8 +36,6 @@ public class Panel_Quotation extends BasePanel{
     private Panel_Page pagePanel;
     private JButton btn_add_xiankang;
     private JComboBox cb_salesman;
-
-
 
 
     //加载进度条
@@ -49,13 +48,13 @@ public class Panel_Quotation extends BasePanel{
     QuotationTableModel tableModel;
 
     boolean limitSelf;
-    public Panel_Quotation()
-    {
-        limitSelf= CacheManager.getInstance().bufferData.quoteAuth.limitSelf;
 
-       tb.setModel(tableModel);
+    public Panel_Quotation() {
+        limitSelf = CacheManager.getInstance().bufferData.quoteAuth.limitSelf;
 
-        dialog=new LoadingDialog(getWindow(getRoot()), new ActionListener() {
+        tb.setModel(tableModel);
+
+        dialog = new LoadingDialog(getWindow(getRoot()), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -79,20 +78,32 @@ public class Panel_Quotation extends BasePanel{
     private void init() {
 
 
-
+        String relateSales = CacheManager.getInstance().bufferData.quoteAuth.relatedSales;
         cb_salesman.setVisible(!limitSelf);
 
-        User all=new User();
-        all.id=-1;
-        all.code="--";
-        all.name="--";
-        all.chineseName="所有人";
+        User all = new User();
+        all.id = -1;
+        all.code = "--";
+        all.name = "--";
+        all.chineseName = "所有人";
         cb_salesman.addItem(all);
-        for(User user:CacheManager.getInstance().bufferData.salesmans)
-        {
-            cb_salesman.addItem(user);
-        }
+        String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
+        if (ids != null) {
+            for (User user : CacheManager.getInstance().bufferData.salesmans) {
 
+                boolean find = false;
+                for (String s : ids) {
+                    if (String.valueOf(user.id).equals(s)) {
+                        find = true;
+                        break;
+                    }
+                }
+
+                if (find)
+                    cb_salesman.addItem(user);
+            }
+
+        }
 
         btn_search.addActionListener(new ActionListener() {
             @Override
@@ -122,86 +133,82 @@ public class Panel_Quotation extends BasePanel{
         });
 
         tb.addMouseListener(new MouseAdapter() {
-                                @Override
-                                public void mouseClicked(MouseEvent e) {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
-                                    if (e.getClickCount() == 2) {
-
-
-                                        final Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
+                if (e.getClickCount() == 2) {
 
 
-                                        UseCaseFactory.getInstance().createQuotationDetail(quotation.id).execute(new Subscriber<QuotationDetail>() {
-                                            @Override
-                                            public void onCompleted() {
-
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                dialog.setVisible(false);
-                                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), e.getMessage());
-                                            }
-
-                                            @Override
-                                            public void onNext(final QuotationDetail o) {
-
-                                                dialog.setVisible(false);
-                                                JFrame frame = new QuotationDetailFrame(o);
-                                                frame.setLocationRelativeTo(getRoot());
-                                                frame.setVisible(true);
+                    final Quotation quotation = tableModel.getItem(tb.convertRowIndexToModel(tb.getSelectedRow()));
 
 
-                                            }
-                                        });
+                    UseCaseFactory.getInstance().createQuotationDetail(quotation.id).execute(new Subscriber<QuotationDetail>() {
+                        @Override
+                        public void onCompleted() {
 
-                                        dialog.setVisible(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            dialog.setVisible(false);
+                            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getRoot()), e.getMessage());
+                        }
+
+                        @Override
+                        public void onNext(final QuotationDetail o) {
+
+                            dialog.setVisible(false);
+                            JFrame frame = new QuotationDetailFrame(o);
+                            frame.setLocationRelativeTo(getRoot());
+                            frame.setVisible(true);
 
 
-                                    }
-                                }
-                            });
+                        }
+                    });
+
+                    dialog.setVisible(true);
+
+
+                }
+            }
+        });
 
 
         btn_add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_NORMAL,"普通报价");
+                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_NORMAL, "普通报价");
 
 
             }
         });
-
 
 
         btn_add_xiankang.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_XK,"咸康报价");
+                addQuotationDetailFrame(Quotation.QUOTATION_TYPE_XK, "咸康报价");
 
 
             }
         });
 
 
-
-
-        boolean quotationAddable=AuthorityUtil.getInstance().addQuotation();
+        boolean quotationAddable = AuthorityUtil.getInstance().addQuotation();
 
         btn_add.setVisible(quotationAddable);
         btn_add_xiankang.setVisible(quotationAddable);
     }
 
 
-    private void addQuotationDetailFrame(int quotationType,String typeName)
-    {
-        QuotationDetail quotationDetail=new QuotationDetail();
+    private void addQuotationDetailFrame(int quotationType, String typeName) {
+        QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.init();
-        quotationDetail.quotation.quotationTypeId=quotationType;
-        quotationDetail.quotation.quotationTypeName=typeName;
-        JFrame frame = new QuotationDetailFrame( quotationDetail);
+        quotationDetail.quotation.quotationTypeId = quotationType;
+        quotationDetail.quotation.quotationTypeName = typeName;
+        JFrame frame = new QuotationDetailFrame(quotationDetail);
         frame.setLocationRelativeTo(getRoot());
         frame.setVisible(true);
     }
@@ -216,36 +223,32 @@ public class Panel_Quotation extends BasePanel{
     /**
      * 读取数据
      */
-    public  void loadData()
+    public void loadData()
 
     {
 
-        loadData(0,pagePanel.getPageSize());
+        loadData(0, pagePanel.getPageSize());
 
     }
 
 
-    private void loadData(final int pageIndex,final int pageSize)
-    {
-        final  String searchValue=jtf_product.getText().trim();
+    private void loadData(final int pageIndex, final int pageSize) {
+        final String searchValue = jtf_product.getText().trim();
 
-      final  long salemansId;
-        if(limitSelf)
-        {
-            salemansId=CacheManager.getInstance().bufferData.loginUser.id;
-        }else
-        {
-            salemansId=((User)cb_salesman.getSelectedItem()).id;
+        final long salemansId;
+        if (limitSelf) {
+            salemansId = CacheManager.getInstance().bufferData.loginUser.id;
+        } else {
+            salemansId = ((User) cb_salesman.getSelectedItem()).id;
         }
 
 
-        new HdSwingWorker<Quotation,Object>( getWindow(getRoot()))
-        {
+        new HdSwingWorker<Quotation, Object>(getWindow(getRoot())) {
             @Override
             protected RemoteData<Quotation> doInBackground() throws Exception {
 
 
-                return   apiManager.loadQuotation(searchValue,salemansId,pageIndex,pageSize);
+                return apiManager.loadQuotation(searchValue, salemansId, pageIndex, pageSize);
 
             }
 
@@ -258,7 +261,6 @@ public class Panel_Quotation extends BasePanel{
 
             }
         }.go();
-
 
 
     }

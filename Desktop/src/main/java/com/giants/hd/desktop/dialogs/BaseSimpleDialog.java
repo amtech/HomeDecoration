@@ -121,6 +121,7 @@ public abstract class BaseSimpleDialog
 
                         setNewData(data);
 
+                        JOptionPane.showMessageDialog(BaseSimpleDialog.this,"保存成功");
                     }else
                     {
                         JOptionPane.showMessageDialog(BaseSimpleDialog.this, data.message);
@@ -141,7 +142,7 @@ public abstract class BaseSimpleDialog
 
     }
 
-    private void setNewData(RemoteData<T>  newData) {
+    protected void setNewData(RemoteData<T>  newData) {
         oldData = (java.util.List<T>) ObjectUtils.deepCopy(newData.datas);
         getTableModel().setDatas(newData.datas);
     }

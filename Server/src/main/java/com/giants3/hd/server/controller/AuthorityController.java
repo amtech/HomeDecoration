@@ -414,12 +414,24 @@ public class AuthorityController extends  BaseController{
 
 
         List<QuoteAuth> quoteAuths=quoteAuthRepository.findAll();
-        List<QuoteAuth> unConfigAuthorities=new ArrayList<>();
+       //移除user 为delete 的权限配置
+        List<QuoteAuth> tempQuoteAuthList=new ArrayList<>();
+        for(QuoteAuth quoteAuth:quoteAuths) {
+           if(quoteAuth.user.deleted) tempQuoteAuthList.add(quoteAuth);
+        }
+        quoteAuths.removeAll(tempQuoteAuthList);
+
+
+
+
+        tempQuoteAuthList.clear();
+
 
         int size=users.size();
         for (int i = 0; i < size; i++) {
 
             User user=users.get(i);
+            if(user.deleted) continue;
             boolean found=false;
             for(QuoteAuth quoteAuth:quoteAuths)
             {
@@ -434,14 +446,14 @@ public class AuthorityController extends  BaseController{
             {
                 QuoteAuth authority=new QuoteAuth();
                 authority.user=user;
-                unConfigAuthorities.add(authority);
+                tempQuoteAuthList.add(authority);
 
             }
 
 
         }
 
-        quoteAuths.addAll(unConfigAuthorities);
+        quoteAuths.addAll(tempQuoteAuthList);
 
 
 
