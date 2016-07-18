@@ -61,7 +61,7 @@ public class HttpUrl {
         if (url.contains("?")) {
             url += "&client=" + ConstantData.CLIENT_DESK;
         } else {
-            url += "?client=" +  ConstantData.CLIENT_DESK;
+            url += "?client=" + ConstantData.CLIENT_DESK;
         }
 
         return url;
@@ -353,8 +353,8 @@ public class HttpUrl {
      *
      * @return
      */
-    public static String copyProductDetail(long id, String productName, String version,boolean copyPicture) {
-        return additionInfo(BaseUrl + "api/product/copy?id=" + id + "&name=" + productName + "&version=" + version+"&copyPicture="+copyPicture);
+    public static String copyProductDetail(long id, String productName, String version, boolean copyPicture) {
+        return additionInfo(BaseUrl + "api/product/copy?id=" + id + "&name=" + productName + "&version=" + version + "&copyPicture=" + copyPicture);
     }
 
     public static String deleteProductLogic(long productId) {
@@ -781,19 +781,19 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/product/saveProductPackTemplate");
     }
-    /**
-
-
 
     /**
+     * /**
      * 随机查询货号   loadProductListByNameRandom 的兼容接口
+     *
      * @param prdName
      * @param withCopy
      * @return
      */
-    public static String loadProductListByNameRandom(String prdName,boolean withCopy) {
-        return additionInfo(BaseUrl + "api/product/loadByNameRandom2?productNames="+prdName+"&withCopy="+withCopy);
+    public static String loadProductListByNameRandom(String prdName, boolean withCopy) {
+        return additionInfo(BaseUrl + "api/product/loadByNameRandom2?productNames=" + prdName + "&withCopy=" + withCopy);
     }
+
     /**
      * 读取订单列表
      *
@@ -807,6 +807,7 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/order/list?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 
+
     public static String loadOrderItemList(String or_no) {
 
         return additionInfo(BaseUrl + "api/order/findOrderItems?orderNo=" + or_no);
@@ -815,10 +816,37 @@ public class HttpUrl {
 
     /**
      * 根据产品no 读取产品详情
+     *
      * @param prdNo
      * @return
      */
     public static String loadProductDetailByPrdNo(String prdNo) {
         return additionInfo(BaseUrl + "api/product/detailByPrdNo?prdNo=" + prdNo);
+    }
+
+    /**
+     * 读取出库详情
+     *
+     * @param ck_no
+     * @return
+     */
+    public static String getStockOutDetail(String ck_no) {
+
+        return additionInfo(BaseUrl + "api/stock/findOutDetail?ck_no=" + ck_no);
+
+
+    }
+
+    /**
+     * 读取出库列表
+     *
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static String loadStockOutList(String key, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 }

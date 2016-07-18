@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.presenter.Presenter;
 import com.google.inject.Guice;
 
 import javax.imageio.ImageIO;
@@ -8,7 +9,7 @@ import javax.swing.*;
 /**
  *  所有frame 框架的基类
  */
-public class BaseFrame  extends JFrame{
+public class BaseFrame  extends JFrame  implements Presenter {
 
 
 
@@ -33,11 +34,8 @@ public class BaseFrame  extends JFrame{
     }
 
 
-
-
-
-
-
-
-
+    @Override
+    public void close() {
+        dispose();
+    }
 }

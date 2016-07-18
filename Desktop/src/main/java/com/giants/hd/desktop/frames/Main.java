@@ -239,8 +239,12 @@ public class Main extends BaseFrame {
             menuBar.add(createReport());
 
 
+
+
         if (AuthorityUtil.getInstance().viewOrderMenu())
             menuBar.add(createOrder());
+        if (AuthorityUtil.getInstance().viewStockModule())
+            menuBar.add(createStockManager());
 
 
         if (AuthorityUtil.getInstance().viewBaseDataModule())
@@ -260,6 +264,38 @@ public class Main extends BaseFrame {
 
         //System.exit(0);
         setJMenuBar(menuBar);
+
+
+    }
+
+
+    /**
+     * 库存列表
+     *
+     * @return
+     */
+    private JMenu createStockManager() {
+
+        //Build second menu in the menu bar.
+        JMenu menu = new JMenu(Module.TITLE_STOCK);
+
+
+        //
+        JMenuItem menuItem = new JMenuItem(Module.TITLE_STOCK_OUT);
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                StockListFrame frame = new StockListFrame();
+                addInterFrame(frame);
+
+            }
+        });
+
+
+        return menu;
 
 
     }
@@ -345,14 +381,7 @@ public class Main extends BaseFrame {
 
 
                     MaterialListInternalFrame materialListInternalFrame = new MaterialListInternalFrame();
-
-                    materialListInternalFrame.setVisible(true); //necessary as of 1.3
-                    desktop.add(materialListInternalFrame);
-                    try {
-                        materialListInternalFrame.setSelected(true);
-                    } catch (java.beans.PropertyVetoException exception) {
-                    }
-                    // Main.this.setContentPane(new Panel_Material("").getRoot());
+                    addInterFrame(materialListInternalFrame);
 
 
                 }
@@ -450,13 +479,8 @@ public class Main extends BaseFrame {
 
 
                     QuotationInternalFrame quotationInternalFrame = new QuotationInternalFrame();
+                    addInterFrame(quotationInternalFrame);
 
-                    quotationInternalFrame.setVisible(true); //necessary as of 1.3
-                    desktop.add(quotationInternalFrame);
-                    try {
-                        quotationInternalFrame.setSelected(true);
-                    } catch (java.beans.PropertyVetoException exception) {
-                    }
 
                     // setContentPane(new Panel_Quotation().getRoot());
 
@@ -658,7 +682,6 @@ public class Main extends BaseFrame {
         });
 
 
-
         return menu;
 
     }
@@ -681,24 +704,26 @@ public class Main extends BaseFrame {
             public void actionPerformed(ActionEvent e) {
 
 
-
-
                 OrderListInternalFrame productListInternalFrame = new OrderListInternalFrame();
+                addInterFrame(productListInternalFrame);
 
-                productListInternalFrame.setVisible(true); //necessary as of 1.3
-                desktop.add(productListInternalFrame);
-
-
-                try {
-                    productListInternalFrame.setSelected(true);
-                } catch (java.beans.PropertyVetoException exception) {
-                }
             }
         });
 
 
         return menu;
 
+    }
+
+    private void addInterFrame(BaseInternalFrame baseInternalFrame) {
+
+
+        baseInternalFrame.setVisible(true); //necessary as of 1.3
+        desktop.add(baseInternalFrame);
+        try {
+            baseInternalFrame.setSelected(true);
+        } catch (java.beans.PropertyVetoException exception) {
+        }
     }
 
     /**

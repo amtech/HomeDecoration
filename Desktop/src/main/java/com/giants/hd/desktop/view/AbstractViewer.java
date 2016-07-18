@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Interface representing a View that will use to load data.
  */
-public interface LoadingView {
+public interface AbstractViewer {
 
 
         /**
@@ -40,4 +40,8 @@ public interface LoadingView {
          */
         Window getWindow();
 
+        Container getRoot();
+
+        void hideLoadingDialog();
+        void showMesssage(String message);
 }

@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.view.AbstractViewer;
 import com.google.inject.Guice;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.event.ActionListener;
 /**
  * 基础模本类。  提供guice注射等等功能  提供一些公共方法
  */
-public  abstract  class BasePanel {
+public  abstract  class BasePanel implements AbstractViewer {
 
     protected PanelListener listener;
     private Window window;
@@ -59,7 +60,7 @@ public  abstract  class BasePanel {
      * @param
      * @return
      */
-    protected Window getWindow(  )
+    public Window getWindow(  )
     {
         Component component=getRoot();
         if(component==null)
@@ -76,6 +77,7 @@ public  abstract  class BasePanel {
      * 获取实际控件
      * @return
      */
+    @Override
     public abstract JComponent getRoot();
 
     public void hideLoadingDialog() {
@@ -170,5 +172,28 @@ public  abstract  class BasePanel {
     }
 
 
+    @Override
+    public void showLoading() {
 
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showRetry() {
+
+    }
+
+    @Override
+    public void hideRetry() {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
 }

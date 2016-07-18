@@ -32,6 +32,7 @@ public class QuoteAuthDialog extends BaseSimpleDialog<QuoteAuth> {
     ApiManager apiManager;
 
     List<User> sales;
+    int showRow;
 
     public QuoteAuthDialog(Window window) {
         super(window);
@@ -54,14 +55,30 @@ public class QuoteAuthDialog extends BaseSimpleDialog<QuoteAuth> {
                 if (e.getClickCount() == 1) {
 
                     int modelRow = jt.convertRowIndexToModel(jt.getSelectedRow());
-                    QuoteAuth quoteAuth = quoteAuthModel.getItem(modelRow);
-                    bindRelateSalesData(  quoteAuth);
+
+                    showRow=modelRow;
+                    showRow(showRow);
                 }
             }
         });
 
 
 
+    }
+
+
+    /**
+     * 显示指定行数
+     * @param row
+     */
+    private  void showRow(int  row)
+    {
+
+
+           panel_relateSales.setVisible(row>=0);
+        jt.setRowSelectionInterval(row,row);
+        QuoteAuth quoteAuth = quoteAuthModel.getItem(row);
+        bindRelateSalesData(  quoteAuth);
     }
 
 
@@ -177,6 +194,8 @@ public class QuoteAuthDialog extends BaseSimpleDialog<QuoteAuth> {
     protected void setNewData(RemoteData<QuoteAuth> newData) {
         super.setNewData(newData);
 
-        panel_relateSales.setVisible(false);
+
+
+        showRow(newData.datas.size()>0?0:-1);
     }
 }

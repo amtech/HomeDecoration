@@ -1,12 +1,14 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.presenter.Presenter;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Created by david on 2015/11/23.
  */
-public abstract class BaseInternalFrame extends JInternalFrame {
+public abstract class BaseInternalFrame extends JInternalFrame  implements Presenter{
 
 
     static int openFrameCount = 0;
@@ -47,4 +49,8 @@ public abstract class BaseInternalFrame extends JInternalFrame {
     protected abstract Container getCustomContentPane();
 
 
+    @Override
+    public void close() {
+
+    }
 }

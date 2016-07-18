@@ -214,6 +214,23 @@ public class AuthorityUtil {
     }
 
 
+    /**
+     * 查看出入库管理
+     * @return
+     */
+    public boolean viewStockModule() {
+
+
+
+        return viewStockList() ;
+    }
+    public boolean viewStockList()
+    {
+
+
+
+        return isViewable(Module.NAME_STOCK);
+    }
     public boolean viewQuotationList() {
 
 

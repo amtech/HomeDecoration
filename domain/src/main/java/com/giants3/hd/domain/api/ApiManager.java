@@ -6,10 +6,12 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -148,6 +150,10 @@ public class ApiManager {
         tokenMaps.put(ErpOrderItem.class, new TypeToken<RemoteData<ErpOrderItem>>() {
         }.getType());
 
+        tokenMaps.put(ErpStockOut.class, new TypeToken<RemoteData<ErpStockOut>>() {
+        }.getType());
+        tokenMaps.put(ErpStockOutDetail.class, new TypeToken<RemoteData<ErpStockOutDetail>>() {
+        }.getType());
     }
 
     @Inject
@@ -315,7 +321,6 @@ public class ApiManager {
         String result = client.postWithStringReturned(url, GsonUtils.toJson(customers));
 
 
-
         RemoteData<Customer> remoteData = invokeByReflect(result, Customer.class);
 
         return remoteData;
@@ -426,7 +431,6 @@ public class ApiManager {
         String result = client.postWithStringReturned(url, GsonUtils.toJson(users));
 
 
-
         RemoteData<Module> remoteData = invokeByReflect(result, Module.class);
 
         return remoteData;
@@ -531,7 +535,6 @@ public class ApiManager {
         String result = client.getWithStringReturned(url);
 
 
-
         RemoteData<PackMaterialPosition> remoteData = invokeByReflect(result, PackMaterialPosition.class);
 
         return remoteData;
@@ -566,7 +569,6 @@ public class ApiManager {
         String url = HttpUrl.loadMaterialListByCodeEquals();
 
         String result = client.postWithStringReturned(url, GsonUtils.toJson(codes));
-
 
 
         RemoteData<Material> remoteData = invokeByReflect(result, Material.class);
@@ -683,9 +685,9 @@ public class ApiManager {
      * @param id
      * @return
      */
-    public RemoteData<ProductDetail> copyProductDetail(long id, String productName, String version,boolean copyPicture) throws HdException {
+    public RemoteData<ProductDetail> copyProductDetail(long id, String productName, String version, boolean copyPicture) throws HdException {
 
-        String url = HttpUrl.copyProductDetail(id, productName, version,copyPicture);
+        String url = HttpUrl.copyProductDetail(id, productName, version, copyPicture);
 
         String result = client.postWithStringReturned(url, null);
 
@@ -939,7 +941,6 @@ public class ApiManager {
         String result = client.postWithStringReturned(url, null);
 
 
-
         RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
 
         return remoteData;
@@ -1034,7 +1035,7 @@ public class ApiManager {
         User user = new User();
         user.name = userName;
         //  user.password =  password ;
-        user.password = DigestUtils.md5( password);
+        user.password = DigestUtils.md5(password);
 
         String result = client.postWithStringReturned(url, GsonUtils.toJson(user));
 
@@ -1254,7 +1255,6 @@ public class ApiManager {
         String result = client.getWithStringReturned(url);
 
 
-
         RemoteData<QuotationDelete> remoteData = invokeByReflect(result, QuotationDelete.class);
 
         return remoteData;
@@ -1456,11 +1456,12 @@ public class ApiManager {
 
     /**
      * 读取包装材料录入模板
+     *
      * @return
      */
     public RemoteData<ProductMaterial> readProductPackTemplate() throws HdException {
 
-        String url = HttpUrl.readProductPackTemplate( );
+        String url = HttpUrl.readProductPackTemplate();
         String result = client.getWithStringReturned(url);
         RemoteData<ProductMaterial> remoteData = invokeByReflect(result, ProductMaterial.class);
         return remoteData;
@@ -1469,7 +1470,7 @@ public class ApiManager {
     public RemoteData<ProductMaterial> saveProductPackMaterialTemplate(List<ProductMaterial> datas) throws HdException {
 
 
-        String url = HttpUrl.saveProductPackMaterialTemplate( );
+        String url = HttpUrl.saveProductPackMaterialTemplate();
         String result = client.postWithStringReturned(url, GsonUtils.toJson(datas));
         RemoteData<ProductMaterial> remoteData = invokeByReflect(result, ProductMaterial.class);
         return remoteData;
@@ -1478,6 +1479,7 @@ public class ApiManager {
 
     /**
      * 随机读取产品列表。
+     *
      * @param productNames 产品名称，以逗号隔开。
      * @param withCopy
      * @return
@@ -1485,7 +1487,7 @@ public class ApiManager {
      */
     public RemoteData<Product> loadProductListByNameRandom(String productNames, boolean withCopy) throws HdException {
 
-        String url = HttpUrl.loadProductListByNameRandom(productNames,withCopy );
+        String url = HttpUrl.loadProductListByNameRandom(productNames, withCopy);
         String result = client.getWithStringReturned(url);
         RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
 
@@ -1495,28 +1497,47 @@ public class ApiManager {
 
     /**
      * 读取订单列表
+     *
      * @param key
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpOrder> getOrderList(String key, int pageIndex, int pageSize)  throws HdException {
+    public RemoteData<ErpOrder> getOrderList(String key, int pageIndex, int pageSize) throws HdException {
 
-        String url = HttpUrl.loadOrderList(key,pageIndex,pageSize );
-        String result = client.getWithStringReturned(url );
+        String url = HttpUrl.loadOrderList(key, pageIndex, pageSize);
+        String result = client.getWithStringReturned(url);
         RemoteData<ErpOrder> remoteData = invokeByReflect(result, ErpOrder.class);
+        return remoteData;
+    }
+
+
+    /**
+     * 读取订单列表
+     *
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<ErpStockOut> getStockOutList(String key, int pageIndex, int pageSize) throws HdException {
+
+        String url = HttpUrl.loadStockOutList(key, pageIndex, pageSize);
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpStockOut> remoteData = invokeByReflect(result, ErpStockOut.class);
         return remoteData;
     }
 
     /**
      * 读取订单明细列表
+     *
      * @param or_no
      * @return
      * @throws HdException
      */
-    public RemoteData<ErpOrderItem> getOrderItemList(String or_no) throws HdException  {
-        String url = HttpUrl.loadOrderItemList(or_no );
-        String result = client.getWithStringReturned(url );
+    public RemoteData<ErpOrderItem> getOrderItemList(String or_no) throws HdException {
+        String url = HttpUrl.loadOrderItemList(or_no);
+        String result = client.getWithStringReturned(url);
         RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
         return remoteData;
     }
@@ -1524,6 +1545,7 @@ public class ApiManager {
 
     /**
      * 根据产品no 读取产品详情
+     *
      * @param prdNo
      * @return
      */
@@ -1531,6 +1553,19 @@ public class ApiManager {
         String url = HttpUrl.loadProductDetailByPrdNo(prdNo);
         String result = client.postWithStringReturned(url, null);
         RemoteData<ProductDetail> productRemoteData = invokeByReflect(result, ProductDetail.class);
+        return productRemoteData;
+    }
+
+    /**
+     * 根据出库单号读取出库详情
+     *
+     * @param ck_no
+     * @return
+     */
+    public RemoteData<ErpStockOutDetail> getStockOutDetail(String ck_no) throws HdException {
+        String url = HttpUrl.getStockOutDetail(ck_no);
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpStockOutDetail> productRemoteData = invokeByReflect(result, ErpStockOutDetail.class);
         return productRemoteData;
     }
 }

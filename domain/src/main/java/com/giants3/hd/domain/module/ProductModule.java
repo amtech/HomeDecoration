@@ -1,7 +1,9 @@
 package com.giants3.hd.domain.module;
 
 import com.giants3.hd.domain.repository.ProductRepository;
+import com.giants3.hd.domain.repository.XiankangRepository;
 import com.giants3.hd.domain.repositoryImpl.ProductRepositoryImpl;
+import com.giants3.hd.domain.repositoryImpl.XiankangRepositoryImpl;
 import com.google.inject.AbstractModule;
 
 /**
@@ -15,7 +17,7 @@ public class ProductModule extends AbstractModule {
 
 
         bind(ProductRepository.class).to(ProductRepositoryImpl.class);
-
+        bind(XiankangRepository.class).to(XiankangRepositoryImpl.class);
 
     }
 
