@@ -3,9 +3,12 @@ package com.giants3.hd.domain.interractor;
 import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
 import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
+
+import java.io.File;
 
 
 /**
@@ -32,10 +35,13 @@ public class UseCaseFactory {
     @Inject
     StockRepository stockRepository;
 
+    @Inject
+    FileRepository fileRepository;
+
     private UseCaseFactory() {
 
 
-        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule()).injectMembers(this);
+        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(),new FileModule()).injectMembers(this);
 
     }
 
@@ -144,5 +150,27 @@ public class UseCaseFactory {
     public UseCase createStockOutDetailUseCase(String ck_no ) {
 
         return new GetStockOutDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), ck_no, stockRepository);
+    }
+
+    /**
+     * 上传临时文件
+     * @param file
+     * @return
+     */
+    public UseCase uploadTempFileUseCase(File[] file)
+    {
+
+        return new UploadTempFileUseCase(Schedulers.newThread(), Schedulers.immediate(), file, fileRepository);
+
+    }
+
+    /**
+     *
+     * @param erpStockOutDetail
+     * @return
+     */
+    public UseCase saveStockOutDetail(ErpStockOutDetail erpStockOutDetail) {
+
+        return new SaveStockOutDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), erpStockOutDetail, stockRepository);
     }
 }

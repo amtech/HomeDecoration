@@ -12,6 +12,13 @@ public class FileUtils {
     public static void copyFile(File destFile, File sourceFile)
     {
 
+
+        if(!destFile.exists())
+        {
+            //确保文件夹建立
+            destFile.getParentFile().mkdirs();
+
+        }
         FileInputStream in = null;
         FileOutputStream out = null;
 

@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.entity.StockOut;
+import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.entity_erp.ErpOrder;
 import com.giants3.hd.server.entity_erp.ErpOrderItem;
 import com.giants3.hd.server.entity_erp.ErpStockOut;
@@ -12,10 +13,9 @@ import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
 *  出入库存相关
@@ -49,4 +49,16 @@ public class StockController extends BaseController{
         return  stockService.findDetail(ck_no) ;
     }
 
+
+
+
+    @RequestMapping(value="/out/save", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<ErpStockOutDetail> save(@RequestBody ErpStockOutDetail stockOutDetail)   {
+
+
+        RemoteData<ErpStockOutDetail>  detailRemoteData=    stockService.saveOutDetail(stockOutDetail);
+        return detailRemoteData;
+    }
 }

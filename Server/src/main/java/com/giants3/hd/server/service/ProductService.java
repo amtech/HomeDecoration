@@ -3,6 +3,7 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.server.utils.FileUtils;
@@ -647,8 +648,12 @@ public class ProductService extends AbstractService implements InitializingBean,
         String oldAttachFiles = oldProduct == null ? "" : oldProduct.attaches;
         if (!newProduct.attaches.equals(oldAttachFiles)) {
 
+
             //更新附件文件
-            updateProductAttaches(newProduct, oldAttachFiles);
+            String filePrefix
+                    ="Product_"+newProduct.name + "_" + newProduct.pVersion + "_";
+            newProduct.attaches= AttachFileUtils.updateProductAttaches(newProduct.attaches,oldAttachFiles,filePrefix,attachfilepath,tempFilePath);
+
         }
 
 
@@ -739,57 +744,6 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
 
-    /**
-     * 更新产品附件
-     */
-    private void updateProductAttaches(Product product, String oldAttachFiles) {
-
-        String[] oldAttaches = StringUtils.split(oldAttachFiles);
-        String[] newAttaches = StringUtils.split(product.attaches);
-        for (String oldAttach : oldAttaches) {
-
-            boolean find = false;
-            for (String newAttach : newAttaches) {
-                if (oldAttach.equals(newAttach)) {
-                    find = true;
-                    break;
-                }
-            }
-            if (!find) {
-                //移除文件
-
-                File file = new File(attachfilepath + oldAttach);
-                if (file.exists()) {
-                    file.delete();
-                }
-            }
-
-        }
-
-
-        int length = newAttaches.length;
-        for (int i = 0; i < length; i++) {
-
-
-            String newAttach = newAttaches[i];
-            if (newAttach.startsWith("TEMP_")) {
-                //移动至附件文件夹
-                File sourceFile = new File(tempFilePath + newAttach + ".jpg");
-                if (sourceFile.exists()) {
-                    String newFileName = product.name + "_" + product.pVersion + "_" + Calendar.getInstance().getTimeInMillis();
-                    com.giants3.hd.utils.FileUtils.copyFile(new File(attachfilepath + newFileName + ".jpg"), sourceFile);
-                    sourceFile.delete();
-                    newAttaches[i] = newFileName;
-                }
-
-            }
-
-
-        }
-        product.attaches = StringUtils.combine(newAttaches);
-
-
-    }
     /**
      * 更新产品的工资信息
      *

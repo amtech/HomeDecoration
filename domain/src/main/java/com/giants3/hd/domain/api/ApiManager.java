@@ -1568,4 +1568,20 @@ public class ApiManager {
         RemoteData<ErpStockOutDetail> productRemoteData = invokeByReflect(result, ErpStockOutDetail.class);
         return productRemoteData;
     }
+
+    /**
+     * 保存出库数据
+     * @param stockOutDetail
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<ErpStockOutDetail> saveStockOutDetail(ErpStockOutDetail stockOutDetail) throws HdException {
+
+
+        String url = HttpUrl.saveStockOutDetail( );
+        String result = client.postWithStringReturned(url,GsonUtils.toJson(stockOutDetail));
+        RemoteData<ErpStockOutDetail> productRemoteData = invokeByReflect(result, ErpStockOutDetail.class);
+        return productRemoteData;
+
+    }
 }

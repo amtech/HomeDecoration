@@ -118,20 +118,53 @@ public class ArrayUtils {
         int length=fields==null?0:fields.length;
 
         if(length==0) return "";
-        String s="";
+        temp.setLength(0);
+
         for(int i=0;i<length-1;i++)
         {
-            s+=fields[i]+divider;
+            temp.append(fields[i]).append(divider);
 
 
         }
-        s+=fields[length-1];
+        temp.append(fields[length-1]);
 
-        return s;
+        return temp.toString();
 
 
     }
 
+
+    /**
+     * 字符串拼接容器 避免大量+ 处理
+     */
+    private static final StringBuilder temp=new StringBuilder(1000);
+    /**
+     * 将字符数组转换成带分隔符的字符串
+     * @param lists
+     * @param divider
+     * @return
+     */
+    public static String toDividerString(List<String> lists, String divider) {
+
+
+        int length=lists==null?0:lists.size();
+
+        if(length==0) return "";
+        temp.setLength(0);
+
+
+        for(int i=0;i<length-1;i++)
+        {
+            temp.append(lists.get(i)).append(divider);
+
+
+        }
+        temp.append(lists.get(length-1));
+
+        return temp.toString();
+
+
+    }
 
     /**
      * 返回 给定值在数组中的位置

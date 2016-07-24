@@ -3,6 +3,7 @@ package com.giants.hd.desktop;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,7 +93,7 @@ public class ImageViewDialog extends JDialog {
 
         String url=HttpUrl.loadProductPicture(productUrl);
 
-        showDialog(frame,url,productName+"-"+version);
+        showDialog(frame,url, StringUtils.isEmpty(version)?productName:(productName+"-"+version));
 
     }
 

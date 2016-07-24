@@ -1,5 +1,7 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.frames.StockOutDetailFrame;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -13,14 +15,19 @@ import javax.swing.*;
 
 public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
 
+    public static final String DESCRIBE = "describe";
+    public static String[] columnNames = new String[]{ "序号","图片",                                "货号",       "版本号",    "产品描述"  ,    "柜号        封签号"   ,"合同号", "客号",    "客号订单号", "单位","单价","数量" ,  "金额"  ,"每箱套数",  "箱数"    ,"箱规"    ,"箱规体积" ,"总体积",  "净重" ,"毛重",};
+    public static int[] columnWidth=new int[]{       60, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH,    120,          120,            200,           160,                       120,       100,       100        ,  40 ,     60,   40 ,       60       ,40  ,         40    ,   120      ,    60       ,     60    ,      40  ,40   };
 
-    public static String[] columnNames = new String[]{ "图片",                                "货号",       "版本号","合同号", "客号",    "客号订单号", "单位","单价","数量" ,  "金额"  ,"每箱套数",  "箱数"    ,"箱规"    ,"箱规体积" ,"总体积",  "净重" ,"毛重","产品描述"};
-    public static int[] columnWidth=new int[]{   ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH,    120,          120,      60,       120,       100,       60        ,  60 ,   60,        60 ,     60          ,60  ,      80    , 100         ,    100        ,60    ,  60     ,120};
-    public static String[] fieldName = new String[]{"photo",                                   "prd_no",  "id_no","os_no",   "bat_no","cus_os_no", "unit"  , "up",  "qty",     "amt", "so_zxs"     ,"xs"  ,  "khxg","xgtj",        "zxgtj",    "jz1",  "mz"   ,"describe"};
+    public static final String KHXG = "khxg";
+    public static final String GUIHAO = "guihao";
+    public static final String FENGQIANHAO = "fengqianhao";
+    public static String[] fieldName = new String[]{  "itm", "photo",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , "up",  "qty",     "amt", "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
 
-    public  static Class[] classes = new Class[]{ImageIcon.class,Object.class, Object.class, Object.class, Object.class, Object.class, Object.class};
+    public  static Class[] classes = new Class[]{Object.class,ImageIcon.class,                       Object.class,   Object.class, Object.class, StockOutDetailFrame.GuiInfo.class,  Object.class};
 
 
+    public int[] multiLineColumn=new int[]{StringUtils.index(fieldName,KHXG)};
 
     @Inject
     public StockOutItemTableModel() {
@@ -39,13 +46,76 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     }
 
 
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+        if(columnIndex==StringUtils.index(fieldName,DESCRIBE))
+
+            return true;
+        if(columnIndex==StringUtils.index(fieldName,GUIHAO+FENGQIANHAO))
+
+            return true;
+
+
+        return super.isCellEditable(rowIndex, columnIndex);
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
 
+        if(columnIndex==StringUtils.index(fieldName,GUIHAO+FENGQIANHAO))
+        {
+            ErpStockOutItem item=getItem(rowIndex)
+                    ;
+            if(item!=null)
+            {
+                return (StringUtils.isEmpty(item.guihao)?"":item.guihao)+"       "+(StringUtils.isEmpty(item.fengqianhao)?"":item.fengqianhao);
+            }else
+
+            return "";
+        }
+
 
 
         return super.getValueAt(rowIndex, columnIndex);
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+        if(columnIndex==StringUtils.index(fieldName,DESCRIBE))
+        {
+
+         ErpStockOutItem  item=     getItem(rowIndex);
+            if(item!=null)
+            {
+                item.describe=String.valueOf(aValue);
+                fireTableCellUpdated(rowIndex,columnIndex);
+            }
+
+        }
+        if(columnIndex==StringUtils.index(fieldName,GUIHAO+FENGQIANHAO))
+        {
+            ErpStockOutItem item=getItem(rowIndex)                    ;
+            if(item!=null&&aValue instanceof StockOutDetailFrame.GuiInfo)
+            {
+                StockOutDetailFrame.GuiInfo guiInfo=(StockOutDetailFrame.GuiInfo)aValue;
+                item.guihao=guiInfo.guihao;
+                item.fengqianhao=guiInfo.fengqianhao;
+                fireTableCellUpdated(rowIndex,columnIndex);
+
+            }
+
+
+        }
+
+        super.setValueAt(aValue, rowIndex, columnIndex);
+    }
+
+
+    @Override
+    public int[] getMultiLineColumns() {
+        return multiLineColumn;
     }
 }

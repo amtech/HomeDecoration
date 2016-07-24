@@ -63,6 +63,7 @@ public class ErpOrder {
      */
     public void updateAfterSql() {
 
+        //时间相关 取前10
         if(!StringUtils.isEmpty(os_dd)) {
             os_dd=os_dd.trim();
             if (os_dd.length() > 10) {

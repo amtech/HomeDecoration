@@ -11,12 +11,11 @@ public interface AbstractViewer {
         /**
          * Show a view with a progress bar indicating a loading process.
          */
-        void showLoading();
+        void showLoadingDialog();
 
-        /**
-         * Hide a loading view.
-         */
-        void hideLoading();
+        void showLoadingDialog(String hint);
+
+
 
         /**
          * Show a retry view in case of an error when retrieving data.

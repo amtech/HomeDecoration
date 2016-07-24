@@ -5,7 +5,7 @@ import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import rx.Observable;
 
-/**
+/** 库存资源接口
  * Created by david on 2015/10/13.
  */
 public interface StockRepository {
@@ -19,4 +19,11 @@ public interface StockRepository {
     Observable<RemoteData<ErpStockOut>> getStockOutList(String key, int pageIndex, int pageSize);
 
     Observable<RemoteData<ErpStockOutDetail>>  getStockOutDetail(String ck_no);
+
+    /**
+     * 保存出库详情
+     * @param stockOutDetail
+     * @return
+     */
+    Observable<RemoteData<ErpStockOutDetail>>  saveStockOutDetail(ErpStockOutDetail stockOutDetail);
 }

@@ -3,20 +3,21 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_StockOutDetail;
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
-import com.google.inject.Inject;
 import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 出库单详情模块
@@ -24,20 +25,18 @@ import java.awt.event.WindowEvent;
 public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPresenter {
 
 
-    @Inject
-    ApiManager apiManager;
+    StockOutDetailViewer stockOutDetailViewer;
+    java.util.List<String> attachStrings = new ArrayList<>();
 
-
-    StockOutDetailViewer panel_stockOutDetail;
-
-
+    //柜号数组信息
+    Set<GuiInfo> guiInfos = new HashSet<>();
     private ErpStockOutDetail oldData;
     private ErpStockOutDetail erpStockOutDetail;
 
     public StockOutDetailFrame(final ErpStockOut stockOut) {
 
-        super();
-        panel_stockOutDetail = new Panel_StockOutDetail(this);
+        super("出库单：" + stockOut.ck_no);
+        stockOutDetailViewer = new Panel_StockOutDetail(this);
         init();
         readData(stockOut);
     }
@@ -47,19 +46,19 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         UseCaseFactory.getInstance().createStockOutDetailUseCase(erpStockOut.ck_no).execute(new Subscriber<RemoteData<ErpStockOutDetail>>() {
             @Override
             public void onCompleted() {
-                panel_stockOutDetail.hideLoadingDialog();
+                stockOutDetailViewer.hideLoadingDialog();
             }
 
             @Override
             public void onError(Throwable e) {
-                panel_stockOutDetail.hideLoadingDialog();
-                panel_stockOutDetail.showMesssage(e.getMessage());
+                stockOutDetailViewer.hideLoadingDialog();
+                stockOutDetailViewer.showMesssage(e.getMessage());
             }
 
             @Override
             public void onNext(RemoteData<ErpStockOutDetail> erpOrderRemoteData) {
                 if (erpOrderRemoteData.isSuccess()) {
-                    panel_stockOutDetail.setStockOutDetail(erpOrderRemoteData.datas.get(0));
+                    setErpStockOutDetail(erpOrderRemoteData.datas.get(0));
                 }
 
 
@@ -70,7 +69,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
 
     public void init() {
-        setContentPane(panel_stockOutDetail.getRoot());
+        setContentPane(stockOutDetailViewer.getRoot());
         setMinimumSize(new Dimension(1024, 768));
         pack();
 
@@ -81,14 +80,14 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
             public void windowClosing(WindowEvent e) {
 
 
-                if (panel_stockOutDetail == null || erpStockOutDetail == null) {
+                if (stockOutDetailViewer == null || erpStockOutDetail == null) {
                     dispose();
                     return;
                 }
 
 //                panel_QuotationDetail.getData(quotationDetail);
-
-                if (!erpStockOutDetail.equals(oldData)) {
+                erpStockOutDetail.erpStockOut.attaches = StringUtils.combine(attachStrings);
+                if (!GsonUtils.toJson(erpStockOutDetail).equals(GsonUtils.toJson(oldData))) {
 
                     int option = JOptionPane.showConfirmDialog(StockOutDetailFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
 
@@ -115,161 +114,69 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     private void setErpStockOutDetail(ErpStockOutDetail newDetail) {
 
         oldData = (ErpStockOutDetail) ObjectUtils.deepCopy(newDetail);
+        erpStockOutDetail = newDetail;
 
-        panel_stockOutDetail.setStockOutDetail(newDetail);
-
-    }
-
-
-    /**
-     * 保存详情信息
-     */
-    private void saveQuotationDetail(final QuotationDetail quotationDetail) {
+        stockOutDetailViewer.setStockOutDetail(newDetail);
+        attachStrings = StringUtils.isEmpty(erpStockOutDetail.erpStockOut.attaches) ? new ArrayList<String>() : (ArrayUtils.changeArrayToList(erpStockOutDetail.erpStockOut.attaches.split(";")));
+        stockOutDetailViewer.showAttachFiles(attachStrings);
 
 
-//        new HdSwingWorker<ErpStockOutDetail, Long>(this) {
-//            @Override
-//            protected RemoteData<ErpStockOutDetail> doInBackground() throws Exception {
-//                return apiManager.saveSt(quotationDetail);
-//            }
-//
-//            @Override
-//            public void onResult(RemoteData<ErpStockOutDetail> data) {
-//
-//                if(data.isSuccess()) {
-//
-//                    setErpStockOutDetail(data.datas.get(0));
-//                    JOptionPane.showMessageDialog(StockOutDetailFrame.this, "保存成功");
-//
-//                }else {
-//
-//                    JOptionPane.showMessageDialog(StockOutDetailFrame.this,data.message);
-//
-//
-//                }
-//            }
-//        }.go();
+        guiInfos.clear();
+        //整理出柜号信息数据
+        for (ErpStockOutItem item : erpStockOutDetail.items) {
+            if (StringUtils.isEmpty(item.guihao) && StringUtils.isEmpty(item.fengqianhao))
+                continue;
+            guiInfos.add(new GuiInfo(item.guihao, item.fengqianhao));
+        }
+
+        stockOutDetailViewer.showGuihaoData(guiInfos);
 
 
     }
 
-    /**
-     * 保存详情信息
-     */
-    private void saveAndVerifyQuotationDetail(final QuotationDetail quotationDetail) {
-
-
-//        new HdSwingWorker<St, Long>(this) {
-//            @Override
-//            protected RemoteData<QuotationDetail> doInBackground() throws Exception {
-//                return apiManager.saveAndVerifyQuotationDetail(quotationDetail);
-//            }
-//
-//            @Override
-//            public void onResult(RemoteData<QuotationDetail> data) {
-//
-//                if(data.isSuccess()) {
-//
-//                    setErpStockOutDetail(data.datas.get(0));
-//                    JOptionPane.showMessageDialog(StockOutDetailFrame.this, "保存/审核成功");
-//
-//                }else {
-//
-//                    JOptionPane.showMessageDialog(StockOutDetailFrame.this,data.message);
-//
-//
-//                }
-//            }
-//        }.go();
-
-
-    }
 
     @Override
     public void save() {
 
-//
-//        try {
-//            panel_QuotationDetail.checkData(quotationDetail);
-//        } catch (HdUIException e)
-//        {
-//            JOptionPane.showMessageDialog(e.component,e.message);
-//            e.component.requestFocus();
-//            return;
-//        }
-//
-//
-//        panel_QuotationDetail.getData(quotationDetail);
-//
-//
-//
-//
-//        if (quotationDetail.equals(oldData)) {
-//            JOptionPane.showMessageDialog(StockOutDetailFrame.this, "数据无改动");
-//            return;
-//        }
-//
-//
-//        saveQuotationDetail(quotationDetail);
+
+        erpStockOutDetail.erpStockOut.attaches = StringUtils.combine(attachStrings);
+        UseCaseFactory.getInstance().saveStockOutDetail(erpStockOutDetail).execute(new Subscriber<RemoteData<ErpStockOutDetail>>() {
+            @Override
+            public void onCompleted() {
+                stockOutDetailViewer.hideLoadingDialog();
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                stockOutDetailViewer.hideLoadingDialog();
+                stockOutDetailViewer.showMesssage(e.getMessage());
+
+            }
+
+            @Override
+            public void onNext(RemoteData<ErpStockOutDetail> remoteData) {
+                stockOutDetailViewer.hideLoadingDialog();
+                if (remoteData.isSuccess()) {
+                    setErpStockOutDetail(remoteData.datas.get(0));
+
+                    stockOutDetailViewer.showMesssage("保存成功!");
+                } else {
+
+                    stockOutDetailViewer.showMesssage("保存失败!" + remoteData.message);
+                }
 
 
+            }
+        });
+
+        stockOutDetailViewer.showLoadingDialog("正在保存。。。");
     }
 
 
     @Override
     public void delete() {
-
-
-//        final QuotationDetail detail= quotationDetail;
-//        if(detail==null)return;
-//
-//        if(detail.quotation.id<=0)
-//        {
-//
-//            JOptionPane.showMessageDialog(StockOutDetailFrame.this, "产品数据未建立，请先保存");
-//            return;
-//
-//        }
-//
-//
-//
-//        int res=   JOptionPane.showConfirmDialog(StockOutDetailFrame.this, "是否删除报价单？（导致数据无法恢复）", "删除", JOptionPane.OK_CANCEL_OPTION);
-//        if(res==JOptionPane.YES_OPTION)
-//        {
-//            new HdSwingWorker<Void,Void>(StockOutDetailFrame.this)
-//            {
-//
-//                @Override
-//                protected RemoteData<Void> doInBackground() throws Exception {
-//
-//                    return     apiManager.deleteQuotationLogic(detail.quotation.id);
-//
-//
-//                }
-//
-//                @Override
-//                public void onResult(RemoteData<Void> data) {
-//
-//                    if(data.isSuccess())
-//                    {
-//
-//                        JOptionPane.showMessageDialog(StockOutDetailFrame.this,"删除成功！");
-//
-//                        StockOutDetailFrame.this.dispose();
-//
-//
-//
-//                    }else
-//                    {
-//                        JOptionPane.showMessageDialog(StockOutDetailFrame.this,data.message);
-//                    }
-//
-//                }
-//            }.go();
-//
-//
-//
-//        }
 
 
     }
@@ -280,10 +187,137 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     }
 
     @Override
+    public void addPictureClick(File[] file) {
+
+
+        //上传图片
+        UseCaseFactory.getInstance().uploadTempFileUseCase(file).execute(new Subscriber<java.util.List<String>>() {
+            @Override
+            public void onCompleted() {
+                stockOutDetailViewer.hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                stockOutDetailViewer.hideLoadingDialog();
+                stockOutDetailViewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(java.util.List<String> stringList) {
+                attachStrings.addAll(stringList);
+                stockOutDetailViewer.showAttachFiles(attachStrings);
+            }
+        });
+        stockOutDetailViewer.showLoadingDialog("正在上传图片。。。");
+
+
+    }
+
+    @Override
+    public void onCemaiChange(String value) {
+
+        if (erpStockOutDetail == null || erpStockOutDetail.erpStockOut == null) return;
+        erpStockOutDetail.erpStockOut.cemai = value;
+    }
+
+    @Override
+    public void onNeihemaiChange(String value) {
+        if (erpStockOutDetail == null || erpStockOutDetail.erpStockOut == null) return;
+
+        erpStockOutDetail.erpStockOut.neheimai = value;
+
+    }
+
+    @Override
+    public void onZhengmaiChange(String value) {
+        if (erpStockOutDetail == null || erpStockOutDetail.erpStockOut == null) return;
+
+        erpStockOutDetail.erpStockOut.zhengmai = value;
+
+    }
+
+    @Override
+    public void onMemoChange(String value) {
+        if (erpStockOutDetail == null || erpStockOutDetail.erpStockOut == null) return;
+
+        erpStockOutDetail.erpStockOut.memo = value;
+
+
+    }
+
+    @Override
+    public void onDeleteAttach(String url) {
+        attachStrings.remove(url);
+    }
+
+
+    @Override
+    public void addGuiInfo(String guihao, String fengqian) {
+
+        GuiInfo guiInfo = new GuiInfo(guihao, fengqian);
+        guiInfos.add(guiInfo);
+        stockOutDetailViewer.showGuihaoData(guiInfos);
+
+    }
+
+    @Override
+    public void removeGuiInfo(GuiInfo guiInfo) {
+        guiInfos.remove(guiInfo);
+        stockOutDetailViewer.showGuihaoData(guiInfos);
+    }
+
+    @Override
     public void close() {
         setVisible(false);
         dispose();
     }
 
+
+    /**
+     * 柜号相关信息数据
+     */
+
+    public static class GuiInfo {
+
+        public String guihao;
+
+        public String fengqianhao;
+
+        public GuiInfo() {
+        }
+
+        public GuiInfo(String guihao, String fengqianhao) {
+
+            this.guihao = guihao;
+            this.fengqianhao = fengqianhao;
+        }
+
+
+        @Override
+        public String toString() {
+            return guihao + "        " + fengqianhao;
+
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof GuiInfo)) return false;
+
+            GuiInfo guiInfo = (GuiInfo) o;
+
+            if (guihao != null ? !guihao.equals(guiInfo.guihao) : guiInfo.guihao != null) return false;
+            return fengqianhao != null ? fengqianhao.equals(guiInfo.fengqianhao) : guiInfo.fengqianhao == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = guihao != null ? guihao.hashCode() : 0;
+            result = 31 * result + (fengqianhao != null ? fengqianhao.hashCode() : 0);
+            return result;
+        }
+    }
 
 }

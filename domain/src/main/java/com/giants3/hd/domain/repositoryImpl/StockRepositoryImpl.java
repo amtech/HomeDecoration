@@ -70,4 +70,29 @@ public class StockRepositoryImpl extends BaseRepositoryImpl implements StockRepo
             }
         });
     }
+
+    @Override
+    public Observable<RemoteData<ErpStockOutDetail>> saveStockOutDetail( final ErpStockOutDetail stockOutDetail) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpStockOutDetail>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<ErpStockOutDetail>> subscriber) {
+                try {
+                    RemoteData<ErpStockOutDetail> remoteData = apiManager.saveStockOutDetail(stockOutDetail);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
 }

@@ -1245,15 +1245,9 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         };
     }
 
-    @Override
-    public void showLoading() {
 
-    }
 
-    @Override
-    public void hideLoading() {
 
-    }
 
     @Override
     public void showRetry() {

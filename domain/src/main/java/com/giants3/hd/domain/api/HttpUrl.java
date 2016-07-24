@@ -849,4 +849,13 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
+
+    /**
+     * 保存出库信息
+     * @return
+     */
+    public static String saveStockOutDetail() {
+
+        return additionInfo(BaseUrl + "api/stock/out/save");
+    }
 }

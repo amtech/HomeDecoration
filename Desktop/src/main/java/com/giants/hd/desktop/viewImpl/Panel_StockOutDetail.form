@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.giants.hd.desktop.viewImpl.Panel_StockOutDetail">
   <grid id="27dc6" binding="root" layout-manager="FormLayout">
-    <rowspec value="center:max(m;100px):grow"/>
-    <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:d:grow"/>
+    <rowspec value="center:max(m;80px):noGrow"/>
+    <rowspec value="top:max(m;40dlu):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
-    <colspec value="fill:d:grow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:max(m;80px):noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="center:425px:grow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <colspec value="fill:min(p;1024px):grow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:max(m;150dlu):noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="1394" height="893"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="7716b" class="javax.swing.JButton" binding="btn_addPicture">
+      <scrollpane id="2c823" binding="scroll">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="添加图片"/>
-        </properties>
-      </component>
-      <scrollpane id="2c823">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <forms/>
+          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -39,20 +37,20 @@
         </children>
       </scrollpane>
       <grid id="d07f1" layout-manager="FormLayout">
-        <rowspec value="center:d:grow"/>
+        <rowspec value="center:max(m;20dlu):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:max(d;4px):noGrow"/>
-        <colspec value="fill:d:noGrow"/>
+        <rowspec value="center:max(d;20dlu):noGrow"/>
+        <colspec value="fill:max(m;40dlu):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:d:grow"/>
+        <colspec value="fill:max(m;80dlu):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="fill:max(d;40dlu):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:d:grow"/>
+        <colspec value="fill:max(d;80dlu):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="fill:max(d;40dlu):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:d:grow"/>
+        <colspec value="fill:max(m;80dlu):noGrow"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
@@ -66,6 +64,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text value="出库单号"/>
             </properties>
           </component>
@@ -75,6 +74,7 @@
               <forms/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text value="客户"/>
             </properties>
           </component>
@@ -85,7 +85,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="b0b28" class="javax.swing.JTextField" binding="tf_cus">
             <constraints>
@@ -94,7 +96,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="e8d66" class="javax.swing.JLabel">
             <constraints>
@@ -102,6 +106,7 @@
               <forms/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text value="日期"/>
             </properties>
           </component>
@@ -111,6 +116,7 @@
               <forms/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text value="目的港"/>
             </properties>
           </component>
@@ -121,7 +127,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="1d31c" class="javax.swing.JTextField" binding="tf_mdg">
             <constraints>
@@ -130,7 +138,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="46baa" class="javax.swing.JLabel">
             <constraints>
@@ -138,6 +148,8 @@
               <forms/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="2"/>
               <text value="提单号"/>
             </properties>
           </component>
@@ -147,6 +159,7 @@
               <forms/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text value="柜数柜型"/>
             </properties>
           </component>
@@ -157,7 +170,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="89ffd" class="javax.swing.JTextField" binding="tf_gsgx">
             <constraints>
@@ -166,8 +181,223 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
+        </children>
+      </grid>
+      <component id="4a864" class="com.giants.hd.desktop.widget.AttachPanel" binding="panel_attach">
+        <constraints>
+          <grid row="4" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms top="0" left="40" bottom="0" right="40" defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <grid id="91a32" layout-manager="FormLayout">
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(m;20dlu):noGrow"/>
+        <rowspec value="center:max(m;20dlu):noGrow"/>
+        <rowspec value="center:max(d;20dlu):noGrow"/>
+        <rowspec value="top:max(m;20dlu):noGrow"/>
+        <rowspec value="top:7dlu:noGrow"/>
+        <colspec value="fill:max(d;30dlu):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;200dlu):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;30dlu):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;200dlu):noGrow"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="2e57" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="正唛"/>
+            </properties>
+          </component>
+          <component id="427b2" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="侧唛"/>
+            </properties>
+          </component>
+          <component id="bfcea" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="内盒唛"/>
+            </properties>
+          </component>
+          <component id="bea7d" class="javax.swing.JTextArea" binding="ta_memo">
+            <constraints>
+              <grid row="4" column="6" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <lineWrap value="true"/>
+            </properties>
+          </component>
+          <component id="b014e" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value="备注"/>
+            </properties>
+          </component>
+          <component id="ef0c0" class="javax.swing.JTextArea" binding="ta_cemai">
+            <constraints>
+              <grid row="2" column="6" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <lineWrap value="true"/>
+            </properties>
+          </component>
+          <component id="29d0c" class="javax.swing.JTextArea" binding="ta_zhengmai">
+            <constraints>
+              <grid row="2" column="2" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <lineWrap value="true"/>
+            </properties>
+          </component>
+          <component id="35fe6" class="javax.swing.JTextArea" binding="ta_neihemai">
+            <constraints>
+              <grid row="4" column="2" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <lineWrap value="true"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="7716b" class="javax.swing.JButton" binding="btn_addPicture">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <text value="添加图片"/>
+        </properties>
+      </component>
+      <grid id="6a19d" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="a63d" class="javax.swing.JButton" binding="save">
+            <constraints/>
+            <properties>
+              <text value="保存"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="da434" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints>
+          <grid row="0" column="2" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <toolTipText value="柜号处理"/>
+        </properties>
+        <border type="line" title="柜号处理相关"/>
+        <children>
+          <scrollpane id="86bd4">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="19f07" class="com.giants.hd.desktop.widget.JHdTable" binding="tb_guihao">
+                <constraints/>
+                <properties>
+                  <fillsViewportHeight value="true"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <grid id="66877" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="6722c" class="javax.swing.JTextField" binding="tf_guihao">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="31cd3" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="柜号"/>
+                </properties>
+              </component>
+              <component id="28480" class="javax.swing.JTextField" binding="tf_fengqian">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="64cfc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="封签号"/>
+                </properties>
+              </component>
+              <component id="c2b2a" class="javax.swing.JButton" binding="btn_addgui">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="添加柜号"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>

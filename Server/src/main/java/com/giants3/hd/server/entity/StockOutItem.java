@@ -6,8 +6,8 @@ import java.io.Serializable;
 /**
  *   erp出库表  额外附加数据存在本系统的
  */
-@Entity(name="T_StockOut")
-public class StockOut implements Serializable {
+@Entity(name="T_StockOutItem")
+public class StockOutItem implements Serializable {
 
 
     @Id
@@ -19,30 +19,29 @@ public class StockOut implements Serializable {
     @Basic
     public String ckNo;
 
+    //出库列表序号
+    @Basic
+    public int itm;
+
+
     /**
-     * 正唛
+     * 产品描述
      */
     @Basic
-    public String zhengmai;
+    public String  describe;
+
+
     /**
-     * 侧唛
+     * 柜号
      */
     @Basic
-    public String cemai;
+    public String  guihao;
+
+
     /**
-     * 内盒麦
+     * 封签号
      */
     @Basic
-    public String neheimai;
-    /**
-     * 备注
-     */
-    @Basic
-    public String memo;
-    /**
-     *  附件列表
-     */
-    @Basic @Lob
-    public String attaches;
+    public String  fengqianhao;
 
 }
