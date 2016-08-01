@@ -321,7 +321,7 @@ public class Product implements Serializable {
 	/**
 	 * 附件列表   以分号隔开。
 	 */
-	@Basic
+	@Basic @Lob
 	public String attaches="";
 
 	/**
@@ -342,6 +342,22 @@ public class Product implements Serializable {
 	@Basic
 	public String factoryName;
 
+
+
+
+	/**
+	 *  包装图片附件
+	 */
+	@Basic @Lob
+	public String packAttaches="";
+
+
+	/**
+	 * 包装备注信息
+	 * @return
+	 */
+	@Basic @Lob
+	public String packInfo="";
 
 
 

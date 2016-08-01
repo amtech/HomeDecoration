@@ -36,6 +36,7 @@ public abstract class BasePanel implements AbstractViewer {
     public BasePanel(Window window) {
 
         this.window = window;
+        Guice.createInjector().injectMembers(this);
     }
 
 

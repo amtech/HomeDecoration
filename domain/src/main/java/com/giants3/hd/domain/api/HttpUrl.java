@@ -858,4 +858,17 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/stock/out/save");
     }
+
+    /**
+     * 查询订单详情
+     * @param os_no
+     * @return
+     */
+    public static String getOrderDetail(String os_no) {
+        return additionInfo(BaseUrl + "api/order/detail?os_no=" + UTF8UrlEncoder.encode(os_no));
+    }
+
+    public static String saveOrderDetail() {
+        return additionInfo(BaseUrl + "api/order/save");
+    }
 }

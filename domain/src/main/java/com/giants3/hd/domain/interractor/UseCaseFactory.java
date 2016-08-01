@@ -3,6 +3,7 @@ package com.giants3.hd.domain.interractor;
 import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
 import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -38,10 +39,14 @@ public class UseCaseFactory {
     @Inject
     FileRepository fileRepository;
 
+
+    @Inject
+    AuthRepository authRepository;
+
     private UseCaseFactory() {
 
 
-        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(),new FileModule()).injectMembers(this);
+        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(), new FileModule(),new AuthModule()).injectMembers(this);
 
     }
 
@@ -144,33 +149,54 @@ public class UseCaseFactory {
      * 读取出库列表case
      *
      * @param ck_no 出库单号
-
      * @return
      */
-    public UseCase createStockOutDetailUseCase(String ck_no ) {
+    public UseCase createStockOutDetailUseCase(String ck_no) {
 
         return new GetStockOutDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), ck_no, stockRepository);
     }
 
     /**
      * 上传临时文件
+     *
      * @param file
      * @return
      */
-    public UseCase uploadTempFileUseCase(File[] file)
-    {
+    public UseCase uploadTempFileUseCase(File[] file) {
 
         return new UploadTempFileUseCase(Schedulers.newThread(), Schedulers.immediate(), file, fileRepository);
 
     }
 
     /**
-     *
      * @param erpStockOutDetail
      * @return
      */
     public UseCase saveStockOutDetail(ErpStockOutDetail erpStockOutDetail) {
 
         return new SaveStockOutDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), erpStockOutDetail, stockRepository);
+    }
+
+    public UseCase createOrderDetailUseCase(String os_no) {
+
+        return new GetOrderDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), os_no, orderRepository);
+    }
+
+    /**
+     * 保存订单详情用例
+     * @param orderDetail
+     * @return
+     */
+    public UseCase saveOrderDetail(ErpOrderDetail orderDetail) {
+        return new SaveOrderDetailUseCase(Schedulers.newThread(), Schedulers.immediate(), orderDetail, orderRepository);
+    }
+
+    /**
+     * 读取报价明细权限
+     * @return
+     */
+    public UseCase createQuoteAuthListCase() {
+
+        return new GetQuoteAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
     }
 }

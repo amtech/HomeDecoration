@@ -5,10 +5,8 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.JTableUtils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
+import java.awt.*;
 
 /**
  *  自定义表格
@@ -52,9 +50,19 @@ public class JHdTable extends JTable {
                     protected void setValue(Object value) {
 
                         String valueString = value == null ? "" : value.toString();
-                        super.setValue(HdSwingUtils.multiLineForLabel(valueString));
+                         super.setValue(HdSwingUtils.multiLineForLabel(valueString));
+                    }
+
+                    @Override
+                    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+
+
+
+                        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     }
                 };
+//             TableCellRenderer renderer=new TextAreaCellRenderer();
                 TableColumnModel columnModel = getColumnModel();
                 for(int index:multiLineTextColumnIndexes)
                 {

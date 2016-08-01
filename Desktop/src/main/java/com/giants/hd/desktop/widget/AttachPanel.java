@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class AttachPanel extends JPanel {
 
         for (String s : urls) {
             final JLabel jLabel = new JLabel();
+//            jLabel.setMinimumSize(new Dimension(maxSize,maxSize));
             showPicture(jLabel, s);
         }
 
@@ -90,15 +92,22 @@ public class AttachPanel extends JPanel {
         jLable.addMouseListener(mouseAdapter);
         labelList.add(jLable);
         pictureUrls.add(fileName);
-
-
         String url = getUrl(fileName);
+        jLable.setMinimumSize(new Dimension(80,80));
+        jLable.setText(fileName);
+//        final ImageIcon icon1 = new ImageIcon(AttachPanel.class.getClassLoader().getResource("icons/logo.jpg"));
+//        jLable.setIcon(icon1);
+
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
             public void setIcon(ImageIcon icon) {
                 jLable.setIcon(icon);
                 jLable.setText("");
+//                final ImageIcon icon1 = new ImageIcon(AttachPanel.class.getClassLoader().getResource("icons/logo.jpg"));
+//                 jLable.setIcon(icon1);
+
+
             }
 
             @Override
@@ -108,19 +117,6 @@ public class AttachPanel extends JPanel {
         }, url, maxSize, maxSize);
 
 
-//        new HdPictureWorker(new Iconable(){
-//            @Override
-//            public void setIcon(ImageIcon icon) {
-//
-//                if(icon==null)
-//                {
-//                    jLable.setText("图片读取失败");
-//                }else {
-//                    jLable.setIcon(icon);
-//                }
-//
-//            }
-//        },120,120,url).execute();
 
         add(jLable);
         revalidate();

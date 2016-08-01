@@ -8,6 +8,7 @@ import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ShortcutHelper;
+import com.giants.hd.desktop.viewImpl.Panel_Auth_Relates;
 import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
@@ -170,7 +171,9 @@ public class Main extends BaseFrame {
         //  frame.generateMenu();
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-
+        //主界面 移除通用监听器  强制退出提示
+        for (WindowListener listener : frame.getWindowListeners())
+            frame.removeWindowListener(listener);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -239,8 +242,6 @@ public class Main extends BaseFrame {
             menuBar.add(createReport());
 
 
-
-
         if (AuthorityUtil.getInstance().viewOrderMenu())
             menuBar.add(createOrder());
         if (AuthorityUtil.getInstance().viewStockModule())
@@ -280,19 +281,20 @@ public class Main extends BaseFrame {
         JMenu menu = new JMenu(Module.TITLE_STOCK);
 
 
-        //
-        JMenuItem menuItem = new JMenuItem(Module.TITLE_STOCK_OUT);
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        if (AuthorityUtil.getInstance().viewStockOutList()) {
+            JMenuItem menuItem = new JMenuItem(Module.TITLE_STOCK_OUT);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
-                StockListFrame frame = new StockListFrame();
-                addInterFrame(frame);
+                    StockListFrame frame = new StockListFrame();
+                    addInterFrame(frame);
 
-            }
-        });
+                }
+            });
+        }
 
 
         return menu;
@@ -669,13 +671,13 @@ public class Main extends BaseFrame {
 
 
         //
-        menuItem = new JMenuItem("报价细分权限");
+        menuItem = new JMenuItem("细分权限");
 
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                QuoteAuthDialog dialog = new QuoteAuthDialog(Main.this);
+                AuthRelatesDialog dialog = new AuthRelatesDialog(Main.this);
                 dialog.pack();
                 dialog.setVisible(true);
             }

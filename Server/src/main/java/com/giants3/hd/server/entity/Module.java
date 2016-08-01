@@ -141,6 +141,13 @@ public class Module implements Serializable{
 
 
 
+    public static final String NAME_STOCK="stockManager";
+    public static final String TITLE_STOCK="库存模块";
+
+
+    public static final String NAME_STOCK_OUT="stockOutList";
+    public static final String TITLE_STOCK_OUT="出库列表";
+
 
     public static final String NAME_PICTURE_UPLOAD="PictureUpload";
     public static final String TITLE_PICTURE_UPLOAD="图片上传";
@@ -177,7 +184,7 @@ public class Module implements Serializable{
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
     ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
-    ,NAME_SYS_PARAM,NAME_TASK_MANAGE,NAME_ORDER
+    ,NAME_SYS_PARAM,NAME_TASK_MANAGE,NAME_ORDER ,NAME_STOCK,NAME_STOCK_OUT
     };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
@@ -187,7 +194,7 @@ public class Module implements Serializable{
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
    , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
-    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,TITLE_ORDER
+    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,TITLE_ORDER,TITLE_STOCK,TITLE_STOCK_OUT
     };
 
 }

@@ -8,10 +8,7 @@ import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.BufferData;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.utils.noEntity.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -149,7 +146,8 @@ public class ApiManager {
 
         tokenMaps.put(ErpOrderItem.class, new TypeToken<RemoteData<ErpOrderItem>>() {
         }.getType());
-
+        tokenMaps.put(ErpOrderDetail.class, new TypeToken<RemoteData<ErpOrderDetail>>() {
+        }.getType());
         tokenMaps.put(ErpStockOut.class, new TypeToken<RemoteData<ErpStockOut>>() {
         }.getType());
         tokenMaps.put(ErpStockOutDetail.class, new TypeToken<RemoteData<ErpStockOutDetail>>() {
@@ -1581,6 +1579,32 @@ public class ApiManager {
         String url = HttpUrl.saveStockOutDetail( );
         String result = client.postWithStringReturned(url,GsonUtils.toJson(stockOutDetail));
         RemoteData<ErpStockOutDetail> productRemoteData = invokeByReflect(result, ErpStockOutDetail.class);
+        return productRemoteData;
+
+    }
+
+    /**
+     * 获取订单详情
+     * @param os_no
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<ErpOrderDetail> getOrderDetail(String os_no ) throws HdException {
+        String url = HttpUrl.getOrderDetail(os_no );
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpOrderDetail> remoteData = invokeByReflect(result, ErpOrderDetail.class);
+        return remoteData;
+    }
+
+    /**
+     * 保存订单详情
+     * @param orderDetail
+     * @return
+     */
+    public RemoteData<ErpOrderDetail> saveOrderDetail(ErpOrderDetail orderDetail) throws HdException {
+        String url = HttpUrl.saveOrderDetail( );
+        String result = client.postWithStringReturned(url,GsonUtils.toJson(orderDetail));
+        RemoteData<ErpOrderDetail> productRemoteData = invokeByReflect(result, ErpOrderDetail.class);
         return productRemoteData;
 
     }

@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import rx.Observable;
 
 /**
@@ -18,4 +19,13 @@ public interface OrderRepository {
     Observable<RemoteData<ErpOrder>> getOrderList(String key, int pageIndex, int pageSize);
 
     Observable getOrderItemList(String or_no);
+
+    Observable<ErpOrderDetail> getOrderOutDetail(String os_no);
+
+    /**
+     * 保存订单详情
+     * @param orderDetail
+     * @return
+     */
+    Observable<RemoteData<ErpOrderDetail>>  saveOrderDetail(ErpOrderDetail orderDetail);
 }

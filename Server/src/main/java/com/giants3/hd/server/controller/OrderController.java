@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.noEntity.ErpOrderDetail;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
@@ -43,6 +44,25 @@ public class OrderController extends BaseController{
 
         boolean isFromDesk= ConstantData.CLIENT_DESK.equals(client);
         return  erpService.findItemsByOrderNo(orderNo,isFromDesk) ;
+    }
+    @RequestMapping(value="/detail", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ErpOrderDetail> findOrderItems(@RequestParam(value = "os_no") String os_no )   {
+
+
+        return  erpService.getOrderDetail(os_no) ;
+    }
+
+
+    @RequestMapping(value="/save", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<ErpOrderDetail> save(@RequestBody ErpOrderDetail stockOutDetail)   {
+
+
+        RemoteData<ErpOrderDetail>  detailRemoteData=    erpService.saveOrderDetail(stockOutDetail);
+        return detailRemoteData;
     }
 
 }

@@ -52,4 +52,8 @@ public class StockOutTableModel extends BaseTableModel<ErpStockOut> {
 
         return super.getValueAt(rowIndex, columnIndex);
     }
+
+
+
+
 }

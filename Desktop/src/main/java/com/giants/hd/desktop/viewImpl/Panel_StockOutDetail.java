@@ -7,6 +7,7 @@ import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.StockOutGuihaoModel;
 import com.giants.hd.desktop.model.StockOutItemTableModel;
 import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
@@ -35,7 +36,7 @@ import java.util.Set;
  * Created by davidleen29 on 2016/7/14.
  */
 public class Panel_StockOutDetail extends BasePanel implements StockOutDetailViewer {
-    private JButton btn_addPicture;
+
     private JPanel root;
     private JHdTable tb;
     private JTextField tf_ck_no;
@@ -45,16 +46,14 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JTextField tf_tdh;
     private JTextField tf_gsgx;
     private JScrollPane scroll;
-    private AttachPanel panel_attach;
-    private JTextArea ta_memo;
-    private JTextArea ta_neihemai;
-    private JTextArea ta_cemai;
-    private JTextArea ta_zhengmai;
+
+
     private JButton save;
     private JHdTable tb_guihao;
     private JTextField tf_guihao;
     private JTextField tf_fengqian;
     private JButton btn_addgui;
+    private JButton btn_showall;
     private StockOutDetailPresenter presenter;
 
     private StockOutItemTableModel tableModel;
@@ -63,7 +62,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
     public Panel_StockOutDetail(StockOutDetailPresenter presenter) {
         this.presenter = presenter;
-
         init();
     }
 
@@ -73,7 +71,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
         tb.setModel(tableModel);
 
-
+        tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tb.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -82,15 +80,28 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
                     int column = tb.convertColumnIndexToModel(tb.getSelectedColumn());
                     int selectRow = tb.convertRowIndexToModel(tb.getSelectedRow());
+                    ErpStockOutItem item = tableModel.getItem(selectRow);
+
+                    if(item==null) return;
+
                     //单击第一列 显示原图
                     if (column == 0) {
 
 
-                        ErpStockOutItem item = tableModel.getItem(selectRow);
 
                         if (!StringUtils.isEmpty(item.prd_no)) {
                             ImageViewDialog.showProductDialog(getWindow(getRoot()), item.prd_no, item.pVersion, item.url);
                         }
+                    }
+                    if (column == 6) {
+                        if(AuthorityUtil.getInstance().viewOrderMenu())
+                        {
+                            String os_no=item.os_no;
+                            presenter.showOrderDetail(os_no);
+                        }
+
+
+
                     }
 
 
@@ -154,26 +165,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tb_guihao.addMouseListener(adapter);
 
 
-        btn_addPicture.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setMultiSelectionEnabled(true);
-                fileChooser.addChoosableFileFilter(new PictureFileFilter());
-                int result = fileChooser.showOpenDialog(null);
-
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    presenter.addPictureClick(fileChooser.getSelectedFiles());
-                }
-
-
-            }
-        });
 
 
         //保存
@@ -187,17 +179,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         });
 
 
-        //图片的摆放布局
-        panel_attach.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        panel_attach.setMaxSize(80);
-
-        panel_attach.setListener(new AttachPanel.OnAttachFileDeleteListener() {
-            @Override
-            public void onDelete(int index, String url) {
-
-                presenter.onDeleteAttach(url);
-            }
-        });
 
         //添加柜号数据
         btn_addgui.addActionListener(new ActionListener() {
@@ -217,99 +198,40 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
             }
         });
+
+
+        tb_guihao.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()==2);
+                int[] row=JTableUtils.getSelectedRowSOnModel(tb_guihao);
+                if(row!=null&&row.length>0) {
+                    StockOutDetailFrame.GuiInfo guiInfo = guihaoModel.getItem(row[0]);
+                    if (guiInfo != null) {
+                        presenter.filterGuihao(guiInfo);
+
+                    }
+                }
+            }
+        });
+
+
+
+        btn_showall.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.filterGuihao(null);
+            }
+        });
     }
 
-    /**
-     * 侧唛数据修改监听
-     */
-    private DocumentListener cemaiDocumentListener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            presenter.onCemaiChange(ta_cemai.getText().trim());
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            presenter.onCemaiChange(ta_cemai.getText().trim());
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-
-            presenter.onCemaiChange(ta_cemai.getText().trim());
-
-        }
-    };
-
-    /**
-     * 内盒唛数据修改监听
-     */
-    private DocumentListener neihemaiDocumentListener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            presenter.onNeihemaiChange(ta_neihemai.getText().trim());
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            presenter.onNeihemaiChange(ta_neihemai.getText().trim());
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-
-            presenter.onNeihemaiChange(ta_neihemai.getText().trim());
-
-        }
-    };
 
 
-    /**
-     * 正唛数据修改监听
-     */
-    private DocumentListener zhengmaiDocumentListener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            presenter.onZhengmaiChange(ta_zhengmai.getText().trim());
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            presenter.onZhengmaiChange(ta_zhengmai.getText().trim());
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-
-            presenter.onZhengmaiChange(ta_zhengmai.getText().trim());
-
-        }
-    };
 
 
-    /**
-     * 备注数据修改监听
-     */
-    private DocumentListener memoDocumentListener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            presenter.onMemoChange(ta_memo.getText().trim());
 
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            presenter.onMemoChange(ta_memo.getText().trim());
-
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-
-            presenter.onMemoChange(ta_memo.getText().trim());
-
-        }
-    };
 
 
     @Override
@@ -329,38 +251,28 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tf_gsgx.setText(erpStockOutDetail.erpStockOut.gsgx);
         tf_mdg.setText(erpStockOutDetail.erpStockOut.mdg);
         tf_tdh.setText(erpStockOutDetail.erpStockOut.tdh);
+
+
+//        ta_cemai.getDocument().removeDocumentListener(cemaiDocumentListener);
+//        ta_neihemai.getDocument().removeDocumentListener(neihemaiDocumentListener);
+//        ta_zhengmai.getDocument().removeDocumentListener(zhengmaiDocumentListener);
+//        ta_memo.getDocument().removeDocumentListener(memoDocumentListener);
+//
+//        ta_cemai.setText(erpStockOutDetail.erpStockOut.cemai);
+//        ta_zhengmai.setText(erpStockOutDetail.erpStockOut.zhengmai);
+//        ta_neihemai.setText(erpStockOutDetail.erpStockOut.neheimai);
+//        ta_memo.setText(erpStockOutDetail.erpStockOut.memo);
+//
+//
+//        ta_cemai.getDocument().addDocumentListener(cemaiDocumentListener);
+//        ta_neihemai.getDocument().addDocumentListener(neihemaiDocumentListener);
+//        ta_zhengmai.getDocument().addDocumentListener(zhengmaiDocumentListener);
+//        ta_memo.getDocument().addDocumentListener(memoDocumentListener);
+
         tableModel.setDatas(erpStockOutDetail.items);
 
-
-        ta_cemai.getDocument().removeDocumentListener(cemaiDocumentListener);
-        ta_neihemai.getDocument().removeDocumentListener(neihemaiDocumentListener);
-        ta_zhengmai.getDocument().removeDocumentListener(zhengmaiDocumentListener);
-        ta_memo.getDocument().removeDocumentListener(memoDocumentListener);
-
-        ta_cemai.setText(erpStockOutDetail.erpStockOut.cemai);
-        ta_zhengmai.setText(erpStockOutDetail.erpStockOut.zhengmai);
-        ta_neihemai.setText(erpStockOutDetail.erpStockOut.neheimai);
-        ta_memo.setText(erpStockOutDetail.erpStockOut.memo);
-
-
-        ta_cemai.getDocument().addDocumentListener(cemaiDocumentListener);
-        ta_neihemai.getDocument().addDocumentListener(neihemaiDocumentListener);
-        ta_zhengmai.getDocument().addDocumentListener(zhengmaiDocumentListener);
-        ta_memo.getDocument().addDocumentListener(memoDocumentListener);
-
-
     }
 
-    @Override
-    public void showAttachFiles(List<String> attachStrings) {
-
-        String[] urls = new String[attachStrings.size()];
-        attachStrings.toArray(urls);
-        panel_attach.setAttachFiles(urls);
-        // btn_addPicture.setVisible(attachStrings.size()< 8);
-
-
-    }
 
 
     @Override
@@ -381,6 +293,23 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         DefaultCellEditor comboboxEditor = new DefaultCellEditor(guiInfoJComboBox);
 
         tb.setDefaultEditor(StockOutDetailFrame.GuiInfo.class, comboboxEditor);
+
+    }
+
+    @Override
+    public void showItems(List<ErpStockOutItem> itemList) {
+        tableModel.setDatas(itemList);
+
+    }
+
+
+    @Override
+    public void setEditable(boolean b) {
+
+
+
+        save.setVisible(b);
+        btn_addgui.setVisible( b);
 
     }
 }

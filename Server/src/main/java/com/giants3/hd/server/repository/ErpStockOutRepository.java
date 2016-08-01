@@ -26,7 +26,7 @@ public class ErpStockOutRepository {
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
      */
 
-    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,B.UP,B.QTY,B.AMT,A.SO_ZXS,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,A.JZ1,A.MZ from TF_CK_Z A FULL JOIN TF_CK B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  where A.ck_no=:ck_no  order by B.itm ASC  ";
+    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,isnull(B.UP,0) as UP, isnull(B.QTY,0) as  QTY, isnull(B.AMT,0) as   AMT ,A.SO_ZXS,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,isnull(A.JZ1,0)as JZ1,isnull(A.MZ,0) as MZ  from TF_CK_Z A FULL JOIN TF_CK B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  where A.ck_no=:ck_no  order by B.itm ASC  ";
 
 
 
@@ -101,7 +101,7 @@ public class ErpStockOutRepository {
      * 调整日期数据
      * @param data
      */
-    private void modifyDateString(List<ErpStockOut> data)
+    protected void modifyDateString(List<ErpStockOut> data)
     {
         if(data==null) return ;
         for(ErpStockOut item:data)

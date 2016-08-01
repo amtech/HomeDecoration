@@ -1,24 +1,29 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.presenter.ProductDetailPresenter;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_ProductDetail;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
+import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.*;
 
 /**
  *  产品详细模块
  */
-public class ProductDetailFrame extends BaseFrame {
+public class ProductDetailFrame extends BaseFrame implements ProductDetailPresenter {
 
 
 
@@ -27,6 +32,9 @@ public class ProductDetailFrame extends BaseFrame {
     @Inject
     Panel_ProductDetail panel_productDetail;
     ProductDelete productDelete =null;
+
+
+    java.util.List<String> attachStrings = new ArrayList<>();
 
 
     private BasePanel.PanelAdapter adapter=new ProductDetailAdapter();
@@ -47,7 +55,7 @@ public class ProductDetailFrame extends BaseFrame {
 
         setTitle("产品详情[" + (productDetail.product == null ? "新增" : ("货号：" + productDetail.product.getName() + "---版本号：" + productDetail.product.getpVersion())) + "]" + (productDelete!=null ? "    [已删除]   " : ""));
 
-
+        panel_productDetail.setPresenter(this);
         init( );
 
         panel_productDetail.setProductDetail(productDetail,productDelete);
@@ -68,47 +76,23 @@ public class ProductDetailFrame extends BaseFrame {
         setMinimumSize(new Dimension(1024, 600));
         pack();
 
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-
-
-
-
-                    if(panel_productDetail.productDetail==null|| productDelete!=null)
-                    {
-                        dispose();
-                        return;
-                    }
-
-                    if(panel_productDetail.isModified())
-                    {
-
-                     int option=   JOptionPane.showConfirmDialog(ProductDetailFrame.this,"数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
-
-                        if (JOptionPane.OK_OPTION == option) {
-                            //点击了确定按钮
-
-                            ProductDetailFrame.this.dispose();
-                        }
-
-                    }else
-                    {
-                        //点击了确定按钮
-
-                        ProductDetailFrame.this.dispose();
-                    }
-
-
-            }
-        });
 
 
 
 
     }
+
+    @Override
+    public boolean hasModifyData() {
+        if(panel_productDetail==null||panel_productDetail.productDetail==null|| productDelete!=null)
+        {
+
+            return false;
+        }
+
+       return panel_productDetail.isModified() ;
+    }
+
     /**
      * 显示产品详情
      * @param product
@@ -119,6 +103,7 @@ public class ProductDetailFrame extends BaseFrame {
     {
 
         super("产品详情[" + (product == null ? "新增" : ("货号：" + product.getName() + "---版本号：" + product.getpVersion())) + "]");
+        panel_productDetail.setPresenter(this);
         init();
         if(product==null)
         {
@@ -137,6 +122,66 @@ public class ProductDetailFrame extends BaseFrame {
             });
 
         }
+    }
+
+    @Override
+    public void addPackagePicture(File[] selectedFiles) {
+
+
+        //上传图片
+        UseCaseFactory.getInstance().uploadTempFileUseCase(selectedFiles).execute(new Subscriber<java.util.List<String>>() {
+            @Override
+            public void onCompleted() {
+                panel_productDetail.hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                panel_productDetail.hideLoadingDialog();
+                panel_productDetail.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(java.util.List<String> stringList) {
+                attachStrings.addAll(stringList);
+                panel_productDetail.showPackAttachFiles(attachStrings);
+            }
+        });
+        panel_productDetail.showLoadingDialog("正在上传图片。。。");
+
+
+
+    }
+
+    @Override
+    public void save( final ProductDetail productDetail) {
+        new HdSwingWorker<ProductDetail, Object>(this.getOwner()) {
+            @Override
+            protected RemoteData<ProductDetail> doInBackground() throws Exception {
+
+                return apiManager.saveProduct(productDetail);
+            }
+
+            @Override
+            public void onResult(RemoteData<ProductDetail> data) {
+              //  panel_productDetail.hideLoadingDialog();
+                if (data.isSuccess()) {
+                    // 显示保存成功
+                    panel_productDetail.showMesssage("数据保存成功!");
+
+                    panel_productDetail.setProductDetail(data.datas.get(0));
+
+
+                } else {
+                    panel_productDetail.showMesssage(data.message);
+
+                }
+            }
+        }.go();
+
+      //  panel_productDetail.showLoadingDialog("正在提交保存。。。·");
+
+
     }
 
     private class ProductDetailAdapter extends BasePanel.PanelAdapter

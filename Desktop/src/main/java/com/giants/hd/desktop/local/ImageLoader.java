@@ -1,6 +1,8 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.interf.Iconable;
+import com.giants.hd.desktop.interf.ImageByteDataReader;
+import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Guice;
 import rx.Observable;
@@ -23,9 +25,8 @@ public class ImageLoader {
 
     public static synchronized ImageLoader getInstance() {
 
-        if(ourInstance==null)
-        {
-            ourInstance=new ImageLoader();
+        if (ourInstance == null) {
+            ourInstance = new ImageLoader();
         }
         return ourInstance;
     }
@@ -35,23 +36,22 @@ public class ImageLoader {
     private ImageLoader() {
 
 
-        manager= Guice.createInjector().getInstance(DownloadFileManager.class);
-
-    }
-    public void displayImage(final Iconable iconable,final String url)
-    {
-
-
-        displayImage(iconable,url,120,120);
+        manager = Guice.createInjector().getInstance(DownloadFileManager.class);
 
     }
 
-
-    public void displayImage(final Iconable iconable,final String url, final double maxWidth, final double maxHeight)
-    {
+    public void displayImage(final Iconable iconable, final String url) {
 
 
-          Observable.create(new Observable.OnSubscribe<BufferedImage>() {
+        displayImage(iconable, url, 120, 120);
+
+    }
+
+
+    public void displayImage(final Iconable iconable, final String url, final double maxWidth, final double maxHeight) {
+
+
+        Observable.create(new Observable.OnSubscribe<BufferedImage>() {
             @Override
             public void call(Subscriber<? super BufferedImage> subscriber) {
 
@@ -67,15 +67,14 @@ public class ImageLoader {
 
             }
         }).map(new Func1<BufferedImage, BufferedImage>() {
-              @Override
-              public BufferedImage call(BufferedImage bufferedImage) {
-                  return scaleImage(bufferedImage, maxWidth, maxHeight);
+            @Override
+            public BufferedImage call(BufferedImage bufferedImage) {
+                return scaleImage(bufferedImage, maxWidth, maxHeight);
 
 
-
-              }
-          })
-                  .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<BufferedImage>() {
+            }
+        })
+                .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<BufferedImage>() {
             @Override
             public void onCompleted() {
 
@@ -98,6 +97,63 @@ public class ImageLoader {
         });
 
 
+    }
+
+
+    public void loadImageData(final ImageByteDataReader byteDataReader, final String url, final double maxWidth, final double maxHeight) {
+
+
+        Observable.create(new Observable.OnSubscribe<BufferedImage>() {
+            @Override
+            public void call(Subscriber<? super BufferedImage> subscriber) {
+
+                try {
+                    String fileName = manager.cacheFile(url);
+                    subscriber.onNext(ImageIO.read(new File(fileName)));
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+
+                    subscriber.onError(e);
+                }
+
+
+            }
+        }).map(new Func1<BufferedImage, byte[]>() {
+            @Override
+            public byte[] call(BufferedImage bufferedImage) {
+                try {
+                    return
+
+                            ImageUtils.scale(bufferedImage, (int) maxWidth, (int) maxHeight, true);
+                } catch (HdException e) {
+                    e.printStackTrace();
+                    return new byte[0];
+                }
+
+
+            }
+        })
+                .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<byte[]>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                e.printStackTrace();
+                byteDataReader.onError("图片读取失败");
+            }
+
+            @Override
+            public void onNext(byte[] bufferedImage) {
+
+
+                byteDataReader.setData(bufferedImage);
+
+            }
+        });
 
 
     }
@@ -131,41 +187,34 @@ public class ImageLoader {
     public String cacheFile(String url) throws IOException {
 
 
-            return manager.cacheFile(url);
+        return manager.cacheFile(url);
 
     }
 
 
-
-
-    public BufferedImage loadImage(String url)  throws IOException
-    {
-       return loadImage(url,-1,-1);
+    public BufferedImage loadImage(String url) throws IOException {
+        return loadImage(url, -1, -1);
     }
 
 
-    public BufferedImage loadImage(String url,final double maxWidth, final double maxHeight)  throws IOException
-    {
-        String fileName=manager.cacheFile(url);
+    public BufferedImage loadImage(String url, final double maxWidth, final double maxHeight) throws IOException {
+        String fileName = manager.cacheFile(url);
 
-        if(maxHeight<=0||maxWidth<=0)
+        if (maxHeight <= 0 || maxWidth <= 0)
             return ImageIO.read(new File(fileName));
 
-         return  scaleImage(  ImageIO.read(new File(fileName)),maxWidth,maxHeight);
-
+        return scaleImage(ImageIO.read(new File(fileName)), maxWidth, maxHeight);
 
 
     }
 
 
-    public void clearCache()
-    {
-          manager.clearCache();
+    public void clearCache() {
+        manager.clearCache();
     }
 
 
     public void close() {
-
 
 
         manager.close();

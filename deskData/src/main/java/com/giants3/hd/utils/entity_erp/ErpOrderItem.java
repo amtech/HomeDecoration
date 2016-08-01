@@ -103,6 +103,20 @@ public class ErpOrderItem {
     public String url;
 
 
+
+    /**
+     * 产品配方号
+     */
+    public String pVersion;
+
+
+    /**
+     * 包装附件列表  由产品信息关联过来。
+     */
+    public String packAttaches;
+
+
+
     public String getOs_no() {
         return os_no;
     }
@@ -238,4 +252,34 @@ public class ErpOrderItem {
     public void setUrl(String url) {
         this.url = url;
     }
+
+
+
+
+    /**
+     * 验货日期
+     */
+    public String verifyDate;
+
+    /**
+     *  出柜日期
+     */
+    public String sendDate;
+
+    /**
+     * 包装信息
+     */
+    public String packageInfo;
+
+
+    /**
+     * 唛头
+     */
+    public String  maitou;
+
+
+    /**
+     * 挂钩说明
+     */
+    public String   guagou ;
 }

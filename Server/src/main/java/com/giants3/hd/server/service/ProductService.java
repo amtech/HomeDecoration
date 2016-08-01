@@ -655,7 +655,16 @@ public class ProductService extends AbstractService implements InitializingBean,
             newProduct.attaches= AttachFileUtils.updateProductAttaches(newProduct.attaches,oldAttachFiles,filePrefix,attachfilepath,tempFilePath);
 
         }
+        String oldPackAttaches = oldProduct == null ? "" : oldProduct.packAttaches;
+        if (!newProduct.packAttaches.equals(oldPackAttaches)) {
 
+
+            //更新包装附件文件
+            String filePrefix
+                    ="Product_"+"Pack_"+newProduct.name + "_" + newProduct.pVersion + "_";
+            newProduct.packAttaches= AttachFileUtils.updateProductAttaches(newProduct.packAttaches,oldPackAttaches,filePrefix,attachfilepath,tempFilePath);
+
+        }
 
         //最新product 数据
         Product product = productRepository.save(newProduct);

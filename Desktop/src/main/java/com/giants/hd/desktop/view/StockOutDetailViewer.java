@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
+import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 
 import java.util.List;
@@ -16,15 +17,23 @@ public interface StockOutDetailViewer extends AbstractViewer {
     public void setStockOutDetail(ErpStockOutDetail erpStockOutDetail);
 
 
-    /**
-     * 显示附件
-     * @param attachStrings
-     */
-    void showAttachFiles(List<String> attachStrings);
+
 
     /**
      * 设置柜号信息
      * @param guiInfos
      */
     void  showGuihaoData(Set<StockOutDetailFrame.GuiInfo> guiInfos);
+
+    /**
+     * 显示出库单项目
+     * @param itemList
+     */
+    void showItems(List<ErpStockOutItem> itemList);
+
+    /**
+     * 设置是否编辑权限
+     * @param b
+     */
+    void setEditable(boolean b);
 }

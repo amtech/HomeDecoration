@@ -58,33 +58,14 @@ public class ErpOrder {
 
 
 
-    /**
-     * sql 数据读取后处理。
-     */
-    public void updateAfterSql() {
-
-        if(!StringUtils.isEmpty(os_dd)) {
-            os_dd=os_dd.trim();
-            if (os_dd.length() > 10) {
-                os_dd=os_dd.substring(0, 10);
-            }
-        }
-
-        if(!StringUtils.isEmpty(est_dd)) {
-            est_dd=est_dd.trim();
-            if (est_dd.length() > 10) {
-                est_dd=est_dd.substring(0, 10);
-            }
-        }
-
-        if(!StringUtils.isEmpty(so_data)) {
-            so_data=so_data.trim();
-            if (so_data.length() > 10) {
-                so_data=so_data.substring(0, 10);
-            }
-        }
-
-    }
 
 
+
+    //本系统增加字段
+
+    public String zhengmai;
+    public String cemai;
+    public String neheimai;
+    public String memo;
+    public  String attaches;
 }

@@ -230,10 +230,15 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
                 }
         }else
         //显示图片
-        if(obj instanceof  byte[] && getColumnClass(columnIndex).equals(ImageIcon.class))
+        if(getColumnClass(columnIndex).equals(ImageIcon.class))
         {
-
+           if( obj instanceof  byte[])
             return new ImageIcon((byte[])obj);
+            //图片url
+            if(obj instanceof  String )
+            {
+
+            }
 
         }
 

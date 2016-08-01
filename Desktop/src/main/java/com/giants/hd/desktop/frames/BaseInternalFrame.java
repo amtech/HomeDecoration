@@ -53,4 +53,9 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements Prese
     public void close() {
 
     }
+
+    @Override
+    public boolean hasModifyData() {
+        return false;
+    }
 }

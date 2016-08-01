@@ -20,7 +20,6 @@ public interface StockOutDetailPresenter extends    Presenter {
 
     public void verify();
 
-    void addPictureClick(File[] file);
 
     /**
      * 侧唛数据改变
@@ -45,11 +44,7 @@ public interface StockOutDetailPresenter extends    Presenter {
      */
     void onMemoChange(String value);
 
-    /**
-     * 删除附件
-     * @param url
-     */
-    void onDeleteAttach(String url);
+
 
 
     /**
@@ -64,4 +59,16 @@ public interface StockOutDetailPresenter extends    Presenter {
      * @param guiInfo
      */
     void removeGuiInfo(StockOutDetailFrame.GuiInfo guiInfo);
+
+    /**
+     * 出库单项目  根据柜号过滤
+     * @param guiInfo
+     */
+    void filterGuihao(StockOutDetailFrame.GuiInfo guiInfo);
+
+    /**
+     * 显示订单详情
+     * @param os_no
+     */
+    void showOrderDetail(String os_no);
 }

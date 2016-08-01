@@ -10,11 +10,13 @@ import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
+import com.giants.hd.desktop.presenter.ProductDetailPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
+import com.giants.hd.desktop.view.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
@@ -47,7 +49,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * 产品详情界面
  */
-public class Panel_ProductDetail extends BasePanel {
+public class Panel_ProductDetail extends BasePanel  implements ProductDetailViewer {
 
 
     @Inject
@@ -144,6 +146,10 @@ public class Panel_ProductDetail extends BasePanel {
     private JLabel lb_qr;
     private JButton btn_export_pic;
     private JButton exportList;
+    private JTabbedPane tabbedPane1;
+    private JTextArea ta_packinfo;
+    private JButton btn_add_pack_image;
+    private AttachPanel pack_attaches;
 
 
     /**
@@ -231,6 +237,11 @@ public class Panel_ProductDetail extends BasePanel {
 
     GlobalData globalData;
 
+    /**
+     * 详情界面逻辑展示
+     */
+    ProductDetailPresenter presenter;
+
 
     public Panel_ProductDetail() {
         super();
@@ -241,9 +252,16 @@ public class Panel_ProductDetail extends BasePanel {
     }
 
 
+    public void setPresenter(ProductDetailPresenter presenter)
+    {
+        this.presenter=presenter;
+    }
+
+
     /**
      * 设置数据
      */
+    @Override
     public void setProductDetail(ProductDetail productDetail) {
 
 
@@ -904,6 +922,10 @@ public class Panel_ProductDetail extends BasePanel {
 
         product.attaches = StringUtils.combine(panel_attach.getAttachFiles());
 
+        product.packInfo=ta_packinfo.getText();
+
+        product.packAttaches=StringUtils.combine(pack_attaches.getAttachFiles());
+
 
         //产品油漆数据
 
@@ -1019,6 +1041,7 @@ public class Panel_ProductDetail extends BasePanel {
         bindTableDatas(tb_pack_wage, packWageTableModel, productDetail.packWages);
 
         jp_pack.productDetiail = productDetail;
+
 
 
     }
@@ -1150,44 +1173,15 @@ public class Panel_ProductDetail extends BasePanel {
         panel_attach.setAttachFiles(fileNames);
 
 
-    }
-
-
-    /**
-     * 执行数据保存
-     *
-     * @param product
-     */
-
-    private void saveData(final ProductDetail product) {
-
-
-        new HdSwingWorker<ProductDetail, Object>(getWindow(getRoot())) {
-            @Override
-            protected RemoteData<ProductDetail> doInBackground() throws Exception {
-
-                return apiManager.saveProduct(product);
-
-
-            }
-
-            @Override
-            public void onResult(RemoteData<ProductDetail> data) {
-
-                if (data.isSuccess()) {
-                    //TODO 显示保存成功
-                    JOptionPane.showMessageDialog(contentPane, "数据保存成功!");
-                    initPanel(data.datas.get(0));
-
-
-                } else {
-                    JOptionPane.showMessageDialog(contentPane, data.message);
-                }
-            }
-        }.go();
+        //包装外信息
+        ta_packinfo.setText( product.packInfo);
+         fileNames = StringUtils.isEmpty(product.packAttaches) ? new String[]{} : product.packAttaches.split(";");
+         pack_attaches.setAttachFiles(fileNames);
 
 
     }
+
+
 
 
     /**
@@ -1331,6 +1325,12 @@ public class Panel_ProductDetail extends BasePanel {
         panel_delete.setVisible(false);
         panel_nomal.setVisible(false);
 
+
+        //附件垂直显示
+
+        panel_attach.setLayout( new GridLayout(0,2,10,10));
+        pack_attaches.setLayout(new GridLayout(0,2,5,5));
+
         tf_product.setToolTipText("以【" + ConstantData.DEMO_PRODUCT_NAME + "】开头的货号，将会默认选为套版使用。");
 
 
@@ -1446,12 +1446,13 @@ public class Panel_ProductDetail extends BasePanel {
 
                     checkData(productDetail);
 
-
-                    saveData(productDetail);
                 } catch (HdUIException exception) {
                     JOptionPane.showMessageDialog(exception.component, exception.message);
                     exception.component.requestFocus();
                 }
+                    presenter.save(productDetail);
+
+
 
 
             }
@@ -1537,6 +1538,25 @@ public class Panel_ProductDetail extends BasePanel {
                 if (dialog.getResult() != null)
                     HdSwingUtils.showDetailPanel(getWindow(getRoot()), dialog.getResult());
 
+
+            }
+        });
+
+
+        btn_add_pack_image.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser(".");
+                //下面这句是去掉显示所有文件这个过滤器。
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setMultiSelectionEnabled(true);
+                fileChooser.addChoosableFileFilter(new PictureFileFilter());
+                int result = fileChooser.showOpenDialog(null);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    presenter.addPackagePicture(fileChooser.getSelectedFiles());
+                }
 
             }
         });
@@ -1631,6 +1651,10 @@ public class Panel_ProductDetail extends BasePanel {
         btn_export.setVisible(AuthorityUtil.getInstance().exportProduct());
 
         btn_export_pic.setVisible(AuthorityUtil.getInstance().exportProduct());
+
+        btn_add_pack_image.setVisible( modifiable);
+
+
 
 
         viewLog.addMouseListener(new MouseAdapter() {
@@ -2273,5 +2297,14 @@ public class Panel_ProductDetail extends BasePanel {
 
     public boolean isModified(Xiankang data) {
         return false;
+    }
+
+    @Override
+    public void showPackAttachFiles(List<String> attachStrings) {
+
+        String[] urls = new String[attachStrings.size()];
+        attachStrings.toArray(urls);
+        pack_attaches.setAttachFiles(urls);
+
     }
 }

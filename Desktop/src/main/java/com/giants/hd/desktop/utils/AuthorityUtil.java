@@ -220,17 +220,11 @@ public class AuthorityUtil {
      */
     public boolean viewStockModule() {
 
-
-
-        return viewStockList() ;
-    }
-    public boolean viewStockList()
-    {
-
-
-
         return isViewable(Module.NAME_STOCK);
+
+
     }
+
     public boolean viewQuotationList() {
 
 
@@ -489,5 +483,21 @@ public class AuthorityUtil {
 
     public boolean viewOrderMenu() {
         return isViewable(Module.NAME_ORDER);
+    }
+
+    /**
+     * 出库查看权限
+     * @return
+     */
+    public boolean viewStockOutList() {
+        return isViewable(Module.NAME_STOCK_OUT);
+    }
+
+    /**
+     * 出库能否编辑权限
+     * @return
+     */
+    public boolean editStockOut() {
+        return editable(Module.NAME_STOCK_OUT);
     }
 }
