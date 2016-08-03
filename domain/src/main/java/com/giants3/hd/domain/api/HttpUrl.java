@@ -802,9 +802,9 @@ public class HttpUrl {
      * @param pageSize
      * @return
      */
-    public static String loadOrderList(String key, int pageIndex, int pageSize) {
+    public static String loadOrderList(String key,long salesId, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/order/list?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/order/list?key=" + key +"&salesId=" + salesId+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 
 
@@ -845,9 +845,9 @@ public class HttpUrl {
      * @param pageSize
      * @return
      */
-    public static String loadStockOutList(String key, int pageIndex, int pageSize) {
+    public static String loadStockOutList(String key, long salesId,int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex +"&salesId=" + salesId + "&pageSize=" + pageSize);
     }
 
     /**
@@ -870,5 +870,31 @@ public class HttpUrl {
 
     public static String saveOrderDetail() {
         return additionInfo(BaseUrl + "api/order/save");
+    }
+
+    /**
+     * 读取出库单权限
+     * @return
+     */
+    public static String readStockOutAuth() {
+
+        return additionInfo(BaseUrl + "api/authority/stockOutAuthList");
+    }
+    /**
+     * 读取订单单权限
+     * @return
+     */
+    public static String readOrderAuth() {
+        return additionInfo(BaseUrl + "api/authority/orderAuthList");
+    }
+
+    public static String saveOrderAuthList() {
+
+        return additionInfo(BaseUrl + "api/authority/saveOrderList");
+
+    }
+
+    public static String saveStockOutAuthList() {
+        return additionInfo(BaseUrl + "api/authority/saveStockOutList");
     }
 }

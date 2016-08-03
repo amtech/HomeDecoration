@@ -40,4 +40,14 @@ public class BufferData implements Serializable{
     public List<ProductDetail> demos;
 
     public List<Factory> factories;
+
+    /**
+     * 订单权限
+     */
+    public OrderAuth orderAuth;
+
+    /**
+     * 出库单权限
+     */
+    public StockOutAuth stockOutAuth;
 }

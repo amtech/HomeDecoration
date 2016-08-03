@@ -16,7 +16,7 @@ public interface OrderRepository {
      * <p/>
      * 获取产品信息 根据 产品名称顺序取值
      */
-    Observable<RemoteData<ErpOrder>> getOrderList(String key, int pageIndex, int pageSize);
+    Observable<RemoteData<ErpOrder>> getOrderList(String key,long salesId, int pageIndex, int pageSize);
 
     Observable getOrderItemList(String or_no);
 

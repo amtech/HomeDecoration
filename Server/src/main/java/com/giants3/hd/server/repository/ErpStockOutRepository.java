@@ -20,6 +20,9 @@ public class ErpStockOutRepository {
 
 
     public static final String KEY_CK_NO = "ck_no";
+    public static final String KEY_SAL_NO = "SAL_NO";
+    public static final String CUS_NO = "cus_no";
+    public static final String CK_NO = "ck_no";
     private EntityManager em;
 
     /**
@@ -31,11 +34,19 @@ public class ErpStockOutRepository {
 
 
     //搜索基句
-    public static final String  STOCK_OUT_LIST=" select A.CK_NO,A.CK_DD,A.CUS_NO,B.MDG,B.TDH,B.GSGX ,C.ADR2,C.TEL1,C.FAX from   MF_CK  A FULL  JOIN  MF_CK_Z B  on A.CK_ID=b.CK_ID  and a.ck_no=b.ck_no  LEFT JOIN CUST C on A.CUS_NO=c.CUS_NO  ";
+    public static final String  STOCK_OUT_LIST=" select A.CK_NO,A.CK_DD,A.CUS_NO,A.sal_no,B.MDG,B.TDH,B.GSGX ,C.ADR2,C.TEL1,C.FAX from   MF_CK  A FULL  JOIN  MF_CK_Z B  on A.CK_ID=b.CK_ID  and a.ck_no=b.ck_no  LEFT JOIN CUST C on A.CUS_NO=c.CUS_NO  ";
 
     //按日期排序
     public static final String STOCK_OUT_ORDER=" order by  A.ck_dd desc ";
     public static final String STOCK_OUT_SEARCH=STOCK_OUT_LIST +" where A.CUS_NO like :cus_no or A.CK_NO like :ck_no " +STOCK_OUT_ORDER;
+
+
+    public static final String  SQL_WHERE_SALE_CAUSE=" and a.sal_no in ( :SAL_NO ) ";
+
+    public static final String STOCK_OUT_SEARCH_WITH_SALE=STOCK_OUT_LIST +" where ( A.CUS_NO like :cus_no or A.CK_NO like :ck_no )  "+ SQL_WHERE_SALE_CAUSE +STOCK_OUT_ORDER;
+
+    public static final String STOCK_OUT_COUNT_WITH_SALE="select  count(*) as count from   MF_CK  A FULL  JOIN  MF_CK_Z B  on A.CK_ID=b.CK_ID  and a.ck_no=b.ck_no  LEFT JOIN CUST C on A.CUS_NO=c.CUS_NO    where ( A.CUS_NO like :cus_no or A.CK_NO like :ck_no )  "+ SQL_WHERE_SALE_CAUSE  ;
+
     public static final String STOCK_OUT_FIND=STOCK_OUT_LIST+" where A.CK_NO = :ck_no " +STOCK_OUT_ORDER;
 
 
@@ -79,13 +90,13 @@ public class ErpStockOutRepository {
     /*
       *   查询出库单明细列表
        */
-    public List<ErpStockOut> stockOutList(String key, int pageIndex, int pageSize) {
+    public List<ErpStockOut> stockOutList(String key,List<String> salNos ,int pageIndex, int pageSize) {
 
 
 
-        org.hibernate.Query query= getStockOutListQuery(STOCK_OUT_SEARCH);
+        org.hibernate.Query query= getStockOutListQuery(STOCK_OUT_SEARCH_WITH_SALE);
 
-        query.setParameter("ck_no", "%" + key + '%').setParameter("cus_no", "%" + key + '%')
+        query.setParameter(CK_NO, "%" + key + '%').setParameter(CUS_NO, "%" + key + '%').setParameterList(KEY_SAL_NO,salNos);
                 ;
         List<ErpStockOut> orders = query
                 .setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).list();
@@ -94,6 +105,21 @@ public class ErpStockOutRepository {
 
         return orders;
 
+    }
+
+
+    /**
+     * 获取关键字查询记录总数
+     *
+     * @param key
+     * @return
+     */
+    public int getRecordCountByKey(String key,List<String> saleNos) {
+
+
+        org.hibernate.Query      query =   em.createNativeQuery(STOCK_OUT_COUNT_WITH_SALE).unwrap(SQLQuery.class) ;
+
+        return (Integer) ( query.setParameter(CK_NO, "%" + key + '%').setParameter(CUS_NO, "%" + key + '%').setParameterList(KEY_SAL_NO,saleNos).list().get(0));
     }
 
 

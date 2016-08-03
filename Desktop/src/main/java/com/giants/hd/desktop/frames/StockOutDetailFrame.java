@@ -4,6 +4,7 @@ import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_StockOutDetail;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
@@ -77,7 +78,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         //设置权限相关
       stockOutDetailViewer.setEditable(  AuthorityUtil.getInstance().editStockOut());
 
-
+        stockOutDetailViewer.setStockOutPriceVisible(CacheManager.getInstance().isStockOutPriceVisible());
     }
 
     @Override

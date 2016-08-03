@@ -6,13 +6,16 @@ import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.view.OrderDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.noEntity.BufferData;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Subscriber;
@@ -56,7 +59,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
         //设置权限相关
         orderDetailViewer.setEditable(AuthorityUtil.getInstance().editStockOut());
-
+        orderDetailViewer.setPriceVisible(CacheManager.getInstance().isOrderPriceVisible());
         loadOrderDetail(os_no);
     }
 

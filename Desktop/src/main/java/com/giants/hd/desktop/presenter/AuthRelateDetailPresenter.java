@@ -9,4 +9,6 @@ public interface AuthRelateDetailPresenter extends    OrderAuthDetailPresenter,S
 
 
     void setSelectedPane(int selectedIndex);
+
+    void save();
 }

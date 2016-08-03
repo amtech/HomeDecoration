@@ -7,7 +7,7 @@ import com.giants3.hd.utils.entity_erp.ErpOrder;
 */
 public interface  OrderListAdapter
 {
-    public void search(String key, int pageIndex, int pageSize);
+    public void search(String key, long salesId, int pageIndex, int pageSize);
 
     void loadOrderDetail(ErpOrder erpOrder);
 

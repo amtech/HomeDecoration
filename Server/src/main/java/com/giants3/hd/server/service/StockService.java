@@ -1,16 +1,11 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.Product;
-import com.giants3.hd.server.entity.StockOut;
-import com.giants3.hd.server.entity.StockOutItem;
+import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.entity_erp.ErpStockOut;
 import com.giants3.hd.server.entity_erp.ErpStockOutItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpStockOutDetail;
-import com.giants3.hd.server.repository.ErpStockOutRepository;
-import com.giants3.hd.server.repository.ProductRepository;
-import com.giants3.hd.server.repository.StockOutItemRepository;
-import com.giants3.hd.server.repository.StockOutRepository;
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -43,9 +38,14 @@ public class StockService extends AbstractService {
 
     @Autowired
     StockOutItemRepository stockOutItemRepository;
+@Autowired
+StockOutAuthRepository stockOutAuthRepository;
 
     @Autowired
     StockOutRepository stockOutRepository;
+
+    @Autowired
+    private UserService userService;
     //临时文件夹
     @Value("${tempfilepath}")
     private String tempFilePath;
@@ -66,18 +66,32 @@ public class StockService extends AbstractService {
         repository = new ErpStockOutRepository(manager);
     }
 
-    /**
-     * 查询出库列表
+
+
+
+    /** 查询出库列表
      *
+     * @param loginUser
      * @param key
+     * @param salesId
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpStockOut> search(String key, int pageIndex, int pageSize) {
+    public RemoteData<ErpStockOut> search(User loginUser,String key,long salesId, int pageIndex, int pageSize) {
+
+        List<String> salesNos=null;
+        //查询所有
+        StockOutAuth stockOutAuth=      stockOutAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+        if(stockOutAuth!=null&& !StringUtils.isEmpty(stockOutAuth.relatedSales)) {
+            salesNos = userService.extractUserCodes(loginUser.id, salesId,stockOutAuth.relatedSales);
+        }
 
 
-        List<ErpStockOut> erpStockOuts = repository.stockOutList(key, pageIndex, pageSize);
+        if(salesNos==null||salesNos.size()==0 ) return wrapData();
+
+
+        List<ErpStockOut> erpStockOuts = repository.stockOutList(key,salesNos, pageIndex, pageSize);
         for (ErpStockOut stockOut : erpStockOuts) {
             attachData(stockOut);
         }
@@ -87,7 +101,9 @@ public class StockService extends AbstractService {
 
 
         remoteData.datas = erpStockOuts;
-        return remoteData;
+        int totalCount = repository.getRecordCountByKey(key,salesNos);
+        return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, erpStockOuts);
+
     }
 
 

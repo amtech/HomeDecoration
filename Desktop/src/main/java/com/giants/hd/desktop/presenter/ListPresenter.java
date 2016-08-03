@@ -7,7 +7,7 @@ import org.apache.poi.ss.formula.functions.T;
  */
 public interface ListPresenter<T> extends  Presenter {
 
-    public void search(String key, int pageIndex, int pageSize) ;
+    public void search(String key,long salesId, int pageIndex, int pageSize) ;
 
 
 

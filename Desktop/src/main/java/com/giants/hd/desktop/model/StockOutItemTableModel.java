@@ -22,12 +22,19 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     public static final String KHXG = "khxg";
     public static final String GUIHAO = "guihao";
     public static final String FENGQIANHAO = "fengqianhao";
-    public static String[] fieldName = new String[]{  "itm", "photo",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , "up",  "qty",     "amt", "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
+    public static final String UP = "up";
+    public static final String AMT = "amt";
+    public static String[] fieldName = new String[]{  "itm", "photo",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , UP,  "qty", AMT, "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
 
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class,                       Object.class,   Object.class, Object.class, StockOutDetailFrame.GuiInfo.class,  Object.class};
 
 
     public int[] multiLineColumn=new int[]{StringUtils.index(fieldName,KHXG)};
+
+    /**
+     * 是否可以查看价格
+     */
+    private boolean priceVisible;
 
     @Inject
     public StockOutItemTableModel() {
@@ -63,6 +70,10 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
+        if (columnIndex == StringUtils.index(fieldName, UP)||columnIndex == StringUtils.index(fieldName, AMT)) {
+
+            if(!priceVisible) return "***";
+        }
 
         if(columnIndex==StringUtils.index(fieldName,GUIHAO+FENGQIANHAO))
         {
@@ -117,5 +128,9 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     @Override
     public int[] getMultiLineColumns() {
         return multiLineColumn;
+    }
+
+    public void setPriceVisible(boolean priceVisible) {
+        this.priceVisible = priceVisible;
     }
 }

@@ -19,7 +19,7 @@ public class StockRepositoryImpl extends BaseRepositoryImpl implements StockRepo
     ApiManager apiManager;
 
     @Override
-    public Observable<RemoteData<ErpStockOut>> getStockOutList(final String key, final int pageIndex, final int pageSize) {
+    public Observable<RemoteData<ErpStockOut>> getStockOutList(final String key, final long salesId, final int pageIndex, final int pageSize) {
 
         return Observable.create(new Observable.OnSubscribe<RemoteData<ErpStockOut>>() {
             @Override
@@ -27,7 +27,7 @@ public class StockRepositoryImpl extends BaseRepositoryImpl implements StockRepo
 
 
                 try {
-                    RemoteData<ErpStockOut> remoteData = apiManager.getStockOutList(key, pageIndex, pageSize);
+                    RemoteData<ErpStockOut> remoteData = apiManager.getStockOutList(key,salesId, pageIndex, pageSize);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();

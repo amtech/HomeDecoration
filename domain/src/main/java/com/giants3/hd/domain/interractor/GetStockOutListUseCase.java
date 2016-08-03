@@ -15,12 +15,14 @@ public class GetStockOutListUseCase extends UseCase {
     private StockRepository stockRepository;
 
     private String key;
+    private final long salesId;
     private int pageIndex;
     private int pageSize;
 
-    public GetStockOutListUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String key, int pageIndex, int pageSize, StockRepository orderRepository) {
+    public GetStockOutListUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String key,long salesId, int pageIndex, int pageSize, StockRepository orderRepository) {
         super(threadExecutor, postExecutionThread);
         this.key = key;
+        this.salesId = salesId;
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
 
@@ -29,6 +31,6 @@ public class GetStockOutListUseCase extends UseCase {
 
     @Override
     protected Observable buildUseCaseObservable() {
-        return stockRepository.getStockOutList(key, pageIndex, pageSize);
+        return stockRepository.getStockOutList(key, salesId,pageIndex, pageSize);
     }
 }

@@ -1,9 +1,6 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.Order;
-import com.giants3.hd.server.entity.OrderItem;
-import com.giants3.hd.server.entity.Product;
-import com.giants3.hd.server.entity.User;
+import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.entity_erp.ErpOrder;
 import com.giants3.hd.server.entity_erp.ErpOrderItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +38,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     @Autowired
     private UserRepository userRepository;
 
-
+    @Autowired
+    private UserService userService;
     @Autowired OrderItemRepository orderItemRepository;
 
     @Autowired OrderRepository orderRepository;
@@ -51,6 +50,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     //附件文件夹
     @Value("${attachfilepath}")
     private String attachfilepath;
+
+
+    @Autowired
+    OrderAuthRepository orderAuthRepository;
 
 
     @Override
@@ -68,19 +71,32 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
-    public RemoteData<ErpOrder> findByKey(String key, int pageIndex, int pageSize) {
+    /**
+     * 查找订单
+     * @param loginUser
+     * @param key
+     * @param salesId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+
+    public RemoteData<ErpOrder> findByKey(User loginUser,String key,long salesId, int pageIndex, int pageSize) {
+        List<String> salesNos=null;
+        //查询所有
+        OrderAuth orderAuth=      orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+        if(orderAuth!=null&& !StringUtils.isEmpty(orderAuth.relatedSales)) {
+             salesNos = userService.extractUserCodes(loginUser.id, salesId,orderAuth.relatedSales);
+        }
 
 
-        List<ErpOrder> result = repository.findOrders(key, pageIndex, pageSize);
+        if(salesNos==null||salesNos.size()==0 ) return wrapData();
+        List<ErpOrder> result = repository.findOrders(key,salesNos, pageIndex, pageSize);
         //进行业务员配对。
 
         for (ErpOrder erpOrder : result) {
             User user = userRepository.findFirstByIsSalesmanAndCodeEquals(true, erpOrder.sal_no);
-
             erpOrder.sal_name = user == null ? (erpOrder.sal_no + "()") : (("(") + user.name + ")" + user.chineseName);
-
-
-
 
             Order order=orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
             if(order!=null)
@@ -91,7 +107,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         }
 
 
-        int totalCount = repository.getOrderCountByKey(key);
+        int totalCount = repository.getOrderCountByKey(key,salesNos);
         return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, result);
 
     }

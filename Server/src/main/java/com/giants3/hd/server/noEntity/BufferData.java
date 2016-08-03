@@ -30,6 +30,16 @@ public class BufferData implements Serializable{
     public List<Authority> authorities;
     public QuoteAuth quoteAuth;
 
+    /**
+     * 订单权限
+     */
+    public OrderAuth orderAuth;
+
+    /**
+     * 出库单权限
+     */
+    public StockOutAuth stockOutAuth;
+
     public  User loginUser;
 
     public  GlobalData globalData;

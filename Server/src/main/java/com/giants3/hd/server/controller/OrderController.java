@@ -1,8 +1,10 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
 import com.giants3.hd.server.service.ErpService;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity_erp.ErpOrder;
@@ -30,10 +32,10 @@ public class OrderController extends BaseController{
     @RequestMapping(value="/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrder> list( @RequestParam(value = "key", required = false, defaultValue = "") String key
+    RemoteData<ErpOrder> list(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key", required = false, defaultValue = "") String key  , @RequestParam(value = "salesId", required = false, defaultValue = "-1") long salesId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize)   {
 
-        return  erpService.findByKey(key,pageIndex,pageSize) ;
+        return  erpService.findByKey(user,key,salesId,pageIndex,pageSize) ;
     }
 
 

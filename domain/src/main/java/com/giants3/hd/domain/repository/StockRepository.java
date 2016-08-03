@@ -16,7 +16,7 @@ public interface StockRepository {
      * <p/>
      * 获取产品信息 根据 产品名称顺序取值
      */
-    Observable<RemoteData<ErpStockOut>> getStockOutList(String key, int pageIndex, int pageSize);
+    Observable<RemoteData<ErpStockOut>> getStockOutList(String key,long salesId, int pageIndex, int pageSize);
 
     Observable<RemoteData<ErpStockOutDetail>>  getStockOutDetail(String ck_no);
 

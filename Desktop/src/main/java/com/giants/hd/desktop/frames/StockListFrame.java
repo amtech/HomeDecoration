@@ -26,7 +26,7 @@ public class StockListFrame extends BaseInternalFrame implements StockListPresen
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                search("",0,20);
+                search("",-1,0,20);
             }
         });
 
@@ -39,13 +39,10 @@ public class StockListFrame extends BaseInternalFrame implements StockListPresen
     }
 
     @Override
-    public void search(String key, int pageIndex, int pageSize) {
+    public void search(String key,long salesId, int pageIndex, int pageSize) {
 
 
-
-
-
-        UseCaseFactory.getInstance().createStockOutListUseCase(key,pageIndex,pageSize).execute(new Subscriber<RemoteData<ErpStockOut>>() {
+        UseCaseFactory.getInstance().createStockOutListUseCase(key,salesId,pageIndex,pageSize).execute(new Subscriber<RemoteData<ErpStockOut>>() {
             @Override
             public void onCompleted() {
                 panel_stock_list.hideLoadingDialog();

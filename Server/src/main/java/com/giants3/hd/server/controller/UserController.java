@@ -73,6 +73,12 @@ public class UserController extends BaseController {
     @Autowired
     private QuoteAuthRepository quoteAuthRepository;
 
+    @Autowired
+    private OrderAuthRepository orderAuthRepository;
+
+    @Autowired
+    private StockOutAuthRepository stockOutAuthRepository;
+
     @RequestMapping("/delete/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId) {
 
@@ -135,12 +141,34 @@ public class UserController extends BaseController {
         bufferData.packs = packRepository.findAll();
         bufferData.pClasses = productClassRepository.findAll();
         bufferData.salesmans = userRepository.findByIsSalesman(true);
+
+
+
         QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
         if (quoteAuth == null) {
             quoteAuth = new QuoteAuth();
             quoteAuth.user = user;
         }
         bufferData.quoteAuth = quoteAuth;
+
+
+
+        OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
+        if (orderAuth == null) {
+            orderAuth = new OrderAuth();
+            orderAuth.user = user;
+        }
+        bufferData.orderAuth = orderAuth;
+
+
+        StockOutAuth stockOutAuth = stockOutAuthRepository.findFirstByUser_IdEquals(user.id);
+        if (stockOutAuth == null) {
+            stockOutAuth = new StockOutAuth();
+            stockOutAuth.user = user;
+        }
+        bufferData.stockOutAuth = stockOutAuth;
+
+
 
 
         //读取第一条数据   总共就一条

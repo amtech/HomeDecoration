@@ -1,26 +1,21 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.model.BaseTableModel;
-import com.giants.hd.desktop.model.QuoteAuthModel;
 import com.giants.hd.desktop.presenter.AuthRelateDetailPresenter;
 import com.giants.hd.desktop.view.AuthRelateDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Auth_Relates;
-import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.OrderAuth;
 import com.giants3.hd.utils.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.StockOutAuth;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Inject;
 import rx.Subscriber;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,18 +38,22 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPre
 
     private List<QuoteAuth> quoteAuths;
 
-//    private List<StockAuth>
+   private List<StockOutAuth> stockOutAuths;
+
+    private List<OrderAuth> orderAuths;
 
 
     public AuthRelatesDialog(Window window) {
         super(window);
-        setTitle("报价细分权限");
+        setTitle("细分权限");
         viewer = new Panel_Auth_Relates(this, this);
         setContentPane(viewer.getRoot());
         sales = CacheManager.getInstance().bufferData.salesmans;
         viewer.showAllSales(sales);
 
         loadQuoteAuth();
+        loadStockOutAuth();
+        loadOrderAuth();
     }
 
     private void loadQuoteAuth() {
@@ -85,6 +84,79 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPre
         viewer.showLoadingDialog();
     }
 
+
+
+    private void loadStockOutAuth() {
+
+        UseCaseFactory.getInstance().createStockOutAuthListCase().execute(new Subscriber<RemoteData<StockOutAuth>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                 e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(RemoteData<StockOutAuth> remoteData) {
+                if (remoteData.isSuccess()) {
+                     setStockOutAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+    }
+
+
+
+    private void setStockOutAuthData(List<StockOutAuth> datas) {
+
+        stockOutAuths = datas;
+        viewer.showStockOutAuthList(datas);
+
+
+    }
+
+    private void loadOrderAuth() {
+
+        UseCaseFactory.getInstance().createOrderAuthListCase().execute(new Subscriber<RemoteData<OrderAuth>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(RemoteData<OrderAuth> remoteData) {
+                if (remoteData.isSuccess()) {
+                    setOrderAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+    }
+
+    private void setOrderAuthData(List<OrderAuth> datas) {
+
+        orderAuths = datas;
+        viewer.showOrderAuthList(orderAuths);
+
+    }
 
     private void setQuoteAuthData(List<QuoteAuth> quoteAuth) {
         quoteAuths = quoteAuth;
@@ -127,7 +199,22 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPre
     @Override
     public void onQuoteAuthRowSelected(int row) {
         showRow=row;
-        showSaleRelate(quoteAuths.get(row).relatedSales);
+        String  relateSales="";
+        switch (selectedPane)
+        {
+
+            case 0:
+                relateSales= quoteAuths.get(row).relatedSales;
+
+                break;
+            case 1:
+                relateSales= orderAuths.get(row).relatedSales;
+                break;
+            case 2:
+                relateSales= stockOutAuths.get(row).relatedSales;
+                break;
+        }
+        showSaleRelate(relateSales);
     }
 
     @Override
@@ -139,13 +226,16 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPre
         showRow = 0;
         switch (selectedPane) {
             case 0:
-                viewer.showPaneAndRow(selectedPane, showRow);
+                viewer.showQuoteRow( showRow);
                 break;
             case 1:
+                viewer.showOrderRow( showRow);
                 break;
             case 2:
+                viewer.showStockOutRow( showRow);
                 break;
         }
+        onQuoteAuthRowSelected(selectedPane);
 
 
     }
@@ -168,11 +258,167 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPre
                 quoteAuths.get(showRow).relatedSales = sb.toString();
                 break;
             case 1:
+                orderAuths.get(showRow).relatedSales = sb.toString();
                 break;
             case 2:
+                stockOutAuths.get(showRow).relatedSales = sb.toString();
                 break;
         }
 
 
+    }
+
+    @Override
+    public void save() {
+
+        switch (selectedPane)
+        {
+
+            case 0:
+                saveQuoteAuth();
+                break;
+            case 1:
+                saveOrderAuth();
+                break;
+            case 2:
+                saveStockOutAuth();
+                break;
+        }
+
+
+
+
+
+
+    }
+
+    private void saveStockOutAuth() {
+
+        if(stockOutAuths==null)
+        {
+            viewer.showMesssage("数据异常"); return;
+        }
+
+
+        UseCaseFactory.getInstance().createStockOutAuthSaveCase(stockOutAuths).execute(new Subscriber<RemoteData<StockOutAuth>>() {
+            @Override
+            public void onCompleted() {
+                viewer.hideLoadingDialog();
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                viewer.hideLoadingDialog();
+                viewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<StockOutAuth> remoteData) {
+                viewer.hideLoadingDialog();
+                if (remoteData.isSuccess()) {
+                    viewer.showMesssage("保存成功");
+                    setStockOutAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+
+        viewer.showLoadingDialog();
+
+
+    }
+
+    private void saveOrderAuth() {
+
+
+        if(orderAuths==null)
+        {
+            viewer.showMesssage("数据异常"); return;
+        }
+
+
+        UseCaseFactory.getInstance().createOrderAuthSaveCase(orderAuths).execute(new Subscriber<RemoteData<OrderAuth>>() {
+            @Override
+            public void onCompleted() {
+                viewer.hideLoadingDialog();
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                viewer.hideLoadingDialog();
+                viewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<OrderAuth> remoteData) {
+                viewer.hideLoadingDialog();
+                if (remoteData.isSuccess()) {
+                    viewer.showMesssage("保存成功");
+                    setOrderAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+
+        viewer.showLoadingDialog();
+    }
+
+    /**
+     * 
+     */
+    private void saveQuoteAuth() {
+
+
+        if(quoteAuths==null)
+        {
+            viewer.showMesssage("数据异常"); return;
+        }
+
+
+        UseCaseFactory.getInstance().createQuoteAuthSaveCase(quoteAuths).execute(new Subscriber<RemoteData<QuoteAuth>>() {
+            @Override
+            public void onCompleted() {
+                viewer.hideLoadingDialog();
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                viewer.hideLoadingDialog();
+                viewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<QuoteAuth> remoteData) {
+                viewer.hideLoadingDialog();
+                if (remoteData.isSuccess()) {
+                    viewer.showMesssage("保存成功");
+                    setQuoteAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+
+        viewer.showLoadingDialog();
+        
+        
+        
     }
 }

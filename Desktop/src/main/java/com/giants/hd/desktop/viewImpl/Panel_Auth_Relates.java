@@ -2,7 +2,9 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.dialogs.BaseSimpleDialog;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants.hd.desktop.model.OrderAuthModel;
 import com.giants.hd.desktop.model.QuoteAuthModel;
+import com.giants.hd.desktop.model.StockOutAuthModel;
 import com.giants.hd.desktop.presenter.AuthRelateDetailPresenter;
 import com.giants.hd.desktop.view.AuthRelateDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
@@ -10,7 +12,9 @@ import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.OrderAuth;
 import com.giants3.hd.utils.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.StockOutAuth;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
@@ -24,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *n
+ * n
  */
-public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailViewer {
+public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailViewer {
     private JPanel contentPane;
     private JButton save;
     private JHdTable tb_quote;
@@ -34,24 +38,18 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
     private JTabbedPane tabs;
     private JHdTable tb_stock;
     private JHdTable tb_order;
-    private JButton save_order;
-    private JButton save_stock;
 
 
     QuoteAuthModel quoteAuthModel;
+    OrderAuthModel orderAuthModel;
+    StockOutAuthModel stockOutAuthModel;
 
 
-    AuthRelateDetailPresenter presenter ;
+    AuthRelateDetailPresenter presenter;
 
     public Panel_Auth_Relates(Window window, final AuthRelateDetailPresenter presenter) {
         super(window);
-         this.presenter=presenter;
-
-
-
-
-
-
+        this.presenter = presenter;
 
 
 //        panel_relateSales.setVisible(false);
@@ -62,12 +60,38 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
                     int modelRow = tb_quote.convertRowIndexToModel(tb_quote.getSelectedRow());
 
 
-
-                     showRow(modelRow);
+                    showRow(tb_quote,modelRow);
                 }
             }
         });
 
+
+
+        tb_stock.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int modelRow = tb_stock.convertRowIndexToModel(tb_stock.getSelectedRow());
+
+
+                    showRow(tb_stock,modelRow);
+                }
+            }
+        });
+
+
+        tb_order
+                .addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int modelRow = tb_order.convertRowIndexToModel(tb_order.getSelectedRow());
+
+
+                    showRow(tb_order,modelRow);
+                }
+            }
+        });
         tabs.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -76,11 +100,27 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
             }
         });
 
-        quoteAuthModel=new QuoteAuthModel();
+        quoteAuthModel = new QuoteAuthModel();
         quoteAuthModel.setRowAdjustable(false);
         tb_quote.setModel(quoteAuthModel);
 
 
+        orderAuthModel = new OrderAuthModel();
+        orderAuthModel.setRowAdjustable(false);
+        tb_order.setModel(orderAuthModel);
+
+        stockOutAuthModel = new StockOutAuthModel();
+        stockOutAuthModel.setRowAdjustable(false);
+        tb_stock.setModel(stockOutAuthModel);
+
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.save();
+            }
+        });
 
     }
 
@@ -92,14 +132,14 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
 
     /**
      * 显示指定行数
+     *
      * @param row
      */
-    private  void showRow(int  row)
-    {
+    private void showRow(JTable table,int row) {
 
 
-       panel_relateSales.setVisible(row>=0);
-        tb_quote.setRowSelectionInterval(row,row);
+        panel_relateSales.setVisible(row >= 0);
+        table.setRowSelectionInterval(row, row);
         presenter.onQuoteAuthRowSelected(row);
 
     }
@@ -112,28 +152,20 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
     }
 
     @Override
-    public void bindRelateSalesData(List<Integer> indexs)
-    {
+    public void bindRelateSalesData(List<Integer> indexs) {
 
 
+        int size = panel_relateSales.getComponentCount();
+        for (int i = 0; i < size; i++) {
+            Component component = panel_relateSales.getComponent(i);
+            if (component instanceof JRadioButton) {
 
-
-
-        int size=panel_relateSales.getComponentCount();
-        for(int i=0;i<size;i++  )
-        {
-            Component component=panel_relateSales.getComponent(i);
-            if(component instanceof  JRadioButton )
-            {
-
-                JRadioButton jRadioButton= (JRadioButton) component;
+                JRadioButton jRadioButton = (JRadioButton) component;
 
                 jRadioButton.removeItemListener(itemListener);
 
 
-
-
-                jRadioButton.setSelected(indexs.indexOf(i)>-1);
+                jRadioButton.setSelected(indexs.indexOf(i) > -1);
 
                 jRadioButton.addItemListener(itemListener);
             }
@@ -145,21 +177,30 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
 
     }
 
-    private ItemListener itemListener=new ItemListener() {
+    @Override
+    public void showStockOutAuthList(List<StockOutAuth> datas) {
+        stockOutAuthModel.setDatas(datas);
+
+    }
+
+    @Override
+    public void showOrderAuthList(List<OrderAuth> orderAuths) {
+        orderAuthModel.setDatas(orderAuths);
+
+    }
+
+    private ItemListener itemListener = new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
 
 
-
-            StringBuilder  newRelates=new StringBuilder();
+            StringBuilder newRelates = new StringBuilder();
             //读取所有item  保存
-            int size=panel_relateSales.getComponentCount();
-            List<Integer> indexes=new ArrayList<>();
-            for(int i=0;i<size;i++  )
-            {
-               JRadioButton jRadioButton= (JRadioButton) panel_relateSales.getComponent(i);
-                if(jRadioButton.isSelected())
-                {
+            int size = panel_relateSales.getComponentCount();
+            List<Integer> indexes = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                JRadioButton jRadioButton = (JRadioButton) panel_relateSales.getComponent(i);
+                if (jRadioButton.isSelected()) {
                     indexes.add(i);
 
                 }
@@ -169,23 +210,17 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
             presenter.onRelateUsesSelected(indexes);
 
 
-
-
         }
     };
-
-
-
-
 
 
     @Override
     public void showAllSales(List<User> salesList) {
 
-        panel_relateSales.setLayout(new GridLayout(0,1,10,10));
+        panel_relateSales.setLayout(new GridLayout(0, 1, 10, 10));
         for (User user : salesList) {
 
-            JRadioButton radioButton = new JRadioButton(user.code+"-"+user.name+"-"+user.chineseName);
+            JRadioButton radioButton = new JRadioButton(user.code + "-" + user.name + "-" + user.chineseName);
             panel_relateSales.add(radioButton);
         }
 
@@ -199,26 +234,40 @@ public class Panel_Auth_Relates extends  BasePanel implements AuthRelateDetailVi
     public void showPaneAndRow(int selectedPane, int showRow) {
 
 
-
         tabs.setSelectedIndex(selectedPane);
 
-        switch (showRow)
-        {
+        switch (showRow) {
             case 0:
-                tb_quote.setRowSelectionInterval(showRow,showRow);
+                tb_quote.setRowSelectionInterval(showRow, showRow);
                 break;
             case 1:
 
-                tb_order.setRowSelectionInterval(showRow,showRow);
+                tb_order.setRowSelectionInterval(showRow, showRow);
                 break;
             case 2
                     :
 
-                tb_stock.setRowSelectionInterval(showRow,showRow);
+                tb_stock.setRowSelectionInterval(showRow, showRow);
                 break;
         }
 
 
+    }
 
+    @Override
+    public void showQuoteRow(int showRow) {
+
+        tb_quote.setRowSelectionInterval(showRow,showRow);
+
+    }
+
+    @Override
+    public void showOrderRow(int showRow) {
+        tb_order.setRowSelectionInterval(showRow,showRow);
+    }
+
+    @Override
+    public void showStockOutRow(int showRow) {
+        tb_stock.setRowSelectionInterval(showRow,showRow);
     }
 }

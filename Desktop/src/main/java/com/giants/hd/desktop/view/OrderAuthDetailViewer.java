@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.view;
 
 import com.giants.hd.desktop.presenter.Presenter;
+import com.giants3.hd.utils.entity.OrderAuth;
 import com.giants3.hd.utils.entity.User;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public interface OrderAuthDetailViewer extends    AbstractViewer {
 
     public void bindRelateSalesData(List<Integer> indexs);
 
+    void showOrderAuthList(List<OrderAuth> orderAuths);
 }

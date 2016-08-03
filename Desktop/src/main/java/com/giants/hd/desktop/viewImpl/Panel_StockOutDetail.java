@@ -312,4 +312,11 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         btn_addgui.setVisible( b);
 
     }
+
+    @Override
+    public void setStockOutPriceVisible(boolean visible)
+    {
+
+        tableModel.setPriceVisible(visible);
+    }
 }

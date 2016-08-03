@@ -16,11 +16,13 @@ public class GetOrderListUseCase extends UseCase {
 
     private String key;
     private int pageIndex;
+    private final long salesId;
     private int pageSize;
-    public GetOrderListUseCase(Scheduler threadExecutor, Scheduler postExecutionThread,String key,int pageIndex,int pageSize, OrderRepository orderRepository) {
+    public GetOrderListUseCase(Scheduler threadExecutor, Scheduler postExecutionThread,String key,long salesId,int pageIndex,int pageSize, OrderRepository orderRepository) {
         super(threadExecutor, postExecutionThread);
         this.key = key;
         this.pageIndex = pageIndex;
+        this.salesId = salesId;
         this.pageSize = pageSize;
 
         this.orderRepository = orderRepository;
@@ -28,6 +30,6 @@ public class GetOrderListUseCase extends UseCase {
 
     @Override
     protected Observable buildUseCaseObservable() {
-        return orderRepository.getOrderList(key,pageIndex,pageSize);
+        return orderRepository.getOrderList(key,salesId,pageIndex,pageSize);
     }
 }

@@ -9,6 +9,7 @@ import com.giants3.hd.server.entity_erp.ErpStockOut;
 import com.giants3.hd.server.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.service.StockService;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class StockController extends BaseController{
     @RequestMapping(value="/outList", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpStockOut> outList(@RequestParam(value = "key", required = false, defaultValue = "") String key
+    RemoteData<ErpStockOut> outList(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key", required = false, defaultValue = "") String key, @RequestParam(value = "salesId", required = false, defaultValue = "-1") long salesId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize)   {
 
-        return  stockService.search(key,pageIndex,pageSize) ;
+        return  stockService.search(user,key,salesId,pageIndex,pageSize) ;
     }
 
     @RequestMapping(value="/findOutDetail", method = RequestMethod.GET)

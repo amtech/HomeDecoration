@@ -4,7 +4,10 @@ import com.giants.hd.desktop.frames.OrderListAdapter;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.OrderTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 
 import javax.swing.*;
@@ -23,6 +26,7 @@ public class Panel_Order_List extends BasePanel {
     private JTextField keys;
     private JHdTable orderTable;
     private Panel_Page pagePanel;
+    private JComboBox cb_salesman;
 
     OrderTableModel orderTableModel;
 
@@ -36,7 +40,8 @@ public class Panel_Order_List extends BasePanel {
         pagePanel.setListener(new PageListener() {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {
-                adapter.search(keys.getText().trim(), pageIndex, pageSize);
+
+                adapter.search(keys.getText().trim(),getSalesId(), pageIndex, pageSize);
             }
         });
 
@@ -45,7 +50,7 @@ public class Panel_Order_List extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                adapter.search(keys.getText().trim(), 0, pagePanel.getPageSize());
+                adapter.search(keys.getText().trim(),getSalesId(), 0, pagePanel.getPageSize());
             }
         });
         keys.addActionListener(new ActionListener() {
@@ -53,7 +58,7 @@ public class Panel_Order_List extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                adapter.search(keys.getText().trim(), 0, pagePanel.getPageSize());
+                adapter.search(keys.getText().trim(),getSalesId(), 0, pagePanel.getPageSize());
             }
         });
 
@@ -71,6 +76,37 @@ public class Panel_Order_List extends BasePanel {
             }
         });
 
+
+        String relateSales = CacheManager.getInstance().bufferData.orderAuth.relatedSales;
+        User all = new User();
+        all.id = -1;
+        all.code = "--";
+        all.name = "--";
+        all.chineseName = "所有人";
+        cb_salesman.addItem(all);
+        String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
+        if (ids != null) {
+            for (User user : CacheManager.getInstance().bufferData.salesmans) {
+
+                boolean find = false;
+                for (String s : ids) {
+                    if (String.valueOf(user.id).equals(s)) {
+                        find = true;
+                        break;
+                    }
+                }
+
+                if (find)
+                    cb_salesman.addItem(user);
+            }
+
+        }
+
+    }
+
+    private long getSalesId()
+    {
+        return ((User)cb_salesman.getSelectedItem()).id;
     }
 
     public void setData(RemoteData<ErpOrder> remoteData) {

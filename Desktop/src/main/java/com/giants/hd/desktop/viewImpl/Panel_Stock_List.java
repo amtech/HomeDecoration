@@ -4,8 +4,11 @@ import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.StockOutTableModel;
 import com.giants.hd.desktop.presenter.StockListPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.StockOut;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.google.inject.Inject;
@@ -27,6 +30,7 @@ public class Panel_Stock_List extends BasePanel {
     private Panel_Page pageController;
     private JTextField jtf_key;
     private JButton btn_search;
+    private JComboBox cb_salesman;
     @Inject
     StockOutTableModel tableModel;
 
@@ -49,7 +53,7 @@ public class Panel_Stock_List extends BasePanel {
 
 
                 if (presenter != null)
-                    presenter.search(jtf_key.getText().trim(), pageIndex, pageSize);
+                    presenter.search(jtf_key.getText().trim(),getSalesId(), pageIndex, pageSize);
             }
         });
 
@@ -60,7 +64,7 @@ public class Panel_Stock_List extends BasePanel {
 
 
                 if (presenter != null)
-                    presenter.search(jtf_key.getText().trim(), 0, pageController.getPageSize());
+                    presenter.search(jtf_key.getText().trim(),getSalesId(), 0, pageController.getPageSize());
 
             }
         });
@@ -86,8 +90,41 @@ public class Panel_Stock_List extends BasePanel {
             }
         });
 
+
+        String relateSales = CacheManager.getInstance().bufferData.stockOutAuth.relatedSales;
+        User all = new User();
+        all.id = -1;
+        all.code = "--";
+        all.name = "--";
+        all.chineseName = "所有人";
+        cb_salesman.addItem(all);
+        String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
+        if (ids != null) {
+            for (User user : CacheManager.getInstance().bufferData.salesmans) {
+
+                boolean find = false;
+                for (String s : ids) {
+                    if (String.valueOf(user.id).equals(s)) {
+                        find = true;
+                        break;
+                    }
+                }
+
+                if (find)
+                    cb_salesman.addItem(user);
+            }
+
+        }
+
+
+
+
     }
 
+    private long getSalesId()
+    {
+        return ((User)cb_salesman.getSelectedItem()).id;
+    }
 
     public void setData(RemoteData<ErpStockOut> remoteData) {
 

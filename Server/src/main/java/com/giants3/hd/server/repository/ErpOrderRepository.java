@@ -1,25 +1,13 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity_erp.ErpStockOut;
-import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.server.entity_erp.ErpOrder;
 import com.giants3.hd.server.entity_erp.ErpOrderItem;
-import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.utils.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.*;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,13 +19,19 @@ public class ErpOrderRepository {
     public static final String KEY_ORDER = "SO";
     public static final String OS_ID = "OS_ID";
     public static final String KEY_OS_NO = "OS_NO";
+    private static final String KEY_SALE_NO = "SAL_NO";
     private EntityManager em;
-
+    //业务员查询条件从句
+    public static final  String   SALE_WHERE_CAUSE=" and p.sal_no in ( :SAL_NO ) ";
     /**
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
      */
     //模糊查找  os_no like  ：os_no
     public static final String SQL_ORDER_LIST_SEARCH = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO)  a  LEFT JOIN\n" +
+            "  \n" +
+            "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.est_dd DESC  ";
+    //模糊查找  os_no like  ：os_no
+    public static final String SQL_ORDER_LIST_SEARCH_WITH_SALES = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+SALE_WHERE_CAUSE+ ")  a  LEFT JOIN\n" +
             "  \n" +
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.est_dd DESC  ";
 
@@ -47,10 +41,13 @@ public class ErpOrderRepository {
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO = :OS_NO )   b on a.os_no=b.os_no   order by a.est_dd DESC  ";
 
     public static final String SQL_ORDER_LIST_COUNT = " select  count(p.os_no)  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO  ";
+    public static final String SQL_ORDER_LIST_COUNT_WITH_SALES = " select  count(p.os_no) as count  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO    "  +SALE_WHERE_CAUSE;
 
     public static String sql_item_1 = "   select os_no,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from tf_pos  where os_id=:OS_ID and os_no =:OS_NO ";
     public static String sql_item_2 = " select isnull(htxs,0) as htxs,isnull(so_zxs,0) as so_zxs ,khxg,isnull(xgtj,0) as xgtj , isnull(zxgtj,0) as zxgtj ,hpgg ,os_no,itm from tf_pos_z    where os_id=:OS_ID and os_no =:OS_NO ";
     public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,b.* from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no ,a.itm asc";
+
+
 
     public ErpOrderRepository(EntityManager em) {
         this.em = em;
@@ -66,7 +63,8 @@ public class ErpOrderRepository {
 
 
 
-        List<ErpOrder> orders = getOrderListQuery(SQL_ORDER_LIST_SEARCH).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + os_no + '%').setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).list();
+
+        List<ErpOrder> orders = getOrderListQuery(SQL_ORDER_LIST_SEARCH).setParameter(OS_ID, KEY_ORDER). setParameter(KEY_OS_NO, "%" + os_no + '%').setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).list();
 
 
         modifyDateString(orders);
@@ -75,6 +73,29 @@ public class ErpOrderRepository {
 
 
     }
+
+    /*
+   *   查询订单
+   *   返回2个元素数组
+      *   @Param saleCodes  指定的业务员
+      *   【0】 表示查询记录数
+   *       【1】 表示查询的结果列表  List<ErpOrder>
+    */
+    public List<ErpOrder> findOrders(String os_no, List<String> saleCodes,int pageIndex, int pageSize) {
+
+
+
+        List<ErpOrder> orders = getOrderListQuery(SQL_ORDER_LIST_SEARCH_WITH_SALES).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + os_no + '%').setParameterList(KEY_SALE_NO,saleCodes).setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).list();
+
+
+        modifyDateString(orders);
+
+        return orders;
+
+
+    }
+
+
 
     /**
      * 获取关键字查询记录总数
@@ -86,7 +107,19 @@ public class ErpOrderRepository {
         return (Integer) em.createNativeQuery(SQL_ORDER_LIST_COUNT).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%').getSingleResult();
     }
 
+    /**
+     * 获取关键字查询记录总数
+     *
+     * @param key
+     * @return
+     */
+    public int getOrderCountByKey(String key,List<String> saleNos) {
 
+
+        org.hibernate.Query      query =   em.createNativeQuery(SQL_ORDER_LIST_COUNT_WITH_SALES).unwrap(SQLQuery.class) ;
+
+        return (Integer) (query.setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%').setParameterList(KEY_SALE_NO,saleNos).list().get(0));
+    }
 
 
 

@@ -1,15 +1,14 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.Authority;
+import com.giants3.hd.server.entity.OrderAuth;
 import com.giants3.hd.server.entity.QuoteAuth;
 
 import com.giants3.hd.server.entity.User;
-import com.giants3.hd.server.repository.AuthorityRepository;
-import com.giants3.hd.server.repository.QuoteAuthRepository;
-import com.giants3.hd.server.repository.SessionRepository;
-import com.giants3.hd.server.repository.UserRepository;
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -37,6 +36,9 @@ public class UserService extends AbstractService implements InitializingBean, Di
     private QuoteAuthRepository quoteAuthRepository;
     @Autowired
     SessionRepository sessionRepository;
+
+    @Autowired
+    OrderAuthRepository orderAuthRepository;
     @Override
     public void destroy() throws Exception {
 
@@ -166,5 +168,48 @@ public class UserService extends AbstractService implements InitializingBean, Di
             return false;
         return false
                 ;
+    }
+
+
+    /**
+     * 根据saleId 来获取用户code  如果saleid=-1 则获取该用户所关联的所有业务员codes
+     * @param loginUserId
+     * @param salesId
+     * @return
+     */
+    public   List<String>  extractUserCodes(long  loginUserId, long salesId,String relateSales)
+    {
+
+        List<String > salesNos=new ArrayList<>();
+        if(salesId==-1)
+        {
+
+
+                String[] ids = relateSales.split(",");
+                for (String id : ids) {
+                    try {
+                        long longId = Long.valueOf(id);
+                        User user = userRepository.findOne(longId);
+                        if (user != null)
+                            salesNos.add(user.code);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+
+
+            }
+
+        }else
+        {
+
+            User user = userRepository.findOne(salesId);
+            if(user!=null)
+            {
+
+                salesNos.add(user.code);
+            }
+        }
+
+        return salesNos;
     }
 }

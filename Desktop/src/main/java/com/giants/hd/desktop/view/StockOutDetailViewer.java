@@ -36,4 +36,6 @@ public interface StockOutDetailViewer extends AbstractViewer {
      * @param b
      */
     void setEditable(boolean b);
+
+    void setStockOutPriceVisible(boolean visible);
 }

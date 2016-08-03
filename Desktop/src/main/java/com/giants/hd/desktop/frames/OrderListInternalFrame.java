@@ -21,7 +21,7 @@ public class OrderListInternalFrame extends BaseInternalFrame implements OrderLi
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                search("",0,20);
+                search("",-1,0,20);
             }
         });
 
@@ -35,13 +35,13 @@ public class OrderListInternalFrame extends BaseInternalFrame implements OrderLi
     }
 
     @Override
-    public void search(String key, int pageIndex, int pageSize) {
+    public void search(String key,  long salesId,int pageIndex, int pageSize) {
 
 
 
 
 
-        UseCaseFactory.getInstance().createOrderListUseCase(key,pageIndex,pageSize).execute(new Subscriber<RemoteData<ErpOrder>>() {
+        UseCaseFactory.getInstance().createOrderListUseCase(key,salesId,pageIndex,pageSize).execute(new Subscriber<RemoteData<ErpOrder>>() {
             @Override
             public void onCompleted() {
                 panelOrderList.hideLoadingDialog();

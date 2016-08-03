@@ -23,7 +23,7 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
     ApiManager apiManager;
 
     @Override
-    public Observable<RemoteData<ErpOrder>> getOrderList(final String key, final int pageIndex, final int pageSize) {
+    public Observable<RemoteData<ErpOrder>> getOrderList(final String key, final long salesId, final int pageIndex, final int pageSize) {
         return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrder>>() {
             @Override
             public void call(Subscriber<? super RemoteData<ErpOrder>> subscriber) {
@@ -32,7 +32,7 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
 
                 try {
-                    RemoteData<ErpOrder> remoteData= apiManager.getOrderList(key,pageIndex,pageSize);
+                    RemoteData<ErpOrder> remoteData= apiManager.getOrderList(key,salesId,pageIndex,pageSize);
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData );

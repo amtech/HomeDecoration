@@ -3,6 +3,9 @@ package com.giants3.hd.domain.interractor;
 import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
 import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.entity.OrderAuth;
+import com.giants3.hd.utils.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.StockOutAuth;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
@@ -10,6 +13,7 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
+import java.util.List;
 
 
 /**
@@ -115,9 +119,9 @@ public class UseCaseFactory {
     }
 
 
-    public UseCase createOrderListUseCase(String key, int pageIndex, int pageSize) {
+    public UseCase createOrderListUseCase(String key,long salesId, int pageIndex, int pageSize) {
 
-        return new GetOrderListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, pageIndex, pageSize, orderRepository);
+        return new GetOrderListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, salesId,pageIndex, pageSize, orderRepository);
     }
 
     public UseCase createOrderItemListUseCase(String os_no) {
@@ -139,9 +143,9 @@ public class UseCaseFactory {
      * @param pageSize
      * @return
      */
-    public UseCase createStockOutListUseCase(String key, int pageIndex, int pageSize) {
+    public UseCase createStockOutListUseCase(String key,long  salesId,int pageIndex, int pageSize) {
 
-        return new GetStockOutListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, pageIndex, pageSize, stockRepository);
+        return new GetStockOutListUseCase(Schedulers.newThread(), Schedulers.immediate(), key,salesId, pageIndex, pageSize, stockRepository);
     }
 
 
@@ -198,5 +202,66 @@ public class UseCaseFactory {
     public UseCase createQuoteAuthListCase() {
 
         return new GetQuoteAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+    }
+
+
+    /**
+     * 读取订单明细权限
+     * @return
+     */
+    public UseCase createOrderAuthListCase() {
+
+        return new GetOrderAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+    }
+
+
+
+    /**
+     * 读取出库明细权限
+     * @return
+     */
+    public UseCase createStockOutAuthListCase() {
+
+        return new GetStockOutAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+    }
+
+    /**
+     * 获取保存出库权限用例
+     * @param stockOutAuths
+     * @return
+     */
+    public UseCase createStockOutAuthSaveCase(List<StockOutAuth> stockOutAuths) {
+
+        return new SaveStockOutAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),stockOutAuths , authRepository);
+
+
+
+    }
+
+
+    /**
+     * 获取保存订单权限用例
+     * @param orderAuths
+     * @return
+     */
+    public UseCase createOrderAuthSaveCase(List<OrderAuth> orderAuths) {
+
+        return new SaveOrderAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),orderAuths , authRepository);
+
+
+
+    }
+
+    /**
+     * 获取保存报价权限用例
+     * @param quoteAuths
+     * @return
+     */
+    public UseCase createQuoteAuthSaveCase(List<QuoteAuth> quoteAuths) {
+
+        return new SaveQuoteAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),quoteAuths , authRepository);
+
+
+
     }
 }

@@ -188,7 +188,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         tf_os_no.setText(order.os_no);
         tf_customer.setText(order.cus_no);
         tf_cos.setText(order.cus_os_no);
-        tf_sales.setText(order.sal_no);
+        tf_sales.setText(order.sal_no+"--"+order.sal_name);
         tf_so_data.setText(order.so_data);
         ta_rem.setText(order.rem);
 
@@ -333,5 +333,11 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         }
     };
 
+
+    @Override
+    public void setPriceVisible(boolean priceVisible)
+    {
+        orderItemTableModel.setFobPriceVisible(priceVisible);
+    }
 
 }

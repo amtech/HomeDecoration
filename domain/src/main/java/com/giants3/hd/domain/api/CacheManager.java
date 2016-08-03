@@ -17,4 +17,25 @@ public class CacheManager {
 
 
     public  BufferData bufferData;
+
+    /**
+     * 是否查看订单单价
+     * @return
+     */
+    public boolean isOrderPriceVisible()
+    {
+        if(bufferData==null||bufferData.orderAuth==null) return false;
+
+       return  bufferData.orderAuth.fobVisible;
+    }
+
+    /**
+     * 是否可以查看出库单单价
+     * @return
+     */
+    public boolean isStockOutPriceVisible() {
+        if(bufferData==null||bufferData.stockOutAuth==null) return false;
+        return bufferData.stockOutAuth.fobVisible;
+
+    }
 }

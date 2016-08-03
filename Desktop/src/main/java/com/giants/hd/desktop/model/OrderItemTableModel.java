@@ -47,9 +47,15 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String GUAGOU = "guagou";
 
     public static final String PACK_ATTACHES = "packAttaches";
-    public static String[] fieldName = new String[]{"itm",     "photo",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", "up", "qty", "amt", "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", "memo"};
+    public static final String UP = "up";
+    public static final String AMT = "amt";
+    public static String[] fieldName = new String[]{"itm",     "photo",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", "memo"};
 
     public static Class[] classes = new Class[]{Object.class,  ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class, ImageIcon.class};
+    /**
+     * 单价是否可见
+     */
+    private boolean fobPriceVisible;
 
 
     @Inject
@@ -98,6 +104,12 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
 
         ErpOrderItem item = getItem(rowIndex);
         if (item == null) return null;
+
+
+        if (columnIndex == StringUtils.index(fieldName, UP)||columnIndex == StringUtils.index(fieldName, AMT)) {
+
+            if(!fobPriceVisible) return "***";
+        }
 
 
         if (columnIndex == StringUtils.index(fieldName, PACK_ATTACHES)) {
@@ -198,4 +210,14 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
 
     //异步加载的图片缓存
     private HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
+
+
+    /**
+     * 设置单价是否可见
+     * @param visible
+     */
+    public void setFobPriceVisible(boolean visible)
+    {
+        this.fobPriceVisible=visible;
+    }
 }

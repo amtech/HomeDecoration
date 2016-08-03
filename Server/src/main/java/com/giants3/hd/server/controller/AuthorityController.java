@@ -11,6 +11,7 @@ import com.giants3.hd.server.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,11 @@ public class AuthorityController extends  BaseController{
     @Autowired
     QuoteAuthRepository quoteAuthRepository;
 
+    @Autowired
+    StockOutAuthRepository stockOutAuthRepository;
+
+    @Autowired
+    OrderAuthRepository orderAuthRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -460,6 +466,122 @@ public class AuthorityController extends  BaseController{
         return wrapData(quoteAuths);
     }
 
+
+    @RequestMapping(value="/orderAuthList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderAuth> orderAuthList( )   {
+
+
+
+        List<User> users=userService.list();
+
+
+        List<OrderAuth> auths=orderAuthRepository.findAll();
+        //移除user 为delete 的权限配置
+        List<OrderAuth> tempAuthList=new ArrayList<>();
+        for(OrderAuth aAuth :auths) {
+            if(aAuth.user.deleted) tempAuthList.add(aAuth);
+        }
+        auths.removeAll(tempAuthList);
+
+
+
+
+        tempAuthList.clear();
+
+
+        int size=users.size();
+        for (int i = 0; i < size; i++) {
+
+            User user=users.get(i);
+            if(user.deleted) continue;
+            boolean found=false;
+            for(OrderAuth quoteAuth:auths)
+            {
+                if(user.id==quoteAuth.user.id)
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(!found)
+            {
+                OrderAuth authority=new OrderAuth();
+                authority.user=user;
+                tempAuthList.add(authority);
+
+            }
+
+
+        }
+
+        auths.addAll(tempAuthList);
+
+
+
+        return wrapData(auths);
+    }
+
+
+
+    @RequestMapping(value="/stockOutAuthList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<StockOutAuth> stockOutAuthList( )   {
+
+
+
+        List<User> users=userService.list();
+
+
+        List<StockOutAuth> auths=stockOutAuthRepository.findAll();
+        //移除user 为delete 的权限配置
+        List<StockOutAuth> tempAuthList=new ArrayList<>();
+        for(StockOutAuth aAuth :auths) {
+            if(aAuth.user.deleted) tempAuthList.add(aAuth);
+        }
+        auths.removeAll(tempAuthList);
+
+
+
+
+        tempAuthList.clear();
+
+
+        int size=users.size();
+        for (int i = 0; i < size; i++) {
+
+            User user=users.get(i);
+            if(user.deleted) continue;
+            boolean found=false;
+            for(StockOutAuth quoteAuth:auths)
+            {
+                if(user.id==quoteAuth.user.id)
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(!found)
+            {
+                StockOutAuth authority=new StockOutAuth();
+                authority.user=user;
+                tempAuthList.add(authority);
+
+            }
+
+
+        }
+
+        auths.addAll(tempAuthList);
+
+
+
+        return wrapData(auths);
+    }
     @RequestMapping(value="/saveQuoteList", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -473,6 +595,47 @@ public class AuthorityController extends  BaseController{
         {
 
             newData.add( quoteAuthRepository.save(authority));
+        }
+
+
+        return  wrapData(newData);
+    }
+
+
+    @RequestMapping(value="/saveStockOutList", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<StockOutAuth> saveStockOutList(  @RequestBody List<StockOutAuth> authorities)   {
+
+
+
+        List<StockOutAuth> newData=new ArrayList<>();
+
+        for(StockOutAuth authority : authorities)
+        {
+
+            newData.add( stockOutAuthRepository.save(authority));
+        }
+
+
+        return  wrapData(newData);
+    }
+
+
+    @RequestMapping(value="/saveOrderList", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    @Transactional
+    RemoteData<OrderAuth> saveOrderList(  @RequestBody List<OrderAuth> authorities)   {
+
+
+
+        List<OrderAuth> newData=new ArrayList<>();
+
+        for(OrderAuth authority : authorities)
+        {
+
+            newData.add( orderAuthRepository.save(authority));
         }
 
 

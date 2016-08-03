@@ -7,4 +7,10 @@ package com.giants.hd.desktop.view;
  */
 public interface AuthRelateDetailViewer extends  OrderAuthDetailViewer,StockOutAuthDetailViewer,QuoteAuthDetailViewer {
     void showPaneAndRow(int selectedPane, int showRow);
+
+    void showQuoteRow(int showRow);
+
+    void showOrderRow(int showRow);
+
+    void showStockOutRow(int showRow);
 }
