@@ -90,7 +90,7 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
             //图片
 
-            if(item.productPhoto!=null)
+
                 addPicture(sheet, HttpUrl.loadProductPicture(item.photoUrl),1,rowUpdate,1,rowUpdate);
 
 //            attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 1 + pictureGap / 2, rowUpdate + pictureGap / 2, 1 - pictureGap, 1 - pictureGap);

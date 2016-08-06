@@ -18,11 +18,11 @@ import javax.swing.*;
 public class StockOutTableModel extends BaseTableModel<ErpStockOut> {
 
 
-    public static String[] columnNames = new String[]{  "出库单","出库日期","客户", "目的港", "提单号", "柜数柜型" };
-    public static int[] columnWidth=new int[]{   120, 120,60,120,100, 60 };
-    public static String[] fieldName = new String[]{  "ck_no",  "ck_dd","cus_no","mdg","tdh", "gsgx" };
+    public static String[] columnNames = new String[]{  "出库单","出库日期","客户","业务员", "目的港", "提单号", "柜数柜型" };
+    public static int[] columnWidth=new int[]{   120, 120,60,120,100,100, 60 };
+    public static String[] fieldName = new String[]{  "ck_no",  "ck_dd","cus_no","sal_cname","mdg","tdh", "gsgx" };
 
-    public  static Class[] classes = new Class[]{Object.class, Object.class, Object.class, Object.class, Object.class, Object.class};
+    public  static Class[] classes = new Class[]{Object.class, Object.class, Object.class,Object.class, Object.class, Object.class, Object.class};
 
 
 

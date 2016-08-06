@@ -211,17 +211,8 @@ public class AttachPanel extends JPanel {
     }
 
 
-    private String getUrl(String fileName) {
-
-        String url = "";
-        if (fileName.startsWith("TEMP_")) {
-            url = HttpUrl.loadTempPicture(fileName);
-
-        } else {
-            url = HttpUrl.loadAttachPicture(fileName);
-        }
-
-        return url;
+    private String getUrl(String relativeUrl) {
+        return  HttpUrl.loadPicture(relativeUrl);
     }
 
     /**

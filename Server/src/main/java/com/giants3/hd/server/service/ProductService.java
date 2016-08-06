@@ -288,9 +288,9 @@ public class ProductService extends AbstractService implements InitializingBean,
             productRepository.save(product);
 
             //   更新报价表中的图片url
-            quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.photo, product.url, product.id);
-            quotationXKItemRepository.updatePhotoByProductId(product.photo, product.url, product.id);
-            quotationXKItemRepository.updatePhoto2ByProductId(product.photo, product.url, product.id);
+            quotationItemRepository.updatePhotoAndPhotoUrlByProductId(  product.url, product.id);
+            quotationXKItemRepository.updatePhotoByProductId(  product.url, product.id);
+            quotationXKItemRepository.updatePhoto2ByProductId(  product.url, product.id);
             productRepository.flush();
             quotationItemRepository.flush();
             quotationXKItemRepository.flush();
@@ -314,8 +314,8 @@ public class ProductService extends AbstractService implements InitializingBean,
         //  为空。
         final File file = new File(filePath);
         if (!file.exists()) {
-            if ((product.photo != null || !StringUtils.isEmpty(product.url))) {
-                product.setPhoto(null);
+            if ((  !StringUtils.isEmpty(product.url))) {
+
                 product.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
                 product.setUrl("");
                 return true;
@@ -325,17 +325,13 @@ public class ProductService extends AbstractService implements InitializingBean,
             long lastPhotoUpdateTime = FileUtils.getFileLastUpdateTime(file);
             String newUrl = FileUtils.getProductPictureURL(product.name, product.pVersion, lastPhotoUpdateTime);
             if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url))
-                try {
-                    product.setPhoto(ImageUtils.scaleProduct(filePath));
+
+
                     product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
                     product.setUrl(newUrl);
                     return true;
 
-                } catch (HdException e) {
-                    e.printStackTrace();
-                    Logger.getLogger("ProductService").info(e.getMessage());
 
-                }
 
 
         }
@@ -376,9 +372,9 @@ public class ProductService extends AbstractService implements InitializingBean,
 
                     //   更新报价表中的图片url
                     //更新报价表中的图片缩略图
-                    quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.photo, product.url, product.id);
-                    quotationXKItemRepository.updatePhotoByProductId(product.photo, product.url, product.id);
-                    quotationXKItemRepository.updatePhoto2ByProductId(product.photo, product.url, product.id);
+                    quotationItemRepository.updatePhotoAndPhotoUrlByProductId(  product.url, product.id);
+                    quotationXKItemRepository.updatePhotoByProductId(  product.url, product.id);
+                    quotationXKItemRepository.updatePhoto2ByProductId(  product.url, product.id);
                 }
 
 

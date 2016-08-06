@@ -155,6 +155,7 @@ public class ErpStockOutRepository {
                 .addScalar("gsgx", StringType.INSTANCE)
                 .addScalar("adr2", StringType.INSTANCE)
                 .addScalar("tel1", StringType.INSTANCE)
+                .addScalar("sal_no", StringType.INSTANCE)
                 .addScalar("fax", StringType.INSTANCE)
              .setResultTransformer(Transformers.aliasToBean(ErpStockOut.class));
 

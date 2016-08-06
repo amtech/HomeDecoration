@@ -36,8 +36,8 @@ public class QuotationItem implements Serializable,Valuable {
     @Basic
     public String productName;
 
-    @Lob  @Basic
-    public byte[]  productPhoto;
+//    @Lob  @Basic
+//    public byte[]  productPhoto;
 
 
     @Basic
@@ -138,7 +138,7 @@ public class QuotationItem implements Serializable,Valuable {
 
 
         productId=product.id;
-        productPhoto=product.photo;
+//        productPhoto=product.photo;
         photoUrl=product.url;
         productName=product.name;
         pVersion=product.pVersion;
@@ -187,7 +187,7 @@ public class QuotationItem implements Serializable,Valuable {
         if (Float.compare(item.weight, weight) != 0) return false;
         if (quotationId != item.quotationId) return false;
         if (productName != null ? !productName.equals(item.productName) : item.productName != null) return false;
-        if (!Arrays.equals(productPhoto, item.productPhoto)) return false;
+//        if (!Arrays.equals(productPhoto, item.productPhoto)) return false;
         if (pVersion != null ? !pVersion.equals(item.pVersion) : item.pVersion != null) return false;
         if (packageSize != null ? !packageSize.equals(item.packageSize) : item.packageSize != null) return false;
         if (unit != null ? !unit.equals(item.unit) : item.unit != null) return false;
@@ -203,7 +203,7 @@ public class QuotationItem implements Serializable,Valuable {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (productId ^ (productId >>> 32));
         result = 31 * result + (productName != null ? productName.hashCode() : 0);
-        result = 31 * result + (productPhoto != null ? Arrays.hashCode(productPhoto) : 0);
+//        result = 31 * result + (productPhoto != null ? Arrays.hashCode(productPhoto) : 0);
         result = 31 * result + (pVersion != null ? pVersion.hashCode() : 0);
         result = 31 * result + inBoxCount;
         result = 31 * result + packQuantity;

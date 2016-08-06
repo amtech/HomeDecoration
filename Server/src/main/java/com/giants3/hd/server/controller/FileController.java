@@ -195,11 +195,7 @@ public class FileController extends BaseController {
         long lastUpdatePhotoTime = FileUtils.getFileLastUpdateTime(new File(newPath));
         String newUrl = FileUtils.getMaterialPictureURL(material.code, material.classId, lastUpdatePhotoTime);
         material.url = newUrl;
-        try {
-            material.photo = ImageUtils.scaleMaterial(newPath) ;
-        } catch (HdException e) {
-            e.printStackTrace();
-        }
+
         material.lastPhotoUpdateTime = lastUpdatePhotoTime;
         materialService.save(material);
         //RemoteData<Void> result= handleFileUpload(new File(""), newPath);
@@ -416,8 +412,10 @@ public class FileController extends BaseController {
             String newPath = tempFilePath + tempFileName + ".JPG";
 
             RemoteData<Void> result = handleFileUpload(file, newPath);
+
+            String url=FileUtils.getDownloadTempUrl(tempFileName);
             if (result.isSuccess())
-                return wrapData(tempFileName);
+                return wrapData(url);
             return wrapError("上传失败");
         } else {
             return wrapError("You failed to upload " + file.getName() + " because the file was empty.");

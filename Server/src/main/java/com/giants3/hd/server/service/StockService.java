@@ -46,6 +46,9 @@ StockOutAuthRepository stockOutAuthRepository;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
     //临时文件夹
     @Value("${tempfilepath}")
     private String tempFilePath;
@@ -94,6 +97,7 @@ StockOutAuthRepository stockOutAuthRepository;
         List<ErpStockOut> erpStockOuts = repository.stockOutList(key,salesNos, pageIndex, pageSize);
         for (ErpStockOut stockOut : erpStockOuts) {
             attachData(stockOut);
+            attachSaleData(stockOut);
         }
 
 
@@ -137,7 +141,6 @@ StockOutAuthRepository stockOutAuthRepository;
             Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(productCode, pVersion);
             if (product != null) {
 
-                item.photo = product.photo;
                 item.url = product.url;
                 item.unit = product.pUnitName;
             }
@@ -172,7 +175,7 @@ StockOutAuthRepository stockOutAuthRepository;
 
         ErpStockOut erpStockOut = repository.findStockOut(ck_no);
         attachData(erpStockOut);
-
+        attachSaleData(erpStockOut);
         RemoteData<ErpStockOutDetail> remoteData = new RemoteData<>();
 
         detail.erpStockOut = erpStockOut;
@@ -188,6 +191,9 @@ StockOutAuthRepository stockOutAuthRepository;
      * @param erpStockOut
      */
     private void attachData(ErpStockOut erpStockOut) {
+
+
+
         if (erpStockOut != null) {
 
 
@@ -203,7 +209,27 @@ StockOutAuthRepository stockOutAuthRepository;
 
         }
     }
+    /**
+     * 附加业务员数据
+     *
+     * @param erpStockOut
+     */
+    private void attachSaleData(ErpStockOut erpStockOut) {
 
+
+
+        if (erpStockOut != null) {
+
+
+            User user = userRepository.findFirstByCodeEquals(erpStockOut.sal_no );
+            if (user != null) {
+                erpStockOut.sal_name = user.name;
+                erpStockOut.sal_cname = user.chineseName;
+
+            }
+
+        }
+    }
 
     /**
      * 剥离数据

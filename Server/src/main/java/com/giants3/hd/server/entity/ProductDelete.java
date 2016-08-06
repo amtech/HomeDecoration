@@ -16,8 +16,7 @@ public class ProductDelete implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    @Lob
-    public byte[] photo;
+
     public long productId;
     public String productName;
     public String pVersion;
@@ -26,6 +25,7 @@ public class ProductDelete implements Serializable {
     public String userCName;
     public long time;
     public String timeString;
+    public String url;
 
 
     public String toString() {
@@ -39,7 +39,7 @@ public class ProductDelete implements Serializable {
     {
 
 
-        photo=product.photo;
+        url=product.url;
         productId=product.id;
         productName=product.name;
         pVersion=product.pVersion;

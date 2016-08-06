@@ -13,7 +13,12 @@ import java.awt.event.WindowEvent;
 public class ImageViewDialog extends JDialog {
     private JPanel contentPane;
     private JLabel picture;
+    private JLabel previous;
+    private JLabel next;
+    private JLabel message;
 
+
+    public String[] urls;
     private ImageViewDialog(Window frame) {
 
         super(frame);
@@ -32,6 +37,10 @@ public class ImageViewDialog extends JDialog {
         setMinimumSize(new Dimension(600, 200));
         setLocation((dimension.width - 600) / 2, (dimension.height - 200) / 2);
 
+        previous.setVisible(false);
+        next.setVisible(false);
+        message.setVisible(false);
+
     }
 
 
@@ -42,7 +51,7 @@ public class ImageViewDialog extends JDialog {
     public  void loadImageAndShow(final String url)
     {
 
-
+         urls=url.split(";");
         picture.setText("正在加载图片....");
        final Dimension dimension=   java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -89,12 +98,8 @@ public class ImageViewDialog extends JDialog {
      */
     public static void showProductDialog(Window frame,String productName,String version,String productUrl) {
 
-
-
         String url=HttpUrl.loadProductPicture(productUrl);
-
         showDialog(frame,url, StringUtils.isEmpty(version)?productName:(productName+"-"+version));
-
     }
 
     /**

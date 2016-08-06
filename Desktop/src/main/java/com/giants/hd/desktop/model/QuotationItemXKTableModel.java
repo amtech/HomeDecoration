@@ -27,7 +27,7 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
 
 
     public static final String COLUMN_PRODUCT="productName";
-    public static final String COLUMN_PRODUCT_PHOTO="productPhoto";
+
     QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
     public static String[] columnNames = new String[]{   "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
@@ -81,15 +81,7 @@ public  static Class[] classes = new Class[]{ };
             return "";
 
 
-        if (fieldName[columnIndex].equals(COLUMN_PRODUCT_PHOTO))
-        {
-            if(item.productPhoto!=null)
-                   return new ImageIcon(item.productPhoto);
-            if(item.productPhoto2!=null)
-                return new ImageIcon(item.productPhoto2);
-            return null;
 
-        }
 
 
         if (fieldName[columnIndex].equals(COLUMN_PRODUCT))

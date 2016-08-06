@@ -19,7 +19,7 @@ public class FileUtils {
     public static final String  DOWNLOAD_PATH="api/file/download/";
     public static final String DOWNLOAD_MATERIAL_CODE =DOWNLOAD_PATH+"material/%s/%s.%s?type=%s&mClass=%s";
     public static final String DOWNLOAD_PRODUCT_NAME_P_VERSION = DOWNLOAD_PATH+"product/%s/%s/%s.%s?type=%s";
-    public static final String DOWNLOAD_TEMP_NAME = "/download/temp/{name}";
+    public static final String DOWNLOAD_TEMP_NAME = DOWNLOAD_PATH+"temp/%s."+IMAGE_JPG;
     public static final String DOWNLOAD_ATTACH_NAME = "/download/attach/{name}";
 
 
@@ -79,6 +79,18 @@ public class FileUtils {
     {
 
         return getMaterialPicturePath(filePath, code, mClass, "jpg");
+
+    }
+
+
+    /**获取临时图片路径      默认是jpg文件
+     *
+     * @return
+     */
+    public static  final String getDownloadTempUrl(String  fileName  )
+    {
+
+        return  String.format(DOWNLOAD_TEMP_NAME,fileName) ;
 
     }
 

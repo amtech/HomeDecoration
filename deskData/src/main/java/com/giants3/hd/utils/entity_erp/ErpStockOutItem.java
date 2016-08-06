@@ -46,8 +46,6 @@ public class ErpStockOutItem   implements Serializable{
 
     //以下是本系统数据 关联过来
 
-
-    public byte[] photo;
     public String url;
     public String unit;
 

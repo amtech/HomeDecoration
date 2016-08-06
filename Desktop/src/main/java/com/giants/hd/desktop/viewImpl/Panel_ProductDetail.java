@@ -8,6 +8,7 @@ import com.giants.hd.desktop.dialogs.SearchDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.interf.ComonSearch;
 import com.giants.hd.desktop.interf.DataChangeListener;
+import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.presenter.ProductDetailPresenter;
@@ -1085,7 +1086,18 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
 
-        photo.setIcon(product.photo == null ? null : new ImageIcon(product.photo));
+
+        ImageLoader.getInstance().displayImage(new Iconable() {
+            @Override
+            public void setIcon(ImageIcon icon) {
+                photo.setIcon(icon);
+            }
+
+            @Override
+            public void onError(String message) {
+                photo.setText("");
+            }
+        },product.url);
 
         photo.setText(product == null ? "产品图片" : "");
 

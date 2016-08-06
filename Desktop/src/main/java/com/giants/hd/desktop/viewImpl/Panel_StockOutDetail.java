@@ -54,6 +54,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JTextField tf_fengqian;
     private JButton btn_addgui;
     private JButton btn_showall;
+    private JTextField tf_sal;
     private StockOutDetailPresenter presenter;
 
     private StockOutItemTableModel tableModel;
@@ -85,7 +86,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
                     if(item==null) return;
 
                     //单击第一列 显示原图
-                    if (column == 0) {
+                    if (column == 1) {
 
 
 
@@ -251,6 +252,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tf_gsgx.setText(erpStockOutDetail.erpStockOut.gsgx);
         tf_mdg.setText(erpStockOutDetail.erpStockOut.mdg);
         tf_tdh.setText(erpStockOutDetail.erpStockOut.tdh);
+        tf_sal.setText(erpStockOutDetail.erpStockOut.sal_name+"-"+erpStockOutDetail.erpStockOut.sal_cname);
 
 
 //        ta_cemai.getDocument().removeDocumentListener(cemaiDocumentListener);

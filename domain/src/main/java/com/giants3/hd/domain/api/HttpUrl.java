@@ -182,7 +182,16 @@ public class HttpUrl {
         String url = BaseUrl + productUrl;
         return url;
     }
-
+    /**
+     * 生成图片的url
+     *
+     * @param relativeUrl
+     * @return
+     */
+    public static String loadPicture(String relativeUrl) {
+        String url = BaseUrl + relativeUrl;
+        return url;
+    }
     /**
      * 读取产品类型
      *

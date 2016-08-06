@@ -26,6 +26,7 @@ public class MaterialDelete implements Serializable {
     public String userCName;
     public long time;
     public String timeString;
+    public String url;
 
 
     public String toString() {
@@ -39,7 +40,7 @@ public class MaterialDelete implements Serializable {
     {
 
 
-        photo=material.photo;
+        url=material.url;
         materialId=material.id;
         materialCode= material.code;
         materialName=material.name;

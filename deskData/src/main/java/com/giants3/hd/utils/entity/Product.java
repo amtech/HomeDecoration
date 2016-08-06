@@ -20,11 +20,7 @@ public class Product implements Serializable {
 	public String memo="";
 
 
-	/**
-	 * 图片，存放缩略图
-	 */
 
-	public byte[] photo;
 
 	/**
 	 * 产品类别id
@@ -477,13 +473,7 @@ public class Product implements Serializable {
 		this.memo = memo;
 	}
 
-	public byte[] getPhoto() {
-		return photo;
-	}
 
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
-	}
 
 	public String getUrl() {
 		return url;
@@ -833,7 +823,7 @@ public class Product implements Serializable {
 	@Override
 	public int hashCode() {
 		int result = memo != null ? memo.hashCode() : 0;
-		result = 31 * result + (photo != null ? Arrays.hashCode(photo) : 0);
+
 		result = 31 * result + (url != null ? url.hashCode() : 0);
 		result = 31 * result + (int) (pClassId ^ (pClassId >>> 32));
 		result = 31 * result + (pClassName != null ? pClassName.hashCode() : 0);

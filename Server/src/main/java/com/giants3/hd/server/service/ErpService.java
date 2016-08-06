@@ -95,8 +95,12 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         //进行业务员配对。
 
         for (ErpOrder erpOrder : result) {
-            User user = userRepository.findFirstByIsSalesmanAndCodeEquals(true, erpOrder.sal_no);
-            erpOrder.sal_name = user == null ? (erpOrder.sal_no + "()") : (("(") + user.name + ")" + user.chineseName);
+
+            User user=userRepository.findFirstByCodeEquals(erpOrder.sal_no);
+            if (user!=null)
+            {
+                attachData(erpOrder,user);
+            }
 
             Order order=orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
             if(order!=null)
@@ -124,6 +128,16 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         List<ErpOrderItem> orderItems = repository.findItemsByOrderNo(orderNo);
         //从报价系统读取产品的单位信息，图片信息
         for (ErpOrderItem item : orderItems) {
+
+                String productCode = item.prd_no;
+                String pVersion = "";
+                try {
+                    pVersion = item.id_no.substring(productCode.length() + 2);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+                item.pVersion = pVersion;
+
             Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(item.prd_name,item.pVersion);
             //  item.prd_no
 
@@ -131,7 +145,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 item.ut = product.pUnitName;
                 //来自电脑端+图片
                 if(fromDesk)
-                  item.photo = product.photo;
+
                   item.productId = product.id;
                    item.url = product.url;
             }
@@ -162,7 +176,11 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             attachData(erpOrder,order);
         }
 
-
+        User user=userRepository.findFirstByCodeEquals(erpOrder.sal_no);
+        if (user!=null)
+        {
+            attachData(erpOrder,user);
+        }
 
         orderDetail.erpOrder=erpOrder;
         orderDetail.items=orderItems;
@@ -185,7 +203,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             if (product != null) {
                 item.ut = product.pUnitName;
-                item.photo = product.photo;
+
                 item.productId = product.id;
                 item.url = product.url;
                 item.packAttaches=product.packAttaches;
@@ -210,15 +228,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             }
 
-
-
         }
-
-
-
-
-
-
 
         return wrapData(orderDetail);
 
@@ -238,6 +248,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         String oldAttaches = erpOrder.attaches;
         detachData(erpOrder, order);
+
+
         //附件处理
         order.attaches = AttachFileUtils.updateProductAttaches(erpOrder.attaches, oldAttaches, "ORDER_" + order.osNo, attachfilepath, tempFilePath);
         orderRepository.save(order);
@@ -319,6 +331,28 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         erpOrder.neheimai = order.neheimai;
         erpOrder.memo = order.memo;
         erpOrder.attaches = order.attaches;
+
+
+    }
+
+
+    /**
+     * 附加数据
+     *
+     * @param erpOrder
+     * @param user
+     */
+    private void attachData(ErpOrder erpOrder, User user) {
+        if (user == null || erpOrder == null) {
+            return;
+        }
+
+
+        erpOrder.sal_no = user.code;
+        erpOrder.sal_name = user.name;
+        erpOrder.sal_cname = user.chineseName;
+
+
 
     }
 }

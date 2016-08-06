@@ -4,17 +4,13 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
-import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.MaterialService;
-import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -782,7 +778,7 @@ public class MaterialController extends BaseController {
                         boolean isModified=false;
                         if(lastUpdateTime>0 )
                         {
-                    if(lastUpdateTime!=material.lastPhotoUpdateTime||material.photo==null)
+                    if(lastUpdateTime!=material.lastPhotoUpdateTime )
                     {
                         updateMaterialPhoto(material);
                         material.lastPhotoUpdateTime=lastUpdateTime;
@@ -793,12 +789,11 @@ public class MaterialController extends BaseController {
 
                 }else
                 {
-                    if(material.photo!=null) {
-                        material.photo = null;
+
                         material.lastPhotoUpdateTime = lastUpdateTime;
                         isModified=true;
                         count++;
-                    }
+
 
                 }
 
@@ -850,17 +845,10 @@ public class MaterialController extends BaseController {
         String url;
         //如果tup图片文件不存在  则 设置photo为空。
         if (!new File(filePath).exists()) {
-            material.setPhoto(null);
             material.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
 
-
         } else {
-            try {
-                material.setPhoto(ImageUtils.scaleMaterial(filePath));
 
-            } catch (HdException e) {
-                e.printStackTrace();
-            }
 
 
 

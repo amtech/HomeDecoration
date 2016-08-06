@@ -38,9 +38,16 @@ public class ErpOrder {
 
 
     /**
-     * 业务中文名
+     * 业务名  从报价系统读取
      */
     public String sal_name;
+
+
+    /** 用户中文名
+     * 从报价系统读取
+     */
+
+    public String sal_cname;
     /**
      * 预计交期
      */

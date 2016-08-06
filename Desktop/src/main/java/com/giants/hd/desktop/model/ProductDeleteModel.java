@@ -18,7 +18,7 @@ public class ProductDeleteModel extends BaseTableModel<ProductDelete> {
 
     public static String[] columnNames = new String[]{"图片", "货号","版本号","删除人", "删除人", "删除日期" };
     public static int[] columnWidth=new int[]{ ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 120, 60, 100,100,160 };
-    public static String[] fieldName = new String[]{"photo", "productName",  "pVersion","userName","userCName","timeString"};
+    public static String[] fieldName = new String[]{"url", "productName",  "pVersion","userName","userCName","timeString"};
 
     public  static Class[] classes = new Class[]{ImageIcon.class };
 

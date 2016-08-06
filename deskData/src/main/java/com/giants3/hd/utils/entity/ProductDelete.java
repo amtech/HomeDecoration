@@ -15,7 +15,7 @@ public class ProductDelete implements Serializable {
 
     public long id;
 
-    public byte[] photo;
+
     public long productId;
     public String productName;
     public String pVersion;
@@ -24,6 +24,7 @@ public class ProductDelete implements Serializable {
     public String userCName;
     public long time;
     public String timeString;
+    public String url;
 
 
     public String toString() {
@@ -37,11 +38,12 @@ public class ProductDelete implements Serializable {
     {
 
 
-        photo=product.photo;
+
         productId=product.id;
         productName=product.name;
         pVersion=product.pVersion;
 
+        url=product.url;
         userId=user.id
                 ;
         userName=user.name;

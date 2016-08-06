@@ -24,7 +24,7 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     public static final String FENGQIANHAO = "fengqianhao";
     public static final String UP = "up";
     public static final String AMT = "amt";
-    public static String[] fieldName = new String[]{  "itm", "photo",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , UP,  "qty", AMT, "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
+    public static String[] fieldName = new String[]{  "itm", "url",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , UP,  "qty", AMT, "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
 
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class,                       Object.class,   Object.class, Object.class, StockOutDetailFrame.GuiInfo.class,  Object.class};
 

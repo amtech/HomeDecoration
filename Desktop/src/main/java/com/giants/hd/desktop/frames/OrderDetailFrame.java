@@ -58,7 +58,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
 
         //设置权限相关
-        orderDetailViewer.setEditable(AuthorityUtil.getInstance().editStockOut());
+        orderDetailViewer.setEditable(AuthorityUtil.getInstance().editOrder());
         orderDetailViewer.setPriceVisible(CacheManager.getInstance().isOrderPriceVisible());
         loadOrderDetail(os_no);
     }

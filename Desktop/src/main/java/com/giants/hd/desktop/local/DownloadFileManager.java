@@ -186,6 +186,7 @@ public class DownloadFileManager {
         File newFile=new File(filePath);
 
             //打开URL通道
+        try{
             URL url = new URL(remoteUrl);
             is =   url.openStream();
 
@@ -201,7 +202,7 @@ public class DownloadFileManager {
 
             //保存文件
 
-        try{
+
                 while ((size = bis.read(buffer)) != -1) {
                     //读取并刷新临时保存文件
                     fos.write(buffer, 0, size);

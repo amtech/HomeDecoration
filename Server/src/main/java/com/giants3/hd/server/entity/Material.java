@@ -145,11 +145,11 @@ public class Material  implements Serializable {
 	public float ingredientRatio=0f;
 
 
-	/**
-	 * 图片，存放缩略图
-	 */
-	@Lob  @Basic
-	public byte[] photo;
+//	/**
+//	 * 图片，存放缩略图
+//	 */
+//	@Lob  @Basic
+//	public byte[] photo;
 
 
 
@@ -331,13 +331,13 @@ public class Material  implements Serializable {
 		this.lastPhotoUpdateTime = lastPhotoUpdateTime;
 	}
 
-	public byte[] getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
-	}
+//	public byte[] getPhoto() {
+//		return photo;
+//	}
+//
+//	public void setPhoto(byte[] photo) {
+//		this.photo = photo;
+//	}
 
 	public static final class MCLass
 	{

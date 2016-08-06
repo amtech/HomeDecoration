@@ -29,11 +29,7 @@ public class ErpOrderItem {
      */
     public String prd_no;
 
-    /**
-     * 缩微图片
-     */
 
-    public byte[] photo;
 
     public long productId;
     /**

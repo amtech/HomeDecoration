@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.QuotationXKItem;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -19,12 +20,12 @@ public class QuotationItemFixColumnXKTableModel extends  BaseTableModel<Quotatio
 
 
     public static final String COLUMN_PRODUCT="productName";
-    public static final String COLUMN_PRODUCT_PHOTO="productPhoto";
+     public static final String PHOTO_URL = "photoUrl";
 
     public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号(折叠)",   "配方号(加强)" } ;
     public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,       60};
 
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,COLUMN_PRODUCT_PHOTO, COLUMN_PRODUCT, "pVersion", "pVersion2"  };
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,PHOTO_URL, COLUMN_PRODUCT, "pVersion", "pVersion2"  };
 
 public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, String.class,Product.class,Product2.class};
 
@@ -56,13 +57,22 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Strin
             return "";
 
 
-        if (fieldName[columnIndex].equals(COLUMN_PRODUCT_PHOTO))
+        //贤康报价图片 必选显示一张
+        if (fieldName[columnIndex].equals(PHOTO_URL))
         {
-            if(item.productPhoto!=null)
-                   return new ImageIcon(item.productPhoto);
-            if(item.productPhoto2!=null)
-                return new ImageIcon(item.productPhoto2);
-            return null;
+            String destUrl="";
+            if(!StringUtils.isEmpty(item.photoUrl))
+            {
+                destUrl=item.photoUrl;
+            }else
+            {
+                destUrl=item.photo2Url;
+            }
+
+            if(!StringUtils.isEmpty(destUrl))
+              return    loadImage(rowIndex,columnIndex,destUrl);
+
+            return "";
 
         }
 

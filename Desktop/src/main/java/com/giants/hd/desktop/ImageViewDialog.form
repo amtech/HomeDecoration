@@ -15,6 +15,26 @@
           <text value=""/>
         </properties>
       </component>
+      <component id="780b8" class="javax.swing.JLabel" binding="next">
+        <constraints border-constraint="East"/>
+        <properties>
+          <text value="&gt;"/>
+        </properties>
+      </component>
+      <component id="40ba2" class="javax.swing.JLabel" binding="previous">
+        <constraints border-constraint="West"/>
+        <properties>
+          <text value="&lt;"/>
+        </properties>
+      </component>
+      <component id="3cd12" class="javax.swing.JLabel" binding="message">
+        <constraints border-constraint="South"/>
+        <properties>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <text value=""/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

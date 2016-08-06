@@ -1,13 +1,18 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.local.ImageLoader;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -225,7 +230,7 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             else
                 if(obj instanceof  Float)
                 {
-                    //TODO   make the float value 3.0  to show in 3 ,without the fraction.
+                    //    make the float value 3.0  to show in 3 ,without the fraction.
                     return FloatHelper.scale((Float)obj,5);
                 }
         }else
@@ -237,13 +242,48 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
             //图片url
             if(obj instanceof  String )
             {
-
+              return   loadImage( rowIndex,columnIndex,  (String)obj);
             }
 
         }
 
         return obj
         ;
+
+
+    }
+
+    protected Object loadImage(final int row , final int column, String url)
+    {
+
+
+
+             String[] fileNames = url.split(";");
+
+            if (fileNames==null||fileNames.length==0||StringUtils.isEmpty(fileNames[0])) return "";
+            final String destUrl=HttpUrl.loadPicture(fileNames[0]);
+            ImageIcon data = pictureMaps.get(destUrl);
+            if (data == null) {
+
+                ImageLoader.getInstance().displayImage(new Iconable() {
+                    @Override
+                    public void setIcon(ImageIcon icon) {
+                        pictureMaps.put(destUrl, icon);
+                        fireTableCellUpdated(row, column);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        pictureMaps.put(destUrl, new ImageIcon(new byte[0]));
+
+                    }
+                }, destUrl,  getColumnWidth()==null?50:  getColumnWidth()[column],getRowHeight());
+
+                return null;
+
+            } else {
+                return data;
+            }
 
 
     }
@@ -401,4 +441,10 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
 
     }
+
+
+
+    //异步加载的图片缓存
+    private HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
+
 }

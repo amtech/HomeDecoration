@@ -500,4 +500,14 @@ public class AuthorityUtil {
     public boolean editStockOut() {
         return editable(Module.NAME_STOCK_OUT);
     }
+
+    /**
+     *  是否订单编辑权限
+     * @return
+     */
+    public boolean editOrder() {
+
+
+        return editable(Module.NAME_ORDER);
+    }
 }

@@ -49,7 +49,7 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String PACK_ATTACHES = "packAttaches";
     public static final String UP = "up";
     public static final String AMT = "amt";
-    public static String[] fieldName = new String[]{"itm",     "photo",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", "memo"};
+    public static String[] fieldName = new String[]{"itm",     "url",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", "memo"};
 
     public static Class[] classes = new Class[]{Object.class,  ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class, ImageIcon.class};
     /**
@@ -112,47 +112,6 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
         }
 
 
-        if (columnIndex == StringUtils.index(fieldName, PACK_ATTACHES)) {
-
-
-            final String attachString = item.packAttaches;
-            if (StringUtils.isEmpty(attachString)) return "";
-           ImageIcon data = pictureMaps.get(attachString);
-            if (data == null) {
-
-
-                String[] fileNames = attachString.split(";");
-                String url = "";
-                if (fileNames[0].startsWith("TEMP_")) {
-                    url = HttpUrl.loadTempPicture(fileNames[0]);
-                } else {
-                    url = HttpUrl.loadAttachPicture(fileNames[0]);
-                }
-
-                ImageLoader.getInstance().displayImage(new Iconable() {
-
-
-
-                    @Override
-                    public void setIcon(ImageIcon icon) {
-                        pictureMaps.put(attachString, icon);
-                        fireTableCellUpdated(rowIndex, columnIndex);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        pictureMaps.put(attachString, new ImageIcon(new byte[0]));
-
-                    }
-                }, url,   columnWidth[columnIndex],getRowHeight());
-
-                return null;
-
-            } else {
-                return data;
-            }
-        }
-
         return super.getValueAt(rowIndex, columnIndex);
     }
 
@@ -208,8 +167,8 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     }
 
 
-    //异步加载的图片缓存
-    private HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
+//    //异步加载的图片缓存
+//    private HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
 
 
     /**

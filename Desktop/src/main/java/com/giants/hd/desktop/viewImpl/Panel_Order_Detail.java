@@ -115,6 +115,13 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
                         ImageViewDialog.showProductDialog(getWindow(), orderItem.prd_name, "", orderItem.url);
                     }
 
+                    //第八列 显示附件
+                    if(column==8)
+                    {
+
+
+                    }
+
 
                 }
 
@@ -188,7 +195,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         tf_os_no.setText(order.os_no);
         tf_customer.setText(order.cus_no);
         tf_cos.setText(order.cus_os_no);
-        tf_sales.setText(order.sal_no+"--"+order.sal_name);
+        tf_sales.setText(order.sal_no+"-"+order.sal_name+"-"+order.sal_cname);
         tf_so_data.setText(order.so_data);
         ta_rem.setText(order.rem);
 

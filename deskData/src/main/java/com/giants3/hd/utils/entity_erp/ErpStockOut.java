@@ -17,6 +17,12 @@ public class ErpStockOut   implements Serializable {
     public String gsgx;
 
 
+    //业务员
+    public String sal_no;
+    //业员名字
+    public String sal_name;
+    //业员中文名
+    public String sal_cname;
     //客户地址
     public String adr2;
     //客户电话
