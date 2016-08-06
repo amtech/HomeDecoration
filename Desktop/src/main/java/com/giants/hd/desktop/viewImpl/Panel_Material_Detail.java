@@ -1,8 +1,11 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
+import com.giants.hd.desktop.interf.Iconable;
+import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.giants3.hd.utils.entity.MaterialType;
@@ -224,8 +227,6 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
 
-        lb_photo.setIcon(data.photo == null ? null : new ImageIcon(data.photo));
-
 
         cb_outofservice.setSelectedIndex(data.outOfService?1:0);
 
@@ -243,6 +244,18 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
         cb_materialClass.addItemListener(materialClassListener);
+
+        ImageLoader.getInstance().displayImage(new Iconable() {
+            @Override
+            public void setIcon(ImageIcon icon) {
+                lb_photo.setIcon(icon);
+            }
+
+            @Override
+            public void onError(String message) {
+                lb_photo.setText("");
+            }
+        }, HttpUrl.loadPicture(data.url));
 
     }
 

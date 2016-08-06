@@ -89,10 +89,7 @@ public class ImageLoader {
 
             @Override
             public void onNext(BufferedImage bufferedImage) {
-
-
                 iconable.setIcon(new ImageIcon(bufferedImage));
-
             }
         });
 

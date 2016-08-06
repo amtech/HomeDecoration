@@ -16,8 +16,7 @@ public class MaterialDelete implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    @Lob
-    public byte[] photo;
+
     public long materialId;
     public String materialCode;
     public String materialName;

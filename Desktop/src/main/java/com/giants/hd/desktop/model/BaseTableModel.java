@@ -364,7 +364,6 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
         }
 
         datas.removeAll(datasToDelete);
-
         fireTableDataChanged();
 
     }
@@ -443,8 +442,11 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
     }
 
 
-
-    //异步加载的图片缓存
-    private HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
+    /**
+     *
+     * 表格中使用的图片缓存
+     * 异步加载的图片缓存
+     */
+    private static HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
 
 }

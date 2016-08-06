@@ -1097,7 +1097,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
             public void onError(String message) {
                 photo.setText("");
             }
-        },product.url);
+        },HttpUrl.loadPicture(product.url),photo.getWidth(),photo.getHeight());
 
         photo.setText(product == null ? "产品图片" : "");
 
