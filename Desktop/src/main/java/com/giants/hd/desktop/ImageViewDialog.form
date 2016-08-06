@@ -15,26 +15,33 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="780b8" class="javax.swing.JLabel" binding="next">
-        <constraints border-constraint="East"/>
-        <properties>
-          <text value="&gt;"/>
-        </properties>
-      </component>
-      <component id="40ba2" class="javax.swing.JLabel" binding="previous">
-        <constraints border-constraint="West"/>
-        <properties>
-          <text value="&lt;"/>
-        </properties>
-      </component>
-      <component id="3cd12" class="javax.swing.JLabel" binding="message">
+      <grid id="cce78" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
-        <properties>
-          <horizontalAlignment value="0"/>
-          <horizontalTextPosition value="0"/>
-          <text value=""/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="3cd12" class="javax.swing.JLabel" binding="message">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="这是一个测试"/>
+            </properties>
+          </component>
+          <component id="746bc" class="javax.swing.JButton" binding="previous">
+            <constraints border-constraint="West"/>
+            <properties>
+              <text value="上一张"/>
+            </properties>
+          </component>
+          <component id="82752" class="javax.swing.JButton" binding="next">
+            <constraints border-constraint="East"/>
+            <properties>
+              <text value="下一张"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

@@ -119,6 +119,17 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
                     if(column==8)
                     {
 
+                         String packAttaches=   orderItem.packAttaches;
+                        if(StringUtils.isEmpty(packAttaches)) return;
+                        String[] temp=StringUtils.split(packAttaches);
+                        final int length = temp.length;
+                        String[] newUrl=new String[length];
+                        for (int i = 0; i < length; i++) {
+                            newUrl[i]=HttpUrl.loadPicture(temp[i]);
+                        }
+
+
+                        ImageViewDialog.showDialog(getWindow(), StringUtils.combine(newUrl), orderItem.prd_name+"包装附件" );
 
                     }
 
