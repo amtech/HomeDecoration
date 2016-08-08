@@ -1,7 +1,11 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
+import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Invoice;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_List;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_StockOutDetail;
 import com.giants3.hd.domain.api.CacheManager;
@@ -11,10 +15,14 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
+import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import rx.Subscriber;
 
+import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -238,6 +246,62 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         OrderDetailFrame orderDetailFrame=new OrderDetailFrame(os_no);
         orderDetailFrame.setLocationRelativeTo(this);
         orderDetailFrame.setVisible(true);
+    }
+
+    @Override
+    public void exportInvoice() {
+
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+        try {
+            new Report_Excel_StockOut_Invoice().report(erpStockOutDetail,file.getAbsolutePath());
+            stockOutDetailViewer.showMesssage("导出成功");
+
+            return;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        } catch (HdException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        }
+
+
+
+
+    }
+
+    @Override
+    public void exportPack() {
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+        try {
+            new Report_Excel_StockOut_List().report(erpStockOutDetail,file.getAbsolutePath());
+            stockOutDetailViewer.showMesssage("导出成功");
+
+            return;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        } catch (HdException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        }
+
+
+
+
+
     }
 
     @Override

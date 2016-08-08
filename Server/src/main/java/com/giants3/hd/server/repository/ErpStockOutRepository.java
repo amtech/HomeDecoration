@@ -71,11 +71,13 @@ public class ErpStockOutRepository {
                 .addScalar("cus_os_no", StringType.INSTANCE)
                 .addScalar("qty", FloatType.INSTANCE)
                 .addScalar("amt", FloatType.INSTANCE)
-                .addScalar("so_zxs", StringType.INSTANCE)
+                .addScalar("so_zxs", IntegerType.INSTANCE)
                 .addScalar("up", FloatType.INSTANCE)
-                .addScalar("xs", StringType.INSTANCE)
+                .addScalar("xs", FloatType.INSTANCE)
                 .addScalar("khxg", StringType.INSTANCE)
-                .addScalar("xgtj", StringType.INSTANCE)
+
+                .addScalar("xgtj", FloatType.INSTANCE)
+                .addScalar("zxgtj", FloatType.INSTANCE)
                 .addScalar("jz1", FloatType.INSTANCE)
                 .addScalar("mz", FloatType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpStockOutItem.class))  .list();

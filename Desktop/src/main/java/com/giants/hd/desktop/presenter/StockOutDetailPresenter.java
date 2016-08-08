@@ -71,4 +71,15 @@ public interface StockOutDetailPresenter extends    Presenter {
      * @param os_no
      */
     void showOrderDetail(String os_no);
+
+    /**
+     * 导出发票单
+     */
+    void exportInvoice();
+
+
+    /**
+     * 导出出库清单
+     */
+    void  exportPack();
 }

@@ -1,28 +1,19 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
-import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.StockOutGuihaoModel;
 import com.giants.hd.desktop.model.StockOutItemTableModel;
 import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
-import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.widget.QuotationItemPopMenu;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.PackMaterialType;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -55,6 +46,8 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JButton btn_addgui;
     private JButton btn_showall;
     private JTextField tf_sal;
+    private JButton export_invoice;
+    private JButton export_pack;
     private StockOutDetailPresenter presenter;
 
     private StockOutItemTableModel tableModel;
@@ -224,6 +217,26 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
 
                 presenter.filterGuihao(null);
+            }
+        });
+
+
+
+
+        export_invoice.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                presenter.exportInvoice();
+
+            }
+        });
+
+
+        export_pack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                presenter.exportPack();
             }
         });
     }

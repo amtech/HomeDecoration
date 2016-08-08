@@ -81,13 +81,14 @@ public class Report_Excel_ProductMaterialList extends AbstractExcelReporter<Prod
     }
 
 
-
+    /**
+     *
+     * @param productMaterials
+     * @param writableSheet
+     */
     private  void writeProductMaterial(List<ProductMaterial> productMaterials, Sheet  writableSheet)
     {
-
         int defaultRowCount=30;
-
-
         int startItemRow=2;
         int dataSize=productMaterials.size();
         //实际数据超出范围 插入空行

@@ -169,6 +169,7 @@ public class StringUtils {
             result[2] = FloatHelper.scale(Float.valueOf(packageString.substring(lastIndex + 1)));
         }catch (Throwable t)
         {
+            System.out.println(packageString);
             t.printStackTrace();
         }
         return result;

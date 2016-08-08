@@ -225,6 +225,18 @@
               <text value="保存"/>
             </properties>
           </component>
+          <component id="7b449" class="javax.swing.JButton" binding="export_invoice">
+            <constraints/>
+            <properties>
+              <text value="导出发票单"/>
+            </properties>
+          </component>
+          <component id="f1dd0" class="javax.swing.JButton" binding="export_pack">
+            <constraints/>
+            <properties>
+              <text value="导出清单"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="da434" layout-manager="BorderLayout" hgap="0" vgap="0">
