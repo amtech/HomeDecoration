@@ -122,6 +122,13 @@ public class Module implements Serializable{
     public static final String TITLE_ORDER = "订单模块";
 
 
+
+
+    public static final String NAME_ORDER_REPORT="OrderReport";
+    public static final String TITLE_ORDER_REPORT="订单报表";
+
+
+
     public static final String NAME_QUOTATION_DELETE="QuotationDelete";
     public static final String TITLE_QUOTATION_DELETE="已删除报价单";
 
@@ -172,6 +179,8 @@ public class Module implements Serializable{
     public static final String TITLE_USER ="用户";
 
 
+
+
     public static final String NAME_MODULE = "MODULE";
     public static final String TITLE_MODULE = "模块列表";
     public static String[] NAMES=new String[]{NAME_MATERIAL,NAME_PRODUCT,NAME_PRODUCT_PICTURE,NAME_MATERIAL_PICTURE,
@@ -182,7 +191,10 @@ public class Module implements Serializable{
             NAME_CUSTOMER,NAME_PROCESS, NAME_USER
 
     ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
-    ,NAME_SYS_PARAM,NAME_TASK_MANAGE,NAME_ORDER,NAME_STOCK,NAME_STOCK_OUT
+    ,NAME_SYS_PARAM,NAME_TASK_MANAGE,
+            NAME_ORDER,NAME_ORDER_REPORT,
+
+            NAME_STOCK,NAME_STOCK_OUT
     };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
@@ -192,7 +204,10 @@ public class Module implements Serializable{
             TITLE_CUSTOMER,TITLE_PROCESS, TITLE_USER
 
    , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
-    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,TITLE_ORDER,TITLE_STOCK,TITLE_STOCK_OUT
+    ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,
+            TITLE_ORDER,TITLE_ORDER_REPORT,
+
+            TITLE_STOCK,TITLE_STOCK_OUT
     };
 
 }

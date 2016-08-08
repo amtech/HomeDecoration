@@ -501,6 +501,15 @@ public class AuthorityUtil {
         return editable(Module.NAME_STOCK_OUT);
     }
 
+
+    /**
+     * 出库单能否导出权限
+     * @return
+     */
+    public boolean exportStockOut() {
+        return exportable(Module.NAME_STOCK_OUT);
+    }
+
     /**
      *  是否订单编辑权限
      * @return
@@ -509,5 +518,13 @@ public class AuthorityUtil {
 
 
         return editable(Module.NAME_ORDER);
+    }
+
+    /**
+     * 是否可以查看订单报表
+     * @return
+     */
+    public boolean viewOrderReport() {
+        return isViewable(Module.NAME_ORDER_REPORT);
     }
 }

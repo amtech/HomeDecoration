@@ -329,6 +329,16 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     }
 
     @Override
+    public void setExportable(boolean b) {
+
+
+
+        export_pack.setVisible(b);
+        export_invoice.setVisible( b);
+
+    }
+
+    @Override
     public void setStockOutPriceVisible(boolean visible)
     {
 

@@ -695,7 +695,7 @@ public class Main extends BaseFrame {
      */
     public JMenu createOrder() {
 
-        JMenu menu = new JMenu(Module.TITLE_ORDER);
+             JMenu menu = new JMenu(Module.TITLE_ORDER);
         //
         JMenuItem menuItem = new JMenuItem("订单列表");
         menu.add(menuItem);
@@ -712,6 +712,24 @@ public class Main extends BaseFrame {
             }
         });
 
+
+
+
+        if(AuthorityUtil.getInstance().viewOrderReport()) {
+            menuItem = new JMenuItem(Module.TITLE_ORDER_REPORT);
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    OrderReportInternalFrame productListInternalFrame = new OrderReportInternalFrame();
+                    addInterFrame(productListInternalFrame);
+
+                }
+            });
+        }
 
         return menu;
 

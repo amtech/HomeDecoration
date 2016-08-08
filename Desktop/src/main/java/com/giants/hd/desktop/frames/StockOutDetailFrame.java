@@ -85,6 +85,8 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
         //设置权限相关
       stockOutDetailViewer.setEditable(  AuthorityUtil.getInstance().editStockOut());
+        //设置权限相关
+        stockOutDetailViewer.setExportable(  AuthorityUtil.getInstance().exportStockOut());
 
         stockOutDetailViewer.setStockOutPriceVisible(CacheManager.getInstance().isStockOutPriceVisible());
     }

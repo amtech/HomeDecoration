@@ -1677,4 +1677,24 @@ public class ApiManager {
         return remoteData;
 
     }
+
+    /**
+     * 读取订单报表  验货日期
+     * @param key
+     * @param dateStart
+     * @param dateEnd
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<ErpOrder> getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) throws HdException {
+
+
+        String url = HttpUrl.getOrderReportByCheckDate(key,dateStart,dateEnd, pageIndex, pageSize);
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpOrder> remoteData = invokeByReflect(result, ErpOrder.class);
+        return remoteData;
+
+
+    }
 }

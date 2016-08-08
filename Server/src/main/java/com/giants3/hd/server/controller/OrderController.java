@@ -37,6 +37,14 @@ public class OrderController extends BaseController{
 
         return  erpService.findByKey(user,key,salesId,pageIndex,pageSize) ;
     }
+ @RequestMapping(value="/reportByCheckDate", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ErpOrder> reportByCheckDate(  @RequestParam(value = "key", required = false, defaultValue = "") String key  , @RequestParam(value = "dateStart") String dateStart , @RequestParam(value = "dateEnd") String dateEnd
+            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize)   {
+
+        return  erpService.findByCheckDate(key,dateStart,dateEnd,pageIndex,pageSize) ;
+    }
 
 
     @RequestMapping(value="/findOrderItems", method = RequestMethod.GET)

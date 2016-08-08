@@ -45,6 +45,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
     private JButton btn_addPicture;
     private JButton save;
     private JTextArea ta_rem;
+    private JTextField tf_check_date;
 
 
     private OrderItemTableModel orderItemTableModel;
@@ -209,7 +210,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         tf_sales.setText(order.sal_no+"-"+order.sal_name+"-"+order.sal_cname);
         tf_so_data.setText(order.so_data);
         ta_rem.setText(order.rem);
-
+        tf_check_date.setText(order.chk_dd);
         ta_memo.setText(order.memo);
 
 

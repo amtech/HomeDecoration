@@ -31,6 +31,10 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;100pt):noGrow"/>
         <colspec value="left:3dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):grow"/>
         <constraints border-constraint="North"/>
         <properties/>
@@ -52,7 +56,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="5b78a" class="javax.swing.JLabel">
             <constraints>
@@ -70,7 +76,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="d0fff" class="javax.swing.JLabel">
             <constraints>
@@ -88,7 +96,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="c6441" class="javax.swing.JLabel">
             <constraints>
@@ -106,7 +116,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="315e4" class="javax.swing.JLabel">
             <constraints>
@@ -124,7 +136,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <component id="78e35" class="javax.swing.JLabel">
             <constraints>
@@ -142,7 +156,9 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
           <grid id="1aff8" layout-manager="FormLayout">
             <rowspec value="center:60pt:noGrow"/>
@@ -164,7 +180,7 @@
             <colspec value="left:4dlu:grow"/>
             <colspec value="fill:max(d;4px):noGrow"/>
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="13" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="17" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties/>
@@ -291,7 +307,7 @@
           </grid>
           <scrollpane id="ca481">
             <constraints>
-              <grid row="8" column="0" row-span="1" col-span="13" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="8" column="0" row-span="1" col-span="17" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties/>
@@ -319,6 +335,27 @@
             </constraints>
             <properties>
               <text value="添加附件"/>
+            </properties>
+          </component>
+          <component id="9db25" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="验货日期"/>
+            </properties>
+          </component>
+          <component id="3f178" class="javax.swing.JTextField" binding="tf_check_date">
+            <constraints>
+              <grid row="2" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <columns value="20"/>
+              <editable value="false"/>
             </properties>
           </component>
         </children>

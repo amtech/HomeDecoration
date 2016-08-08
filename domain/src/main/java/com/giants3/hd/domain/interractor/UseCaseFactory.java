@@ -264,4 +264,16 @@ public class UseCaseFactory {
 
 
     }
+
+    /**
+     * 订单报表查询
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public UseCase createOrderReportUseCase(String key,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
+       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), key, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
+
+    }
 }

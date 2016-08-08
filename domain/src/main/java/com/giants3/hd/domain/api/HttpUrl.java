@@ -906,4 +906,18 @@ public class HttpUrl {
     public static String saveStockOutAuthList() {
         return additionInfo(BaseUrl + "api/authority/saveStockOutList");
     }
+    /**
+     * 读取订单报表  验货日期
+     * @param key
+     * @param dateStart
+     * @param dateEnd
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static String getOrderReportByCheckDate(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + "api/order/reportByCheckDate?key=" + key +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+
+    }
 }

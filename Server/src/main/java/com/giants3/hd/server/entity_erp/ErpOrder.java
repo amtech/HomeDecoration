@@ -42,6 +42,11 @@ public class ErpOrder {
      */
     public String sal_name;
 
+    /**
+     * 验货日期
+     */
+    public String chk_dd;
+
 
     /** 用户中文名
      * 从报价系统读取

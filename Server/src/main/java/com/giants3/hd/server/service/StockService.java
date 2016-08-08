@@ -83,6 +83,9 @@ StockOutAuthRepository stockOutAuthRepository;
      */
     public RemoteData<ErpStockOut> search(User loginUser,String key,long salesId, int pageIndex, int pageSize) {
 
+
+
+
         List<String> salesNos=null;
         //查询所有
         StockOutAuth stockOutAuth=      stockOutAuthRepository.findFirstByUser_IdEquals(loginUser.id);

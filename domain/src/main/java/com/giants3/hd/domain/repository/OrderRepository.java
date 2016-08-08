@@ -28,4 +28,15 @@ public interface OrderRepository {
      * @return
      */
     Observable<RemoteData<ErpOrderDetail>>  saveOrderDetail(ErpOrderDetail orderDetail);
+
+    /**
+     * 订单报表查询    验货日期
+     * @param key
+     * @param dateStart
+     * @param dateEnd
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    Observable<RemoteData<ErpOrder>>  getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize);
 }

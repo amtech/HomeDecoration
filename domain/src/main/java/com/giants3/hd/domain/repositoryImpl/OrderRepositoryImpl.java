@@ -146,4 +146,41 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
             }
         });
     }
+
+
+    @Override
+    public Observable<RemoteData<ErpOrder>> getOrderReport(final String key, final String dateStart, final String dateEnd, final int pageIndex, final int pageSize) {
+
+
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrder>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<ErpOrder>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<ErpOrder> remoteData= apiManager.getOrderReport(  key,   dateStart,   dateEnd,   pageIndex,   pageSize);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+
+    }
 }

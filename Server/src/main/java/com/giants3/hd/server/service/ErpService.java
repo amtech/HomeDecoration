@@ -355,4 +355,29 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
     }
+
+    public RemoteData<ErpOrder> findByCheckDate(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) {
+
+
+        List<ErpOrder> result = repository.findOrderByKeyCheckDate(key,  dateStart,   dateEnd, pageIndex, pageSize);
+        //进行业务员配对。
+
+        for (ErpOrder erpOrder : result) {
+
+            User user=userRepository.findFirstByCodeEquals(erpOrder.sal_no);
+            if (user!=null)
+            {
+                attachData(erpOrder,user);
+            }
+
+            Order order=orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
+            if(order!=null)
+            {
+                attachData(erpOrder,order);
+            }
+
+        }
+        int totalCount = repository.getOrderCountByKeyAndCheckDate(key,dateStart,dateEnd);
+        return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, result);
+    }
 }

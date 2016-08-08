@@ -47,6 +47,11 @@ public class ErpOrder {
      */
 
     public String sal_cname;
+
+    /**
+     * 验货日期
+     */
+    public String chk_dd;
     /**
      * 预计交期
      */
