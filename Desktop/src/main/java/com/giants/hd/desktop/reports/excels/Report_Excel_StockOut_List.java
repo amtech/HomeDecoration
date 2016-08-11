@@ -3,18 +3,22 @@ package com.giants.hd.desktop.reports.excels;
 import com.giants.hd.desktop.model.StockOutItemTableModel;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.Remote;
 import java.util.*;
 
 /**导出出库清单
@@ -40,7 +44,7 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
 
         //以包起始的地方开始   jar 根目录开始。
         InputStream inputStream=	getClass().getClassLoader().getResourceAsStream(TEMPLATE_FILE_NAME) ;
-        String fileName=fileOutputDirectory+data.erpStockOut.ck_no+"-PACKING-LIST-YUNFEI-RM.xls";
+        String fileName=fileOutputDirectory+ File.separator+data.erpStockOut.ck_no+"-PACKING-LIST-YUNFEI-RM.xls";
         //Create Workbook instance holding reference to .xlsx file
         workbook = new HSSFWorkbook(inputStream);
         writeOnExcel(data ,workbook  );
@@ -70,29 +74,35 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
 
 
         //日期
-        addString(writableSheet, data.erpStockOut.ck_dd, 11, 8);
+        addString(writableSheet, "Invoice No:"+data.erpStockOut.ck_dd, 11, 7);
 
         //客户
         addString(writableSheet, data.erpStockOut.cus_no, 1, 4);
 
         //发票号
-        addString(writableSheet, data.erpStockOut.ck_no, 11, 5);
+        addString(writableSheet,"Invoice No:"+ data.erpStockOut.ck_no, 11,4);
 
-        //目的港
-        addString(writableSheet, data.erpStockOut.mdg, 11, 3);
+
         //目的港
         String mdgText="FROM FUZHOU TO %s BY SEA";
-        addString(writableSheet, String.format(mdgText,StringUtils.isEmpty( data.erpStockOut.mdg)?"目的港":mdgText,data.erpStockOut.mdg), 0, 17);
+        addString(writableSheet, String.format(mdgText,  data.erpStockOut.mdg), 0, 17);
 
         //提单号
-        addString(writableSheet, data.erpStockOut.tdh, 5, 8);
+        addString(writableSheet,"提单号："+ data.erpStockOut.tdh, 2, 8);
+
+
+        //客户信息
+
+        addString(writableSheet,  data.erpStockOut.adr2, 0, 5);
+        addString(writableSheet,  data.erpStockOut.tel1, 0, 6);
+        addString(writableSheet,  data.erpStockOut.fax, 0, 7);
 
         //添加唛头信息
+      ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
+        //唛头所有订单的唛头
 
-
-      //  ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
-
-
+        //所关联的所有订单号。
+        Set<String> orders=new HashSet<>();
 
 
         List<ErpStockOutItem> items = data.items;
@@ -112,11 +122,35 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
                 guiItems = new ArrayList<>();
                 groupMaps.put(item.guihao, guiItems);
             }
+            orders.add(item.os_no);
             guiItems.add(item);
 
         }
 
 
+        //所有唛头数据
+        StringBuilder  maitous=new StringBuilder();
+
+        for(String os_no:orders)
+        {
+
+            try {
+                RemoteData<ErpOrderDetail>  remoteData=apiManager.getOrderDetail(os_no);
+                if (remoteData.isSuccess())
+                {
+                    String zhengmai=remoteData.datas.get(0).erpOrder.zhengmai;
+                    if(!StringUtils.isEmpty(zhengmai))
+                    maitous.append(zhengmai).append(",");
+                }
+            } catch (HdException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(maitous.length()>1)
+            maitous.setLength(maitous.length()-1);
+        //
+        addString(writableSheet, maitous.toString(), 0, 10);
         //未进行分柜的 显示在前
 
 

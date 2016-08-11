@@ -19,6 +19,23 @@ public class Order implements Serializable {
     @Basic
     public String osNo;
 
+
+    /**
+     * 业务员编号
+     */
+    @Basic
+    public String sal_no;
+
+    /**
+     * 业务员
+     */
+    @Basic
+    public String sal_name;
+    /**
+     * 业务员中文名
+     */
+    @Basic
+    public String sal_cname;
     /**
      * 正唛
      */
@@ -34,6 +51,18 @@ public class Order implements Serializable {
      */
     @Basic
     public String neheimai;
+
+
+    /**
+     * 左麦
+     */
+    @Basic
+    public String zuomai;
+    /**
+     * 右麦
+     */
+    @Basic
+    public String youmai;
     /**
      * 备注
      */
@@ -45,5 +74,11 @@ public class Order implements Serializable {
     @Basic
     @Lob
     public String attaches;
+
+    /**
+     * 客户号
+     */
+    @Basic
+    public String cus_no;
 
 }

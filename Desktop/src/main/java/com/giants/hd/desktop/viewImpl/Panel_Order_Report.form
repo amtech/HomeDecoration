@@ -18,7 +18,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:d:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:max(d;100px):noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:p:noGrow"/>
@@ -27,9 +27,11 @@
         <colspec value="fill:max(d;100px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
-        <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:d:grow"/>
-        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="left:3dlu:noGrow"/>
+        <colspec value="fill:d:noGrow"/>
+        <colspec value="left:max(m;4px):noGrow"/>
+        <colspec value="fill:91px:noGrow"/>
+        <colspec value="left:4dlu:grow"/>
         <colspec value="fill:d:grow"/>
         <constraints border-constraint="North"/>
         <properties/>
@@ -44,7 +46,7 @@
               <font size="20" style="1"/>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
-              <text value="订单列表"/>
+              <text value="出货列表"/>
             </properties>
           </component>
           <component id="fa5b4" class="javax.swing.JButton" binding="btn_search">
@@ -55,15 +57,6 @@
             <properties>
               <text value="查询"/>
             </properties>
-          </component>
-          <component id="ef4cd" class="javax.swing.JTextField" binding="keys">
-            <constraints>
-              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms/>
-            </constraints>
-            <properties/>
           </component>
           <component id="c82f2" class="net.sourceforge.jdatepicker.impl.JDatePickerImpl" binding="date_start" custom-create="true">
             <constraints>
@@ -95,6 +88,22 @@
             </constraints>
             <properties>
               <text value="到"/>
+            </properties>
+          </component>
+          <component id="6ba69" class="javax.swing.JComboBox" binding="cb_sales">
+            <constraints>
+              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="bd9d5" class="javax.swing.JButton" binding="export">
+            <constraints>
+              <grid row="0" column="16" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="导出"/>
             </properties>
           </component>
         </children>

@@ -3,6 +3,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
+import com.giants3.hd.server.noEntity.OrderReportItem;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.ConstantData;
@@ -45,7 +46,14 @@ public class OrderController extends BaseController{
 
         return  erpService.findByCheckDate(key,dateStart,dateEnd,pageIndex,pageSize) ;
     }
+    @RequestMapping(value="/reportItemByCheckDate", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderReportItem> reportItemByCheckDate(@RequestParam(value = "sal_no" ,  required = false, defaultValue = "") String sal_no  , @RequestParam(value = "dateStart") String dateStart , @RequestParam(value = "dateEnd") String dateEnd
+        )   {
 
+        return  erpService.findItemByCheckDate(sal_no,dateStart,dateEnd) ;
+    }
 
     @RequestMapping(value="/findOrderItems", method = RequestMethod.GET)
     public

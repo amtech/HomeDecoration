@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.giants.hd.desktop.viewImpl.Panel_Order_Detail">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1710" height="681"/>
+      <xy x="20" y="20" width="1902" height="771"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -31,10 +31,6 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;100pt):noGrow"/>
         <colspec value="left:3dlu:noGrow"/>
-        <colspec value="fill:max(d;4px):noGrow"/>
-        <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:max(d;4px):noGrow"/>
-        <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):grow"/>
         <constraints border-constraint="North"/>
         <properties/>
@@ -42,7 +38,7 @@
         <children>
           <component id="b5793" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -102,7 +98,7 @@
           </component>
           <component id="c6441" class="javax.swing.JLabel">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -161,26 +157,27 @@
             </properties>
           </component>
           <grid id="1aff8" layout-manager="FormLayout">
-            <rowspec value="center:60pt:noGrow"/>
-            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:0pt:noGrow"/>
+            <rowspec value="top:3dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(m;20dlu):noGrow"/>
-            <rowspec value="center:max(m;20dlu):noGrow"/>
             <rowspec value="center:max(d;20dlu):noGrow"/>
-            <rowspec value="top:max(m;20dlu):noGrow"/>
-            <rowspec value="top:7dlu:noGrow"/>
+            <rowspec value="top:30dlu:noGrow"/>
             <colspec value="fill:max(d;30dlu):noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
-            <colspec value="fill:max(d;300dlu):noGrow"/>
+            <colspec value="fill:150dlu:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:max(d;30dlu):noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
-            <colspec value="fill:max(d;300dlu):noGrow"/>
-            <colspec value="left:4dlu:grow"/>
+            <colspec value="fill:150dlu:noGrow"/>
+            <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:max(d;4px):noGrow"/>
+            <colspec value="left:30dlu:noGrow"/>
+            <colspec value="fill:150dlu:noGrow"/>
+            <colspec value="fill:max(d;4px):grow"/>
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="17" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="13" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties/>
@@ -206,40 +203,9 @@
                   <text value="侧唛"/>
                 </properties>
               </component>
-              <component id="c89b6" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="0"/>
-                  <text value="内盒唛"/>
-                </properties>
-              </component>
-              <component id="27b8f" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="0"/>
-                  <text value="备注"/>
-                </properties>
-              </component>
-              <component id="6a651" class="javax.swing.JTextArea" binding="ta_cemai">
-                <constraints>
-                  <grid row="4" column="6" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
-                </constraints>
-                <properties>
-                  <lineWrap value="true"/>
-                </properties>
-              </component>
               <component id="bea7b" class="javax.swing.JTextArea" binding="ta_zhengmai">
                 <constraints>
-                  <grid row="4" column="2" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
                   </grid>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
@@ -248,37 +214,9 @@
                   <lineWrap value="true"/>
                 </properties>
               </component>
-              <component id="327f1" class="javax.swing.JTextArea" binding="ta_neihemai">
-                <constraints>
-                  <grid row="6" column="2" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
-                </constraints>
-                <properties>
-                  <lineWrap value="true"/>
-                </properties>
-              </component>
-              <scrollpane id="b1df4">
-                <constraints>
-                  <grid row="6" column="6" row-span="3" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="495e1" class="javax.swing.JTextArea" binding="ta_memo">
-                    <constraints/>
-                    <properties>
-                      <lineWrap value="true"/>
-                      <wrapStyleWord value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
               <scrollpane id="14c15">
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="7" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="1" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -303,11 +241,111 @@
                   <text value="订单说明"/>
                 </properties>
               </component>
+              <component id="ffa92" class="javax.swing.JTextArea" binding="ta_zuomai">
+                <constraints>
+                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties>
+                  <lineWrap value="true"/>
+                </properties>
+              </component>
+              <component id="6a651" class="javax.swing.JTextArea" binding="ta_cemai">
+                <constraints>
+                  <grid row="4" column="6" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties>
+                  <lineWrap value="true"/>
+                </properties>
+              </component>
+              <component id="f0c74" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties>
+                  <text value="左唛"/>
+                </properties>
+              </component>
+              <component id="b68c9" class="javax.swing.JTextArea" binding="ta_youmai">
+                <constraints>
+                  <grid row="5" column="6" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties>
+                  <lineWrap value="true"/>
+                </properties>
+              </component>
+              <component id="27b8f" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="0"/>
+                  <text value="备注"/>
+                </properties>
+              </component>
+              <scrollpane id="b1df4">
+                <constraints>
+                  <grid row="6" column="2" row-span="1" col-span="10" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="495e1" class="javax.swing.JTextArea" binding="ta_memo">
+                    <constraints/>
+                    <properties>
+                      <lineWrap value="true"/>
+                      <wrapStyleWord value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="620e5" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="0"/>
+                  <text value="右唛"/>
+                </properties>
+              </component>
+              <component id="c89b6" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="0"/>
+                  <text value="内盒唛"/>
+                </properties>
+              </component>
+              <component id="327f1" class="javax.swing.JTextArea" binding="ta_neihemai">
+                <constraints>
+                  <grid row="4" column="10" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties>
+                  <lineWrap value="true"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <scrollpane id="ca481">
             <constraints>
-              <grid row="8" column="0" row-span="1" col-span="17" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="8" column="0" row-span="1" col-span="13" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties/>
@@ -335,27 +373,6 @@
             </constraints>
             <properties>
               <text value="添加附件"/>
-            </properties>
-          </component>
-          <component id="9db25" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <text value="验货日期"/>
-            </properties>
-          </component>
-          <component id="3f178" class="javax.swing.JTextField" binding="tf_check_date">
-            <constraints>
-              <grid row="2" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <columns value="20"/>
-              <editable value="false"/>
             </properties>
           </component>
         </children>

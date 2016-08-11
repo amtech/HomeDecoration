@@ -908,16 +908,17 @@ public class HttpUrl {
     }
     /**
      * 读取订单报表  验货日期
-     * @param key
+     * @param salCode
      * @param dateStart
      * @param dateEnd
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public static String getOrderReportByCheckDate(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) {
+    public static String getOrderReportByCheckDate(String salCode
+            , String dateStart, String dateEnd, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/order/reportByCheckDate?key=" + key +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?sal_no=" + salCode +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 }

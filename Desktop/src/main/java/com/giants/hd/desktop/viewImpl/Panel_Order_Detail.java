@@ -45,7 +45,8 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
     private JButton btn_addPicture;
     private JButton save;
     private JTextArea ta_rem;
-    private JTextField tf_check_date;
+    private JTextArea ta_youmai;
+    private JTextArea ta_zuomai;
 
 
     private OrderItemTableModel orderItemTableModel;
@@ -210,7 +211,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         tf_sales.setText(order.sal_no+"-"+order.sal_name+"-"+order.sal_cname);
         tf_so_data.setText(order.so_data);
         ta_rem.setText(order.rem);
-        tf_check_date.setText(order.chk_dd);
+
         ta_memo.setText(order.memo);
 
 
@@ -218,17 +219,24 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         ta_neihemai.getDocument().removeDocumentListener(neihemaiDocumentListener);
         ta_zhengmai.getDocument().removeDocumentListener(zhengmaiDocumentListener);
         ta_memo.getDocument().removeDocumentListener(memoDocumentListener);
+        ta_zuomai.getDocument().removeDocumentListener(zuomaiDocumentListener);
+        ta_youmai.getDocument().removeDocumentListener(youmaiDocumentListener);
+
 
         ta_cemai.setText(orderDetail.erpOrder.cemai);
         ta_zhengmai.setText(orderDetail.erpOrder.zhengmai);
         ta_neihemai.setText(orderDetail.erpOrder.neheimai);
         ta_memo.setText(orderDetail.erpOrder.memo);
+        ta_zuomai.setText(orderDetail.erpOrder.zuomai);
+        ta_youmai.setText(orderDetail.erpOrder.youmai);
 
 
         ta_cemai.getDocument().addDocumentListener(cemaiDocumentListener);
         ta_neihemai.getDocument().addDocumentListener(neihemaiDocumentListener);
         ta_zhengmai.getDocument().addDocumentListener(zhengmaiDocumentListener);
         ta_memo.getDocument().addDocumentListener(memoDocumentListener);
+        ta_zuomai.getDocument().addDocumentListener(zuomaiDocumentListener);
+        ta_youmai.getDocument().addDocumentListener(youmaiDocumentListener);
 
         orderItemTableModel.setDatas(orderDetail.items);
 
@@ -351,6 +359,59 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
 
         }
     };
+
+     /**
+     * 左唛数据修改监听
+     */
+    private DocumentListener zuomaiDocumentListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            orderDetailPresenter.onZuomaiChange(ta_zuomai.getText().trim());
+
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            orderDetailPresenter.onZuomaiChange(ta_zuomai.getText().trim());
+
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+            orderDetailPresenter.onZuomaiChange(ta_zuomai.getText().trim());
+
+        }
+    };
+    /**
+     * 右唛数据修改监听
+     */
+    private DocumentListener youmaiDocumentListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            orderDetailPresenter.onYoumaiChange(ta_youmai.getText().trim());
+
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            orderDetailPresenter.onYoumaiChange(ta_youmai.getText().trim());
+
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+            orderDetailPresenter.onYoumaiChange(ta_youmai.getText().trim());
+
+        }
+    };
+
+
+
+
+
+
 
 
     @Override

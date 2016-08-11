@@ -1,14 +1,21 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
-import com.giants.hd.desktop.model.OrderTableModel;
+import com.giants.hd.desktop.model.OrderItemTableModel;
+import com.giants.hd.desktop.model.OrderReportItemTableModel;
 import com.giants.hd.desktop.presenter.OrderReportPresenter;
-import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.view.OrderReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 
@@ -20,39 +27,41 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.Calendar;
 
-/**订单报表界面实现层
+/**
+ * 订单报表界面实现层
  * Created by davidleen29 on 2016/8/8.
  */
-public class Panel_Order_Report  extends BasePanel implements OrderReportViewer{
+public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
 
     private final OrderReportPresenter orderReportPresenter;
 
-    OrderTableModel orderTableModel;
+    OrderReportItemTableModel orderReportItemTableModel;
     private JPanel root;
     private Panel_Page pagePanel;
     private JHdTable orderTable;
     private JButton btn_search;
-    private JTextField keys;
+
     private JDatePickerImpl date_start;
     private JDatePickerImpl date_end;
+    private JComboBox cb_sales;
+    private JButton export;
 
     public Panel_Order_Report(final OrderReportPresenter orderReportPresenter) {
 
         this.orderReportPresenter = orderReportPresenter;
 
-        orderTableModel=new OrderTableModel();
-        orderTable.setModel(orderTableModel);
+        orderReportItemTableModel = new OrderReportItemTableModel();
+        orderTable.setModel(orderReportItemTableModel);
         btn_search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String startDate=date_start.getJFormattedTextField().getText().toString();
-                String endDate=date_end.getJFormattedTextField().getText().toString();
+                String startDate = date_start.getJFormattedTextField().getText().toString();
+                String endDate = date_end.getJFormattedTextField().getText().toString();
 
-                String key=keys.getText().toString();
+                  User user= (User) cb_sales.getSelectedItem();
 
-
-                orderReportPresenter.search(key,startDate,endDate,0,pagePanel.getPageSize());
+                orderReportPresenter.search(user.code, startDate, endDate, 0, pagePanel.getPageSize());
 
 
             }
@@ -75,8 +84,8 @@ public class Panel_Order_Report  extends BasePanel implements OrderReportViewer{
                     String startDate = date_start.getJFormattedTextField().getText().toString();
                     String endDate = date_end.getJFormattedTextField().getText().toString();
 
-                    String key = keys.getText().toString();
-                    orderReportPresenter.search(key,startDate,endDate,  pageIndex, pageSize);
+                    User user= (User) cb_sales.getSelectedItem();
+                    orderReportPresenter.search(user.code, startDate, endDate, pageIndex, pageSize);
                 }
             }
         });
@@ -84,23 +93,61 @@ public class Panel_Order_Report  extends BasePanel implements OrderReportViewer{
         orderTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2)
-                {
+                if (e.getClickCount() == 2) {
 
-                  int[] row=  JTableUtils.getSelectedRowSOnModel(orderTable);
-                    if(row!=null&&row.length>=1)
-                    {
-
-                        ErpOrder order=orderTableModel.getItem(row[0]);
-                        orderReportPresenter.loadOrderDetail(order);
-                    }
-
+//                  int[] row=  JTableUtils.getSelectedRowSOnModel(orderTable);
+//                    if(row!=null&&row.length>=1)
+//                    {
+//
+//                        ErpOrderItem order= orderItemTableModel.getItem(row[0]);
+//                        orderReportPresenter.loadOrderDetail(order);
+//                    }
 
 
                 }
             }
         });
 
+
+        User all = new User();
+        all.id = -1;
+        all.code = "";
+        all.name = "--";
+        all.chineseName = "所有人";
+        cb_sales.addItem(all);
+
+        for (User user : CacheManager.getInstance().bufferData.salesmans) {
+            cb_sales.addItem(user);
+        }
+
+        orderTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2) {
+
+                    int column = orderTable.convertColumnIndexToModel(orderTable.getSelectedColumn());
+                    int selectRow = orderTable.convertRowIndexToModel(orderTable.getSelectedRow());
+                    OrderReportItem item = orderReportItemTableModel.getItem(selectRow);
+                    if (item == null) return;
+                    if (StringUtils.isEmpty(item.url)) return;
+
+                    //单击第一列 显示原图
+                    if (column == 3) {
+
+                            ImageViewDialog.showDialog(getWindow(getRoot()), HttpUrl.loadPicture(item.url), item.prd_no);
+
+                    }
+                }
+            }
+        });
+
+        export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                orderReportPresenter.export();
+            }
+        });
     }
 
     @Override
@@ -109,10 +156,10 @@ public class Panel_Order_Report  extends BasePanel implements OrderReportViewer{
     }
 
     @Override
-    public void setData(RemoteData<ErpOrder> erpOrderRemoteData) {
-        if(erpOrderRemoteData.isSuccess())
-        orderTableModel.setDatas(erpOrderRemoteData.datas);
-        else
+    public void setData(RemoteData<OrderReportItem> erpOrderRemoteData) {
+        if (erpOrderRemoteData.isSuccess()) {
+      orderReportItemTableModel.setDatas(erpOrderRemoteData.datas);
+        } else
             showMesssage(erpOrderRemoteData.message);
         pagePanel.bindRemoteData(erpOrderRemoteData);
     }
@@ -121,7 +168,7 @@ public class Panel_Order_Report  extends BasePanel implements OrderReportViewer{
         JDatePanelImpl picker = new JDatePanelImpl(null);
         date_start = new JDatePickerImpl(picker, new HdDateComponentFormatter());
 
-          picker = new JDatePanelImpl(null);
+        picker = new JDatePanelImpl(null);
         date_end = new JDatePickerImpl(picker, new HdDateComponentFormatter());
     }
 }

@@ -7,6 +7,8 @@ import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
+import org.apache.commons.collections.map.LRUMap;
+import sun.misc.LRUCache;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -262,7 +264,9 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
 
             if (fileNames==null||fileNames.length==0||StringUtils.isEmpty(fileNames[0])) return "";
             final String destUrl=HttpUrl.loadPicture(fileNames[0]);
-            ImageIcon data = pictureMaps.get(destUrl);
+            ImageIcon data = (ImageIcon) pictureMaps.get(destUrl);
+        if (data!=null)
+        System.out.println(pictureMaps.size()+ "  hit   "+destUrl);
             if (data == null) {
 
                 ImageLoader.getInstance().displayImage(new Iconable() {
@@ -446,7 +450,10 @@ public  abstract class BaseTableModel<T> extends AbstractTableModel {
      *
      * 表格中使用的图片缓存
      * 异步加载的图片缓存
+     * 最多50
      */
-    private static HashMap<String,ImageIcon> pictureMaps = new HashMap<>();
+    private static  LRUMap pictureMaps = new LRUMap (50,0.75f,false);
+
+
 
 }

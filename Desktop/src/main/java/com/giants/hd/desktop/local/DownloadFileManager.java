@@ -213,16 +213,19 @@ public class DownloadFileManager {
         } finally {
 
             try {
+                if(fos!=null)
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
+                if(bis!=null)
                 bis.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
+                if(is!=null)
                 is.close();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -5,6 +5,7 @@ import com.giants3.hd.server.entity_erp.ErpOrder;
 import com.giants3.hd.server.entity_erp.ErpOrderItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
+import com.giants3.hd.server.noEntity.OrderReportItem;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.utils.RemoteData;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -272,7 +274,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 /**
- * 剥离数据
+ * 剥离数据  保存本系统
  *
  * @param erpOrderItem
  */
@@ -288,6 +290,19 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         orderItem.verifyDate= erpOrderItem.verifyDate;
         orderItem.osNo= erpOrderItem.os_no;
         orderItem.itm= erpOrderItem.itm;
+
+
+
+
+        orderItem.qty= erpOrderItem.qty;
+        orderItem.ut= erpOrderItem.ut;
+        orderItem.prd_no= erpOrderItem.prd_no;
+        orderItem.url= erpOrderItem.url;
+        orderItem.bat_no= erpOrderItem.bat_no;
+
+
+
+
 
     }
 
@@ -311,6 +326,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         order.osNo = erpOrder.os_no;
         order.attaches = erpOrder.attaches;
 
+
+        order.zuomai=erpOrder.zuomai;
+        order.youmai=erpOrder.youmai;
+        order.sal_no=erpOrder.sal_no;
+        order.sal_name=erpOrder.sal_name;
+        order.sal_cname=erpOrder.sal_cname;
+        order.cus_no=erpOrder.cus_no;
+
     }
 
 
@@ -329,6 +352,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         erpOrder.cemai = order.cemai;
         erpOrder.zhengmai = order.zhengmai;
         erpOrder.neheimai = order.neheimai;
+        erpOrder.zuomai = order.zuomai;
+        erpOrder.youmai = order.youmai;
         erpOrder.memo = order.memo;
         erpOrder.attaches = order.attaches;
 
@@ -379,5 +404,60 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         }
         int totalCount = repository.getOrderCountByKeyAndCheckDate(key,dateStart,dateEnd);
         return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, result);
+    }
+
+    /**
+     * 导出出货报表数据
+     * @param sal_no
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    public RemoteData<OrderReportItem> findItemByCheckDate(String sal_no, String dateStart, String dateEnd ) {
+
+
+
+          List<OrderItem> orderItems= orderItemRepository.findByVerifyDateGreaterThanEqualAndVerifyDateLessThanEqual(dateStart, dateEnd);
+
+
+        List<OrderReportItem> items=new ArrayList<>();
+        for(OrderItem orderitem:orderItems)
+        {
+            Order order=orderRepository.findFirstByOsNoEquals(orderitem.osNo);
+            if(order!=null )
+            {
+                if( StringUtils.isEmpty(sal_no)||sal_no.equals(order.sal_no))
+                {
+                    OrderReportItem orderReportItem= new OrderReportItem();
+                    bindReportData(orderReportItem,orderitem,order);
+                    items.add(orderReportItem);
+                }
+
+            }
+        }
+
+
+
+        return wrapData(items);
+    }
+
+    /**
+     * 绑定生成报表数据
+     * @param orderReportItem
+     * @param orderItem
+     * @param order
+     */
+    private void bindReportData(OrderReportItem orderReportItem,OrderItem orderItem,Order order  )
+    {
+        orderReportItem.cus_no=order.cus_no;
+        orderReportItem.os_no=order.osNo;
+        orderReportItem.cus_prd_no=orderItem.bat_no;
+        orderReportItem.qty=orderItem.qty;
+        orderReportItem.prd_no=orderItem.prd_no;
+        orderReportItem.url=orderItem.url;
+        orderReportItem.sendDate=orderItem.sendDate;
+        orderReportItem.verifyDate=orderItem.verifyDate;
+        orderReportItem.unit=orderItem.ut;
+
     }
 }

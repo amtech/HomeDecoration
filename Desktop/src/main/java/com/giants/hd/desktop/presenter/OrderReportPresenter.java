@@ -13,7 +13,12 @@ import java.io.File;
 public interface OrderReportPresenter extends    Presenter {
 
 
-    void search(String key, String dateStart,String dateEnd, int pageIndex, int pageSize);
+    void search(String salCode, String dateStart,String dateEnd, int pageIndex, int pageSize);
 
     void loadOrderDetail(ErpOrder erpOrder);
+
+    /**
+     * 导出报表
+     */
+    void export();
 }

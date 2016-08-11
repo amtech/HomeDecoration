@@ -156,6 +156,7 @@ public class ImageLoader {
 //    }
 
     private BufferedImage scaleImage(BufferedImage bufferedImage, double maxWidth, double maxHeight) {
+        if(bufferedImage==null) return null;
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 

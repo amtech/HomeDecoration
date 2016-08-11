@@ -159,18 +159,16 @@ public class FileUtils {
         if(!StringUtils.isEmpty(pVersion))
         {
             //第四五位 如果为0 直接匹配原来的货号。
-             if(pVersion.length()==6&&pVersion.charAt(3)=='0'&&pVersion.charAt(4)=='0')
-             {
-
-
-
-
-                     productFileName= productName;
-
-             }else
-             {
-                 productFileName= productName+ "-"+pVersion ;
-             }
+            if(pVersion.length()==6) {
+                if (  pVersion.charAt(3) == '0' && pVersion.charAt(4) == '0') {
+                    productFileName = productName;
+                } else {
+                    //第六位都化为0 为基准  最后一位不影响图片
+                    productFileName = productName + "-" + pVersion.substring(0, 5) + "0";
+                }
+            }else {
+                productFileName = productName + "-" + pVersion;
+            }
 
 
         }else

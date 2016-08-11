@@ -4,6 +4,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.StockOutAuth;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ import java.util.List;
  */
 public interface OrderReportViewer extends    AbstractViewer {
 
-    void setData(RemoteData<ErpOrder> erpOrderRemoteData);
+    void setData(RemoteData<OrderReportItem> erpOrderRemoteData);
 }

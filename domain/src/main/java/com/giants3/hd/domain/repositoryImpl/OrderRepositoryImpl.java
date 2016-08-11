@@ -8,6 +8,7 @@ import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.Observable;
@@ -149,18 +150,18 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
 
     @Override
-    public Observable<RemoteData<ErpOrder>> getOrderReport(final String key, final String dateStart, final String dateEnd, final int pageIndex, final int pageSize) {
+    public Observable<RemoteData<OrderReportItem>> getOrderReport(final String salCode, final String dateStart, final String dateEnd, final int pageIndex, final int pageSize) {
 
 
-        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrder>>() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderReportItem>>() {
             @Override
-            public void call(Subscriber<? super RemoteData<ErpOrder>> subscriber) {
+            public void call(Subscriber<? super RemoteData<OrderReportItem>> subscriber) {
 
 
 
 
                 try {
-                    RemoteData<ErpOrder> remoteData= apiManager.getOrderReport(  key,   dateStart,   dateEnd,   pageIndex,   pageSize);
+                    RemoteData<OrderReportItem> remoteData= apiManager.getOrderReport(  salCode,   dateStart,   dateEnd,   pageIndex,   pageSize);
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);

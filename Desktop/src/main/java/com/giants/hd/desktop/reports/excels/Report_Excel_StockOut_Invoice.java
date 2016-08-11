@@ -10,6 +10,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class Report_Excel_StockOut_Invoice  extends  AbstractExcelReporter<ErpSt
 
         //以包起始的地方开始   jar 根目录开始。
         InputStream inputStream=	getClass().getClassLoader().getResourceAsStream(TEMPLATE_FILE_NAME) ;
-        String fileName=fileOutputDirectory+data.erpStockOut.ck_no+"-INVOICE-YUNFEI-RM.xls";
+        String fileName=fileOutputDirectory+ File.separator+data.erpStockOut.ck_no+"-INVOICE-YUNFEI-RM.xls";
         //Create Workbook instance holding reference to .xlsx file
         workbook = new HSSFWorkbook(inputStream);
         writeOnExcel(data ,workbook  );
@@ -70,20 +71,25 @@ public class Report_Excel_StockOut_Invoice  extends  AbstractExcelReporter<ErpSt
         Sheet writableSheet= workbook.getSheetAt(0);
 
     //出库单号
-        addString(writableSheet, data.erpStockOut.ck_no, 7, 5);
+        addString(writableSheet, "Invoice No:"+data.erpStockOut.ck_no, 6, 4);
         //日期
-        addString(writableSheet, data.erpStockOut.ck_dd, 7, 7);
-
+        addString(writableSheet, "Date:"+data.erpStockOut.ck_dd, 6, 7);
+        // 提单号
+        addString(writableSheet, "提单号:"+data.erpStockOut.tdh, 4, 8);
         //客户
-        addString(writableSheet, data.erpStockOut.cus_no, 6, 1);
+        addString(writableSheet, data.erpStockOut.cus_no, 1, 4);
+
+        //客户信息
+
+        addString(writableSheet,  data.erpStockOut.adr2, 0, 5);
+        addString(writableSheet,  data.erpStockOut.tel1, 0, 6);
+        addString(writableSheet,  data.erpStockOut.fax, 0, 7);
+
 
 
         //目的港
         String mdgText="FROM FUZHOU TO %s BY SEA";
-        addString(writableSheet, String.format(mdgText, StringUtils.isEmpty( data.erpStockOut.mdg)?"目的港":mdgText,data.erpStockOut.mdg), 11, 3);
-
-        //提单号
-        addString(writableSheet, data.erpStockOut.tdh, 5, 8);
+        addString(writableSheet, String.format(mdgText,  data.erpStockOut.mdg), 0, 10);
 
 
         List<ErpStockOutItem> items=data.items;

@@ -77,6 +77,14 @@ public class ErpOrder {
     public String zhengmai;
     public String cemai;
     public String neheimai;
+    /**
+     * 左麦
+     */
+    public String zuomai;
+    /**
+     * 右麦
+     */
+    public String youmai;
     public String memo;
     public  String attaches;
 }

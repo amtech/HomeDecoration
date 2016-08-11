@@ -56,4 +56,16 @@ public interface OrderDetailPresenter extends    Presenter {
     void printPaint(ErpOrderItem orderItem);
 
     void showProductDetail(ErpOrderItem orderItem);
+
+    /**
+     * 右唛数据改变
+     * @param value
+     */
+    void onYoumaiChange(String value);
+
+    /**
+     * 佐麦数据改变
+     * @param trim
+     */
+    void onZuomaiChange(String trim);
 }

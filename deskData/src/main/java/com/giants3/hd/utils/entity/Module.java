@@ -124,7 +124,7 @@ public class Module implements Serializable{
 
 
 
-    public static final String NAME_ORDER_REPORT="OrderReport";
+    public static final String NAME_ORDER_REPORT="HD_ORDER_REPORT";
     public static final String TITLE_ORDER_REPORT="订单报表";
 
 

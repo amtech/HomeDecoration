@@ -52,4 +52,14 @@ public class OrderItem implements Serializable {
      */
     public String   guagou ;
 
+
+
+
+
+    //系统数据 附加，方便报表生成
+    public String bat_no;
+    public int qty;
+    public String prd_no;
+    public String url;
+    public String ut;
 }

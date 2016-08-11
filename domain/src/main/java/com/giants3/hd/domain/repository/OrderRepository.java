@@ -3,6 +3,7 @@ package com.giants3.hd.domain.repository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 import rx.Observable;
 
 /**
@@ -31,12 +32,12 @@ public interface OrderRepository {
 
     /**
      * 订单报表查询    验货日期
-     * @param key
+     * @param salCode
      * @param dateStart
      * @param dateEnd
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    Observable<RemoteData<ErpOrder>>  getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize);
+    Observable<RemoteData<OrderReportItem>>  getOrderReport(String salCode, String dateStart, String dateEnd, int pageIndex, int pageSize);
 }

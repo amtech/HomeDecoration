@@ -156,6 +156,9 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(ErpStockOutDetail.class, new TypeToken<RemoteData<ErpStockOutDetail>>() {
         }.getType());
+
+        tokenMaps.put(OrderReportItem.class, new TypeToken<RemoteData<OrderReportItem>>() {
+        }.getType());
     }
 
     @Inject
@@ -1505,9 +1508,9 @@ public class ApiManager {
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpOrder> getOrderList(String key, long salesId,int pageIndex, int pageSize) throws HdException {
+    public RemoteData<ErpOrder> getOrderList(String key, long salesId, int pageIndex, int pageSize) throws HdException {
 
-        String url = HttpUrl.loadOrderList(key,salesId, pageIndex, pageSize);
+        String url = HttpUrl.loadOrderList(key, salesId, pageIndex, pageSize);
         String result = client.getWithStringReturned(url);
         RemoteData<ErpOrder> remoteData = invokeByReflect(result, ErpOrder.class);
         return remoteData;
@@ -1522,9 +1525,9 @@ public class ApiManager {
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpStockOut> getStockOutList(String key, long salesId,int pageIndex, int pageSize) throws HdException {
+    public RemoteData<ErpStockOut> getStockOutList(String key, long salesId, int pageIndex, int pageSize) throws HdException {
 
-        String url = HttpUrl.loadStockOutList(key,salesId, pageIndex, pageSize);
+        String url = HttpUrl.loadStockOutList(key, salesId, pageIndex, pageSize);
         String result = client.getWithStringReturned(url);
         RemoteData<ErpStockOut> remoteData = invokeByReflect(result, ErpStockOut.class);
         return remoteData;
@@ -1573,6 +1576,7 @@ public class ApiManager {
 
     /**
      * 保存出库数据
+     *
      * @param stockOutDetail
      * @return
      * @throws HdException
@@ -1580,8 +1584,8 @@ public class ApiManager {
     public RemoteData<ErpStockOutDetail> saveStockOutDetail(ErpStockOutDetail stockOutDetail) throws HdException {
 
 
-        String url = HttpUrl.saveStockOutDetail( );
-        String result = client.postWithStringReturned(url,GsonUtils.toJson(stockOutDetail));
+        String url = HttpUrl.saveStockOutDetail();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(stockOutDetail));
         RemoteData<ErpStockOutDetail> productRemoteData = invokeByReflect(result, ErpStockOutDetail.class);
         return productRemoteData;
 
@@ -1589,12 +1593,13 @@ public class ApiManager {
 
     /**
      * 获取订单详情
+     *
      * @param os_no
      * @return
      * @throws HdException
      */
-    public RemoteData<ErpOrderDetail> getOrderDetail(String os_no ) throws HdException {
-        String url = HttpUrl.getOrderDetail(os_no );
+    public RemoteData<ErpOrderDetail> getOrderDetail(String os_no) throws HdException {
+        String url = HttpUrl.getOrderDetail(os_no);
         String result = client.getWithStringReturned(url);
         RemoteData<ErpOrderDetail> remoteData = invokeByReflect(result, ErpOrderDetail.class);
         return remoteData;
@@ -1602,12 +1607,13 @@ public class ApiManager {
 
     /**
      * 保存订单详情
+     *
      * @param orderDetail
      * @return
      */
     public RemoteData<ErpOrderDetail> saveOrderDetail(ErpOrderDetail orderDetail) throws HdException {
-        String url = HttpUrl.saveOrderDetail( );
-        String result = client.postWithStringReturned(url,GsonUtils.toJson(orderDetail));
+        String url = HttpUrl.saveOrderDetail();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(orderDetail));
         RemoteData<ErpOrderDetail> productRemoteData = invokeByReflect(result, ErpOrderDetail.class);
         return productRemoteData;
 
@@ -1615,6 +1621,7 @@ public class ApiManager {
 
     /**
      * 读取出库单权限
+     *
      * @return
      */
     public RemoteData<StockOutAuth> readStockOutAuth() throws HdException {
@@ -1629,8 +1636,10 @@ public class ApiManager {
         return remoteData;
 
     }
+
     /**
      * 读取订单单权限
+     *
      * @return
      */
     public RemoteData<OrderAuth> readOrderAuth() throws HdException {
@@ -1646,6 +1655,7 @@ public class ApiManager {
 
     /**
      * 保存出库权限
+     *
      * @param stockOutAuths
      * @return
      */
@@ -1660,8 +1670,10 @@ public class ApiManager {
 
         return remoteData;
     }
+
     /**
      * 保存订单权限
+     *
      * @param orderAuths
      * @return
      */
@@ -1680,6 +1692,7 @@ public class ApiManager {
 
     /**
      * 读取订单报表  验货日期
+     *
      * @param key
      * @param dateStart
      * @param dateEnd
@@ -1687,12 +1700,12 @@ public class ApiManager {
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpOrder> getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) throws HdException {
+    public RemoteData<OrderReportItem> getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) throws HdException {
 
 
-        String url = HttpUrl.getOrderReportByCheckDate(key,dateStart,dateEnd, pageIndex, pageSize);
+        String url = HttpUrl.getOrderReportByCheckDate(key, dateStart, dateEnd, pageIndex, pageSize);
         String result = client.getWithStringReturned(url);
-        RemoteData<ErpOrder> remoteData = invokeByReflect(result, ErpOrder.class);
+        RemoteData<OrderReportItem> remoteData = invokeByReflect(result, OrderReportItem.class);
         return remoteData;
 
 

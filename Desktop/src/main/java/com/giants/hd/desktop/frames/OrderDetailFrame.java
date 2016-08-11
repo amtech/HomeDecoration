@@ -300,4 +300,27 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     }
 
 
+    /**
+     * 右唛数据改变
+     *
+     * @param value
+     */
+    @Override
+    public void onYoumaiChange(String value) {
+
+        if (orderDetail == null || orderDetail.erpOrder == null) return;
+        orderDetail.erpOrder.youmai = value;
+
+    }
+
+    /**
+     * 佐麦数据改变
+     *
+     * @param value
+     */
+    @Override
+    public void onZuomaiChange(String value) {
+        if (orderDetail == null || orderDetail.erpOrder == null) return;
+        orderDetail.erpOrder.zuomai = value;
+    }
 }

@@ -530,9 +530,6 @@ public class ProductService extends AbstractService implements InitializingBean,
         }
 
 
-        //chap
-
-
         return returnFindProductDetailById(newProductId);
     }
 

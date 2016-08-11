@@ -272,8 +272,8 @@ public class UseCaseFactory {
      * @param pageSize
      * @return
      */
-    public UseCase createOrderReportUseCase(String key,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
-       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), key, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
+    public UseCase createOrderReportUseCase(String salCode,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
+       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), salCode, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
 
     }
 }

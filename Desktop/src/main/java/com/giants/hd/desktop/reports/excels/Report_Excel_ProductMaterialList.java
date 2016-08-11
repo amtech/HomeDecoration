@@ -18,10 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -48,7 +45,7 @@ public class Report_Excel_ProductMaterialList extends AbstractExcelReporter<Prod
 
         //以包起始的地方开始   jar 根目录开始。
         InputStream inputStream=	getClass().getClassLoader().getResourceAsStream(TEMPLATE_FILE_NAME) ;
-        String fileName=fileOutputDirectory+data.product.name+"材料清单.xls";
+        String fileName=fileOutputDirectory+ File.separator+data.product.name+"材料清单.xls";
         //Create Workbook instance holding reference to .xlsx file
         workbook = new HSSFWorkbook(inputStream);
 

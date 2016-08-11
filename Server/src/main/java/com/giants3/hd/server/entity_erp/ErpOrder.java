@@ -48,7 +48,7 @@ public class ErpOrder {
     public String chk_dd;
 
 
-    /** 用户中文名
+    /** 业务员中文名
      * 从报价系统读取
      */
 
@@ -78,6 +78,16 @@ public class ErpOrder {
     public String zhengmai;
     public String cemai;
     public String neheimai;
+
+    /**
+     * 左麦
+     */
+    public String zuomai;
+    /**
+     * 右麦
+     */
+    public String youmai;
+
     public String memo;
     public  String attaches;
 

@@ -1,6 +1,9 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.presenter.OrderReportPresenter;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutPlan;
+import com.giants.hd.desktop.utils.JTableUtils;
+import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.OrderReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_List;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Report;
@@ -9,16 +12,23 @@ import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /** 订单报表业务逻辑层
  * Created by david on 2015/11/23.
  */
 public class OrderReportInternalFrame extends BaseInternalFrame implements OrderReportPresenter{
     OrderReportViewer orderReportViewer;
+
+
+    java.util.List<OrderReportItem> items=null;
     public OrderReportInternalFrame( ) {
         super(Module.TITLE_ORDER_REPORT);
 
@@ -45,13 +55,13 @@ public class OrderReportInternalFrame extends BaseInternalFrame implements Order
         return orderReportViewer.getRoot();
     }
     @Override
-    public void search(String key, String dateStart,String dateEnd, int pageIndex, int pageSize) {
+    public void search(String salCode, String dateStart,String dateEnd, int pageIndex, int pageSize) {
 
 
 
 
 
-        UseCaseFactory.getInstance().createOrderReportUseCase(key,dateStart,dateEnd,pageIndex,pageSize).execute(new Subscriber<RemoteData<ErpOrder>>() {
+        UseCaseFactory.getInstance().createOrderReportUseCase(salCode,dateStart,dateEnd,pageIndex,pageSize).execute(new Subscriber<RemoteData<OrderReportItem>>() {
             @Override
             public void onCompleted() {
                 orderReportViewer.hideLoadingDialog();
@@ -64,15 +74,22 @@ public class OrderReportInternalFrame extends BaseInternalFrame implements Order
             }
 
             @Override
-            public void onNext(RemoteData<ErpOrder> erpOrderRemoteData) {
+            public void onNext(RemoteData<OrderReportItem> orderReportItemRemoteData) {
 
-                orderReportViewer.setData(erpOrderRemoteData);
+                setRemoteData(orderReportItemRemoteData);
             }
         });
 
         orderReportViewer.showLoadingDialog();
 
 
+    }
+
+    private void setRemoteData(RemoteData<OrderReportItem> remoteData)
+    {
+        if(remoteData.isSuccess())
+           items=remoteData.datas;
+        orderReportViewer.setData(remoteData);
     }
 
     /**
@@ -95,4 +112,31 @@ public class OrderReportInternalFrame extends BaseInternalFrame implements Order
     }
 
 
+    /**
+     * 导出报表
+     */
+    @Override
+    public void export() {
+
+            if(items==null) {
+                orderReportViewer.showMesssage("无数据导出");
+                return;
+            }
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+        try {
+            new Report_Excel_StockOutPlan().report(items,file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            orderReportViewer.showMesssage(e.getMessage());
+        } catch (HdException e) {
+            e.printStackTrace();
+            orderReportViewer.showMesssage(e.getMessage());
+        }
+
+
+    }
 }
