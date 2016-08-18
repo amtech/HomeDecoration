@@ -267,13 +267,13 @@ public class UseCaseFactory {
 
     /**
      * 订单报表查询
-     * @param key
+     * @param userId
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public UseCase createOrderReportUseCase(String salCode,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
-       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), salCode, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
+    public UseCase createOrderReportUseCase(long userId,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
+       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), userId, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
 
     }
 }

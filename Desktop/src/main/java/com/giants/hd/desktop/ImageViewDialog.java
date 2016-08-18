@@ -138,12 +138,16 @@ public class ImageViewDialog extends JDialog {
 
     public void loadImageAndShow(final String url) {
 
+        loadImageAndShow(url,0);
+
+    }
+
+    public void loadImageAndShow(final String url,int index) {
         urls =StringUtils.split(url);
-          currentIndex=0;
+        currentIndex=index;
         updateUi();
 
         setVisible(true);
-
     }
 
     /**
@@ -244,7 +248,6 @@ public class ImageViewDialog extends JDialog {
         showDialog(frame, url, url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf(".")));
 
     }
-
     /**
      * 显示图片显示框体框
      * url 为绝对路径  duotu以分号分开。
@@ -252,9 +255,20 @@ public class ImageViewDialog extends JDialog {
      * @param url
      */
     public static void showDialog(Window frame, String url, String title) {
+        showDialog(frame,url,title,0);
+
+    }
+    /**
+     * 显示图片显示框体框
+     * url 为绝对路径  duotu以分号分开。
+     *
+     * @param url
+     * @param  index  当前显示索引
+     */
+    public static void showDialog(Window frame, String url, String title,int index) {
         ImageViewDialog dialog = new ImageViewDialog(frame);
         dialog.setTitle(title);
-        dialog.loadImageAndShow(url);
+        dialog.loadImageAndShow(url,index);
 
 
     }

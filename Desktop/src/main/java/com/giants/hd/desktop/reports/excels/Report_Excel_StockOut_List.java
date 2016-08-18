@@ -177,7 +177,7 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
 
             int xs
                     =0;
-            int qty=0;
+            int stockOutQty=0;
             //体积
             float tiji=0;
             //净重
@@ -196,9 +196,11 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
                 addString(writableSheet, stockOutItem.describe, 2, row);
                 //包装
                 addString(writableSheet, stockOutItem.unit, 3, row);
-                addNumber(writableSheet, Float.valueOf(stockOutItem.xs), 5, row);
+                int itemXs= stockOutItem.stockOutQty/ stockOutItem.so_zxs ;
 
-                addNumber(writableSheet, stockOutItem.qty, 6, row);
+                addNumber(writableSheet, itemXs, 5, row);
+
+                addNumber(writableSheet, stockOutItem.stockOutQty, 6, row);
 
                 addNumber(writableSheet, Float.valueOf(stockOutItem.so_zxs), 7, row);
 
@@ -212,13 +214,13 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
                 addString(writableSheet, "*", 12, row);
                 addNumber(writableSheet, xg[2], 13, row);
 
-                tiji+= (xg[0]*xg[1]*xg[2])/1000000*stockOutItem.qty;
+                tiji+= (xg[0]*xg[1]*xg[2])/1000000*stockOutItem.stockOutQty;
                 addString(writableSheet, stockOutItem.cus_os_no, 16, row);
 
-                xs+=Float.valueOf(stockOutItem.xs);
-                qty+= stockOutItem.qty;
-                mz+=stockOutItem.mz*stockOutItem.qty;
-                jz+=stockOutItem.jz1*stockOutItem.qty;
+                xs+=itemXs;
+                stockOutQty+= stockOutItem.stockOutQty;
+                mz+=stockOutItem.mz*stockOutItem.stockOutQty;
+                jz+=stockOutItem.jz1*stockOutItem.stockOutQty;
                 row++;
 
             }
@@ -226,7 +228,7 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
 
             addString(writableSheet,  "TTL:", 3, row);
             addNumber(writableSheet, xs, 5, row);
-            addNumber(writableSheet, qty, 6, row);
+            addNumber(writableSheet, stockOutQty, 6, row);
             addString(writableSheet,  "N.W.:", 9, row);
             addNumber(writableSheet,  jz, 11, row);
             addString(writableSheet,  "KGS", 12, row);
@@ -240,7 +242,7 @@ public class Report_Excel_StockOut_List extends  AbstractExcelReporter<ErpStockO
             row++;
 
 
-            totalqty+=qty;
+            totalqty+=stockOutQty;
             totaltiji+=tiji;
             totalxs+=xs;
             totaljz+=jz;

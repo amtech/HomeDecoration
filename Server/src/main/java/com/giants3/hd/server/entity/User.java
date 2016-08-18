@@ -86,4 +86,12 @@ public class User implements Serializable,Valuable {
 
         return "["+code+"]["+name+"]"+chineseName;
     }
+
+    /**
+     * 是否管理员
+     * @return
+     */
+    public boolean isAdmin() {
+        return "Admin".equalsIgnoreCase(name);
+    }
 }

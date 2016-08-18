@@ -13,7 +13,7 @@ import java.io.File;
 public interface OrderReportPresenter extends    Presenter {
 
 
-    void search(String salCode, String dateStart,String dateEnd, int pageIndex, int pageSize);
+    void search(long userId, String dateStart,String dateEnd, int pageIndex, int pageSize);
 
     void loadOrderDetail(ErpOrder erpOrder);
 

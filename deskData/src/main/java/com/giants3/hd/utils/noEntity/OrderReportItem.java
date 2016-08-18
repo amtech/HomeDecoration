@@ -9,6 +9,7 @@ public class OrderReportItem {
     public String cus_no;
     public String prd_no;
     public String url;
+    public String saleName;
     /**
      * 客号
      */

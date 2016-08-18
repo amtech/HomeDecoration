@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 //import org.apache.commons.logging.Log;
 
@@ -822,11 +823,32 @@ public class Main extends BaseFrame {
         }
 
 
-//        menuItem = new JMenuItem("咸康数据调整");
-//        menu.add(menuItem);
-//        menuItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
+
+
+        menuItem = new JMenuItem("重启");
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                //启动应用程序
+                try {
+                    JOptionPane.showMessageDialog(Main.this, "重新启动应用程序");
+
+                    Thread.sleep(500);
+                    Process p = Runtime.getRuntime().exec("java -Xmx1024M  -jar " +"估价系统.jar");
+                //退出程序
+                    System.exit(0);
+                } catch (IOException ex5) {
+                    ex5.printStackTrace();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
+
 //
 //
 //

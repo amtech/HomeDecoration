@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
@@ -24,7 +25,9 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     public static final String FENGQIANHAO = "fengqianhao";
     public static final String UP = "up";
     public static final String AMT = "amt";
-    public static String[] fieldName = new String[]{  "itm", "url",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , UP,  "qty", AMT, "so_zxs"     ,"xs"  , KHXG,    "xgtj",        "zxgtj",    "jz1",  "mz"   };
+    public static final String XS = "xs";
+    public static final String ZXGTJ = "zxgtj";
+    public static String[] fieldName = new String[]{  "itm", "url",                                   "prd_no",  "pVersion",    DESCRIBE, GUIHAO+FENGQIANHAO,"os_no",   "bat_no","cus_os_no", "unit"  , UP,  "stockOutQty", AMT, "so_zxs"     , XS, KHXG,    "xgtj", ZXGTJ,    "jz1",  "mz"   };
 
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class,                       Object.class,   Object.class, Object.class, StockOutDetailFrame.GuiInfo.class,  Object.class};
 
@@ -70,6 +73,8 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
+        ErpStockOutItem item=getItem(rowIndex);
+
         if (columnIndex == StringUtils.index(fieldName, UP)||columnIndex == StringUtils.index(fieldName, AMT)) {
 
             if(!priceVisible) return "***";
@@ -77,7 +82,7 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
 
         if(columnIndex==StringUtils.index(fieldName,GUIHAO+FENGQIANHAO))
         {
-            ErpStockOutItem item=getItem(rowIndex)
+
                     ;
             if(item!=null)
             {
@@ -86,9 +91,18 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
 
             return "";
         }
-
-
-
+        if(columnIndex==StringUtils.index(fieldName,XS))
+        {
+            return item.stockOutQty/item.so_zxs;
+        }
+        if(columnIndex==StringUtils.index(fieldName,ZXGTJ))
+        {
+            return FloatHelper.scale(item.stockOutQty*item.xgtj);
+        }
+        if(columnIndex==StringUtils.index(fieldName,AMT))
+        {
+            return FloatHelper.scale(item.stockOutQty*item.up);
+        }
         return super.getValueAt(rowIndex, columnIndex);
     }
 

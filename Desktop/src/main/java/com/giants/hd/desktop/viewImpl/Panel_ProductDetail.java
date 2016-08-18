@@ -1273,6 +1273,9 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
                 }
             });
 
+
+        pack_attaches.setTitle("包装附件");
+        panel_attach.setTitle("产品附件");
     }
 
 

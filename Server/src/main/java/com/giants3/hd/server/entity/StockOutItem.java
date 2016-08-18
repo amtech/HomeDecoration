@@ -44,4 +44,13 @@ public class StockOutItem implements Serializable {
     @Basic
     public String  fengqianhao;
 
+
+    /**
+     * 出库数量
+     */
+    public int stockOutQty;
+
+
+    public boolean subRecord;
+
 }

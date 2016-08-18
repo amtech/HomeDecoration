@@ -32,12 +32,12 @@ public interface OrderRepository {
 
     /**
      * 订单报表查询    验货日期
-     * @param salCode
+     * @param   userId
      * @param dateStart
      * @param dateEnd
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    Observable<RemoteData<OrderReportItem>>  getOrderReport(String salCode, String dateStart, String dateEnd, int pageIndex, int pageSize);
+    Observable<RemoteData<OrderReportItem>>  getOrderReport(long userId, String dateStart, String dateEnd, int pageIndex, int pageSize);
 }

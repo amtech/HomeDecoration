@@ -77,23 +77,32 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * 查找订单
      * @param loginUser
      * @param key
-     * @param salesId
+     * @param salesId  是否制定业务员 -1 表示所有人
      * @param pageIndex
      * @param pageSize
      * @return
      */
 
     public RemoteData<ErpOrder> findByKey(User loginUser,String key,long salesId, int pageIndex, int pageSize) {
-        List<String> salesNos=null;
-        //查询所有
-        OrderAuth orderAuth=      orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
-        if(orderAuth!=null&& !StringUtils.isEmpty(orderAuth.relatedSales)) {
-             salesNos = userService.extractUserCodes(loginUser.id, salesId,orderAuth.relatedSales);
+        List<ErpOrder> result;
+        int totalCount;
+        if(loginUser.isAdmin()&&salesId==-1)
+        {
+            result = repository.findOrders(key,  pageIndex, pageSize);
+            totalCount = repository.getOrderCountByKey(key);
+        }else {
+            List<String> salesNos = null;
+            //查询所有
+            OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+            if (orderAuth != null && !StringUtils.isEmpty(orderAuth.relatedSales)) {
+                salesNos = userService.extractUserCodes(loginUser.id, salesId, orderAuth.relatedSales);
+            }
+
+
+            if (salesNos == null || salesNos.size() == 0) return wrapData();
+            result = repository.findOrders(key, salesNos, pageIndex, pageSize);
+            totalCount = repository.getOrderCountByKey(key,salesNos);
         }
-
-
-        if(salesNos==null||salesNos.size()==0 ) return wrapData();
-        List<ErpOrder> result = repository.findOrders(key,salesNos, pageIndex, pageSize);
         //进行业务员配对。
 
         for (ErpOrder erpOrder : result) {
@@ -113,7 +122,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         }
 
 
-        int totalCount = repository.getOrderCountByKey(key,salesNos);
+
         return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, result);
 
     }
@@ -408,14 +417,23 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     /**
      * 导出出货报表数据
-     * @param sal_no
+     * @param loginUser
+     * @param salesId
      * @param dateStart
      * @param dateEnd
      * @return
      */
-    public RemoteData<OrderReportItem> findItemByCheckDate(String sal_no, String dateStart, String dateEnd ) {
+    public RemoteData<OrderReportItem> findItemByCheckDate(User loginUser,long salesId  , String dateStart, String dateEnd ) {
+
+        List<String> salesNos=null;
+        //查询所有
+        OrderAuth orderAuth=      orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+        if(orderAuth!=null&& !StringUtils.isEmpty(orderAuth.relatedSales)) {
+            salesNos = userService.extractUserCodes(loginUser.id, salesId,orderAuth.relatedSales);
+        }
 
 
+        if(salesNos==null||salesNos.size()==0 ) return wrapData();
 
           List<OrderItem> orderItems= orderItemRepository.findByVerifyDateGreaterThanEqualAndVerifyDateLessThanEqual(dateStart, dateEnd);
 
@@ -426,7 +444,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             Order order=orderRepository.findFirstByOsNoEquals(orderitem.osNo);
             if(order!=null )
             {
-                if( StringUtils.isEmpty(sal_no)||sal_no.equals(order.sal_no))
+                //所有人并且是管理员的 所有记录都通过。 否则只接受指定业务员记录
+                if((salesId==-1&&loginUser.isAdmin())|| salesNos.indexOf(order.sal_no)>-1)
                 {
                     OrderReportItem orderReportItem= new OrderReportItem();
                     bindReportData(orderReportItem,orderitem,order);
@@ -458,6 +477,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         orderReportItem.sendDate=orderItem.sendDate;
         orderReportItem.verifyDate=orderItem.verifyDate;
         orderReportItem.unit=orderItem.ut;
+
+        orderReportItem.saleName=order.sal_name+" "+order.sal_cname;
+
 
     }
 }

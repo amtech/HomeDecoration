@@ -915,10 +915,10 @@ public class HttpUrl {
      * @param pageSize
      * @return
      */
-    public static String getOrderReportByCheckDate(String salCode
+    public static String getOrderReportByCheckDate(long userId
             , String dateStart, String dateEnd, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?sal_no=" + salCode +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?saleId=" + userId +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 }

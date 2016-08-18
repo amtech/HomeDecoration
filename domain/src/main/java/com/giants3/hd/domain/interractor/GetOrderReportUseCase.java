@@ -13,15 +13,15 @@ public class GetOrderReportUseCase extends UseCase {
 
     private OrderRepository orderRepository;
 
-    private String salCode;
+    long userId;
     private final String dateStart;
     private final String dateEnd;
     private int pageIndex;
 
     private int pageSize;
-    public GetOrderReportUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String salCode,   String dateStart,String dateEnd, int pageIndex, int pageSize, OrderRepository orderRepository) {
+    public GetOrderReportUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, long userId,   String dateStart,String dateEnd, int pageIndex, int pageSize, OrderRepository orderRepository) {
         super(threadExecutor, postExecutionThread);
-        this.salCode = salCode;
+        this.userId = userId;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.pageIndex = pageIndex;
@@ -33,6 +33,6 @@ public class GetOrderReportUseCase extends UseCase {
 
     @Override
     protected Observable buildUseCaseObservable() {
-        return orderRepository.getOrderReport(salCode,dateStart,dateEnd,pageIndex,pageSize);
+        return orderRepository.getOrderReport(  userId,dateStart,dateEnd,pageIndex,pageSize);
     }
 }

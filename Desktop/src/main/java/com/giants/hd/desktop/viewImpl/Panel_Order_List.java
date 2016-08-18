@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 订单面板  presenter
@@ -41,7 +43,7 @@ public class Panel_Order_List extends BasePanel {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {
 
-                adapter.search(keys.getText().trim(),getSalesId(), pageIndex, pageSize);
+                adapter.search(keys.getText().trim(), getSalesId(), pageIndex, pageSize);
             }
         });
 
@@ -50,7 +52,7 @@ public class Panel_Order_List extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                adapter.search(keys.getText().trim(),getSalesId(), 0, pagePanel.getPageSize());
+                adapter.search(keys.getText().trim(), getSalesId(), 0, pagePanel.getPageSize());
             }
         });
         keys.addActionListener(new ActionListener() {
@@ -58,7 +60,7 @@ public class Panel_Order_List extends BasePanel {
             public void actionPerformed(ActionEvent e) {
 
 
-                adapter.search(keys.getText().trim(),getSalesId(), 0, pagePanel.getPageSize());
+                adapter.search(keys.getText().trim(), getSalesId(), 0, pagePanel.getPageSize());
             }
         });
 
@@ -75,38 +77,49 @@ public class Panel_Order_List extends BasePanel {
                 }
             }
         });
-
-
-        String relateSales = CacheManager.getInstance().bufferData.orderAuth.relatedSales;
         User all = new User();
         all.id = -1;
         all.code = "--";
         all.name = "--";
         all.chineseName = "所有人";
         cb_salesman.addItem(all);
-        String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
-        if (ids != null) {
-            for (User user : CacheManager.getInstance().bufferData.salesmans) {
 
-                boolean find = false;
-                for (String s : ids) {
-                    if (String.valueOf(user.id).equals(s)) {
-                        find = true;
-                        break;
+
+        List<User> sales = new ArrayList<>();
+        if (CacheManager.getInstance().bufferData.loginUser.isAdmin()) {
+
+            sales.addAll(CacheManager.getInstance().bufferData.salesmans);
+        } else {
+            String relateSales = CacheManager.getInstance().bufferData.orderAuth.relatedSales;
+
+            String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
+            if (ids != null) {
+                for (User user : CacheManager.getInstance().bufferData.salesmans) {
+
+                    boolean find = false;
+                    for (String s : ids) {
+                        if (String.valueOf(user.id).equals(s)) {
+                            find = true;
+                            break;
+                        }
                     }
+
+                    if (find)
+                        sales.add(user);
+
                 }
 
-                if (find)
-                    cb_salesman.addItem(user);
             }
 
         }
+        for (User user : sales)
+            cb_salesman.addItem(user);
+
 
     }
 
-    private long getSalesId()
-    {
-        return ((User)cb_salesman.getSelectedItem()).id;
+    private long getSalesId() {
+        return ((User) cb_salesman.getSelectedItem()).id;
     }
 
     public void setData(RemoteData<ErpOrder> remoteData) {

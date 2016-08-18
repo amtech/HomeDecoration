@@ -27,7 +27,7 @@ public class Panel_Page<T>   {
     {
 
         super();
-
+        message.setText("");
         jtf_pageIndex.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

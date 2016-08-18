@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +31,8 @@ public class AttachPanel extends JPanel {
 
     List<String> pictureUrls;
 
+
+    private String title;
 
     private MouseAdapter mouseAdapter;
 
@@ -157,14 +160,39 @@ public class AttachPanel extends JPanel {
             if (e.getClickCount() == 2) {
 
 
-                String url = getUrl(pictureUrls.get(index));
 
-                ImageViewDialog.showDialog(SwingUtilities.getWindowAncestor(AttachPanel.this), url);
+
+
+
+                //拼接成url连续绝对路径串
+                String destUrl="";
+                for(String s:pictureUrls)
+                {
+                    destUrl+=getUrl(s);
+                    destUrl+=StringUtils.STRING_SPLIT_COMMON;
+                }
+
+
+
+
+                String dialogTitle=StringUtils.isEmpty(title)?"附件":title;
+                ImageViewDialog.showDialog(SwingUtilities.getWindowAncestor(AttachPanel.this), destUrl,dialogTitle,index);
                 // ImageViewDialog.showDialog(SwingUtilities.getWindowAncestor(this),);
             }
 
 
         }
+
+
+
+    }
+
+    /**
+     * 设置标题
+     */
+    public void setTitle( String title)
+    {
+        this.title=title;
     }
 
     /**

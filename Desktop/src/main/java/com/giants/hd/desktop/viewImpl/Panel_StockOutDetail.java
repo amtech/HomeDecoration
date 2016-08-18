@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
+import com.giants.hd.desktop.dialogs.SplitStockOutItemDialog;
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
 import com.giants.hd.desktop.model.StockOutGuihaoModel;
 import com.giants.hd.desktop.model.StockOutItemTableModel;
@@ -10,10 +11,12 @@ import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -54,6 +57,8 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
     private StockOutGuihaoModel guihaoModel;
 
+    Point popupMenuLocation=new Point();
+
     public Panel_StockOutDetail(StockOutDetailPresenter presenter) {
         this.presenter = presenter;
         init();
@@ -67,8 +72,69 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
         tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tb.addMouseListener(new MouseAdapter() {
+
+
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            private void showMenu(MouseEvent e) {
+                if (  presenter.isEditable()&&e.isPopupTrigger()) {
+
+                      ErpStockOutItem item=null;
+
+                    int[] modelRows = JTableUtils.getSelectedRowSOnModel(tb);
+                    if (modelRows != null && modelRows.length > 0) {
+
+                        item=tableModel.getItem(modelRows[0]);
+                    }
+                    if(item==null)return;
+                   final  ErpStockOutItem finalItem=item;
+                    popupMenuLocation.setLocation(e.getXOnScreen(),e.getYOnScreen());
+                    JPopupMenu menu = new JPopupMenu();
+                    JMenuItem split = new JMenuItem(" 拆 分 ");
+                    split.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                            showSplitDialog(finalItem);
+
+                        }
+                    });
+                    menu.add(split);
+                    if(item.subRecord) {
+                        JMenuItem delete = new JMenuItem(" 删 除 ");
+                        menu.add(delete);
+                        delete.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+
+
+                                presenter.deleteErpStockOutItem( finalItem);
+
+                            }
+                        });
+                    }
+                    //  取得右键点击所在行
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+
+                    return;
+                }
+
+            }
+
             @Override
             public void mouseClicked(MouseEvent e) {
+
 
                 if (e.getClickCount() == 2) {
 
@@ -76,11 +142,10 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
                     int selectRow = tb.convertRowIndexToModel(tb.getSelectedRow());
                     ErpStockOutItem item = tableModel.getItem(selectRow);
 
-                    if(item==null) return;
+                    if (item == null) return;
 
                     //单击第一列 显示原图
                     if (column == 1) {
-
 
 
                         if (!StringUtils.isEmpty(item.prd_no)) {
@@ -88,12 +153,10 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
                         }
                     }
                     if (column == 6) {
-                        if(AuthorityUtil.getInstance().viewOrderMenu())
-                        {
-                            String os_no=item.os_no;
+                        if (AuthorityUtil.getInstance().viewOrderMenu()) {
+                            String os_no = item.os_no;
                             presenter.showOrderDetail(os_no);
                         }
-
 
 
                     }
@@ -159,9 +222,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tb_guihao.addMouseListener(adapter);
 
 
-
-
-
         //保存
         save.addActionListener(new ActionListener() {
             @Override
@@ -171,7 +231,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
             }
         });
-
 
 
         //添加柜号数据
@@ -197,9 +256,9 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tb_guihao.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2);
-                int[] row=JTableUtils.getSelectedRowSOnModel(tb_guihao);
-                if(row!=null&&row.length>0) {
+                if (e.getClickCount() == 2) ;
+                int[] row = JTableUtils.getSelectedRowSOnModel(tb_guihao);
+                if (row != null && row.length > 0) {
                     StockOutDetailFrame.GuiInfo guiInfo = guihaoModel.getItem(row[0]);
                     if (guiInfo != null) {
                         presenter.filterGuihao(guiInfo);
@@ -210,7 +269,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         });
 
 
-
         btn_showall.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,8 +277,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
                 presenter.filterGuihao(null);
             }
         });
-
-
 
 
         export_invoice.addActionListener(new ActionListener() {
@@ -242,12 +298,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     }
 
 
-
-
-
-
-
-
     @Override
     public JComponent getRoot() {
         return root;
@@ -265,7 +315,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tf_gsgx.setText(erpStockOutDetail.erpStockOut.gsgx);
         tf_mdg.setText(erpStockOutDetail.erpStockOut.mdg);
         tf_tdh.setText(erpStockOutDetail.erpStockOut.tdh);
-        tf_sal.setText(erpStockOutDetail.erpStockOut.sal_name+"-"+erpStockOutDetail.erpStockOut.sal_cname);
+        tf_sal.setText(erpStockOutDetail.erpStockOut.sal_name + "-" + erpStockOutDetail.erpStockOut.sal_cname);
 
 
 //        ta_cemai.getDocument().removeDocumentListener(cemaiDocumentListener);
@@ -289,7 +339,6 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     }
 
 
-
     @Override
     public void showGuihaoData(Set<StockOutDetailFrame.GuiInfo> guiInfos) {
 
@@ -300,14 +349,17 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         guihaoModel.setDatas(guiInfoList);
 
 
-        //设置出库表格柜号处理数据
-        JComboBox<StockOutDetailFrame.GuiInfo> guiInfoJComboBox = new JComboBox<>();
-        guiInfoJComboBox.addItem(new StockOutDetailFrame.GuiInfo("",""));
-        for (StockOutDetailFrame.GuiInfo guiInfo : guiInfoList)
-            guiInfoJComboBox.addItem(guiInfo);
-        DefaultCellEditor comboboxEditor = new DefaultCellEditor(guiInfoJComboBox);
+        if(presenter.isEditable()) {
+            //设置出库表格柜号处理数据
+            JComboBox<StockOutDetailFrame.GuiInfo> guiInfoJComboBox = new JComboBox<>();
+            guiInfoJComboBox.addItem(new StockOutDetailFrame.GuiInfo("", ""));
+            for (StockOutDetailFrame.GuiInfo guiInfo : guiInfoList)
+                guiInfoJComboBox.addItem(guiInfo);
+            DefaultCellEditor comboboxEditor = new DefaultCellEditor(guiInfoJComboBox);
 
-        tb.setDefaultEditor(StockOutDetailFrame.GuiInfo.class, comboboxEditor);
+
+            tb.setDefaultEditor(StockOutDetailFrame.GuiInfo.class, comboboxEditor);
+        }
 
     }
 
@@ -322,9 +374,11 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     public void setEditable(boolean b) {
 
 
-
         save.setVisible(b);
-        btn_addgui.setVisible( b);
+        btn_addgui.setVisible(b);
+        tableModel.setEditable(b);
+        tableModel.setRowAdjustable(false);
+        guihaoModel.setEditable(false);
 
     }
 
@@ -332,16 +386,37 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     public void setExportable(boolean b) {
 
 
-
         export_pack.setVisible(b);
-        export_invoice.setVisible( b);
+        export_invoice.setVisible(b);
 
     }
 
     @Override
-    public void setStockOutPriceVisible(boolean visible)
-    {
+    public void setStockOutPriceVisible(boolean visible) {
 
         tableModel.setPriceVisible(visible);
+    }
+
+    /**
+     * 显示拆分对话框
+     *
+     * @param stockOutItem
+     */
+
+    @Override
+    public void showSplitDialog(final ErpStockOutItem stockOutItem) {
+
+
+        SplitStockOutItemDialog dialog = new SplitStockOutItemDialog();
+        dialog.pack();
+        dialog.setLocation( popupMenuLocation);
+        dialog.setStockOutItem(stockOutItem, new SplitStockOutItemDialog.OnNewQtyGetListener() {
+            @Override
+            public void onNewQty(int newQty) {
+
+                presenter.splitItem(stockOutItem,newQty);
+            }
+        });
+        dialog.setVisible(true);
     }
 }

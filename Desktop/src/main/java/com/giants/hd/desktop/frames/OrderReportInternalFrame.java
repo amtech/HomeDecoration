@@ -55,13 +55,13 @@ public class OrderReportInternalFrame extends BaseInternalFrame implements Order
         return orderReportViewer.getRoot();
     }
     @Override
-    public void search(String salCode, String dateStart,String dateEnd, int pageIndex, int pageSize) {
+    public void search(long userId, String dateStart,String dateEnd, int pageIndex, int pageSize) {
 
 
 
 
 
-        UseCaseFactory.getInstance().createOrderReportUseCase(salCode,dateStart,dateEnd,pageIndex,pageSize).execute(new Subscriber<RemoteData<OrderReportItem>>() {
+        UseCaseFactory.getInstance().createOrderReportUseCase(  userId,dateStart,dateEnd,pageIndex,pageSize).execute(new Subscriber<RemoteData<OrderReportItem>>() {
             @Override
             public void onCompleted() {
                 orderReportViewer.hideLoadingDialog();

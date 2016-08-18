@@ -254,6 +254,13 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     public void exportInvoice() {
 
 
+        if(hasModifyData())
+        {
+
+            stockOutDetailViewer.showMesssage("请先保存数据");
+            return;
+        }
+
         final File file = SwingFileUtils.getSelectedDirectory();
         if (file == null) return;
 
@@ -280,7 +287,12 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
     @Override
     public void exportPack() {
+        if(hasModifyData())
+        {
 
+            stockOutDetailViewer.showMesssage("请先保存数据");
+            return;
+        }
         final File file = SwingFileUtils.getSelectedDirectory();
         if (file == null) return;
 
@@ -359,4 +371,72 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         }
     }
 
+
+    /**
+     * 出库单拆分
+     *
+     * @param erpStockOutItem
+     */
+    @Override
+    public void splitItem(ErpStockOutItem erpStockOutItem, int newQty) {
+
+
+        int index=erpStockOutDetail.items.indexOf(erpStockOutItem);
+
+        ErpStockOutItem newStockOutItem=GsonUtils.fromJson(GsonUtils.toJson(erpStockOutItem),ErpStockOutItem.class);
+        newStockOutItem.subRecord=true;
+        newStockOutItem.id=0;
+        newStockOutItem.stockOutQty=newQty;
+        erpStockOutItem.stockOutQty-=newQty;
+
+        erpStockOutDetail.items.add(index+1,newStockOutItem);
+        stockOutDetailViewer.showItems(erpStockOutDetail.items);
+
+
+
+    }
+
+
+    /**
+     * 删除拆分的出库单
+     *
+     * @param finalItem
+     */
+    @Override
+    public void deleteErpStockOutItem(ErpStockOutItem finalItem) {
+
+        if(!finalItem.subRecord) return;
+
+        boolean returned=false;
+        for(ErpStockOutItem item:erpStockOutDetail.items)
+        {
+            //找到主数据。
+            if(item.itm==finalItem.itm&& !item.subRecord)
+            {
+                item.stockOutQty+=finalItem.stockOutQty;
+                returned=true;
+                break;
+            }
+        }
+
+        if(returned)
+        {
+            erpStockOutDetail.items.remove(finalItem);
+            stockOutDetailViewer.showItems(erpStockOutDetail.items);
+
+        }
+
+
+
+    }
+
+    /**
+     * 是否可编辑状态
+     *
+     * @return
+     */
+    @Override
+    public boolean isEditable() {
+        return  AuthorityUtil.getInstance().editStockOut();
+    }
 }

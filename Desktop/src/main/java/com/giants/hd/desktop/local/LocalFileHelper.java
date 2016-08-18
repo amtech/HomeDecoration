@@ -44,7 +44,28 @@ public class LocalFileHelper {
 
 
     }
+    public static     void writeString(String fileName,String message)
+    {
 
+        try{
+
+            FileOutputStream fos=new FileOutputStream(new File(path,fileName),true);
+            ObjectOutputStream obs=new ObjectOutputStream(fos);
+
+            obs.writeObject(message);
+
+
+            obs.close();
+            fos.close();
+
+
+        }catch (IOException io)
+        {
+            io.printStackTrace();
+        }
+
+
+    }
 
     public static final<T> T get(Class<T> tClass)
     {

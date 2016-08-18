@@ -1,18 +1,24 @@
 package com.giants3.hd.server.entity_erp;
 
 import java.io.Serializable;
-
 /**
  * Erp 数据库出库d单细项
  * Created by davidleen29 on 2016/7/16.
  */
 public class ErpStockOutItem   implements Serializable{
 
+    public  long id;
+
     public String ck_no;
     public int itm;
     public String prd_no;
     public String id_no;
     public String os_no;
+
+    /**
+     * erp产品描述
+     */
+    public  String idx_name;
     /**
      * 客号
      */
@@ -23,13 +29,13 @@ public class ErpStockOutItem   implements Serializable{
     public String cus_os_no;
 
 
-    public float qty;
+    public int qty;
 
     /**
      * 单价
      */
     public float up;
-    public float amt;
+   // public float amt;
 
     /**
      * 每箱套数
@@ -38,9 +44,10 @@ public class ErpStockOutItem   implements Serializable{
 
 
     /**
-     * 箱数
+     * 箱数   stockOutQty/每箱套数
+     *
      */
-    public float xs;
+   // public float xs;
 
     /**
      * 箱规
@@ -53,10 +60,10 @@ public class ErpStockOutItem   implements Serializable{
     public float xgtj;
 
     /**
-     * 总体积
+     * 总体积   箱规体积*stockOutQty'
      */
 
-    public  float zxgtj;
+    // public  float zxgtj;
     /**
      * 净重
      */
@@ -99,5 +106,16 @@ public class ErpStockOutItem   implements Serializable{
      * 封签号
      */
     public String  fengqianhao;
-}
 
+
+
+    /**
+     * 从记录录标记， 拆分的从记录 可以被删除
+     */
+    public boolean  subRecord;
+
+    /**
+     * 出库单 单款产品的出库量。  没被拆分的qty=stockOutQty
+     */
+    public int stockOutQty;
+}

@@ -1,8 +1,5 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import com.google.inject.Inject;
@@ -16,14 +13,13 @@ import javax.swing.*;
 public class OrderReportItemTableModel extends BaseTableModel<OrderReportItem> {
 
 
+    public static String[] columnNames = new String[]{"客户", "合同号 ", "货号", "图片", "客号", "单位", "数量", "验货日期", "出柜日期", "业务员"};
+    public static int[] columnWidth = new int[]{80, 100, 80, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 80, 60, 60, 100, 100, 80};
 
-    public static String[] columnNames = new String[]{ "客户", "合同号 ",  "货号",                  "图片",                        "客号",               "单位",         "数量", "验货日期", "出柜日期" };
-    public static int[] columnWidth = new int[]{      80,          100,      80,         ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH,   80,                   60,              60,      100,         100  };
 
+    public static String[] fieldName = new String[]{"cus_no", "os_no", "prd_no", "url", "cus_prd_no", "unit", "qty", "verifyDate", "sendDate", "saleName"};
 
-    public static String[] fieldName = new String[]{   "cus_no",    "os_no",  "prd_no",      "url",                               "cus_prd_no",      "unit",         "qty" , "verifyDate", "sendDate" };
-
-    public static Class[] classes = new Class[]{  Object.class,   Object.class, Object.class, ImageIcon.class, String.class, String.class, String.class };
+    public static Class[] classes = new Class[]{Object.class, Object.class, Object.class, ImageIcon.class, String.class, String.class, String.class, String.class};
     /**
      * 单价是否可见
      */
@@ -45,8 +41,6 @@ public class OrderReportItemTableModel extends BaseTableModel<OrderReportItem> {
     public int getRowHeight() {
         return ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT;
     }
-
-
 
 
 }

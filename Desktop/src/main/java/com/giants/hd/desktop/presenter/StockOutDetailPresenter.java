@@ -1,6 +1,8 @@
 package com.giants.hd.desktop.presenter;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 
 import java.io.File;
 
@@ -82,4 +84,23 @@ public interface StockOutDetailPresenter extends    Presenter {
      * 导出出库清单
      */
     void  exportPack();
+
+
+    /**
+     * 出库单拆分
+     * @param erpStockOut
+     */
+    void splitItem(ErpStockOutItem erpStockOut, int qty);
+
+    /**
+     * 删除拆分的出库单
+     * @param finalItem
+     */
+    void deleteErpStockOutItem(ErpStockOutItem finalItem);
+
+    /**
+     * 是否可编辑状态
+     * @return
+     */
+    boolean isEditable();
 }

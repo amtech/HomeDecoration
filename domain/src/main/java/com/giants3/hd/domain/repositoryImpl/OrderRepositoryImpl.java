@@ -150,7 +150,7 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
 
     @Override
-    public Observable<RemoteData<OrderReportItem>> getOrderReport(final String salCode, final String dateStart, final String dateEnd, final int pageIndex, final int pageSize) {
+    public Observable<RemoteData<OrderReportItem>> getOrderReport(final long userId, final String dateStart, final String dateEnd, final int pageIndex, final int pageSize) {
 
 
         return Observable.create(new Observable.OnSubscribe<RemoteData<OrderReportItem>>() {
@@ -161,7 +161,7 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
 
                 try {
-                    RemoteData<OrderReportItem> remoteData= apiManager.getOrderReport(  salCode,   dateStart,   dateEnd,   pageIndex,   pageSize);
+                    RemoteData<OrderReportItem> remoteData= apiManager.getOrderReport(    userId,   dateStart,   dateEnd,   pageIndex,   pageSize);
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);

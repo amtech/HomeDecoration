@@ -1693,17 +1693,17 @@ public class ApiManager {
     /**
      * 读取订单报表  验货日期
      *
-     * @param key
+     * @param         userId
      * @param dateStart
      * @param dateEnd
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public RemoteData<OrderReportItem> getOrderReport(String key, String dateStart, String dateEnd, int pageIndex, int pageSize) throws HdException {
+    public RemoteData<OrderReportItem> getOrderReport(long userId, String dateStart, String dateEnd, int pageIndex, int pageSize) throws HdException {
 
 
-        String url = HttpUrl.getOrderReportByCheckDate(key, dateStart, dateEnd, pageIndex, pageSize);
+        String url = HttpUrl.getOrderReportByCheckDate(userId, dateStart, dateEnd, pageIndex, pageSize);
         String result = client.getWithStringReturned(url);
         RemoteData<OrderReportItem> remoteData = invokeByReflect(result, OrderReportItem.class);
         return remoteData;

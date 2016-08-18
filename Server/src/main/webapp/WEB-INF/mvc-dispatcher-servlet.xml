@@ -3,18 +3,26 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-
+        http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/data/jpa
+         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd
+         http://www.springframework.org/schema/task
+         http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+>
 
 
     <context:component-scan base-package="com.giants3.hd.server"/>
+    <context:annotation-config />
 
-
-
-
-
+    <task:annotation-driven/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
@@ -31,7 +39,7 @@
             </bean>
 
             <bean class="com.giants3.hd.server.converter.GsonMessageConverter"
-                  >
+            >
             </bean>
             <bean class="com.giants3.hd.server.converter.StringMessageConverter"
             >
@@ -42,26 +50,24 @@
     </mvc:annotation-driven>
 
 
+    <context:property-placeholder location="config/application.properties"/>
 
-    <context:property-placeholder  location="config/application.properties"/>
-
-    <jpa:repositories base-package="com.giants3.hd.server.repository"  />
+    <jpa:repositories base-package="com.giants3.hd.server.repository"/>
 
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 
-            >
+    >
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
 
-        <property name="packagesToScan" >
+        <property name="packagesToScan">
             <list>
                 <value>com.giants3.hd.server.entity</value>
 
             </list>
-         </property>
+        </property>
 
     </bean>
-
 
 
     <mvc:interceptors>
@@ -78,34 +84,44 @@
     -->
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <!--<bean id="entityManagerFactoryERP" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="erpPersistenceUnit"/>
     </bean>-->
 
-   <!-- <bean id="prdtRepository" class="com.giants3.hd.server.repository.ErpPrdtRepository">
-        <property name="entityManager" ref="sharedEntityManager"/>
-    </bean>-->
+    <!-- <bean id="prdtRepository" class="com.giants3.hd.server.repository.ErpPrdtRepository">
+         <property name="entityManager" ref="sharedEntityManager"/>
+     </bean>-->
     <!-- <bean id="entityManagerFactoryERP" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
             autowire-candidate="false"
            primary="false"
 
              >-->
-       <!--  <property name="persistenceXmlLocation" value="classpath:config/persitence.xml" />-->
-      <!--  <property name="persistenceUnitName" value="erpPersistenceUnit" />-->
+    <!--  <property name="persistenceXmlLocation" value="classpath:config/persitence.xml" />-->
+    <!--  <property name="persistenceUnitName" value="erpPersistenceUnit" />-->
 
-        <!--<property name="dataSource" ref="restDemoLegacyDS" />
-        <property name="packagesToScan" value="org.codingpedia.demo.*" />
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="showSql" value="true" />
-                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
-            </bean>
-        </property>-->
-   <!-- </bean>
--->
+    <!--<property name="dataSource" ref="restDemoLegacyDS" />
+    <property name="packagesToScan" value="org.codingpedia.demo.*" />
+    <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+            <property name="showSql" value="true" />
+            <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+        </bean>
+    </property>-->
+    <!-- </bean>
+ -->
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+    <!--  开启这个配置，spring才能识别@Scheduled注解   -->
+
+     <!--<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>-->
+     <!--<task:scheduler id="qbScheduler" pool-size="10"/>-->
+
+
+
+
 </beans>

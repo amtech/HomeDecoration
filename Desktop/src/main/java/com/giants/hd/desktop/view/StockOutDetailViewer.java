@@ -40,4 +40,10 @@ public interface StockOutDetailViewer extends AbstractViewer {
     void setExportable(boolean b);
 
     void setStockOutPriceVisible(boolean visible);
+
+    /**
+     * 显示拆分对话框
+     * @param stockOutItem
+     */
+    void showSplitDialog(ErpStockOutItem stockOutItem);
 }

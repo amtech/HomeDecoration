@@ -7,6 +7,8 @@ import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
+import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,8 +39,8 @@ public class StockService extends AbstractService {
 
     @Autowired
     StockOutItemRepository stockOutItemRepository;
-@Autowired
-StockOutAuthRepository stockOutAuthRepository;
+    @Autowired
+    StockOutAuthRepository stockOutAuthRepository;
 
     @Autowired
     StockOutRepository stockOutRepository;
@@ -70,9 +71,8 @@ StockOutAuthRepository stockOutAuthRepository;
     }
 
 
-
-
-    /** 查询出库列表
+    /**
+     * 查询出库列表
      *
      * @param loginUser
      * @param key
@@ -81,23 +81,21 @@ StockOutAuthRepository stockOutAuthRepository;
      * @param pageSize
      * @return
      */
-    public RemoteData<ErpStockOut> search(User loginUser,String key,long salesId, int pageIndex, int pageSize) {
+    public RemoteData<ErpStockOut> search(User loginUser, String key, long salesId, int pageIndex, int pageSize) {
 
 
-
-
-        List<String> salesNos=null;
+        List<String> salesNos = null;
         //查询所有
-        StockOutAuth stockOutAuth=      stockOutAuthRepository.findFirstByUser_IdEquals(loginUser.id);
-        if(stockOutAuth!=null&& !StringUtils.isEmpty(stockOutAuth.relatedSales)) {
-            salesNos = userService.extractUserCodes(loginUser.id, salesId,stockOutAuth.relatedSales);
+        StockOutAuth stockOutAuth = stockOutAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+        if (stockOutAuth != null && !StringUtils.isEmpty(stockOutAuth.relatedSales)) {
+            salesNos = userService.extractUserCodes(loginUser.id, salesId, stockOutAuth.relatedSales);
         }
 
 
-        if(salesNos==null||salesNos.size()==0 ) return wrapData();
+        if (salesNos == null || salesNos.size() == 0) return wrapData();
 
 
-        List<ErpStockOut> erpStockOuts = repository.stockOutList(key,salesNos, pageIndex, pageSize);
+        List<ErpStockOut> erpStockOuts = repository.stockOutList(key, salesNos, pageIndex, pageSize);
         for (ErpStockOut stockOut : erpStockOuts) {
             attachData(stockOut);
             attachSaleData(stockOut);
@@ -108,7 +106,7 @@ StockOutAuthRepository stockOutAuthRepository;
 
 
         remoteData.datas = erpStockOuts;
-        int totalCount = repository.getRecordCountByKey(key,salesNos);
+        int totalCount = repository.getRecordCountByKey(key, salesNos);
         return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, erpStockOuts);
 
     }
@@ -126,9 +124,8 @@ StockOutAuthRepository stockOutAuthRepository;
         List<ErpStockOutItem> erpStockOuts = repository.stockOutItemsList(ck_no);
 
 
-
-
-
+        //存放 拆分出来的单项数据
+        List<ErpStockOutItem> additionalItems = new ArrayList<>();
         for (ErpStockOutItem item : erpStockOuts) {
             String productCode = item.prd_no;
             String pVersion = "";
@@ -149,26 +146,72 @@ StockOutAuthRepository stockOutAuthRepository;
             }
 
 
-
             //附件封签号 柜号 描述数据
 
 
-            StockOutItem stockOutItem=stockOutItemRepository.findFirstByCkNoEqualsAndItmEquals(item.ck_no,item.itm);
-            if(stockOutItem!=null)
-            {
+            List<StockOutItem> stockOutItems = stockOutItemRepository.findByCkNoEqualsAndItmEquals(item.ck_no, item.itm);
 
-                item.describe=stockOutItem.describe;
-                item.fengqianhao=stockOutItem.fengqianhao;
-                item.guihao=stockOutItem.guihao;
+            if (stockOutItems != null && stockOutItems.size() > 0) {
 
+                int size = stockOutItems.size();
+                StockOutItem stockOutItem = stockOutItems.get(0);
+                item.describe = stockOutItem.describe;
+                item.fengqianhao = stockOutItem.fengqianhao;
+                item.guihao = stockOutItem.guihao;
+                item.subRecord = stockOutItem.subRecord;
+
+                //保证 出库的数量有数据
+                item.stockOutQty = stockOutItem.stockOutQty == 0 ? item.qty : stockOutItem.stockOutQty;
+                item.id = stockOutItem.id;
+                //描述取值
+                if (!StringUtils.isEmpty(stockOutItem.describe)) {
+                    item.describe = stockOutItem.describe;
+                } else {
+                    item.describe = item.idx_name;
+                }
+
+                for (int i = 1; i < size; i++) {
+                    ErpStockOutItem additionItem = GsonUtils.fromJson(GsonUtils.toJson(item), ErpStockOutItem.class);
+                    stockOutItem = stockOutItems.get(i);
+                    additionItem.describe = stockOutItem.describe;
+                    additionItem.fengqianhao = stockOutItem.fengqianhao;
+                    additionItem.guihao = stockOutItem.guihao;
+                    additionItem.stockOutQty = stockOutItem.stockOutQty;
+                    item.subRecord = stockOutItem.subRecord;
+                    additionItem.id = stockOutItem.id;
+
+                    //描述取值
+                    if (!StringUtils.isEmpty(stockOutItem.describe)) {
+                        additionItem.describe = stockOutItem.describe;
+                    } else {
+                        additionItem.describe = additionItem.idx_name;
+                    }
+
+                    additionalItems.add(additionItem);
+                }
+            } else {
+                item.stockOutQty = item.qty;
             }
 
 
-
-
-
-
         }
+
+        //汇总拆分的数据
+        erpStockOuts.addAll(additionalItems);
+
+        //排序
+        ArrayUtils.SortList(erpStockOuts, new Comparator<ErpStockOutItem>() {
+            @Override
+            public int compare(ErpStockOutItem o1, ErpStockOutItem o2) {
+
+                int value = o1.ck_no.compareTo(o2.ck_no);
+                if (value != 0) return value;
+                value = Integer.compare(o1.itm, o2.itm);
+                if (value != 0) return value;
+                return Boolean.compare(o2.subRecord,o1.subRecord);
+
+            }
+        });
 
 
         ErpStockOutDetail detail = new ErpStockOutDetail();
@@ -196,7 +239,6 @@ StockOutAuthRepository stockOutAuthRepository;
     private void attachData(ErpStockOut erpStockOut) {
 
 
-
         if (erpStockOut != null) {
 
 
@@ -212,6 +254,7 @@ StockOutAuthRepository stockOutAuthRepository;
 
         }
     }
+
     /**
      * 附加业务员数据
      *
@@ -220,11 +263,10 @@ StockOutAuthRepository stockOutAuthRepository;
     private void attachSaleData(ErpStockOut erpStockOut) {
 
 
-
         if (erpStockOut != null) {
 
 
-            User user = userRepository.findFirstByCodeEquals(erpStockOut.sal_no );
+            User user = userRepository.findFirstByCodeEquals(erpStockOut.sal_no);
             if (user != null) {
                 erpStockOut.sal_name = user.name;
                 erpStockOut.sal_cname = user.chineseName;
@@ -275,33 +317,37 @@ StockOutAuthRepository stockOutAuthRepository;
 
         detachData(stockOutDetail.erpStockOut, stockOut);
         //附件处理
-        stockOut.attaches = AttachFileUtils.updateProductAttaches(stockOut.attaches, oldAttaches,"StockOut_"+stockOut.ckNo, attachfilepath, tempFilePath);
+        stockOut.attaches = AttachFileUtils.updateProductAttaches(stockOut.attaches, oldAttaches, "StockOut_" + stockOut.ckNo, attachfilepath, tempFilePath);
         stockOutRepository.save(stockOut);
 
 
+        List<ErpStockOutItem> newStockOutItems = stockOutDetail.items;
 
-        List<ErpStockOutItem> newStockOutItems=stockOutDetail.items;
-
-        for(ErpStockOutItem item :newStockOutItems)
-        {
-
-            StockOutItem stockOutItem=stockOutItemRepository.findFirstByCkNoEqualsAndItmEquals(item.ck_no,item.itm);
-            if(stockOutItem==null)
-            {
-                stockOutItem=new StockOutItem();
+        List<StockOutItem> oldItems = stockOutItemRepository.findByCkNoEquals(stockOutDetail.erpStockOut.ck_no);
+        List<Long> oldIds = new ArrayList<>();
+        for (StockOutItem item : oldItems) {
+            oldIds.add(item.id);
+        }
+        for (ErpStockOutItem item : newStockOutItems) {
+            oldIds.remove(item.id);
+            StockOutItem stockOutItem = stockOutItemRepository.findOne(item.id);
+            if (stockOutItem == null) {
+                stockOutItem = new StockOutItem();
             }
-            stockOutItem.ckNo=item.ck_no;
-            stockOutItem.itm=item.itm;
-            stockOutItem.describe=item.describe;
-            stockOutItem.fengqianhao=item.fengqianhao;
-            stockOutItem.guihao=item.guihao;
-
+            stockOutItem.ckNo = item.ck_no;
+            stockOutItem.itm = item.itm;
+            stockOutItem.describe = item.describe;
+            stockOutItem.fengqianhao = item.fengqianhao;
+            stockOutItem.guihao = item.guihao;
+            stockOutItem.subRecord = item.subRecord;
+            stockOutItem.stockOutQty = item.stockOutQty;
             stockOutItemRepository.save(stockOutItem);
         }
 
-
-
-
+        //删除被删除的记录  不存在新的列表中
+        for (Long id : oldIds) {
+            stockOutItemRepository.delete(id);
+        }
 
 
         return findDetail(stockOutDetail.erpStockOut.ck_no);

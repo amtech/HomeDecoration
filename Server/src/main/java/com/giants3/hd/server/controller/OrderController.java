@@ -49,10 +49,10 @@ public class OrderController extends BaseController{
     @RequestMapping(value="/reportItemByCheckDate", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<OrderReportItem> reportItemByCheckDate(@RequestParam(value = "sal_no" ,  required = false, defaultValue = "") String sal_no  , @RequestParam(value = "dateStart") String dateStart , @RequestParam(value = "dateEnd") String dateEnd
+    RemoteData<OrderReportItem> reportItemByCheckDate( @ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "saleId" ,  required = false, defaultValue = "-1") long saleId  , @RequestParam(value = "dateStart") String dateStart , @RequestParam(value = "dateEnd") String dateEnd
         )   {
 
-        return  erpService.findItemByCheckDate(sal_no,dateStart,dateEnd) ;
+        return  erpService.findItemByCheckDate(user,saleId,dateStart,dateEnd) ;
     }
 
     @RequestMapping(value="/findOrderItems", method = RequestMethod.GET)

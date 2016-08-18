@@ -187,6 +187,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
                 orderDetailPresenter.onDeleteAttach(url);
             }
         });
+        panel_attach.setTitle("订单附件");
 
       //  orderItemList.setCe(Date.class,new DateCellEditor());
         orderItemList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

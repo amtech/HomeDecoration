@@ -25,7 +25,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * 订单报表界面实现层
@@ -61,7 +63,7 @@ public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
 
                   User user= (User) cb_sales.getSelectedItem();
 
-                orderReportPresenter.search(user.code, startDate, endDate, 0, pagePanel.getPageSize());
+                orderReportPresenter.search(user.id, startDate, endDate, 0, pagePanel.getPageSize());
 
 
             }
@@ -85,7 +87,7 @@ public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
                     String endDate = date_end.getJFormattedTextField().getText().toString();
 
                     User user= (User) cb_sales.getSelectedItem();
-                    orderReportPresenter.search(user.code, startDate, endDate, pageIndex, pageSize);
+                    orderReportPresenter.search(user.id, startDate, endDate, pageIndex, pageSize);
                 }
             }
         });
@@ -111,14 +113,44 @@ public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
 
         User all = new User();
         all.id = -1;
-        all.code = "";
+        all.code = "--";
         all.name = "--";
         all.chineseName = "所有人";
         cb_sales.addItem(all);
 
-        for (User user : CacheManager.getInstance().bufferData.salesmans) {
-            cb_sales.addItem(user);
+
+        List<User> sales = new ArrayList<>();
+        if (CacheManager.getInstance().bufferData.loginUser.isAdmin()) {
+
+            sales.addAll(CacheManager.getInstance().bufferData.salesmans);
+        } else {
+            String relateSales = CacheManager.getInstance().bufferData.orderAuth.relatedSales;
+
+            String[] ids = StringUtils.isEmpty(relateSales) ? null : relateSales.split(",|，");
+            if (ids != null) {
+                for (User user : CacheManager.getInstance().bufferData.salesmans) {
+
+                    boolean find = false;
+                    for (String s : ids) {
+                        if (String.valueOf(user.id).equals(s)) {
+                            find = true;
+                            break;
+                        }
+                    }
+
+                    if (find)
+                        sales.add(user);
+
+                }
+
+            }
+
         }
+        for (User user : sales)
+            cb_sales.addItem(user);
+//        for (User user : CacheManager.getInstance().bufferData.salesmans) {
+//            cb_sales.addItem(user);
+//        }
 
         orderTable.addMouseListener(new MouseAdapter() {
             @Override
