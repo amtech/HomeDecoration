@@ -1,5 +1,6 @@
 package com.giants3.hd.server.utils;
 
+import com.giants3.hd.server.entity.Product;
 import com.giants3.hd.utils.StringUtils;
 
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.Calendar;
 
 /**
  *  文件处理类
@@ -19,9 +21,10 @@ public class FileUtils {
     public static final String  DOWNLOAD_PATH="api/file/download/";
     public static final String DOWNLOAD_MATERIAL_CODE =DOWNLOAD_PATH+"material/%s/%s.%s?type=%s&mClass=%s";
     public static final String DOWNLOAD_PRODUCT_NAME_P_VERSION = DOWNLOAD_PATH+"product/%s/%s/%s.%s?type=%s";
-    public static final String DOWNLOAD_TEMP_NAME = DOWNLOAD_PATH+"temp/%s."+IMAGE_JPG;
+    public static final String DOWNLOAD_TEMP_PATH = DOWNLOAD_PATH+"temp/" ;
+    public static final String DOWNLOAD_TEMP_NAME = DOWNLOAD_TEMP_PATH+"%s."+IMAGE_JPG;
     public static final String DOWNLOAD_ATTACH_NAME = "/download/attach/{name}";
-
+    public static final String DOWNLOAD_ATTACH_PATH = DOWNLOAD_PATH+"attach/";
 
 
     /**
@@ -253,5 +256,34 @@ public class FileUtils {
     public static String getQuotationFile(String quotationfilepath, String name,String appendix) {
 
         return quotationfilepath+File.separator+name+"."+appendix;
+    }
+
+
+
+    /**
+     * 根据temp的url获取临时文件的路径
+     * @param url
+     * @return
+     */
+    public static String getTempFileName(String url,String tempFilePath)
+    {
+        if (url.startsWith(FileUtils.DOWNLOAD_TEMP_PATH)) {
+
+
+            String relativePath=url.substring(FileUtils.DOWNLOAD_TEMP_PATH.length());
+
+            return tempFilePath+relativePath;
+        }
+
+        return "";
+    }
+
+
+    /**
+     *
+     */
+    public static  String generateAttachFileName(Product product)
+    {
+      return   "PRODUCT_" + product.getFullName() +"-"+ Calendar.getInstance().getTimeInMillis() + ".jpg";
     }
 }

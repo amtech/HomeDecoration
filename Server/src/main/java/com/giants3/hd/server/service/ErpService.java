@@ -15,6 +15,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -480,6 +481,64 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         orderReportItem.saleName=order.sal_name+" "+order.sal_cname;
 
+
+    }
+
+
+
+
+    /**
+     * 更新d订单附件
+     * 将附件从临时文件转移到附件文件夹下
+     *
+     */
+    public void updateAttachFiles() {
+
+
+        Page<Order> page;
+        Pageable pageable=constructPageSpecification(0,100);
+        page=orderRepository.findAll( pageable);
+        handleList(page.getContent());
+
+        while (page.hasNext())
+        {
+            pageable= page.nextPageable();
+            page=orderRepository.findAll( pageable);
+            List<Order> products=page.getContent();
+            handleList(products);
+
+        }
+
+
+
+
+
+
+
+
+
+    }
+
+    private  void handleList(List<Order> products)
+    {
+
+
+        for(Order order:products)
+        {
+
+            String newAttaches= AttachFileUtils.getNewAttaches(order.attaches,attachfilepath,tempFilePath,AttachFileUtils.ORDER_ATTACH_PREFIX+ order.osNo);
+            if(!newAttaches.equals(order.attaches))
+            {
+                order.attaches=newAttaches;
+                orderRepository.save(order);
+
+            }
+
+        }
+
+
+
+        productRepository.flush();
 
     }
 }

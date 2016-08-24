@@ -9,8 +9,9 @@ public class FileUtils {
 
 
 
-    public static void copyFile(File destFile, File sourceFile)
+    public static boolean copyFile(File destFile, File sourceFile)
     {
+
 
 
         if(!destFile.exists())
@@ -35,6 +36,7 @@ public class FileUtils {
                 out.write(buffer, 0, size);
                 out.flush();
             }
+            return true;
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
         } finally {
@@ -45,6 +47,8 @@ public class FileUtils {
             }
         }
 
+
+        return false;
 
 
     }

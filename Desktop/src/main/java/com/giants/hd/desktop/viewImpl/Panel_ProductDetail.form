@@ -536,7 +536,8 @@
             </constraints>
             <properties>
               <columns value="2"/>
-              <editable value="false"/>
+              <editable value="true"/>
+              <enabled value="true"/>
               <horizontalAlignment value="0"/>
             </properties>
           </component>

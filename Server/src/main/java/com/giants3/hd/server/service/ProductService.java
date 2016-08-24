@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -636,28 +637,28 @@ public class ProductService extends AbstractService implements InitializingBean,
        // updateProductPhotoTime(newProduct);
 
 
-        //检查附件数据是否有改变
-        Product oldProduct = productRepository.findOne(productId);
-        String oldAttachFiles = oldProduct == null ? "" : oldProduct.attaches;
-        if (!newProduct.attaches.equals(oldAttachFiles)) {
-
-
-            //更新附件文件
-            String filePrefix
-                    ="Product_"+newProduct.name + "_" + newProduct.pVersion + "_";
-            newProduct.attaches= AttachFileUtils.updateProductAttaches(newProduct.attaches,oldAttachFiles,filePrefix,attachfilepath,tempFilePath);
-
-        }
-        String oldPackAttaches = oldProduct == null ? "" : oldProduct.packAttaches;
-        if (!newProduct.packAttaches.equals(oldPackAttaches)) {
-
-
-            //更新包装附件文件
-            String filePrefix
-                    ="Product_"+"Pack_"+newProduct.name + "_" + newProduct.pVersion + "_";
-            newProduct.packAttaches= AttachFileUtils.updateProductAttaches(newProduct.packAttaches,oldPackAttaches,filePrefix,attachfilepath,tempFilePath);
-
-        }
+//        //检查附件数据是否有改变
+//        Product oldProduct = productRepository.findOne(productId);
+//        String oldAttachFiles = oldProduct == null ? "" : oldProduct.attaches;
+//        if (!newProduct.attaches.equals(oldAttachFiles)) {
+//
+//            newProduct.attaches=
+//            //更新附件文件
+//            String filePrefix
+//                    ="Product_"+newProduct.name + "_" + newProduct.pVersion + "_";
+//            newProduct.attaches= AttachFileUtils.updateProductAttaches(newProduct.attaches,oldAttachFiles,filePrefix,attachfilepath,tempFilePath);
+//
+//        }
+//        String oldPackAttaches = oldProduct == null ? "" : oldProduct.packAttaches;
+//        if (!newProduct.packAttaches.equals(oldPackAttaches)) {
+//
+//
+//            //更新包装附件文件
+//            String filePrefix
+//                    ="Product_"+"Pack_"+newProduct.name + "_" + newProduct.pVersion + "_";
+//            newProduct.packAttaches= AttachFileUtils.updateProductAttaches(newProduct.packAttaches,oldPackAttaches,filePrefix,attachfilepath,tempFilePath);
+//
+//        }
 
         //最新product 数据
         Product product = productRepository.save(newProduct);
@@ -1004,4 +1005,95 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
     }
+
+
+    /**
+     * 更新产品附件     包装附件 与 产品附件
+     */
+    @Async
+    public void updateAttachFiles() {
+        String threadName = Thread.currentThread().getName();
+        System.out.println("   " + threadName + " beginning work   " );
+
+        Page<Product> page;
+        Pageable pageable=constructPageSpecification(0,100);
+        page=productRepository.findAll( pageable);
+        handleProductList(page.getContent());
+
+       while (page.hasNext())
+        {
+            pageable= page.nextPageable();
+            page=productRepository.findAll( pageable);
+            List<Product> products=page.getContent();
+            handleProductList(products);
+
+        }
+
+
+
+
+
+
+
+
+
+    }
+
+    private  void handleProductList(List<Product> products)
+    {
+
+
+        for(Product product:products)
+        {
+            handleProductAttach(product);
+        }
+
+
+
+        productRepository.flush();
+
+    }
+
+    /**
+     *
+     * @param product
+     */
+    private  void handleProductAttach(Product product)
+    {
+
+        boolean update=false;
+        String newAttaches= AttachFileUtils.getNewAttaches(product.attaches,attachfilepath,tempFilePath,AttachFileUtils.PRODUCT_ATTACH_PREFIX+ product.getFullName());
+        if(!newAttaches.equals(product.attaches))
+        {
+            product.attaches=newAttaches;
+            update=true;
+
+        }
+        newAttaches= AttachFileUtils.getNewAttaches(product.packAttaches,attachfilepath,tempFilePath, AttachFileUtils.PRODUCT_PACK_ATTACH_PREFIX+product.getFullName());
+        if(!newAttaches.equals(product.packAttaches))
+        {
+            product.packAttaches=newAttaches;
+            update=true;
+
+        }
+
+        if(update)
+        {
+
+            productRepository.save(product);
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
 }

@@ -210,6 +210,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
 
     private DocumentListener tf_quantityListener;
+    private DocumentListener tf_inboxCountListener;
     /**
      * 单位改变的监听器
      */
@@ -301,6 +302,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
         //数量改变
         tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+        tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
 
 //        //修改规格监听
         //    ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
@@ -314,6 +316,8 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
     public void removeListeners() {
         //数量改变
         tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
+        tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
+
 
 //        //修改规格监听
         ta_spec_cm.getDocument().removeDocumentListener(ta_spec_cmListener);
@@ -426,7 +430,62 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
             }
         };
+//内盒数量 修改监听器
+        tf_inboxCountListener = new DocumentListener() {
 
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        update();
+                    }
+                });
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        update();
+                    }
+                });
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+
+                // update();
+
+            }
+
+
+            private void update() {
+
+
+                int newValue = 0;
+                try {
+
+                    newValue = Integer.valueOf(tf_inboxCount.getText().trim());
+                    productDetail.product.insideBoxQuantity = newValue;
+                } catch (Throwable t) {
+
+                }
+
+
+            }
+        };
 
         //英寸输入监听
         ta_spec_inchListener = new DocumentListener() {
@@ -527,8 +586,9 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
 
                     //包装内盒，长宽高是否可输入
-                    tf_inboxCount.setEditable(!isSelfProduct);
-                    tf_inboxCount.setEnabled(!isSelfProduct);
+                    //内盒可以手动输入
+//                    tf_inboxCount.setEditable(!isSelfProduct);
+//                    tf_inboxCount.setEnabled(!isSelfProduct);
                     tf_long.setEnabled(!isSelfProduct);
                     tf_long.setEditable(!isSelfProduct);
                     tf_width.setEnabled(!isSelfProduct);
@@ -544,7 +604,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
                     if (isSelfProduct) {
 
                         tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
-                        tf_inboxCount.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+
                         tf_quantity.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
                         tf_long.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
                         tf_width.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
@@ -553,7 +613,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
                     } else {
                         tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
-                        tf_inboxCount.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+
                         tf_quantity.getDocument().addDocumentListener(tf_packSizeDocumentListener);
                         tf_long.getDocument().addDocumentListener(tf_packSizeDocumentListener);
                         tf_width.getDocument().addDocumentListener(tf_packSizeDocumentListener);
@@ -642,6 +702,8 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
             }
         };
+
+
 
 
         //外厂模式下  实际成本数据改变监听器
@@ -1942,6 +2004,13 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
             tf_quantity.setText(String.valueOf(product.packQuantity));
             tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
         }
+
+//        if (!tf_inboxCount.getText().trim().equals(String.valueOf(product.insideBoxQuantity))) {insideBoxQuantity
+            tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
+            tf_inboxCount.setText(String.valueOf(product.insideBoxQuantity));
+            tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
+//       tf_inboxCountListener }
+
     }
 
 

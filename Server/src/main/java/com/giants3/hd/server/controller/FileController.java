@@ -5,6 +5,7 @@ import com.giants3.hd.server.entity.Material;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
@@ -291,7 +292,7 @@ public class FileController extends BaseController {
     public FileSystemResource getAttachFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
 
 
-        FileSystemResource resource = new FileSystemResource(attachfilepath + name + "." + type);
+        FileSystemResource resource = new FileSystemResource(attachfilepath +  name.replace(AttachFileUtils.FILE_SEPARATOR,File.pathSeparator) + "." + type);
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
 
         return resource;

@@ -144,10 +144,12 @@ public class ProductDetail  implements Serializable {
                     product.packHeight=material.getpHeight();
                     product.packWidth=material.getpWidth();
 
-                }else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
-                {
-                    product.insideBoxQuantity=(int)material.quantity;
                 }
+                //取消数据联动
+//                else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
+//                {
+//                    product.insideBoxQuantity=(int)material.quantity;
+//                }
             }
 
 
