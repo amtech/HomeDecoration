@@ -108,6 +108,13 @@ public class ErpStockOutItem   implements Serializable{
     public String  fengqianhao;
 
 
+    /**
+     * 柜型号
+     */
+    public String guixing;
+
+
+
 
     /**
      * 从记录录标记， 拆分的从记录 可以被删除

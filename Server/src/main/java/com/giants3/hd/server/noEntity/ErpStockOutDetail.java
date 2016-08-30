@@ -15,4 +15,5 @@ public class ErpStockOutDetail   implements Serializable {
 
     public ErpStockOut erpStockOut;
     public List<ErpStockOutItem> items;
+
 }

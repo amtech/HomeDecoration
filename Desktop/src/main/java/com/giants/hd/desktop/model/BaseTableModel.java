@@ -30,6 +30,8 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
     public String[] fieldName;
     public Field[] fields;
     public Class[] classes;
+    //是否合成字段  以.为二级字段。
+    public boolean[] combineField;
     List<T> datas;
     public Class<T> itemClass;
 
@@ -61,16 +63,24 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
         this.itemClass = itemClass;
         int size = fieldName.length;
         fields = new Field[size];
-
+        combineField=new boolean[size];
         for (int i = 0; i < size; i++) {
+            combineField[i]=fieldName[i].indexOf(StringUtils.STRING_SPLIT_DOT)>-1;
+
+            if (combineField[i])
+            {
 
 
-            try {
-                fields[i] = itemClass.getField(fieldName[i]);
-            } catch (NoSuchFieldException e) {
+            }else {
 
-                Logger.getLogger("TEST").info(fieldName[i] + " is not a field of class :" + itemClass);
 
+                try {
+                    fields[i] = itemClass.getField(fieldName[i]);
+                } catch (NoSuchFieldException e) {
+
+                    Logger.getLogger("TEST").info(fieldName[i] + " is not a field of class :" + itemClass);
+
+                }
             }
 
         }
@@ -195,15 +205,39 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
             return rowIndex + 1;
         }
 
-        if (fields[columnIndex] == null)
-            return null;
 
 
+        T data =getItem(rowIndex);
         Object obj = null;
-        try {
-            obj = fields[columnIndex].get(getItem(rowIndex));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        //复合字段数据
+        if(combineField[columnIndex])
+        {
+           String[] fields=fieldName[columnIndex].split(StringUtils.STRING_SPLIT_DOT);
+              obj=data;
+            for(String field:fields)
+            {
+                try {
+                    obj= obj.getClass().getField(field).get(obj);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else {
+
+            //单字段处理
+            if (fields[columnIndex] == null)
+                return null;
+
+
+
+            try {
+                obj = fields[columnIndex].get(data);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
 
 

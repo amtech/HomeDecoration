@@ -54,7 +54,7 @@ public interface StockOutDetailPresenter extends    Presenter {
      * @param guihao
      * @param fengqian
      */
-    void addGuiInfo(String guihao, String fengqian);
+    void addGuiInfo(String guihao, String fengqian,String guixing);
 
     /**
      * 移除柜号数据
@@ -103,4 +103,9 @@ public interface StockOutDetailPresenter extends    Presenter {
      * @return
      */
     boolean isEditable();
+
+    /**
+     * 导出清关发票
+     */
+    void exportQingguan();
 }

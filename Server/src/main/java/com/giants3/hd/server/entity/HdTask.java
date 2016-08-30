@@ -57,6 +57,9 @@ public class HdTask implements Serializable {
     public static final String NAME_SYNC_ERP="ERP材料同步";
 
 
+    public static final int TYPE_UPDATE_ATTACH=101;
+    public static final String NAME_UPDATE_ATTACH="附件图片迁移";
+
 
 
 

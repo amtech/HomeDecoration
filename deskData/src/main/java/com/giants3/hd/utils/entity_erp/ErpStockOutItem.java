@@ -108,7 +108,10 @@ public class ErpStockOutItem   implements Serializable{
      * 封签号
      */
     public String  fengqianhao;
-
+    /**
+     * 柜型号
+     */
+    public String guixing;
 
 
     /**
@@ -120,5 +123,7 @@ public class ErpStockOutItem   implements Serializable{
      * 出库单 单款产品的出库量。  没被拆分的qty=stockOutQty
      */
     public int stockOutQty;
+
+
 }
 

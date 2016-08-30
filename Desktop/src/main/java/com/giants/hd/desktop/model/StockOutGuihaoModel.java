@@ -9,11 +9,11 @@ import com.google.inject.Inject;
  */
 public class StockOutGuihaoModel extends BaseTableModel<StockOutDetailFrame.GuiInfo> {
 
-    public static String[] columnNames = new String[]{"   柜号 ", "  封签号  "};
-    public static int[] columnWidth = new int[]{150, 150};
+    public static String[] columnNames = new String[]{"   柜号 ", "  封签号  ","柜型"};
+    public static int[] columnWidth = new int[]{80, 80,100};
 
 
-    public static String[] fieldName = new String[]{"guihao", "fengqianhao"};
+    public static String[] fieldName = new String[]{"guihao", "fengqianhao","guixing"};
 
     public static Class[] classes = new Class[]{Object.class, Object.class};
 

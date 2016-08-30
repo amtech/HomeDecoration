@@ -106,6 +106,7 @@ public class Report_Excel_StockOut_Invoice extends AbstractExcelReporter<ErpStoc
             float amt = FloatHelper.scale(outItem.stockOutQty * outItem.up
             );
             addNumber(writableSheet, amt, 7, row);
+            //PO
             addString(writableSheet, outItem.cus_os_no, 8, row);
 
 //            //材料长宽高

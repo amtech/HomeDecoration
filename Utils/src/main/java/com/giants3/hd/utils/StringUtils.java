@@ -20,6 +20,7 @@ public class StringUtils {
 
     public static final String STRING_SPLIT_COMMON =";";
 
+    public static final String STRING_SPLIT_DOT =".";
 
     /**
      * 厘米字符串 转换成 英寸字符串

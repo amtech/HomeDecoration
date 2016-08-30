@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
-import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Invoice;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_List;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Qingguan_Invoice;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.StockOutDetailViewer;
@@ -19,7 +19,6 @@ import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import rx.Subscriber;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -81,24 +80,22 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         pack();
 
 
-
-
         //设置权限相关
-      stockOutDetailViewer.setEditable(  AuthorityUtil.getInstance().editStockOut());
+        stockOutDetailViewer.setEditable(AuthorityUtil.getInstance().editStockOut());
         //设置权限相关
-        stockOutDetailViewer.setExportable(  AuthorityUtil.getInstance().exportStockOut());
+        stockOutDetailViewer.setExportable(AuthorityUtil.getInstance().exportStockOut());
 
         stockOutDetailViewer.setStockOutPriceVisible(CacheManager.getInstance().isStockOutPriceVisible());
     }
 
     @Override
     public boolean hasModifyData() {
-         return !GsonUtils.toJson(erpStockOutDetail).equals( oldData );
+        return !GsonUtils.toJson(erpStockOutDetail).equals(oldData);
     }
 
     private void setErpStockOutDetail(ErpStockOutDetail newDetail) {
 
-        oldData =GsonUtils.toJson(newDetail);
+        oldData = GsonUtils.toJson(newDetail);
         erpStockOutDetail = newDetail;
 
         stockOutDetailViewer.setStockOutDetail(newDetail);
@@ -108,7 +105,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         for (ErpStockOutItem item : erpStockOutDetail.items) {
             if (StringUtils.isEmpty(item.guihao) && StringUtils.isEmpty(item.fengqianhao))
                 continue;
-            guiInfos.add(new GuiInfo(item.guihao, item.fengqianhao));
+            guiInfos.add(new GuiInfo(item.guihao, item.fengqianhao, item.guixing));
         }
 
         stockOutDetailViewer.showGuihaoData(guiInfos);
@@ -168,7 +165,6 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     }
 
 
-
     @Override
     public void onCemaiChange(String value) {
 
@@ -202,12 +198,10 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     }
 
 
-
-
     @Override
-    public void addGuiInfo(String guihao, String fengqian) {
+    public void addGuiInfo(String guihao, String fengqian, String guixing) {
 
-        GuiInfo guiInfo = new GuiInfo(guihao, fengqian);
+        GuiInfo guiInfo = new GuiInfo(guihao, fengqian, guixing);
         guiInfos.add(guiInfo);
         stockOutDetailViewer.showGuihaoData(guiInfos);
 
@@ -223,19 +217,16 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     public void filterGuihao(GuiInfo guiInfo) {
 
 
-        java.util.List<ErpStockOutItem> itemList=new ArrayList<>();
-        if(guiInfo==null||(StringUtils.isEmpty(guiInfo.guihao) ))
-        {
+        java.util.List<ErpStockOutItem> itemList = new ArrayList<>();
+        if (guiInfo == null || (StringUtils.isEmpty(guiInfo.guihao))) {
             itemList.addAll(erpStockOutDetail.items);
-        }else {
+        } else {
             for (ErpStockOutItem item : erpStockOutDetail.items) {
-                if (guiInfo.guihao.equals(item.guihao) ) {
+                if (guiInfo.guihao.equals(item.guihao)) {
                     itemList.add(item);
                 }
             }
         }
-
-
 
 
         stockOutDetailViewer.showItems(itemList);
@@ -245,7 +236,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
     @Override
     public void showOrderDetail(String os_no) {
-        OrderDetailFrame orderDetailFrame=new OrderDetailFrame(os_no);
+        OrderDetailFrame orderDetailFrame = new OrderDetailFrame(os_no);
         orderDetailFrame.setLocationRelativeTo(this);
         orderDetailFrame.setVisible(true);
     }
@@ -254,8 +245,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     public void exportInvoice() {
 
 
-        if(hasModifyData())
-        {
+        if (hasModifyData()) {
 
             stockOutDetailViewer.showMesssage("请先保存数据");
             return;
@@ -266,7 +256,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
 
         try {
-            new Report_Excel_StockOut_Invoice().report(erpStockOutDetail,file.getAbsolutePath());
+            new Report_Excel_StockOut_Invoice().report(erpStockOutDetail, file.getAbsolutePath());
             stockOutDetailViewer.showMesssage("导出成功");
 
             return;
@@ -279,16 +269,13 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
             stockOutDetailViewer.showMesssage(e1.getMessage());
 
         }
-
-
 
 
     }
 
     @Override
     public void exportPack() {
-        if(hasModifyData())
-        {
+        if (hasModifyData()) {
 
             stockOutDetailViewer.showMesssage("请先保存数据");
             return;
@@ -298,7 +285,7 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
 
 
         try {
-            new Report_Excel_StockOut_List().report(erpStockOutDetail,file.getAbsolutePath());
+            new Report_Excel_StockOut_List().report(erpStockOutDetail, file.getAbsolutePath());
             stockOutDetailViewer.showMesssage("导出成功");
 
             return;
@@ -311,9 +298,6 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
             stockOutDetailViewer.showMesssage(e1.getMessage());
 
         }
-
-
-
 
 
     }
@@ -334,14 +318,16 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
         public String guihao;
 
         public String fengqianhao;
+        public String guixing;
 
         public GuiInfo() {
         }
 
-        public GuiInfo(String guihao, String fengqianhao) {
+        public GuiInfo(String guihao, String fengqianhao, String guixing) {
 
             this.guihao = guihao;
             this.fengqianhao = fengqianhao;
+            this.guixing = guixing;
         }
 
 
@@ -381,17 +367,16 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     public void splitItem(ErpStockOutItem erpStockOutItem, int newQty) {
 
 
-        int index=erpStockOutDetail.items.indexOf(erpStockOutItem);
+        int index = erpStockOutDetail.items.indexOf(erpStockOutItem);
 
-        ErpStockOutItem newStockOutItem=GsonUtils.fromJson(GsonUtils.toJson(erpStockOutItem),ErpStockOutItem.class);
-        newStockOutItem.subRecord=true;
-        newStockOutItem.id=0;
-        newStockOutItem.stockOutQty=newQty;
-        erpStockOutItem.stockOutQty-=newQty;
+        ErpStockOutItem newStockOutItem = GsonUtils.fromJson(GsonUtils.toJson(erpStockOutItem), ErpStockOutItem.class);
+        newStockOutItem.subRecord = true;
+        newStockOutItem.id = 0;
+        newStockOutItem.stockOutQty = newQty;
+        erpStockOutItem.stockOutQty -= newQty;
 
-        erpStockOutDetail.items.add(index+1,newStockOutItem);
+        erpStockOutDetail.items.add(index + 1, newStockOutItem);
         stockOutDetailViewer.showItems(erpStockOutDetail.items);
-
 
 
     }
@@ -405,27 +390,23 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
     @Override
     public void deleteErpStockOutItem(ErpStockOutItem finalItem) {
 
-        if(!finalItem.subRecord) return;
+        if (!finalItem.subRecord) return;
 
-        boolean returned=false;
-        for(ErpStockOutItem item:erpStockOutDetail.items)
-        {
+        boolean returned = false;
+        for (ErpStockOutItem item : erpStockOutDetail.items) {
             //找到主数据。
-            if(item.itm==finalItem.itm&& !item.subRecord)
-            {
-                item.stockOutQty+=finalItem.stockOutQty;
-                returned=true;
+            if (item.itm == finalItem.itm && !item.subRecord) {
+                item.stockOutQty += finalItem.stockOutQty;
+                returned = true;
                 break;
             }
         }
 
-        if(returned)
-        {
+        if (returned) {
             erpStockOutDetail.items.remove(finalItem);
             stockOutDetailViewer.showItems(erpStockOutDetail.items);
 
         }
-
 
 
     }
@@ -437,6 +418,40 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPres
      */
     @Override
     public boolean isEditable() {
-        return  AuthorityUtil.getInstance().editStockOut();
+        return AuthorityUtil.getInstance().editStockOut();
+    }
+
+    /**
+     * 导出清关发票
+     */
+    @Override
+    public void exportQingguan() {
+
+        if (hasModifyData()) {
+
+            stockOutDetailViewer.showMesssage("请先保存数据");
+            return;
+        }
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+        try {
+            new Report_Excel_StockOut_Qingguan_Invoice().report(erpStockOutDetail, file.getAbsolutePath());
+            stockOutDetailViewer.showMesssage("导出成功");
+
+            return;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        } catch (HdException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        }
+
+
     }
 }

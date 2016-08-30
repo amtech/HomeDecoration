@@ -158,6 +158,7 @@ public class StockService extends AbstractService {
                 item.describe = stockOutItem.describe;
                 item.fengqianhao = stockOutItem.fengqianhao;
                 item.guihao = stockOutItem.guihao;
+                item.guixing=stockOutItem.guixing;
                 item.subRecord = stockOutItem.subRecord;
 
                 //保证 出库的数量有数据
@@ -176,6 +177,7 @@ public class StockService extends AbstractService {
                     additionItem.describe = stockOutItem.describe;
                     additionItem.fengqianhao = stockOutItem.fengqianhao;
                     additionItem.guihao = stockOutItem.guihao;
+                    additionItem.guixing=stockOutItem.guixing;
                     additionItem.stockOutQty = stockOutItem.stockOutQty;
                     item.subRecord = stockOutItem.subRecord;
                     additionItem.id = stockOutItem.id;
@@ -294,6 +296,7 @@ public class StockService extends AbstractService {
         stockOut.ckNo = erpStockOut.ck_no;
         stockOut.attaches = erpStockOut.attaches;
 
+
     }
 
 
@@ -339,6 +342,7 @@ public class StockService extends AbstractService {
             stockOutItem.describe = item.describe;
             stockOutItem.fengqianhao = item.fengqianhao;
             stockOutItem.guihao = item.guihao;
+            stockOutItem.guixing=item.guixing;
             stockOutItem.subRecord = item.subRecord;
             stockOutItem.stockOutQty = item.stockOutQty;
             stockOutItemRepository.save(stockOutItem);

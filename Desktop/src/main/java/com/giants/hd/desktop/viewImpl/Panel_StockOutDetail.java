@@ -51,6 +51,8 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JTextField tf_sal;
     private JButton export_invoice;
     private JButton export_pack;
+    private JTextField tf_guixing;
+    private JButton export_qingguan;
     private StockOutDetailPresenter presenter;
 
     private StockOutItemTableModel tableModel;
@@ -71,6 +73,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         tb.setModel(tableModel);
 
         tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tb_guihao.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tb.addMouseListener(new MouseAdapter() {
 
 
@@ -240,6 +243,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
                 String guihao = tf_guihao.getText();
                 String fengqian = tf_fengqian.getText().trim();
+                String guixing=tf_guixing.getText().trim();
 
                 if (StringUtils.isEmpty(guihao) || StringUtils.isEmpty(fengqian)) {
                     JOptionPane.showMessageDialog(getRoot(), "请输入柜号封签号");
@@ -247,7 +251,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
                 }
 
 
-                presenter.addGuiInfo(guihao, fengqian);
+                presenter.addGuiInfo(guihao, fengqian,guixing);
 
             }
         });
@@ -293,6 +297,17 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
             @Override
             public void actionPerformed(ActionEvent e) {
                 presenter.exportPack();
+            }
+        });
+
+
+        export_qingguan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                presenter.exportQingguan();
             }
         });
     }
@@ -344,6 +359,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
         tf_guihao.setText("");
         tf_fengqian.setText("");
+        tf_guixing.setText("");
         List<StockOutDetailFrame.GuiInfo> guiInfoList = new ArrayList<>();
         guiInfoList.addAll(guiInfos);
         guihaoModel.setDatas(guiInfoList);
@@ -352,7 +368,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
         if(presenter.isEditable()) {
             //设置出库表格柜号处理数据
             JComboBox<StockOutDetailFrame.GuiInfo> guiInfoJComboBox = new JComboBox<>();
-            guiInfoJComboBox.addItem(new StockOutDetailFrame.GuiInfo("", ""));
+            guiInfoJComboBox.addItem(new StockOutDetailFrame.GuiInfo("", "",""));
             for (StockOutDetailFrame.GuiInfo guiInfo : guiInfoList)
                 guiInfoJComboBox.addItem(guiInfo);
             DefaultCellEditor comboboxEditor = new DefaultCellEditor(guiInfoJComboBox);

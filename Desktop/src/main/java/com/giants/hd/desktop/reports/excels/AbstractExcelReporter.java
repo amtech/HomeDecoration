@@ -289,4 +289,31 @@ public abstract class AbstractExcelReporter<T> {
 
     }
 
+
+    /**
+     * 合并单元格
+     * @param sheet
+     * @param firstRow
+     * @param lastRow
+     * @param firstCol
+     * @param lastCol
+     */
+
+    public void combineRowAndCell(Sheet sheet,int firstRow,int lastRow,int firstCol,int lastCol)
+    {
+
+
+        POIUtils.addMergedRegion(sheet,firstRow, lastRow, firstCol, lastCol );
+    }
+
+    public  void setCellAlign(Workbook workbook,Sheet sheet,int firstRow,int firstCol,short horizontalAlign,short verticalAlign)
+    {
+        POIUtils.setCellAlign( workbook, sheet,  firstRow,  firstCol,  horizontalAlign,  verticalAlign);
+    }
+
+
+    public  void setCellAlignLeftCenter(Workbook workbook,Sheet sheet,int firstRow,int firstCol)
+    {
+        POIUtils.setCellAlign( workbook, sheet,  firstRow,  firstCol,  CellStyle.ALIGN_LEFT,  CellStyle.VERTICAL_CENTER);
+    }
 }

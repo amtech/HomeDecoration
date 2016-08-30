@@ -1010,7 +1010,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     /**
      * 更新产品附件     包装附件 与 产品附件
      */
-    @Async
+   // @Async
     public void updateAttachFiles() {
         String threadName = Thread.currentThread().getName();
         System.out.println("   " + threadName + " beginning work   " );

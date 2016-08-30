@@ -8,21 +8,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.util.Iterator;
 
 public class POIUtils {
-//	/**
-//	 * 把一个excel中的cellstyletable复制到另一个excel，这里会报错，不能用这种方法，不明白呀？？？？？
-//	 * @param fromBook
-//	 * @param toBook
-//	 */
-//	public static void copyBookCellStyle(HSSFWorkbook fromBook,HSSFWorkbook toBook){
-//		for(short i=0;i<fromBook.getNumCellStyles();i++){
-//			HSSFCellStyle fromStyle=fromBook.getCellStyleAt(i);
-//			HSSFCellStyle toStyle=toBook.getCellStyleAt(i);
-//			if(toStyle==null){
-//				toStyle=toBook.createCellStyle();
-//			}
-//			copyCellStyle(fromStyle,toStyle);
-//		}
-//	}
+
     /**
      * 复制一个单元格样式到目的单元格样式
      * @param fromStyle
@@ -180,5 +166,25 @@ public class POIUtils {
             } else { // nothing29
             }
         }
+    }
+
+    public static int  addMergedRegion(Sheet sheet,int firstRow,int lastRow,int firstCol,int lastCol)
+    {
+
+
+      return  sheet.addMergedRegion(new CellRangeAddress(  firstRow,   lastRow,   firstCol,   lastCol));
+
+    }
+
+    public static void setCellAlign(Workbook workbook, Sheet sheet, int row, int col, short horizontalAlign, short verticalAlign) {
+
+
+        Cell cell=        sheet.getRow(row).getCell(col);
+;
+        CellStyle cellStyle=cell.getCellStyle();
+      if (cellStyle==null) cellStyle=workbook.createCellStyle();
+        cellStyle.setAlignment(horizontalAlign);
+        cellStyle.setVerticalAlignment(verticalAlign);
+        cell.setCellStyle(cellStyle);
     }
 }

@@ -46,6 +46,10 @@ public class StockOutItem implements Serializable {
 
 
     /**
+     * 柜型号。
+     */
+    public String guixing;
+    /**
      * 出库数量
      */
     public int stockOutQty;
