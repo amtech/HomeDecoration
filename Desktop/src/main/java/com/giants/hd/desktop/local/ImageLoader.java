@@ -44,37 +44,33 @@ public class ImageLoader {
 
 
         displayImage(iconable, url, 120, 120);
-
     }
 
 
     public void displayImage(final Iconable iconable, final String url, final double maxWidth, final double maxHeight) {
 
 
-        Observable.create(new Observable.OnSubscribe<BufferedImage>() {
+        Observable.create(new Observable.OnSubscribe<ImageIcon>() {
             @Override
-            public void call(Subscriber<? super BufferedImage> subscriber) {
+            public void call(Subscriber<? super ImageIcon> subscriber) {
 
                 try {
                     String fileName = manager.cacheFile(url);
-                    subscriber.onNext(ImageIO.read(new File(fileName)));
+                    ImageIcon imageIcon=new ImageIcon(ImageUtils.scale(fileName,(int)maxWidth,(int)maxHeight,true));
+                    subscriber.onNext(imageIcon );
                     subscriber.onCompleted();
                 } catch (IOException e) {
 
+                    subscriber.onError(e);
+                } catch (HdException e) {
+                    e.printStackTrace();
                     subscriber.onError(e);
                 }
 
 
             }
-        }).map(new Func1<BufferedImage, BufferedImage>() {
-            @Override
-            public BufferedImage call(BufferedImage bufferedImage) {
-                return scaleImage(bufferedImage, maxWidth, maxHeight);
-
-
-            }
         })
-                .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<BufferedImage>() {
+                .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<ImageIcon>() {
             @Override
             public void onCompleted() {
 
@@ -88,8 +84,8 @@ public class ImageLoader {
             }
 
             @Override
-            public void onNext(BufferedImage bufferedImage) {
-                iconable.setIcon(new ImageIcon(bufferedImage));
+            public void onNext(ImageIcon bufferedImage) {
+                iconable.setIcon(bufferedImage);
             }
         });
 

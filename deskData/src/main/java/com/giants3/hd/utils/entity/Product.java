@@ -2,6 +2,7 @@ package com.giants3.hd.utils.entity;
 
 
 import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -967,5 +968,16 @@ public class Product implements Serializable {
 
 		gangza=FloatHelper.scale(packQuantity>0?globalData.price_of_export*packVolume/packQuantity:0);
 		return gangza;
+	}
+
+
+
+	/**
+	 * 获取产品全名    当有pversion时候  用-连接
+	 * @return
+	 */
+	public  String getFullName()
+	{
+		return name+ (StringUtils.isEmpty(pVersion)?"":("-"+pVersion));
 	}
 }

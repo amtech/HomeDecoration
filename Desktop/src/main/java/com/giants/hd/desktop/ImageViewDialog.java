@@ -189,7 +189,7 @@ public class ImageViewDialog extends JDialog {
                 picture.requestFocusInWindow();
 
                 setSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-                setLocation((dimension.width - icon.getIconWidth()) / 2, (dimension.height - icon.getIconHeight()) / 2);
+                setLocation(Math.max(0,(dimension.width - icon.getIconWidth()) / 2),Math.max(0, (dimension.height - icon.getIconHeight()) / 2));
 
             }
 
