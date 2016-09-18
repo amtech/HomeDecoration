@@ -5,28 +5,25 @@ import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.BackDataHelper;
-import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * quotation 业务处理 类
@@ -50,6 +47,9 @@ public class ProductService extends AbstractService implements InitializingBean,
     @Autowired
     private ProductPaintRepository productPaintRepository;
 
+
+    @Autowired
+    private OrderItemWorkFlowRepository orderItemWorkFlowRepository;
     @Autowired
     private ProductLogRepository productLogRepository;
 
@@ -69,6 +69,8 @@ public class ProductService extends AbstractService implements InitializingBean,
     @Autowired
     private ProductDeleteRepository productDeleteRepository;
 
+    @Autowired
+    private WorkFlowRepository workFlowRepository;
 
 
     @Value("${deleteProductFilePath}")
@@ -273,30 +275,44 @@ public class ProductService extends AbstractService implements InitializingBean,
     /**
      * 查找同名产品 并更新缩略图
      *
-     * @param productName
+     * @param fullProductName 产品全名称  09A3334,  09A9889-12211;
      */
     @Transactional
-    public void updateProductPhoto(String productName) {
+    public void updateProductPhoto(String fullProductName) {
 
 
-        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(productName, "");
-        if (product == null) {
-            return;
-        }
-        boolean changed = updateProductPhotoData(product);
-
-        if (changed) {
-            productRepository.save(product);
-
-            //   更新报价表中的图片url
-            quotationItemRepository.updatePhotoAndPhotoUrlByProductId(  product.url, product.id);
-            quotationXKItemRepository.updatePhotoByProductId(  product.url, product.id);
-            quotationXKItemRepository.updatePhoto2ByProductId(  product.url, product.id);
-            productRepository.flush();
-            quotationItemRepository.flush();
-            quotationXKItemRepository.flush();
+        //拆分产品全名
+        String productName;
+        String pversion;
+        int indexOfDivider = fullProductName.indexOf(StringUtils.PRODUCT_NAME_SPILT);
+        if (indexOfDivider == -1) {
+            productName = fullProductName;
+            pversion = "";
+        } else {
+            productName = fullProductName.substring(0, indexOfDivider);
+            pversion = fullProductName.substring(indexOfDivider + 1);
         }
 
+
+        //所有同名的产品 都要遍历产品图片的url  同名 不同pversion的产品 可能共用同一张图片
+        List<Product> products = productRepository.findByNameEquals(productName);
+        for (Product product : products) {
+
+            boolean changed = updateProductPhotoData(product);
+
+            if (changed) {
+                productRepository.save(product);
+
+                //   更新报价表中的图片url
+                quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.url, product.id);
+                quotationXKItemRepository.updatePhotoByProductId(product.url, product.id);
+                quotationXKItemRepository.updatePhoto2ByProductId(product.url, product.id);
+                productRepository.flush();
+                quotationItemRepository.flush();
+                quotationXKItemRepository.flush();
+            }
+
+        }
 
     }
 
@@ -315,7 +331,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         //  为空。
         final File file = new File(filePath);
         if (!file.exists()) {
-            if ((  !StringUtils.isEmpty(product.url))) {
+            if ((!StringUtils.isEmpty(product.url))) {
 
                 product.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
                 product.setUrl("");
@@ -328,11 +344,9 @@ public class ProductService extends AbstractService implements InitializingBean,
             if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url))
 
 
-                    product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
-                    product.setUrl(newUrl);
-                    return true;
-
-
+                product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
+            product.setUrl(newUrl);
+            return true;
 
 
         }
@@ -373,9 +387,9 @@ public class ProductService extends AbstractService implements InitializingBean,
 
                     //   更新报价表中的图片url
                     //更新报价表中的图片缩略图
-                    quotationItemRepository.updatePhotoAndPhotoUrlByProductId(  product.url, product.id);
-                    quotationXKItemRepository.updatePhotoByProductId(  product.url, product.id);
-                    quotationXKItemRepository.updatePhoto2ByProductId(  product.url, product.id);
+                    quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.url, product.id);
+                    quotationXKItemRepository.updatePhotoByProductId(product.url, product.id);
+                    quotationXKItemRepository.updatePhoto2ByProductId(product.url, product.id);
                 }
 
 
@@ -392,14 +406,12 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-
     /**
-     *
-     * @param user  登录用户信息
+     * @param user           登录用户信息
      * @param productId
      * @param newProductName
      * @param version
-     * @param copyPicture   是否复制图片
+     * @param copyPicture    是否复制图片
      * @return
      */
     @Transactional
@@ -412,7 +424,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                     + "已经存在,请更换");
         }
 
-        Product product =productRepository.findOne(productId);
+        Product product = productRepository.findOne(productId);
 
         if (product == null) {
             return wrapError("未找到当前产品信息");
@@ -440,9 +452,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         newProduct.pVersion = version;
 
 
-
-
-        if(copyPicture) {
+        if (copyPicture) {
             //复制产品图片
 
             String newproductPicturePath = FileUtils.getProductPicturePath(productFilePath, newProductName, version);
@@ -463,9 +473,6 @@ public class ProductService extends AbstractService implements InitializingBean,
                 }
 
 
-
-
-
             }
 
 
@@ -478,7 +485,6 @@ public class ProductService extends AbstractService implements InitializingBean,
 //            newProduct.url="";
 //            newProduct.lastPhotoUpdateTime=Calendar.getInstance().getTimeInMillis();
 //        }
-
 
 
         //保存新产品信息
@@ -536,10 +542,11 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     /**
      * 查询产品详情
+     *
      * @param productId
      * @return
      */
-    RemoteData<ProductDetail> returnFindProductDetailById( long productId) {
+    RemoteData<ProductDetail> returnFindProductDetailById(long productId) {
 
 
         ProductDetail detail = findProductDetailById(productId);
@@ -553,10 +560,11 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
     }
+
     /**
      * 记录产品修改信息
      */
-    public  void updateProductLog(Product product, User user) {
+    public void updateProductLog(Product product, User user) {
 
         //记录数据当前修改着相关信息
         ProductLog productLog = productLogRepository.findFirstByProductIdEquals(product.id);
@@ -581,12 +589,13 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     /**
      * 保存产品详情
+     *
      * @param user
      * @param productDetail
      * @return
      */
     @Transactional
-    public RemoteData<ProductDetail> saveProductDetail( User user,ProductDetail productDetail) {
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail) {
 
 
         long productId = productDetail.product.id;
@@ -596,10 +605,10 @@ public class ProductService extends AbstractService implements InitializingBean,
         Product newProduct = productDetail.product;
 
 
-        Product  sameNameAndVersionProduct=productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name, newProduct.pVersion);
+        Product sameNameAndVersionProduct = productRepository.findFirstByNameEqualsAndPVersionEquals(newProduct.name, newProduct.pVersion);
         //新增加数据
         //检查唯一性 货号版本号形成唯一的索引
-        if ( sameNameAndVersionProduct!= null&&sameNameAndVersionProduct.id!=newProduct.id) {
+        if (sameNameAndVersionProduct != null && sameNameAndVersionProduct.id != newProduct.id) {
             return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
                     + "已经存在,请更换");
         }
@@ -634,7 +643,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         newProduct.lastUpdateTime = Calendar.getInstance().getTimeInMillis();
 
 
-       // updateProductPhotoTime(newProduct);
+        // updateProductPhotoTime(newProduct);
 
 
 //        //检查附件数据是否有改变
@@ -745,8 +754,6 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-
-
     /**
      * 更新产品的工资信息
      *
@@ -794,6 +801,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
     }
+
     /**
      * 更新产品的材料数据， 不同流程 不同处理。
      *
@@ -841,7 +849,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
     @Transactional
-   public  RemoteData<ProductDetail> resumeDelete(  User user,  long deleteProductId) {
+    public RemoteData<ProductDetail> resumeDelete(User user, long deleteProductId) {
 
 
         ProductDelete productDelete = productDeleteRepository.findOne(deleteProductId);
@@ -908,7 +916,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     @Transactional
     public
     @ResponseBody
-    RemoteData<Void> logicDelete( User user, long productId) {
+    RemoteData<Void> logicDelete(User user, long productId) {
 
 
         ProductDetail detail = findProductDetailById(productId);
@@ -957,15 +965,9 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-
-
-
-
-
-
     public
     @ResponseBody
-    RemoteData<ProductDetail> detailDelete(  long productDeleteId) {
+    RemoteData<ProductDetail> detailDelete(long productDeleteId) {
 
 
         ProductDelete productDelete = productDeleteRepository.findOne(productDeleteId);
@@ -988,11 +990,9 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-
-
     public
     @ResponseBody
-    RemoteData<ProductDelete> listDelete( String prd_name,  int pageIndex,   int pageCount) {
+    RemoteData<ProductDelete> listDelete(String prd_name, int pageIndex, int pageCount) {
 
 
         Pageable pageable = constructPageSpecification(pageIndex, pageCount);
@@ -1010,44 +1010,33 @@ public class ProductService extends AbstractService implements InitializingBean,
     /**
      * 更新产品附件     包装附件 与 产品附件
      */
-   // @Async
+    // @Async
     public void updateAttachFiles() {
         String threadName = Thread.currentThread().getName();
-        System.out.println("   " + threadName + " beginning work   " );
+        System.out.println("   " + threadName + " beginning work   ");
 
         Page<Product> page;
-        Pageable pageable=constructPageSpecification(0,100);
-        page=productRepository.findAll( pageable);
+        Pageable pageable = constructPageSpecification(0, 100);
+        page = productRepository.findAll(pageable);
         handleProductList(page.getContent());
 
-       while (page.hasNext())
-        {
-            pageable= page.nextPageable();
-            page=productRepository.findAll( pageable);
-            List<Product> products=page.getContent();
+        while (page.hasNext()) {
+            pageable = page.nextPageable();
+            page = productRepository.findAll(pageable);
+            List<Product> products = page.getContent();
             handleProductList(products);
 
         }
 
 
-
-
-
-
-
-
-
     }
 
-    private  void handleProductList(List<Product> products)
-    {
+    private void handleProductList(List<Product> products) {
 
 
-        for(Product product:products)
-        {
+        for (Product product : products) {
             handleProductAttach(product);
         }
-
 
 
         productRepository.flush();
@@ -1055,45 +1044,59 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
     /**
-     *
      * @param product
      */
-    private  void handleProductAttach(Product product)
-    {
+    private void handleProductAttach(Product product) {
 
-        boolean update=false;
-        String newAttaches= AttachFileUtils.getNewAttaches(product.attaches,attachfilepath,tempFilePath,AttachFileUtils.PRODUCT_ATTACH_PREFIX+ product.getFullName());
-        if(!newAttaches.equals(product.attaches))
-        {
-            product.attaches=newAttaches;
-            update=true;
+        boolean update = false;
+        String newAttaches = AttachFileUtils.getNewAttaches(product.attaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_ATTACH_PREFIX + product.getFullName());
+        if (!newAttaches.equals(product.attaches)) {
+            product.attaches = newAttaches;
+            update = true;
 
         }
-        newAttaches= AttachFileUtils.getNewAttaches(product.packAttaches,attachfilepath,tempFilePath, AttachFileUtils.PRODUCT_PACK_ATTACH_PREFIX+product.getFullName());
-        if(!newAttaches.equals(product.packAttaches))
-        {
-            product.packAttaches=newAttaches;
-            update=true;
+        newAttaches = AttachFileUtils.getNewAttaches(product.packAttaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_PACK_ATTACH_PREFIX + product.getFullName());
+        if (!newAttaches.equals(product.packAttaches)) {
+            product.packAttaches = newAttaches;
+            update = true;
 
         }
 
-        if(update)
-        {
+        if (update) {
 
             productRepository.save(product);
         }
 
 
-
     }
 
 
+    /**
+     * 设置默认的流程数据
+     */
+    @Transactional
+    public void setDefaultWorkFlowIds() {
+
+        List<WorkFlow> workFlows = workFlowRepository.findAll();
 
 
+        StringBuilder workFlowIndexs = new StringBuilder();
+        for (WorkFlow workFlow : workFlows) {
+            workFlowIndexs.append(workFlow.flowIndex).append(StringUtils.PRODUCT_NAME_COMMA);
 
+        }
+        workFlowIndexs.setLength(workFlowIndexs.length() - 1);
+        String workFlowIndexStrings = workFlowIndexs.toString();
 
+        workFlowIndexs.setLength(0);
+        for (WorkFlow workFlow : workFlows) {
+            workFlowIndexs.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
 
+        }
+        workFlowIndexs.setLength(workFlowIndexs.length() - 1);
 
+        String workFlowNameStrings = workFlowIndexs.toString();
+        productRepository.setDefaultWorkFlowIds(workFlowIndexStrings, workFlowNameStrings);
 
-
+    }
 }

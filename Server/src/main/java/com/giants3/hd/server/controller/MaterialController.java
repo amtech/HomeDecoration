@@ -326,7 +326,7 @@ public class MaterialController extends BaseController {
                // Logger.getLogger(TAG).info("material :"+prdt.prd_no+" didnot found its class :"+classId);
 
 
-           // Logger.getLogger(TAG).info("material :"+prdt.prd_no+",index="+i);
+           // Logger.getLogger(TAG).info("material :"+prdt.prd_no+",flowIndex="+i);
             savePrdt(prdt,relateProductIds);
 
             materialRepository.flush();
@@ -503,16 +503,16 @@ public class MaterialController extends BaseController {
 //        if(size >0)
 //        {
 //
-//            int index=0;
+//            int flowIndex=0;
 //            for(long productId:productIds) {
 //
-//                index++;
+//                flowIndex++;
 //                ProductDetail productDetail=   productService.findProductDetailById(productId);
 //                if(productDetail!=null) {
 //
 //                    productDetail.updateProductStatistics(globalData);
 //                    productRepository.save(productDetail.product);
-//                    Logger.getLogger(TAG).info("productId:"+productId+" has Update! index:"+index
+//                    Logger.getLogger(TAG).info("productId:"+productId+" has Update! flowIndex:"+flowIndex
 //                    +",size:"+size);
 //                }
 //

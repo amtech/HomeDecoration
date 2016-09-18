@@ -527,4 +527,14 @@ public class AuthorityUtil {
     public boolean viewOrderReport() {
         return isViewable(Module.NAME_ORDER_REPORT);
     }
+
+    /**
+     * 是否可以查看生产流程
+     * @return
+     */
+    public boolean viewWorkFlowMenu() {
+        return isViewable(Module.NAME_WORK_FLOW);
+    }
+
+
 }

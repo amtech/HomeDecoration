@@ -36,8 +36,8 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String TITLE_PACKAGE_INFO = "包装信息";
     public static final String TITLE_MAITOU = "唛头";
     public static final String TITLE_GUAGOU = "挂钩说明";
-    public static String[] columnNames = new String[]{"序号", "图片", "货号", "配方号", "客号", TITLE_VERIFY_DATE, TITLE_SEND_DATE, TITLE_PACKAGE_INFO, "包装图片", TITLE_MAITOU, TITLE_GUAGOU, "单位", "单价", "数量", "金额", "箱数", "每箱数", "箱规", "立方数", "总立方数", "产品尺寸", "备注"};
-    public static int[] columnWidth = new int[]{40, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 60, 60, 100, 100, 100, 100, 100, 150, 100, 40, 40, 40, 80, 120, 60, 120, 120, 120, 120, 400};
+    public static String[] columnNames = new String[]{"序号", "图片", "货号", "配方号", "客号", TITLE_VERIFY_DATE, TITLE_SEND_DATE, TITLE_PACKAGE_INFO, "包装图片", TITLE_MAITOU, TITLE_GUAGOU, "单位", "单价", "数量", "金额", "箱数", "每箱数", "箱规", "立方数", "总立方数", "产品尺寸", "生产进度","备注"};
+    public static int[] columnWidth = new int[]{40, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 60, 60, 100, 100, 100, 100, 100, 150, 100, 40, 40, 40, 80, 120, 60, 120, 120, 120, 120,120, 400};
 
 
     public static final String VERIFY_DATE = "verifyDate";
@@ -49,7 +49,7 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String PACK_ATTACHES = "packAttaches";
     public static final String UP = "up";
     public static final String AMT = "amt";
-    public static String[] fieldName = new String[]{"itm",     "url",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", "memo"};
+    public static String[] fieldName = new String[]{"itm",     "url",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg","currentWorkFlow", "memo"};
 
     public static Class[] classes = new Class[]{Object.class,  ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class, ImageIcon.class};
     /**

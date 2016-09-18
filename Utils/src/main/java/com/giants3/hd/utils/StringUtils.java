@@ -18,10 +18,11 @@ public class StringUtils {
 
     public static final String spec_separator_pattern="\\*";
 
-    public static final String STRING_SPLIT_COMMON =";";
+    public static final String STRING_SPLIT_SEMICOLON =";";
 
     public static final String STRING_SPLIT_DOT =".";
-
+    public static final String PRODUCT_NAME_SPILT ="-";
+    public static final String PRODUCT_NAME_COMMA =",";
     /**
      * 厘米字符串 转换成 英寸字符串
      *格式如下 999*999*999\n 888*888*88
@@ -229,7 +230,15 @@ public class StringUtils {
     {
 
         if(StringUtils.isEmpty(string)) return new String[]{};
-        return string.split(STRING_SPLIT_COMMON);
+        return string.split(STRING_SPLIT_SEMICOLON);
+
+    }
+
+    public static final String[] split(String string,String  separator)
+    {
+
+        if(StringUtils.isEmpty(string)) return new String[]{};
+        return string.split(separator);
 
     }
 
@@ -239,13 +248,24 @@ public class StringUtils {
 
         StringBuilder stringBuilder=new StringBuilder();
         for(String s:strings)
-            stringBuilder.append(s).append(STRING_SPLIT_COMMON);
+            stringBuilder.append(s).append(STRING_SPLIT_SEMICOLON);
         if(stringBuilder.length()>0)
             stringBuilder.setLength(stringBuilder.length()-1);
 
         return stringBuilder.toString();
     }
+    public   static final <T> String combine(T[] strings )
+    {
 
+
+        StringBuilder stringBuilder=new StringBuilder();
+        for(T s:strings)
+            stringBuilder.append(s).append(STRING_SPLIT_SEMICOLON);
+        if(stringBuilder.length()>0)
+            stringBuilder.setLength(stringBuilder.length()-1);
+
+        return stringBuilder.toString();
+    }
 
     public static final <T> String combine(Iterable<T> strings )
     {
@@ -255,7 +275,7 @@ public class StringUtils {
 
         StringBuilder stringBuilder=new StringBuilder();
         for(T s:strings)
-            stringBuilder.append(s).append(STRING_SPLIT_COMMON);
+            stringBuilder.append(s).append(STRING_SPLIT_SEMICOLON);
         if(stringBuilder.length()>0)
             stringBuilder.setLength(stringBuilder.length()-1);
 

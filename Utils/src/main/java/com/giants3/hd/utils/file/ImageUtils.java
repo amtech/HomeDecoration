@@ -85,8 +85,8 @@ public class ImageUtils {
      */
     public static final byte[] scale(String filePath, int maxWidth, int maxHeight, boolean preserveAlpha) throws HdException {
 
-        File file=new File(filePath);
-        if(!file.exists()) return null;
+        File file = new File(filePath);
+        if (!file.exists()) return null;
 
         byte[] result = null;
         FileInputStream fileInputStream = null;
@@ -338,16 +338,20 @@ public class ImageUtils {
      * @throws IOException
      */
     private static byte[] bufferImageToByte(BufferedImage bufferedImage, boolean preserveAlpha) throws IOException {
-        memoryCacheImageOutputStream.reset();
-        buffer.reset();
-        ImageIO.write(bufferedImage, preserveAlpha ? "png" : "jpg", memoryCacheImageOutputStream);
-        bufferedImage.flush();
-        memoryCacheImageOutputStream.flush();
-        memoryCacheImageOutputStream.reset();
-        byte[] result = buffer.toByteArray();
-        buffer.flush();
-        ;
-        buffer.reset();
+        byte[] result = null;
+        synchronized (memoryCacheImageOutputStream) {
+            memoryCacheImageOutputStream.reset();
+            buffer.reset();
+            ImageIO.write(bufferedImage, preserveAlpha ? "png" : "jpg", memoryCacheImageOutputStream);
+            bufferedImage.flush();
+            memoryCacheImageOutputStream.flush();
+            memoryCacheImageOutputStream.reset();
+
+            result = buffer.toByteArray();
+            buffer.flush();
+
+            buffer.reset();
+        }
         return result;
     }
 

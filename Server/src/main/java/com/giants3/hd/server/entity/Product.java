@@ -6,7 +6,6 @@ import com.giants3.hd.utils.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * 产品表
@@ -361,6 +360,11 @@ public class Product implements Serializable {
 	public String packInfo="";
 
 
+	/**
+	 * 生产流程ids 逗号分隔
+	 */
+	public String workFlowIndexs;
+	public String workFlowNames;
 
 
 	public float getFob() {
@@ -814,6 +818,8 @@ public class Product implements Serializable {
 		if (insideBoxQuantity != product.insideBoxQuantity) return false;
 		if (Float.compare(product.cost4, cost4) != 0) return false;
 		if (memo != null ? !memo.equals(product.memo) : product.memo != null) return false;
+
+		if (workFlowIndexs != null ? !workFlowIndexs.equals(product.workFlowIndexs) : product.workFlowIndexs != null) return false;
 		if (factoryCode != null ? !factoryCode.equals(product.factoryCode) : product.factoryCode != null) return false;
 		if (attaches != null ? !attaches.equals(product.attaches) : product.attaches != null) return false;
 
@@ -890,6 +896,7 @@ public class Product implements Serializable {
 		result = 31 * result + (mirrorSize != null ? mirrorSize.hashCode() : 0);
 		result = 31 * result + (attaches != null ? attaches.hashCode() : 0);
 		result = 31 * result + (factoryCode != null ? factoryCode.hashCode() : 0);
+		result = 31 * result + (workFlowIndexs != null ? workFlowIndexs.hashCode() : 0);
 		return result;
 	}
 

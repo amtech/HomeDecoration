@@ -71,6 +71,9 @@ public class ProductDetail  implements Serializable {
     public List<ProductWage> packWages;
 
 
+
+
+
     /**
      * 更新产品的统计数据
      */

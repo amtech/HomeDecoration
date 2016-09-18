@@ -1,21 +1,21 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.interf.Iconable;
-import com.giants.hd.desktop.interf.ImageByteDataReader;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Guice;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 图片加载类
@@ -56,8 +56,13 @@ public class ImageLoader {
 
                 try {
                     String fileName = manager.cacheFile(url);
-                    ImageIcon imageIcon=new ImageIcon(ImageUtils.scale(fileName,(int)maxWidth,(int)maxHeight,true));
-                    subscriber.onNext(imageIcon );
+
+                    InputStream in = new ByteArrayInputStream(ImageUtils.scale(fileName, (int) maxWidth, (int) maxHeight, true));
+                    BufferedImage bufferedImage = ImageIO.read(in);
+                    byte[] result = ImageUtils.scale(bufferedImage, (int) maxWidth, (int) maxHeight, false);
+                    ImageIcon imageIcon = new ImageIcon(result);
+
+                    subscriber.onNext(imageIcon);
                     subscriber.onCompleted();
                 } catch (IOException e) {
 
@@ -70,6 +75,13 @@ public class ImageLoader {
 
             }
         })
+//                .map(new Func1<ImageIcon, ImageIcon>() {
+//            @Override
+//            public ImageIcon call(ImageIcon imageIcon) {
+//
+//
+//            }
+//        })
                 .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<ImageIcon>() {
             @Override
             public void onCompleted() {
@@ -152,7 +164,7 @@ public class ImageLoader {
 //    }
 
     private BufferedImage scaleImage(BufferedImage bufferedImage, double maxWidth, double maxHeight) {
-        if(bufferedImage==null) return null;
+        if (bufferedImage == null) return null;
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 

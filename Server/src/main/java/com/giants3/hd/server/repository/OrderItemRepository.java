@@ -23,5 +23,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     public List<OrderItem> findByVerifyDateGreaterThanEqualAndVerifyDateLessThanEqual(String startDate , String endDate  );
 
 
+    List<OrderItem> findByOsNoEqualsOrderByItm(String osNo);
 
 }

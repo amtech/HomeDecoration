@@ -71,6 +71,7 @@ public class ProductDetail  implements Serializable {
     public List<ProductWage> packWages;
 
 
+
     /**
      * 更新产品的统计数据
      */
@@ -277,6 +278,7 @@ public class ProductDetail  implements Serializable {
             return false;
         if (packMaterials != null ? !packMaterials.equals(detail.packMaterials) : detail.packMaterials != null)
             return false;
+
         return !(packWages != null ? !packWages.equals(detail.packWages) : detail.packWages != null);
 
     }
@@ -291,6 +293,7 @@ public class ProductDetail  implements Serializable {
         result = 31 * result + (assembleWages != null ? assembleWages.hashCode() : 0);
         result = 31 * result + (packMaterials != null ? packMaterials.hashCode() : 0);
         result = 31 * result + (packWages != null ? packWages.hashCode() : 0);
+
         return result;
     }
 

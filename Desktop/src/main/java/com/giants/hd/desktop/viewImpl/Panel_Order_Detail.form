@@ -375,6 +375,15 @@
               <text value="添加附件"/>
             </properties>
           </component>
+          <component id="dcc9a" class="javax.swing.JButton" binding="btn_track">
+            <constraints>
+              <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="启动生产流程"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <scrollpane id="34bdb">

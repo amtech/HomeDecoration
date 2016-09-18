@@ -2,10 +2,7 @@ package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.OrderAuth;
-import com.giants3.hd.utils.entity.QuoteAuth;
-import com.giants3.hd.utils.entity.StockOutAuth;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
@@ -13,6 +10,7 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
+import java.sql.Statement;
 import java.util.List;
 
 
@@ -32,6 +30,8 @@ public class UseCaseFactory {
     @Inject
     OrderRepository orderRepository;
     @Inject
+    WorkFlowRepository workFlowRepository;
+    @Inject
     ProductRepository productRepository;
     @Inject
     XiankangRepository xiankangRepository;
@@ -42,6 +42,9 @@ public class UseCaseFactory {
 
     @Inject
     FileRepository fileRepository;
+
+    @Inject
+    UserRepository userRepository;
 
 
     @Inject
@@ -275,5 +278,44 @@ public class UseCaseFactory {
     public UseCase createOrderReportUseCase(long userId,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
        return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), userId, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
 
+    }
+
+    /**
+     * 获取生产流程列表
+     * @return
+     */
+    public UseCase createGetWorkFlowUseCase() {
+
+        return new GetWorkFlowUseCase(
+                Schedulers.newThread(), Schedulers.immediate(), workFlowRepository);
+    }
+    /**
+     * 保存生产流程列表
+     * @return
+     */
+    public UseCase createSaveWorkFlowUseCase(List<WorkFlow> workFlows) {
+
+        return new SaveWorkFlowUseCase(
+                Schedulers.newThread(), Schedulers.immediate(),workFlows, workFlowRepository);
+    }
+
+    /**
+     * 获取用户列表
+     * @return
+     */
+    public UseCase createGetUserListUseCase() {
+
+        return new GetUserListUseCase(
+                Schedulers.newThread(), Schedulers.immediate(), userRepository);
+    }
+
+    /**
+     * 启动订单跟踪
+     * @return
+     */
+    public UseCase startOrderTrackUseCase(String os_no) {
+
+        return new StartOrderTrackUseCase(
+                Schedulers.newThread(), Schedulers.immediate(),os_no, workFlowRepository);
     }
 }

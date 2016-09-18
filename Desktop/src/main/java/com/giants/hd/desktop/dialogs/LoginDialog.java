@@ -4,14 +4,18 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.User;
 import com.google.inject.Inject;
+import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
 
 public class LoginDialog extends BaseDialog<User> {
     private JPanel contentPane;
@@ -80,62 +84,50 @@ public class LoginDialog extends BaseDialog<User> {
     private  void  loadUsers()
     {
 
-        new HdSwingWorker<User,Object>(this)
-        {
+        UseCaseFactory.getInstance().createGetUserListUseCase().execute(new Subscriber<java.util.List<User>>() {
             @Override
-            protected RemoteData<User> doInBackground() throws Exception {
-                return apiManager.readUsers();
+            public void onCompleted() {
+
             }
 
             @Override
-            public void onResult(RemoteData<User> data) {
+            public void onError(Throwable e) {
+                JOptionPane.showMessageDialog(LoginDialog.this,e.getMessage());
+            }
 
-                if(data.isSuccess())
+
+            @Override
+            public void onNext(List<User> users) {
+                cb_user.removeAllItems();
+                for(User  user:users)
+                    cb_user.addItem(user);
+
+
+                User user= LocalFileHelper.get(User.class);
+                int selectIndex=0;
+                if(user!=null)
                 {
+                    for (int i = 0,count= cb_user.getItemCount(); i <count; i++) {
 
-
-
-                    cb_user.removeAllItems();
-                    for(User  user:data.datas)
-                        cb_user.addItem(user);
-
-
-                    User user= LocalFileHelper.get(User.class);
-                    int selectIndex=0;
-                    if(user!=null)
-                    {
-                        for (int i = 0,count= cb_user.getItemCount(); i <count; i++) {
-
-                            User temp= (User) cb_user.getItemAt(i);
-                            if(temp.id==user.id)
-                            {
-                                selectIndex=i;
-                                break;
-                            }
-
-
+                        User temp= (User) cb_user.getItemAt(i);
+                        if(temp.id==user.id)
+                        {
+                            selectIndex=i;
+                            break;
                         }
 
 
                     }
 
 
-                     cb_user.setSelectedIndex(selectIndex);
-
-
-
-                }else {
-
-                    JOptionPane.showMessageDialog(LoginDialog.this,data.message);
                 }
 
 
-
-
-
-
+                cb_user.setSelectedIndex(selectIndex);
             }
-        }.go();
+
+        });
+
     }
 
 

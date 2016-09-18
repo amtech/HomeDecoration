@@ -68,4 +68,18 @@ public interface OrderDetailPresenter extends    Presenter {
      * @param trim
      */
     void onZuomaiChange(String trim);
+
+    boolean isEditable();
+
+    /**
+     * 查看生产流程
+     * @param finalItem
+     */
+    void showWorkFlow(ErpOrderItem finalItem);
+
+
+    /**
+     * 启动生产流程跟踪
+     */
+    void startOrderTrack();
 }

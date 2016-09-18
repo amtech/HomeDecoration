@@ -908,7 +908,7 @@ public class HttpUrl {
     }
     /**
      * 读取订单报表  验货日期
-     * @param salCode
+     * @param userId
      * @param dateStart
      * @param dateEnd
      * @param pageIndex
@@ -920,5 +920,19 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?saleId=" + userId +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
+    }
+
+    public static String getWorkFlowList() {
+        return additionInfo(BaseUrl + "api/order/listWorkFlow" );
+
+    }
+
+    public static String saveWorkFlowList() {
+        return additionInfo(BaseUrl + "api/order/saveWorkFlow" );
+
+    }
+
+    public static String startOrderTrack(String os_no) {
+        return additionInfo(BaseUrl + "api/order/startOrderTrack?os_no="+os_no );
     }
 }

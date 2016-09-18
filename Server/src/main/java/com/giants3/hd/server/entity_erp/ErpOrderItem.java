@@ -272,4 +272,11 @@ public class ErpOrderItem {
      * 挂钩说明
      */
     public String   guagou ;
+
+
+
+    /**
+     * 当前生产流程
+     */
+    public String currentWorkFlow;
 }

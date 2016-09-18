@@ -1,9 +1,8 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.repository.AppVersionRepository;
-import com.giants3.hd.server.repository.GlobalDataRepository;
-import com.giants3.hd.server.repository.ModuleRepository;
-import com.giants3.hd.server.service.MaterialService;
+import com.giants3.hd.server.entity.WorkFlow;
+import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.server.entity.AppVersion;
@@ -45,13 +44,17 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     GlobalDataRepository globalDataRepository;
 
-
+    @Autowired
+    WorkFlowRepository workFlowRepository;
     @Autowired
     TaskController taskController;
 
     @Value("${appfilepath}")
     private String appFilePath;
 
+
+    @Autowired
+    ProductService productService;
 
     @Autowired
     MaterialController materialController;
@@ -70,9 +73,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             //模块数据初始化
             if(existSize!=newSize)
             {
-
-
-
 
                 for(Module module:Module.getInitDataList())
                 {
@@ -139,7 +139,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             if(appVersion!=null)
             {
-                //核对最新版本
+                //核对客户端最新版本
 
                 AppVersion oldVersion=appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(appVersion.appName);
 
@@ -189,6 +189,17 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         }
 
 
+
+
+            // 生产流程数据初始化
+
+            List<WorkFlow> workFlows=workFlowRepository.findAll();
+            if(workFlows.size()==0)
+            {
+                 workFlowRepository.save(WorkFlow.initWorkFlowData());
+                productService.setDefaultWorkFlowIds( );
+
+            }
 
 
 
@@ -255,4 +266,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         }
         return properties;
     }
+
+
+
+
 }

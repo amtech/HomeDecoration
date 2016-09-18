@@ -1,27 +1,31 @@
 package com.giants3.hd.server.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  *  流程跳转确认信
  *
  * Created by davidleen29 on 2016/9/3.
  */
+@Entity(name = "T_WorkFlowMessage")
 public class WorkFlowMessage
 {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-    /**
-     * 发起流程id
-     */
-    public long fromFlowId;
 
+    public int fromFlowIndex;
     public String  fromFlowName;
 
 
     /**
      * 接受流程id
      */
-    public long toFlowId;
+    public int toFlowIndex;
     public  String  toFlowName;
 
 
@@ -60,36 +64,30 @@ public class WorkFlowMessage
      */
     public int transportQty;
 
-    /**
-     * 是否自动审核，  否 需要审核
-     */
-    public boolean  autoCheck;
 
-    /**
-     * 发送者
-     */
-    public  String sender;
-    public long  senderId;
-    /**
-     * 接收者
-     */
-    public String  receiver;
-    public long  receiverId;
+
+
 
 
     /**
-     * 审核者
-     */
-    public String checker;
-    public long  checkerId;
-
-
-    /**
-     * 当前状态  1 已发出  2 已接受  3 已审核
+     * 当前状态  0 未处理  1 已处理
      */
     public int  state;
 
 
 
+
+    public String createTimeString;
+    public long createTime;
+
+    public   long receiveTime;
+    public String receiveTimeString;
+
+
+    public long checkTime;
+    public String checkTimeString;
+
+
+            ;
 
 }

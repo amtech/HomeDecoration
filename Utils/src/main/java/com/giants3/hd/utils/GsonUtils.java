@@ -66,12 +66,7 @@ public class GsonUtils {
 
     public   static  <T> T fromJson(String json, Type typeOfT)
     {
-
-
           return   gson.fromJson(json,typeOfT);
-       // new StringReader(  new     ByteArrayInputStream(json.getBytes()));
-      //      return fromReader(new StringReader(json),typeOfT);
-
     }
 
     public static <T> T  fromReader( Reader reader, Type typeOfT)throws  HdException

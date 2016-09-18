@@ -78,7 +78,8 @@ public class User implements Serializable,Valuable {
     @Override
     public String toString() {
 
-
+           if(StringUtils.isEmpty(code)&&StringUtils.isEmpty(name))
+               return "";
         return "["+code+"]["+name+"]"+chineseName;
     }
 

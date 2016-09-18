@@ -12,18 +12,14 @@ import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
-import com.giants3.hd.utils.noEntity.BufferData;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -38,23 +34,24 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     private ErpOrderDetail orderDetail;
     private String oldData;
     private OrderDetailViewer orderDetailViewer;
-    public OrderDetailFrame(String orderNo  ) {
+
+    public OrderDetailFrame(String orderNo) {
         super();
         initPanel(orderNo);
 
     }
+
     public OrderDetailFrame(ErpOrder order) {
         super();
         setTitle(order == null ? "订单详情" : "订单：" + order.os_no);
         initPanel(order.os_no);
 
     }
-    private void initPanel(String os_no)
-    {
+
+    private void initPanel(String os_no) {
         setMinimumSize(new Dimension(1080, 800));
         orderDetailViewer = new Panel_Order_Detail(this);
         setContentPane(orderDetailViewer.getRoot());
-
 
 
         //设置权限相关
@@ -75,7 +72,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
         String newAttachString = StringUtils.combine(attachStrings);
         if (!StringUtils.isEmpty(newAttachString))
             orderDetail.erpOrder.attaches = newAttachString;
-        return !GsonUtils.toJson(orderDetail).equals(oldData) ;
+        return !GsonUtils.toJson(orderDetail).equals(oldData);
     }
 
     public void loadOrderDetail(String os_no) {
@@ -105,7 +102,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
 
     private void setOrderDetail(ErpOrderDetail orderDetail) {
-        setTitle(orderDetail == null ||orderDetail.erpOrder==null? "订单详情" : "订单：" + orderDetail.erpOrder.os_no);
+        setTitle(orderDetail == null || orderDetail.erpOrder == null ? "订单详情" : "订单：" + orderDetail.erpOrder.os_no);
         oldData = GsonUtils.toJson(orderDetail);
         this.orderDetail = orderDetail;
 
@@ -322,5 +319,58 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     public void onZuomaiChange(String value) {
         if (orderDetail == null || orderDetail.erpOrder == null) return;
         orderDetail.erpOrder.zuomai = value;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return AuthorityUtil.getInstance().editOrder();
+    }
+
+    /**
+     * 查看生产流程
+     *
+     * @param finalItem
+     */
+    @Override
+    public void showWorkFlow(ErpOrderItem finalItem) {
+
+
+    }
+
+    /**
+     * 启动生产流程跟踪
+     */
+    @Override
+    public void startOrderTrack() {
+
+
+        UseCaseFactory.getInstance().startOrderTrackUseCase(orderDetail.erpOrder.os_no).execute(new Subscriber<RemoteData<Void>>() {
+            @Override
+            public void onCompleted() {
+
+
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                orderDetailViewer.hideLoadingDialog();
+                orderDetailViewer.showMesssage(e.getMessage());
+            }
+
+
+            @Override
+            public void onNext(RemoteData<Void> erpOrderDetailRemoteData) {
+                orderDetailViewer.hideLoadingDialog();
+                if (erpOrderDetailRemoteData.isSuccess()) {
+                    loadOrderDetail(orderDetail.erpOrder.os_no);
+                }
+
+            }
+
+
+        });
+        orderDetailViewer.showLoadingDialog();
+
     }
 }

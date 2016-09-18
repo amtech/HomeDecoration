@@ -4,8 +4,12 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.model.OrderItemTableModel;
 import com.giants.hd.desktop.presenter.OrderDetailPresenter;
+import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.view.OrderDetailViewer;
-import com.giants.hd.desktop.widget.*;
+import com.giants.hd.desktop.widget.AttachPanel;
+import com.giants.hd.desktop.widget.DateCellEditor;
+import com.giants.hd.desktop.widget.JHdTable;
+import com.giants.hd.desktop.widget.TextAreaCellEditor;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
@@ -16,17 +20,17 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-/**  订单详情
+/**
+ * 订单详情
  * Created by david on 2016/3/30.
  */
-public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer {
+public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
     private JPanel panel1;
     private JHdTable orderItemList;
     private JButton printPaint;
@@ -47,6 +51,10 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
     private JTextArea ta_rem;
     private JTextArea ta_youmai;
     private JTextArea ta_zuomai;
+    private JButton btn_track;
+
+
+    Point popupMenuLocation = new Point();
 
 
     private OrderItemTableModel orderItemTableModel;
@@ -100,6 +108,53 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
 
 
         orderItemList.addMouseListener(new MouseInputAdapter() {
+
+
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            private void showMenu(MouseEvent e) {
+                if (orderDetailPresenter.isEditable() && e.isPopupTrigger()) {
+
+                    ErpOrderItem item = null;
+
+                    int[] modelRows = JTableUtils.getSelectedRowSOnModel(orderItemList);
+                    if (modelRows != null && modelRows.length > 0) {
+
+                        item = orderItemTableModel.getItem(modelRows[0]);
+                    }
+                    if (item == null) return;
+                    final ErpOrderItem finalItem = item;
+                    popupMenuLocation.setLocation(e.getXOnScreen(), e.getYOnScreen());
+                    JPopupMenu menu = new JPopupMenu();
+                    JMenuItem split = new JMenuItem("查看生产流程");
+                    split.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                            orderDetailPresenter.showWorkFlow(finalItem);
+
+                        }
+                    });
+                    menu.add(split);
+
+                    //  取得右键点击所在行
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+
+                    return;
+                }
+            }
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -118,20 +173,19 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
                     }
 
                     //第八列 显示附件
-                    if(column==8)
-                    {
+                    if (column == 8) {
 
-                         String packAttaches=   orderItem.packAttaches;
-                        if(StringUtils.isEmpty(packAttaches)) return;
-                        String[] temp=StringUtils.split(packAttaches);
+                        String packAttaches = orderItem.packAttaches;
+                        if (StringUtils.isEmpty(packAttaches)) return;
+                        String[] temp = StringUtils.split(packAttaches);
                         final int length = temp.length;
-                        String[] newUrl=new String[length];
+                        String[] newUrl = new String[length];
                         for (int i = 0; i < length; i++) {
-                            newUrl[i]=HttpUrl.loadPicture(temp[i]);
+                            newUrl[i] = HttpUrl.loadPicture(temp[i]);
                         }
 
 
-                        ImageViewDialog.showDialog(getWindow(), StringUtils.combine(newUrl), orderItem.prd_name+"包装附件" );
+                        ImageViewDialog.showDialog(getWindow(), StringUtils.combine(newUrl), orderItem.prd_name + "包装附件");
 
                     }
 
@@ -140,7 +194,6 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
 
             }
         });
-
 
 
         btn_addPicture.addActionListener(new ActionListener() {
@@ -175,6 +228,13 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
             }
         });
 
+        btn_track.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                orderDetailPresenter.startOrderTrack();
+            }
+        });
 
         //图片的摆放布局
         panel_attach.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -189,11 +249,11 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         });
         panel_attach.setTitle("订单附件");
 
-      //  orderItemList.setCe(Date.class,new DateCellEditor());
+        //  orderItemList.setCe(Date.class,new DateCellEditor());
         orderItemList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         orderItemList.getColumn(OrderItemTableModel.TITLE_VERIFY_DATE).setCellEditor(new DateCellEditor());
         orderItemList.getColumn(OrderItemTableModel.TITLE_SEND_DATE).setCellEditor(new DateCellEditor());
-        TextAreaCellEditor textAreaCellEditorAndRenderer=  new TextAreaCellEditor();
+        TextAreaCellEditor textAreaCellEditorAndRenderer = new TextAreaCellEditor();
         orderItemList.getColumn(OrderItemTableModel.TITLE_PACKAGE_INFO).setCellEditor(textAreaCellEditorAndRenderer);
         orderItemList.getColumn(OrderItemTableModel.TITLE_MAITOU).setCellEditor(textAreaCellEditorAndRenderer);
         orderItemList.getColumn(OrderItemTableModel.TITLE_GUAGOU).setCellEditor(textAreaCellEditorAndRenderer);
@@ -204,12 +264,12 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
     @Override
     public void setOrderDetail(ErpOrderDetail orderDetail) {
 
-        ErpOrder order=orderDetail.erpOrder;
+        ErpOrder order = orderDetail.erpOrder;
         tf_dd.setText(order.os_dd);
         tf_os_no.setText(order.os_no);
         tf_customer.setText(order.cus_no);
         tf_cos.setText(order.cus_os_no);
-        tf_sales.setText(order.sal_no+"-"+order.sal_name+"-"+order.sal_cname);
+        tf_sales.setText(order.sal_no + "-" + order.sal_name + "-" + order.sal_cname);
         tf_so_data.setText(order.so_data);
         ta_rem.setText(order.rem);
 
@@ -242,6 +302,20 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         orderItemTableModel.setDatas(orderDetail.items);
 
 
+
+        //检查是否已经启动生产流程追踪
+        boolean hasStartTrack = false;
+        for (ErpOrderItem orderItem : orderDetail.items) {
+            if (!StringUtils.isEmpty(orderItem.currentWorkFlow)) {
+                hasStartTrack = true;
+                break;
+            }
+        }
+
+        btn_track.setEnabled(!hasStartTrack);
+        btn_track.setText(!hasStartTrack?"启动生产流程":"生产流程已经启动");
+
+
     }
 
     @Override
@@ -264,7 +338,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         String[] urls = new String[attachStrings.size()];
         attachStrings.toArray(urls);
         panel_attach.setAttachFiles(urls);
-        // btn_addPicture.setVisible(attachStrings.size()< 8);
+
 
     }
 
@@ -361,7 +435,7 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
         }
     };
 
-     /**
+    /**
      * 左唛数据修改监听
      */
     private DocumentListener zuomaiDocumentListener = new DocumentListener() {
@@ -409,15 +483,8 @@ public class Panel_Order_Detail extends BasePanel  implements OrderDetailViewer 
     };
 
 
-
-
-
-
-
-
     @Override
-    public void setPriceVisible(boolean priceVisible)
-    {
+    public void setPriceVisible(boolean priceVisible) {
         orderItemTableModel.setFobPriceVisible(priceVisible);
     }
 

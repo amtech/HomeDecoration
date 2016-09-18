@@ -35,6 +35,11 @@ public class BufferData implements Serializable{
     public  GlobalData globalData;
 
     /**
+     * 生产全流程
+     */
+    public List<WorkFlow> workFlows;
+
+    /**
      * 产品录入的模板数据
      */
     public List<ProductDetail> demos;

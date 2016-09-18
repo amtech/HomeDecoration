@@ -19,6 +19,7 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
+import com.giants.hd.desktop.widget.StepLayoutManager;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.domain.api.ApiManager;
@@ -50,7 +51,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * 产品详情界面
  */
-public class Panel_ProductDetail extends BasePanel  implements ProductDetailViewer {
+public class Panel_ProductDetail extends BasePanel implements ProductDetailViewer {
 
 
     @Inject
@@ -151,6 +152,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
     private JTextArea ta_packinfo;
     private JButton btn_add_pack_image;
     private AttachPanel pack_attaches;
+    private JPanel panel_workflow;
 
 
     /**
@@ -254,9 +256,8 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
     }
 
 
-    public void setPresenter(ProductDetailPresenter presenter)
-    {
-        this.presenter=presenter;
+    public void setPresenter(ProductDetailPresenter presenter) {
+        this.presenter = presenter;
     }
 
 
@@ -704,8 +705,6 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         };
 
 
-
-
         //外厂模式下  实际成本数据改变监听器
         tf_foreign_relate_documentListener = new DocumentListener() {
             @Override
@@ -775,7 +774,6 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         });
 
 
-
         exportList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -785,15 +783,15 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
 
                 try {
-                    new Report_Excel_ProductMaterialList().report(productDetail,file.getAbsolutePath());
+                    new Report_Excel_ProductMaterialList().report(productDetail, file.getAbsolutePath());
                     JOptionPane.showMessageDialog(getRoot(), "导出成功");
                     return;
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                    JOptionPane.showMessageDialog(getRoot(),e1.getMessage());
+                    JOptionPane.showMessageDialog(getRoot(), e1.getMessage());
                 } catch (HdException e1) {
                     e1.printStackTrace();
-                    JOptionPane.showMessageDialog(getRoot(),e1.getMessage());
+                    JOptionPane.showMessageDialog(getRoot(), e1.getMessage());
 
                 }
 
@@ -979,15 +977,17 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         //日期格式验证
         product.setrDate(tf_dateValue);
 
+        product.workFlowIds=getWorkFlowData();
+
 
         //附件
 
 
         product.attaches = StringUtils.combine(panel_attach.getAttachFiles());
 
-        product.packInfo=ta_packinfo.getText();
+        product.packInfo = ta_packinfo.getText();
 
-        product.packAttaches=StringUtils.combine(pack_attaches.getAttachFiles());
+        product.packAttaches = StringUtils.combine(pack_attaches.getAttachFiles());
 
 
         //产品油漆数据
@@ -1106,7 +1106,6 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         jp_pack.productDetiail = productDetail;
 
 
-
     }
 
 
@@ -1148,7 +1147,6 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
 
-
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
             public void setIcon(ImageIcon icon) {
@@ -1159,7 +1157,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
             public void onError(String message) {
                 photo.setText("");
             }
-        },HttpUrl.loadPicture(product.url),photo.getWidth(),photo.getHeight());
+        }, HttpUrl.loadPicture(product.url), photo.getWidth(), photo.getHeight());
 
         photo.setText(product == null ? "产品图片" : "");
 
@@ -1248,14 +1246,74 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
 
         //包装外信息
-        ta_packinfo.setText( product.packInfo);
-         fileNames = StringUtils.isEmpty(product.packAttaches) ? new String[]{} : product.packAttaches.split(";");
-         pack_attaches.setAttachFiles(fileNames);
+        ta_packinfo.setText(product.packInfo);
+        fileNames = StringUtils.isEmpty(product.packAttaches) ? new String[]{} : product.packAttaches.split(";");
+        pack_attaches.setAttachFiles(fileNames);
+        bindWorkFlowData(product);
 
 
     }
 
+    /**
+     * 绑定生产流程数据
+     *
+     * @param product
+     */
+    private void bindWorkFlowData(Product product) {
+        //绑定生产流程数据
 
+        String productWorkFlows = product.workFlowIds;
+        String[] indexs = StringUtils.split(productWorkFlows, StringUtils.PRODUCT_NAME_COMMA);
+        int count = CacheManager.getInstance().bufferData.workFlows.size();
+        for (int i = 0; i < count; i++) {
+            Component c = panel_workflow.getComponent(i);
+            if (c instanceof JCheckBox) {
+
+                WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
+
+                boolean existed = false;
+                for (String s : indexs) {
+                    if (s.equals(String.valueOf(workFlow.flowIndex))) {
+                        existed = true;
+                        break;
+                    }
+
+                }
+
+
+                ((JCheckBox) c).setSelected(existed);
+            }
+        }
+    }
+
+
+    /**
+     * 获取生产流程数据
+     * @return
+     */
+    public String getWorkFlowData() {
+
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int count = CacheManager.getInstance().bufferData.workFlows.size();
+        for (int i = 0; i < count; i++) {
+            Component c = panel_workflow.getComponent(i);
+            if (c instanceof JCheckBox) {
+                if (((JCheckBox) c).isSelected())
+                {
+                    WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
+                    stringBuilder.append(workFlow.flowIndex).append(StringUtils.PRODUCT_NAME_COMMA);
+
+
+                }
+
+
+            }
+        }
+        if (stringBuilder.length() > 0)
+            stringBuilder.setLength(stringBuilder.length() - 1);
+        return stringBuilder.toString();
+    }
 
 
     /**
@@ -1338,6 +1396,8 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
         pack_attaches.setTitle("包装附件");
         panel_attach.setTitle("产品附件");
+
+
     }
 
 
@@ -1405,8 +1465,8 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
         //附件垂直显示
 
-        panel_attach.setLayout( new GridLayout(0,2,10,10));
-        pack_attaches.setLayout(new GridLayout(0,2,5,5));
+        panel_attach.setLayout(new GridLayout(0, 2, 10, 10));
+        pack_attaches.setLayout(new GridLayout(0, 2, 5, 5));
 
         tf_product.setToolTipText("以【" + ConstantData.DEMO_PRODUCT_NAME + "】开头的货号，将会默认选为套版使用。");
 
@@ -1422,7 +1482,6 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
             public void onTableMenuClick(int index, BaseTableModel tableModel, int rowIndex[]) {
 
                 if (index < 0 || rowIndex == null || rowIndex.length == 0) return;
-
 
 
                 switch (index) {
@@ -1527,9 +1586,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
                     JOptionPane.showMessageDialog(exception.component, exception.message);
                     exception.component.requestFocus();
                 }
-                    presenter.save(productDetail);
-
-
+                presenter.save(productDetail);
 
 
             }
@@ -1729,9 +1786,7 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
 
         btn_export_pic.setVisible(AuthorityUtil.getInstance().exportProduct());
 
-        btn_add_pack_image.setVisible( modifiable);
-
-
+        btn_add_pack_image.setVisible(modifiable);
 
 
         viewLog.addMouseListener(new MouseAdapter() {
@@ -1749,7 +1804,14 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
                 }
             }
         });
+        panel_workflow.removeAll();
+        panel_workflow.setLayout(new StepLayoutManager(10, 10));
+        for (WorkFlow workFlow : CacheManager.getInstance().bufferData.workFlows) {
+            JCheckBox jCheckBox = new JCheckBox(workFlow.name);
 
+            panel_workflow.add(jCheckBox);
+
+        }
 
         //配置表格的自定义编辑输入   //工序
 
@@ -2006,9 +2068,9 @@ public class Panel_ProductDetail extends BasePanel  implements ProductDetailView
         }
 
 //        if (!tf_inboxCount.getText().trim().equals(String.valueOf(product.insideBoxQuantity))) {insideBoxQuantity
-            tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
-            tf_inboxCount.setText(String.valueOf(product.insideBoxQuantity));
-            tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
+        tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
+        tf_inboxCount.setText(String.valueOf(product.insideBoxQuantity));
+        tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
 //       tf_inboxCountListener }
 
     }

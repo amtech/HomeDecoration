@@ -1,16 +1,14 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.noEntity.BufferData;
+import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.*;
-
-
-import com.giants3.hd.server.noEntity.BufferData;
-import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,6 +70,8 @@ public class UserController extends BaseController {
     private FactoryRepository factoryRepository;
     @Autowired
     private QuoteAuthRepository quoteAuthRepository;
+    @Autowired
+    private WorkFlowRepository workFlowRepository;
 
     @Autowired
     private OrderAuthRepository orderAuthRepository;
@@ -86,7 +86,6 @@ public class UserController extends BaseController {
 
         return "redirect:/";
     }
-
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -115,7 +114,7 @@ public class UserController extends BaseController {
         try {
             return userService.saveUserList(users);
         } catch (HdException e) {
-           return wrapError(e.getMessage());
+            return wrapError(e.getMessage());
         }
 
     }
@@ -143,7 +142,6 @@ public class UserController extends BaseController {
         bufferData.salesmans = userRepository.findByIsSalesman(true);
 
 
-
         QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
         if (quoteAuth == null) {
             quoteAuth = new QuoteAuth();
@@ -152,6 +150,11 @@ public class UserController extends BaseController {
         bufferData.quoteAuth = quoteAuth;
 
 
+
+
+        List<WorkFlow> workFlows = workFlowRepository.findAll();
+
+        bufferData.workFlows = workFlows;
 
         OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
         if (orderAuth == null) {
@@ -169,8 +172,6 @@ public class UserController extends BaseController {
         bufferData.stockOutAuth = stockOutAuth;
 
 
-
-
         //读取第一条数据   总共就一条
         bufferData.globalData = globalDataRepository.findAll().get(0);
         bufferData.factories = factoryRepository.findAll();
@@ -184,7 +185,7 @@ public class UserController extends BaseController {
                 productDetail = productService.findProductDetailById(result.datas.get(i).id);
                 if (productDetail != null) {
                     //擦除去记录信息
-                    productDetail= (ProductDetail)ObjectUtils.deepCopy(productDetail);
+                    productDetail = (ProductDetail) ObjectUtils.deepCopy(productDetail);
                     productDetail.swipe();
                     demos.add(productDetail);
                 }
@@ -201,6 +202,7 @@ public class UserController extends BaseController {
 
     /**
      * 提供移动端  省略很多数据
+     *
      * @param userId
      * @return
      */
@@ -208,14 +210,13 @@ public class UserController extends BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<BufferData> getInitData(@RequestParam(value = "userId"  ) long userId) {
+    RemoteData<BufferData> getInitData(@RequestParam(value = "userId") long userId) {
 
 
-        User  user=userRepository.findOne(userId);
+        User user = userRepository.findOne(userId);
 
-        if(user==null)
-        {
-           return wrapError("未找到用户");
+        if (user == null) {
+            return wrapError("未找到用户");
         }
         BufferData bufferData = new BufferData();
         bufferData.customers = customerRepository.findAll();

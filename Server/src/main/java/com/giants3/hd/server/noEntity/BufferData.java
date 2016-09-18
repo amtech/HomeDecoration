@@ -31,6 +31,11 @@ public class BufferData implements Serializable{
     public QuoteAuth quoteAuth;
 
     /**
+     * 生产全流程
+     */
+    public List<WorkFlow> workFlows;
+
+    /**
      * 订单权限
      */
     public OrderAuth orderAuth;

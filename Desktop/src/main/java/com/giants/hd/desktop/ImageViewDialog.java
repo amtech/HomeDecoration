@@ -24,6 +24,8 @@ public class ImageViewDialog extends JDialog {
 
     public String[] urls;
 
+    final Dimension maxSize=new Dimension();
+
     private ImageViewDialog(Window frame) {
 
         super(frame);
@@ -41,6 +43,11 @@ public class ImageViewDialog extends JDialog {
         Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setMinimumSize(new Dimension(600, 200));
         setLocation((dimension.width - 600) / 2, (dimension.height - 200) / 2);
+
+        int maxWidth= (int) (dimension.getWidth()*9/10);
+        int maxHeight= (int) (dimension.getHeight()*9/10);
+        maxSize.width=maxWidth;
+        maxSize.height=maxHeight;
 
         picture.addKeyListener(new KeyAdapter() {
             @Override
@@ -180,6 +187,7 @@ public class ImageViewDialog extends JDialog {
     {
         picture.setText("正在加载图片....");
         final Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        //加载图片为最大为屏幕3/4
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
@@ -188,8 +196,10 @@ public class ImageViewDialog extends JDialog {
                 picture.setIcon(icon);
                 picture.requestFocusInWindow();
 
-                setSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-                setLocation(Math.max(0,(dimension.width - icon.getIconWidth()) / 2),Math.max(0, (dimension.height - icon.getIconHeight()) / 2));
+                   Dimension toShow=new Dimension(  icon.getIconWidth() ,icon.getIconHeight() );
+
+                setSize(toShow);
+                setLocation((int) Math.max(0,(dimension.width - toShow.getWidth()) / 2), (int) Math.max(0, (dimension.height - toShow.getHeight()) / 2));
 
             }
 
@@ -197,7 +207,7 @@ public class ImageViewDialog extends JDialog {
             public void onError(String message) {
                 picture.setText(message);
             }
-        }, url, dimension.getWidth(), dimension.getHeight());
+        }, url, maxSize.getWidth(), maxSize.getHeight());
 
     }
 

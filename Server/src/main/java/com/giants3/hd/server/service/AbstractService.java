@@ -36,7 +36,7 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
     /**
      * Returns a new object which specifies the the wanted result page.
-     * @param pageIndex The index of the wanted result page
+     * @param pageIndex The flowIndex of the wanted result page
      * @return
      */
     protected Pageable constructPageSpecification(int pageIndex, int pageSize,Sort sort) {

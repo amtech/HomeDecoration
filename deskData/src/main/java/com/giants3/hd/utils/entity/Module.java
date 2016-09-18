@@ -178,6 +178,8 @@ public class Module implements Serializable{
     public static final String NAME_USER ="User";
     public static final String TITLE_USER ="用户";
 
+    public static final String NAME_WORK_FLOW ="WorkFlow";
+    public static final String TITLE_WORK_FLOW ="生产流程";
 
 
 
@@ -194,7 +196,7 @@ public class Module implements Serializable{
     ,NAME_SYS_PARAM,NAME_TASK_MANAGE,
             NAME_ORDER,NAME_ORDER_REPORT,
 
-            NAME_STOCK,NAME_STOCK_OUT
+            NAME_STOCK,NAME_STOCK_OUT,NAME_WORK_FLOW
     };
 
     public static String[] TITLES=new String[]{TITLE_MATERIAL,TITLE_PRODUCT,TITLE_PRODUCT_PICTURE,TITLE_MATERIAL_PICTURE,
@@ -207,7 +209,7 @@ public class Module implements Serializable{
     ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,
             TITLE_ORDER,TITLE_ORDER_REPORT,
 
-            TITLE_STOCK,TITLE_STOCK_OUT
+            TITLE_STOCK,TITLE_STOCK_OUT,TITLE_WORK_FLOW
     };
 
 }

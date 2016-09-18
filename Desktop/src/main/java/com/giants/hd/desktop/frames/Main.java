@@ -245,6 +245,12 @@ public class Main extends BaseFrame {
 
         if (AuthorityUtil.getInstance().viewOrderMenu())
             menuBar.add(createOrder());
+
+        //生产流程
+        if (AuthorityUtil.getInstance().viewWorkFlowMenu())
+            menuBar.add(createWorkFlowMenu());
+
+
         if (AuthorityUtil.getInstance().viewStockModule())
             menuBar.add(createStockManager());
 
@@ -266,6 +272,38 @@ public class Main extends BaseFrame {
 
         //System.exit(0);
         setJMenuBar(menuBar);
+
+
+    }
+
+    /**
+     * 生产流程菜单
+     * @return
+     */
+    private JMenu createWorkFlowMenu() {
+
+        //Build second menu in the menu bar.
+        JMenu menu = new JMenu(Module.TITLE_WORK_FLOW);
+
+
+
+            JMenuItem menuItem = new JMenuItem("生产流程配置");
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    WorkFlowFrame frame = new WorkFlowFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
+
+
+        return menu;
+
 
 
     }
@@ -302,6 +340,9 @@ public class Main extends BaseFrame {
 
 
     }
+
+
+
 
 
     public JMenu createProduct() {

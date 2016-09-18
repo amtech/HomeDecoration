@@ -159,6 +159,8 @@ public class ApiManager {
 
         tokenMaps.put(OrderReportItem.class, new TypeToken<RemoteData<OrderReportItem>>() {
         }.getType());
+        tokenMaps.put(WorkFlow.class, new TypeToken<RemoteData<WorkFlow>>() {
+        }.getType());
     }
 
     @Inject
@@ -1708,6 +1710,45 @@ public class ApiManager {
         RemoteData<OrderReportItem> remoteData = invokeByReflect(result, OrderReportItem.class);
         return remoteData;
 
+
+    }
+
+    /**
+     * 获取生产流程表
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<WorkFlow> getWorkFlowList() throws HdException {
+        String url = HttpUrl.getWorkFlowList( );
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlow> remoteData = invokeByReflect(result, WorkFlow.class);
+        return remoteData;
+    }
+
+    /**
+     * 保存生产流程表
+     * @param workFlows
+     * @return
+     */
+    public RemoteData<WorkFlow> saveWorkFlowList(List<WorkFlow> workFlows) throws HdException {
+
+        String url = HttpUrl.saveWorkFlowList( );
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(workFlows));
+        RemoteData<WorkFlow> remoteData = invokeByReflect(result, WorkFlow.class);
+        return remoteData;
+    }
+
+    /**
+     *
+     * 启动订单生产流程跟踪
+     * @param os_no
+     * @return
+     */
+    public RemoteData<Void> startOrderTrack(String os_no) throws HdException {
+        String url = HttpUrl.startOrderTrack( os_no);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
 
     }
 }
