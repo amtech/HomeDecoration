@@ -772,6 +772,21 @@ public class Main extends BaseFrame {
                 }
             });
         }
+        if(AuthorityUtil.getInstance().viewOrderWorkFlowReport()) {
+            menuItem = new JMenuItem(Module.TITLE_ORDER_WORK_FLOW_REPORT);
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    OrderWorkFlowReportInternalFrame orderWorkFlowReportInternalFrame = new OrderWorkFlowReportInternalFrame();
+                    addInterFrame(orderWorkFlowReportInternalFrame);
+
+                }
+            });
+        }
 
         return menu;
 

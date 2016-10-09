@@ -22,7 +22,7 @@ import java.util.*;
 @Controller
 
 @RequestMapping("/application")
-public class ApplicationController extends  BaseController {
+public class    ApplicationController extends  BaseController {
 
 
     @Autowired

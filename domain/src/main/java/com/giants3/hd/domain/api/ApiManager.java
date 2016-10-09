@@ -1751,4 +1751,20 @@ public class ApiManager {
         return remoteData;
 
     }
+
+    public RemoteData<ErpOrderItem> getUnCompleteOrderWorkFlowReport() throws HdException {
+
+        String url = HttpUrl.getUnCompleteOrderWorkFlowReport( );
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
+        return remoteData;
+
+    }
+
+    public RemoteData<ErpOrderItem> getOrderWorkFlowReport(String key, int pageIndex, int pageSize) throws HdException {
+        String url = HttpUrl.getOrderWorkFlowReport( key,pageIndex,pageSize);
+        String result = client.getWithStringReturned(url);
+        RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
+        return remoteData;
+    }
 }

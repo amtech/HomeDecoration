@@ -48,9 +48,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     /**
      * 更新所有产品的生产流程数据， 仅仅在生产流程数据初始化时候 执行。
-     * @param workFlowIndexs
+     * @param workFlowSteps
      */
     @Modifying
-    @Query("update T_Product p set    p.workFlowIndexs=:workFlowIndexs ,p.workFlowNames=:workFlowNames")
-    public void setDefaultWorkFlowIds(@Param("workFlowIndexs") String workFlowIndexs ,@Param("workFlowNames") String workFlowNames );
+    @Query("update T_Product p set    p.workFlowSteps=:workFlowSteps ,p.workFlowNames=:workFlowNames")
+    public void setDefaultWorkFlowIds(@Param("workFlowSteps") String workFlowSteps ,@Param("workFlowNames") String workFlowNames );
 }

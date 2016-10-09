@@ -15,4 +15,16 @@ public interface WorkFlowRepository extends JpaRepository<WorkFlow,Long> {
 
 
     List<WorkFlow> findByCheckerIdEqualsOrUserIdEquals(long id, long id1);
+
+    WorkFlow findFirstByFlowStepEquals(int flowStep);
+
+    List<WorkFlow> findByUserIdEquals(long id);
+
+    /**
+     *
+     * @param id
+     * @param flowStep
+     * @return
+     */
+    List<WorkFlow> findByUserIdEqualsAndFlowStepNot(long id, int flowStep);
 }

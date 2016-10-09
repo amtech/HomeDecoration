@@ -184,4 +184,75 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
         });
 
     }
+
+    /**
+     * 获取未出库订单货款
+     *
+     * @return
+     */
+    @Override
+    public Observable<RemoteData<ErpOrderItem>> getUnCompleteOrderWorkFlowReport() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItem>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<ErpOrderItem>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<ErpOrderItem> remoteData= apiManager.getUnCompleteOrderWorkFlowReport(   );
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
+
+    @Override
+    public Observable<RemoteData<ErpOrderItem>> getOrderWorkFlowReport(final String key, final int pageIndex, final int pageSize) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItem>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<ErpOrderItem>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<ErpOrderItem> remoteData= apiManager.getOrderWorkFlowReport(  key,   pageIndex,   pageSize);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
 }

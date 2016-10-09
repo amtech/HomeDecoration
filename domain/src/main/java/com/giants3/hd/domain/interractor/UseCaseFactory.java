@@ -318,4 +318,15 @@ public class UseCaseFactory {
         return new StartOrderTrackUseCase(
                 Schedulers.newThread(), Schedulers.immediate(),os_no, workFlowRepository);
     }
+
+    public UseCase createUnCompleteOrderWorkFlowReportUseCase() {
+
+        return new UnCompleteOrderWorkFlowReportUseCase( Schedulers.newThread(), Schedulers.immediate(), orderRepository);
+
+    }
+
+    public UseCase createOrderWorkFlowReportUseCase(String key, int pageIndex, int pageSize) {
+
+        return new  OrderWorkFlowReportUseCase( Schedulers.newThread(), Schedulers.immediate(), key,pageIndex,pageSize,orderRepository);
+    }
 }

@@ -18,14 +18,14 @@ public class WorkFlowMessage
     public long id;
 
 
-    public int fromFlowIndex;
+    public int fromFlowStep;
     public String  fromFlowName;
 
 
     /**
      * 接受流程id
      */
-    public int toFlowIndex;
+    public int toFlowStep;
     public  String  toFlowName;
 
 
@@ -65,12 +65,16 @@ public class WorkFlowMessage
     public int transportQty;
 
 
+    /**
+     * 消息内容
+     */
+    public String name;
 
 
 
 
     /**
-     * 当前状态  0 未处理  1 已处理
+     * 当前状态  0 未处理  1 已经接受  2 审核通过 3  审核拒绝  4 返工
      */
     public int  state;
 
@@ -86,8 +90,41 @@ public class WorkFlowMessage
 
     public long checkTime;
     public String checkTimeString;
+    public String url;
 
 
-            ;
+
+
+    public  String memo;
+    ;
+
+
+    /**
+     * 返工
+     */
+    public static final int STATE_REWORK =4;
+
+    /**
+     * 审核不通过
+     */
+    public static final int STATE_REJECT=3;
+    /**
+     * 已接收
+     */
+    public static final int STATE_PASS=2;
+
+    /**
+     * 已接收
+     */
+    public static final int STATE_RECEIVE=1;
+
+    /**
+     * 发送
+     */
+    public static final int STATE_SEND=0;
+
+
+    public static  final  String NAME_SUBMIT="提交";
+    public static  final  String NAME_REWORK="返工";
 
 }

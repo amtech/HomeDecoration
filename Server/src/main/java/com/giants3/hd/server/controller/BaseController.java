@@ -125,7 +125,7 @@ public class BaseController {
 
     /**
      * Returns a new object which specifies the the wanted result page.
-     * @param pageIndex The flowIndex of the wanted result page
+     * @param pageIndex The flowStep of the wanted result page
      * @return
      */
     protected Pageable constructPageSpecification(int pageIndex, int pageSize,Sort sort) {
@@ -136,7 +136,7 @@ public class BaseController {
 
     /**
      * Returns a new object which specifies the the wanted result page.
-     * @param pageIndex The flowIndex of the wanted result page
+     * @param pageIndex The flowStep of the wanted result page
      * @return
      */
     protected

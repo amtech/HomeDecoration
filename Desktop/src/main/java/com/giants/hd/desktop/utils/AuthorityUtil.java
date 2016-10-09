@@ -7,34 +7,31 @@ import com.giants3.hd.utils.entity.User;
 
 import java.util.List;
 
-/** 权限判断
+/**
+ * 权限判断
  * Created by davidleen29 on 2015/8/8.
  */
 public class AuthorityUtil {
 
 
+    private static AuthorityUtil authorityUtil = new AuthorityUtil();
 
-    private static AuthorityUtil authorityUtil=new AuthorityUtil();
-    public static AuthorityUtil getInstance()
-    {
+    public static AuthorityUtil getInstance() {
         return authorityUtil;
     }
 
 
-
     /**
      * 查看模块是否有查看权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean isViewable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean isViewable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.viewable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.viewable) {
                 return true;
             }
 
@@ -45,20 +42,17 @@ public class AuthorityUtil {
     }
 
 
-
     /**
      * 查看模块是否有审核权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean isVerifiable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean isVerifiable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.checkable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.checkable) {
                 return true;
             }
 
@@ -70,17 +64,15 @@ public class AuthorityUtil {
 
     /**
      * 查看模块是否有添加的权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean isAddable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean isAddable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.addable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.addable) {
                 return true;
             }
 
@@ -91,17 +83,15 @@ public class AuthorityUtil {
 
     /**
      * 查看模块是否有查看权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean editable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean editable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.editable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.editable) {
                 return true;
             }
 
@@ -114,17 +104,15 @@ public class AuthorityUtil {
 
     /**
      * 查看模块是否有查看权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean deletable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean deletable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.deletable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.deletable) {
                 return true;
             }
 
@@ -136,17 +124,15 @@ public class AuthorityUtil {
 
     /**
      * 查看模块是否有查看权限
+     *
      * @param moduleName
      * @return
      */
-    private boolean exportable(String moduleName)
-    {
-        if(CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+    private boolean exportable(String moduleName) {
+        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
             return true;
-        for(Authority authority:getAuthority())
-        {
-            if(moduleName.equals(authority.module.name)&&authority.exportable)
-            {
+        for (Authority authority : getAuthority()) {
+            if (moduleName.equals(authority.module.name) && authority.exportable) {
                 return true;
             }
 
@@ -157,21 +143,19 @@ public class AuthorityUtil {
     }
 
 
-    public List<Authority> getAuthority()
-    {
+    public List<Authority> getAuthority() {
         return CacheManager.getInstance().bufferData.authorities;
     }
 
-    public boolean viewProductModule()
-    {
+    public boolean viewProductModule() {
 
 
-        return viewProductList()||viewMaterialList()||viewMaterialPicture()||viewProductPicture()||viewProductDelete();
+        return viewProductList() || viewMaterialList() || viewMaterialPicture() || viewProductPicture() || viewProductDelete();
     }
 
-    public  boolean viewMaterialPicture() {
+    public boolean viewMaterialPicture() {
 
-       return isViewable(Module.NAME_MATERIAL_PICTURE);
+        return isViewable(Module.NAME_MATERIAL_PICTURE);
     }
 
     public boolean viewProductPicture() {
@@ -179,9 +163,7 @@ public class AuthorityUtil {
         return isViewable(Module.NAME_PRODUCT_PICTURE);
     }
 
-    public boolean viewProductList()
-    {
-
+    public boolean viewProductList() {
 
 
         return isViewable(Module.NAME_PRODUCT);
@@ -189,33 +171,28 @@ public class AuthorityUtil {
     }
 
 
-        public boolean viewMaterialList()
-        {
+    public boolean viewMaterialList() {
 
 
-
-            return isViewable(Module.NAME_MATERIAL);
-        }
-
-
-
-
+        return isViewable(Module.NAME_MATERIAL);
+    }
 
 
     /**
      * 查看报价模块
+     *
      * @return
      */
     public boolean viewQuotationModule() {
 
 
-
-        return viewQuotationList()||viewQuotationDeleteList();
+        return viewQuotationList() || viewQuotationDeleteList();
     }
 
 
     /**
      * 查看出入库管理
+     *
      * @return
      */
     public boolean viewStockModule() {
@@ -228,46 +205,44 @@ public class AuthorityUtil {
     public boolean viewQuotationList() {
 
 
-
-        return isViewable(Module.NAME_QUOTATION) ;
+        return isViewable(Module.NAME_QUOTATION);
     }
 
     public boolean viewQuotationDeleteList() {
 
 
-
-        return isViewable(Module.NAME_QUOTATION_DELETE) ;
+        return isViewable(Module.NAME_QUOTATION_DELETE);
     }
 
 
     /**
      * 查看基础数据模块
+     *
      * @return
      */
     public boolean viewBaseDataModule() {
-        return viewProcessList()||viewMaterialClassList()||viewCustomerList()||viewPackMaterialClassList();
+        return viewProcessList() || viewMaterialClassList() || viewCustomerList() || viewPackMaterialClassList();
 
     }
 
 
     /**
      * 查看工序列表
+     *
      * @return
      */
-    public boolean viewProcessList()
-    {
+    public boolean viewProcessList() {
 
         return isViewable(Module.NAME_PROCESS);
     }
 
 
-
     /**
      * 查看工序列表
+     *
      * @return
      */
-    public boolean viewCustomerList()
-    {
+    public boolean viewCustomerList() {
 
 
         return isViewable(Module.NAME_CUSTOMER);
@@ -277,10 +252,10 @@ public class AuthorityUtil {
 
     /**
      * 查看材料类型列表
+     *
      * @return
      */
-    public boolean viewMaterialClassList()
-    {
+    public boolean viewMaterialClassList() {
 
         return isViewable(Module.NAME_MATERIAL_CLASS);
 
@@ -290,10 +265,10 @@ public class AuthorityUtil {
 
     /**
      * 查看材料类型列表
+     *
      * @return
      */
-    public boolean viewPackMaterialClassList()
-    {
+    public boolean viewPackMaterialClassList() {
 
         return isViewable(Module.NAME_PACK_MATERIAL_CLASS);
 
@@ -303,11 +278,10 @@ public class AuthorityUtil {
     /**
      * 查看权限模块
      */
-    public boolean viewAuthorityModule()
-    {
+    public boolean viewAuthorityModule() {
 
 
-        return viewUserList()||viewModuleList()||viewAuthorityList();
+        return viewUserList() || viewModuleList() || viewAuthorityList();
 
     }
 
@@ -316,10 +290,9 @@ public class AuthorityUtil {
      * 查看用户列表
      */
 
-    public boolean viewUserList()
-    {
+    public boolean viewUserList() {
 
-      return   isViewable(Module.NAME_USER);
+        return isViewable(Module.NAME_USER);
     }
 
 
@@ -327,38 +300,37 @@ public class AuthorityUtil {
      * 查看模块列表
      */
 
-    public boolean viewModuleList()
-    {
+    public boolean viewModuleList() {
 
-        return   isViewable(Module.NAME_MODULE);
+        return isViewable(Module.NAME_MODULE);
     }
 
     /**
      * 查看模块列表
      */
 
-    public boolean viewAuthorityList()
-    {
+    public boolean viewAuthorityList() {
 
-        return   isViewable(Module.NAME_AUTHORITY);
+        return isViewable(Module.NAME_AUTHORITY);
     }
 
 
     /**
      * 系统模块是否可视
+     *
      * @return
      */
     public boolean viewSystemModule() {
 
-        return viewSyncData() ||viewSysParam();
+        return viewSyncData() || viewSysParam();
     }
 
     /**
      * 同步数据 菜单
+     *
      * @return
      */
-    public boolean viewSyncData()
-    {
+    public boolean viewSyncData() {
 
         return isViewable(Module.NAME_SYNC_DATA);
     }
@@ -366,11 +338,10 @@ public class AuthorityUtil {
 
     /**
      * 图片上传菜单
+     *
      * @return
      */
-    public boolean viewPictureUpload()
-    {
-
+    public boolean viewPictureUpload() {
 
 
         return isViewable(Module.NAME_PICTURE_UPLOAD);
@@ -379,6 +350,7 @@ public class AuthorityUtil {
 
     /**
      * 是否有添加产品的权限
+     *
      * @return
      */
     public boolean addProduct() {
@@ -391,6 +363,7 @@ public class AuthorityUtil {
 
     /**
      * 添加材料的权限
+     *
      * @return
      */
     public boolean addMaterial() {
@@ -401,6 +374,7 @@ public class AuthorityUtil {
 
     /**
      * 添加报价单的权限
+     *
      * @return
      */
     public boolean addQuotation() {
@@ -459,6 +433,7 @@ public class AuthorityUtil {
 
     /**
      * 查看设置系统参数
+     *
      * @return
      */
     public boolean viewSysParam() {
@@ -487,6 +462,7 @@ public class AuthorityUtil {
 
     /**
      * 出库查看权限
+     *
      * @return
      */
     public boolean viewStockOutList() {
@@ -495,6 +471,7 @@ public class AuthorityUtil {
 
     /**
      * 出库能否编辑权限
+     *
      * @return
      */
     public boolean editStockOut() {
@@ -504,6 +481,7 @@ public class AuthorityUtil {
 
     /**
      * 出库单能否导出权限
+     *
      * @return
      */
     public boolean exportStockOut() {
@@ -511,7 +489,8 @@ public class AuthorityUtil {
     }
 
     /**
-     *  是否订单编辑权限
+     * 是否订单编辑权限
+     *
      * @return
      */
     public boolean editOrder() {
@@ -522,6 +501,7 @@ public class AuthorityUtil {
 
     /**
      * 是否可以查看订单报表
+     *
      * @return
      */
     public boolean viewOrderReport() {
@@ -530,6 +510,7 @@ public class AuthorityUtil {
 
     /**
      * 是否可以查看生产流程
+     *
      * @return
      */
     public boolean viewWorkFlowMenu() {
@@ -537,4 +518,7 @@ public class AuthorityUtil {
     }
 
 
+    public boolean viewOrderWorkFlowReport() {
+        return isViewable(Module.NAME_ORDER_WORK_FLOW_REPORT);
+    }
 }

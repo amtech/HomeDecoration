@@ -977,7 +977,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         //日期格式验证
         product.setrDate(tf_dateValue);
 
-        product.workFlowIds=getWorkFlowData();
+        getWorkFlowData(product);
 
 
         //附件
@@ -1262,7 +1262,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     private void bindWorkFlowData(Product product) {
         //绑定生产流程数据
 
-        String productWorkFlows = product.workFlowIds;
+        String productWorkFlows = product.workFlowSteps;
         String[] indexs = StringUtils.split(productWorkFlows, StringUtils.PRODUCT_NAME_COMMA);
         int count = CacheManager.getInstance().bufferData.workFlows.size();
         for (int i = 0; i < count; i++) {
@@ -1273,7 +1273,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                 boolean existed = false;
                 for (String s : indexs) {
-                    if (s.equals(String.valueOf(workFlow.flowIndex))) {
+                    if (s.equals(String.valueOf(workFlow.flowStep))) {
                         existed = true;
                         break;
                     }
@@ -1289,21 +1289,22 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
     /**
      * 获取生产流程数据
+     *
      * @return
      */
-    public String getWorkFlowData() {
+    public void getWorkFlowData(Product product) {
 
 
         StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder nameBuilder = new StringBuilder();
         int count = CacheManager.getInstance().bufferData.workFlows.size();
         for (int i = 0; i < count; i++) {
             Component c = panel_workflow.getComponent(i);
             if (c instanceof JCheckBox) {
-                if (((JCheckBox) c).isSelected())
-                {
+                if (((JCheckBox) c).isSelected()) {
                     WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
-                    stringBuilder.append(workFlow.flowIndex).append(StringUtils.PRODUCT_NAME_COMMA);
-
+                    stringBuilder.append(workFlow.flowStep).append(StringUtils.PRODUCT_NAME_COMMA);
+                    nameBuilder.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
 
                 }
 
@@ -1312,7 +1313,12 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         }
         if (stringBuilder.length() > 0)
             stringBuilder.setLength(stringBuilder.length() - 1);
-        return stringBuilder.toString();
+        if (nameBuilder.length() > 0)
+            nameBuilder.setLength(nameBuilder.length() - 1);
+
+        product.workFlowSteps = stringBuilder.toString();
+        product.workFlowNames = nameBuilder.toString();
+
     }
 
 

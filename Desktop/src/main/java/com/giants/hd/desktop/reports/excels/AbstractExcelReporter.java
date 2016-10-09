@@ -5,10 +5,11 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 
 /**
@@ -127,6 +128,16 @@ public abstract class AbstractExcelReporter<T> {
     }
 
 
+    /**
+     *
+     * @param workbook
+     * @param sheet
+     * @param url
+     * @param column  第一个cell 列
+     * @param row      第一个cell 的行
+     * @param column2  第二个cell 列 如果图片只占用一个格子，则第一个第二个都是column row 都是一样的
+     * @param row2    第二个cell 列
+     */
     protected void attachPicture(org.apache.poi.ss.usermodel.Workbook workbook, Sheet sheet, String url, int column, int row, int column2, int row2) {
 
 
@@ -315,5 +326,26 @@ public abstract class AbstractExcelReporter<T> {
     public  void setCellAlignLeftCenter(Workbook workbook,Sheet sheet,int firstRow,int firstCol)
     {
         POIUtils.setCellAlign( workbook, sheet,  firstRow,  firstCol,  CellStyle.ALIGN_LEFT,  CellStyle.VERTICAL_CENTER);
+    }
+
+
+
+    protected Workbook open(File file) throws IOException {
+        InputStream inputStream = new FileInputStream(file);
+        Workbook workbook = new HSSFWorkbook(inputStream);
+        inputStream.close();
+
+        return workbook;
+
+    }
+
+
+    protected void write(Workbook workbook, File file) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        workbook.write(fos);
+        workbook.close();
+        fos.flush();
+        fos.close();
+
     }
 }

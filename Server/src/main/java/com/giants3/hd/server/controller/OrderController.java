@@ -10,7 +10,6 @@ import com.giants3.hd.server.noEntity.ErpOrderDetail;
 import com.giants3.hd.server.noEntity.OrderReportItem;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,7 +55,6 @@ public class OrderController extends BaseController {
 
         return erpService.findItemByCheckDate(user, saleId, dateStart, dateEnd);
     }
-
 
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -136,7 +134,7 @@ public class OrderController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/unHandleWorkFlowMessage", method = RequestMethod.POST)
+    @RequestMapping(value = "/unHandleWorkFlowMessage", method = RequestMethod.GET)
     public
     @ResponseBody
     RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
@@ -153,16 +151,15 @@ public class OrderController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/receiveWorkFlow", method = RequestMethod.GET)
+    @RequestMapping(value = "/receiveWorkFlowMessage", method = RequestMethod.GET)
     public
     @ResponseBody
     RemoteData<Void> receiveWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "workFlowMsgId") long workFlowMsgId) {
 
 
-        erpService.receiveOrderItemWorkFlow(user, workFlowMsgId);
-        return wrapData();
-    }
+        return erpService.receiveOrderItemWorkFlow(user, workFlowMsgId);
 
+    }
 
 
     /**
@@ -171,30 +168,139 @@ public class OrderController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/checkWorkFlow", method = RequestMethod.GET)
+    @RequestMapping(value = "/checkWorkFlowMessage", method = RequestMethod.GET)
     public
     @ResponseBody
     RemoteData<Void> checkOrderItemWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "workFlowMsgId") long workFlowMsgId) {
 
 
-        erpService.checkOrderItemWorkFlow(user, workFlowMsgId);
-        return wrapData();
+        return erpService.checkOrderItemWorkFlow(user, workFlowMsgId);
+
     }
 
+
     /**
-     * 发起生产流程 生产流程递交
+     * 获取可以发送流程的订单货款
      *
      * @param
      * @return
      */
-    @RequestMapping(value = "/sendWorkFlow", method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrderItemForTransform", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Void> sendOrderItemWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "orderItemId") long orderItemId, @RequestParam(value = "toWorkFlowId") long toWorkFlowId) {
+    RemoteData<ErpOrderItem> getOrderItemForTransform(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
 
 
-        erpService.sendOrderItemWorkFlow(user, orderItemId,toWorkFlowId);
-        return wrapData();
+        return erpService.getOrderItemForTransform(user);
+
     }
+
+    /**
+     * 获取可以发送流程的订单货款
+     * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/sendWorkFlowMessage", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> sendWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+            , @RequestParam(value = "orderItemId") long orderItemId
+            , @RequestParam(value = "flowStep") int flowStep
+            , @RequestParam(value = "tranQty") int tranQty
+            , @RequestParam(value = "memo") String memo
+    ) {
+
+
+        return erpService.sendWorkFlowMessage(user, orderItemId, flowStep, tranQty,memo);
+
+    }
+
+
+
+
+    /**
+     * 流程审核拒绝  返工
+     * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/rejectWorkFlowMessage", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> rejectWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+            , @RequestParam(value = "workFlowMsgId") long workFlowMsgId
+            , @RequestParam(value = "toWorkFlowStep") int toWorkFlowStep
+            , @RequestParam(value = "reason") String reason
+    ) {
+
+
+        return erpService.rejectWorkFlowMessage(user, workFlowMsgId, toWorkFlowStep, reason);
+
+    }
+    /**
+     * 获取可以发送流程的订单货款
+     * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getSendWorkFlowMessageList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> getSendWorkFlowMessageList(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+    ) {
+
+
+        return erpService.getSendWorkFlowMessageList(user);
+
+    }
+
+
+    /**
+     * 获取未完成的订单货款
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/unCompleteOrderItem", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ErpOrderItem> getUnCompleteOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user   ) {
+
+
+        return erpService.getUnCompleteOrderItem(user);
+
+    }
+
+    /**
+     * 获取 订单货款 生产进度数据
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getWorkFlowOrderItem", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ErpOrderItem> getWorkFlowOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+            , @RequestParam(value = "key") String key
+            , @RequestParam(value = "pageIndex",defaultValue ="0") int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue ="20") int pageSize
+
+
+    ) {
+
+
+        return erpService.getWorkFlowOrderItem(user,key,pageIndex,pageSize);
+
+
+
+    }
+
 
 }

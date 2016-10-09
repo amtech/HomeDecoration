@@ -1080,22 +1080,22 @@ public class ProductService extends AbstractService implements InitializingBean,
         List<WorkFlow> workFlows = workFlowRepository.findAll();
 
 
-        StringBuilder workFlowIndexs = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (WorkFlow workFlow : workFlows) {
-            workFlowIndexs.append(workFlow.flowIndex).append(StringUtils.PRODUCT_NAME_COMMA);
+            stringBuilder.append(workFlow.flowStep).append(StringUtils.PRODUCT_NAME_COMMA);
 
         }
-        workFlowIndexs.setLength(workFlowIndexs.length() - 1);
-        String workFlowIndexStrings = workFlowIndexs.toString();
+        stringBuilder.setLength(stringBuilder.length() - 1);
+        String workFlowIndexStrings = stringBuilder.toString();
 
-        workFlowIndexs.setLength(0);
+        stringBuilder.setLength(0);
         for (WorkFlow workFlow : workFlows) {
-            workFlowIndexs.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
+            stringBuilder.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
 
         }
-        workFlowIndexs.setLength(workFlowIndexs.length() - 1);
+        stringBuilder.setLength(stringBuilder.length() - 1);
 
-        String workFlowNameStrings = workFlowIndexs.toString();
+        String workFlowNameStrings = stringBuilder.toString();
         productRepository.setDefaultWorkFlowIds(workFlowIndexStrings, workFlowNameStrings);
 
     }

@@ -127,7 +127,8 @@ public class Module implements Serializable{
     public static final String NAME_ORDER_REPORT="HD_ORDER_REPORT";
     public static final String TITLE_ORDER_REPORT="订单报表";
 
-
+    public static final String NAME_ORDER_WORK_FLOW_REPORT="HD_ORDER_WORK_FLOW_REPORT";
+    public static final String TITLE_ORDER_WORK_FLOW_REPORT="生产流程报表";
 
     public static final String NAME_QUOTATION_DELETE="QuotationDelete";
     public static final String TITLE_QUOTATION_DELETE="已删除报价单";
@@ -195,6 +196,7 @@ public class Module implements Serializable{
     ,NAME_MODULE,NAME_PRODUCT_DELETE,NAME_QUOTATION_DELETE
     ,NAME_SYS_PARAM,NAME_TASK_MANAGE,
             NAME_ORDER,NAME_ORDER_REPORT,
+   NAME_ORDER_WORK_FLOW_REPORT,
 
             NAME_STOCK,NAME_STOCK_OUT,NAME_WORK_FLOW
     };
@@ -208,7 +210,7 @@ public class Module implements Serializable{
    , TITLE_MODULE,TITLE_PRODUCT_DELETE,TITLE_QUOTATION_DELETE
     ,TITLE_SYS_PARAM,TITLE_TASK_MANAGE,
             TITLE_ORDER,TITLE_ORDER_REPORT,
-
+            TITLE_ORDER_WORK_FLOW_REPORT,
             TITLE_STOCK,TITLE_STOCK_OUT,TITLE_WORK_FLOW
     };
 

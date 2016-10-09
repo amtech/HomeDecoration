@@ -1,0 +1,147 @@
+package com.giants.hd.desktop.frames;
+
+import com.giants.hd.desktop.presenter.OrderWorkFlowReportPresenter;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutPlan;
+import com.giants.hd.desktop.utils.SwingFileUtils;
+import com.giants.hd.desktop.view.OrderWorkFlowReportViewer;
+import com.giants.hd.desktop.viewImpl.Panel_OrderWorkFlowReport;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.Module;
+import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+
+
+import rx.Subscriber;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * 订单生产流程报表界面
+ * Created by david on 20160925
+ */
+public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implements OrderWorkFlowReportPresenter {
+    OrderWorkFlowReportViewer viewer;
+
+
+    java.util.List<ErpOrderItem> items = null;
+
+    public OrderWorkFlowReportInternalFrame() {
+        super(Module.TITLE_ORDER_WORK_FLOW_REPORT);
+
+        init();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                searchUnDoneOrder(  );
+            }
+        });
+
+    }
+
+    public void init() {
+
+//        setMinimumSize(new Dimension(1024, 768));
+//        pack();
+    }
+
+
+    @Override
+    protected Container getCustomContentPane() {
+        viewer = new Panel_OrderWorkFlowReport(this);
+        return viewer.getRoot();
+    }
+
+    @Override
+    public void searchUnDoneOrder( ) {
+
+
+        UseCaseFactory.getInstance().createUnCompleteOrderWorkFlowReportUseCase(  ).execute(new Subscriber<RemoteData<ErpOrderItem>>() {
+            @Override
+            public void onCompleted() {
+                viewer.hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                viewer.hideLoadingDialog();
+                viewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<ErpOrderItem> orderReportItemRemoteData) {
+
+                setUnCompleteRemoteData(orderReportItemRemoteData);
+            }
+        });
+
+        viewer.showLoadingDialog();
+
+
+    }
+
+    private void setUnCompleteRemoteData(RemoteData<ErpOrderItem> remoteData) {
+        if (remoteData.isSuccess())
+            items = remoteData.datas;
+        viewer.setUnCompleteData(remoteData);
+    }
+
+
+    /**
+     * 导出报表
+     */
+    @Override
+    public void export() {
+
+        if (items == null) {
+            viewer.showMesssage("无数据导出");
+            return;
+        }
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+//        try {
+//            new Report_Excel_StockOutPlan().report(items, file.getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            viewer.showMesssage(e.getMessage());
+//        } catch (HdException e) {
+//            e.printStackTrace();
+//            viewer.showMesssage(e.getMessage());
+//        }
+
+
+    }
+
+
+    @Override
+    public void search(String key, int pageIndex, int pageSize) {
+
+
+        UseCaseFactory.getInstance().createOrderWorkFlowReportUseCase(key,pageIndex,pageSize  ).execute(new Subscriber<RemoteData<ErpOrderItem>>() {
+            @Override
+            public void onCompleted() {
+                viewer.hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                viewer.hideLoadingDialog();
+                viewer.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<ErpOrderItem> orderReportItemRemoteData) {
+
+                viewer.setData(orderReportItemRemoteData);
+            }
+        });
+
+        viewer.showLoadingDialog();
+    }
+}

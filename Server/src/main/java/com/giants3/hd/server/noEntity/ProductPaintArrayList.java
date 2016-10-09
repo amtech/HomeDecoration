@@ -47,7 +47,7 @@ public class ProductPaintArrayList extends ArrayList<ProductPaint> {
             ingredientPaint.updatePriceAndCostAndQuantity(globalData);
             int index=this.indexOf(ingredientPaint);
             return index;
-            //fireTableRowsUpdated(flowIndex, flowIndex);
+            //fireTableRowsUpdated(flowStep, flowStep);
         }
 
 

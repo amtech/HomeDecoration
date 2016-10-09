@@ -232,6 +232,7 @@ public class UserController extends BaseController {
         //读取第一条数据   总共就一条
         bufferData.globalData = globalDataRepository.findAll().get(0);
         bufferData.factories = factoryRepository.findAll();
+        bufferData.workFlows=workFlowRepository.findAll();
 //        List<ProductDetail> demos = new ArrayList<>();
 //        ProductDetail productDetail = null;
 //        RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);

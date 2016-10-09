@@ -202,6 +202,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             OrderItem orderItem = orderItemRepository.findFirstByOsNoEqualsAndItmEquals(item.os_no, item.itm);
             if (orderItem != null) {
 
+                item.id = orderItem.id;
                 item.maitou = orderItem.maitou;
                 item.guagou = orderItem.guagou;
 
@@ -509,6 +510,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         Order order = orderRepository.findFirstByOsNoEquals(os_no);
         List<OrderItem> orderItems = orderItemRepository.findByOsNoEqualsOrderByItm(os_no);
 
+        if (orderItems == null || orderItems.size() == 0)
+            return wrapError("该订单未保存，请选保存。");
+        ;
         List<WorkFlowOrderItem> workFlows = orderItemWorkFlowRepository.findByOrderNameEquals(os_no);
         if (workFlows == null || workFlows.size() == 0) {
 
@@ -518,18 +522,24 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 workFlowOrderItem.orderId = order.id;
                 workFlowOrderItem.orderName = order.osNo;
                 workFlowOrderItem.orderItemId = orderItem.id;
-                workFlowOrderItem.productName = orderItem.prd_no;
-
+                workFlowOrderItem.productName = orderItem.prd_no + (StringUtils.isEmpty(orderItem.pVersion) ? "" : ("-" + orderItem.pVersion));
+                workFlowOrderItem.tranQty = orderItem.qty;
 
                 //设置当前为初始状态
                 Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prd_no, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
+
+                if (product == null)
+                    return wrapError("该订单中有货款，没有产品资料，请补全。");
+                ;
                 if (product != null) {
-                    workFlowOrderItem.workFlowIndex = WorkFlow.STEP_INDEX_1;
+                    workFlowOrderItem.workFlowStep = WorkFlow.FIRST_STEP;
                     workFlowOrderItem.workFlowName = WorkFlow.STEP_1;
-                    workFlowOrderItem.workFlowIndexs = product.workFlowIndexs;
+                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
                     workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
-                    workFlowOrderItem.workFlowIndexs = product.workFlowIndexs;
+                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
                     workFlowOrderItem.workFlowNames = product.workFlowNames;
+                    //默认第一个流程发起提交
+                    workFlowOrderItem.workFlowState = 1;
                     workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
                     workFlowOrderItem.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
@@ -547,20 +557,21 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 workFlowMessage.orderItemQty = orderItem.qty;
                 workFlowMessage.transportQty = orderItem.qty;
 
-
-                workFlowMessage.fromFlowIndex = workFlowOrderItem.workFlowIndex;
+                workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
+                workFlowMessage.fromFlowStep = workFlowOrderItem.workFlowStep;
                 workFlowMessage.fromFlowName = workFlowOrderItem.workFlowName;
 
 
-                workFlowMessage.toFlowIndex = Integer.valueOf(StringUtils.split(workFlowOrderItem.workFlowIndexs, StringUtils.PRODUCT_NAME_COMMA)[1]);
+                workFlowMessage.toFlowStep = Integer.valueOf(StringUtils.split(workFlowOrderItem.workFlowSteps, StringUtils.PRODUCT_NAME_COMMA)[1]);
                 workFlowMessage.toFlowName = StringUtils.split(workFlowOrderItem.workFlowNames, StringUtils.PRODUCT_NAME_COMMA)[1];
 
                 workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
                 workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
-                workFlowMessage.state = 0;
+                workFlowMessage.state = WorkFlowMessage.STATE_SEND;
                 workFlowMessage.unit = product.pUnitName;
                 workFlowMessage.productId = product.id;
-
+                workFlowMessage.productName = product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion));
+                workFlowMessage.url = product.url;
 
                 workFlowMessageRepository.save(workFlowMessage);
 
@@ -585,9 +596,82 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * 接收产品订单的递交数据
      * 如果该流程未配置审核人， 则自动通过审核。并使该订单进入下一个流程
      */
-    public void receiveOrderItemWorkFlow(User loginUser, long messageId) {
+    @Transactional
+    public RemoteData<Void> receiveOrderItemWorkFlow(User loginUser, long messageId) {
 
 
+        WorkFlowMessage message = workFlowMessageRepository.findOne(messageId);
+        if (message == null) {
+            return wrapError("消息不存在：" + messageId);
+        }
+        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(message.toFlowStep);
+        if (workFlow == null) {
+            return wrapError("目标流程不存在" + message.toFlowStep);
+        }
+
+        if (workFlow.userId != loginUser.id) {
+            return wrapError("你不是目标流程的负责人：" + workFlow.userCName);
+        }
+
+
+        OrderItem orderItem = orderItemRepository.findOne(message.orderItemId);
+        if (orderItem == null) {
+            return
+                    wrapError("未找到该订单货款 :" + message.orderName + "   " + message.productName);
+        }
+
+        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(message.orderItemId);
+        if (workFlowOrderItem == null) {
+            return
+                    wrapError("未找到该货款流程数据 :" + message.orderName + "   " + message.productName);
+        }
+
+
+        message.receiveTime = Calendar.getInstance().getTimeInMillis();
+        message.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+
+        if (message.state == WorkFlowMessage.STATE_SEND) {
+
+
+//            //有审核人
+//            if (workFlow.checkerId > 0) {
+//                message.state = WorkFlowMessage.STATE_RECEIVE;
+//                workFlowOrderItem.workFlowState = 1;
+//            } else {
+                //无审核人 系统自动审核通过
+                message.state = WorkFlowMessage.STATE_PASS;
+                message.checkTime = Calendar.getInstance().getTimeInMillis();
+                message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+                //进入目标流程
+                workFlowOrderItem.workFlowName = workFlow.name;
+                workFlowOrderItem.workFlowStep = workFlow.flowStep;
+                workFlowOrderItem.workFlowState = 0;
+                workFlowOrderItem.tranQty = message.transportQty;
+
+
+
+
+        } else if (message.state == WorkFlowMessage.STATE_REWORK) {
+            //返工 状态 自动通过。
+            message.state = WorkFlowMessage.STATE_PASS;
+            message.receiveTime = Calendar.getInstance().getTimeInMillis();
+            message.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+            //进入目标流程
+            workFlowOrderItem.workFlowName = workFlow.name;
+            workFlowOrderItem.workFlowStep = workFlow.flowStep;
+            workFlowOrderItem.workFlowState = 0;
+            workFlowOrderItem.tranQty = message.transportQty;
+
+        }
+        orderItemWorkFlowRepository.save(workFlowOrderItem);
+
+        workFlowMessageRepository.save(message);
+
+
+        return wrapData();
     }
 
 
@@ -597,10 +681,125 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * @param loginUser
      * @param messageId
      */
-    public void checkOrderItemWorkFlow(User loginUser, long messageId) {
+    @Transactional
+    public RemoteData<Void> checkOrderItemWorkFlow(User loginUser, long messageId) {
+
+        WorkFlowMessage message = workFlowMessageRepository.findOne(messageId);
+        if (message == null) {
+            return wrapError("消息不存在：" + messageId);
+        }
+        if (message.state != WorkFlowMessage.STATE_RECEIVE) {
+            return wrapError("当前消息的状态不对，必须是已接收未审核的");
+        }
+
+
+        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(message.toFlowStep);
+        if (workFlow == null) {
+            return wrapError("目标流程不存在" + message.toFlowStep);
+        }
+
+        if (workFlow.checkerId != loginUser.id) {
+            return wrapError("你不是目标流程的传递的审核人：" + workFlow.userCName);
+        }
+
+
+        OrderItem orderItem = orderItemRepository.findOne(message.orderItemId);
+        if (orderItem == null) {
+            return
+                    wrapError("未找到该订单货款 :" + message.orderName + "   " + message.productName);
+        }
+
+        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(message.orderItemId);
+        if (workFlowOrderItem == null) {
+            return
+                    wrapError("未找到该货款流程数据 :" + message.orderName + "   " + message.productName);
+        }
+
+
+
+        message.state = WorkFlowMessage.STATE_PASS;
+        message.checkTime = Calendar.getInstance().getTimeInMillis();
+        message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+
+        orderItemWorkFlowRepository.save(workFlowOrderItem);
+
+
+        workFlowMessageRepository.save(message);
+
+
+        return wrapData();
 
     }
 
+
+    /**
+     * 获取指定用户可以操作的生产流程转移的订单items
+     *
+     * @return
+     */
+    public RemoteData<ErpOrderItem> getOrderItemForTransform(User loginUser) {
+
+
+        /**
+         * 找出负责人 ，并且不是最后一道流程,最后一道流程不能发起提交了。
+         */
+        List<WorkFlow> workFlows = workFlowRepository.findByUserIdEqualsAndFlowStepNot(loginUser.id, WorkFlow.FINAL_STEP);
+
+        if (workFlows == null || workFlows.size() == 0) {
+            return wrapError("你不是流程负责人，不能发送流程操作");
+        }
+
+
+        final int size = workFlows.size();
+        int[] steps = new int[size];
+        for (int i = 0; i < size; i++) {
+            steps[i] = workFlows.get(i).flowStep;
+
+        }
+        //已经发送 或者 已经接受未审核的  都不能再发。
+        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepInAndWorkFlowStateEqualsOrderByOrderNameDesc(steps, 0);
+
+
+        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+
+        return wrapData(erpOrderItems);
+
+
+    }
+
+    private List<ErpOrderItem> convertWorkFlowItemToErpOrderItem(List<WorkFlowOrderItem> orderItems) {
+        List<ErpOrderItem> erpOrderItems = new ArrayList<>();
+        for (WorkFlowOrderItem orderItem : orderItems) {
+
+            ErpOrderItem erpOrderItem = new ErpOrderItem();
+            erpOrderItem.id = orderItem.orderItemId;
+            erpOrderItem.os_no = orderItem.orderName;
+            erpOrderItem.prd_name = orderItem.productName;
+
+            erpOrderItem.currentWorkFlow = orderItem.workFlowName;
+            erpOrderItem.currentWorkStep = orderItem.workFlowStep;
+            erpOrderItem.currentWorkState = orderItem.workFlowState;
+            erpOrderItem.tranQty = orderItem.tranQty;
+
+            OrderItem oItem = orderItemRepository.findOne(orderItem.orderItemId);
+            if (oItem != null) {
+
+                erpOrderItem.qty = oItem.qty;
+                erpOrderItem.prd_no = oItem.prd_no;
+                erpOrderItem.pVersion = oItem.pVersion;
+                erpOrderItem.ut = oItem.ut;
+                erpOrderItem.bat_no = oItem.bat_no;
+                erpOrderItem.pVersion = oItem.pVersion;
+                erpOrderItem.prd_no = oItem.prd_no;
+                erpOrderItem.url = oItem.url;
+
+            }
+            erpOrderItems.add(erpOrderItem);
+        }
+
+        return erpOrderItems;
+    }
 
     /**
      * 获取生产流程表
@@ -646,12 +845,13 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         if (workFlows == null || workFlows.size() == 0) return wrapData();
 
         int size = workFlows.size();
-        int[] flowIndexs = new int[size];
+        int[] flowSteps = new int[size];
         for (int i = 0; i < size; i++) {
             WorkFlow workFlow = workFlows.get(i);
-            flowIndexs[i] = workFlow.flowIndex;
+            flowSteps[i] = workFlow.flowStep;
         }
-        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateEqualsAndToFlowIndexIn(0, flowIndexs);
+        int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_RECEIVE, WorkFlowMessage.STATE_REWORK};
+        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepIn(state, flowSteps);
 
         return wrapData(workFlowMessages);
 
@@ -662,9 +862,163 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      *
      * @param user
      * @param orderItemId
-     * @param toWorkFlowId
+     * @param flowStep
+     * @param tranQty
      */
-    public void sendOrderItemWorkFlow(User user, long orderItemId, long toWorkFlowId) {
+
+
+    @Transactional
+    public RemoteData<Void> sendWorkFlowMessage(User user, long orderItemId, int flowStep, int tranQty, String memo) {
+
+
+        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
+        if (workFlowOrderItem == null) return wrapError("订单数据不存在");
+
+
+        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(flowStep);
+        if (workFlow == null) {
+            return wrapError("目标流程：" + flowStep + " 不存在");
+        }
+
+
+        workFlowOrderItem.workFlowState = 1;
+        orderItemWorkFlowRepository.save(workFlowOrderItem);
+
+        OrderItem orderItem = orderItemRepository.findOne(workFlowOrderItem.orderItemId);
+        //设置当前为初始状态
+        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prd_no, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
+        if (product == null)
+            return wrapError("该订单中有货款，没有产品资料，请补全。");
+        //构建信息发出消息
+        WorkFlowMessage workFlowMessage = new WorkFlowMessage();
+        workFlowMessage.orderId = workFlowOrderItem.id;
+        workFlowMessage.orderName = workFlowOrderItem.orderName;
+        workFlowMessage.orderItemId = workFlowOrderItem.orderItemId;
+        workFlowMessage.orderItemQty = orderItem.qty;
+        workFlowMessage.transportQty = tranQty;
+        workFlowMessage.memo = memo;
+        workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
+        workFlowMessage.fromFlowStep = workFlowOrderItem.workFlowStep;
+        workFlowMessage.fromFlowName = workFlowOrderItem.workFlowName;
+        workFlowMessage.toFlowStep = workFlow.flowStep;
+        workFlowMessage.toFlowName = workFlow.name;
+        workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
+        workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+        workFlowMessage.state = WorkFlowMessage.STATE_SEND;
+        workFlowMessage.unit = orderItem.ut;
+        workFlowMessage.productId = product.id;
+        workFlowMessage.productName = product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion));
+        workFlowMessage.url = product.url;
+        workFlowMessageRepository.save(workFlowMessage);
+
+
+        return wrapData();
+
+
+    }
+
+
+    /**
+     * 获取指定用户发送的流程消息列表
+     *
+     * @param loginUser
+     * @return
+     */
+
+    public RemoteData<WorkFlowMessage> getSendWorkFlowMessageList(User loginUser) {
+
+        /**
+         * 找出负责人 ，并且不是最后一道流程,最后一道流程不能发起提交了。
+         */
+        List<WorkFlow> workFlows = workFlowRepository.findByUserIdEqualsAndFlowStepNot(loginUser.id, WorkFlow.FINAL_STEP);
+
+        if (workFlows.size() == 0) return wrapData();
+
+
+        final int size = workFlows.size();
+        int[] steps = new int[size];
+        for (int i = 0; i < size; i++) {
+            steps[i] = workFlows.get(i).flowStep;
+
+        }
+
+        return wrapData(workFlowMessageRepository.findByFromFlowStepIn(steps));
+    }
+
+    public RemoteData<ErpOrderItem> getUnCompleteOrderItem(User user) {
+
+
+        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepNotOrderByCreateTimeDesc(WorkFlow.FINAL_STEP);
+
+        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+
+        return wrapData(erpOrderItems);
+
+
+    }
+
+    public RemoteData<ErpOrderItem> getWorkFlowOrderItem(User user, String key, int pageIndex, int pageSize) {
+
+        String keyForSearch = "%" + key + "%";
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+
+        Page<WorkFlowOrderItem> pageValue = orderItemWorkFlowRepository.findByOrderNameLikeOrProductNameLikeOrderByOrderNameDesc(keyForSearch, keyForSearch, pageable);
+
+        List<WorkFlowOrderItem> orderItems = pageValue.getContent();
+
+        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), erpOrderItems);
+
+
+    }
+
+    @Transactional
+    public RemoteData<Void> rejectWorkFlowMessage(User user, long workFlowMsgId, int toWorkFlowStep, String reason) {
+
+        WorkFlowMessage message = workFlowMessageRepository.findOne(workFlowMsgId);
+
+        WorkFlow to = workFlowRepository.findFirstByFlowStepEquals(toWorkFlowStep);
+
+        message.state = WorkFlowMessage.STATE_REJECT;
+        message.memo = reason;
+        message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+        message.checkTime = Calendar.getInstance().getTimeInMillis();
+
+
+        workFlowMessageRepository.save(message);
+
+
+        //构建返工发出消息
+        WorkFlowMessage workFlowMessage = new WorkFlowMessage();
+        workFlowMessage.orderId = message.orderId;
+        workFlowMessage.orderName = message.orderName;
+        workFlowMessage.orderItemId = message.orderItemId;
+        workFlowMessage.orderItemQty = message.orderItemQty;
+        workFlowMessage.transportQty = message.transportQty;
+        workFlowMessage.memo = reason;
+        workFlowMessage.name = WorkFlowMessage.NAME_REWORK;
+
+        workFlowMessage.fromFlowStep = message.fromFlowStep;
+        workFlowMessage.fromFlowName = message.fromFlowName;
+
+
+        workFlowMessage.toFlowStep = to.flowStep;
+        workFlowMessage.toFlowName = to.name;
+
+        workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
+        workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+        workFlowMessage.state = WorkFlowMessage.STATE_REWORK;
+        workFlowMessage.unit = message.unit;
+        workFlowMessage.productId = message.productId;
+        workFlowMessage.productName = message.productName;
+        workFlowMessage.url = message.url;
+
+        workFlowMessageRepository.save(workFlowMessage);
+
+//        workFlowRepository.
+        return wrapData();
+
 
     }
 }

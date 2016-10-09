@@ -182,6 +182,7 @@ public class HttpUrl {
         String url = BaseUrl + productUrl;
         return url;
     }
+
     /**
      * 生成图片的url
      *
@@ -192,6 +193,7 @@ public class HttpUrl {
         String url = BaseUrl + relativeUrl;
         return url;
     }
+
     /**
      * 读取产品类型
      *
@@ -811,9 +813,9 @@ public class HttpUrl {
      * @param pageSize
      * @return
      */
-    public static String loadOrderList(String key,long salesId, int pageIndex, int pageSize) {
+    public static String loadOrderList(String key, long salesId, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/order/list?key=" + key +"&salesId=" + salesId+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/order/list?key=" + key + "&salesId=" + salesId + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
     }
 
 
@@ -854,13 +856,14 @@ public class HttpUrl {
      * @param pageSize
      * @return
      */
-    public static String loadStockOutList(String key, long salesId,int pageIndex, int pageSize) {
+    public static String loadStockOutList(String key, long salesId, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex +"&salesId=" + salesId + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/stock/outList?key=" + key + "&pageIndex=" + pageIndex + "&salesId=" + salesId + "&pageSize=" + pageSize);
     }
 
     /**
      * 保存出库信息
+     *
      * @return
      */
     public static String saveStockOutDetail() {
@@ -870,6 +873,7 @@ public class HttpUrl {
 
     /**
      * 查询订单详情
+     *
      * @param os_no
      * @return
      */
@@ -883,14 +887,17 @@ public class HttpUrl {
 
     /**
      * 读取出库单权限
+     *
      * @return
      */
     public static String readStockOutAuth() {
 
         return additionInfo(BaseUrl + "api/authority/stockOutAuthList");
     }
+
     /**
      * 读取订单单权限
+     *
      * @return
      */
     public static String readOrderAuth() {
@@ -906,8 +913,10 @@ public class HttpUrl {
     public static String saveStockOutAuthList() {
         return additionInfo(BaseUrl + "api/authority/saveStockOutList");
     }
+
     /**
      * 读取订单报表  验货日期
+     *
      * @param userId
      * @param dateStart
      * @param dateEnd
@@ -918,21 +927,31 @@ public class HttpUrl {
     public static String getOrderReportByCheckDate(long userId
             , String dateStart, String dateEnd, int pageIndex, int pageSize) {
 
-        return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?saleId=" + userId +"&dateStart=" + dateStart+ "&dateEnd=" + dateEnd+ "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+        return additionInfo(BaseUrl + "api/order/reportItemByCheckDate?saleId=" + userId + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
 
     }
 
     public static String getWorkFlowList() {
-        return additionInfo(BaseUrl + "api/order/listWorkFlow" );
+        return additionInfo(BaseUrl + "api/order/listWorkFlow");
 
     }
 
     public static String saveWorkFlowList() {
-        return additionInfo(BaseUrl + "api/order/saveWorkFlow" );
+        return additionInfo(BaseUrl + "api/order/saveWorkFlow");
 
     }
 
     public static String startOrderTrack(String os_no) {
-        return additionInfo(BaseUrl + "api/order/startOrderTrack?os_no="+os_no );
+        return additionInfo(BaseUrl + "api/order/startOrderTrack?os_no=" + os_no);
+    }
+
+    public static String getUnCompleteOrderWorkFlowReport() {
+
+        return additionInfo(BaseUrl + "api/order/unCompleteOrderItem");
+    }
+
+    public static String getOrderWorkFlowReport(String key, int pageIndex, int pageSize) {
+
+        return additionInfo(BaseUrl + String.format("api/order/getWorkFlowOrderItem?key=%s&pageIndex=%d&pageSize=%d", key, pageIndex, pageSize));
     }
 }

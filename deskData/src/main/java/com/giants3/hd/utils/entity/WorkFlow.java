@@ -13,7 +13,7 @@ public class WorkFlow {
     /**
      * 当前序号
      */
-    public int flowIndex;
+    public int flowStep;
 
 
 

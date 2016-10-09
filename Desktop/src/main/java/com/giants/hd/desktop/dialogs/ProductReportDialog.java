@@ -25,12 +25,15 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * 产品报表界面
+ */
 public class ProductReportDialog extends BaseDialog<Void> {
     private JPanel contentPane;
     private JTextField start;
     private JTextField end;
     private JCheckBox include;
-    private JButton export;
+    private JButton export2;
     private JButton search;
     private JHdTable jt;
     private JButton export1;
@@ -39,6 +42,7 @@ public class ProductReportDialog extends BaseDialog<Void> {
     private JTabbedPane tabbedPane1;
     private JCheckBox random_include;
     private JButton btn_random_search;
+    private JButton btn_report3;
     ProductTableModel model;
 
 
@@ -195,7 +199,7 @@ public class ProductReportDialog extends BaseDialog<Void> {
 
 
 
-        export.addActionListener(new ActionListener() {
+        export2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -261,7 +265,39 @@ public class ProductReportDialog extends BaseDialog<Void> {
 
             }
         });
+        btn_report3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(products==null||products.size()==0)
+                {
+                    JOptionPane.showMessageDialog(ProductReportDialog.this, "无数据导出");
+                    return;
+                }
 
+                final    File file= SwingFileUtils.getSelectedDirectory();
+                if(file==null) return;
+                new HdSwingWorker<Void,Void>(ProductReportDialog.this)
+                {
+
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+                        new Excel_ProductReport().reportProduct3(products, file.getPath());
+                        return new RemoteData<Void>();
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+                        JOptionPane.showMessageDialog(ProductReportDialog.this, "导出成功");
+                    }
+                }.go();
+
+
+
+
+
+            }
+        });
 
         //查询动作
         ActionListener randomSearchActionListener=new ActionListener() {

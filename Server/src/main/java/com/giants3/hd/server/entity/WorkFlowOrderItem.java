@@ -28,7 +28,7 @@ public class WorkFlowOrderItem {
      * 当前进度数据
      */
 
-    public int workFlowIndex;
+    public int workFlowStep;
     public String workFlowName;
 
 
@@ -36,16 +36,22 @@ public class WorkFlowOrderItem {
      * 订单货款对应的流程数据
      */
 
-    public String workFlowIndexs;
+    public String workFlowSteps;
     public String workFlowNames;
 
 
+
     /**
-     * 当前状态  1 处理中，2 已发出  3已接受
+     * 当前生产状态  0 正常  1 已发送  2 已接收 3 已审核=0进入下一个流程
      */
-    public int messageState;
+    public int workFlowState;
 
 
     public String createTimeString;
     public long createTime;
+
+    /**
+     * 传递的数量
+     */
+    public int tranQty;
 }

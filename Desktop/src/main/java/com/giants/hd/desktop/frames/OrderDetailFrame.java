@@ -354,6 +354,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 orderDetailViewer.hideLoadingDialog();
                 orderDetailViewer.showMesssage(e.getMessage());
             }

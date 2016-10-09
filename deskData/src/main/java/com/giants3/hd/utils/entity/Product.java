@@ -342,16 +342,19 @@ public class Product implements Serializable {
 	 *  包装图片附件
 	 */
 	public String packAttaches="";
-	/**
-	 * 生产流程ids 逗号分隔
-	 */
-	public String  workFlowIds;
 
 	/**
 	 * 包装备注信息
 	 * @return
      */
 	public String packInfo="";
+
+	/**
+	 * 生产流程ids 逗号分隔
+	 */
+	public String workFlowSteps;
+	public String workFlowNames;
+
 
 	public float getFob() {
 		return fob;
@@ -802,7 +805,7 @@ public class Product implements Serializable {
 		if (packInfo != null ? !packInfo.equals(product.packInfo) : product.packInfo != null) return false;
 
 		if (packAttaches != null ? !packAttaches.equals(product.packAttaches) : product.packAttaches != null) return false;
-		if (workFlowIds != null ? !workFlowIds.equals(product.workFlowIds) : product.workFlowIds != null) return false;
+		if (workFlowSteps != null ? !workFlowSteps.equals(product.workFlowSteps) : product.workFlowSteps != null) return false;
 		if (factoryCode != null ? !factoryCode.equals(product.factoryCode) : product.factoryCode != null) return false;
 		if (attaches != null ? !attaches.equals(product.attaches) : product.attaches != null) return false;
 
@@ -881,7 +884,7 @@ public class Product implements Serializable {
 		result = 31 * result + (factoryCode != null ? factoryCode.hashCode() : 0);
 		result = 31 * result + (packInfo != null ? packInfo.hashCode() : 0);
 		result = 31 * result + (packAttaches != null ? packAttaches.hashCode() : 0);
-		result = 31 * result + (workFlowIds != null ? workFlowIds.hashCode() : 0);
+		result = 31 * result + (workFlowSteps != null ? workFlowSteps.hashCode() : 0);
 		return result;
 	}
 

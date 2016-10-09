@@ -15,13 +15,14 @@ import java.util.List;
 public class WorkFlow {
 
     public static final String STEP_1 = "白胚制作";
-    public static final int STEP_INDEX_1 = 0;
+    public static final int FIRST_STEP = 0;
+    public static final int FINAL_STEP = 8;
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    public static final int STEP_INDEX_2 = 1;
+    public static final int FLOW_STEP_2 = 1;
     public static final String STEP_2 = "白胚仓";
 
     public String name;
@@ -29,7 +30,7 @@ public class WorkFlow {
     /**
      * 当前序号
      */
-    public int flowIndex;
+    public int flowStep;
 
 
 
@@ -60,47 +61,53 @@ public class WorkFlow {
 
         workFlow = new WorkFlow();
         workFlow.name = STEP_1;
-        workFlow.flowIndex = STEP_INDEX_1;
+        workFlow.flowStep = FIRST_STEP;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
         workFlow.name = STEP_2;
-        workFlow.flowIndex = STEP_INDEX_2;
+        workFlow.flowStep = FLOW_STEP_2;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "喷塑";
-        workFlow.flowIndex = 2;
+        workFlow.flowStep = 2;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "颜色";
-        workFlow.flowIndex = 3;
+        workFlow.flowStep = 3;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
         workFlow.name = "组装";
-        workFlow.flowIndex = 4;
+        workFlow.flowStep = 4;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
         workFlow.name = "验收";
-        workFlow.flowIndex = 5;
+        workFlow.flowStep = 5;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "包装";
-        workFlow.flowIndex = 6;
+        workFlow.flowStep = 6;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "成品仓";
-        workFlow.flowIndex = 7;
+        workFlow.flowStep = 7;
         workFlows.add(workFlow);
 
+
+
+        workFlow = new WorkFlow();
+        workFlow.name = "出库";
+        workFlow.flowStep = FINAL_STEP;
+        workFlows.add(workFlow);
         return workFlows;
 
 
