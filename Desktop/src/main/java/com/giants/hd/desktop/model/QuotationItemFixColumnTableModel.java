@@ -21,7 +21,7 @@ public class QuotationItemFixColumnTableModel extends  BaseTableModel<QuotationI
 
     public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号" };
     public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60 };
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"photoUrl", "productName", "pVersion" };
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"thumbnail", "productName", "pVersion" };
     public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Product.class,Product.class};
 
     public  static boolean[] editables = new boolean[]{false,false,                                   true,           true};

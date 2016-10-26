@@ -3,10 +3,14 @@ package com.giants.hd.desktop.local;
 import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants3.hd.utils.StringUtils;
 import com.google.inject.Singleton;
+import de.greenrobot.common.io.IoUtils;
+import org.apache.commons.collections.map.LRUMap;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -26,10 +30,13 @@ public class DownloadFileManager {
     private AccumulateMap cacheTable ;
 
 
+     private Map<String,String> lruMap;
+
 
     public DownloadFileManager() {
 
 
+        LRUMap map;
         File f=  new  File(localFilePath);
         if(!f.exists())
         {
@@ -42,6 +49,10 @@ public class DownloadFileManager {
         {
             cacheTable=new AccumulateMap();
         }
+
+
+//        LRUMap lruMap;
+//        lruMap=Collections.synchronizedMap(new LRUMap(CACHE_MAX_SIZE));
 
     }
 
@@ -72,6 +83,8 @@ public class DownloadFileManager {
             accumulateCache(fileName);
             return fileName;
         }
+
+
         download(url,fileName);
         accumulateCache(fileName);
         return fileName;
@@ -199,6 +212,7 @@ public class DownloadFileManager {
             fos = new FileOutputStream(newFile);
 
 
+           // IoUtils.copyAllBytes(bis,fos);
 
             //保存文件
 

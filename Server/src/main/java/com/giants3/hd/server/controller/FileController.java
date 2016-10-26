@@ -9,6 +9,7 @@ import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import de.greenrobot.common.io.IoUtils;
@@ -244,7 +245,21 @@ public class FileController extends BaseController {
 
 
         FileSystemResource resource = new FileSystemResource(FileUtils.getProductPicturePath(productFilePath, name, pVersion, type));
+
+
         //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
+
+        return resource;
+    }
+
+
+    @RequestMapping(value = "/download/product/thumbnail/{name}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getProductThumbnailFile(@PathVariable String name , @RequestParam(value = "type", defaultValue = "jpg") String type) {
+
+        if(StringUtils.isEmpty(name)) return null;
+
+        FileSystemResource resource = new FileSystemResource(productFilePath+ "thumbnail"+FileUtils.SEPARATOR+name.replace(FileUtils.URL_PATH_SEPARATOR,FileUtils.SEPARATOR)+"."+type);
 
         return resource;
     }
@@ -346,6 +361,22 @@ public class FileController extends BaseController {
 
 
     }
+
+    @RequestMapping(value = "/download/androidApp/{name}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getAndroidApp(@PathVariable String name) {
+
+
+
+
+        FileSystemResource resource = new FileSystemResource(appFilePath + name+".apk");
+        return resource;
+
+
+    }
+
+
+
 
 
     /**

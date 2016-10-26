@@ -66,7 +66,7 @@ public class QuotationService extends AbstractService implements InitializingBea
                     longIds[i]=Long.valueOf(ids[i]);
                 }
 
-                 pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdInOrQNumberLikeAndSalesmanIdEqualsOrderByQDateDesc("%" + searchValue + "%",longIds, "%" + searchValue + "%", salesmanId, pageable);
+                 pageValue = quotationRepository.findByCustomerNameLikeAndSalesmanIdInOrQNumberLikeAndSalesmanIdInOrderByQDateDesc("%" + searchValue + "%",longIds, "%" + searchValue + "%", longIds, pageable);
 
 
 

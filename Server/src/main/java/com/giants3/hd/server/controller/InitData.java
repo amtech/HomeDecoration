@@ -3,11 +3,14 @@ package com.giants3.hd.server.controller;
 import com.giants3.hd.server.entity.WorkFlow;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.xml.AndroidManifest;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.server.entity.AppVersion;
 import com.giants3.hd.server.entity.GlobalData;
 import com.giants3.hd.server.entity.Module;
+import com.sun.deploy.xml.XMLParser;
+import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +19,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -132,6 +138,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
                     }
+
+
                 }
 
             }
@@ -140,7 +148,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             if(appVersion!=null)
             {
                 //核对客户端最新版本
-
                 AppVersion oldVersion=appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(appVersion.appName);
 
                 if(oldVersion==null)

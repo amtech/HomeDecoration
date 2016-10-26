@@ -4,6 +4,8 @@ package com.giants3.hd.server.repository;
 import com.giants3.hd.server.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
 *  客户信息
  *
@@ -12,5 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 
 
     public Customer findFirstByCodeEquals(String code);
+
 
 }

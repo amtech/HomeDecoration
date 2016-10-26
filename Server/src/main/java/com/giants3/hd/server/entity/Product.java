@@ -325,10 +325,17 @@ public class Product implements Serializable {
 	public String attaches="";
 
 	/**
-	 * 图片url
+	 *原图片url
 	 */
 	@Basic
 	public  String url;
+
+
+	/**
+	 *縮略圖路徑
+	 */
+	@Basic
+	public  String thumbnail;
 
 
 	/**

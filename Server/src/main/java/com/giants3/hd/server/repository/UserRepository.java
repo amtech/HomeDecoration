@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     User findFirstByIsSalesmanAndCodeEquals(boolean isSalman, String sal_no);
 
-    List<User> findByDeletedEquals(boolean deleted  );
+    List<User> findByDeletedEqualsOrderByCode(boolean deleted  );
 }

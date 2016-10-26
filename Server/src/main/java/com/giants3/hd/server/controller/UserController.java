@@ -4,6 +4,7 @@ import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.noEntity.BufferData;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.CustomerService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.ConstantData;
@@ -37,7 +38,7 @@ public class UserController extends BaseController {
     private AuthorityRepository authorityRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @Autowired
     private PackMaterialClassRepository packMaterialClassRepository;
@@ -129,7 +130,7 @@ public class UserController extends BaseController {
 
         BufferData bufferData = new BufferData();
         bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
-        bufferData.customers = customerRepository.findAll();
+        bufferData.customers = customerService.list();
 
         bufferData.materialClasses = materialClassRepository.findAll();
         bufferData.packMaterialClasses = packMaterialClassRepository.findAll();
@@ -219,7 +220,7 @@ public class UserController extends BaseController {
             return wrapError("未找到用户");
         }
         BufferData bufferData = new BufferData();
-        bufferData.customers = customerRepository.findAll();
+        bufferData.customers = customerService.list();
         bufferData.materialClasses = materialClassRepository.findAll();
         bufferData.packMaterialClasses = packMaterialClassRepository.findAll();
         bufferData.packMaterialPositions = packMaterialPositionRepository.findAll();

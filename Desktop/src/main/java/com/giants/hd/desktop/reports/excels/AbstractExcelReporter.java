@@ -54,7 +54,7 @@ public abstract class AbstractExcelReporter<T> {
             if (startRow + defaultRowCount < sheet.getLastRowNum())
                 sheet.shiftRows(startRow + defaultRowCount, sheet.getLastRowNum(), rowNumToInsert, true, true);
 
-            Row rowForCopy = sheet.getRow(startRow);
+            Row rowForCopy = getRow(sheet,startRow);
             for (int j = 0; j < rowNumToInsert; j++) {
 
                 int rowToInsert = startRow + defaultRowCount + j;
@@ -114,19 +114,29 @@ public abstract class AbstractExcelReporter<T> {
 
 
     protected void addString(Sheet sheet, String value, int column, int rowUpdate) {
-        Cell cell = sheet.getRow(rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
+        Cell cell = getRow(sheet,rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
         cell.setCellValue(value);
 
     }
 
     protected void addNumber(Sheet sheet, double value, int column, int rowUpdate) {
-        Row row = sheet.getRow(rowUpdate);
+        Row row = getRow(sheet,rowUpdate);
         Cell cell = row.getCell(column, Row.CREATE_NULL_AS_BLANK);
 
         cell.setCellValue(value);
 
     }
 
+
+    private Row getRow(Sheet sheet,int rowUpdate)
+    {
+        Row row = sheet.getRow(rowUpdate);
+        if(row==null)
+        {
+            row=sheet.createRow(rowUpdate);
+        }
+        return row;
+    }
 
     /**
      *
@@ -149,7 +159,7 @@ public abstract class AbstractExcelReporter<T> {
 
         int rowHeight = 0;
         for (int i = row; i <= row2; i++) {
-            rowHeight += sheet.getRow(row).getHeightInPoints() * DEFAULT_PIXEL_A_POINT;
+            rowHeight +=  getRow(sheet,row).getHeightInPoints() * DEFAULT_PIXEL_A_POINT;
         }
 
 
@@ -232,7 +242,7 @@ public abstract class AbstractExcelReporter<T> {
                 float heightPixel = padding;
                 for (int rowIndex = row; rowIndex <= row2; rowIndex++) {
 
-                    float thisRowHeight = sheet.getRow(rowIndex).getHeightInPoints() * DEFAULT_PIXEL_A_POINT;
+                    float thisRowHeight = getRow(sheet,rowIndex).getHeightInPoints() * DEFAULT_PIXEL_A_POINT;
                     float stepPixel = heightPixel + thisRowHeight;
                     if (stepPixel >= top && destRow1 < 0) {
                         destRow1 = rowIndex;

@@ -94,6 +94,11 @@ public class ErpOrderItem {
      */
     public String hpgg;
     /**
+     * 缩略路径
+     */
+    public String thumbnail;
+
+    /**
      * 图片路径
      */
     public String url;

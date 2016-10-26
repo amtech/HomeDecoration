@@ -61,6 +61,8 @@ public class OrderItem implements Serializable {
     public int qty;
     public String prd_no;
     public  String pVersion;
+
+    public String thumbnail;
     public String url;
     public String ut;
 }

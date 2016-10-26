@@ -9,6 +9,7 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,7 +114,8 @@ public class CustomerService extends AbstractService  {
      */
     public List<Customer> list()
     {
-        return  customerRepository.findAll() ;
+
+        return  customerRepository.findAll(new Sort("code")) ;
     }
 
 

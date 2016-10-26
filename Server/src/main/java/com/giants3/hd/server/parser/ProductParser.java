@@ -32,6 +32,8 @@ public class ProductParser implements DataParser<Product,AProduct> {
                 =data.price;
         aProduct.url
                 =data.url;
+        aProduct.thumbnail
+                =data.thumbnail;
         return aProduct;
     }
 }

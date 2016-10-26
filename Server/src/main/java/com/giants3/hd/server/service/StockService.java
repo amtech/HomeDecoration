@@ -142,6 +142,7 @@ public class StockService extends AbstractService {
             if (product != null) {
 
                 item.url = product.url;
+                item.thumbnail = product.thumbnail;
                 item.unit = product.pUnitName;
             }
 

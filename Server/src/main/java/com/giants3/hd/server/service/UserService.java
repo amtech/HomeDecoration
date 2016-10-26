@@ -1,14 +1,12 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.Authority;
-import com.giants3.hd.server.entity.OrderAuth;
 import com.giants3.hd.server.entity.QuoteAuth;
 
 import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -132,7 +130,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
      */
     public List<User> list()
     {
-        return  userRepository.findByDeletedEquals(false );
+        return  userRepository.findByDeletedEqualsOrderByCode(false );
     }
 //    /**
 //     * 删除用户 进行关联判断

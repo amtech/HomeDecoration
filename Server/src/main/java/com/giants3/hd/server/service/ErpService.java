@@ -193,6 +193,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
                 item.productId = product.id;
                 item.url = product.url;
+                item.thumbnail = product.thumbnail;
                 item.packAttaches = product.packAttaches;
                 item.packageInfo = product.packInfo;
             }
@@ -447,6 +448,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         orderReportItem.qty = orderItem.qty;
         orderReportItem.prd_no = orderItem.prd_no;
         orderReportItem.url = orderItem.url;
+        orderReportItem.thumbnail = orderItem.thumbnail;
         orderReportItem.sendDate = orderItem.sendDate;
         orderReportItem.verifyDate = orderItem.verifyDate;
         orderReportItem.unit = orderItem.ut;
@@ -632,18 +634,19 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
         if (message.state == WorkFlowMessage.STATE_SEND) {
-
-
-//            //有审核人
-//            if (workFlow.checkerId > 0) {
-//                message.state = WorkFlowMessage.STATE_RECEIVE;
-//                workFlowOrderItem.workFlowState = 1;
-//            } else {
+        //有审核人
+            if (workFlow.checkerId > 0) {
+                message.state = WorkFlowMessage.STATE_RECEIVE;
+                workFlowOrderItem.workFlowState = 1;
+            } else {
                 //无审核人 系统自动审核通过
                 message.state = WorkFlowMessage.STATE_PASS;
                 message.checkTime = Calendar.getInstance().getTimeInMillis();
                 message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
+            }
+
+            //不管有无审核人 ，只要接收就进入下一流程
                 //进入目标流程
                 workFlowOrderItem.workFlowName = workFlow.name;
                 workFlowOrderItem.workFlowStep = workFlow.flowStep;
@@ -793,6 +796,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 erpOrderItem.pVersion = oItem.pVersion;
                 erpOrderItem.prd_no = oItem.prd_no;
                 erpOrderItem.url = oItem.url;
+                erpOrderItem.thumbnail = oItem.thumbnail;
+                erpOrderItem.sendDate = oItem.sendDate;
+                erpOrderItem.verifyDate = oItem.verifyDate;
 
             }
             erpOrderItems.add(erpOrderItem);
@@ -942,7 +948,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         }
 
-        return wrapData(workFlowMessageRepository.findByFromFlowStepIn(steps));
+        return wrapData(workFlowMessageRepository.findByFromFlowStepInOrderByCreateTimeDesc(steps));
     }
 
     public RemoteData<ErpOrderItem> getUnCompleteOrderItem(User user) {

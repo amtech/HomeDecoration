@@ -17,7 +17,7 @@ public class OrderReportItemTableModel extends BaseTableModel<OrderReportItem> {
     public static int[] columnWidth = new int[]{80, 100, 80, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 80, 60, 60, 100, 100, 80};
 
 
-    public static String[] fieldName = new String[]{"cus_no", "os_no", "prd_no", "url", "cus_prd_no", "unit", "qty", "verifyDate", "sendDate", "saleName"};
+    public static String[] fieldName = new String[]{"cus_no", "os_no", "prd_no", "thumbnail", "cus_prd_no", "unit", "qty", "verifyDate", "sendDate", "saleName"};
 
     public static Class[] classes = new Class[]{Object.class, Object.class, Object.class, ImageIcon.class, String.class, String.class, String.class, String.class};
     /**

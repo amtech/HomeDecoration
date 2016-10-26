@@ -7,6 +7,9 @@ import com.giants3.hd.server.entity.StockOutItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -25,5 +28,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
 
     List<OrderItem> findByOsNoEqualsOrderByItm(String osNo);
 
-
+    @Modifying
+    @Query("update T_OrderItem p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.prd_no =   :prd_no  and  p.pVersion= :pVersion")
+    int updateUrlByProductInfo(@Param("thumbnail") String thumbnail,@Param("photoUrl") String url, @Param("prd_no")  String  prd_no,@Param("pVersion")  String  pVersion);
 }

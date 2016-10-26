@@ -8,6 +8,7 @@ public class OrderReportItem {
     public String os_no;
     public String cus_no;
     public String prd_no;
+    public String thumbnail;
     public String url;
 
     public String saleName;

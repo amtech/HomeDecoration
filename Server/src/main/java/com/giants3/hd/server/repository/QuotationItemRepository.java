@@ -24,7 +24,7 @@ public interface QuotationItemRepository extends JpaRepository<QuotationItem,Lon
    public int  deleteByQuotationIdEquals(long quotationId);
 
    @Modifying
-   @Query("update T_QuotationItem p set   p.photoUrl=:photoUrl  WHERE p.productId =   :productId ")
-   public void updatePhotoAndPhotoUrlByProductId( @Param("photoUrl") String url,  @Param("productId") long productId);
+   @Query("update T_QuotationItem p set   p.photoUrl=:photoUrl,p.thumbnail=:thumbnail   WHERE p.productId =   :productId ")
+   public void updatePhotoAndPhotoUrlByProductId( @Param("thumbnail") String thumbnail, @Param("photoUrl") String url,  @Param("productId") long productId);
 
 }

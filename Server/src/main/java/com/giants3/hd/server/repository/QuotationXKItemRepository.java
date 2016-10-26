@@ -21,11 +21,11 @@ public interface QuotationXKItemRepository extends JpaRepository<QuotationXKItem
    int  deleteByQuotationIdEquals(long quotationId);
 
    @Modifying
-   @Query("update T_QuotationXKItem p set    p.photoUrl=:photoUrl    WHERE p.productId =   :productId ")
-   public int updatePhotoByProductId( @Param("photoUrl") String photoUrl,@Param("productId") long productId);
+   @Query("update T_QuotationXKItem p set    p.photoUrl=:photoUrl , p.thumbnail=:thumbnail   WHERE p.productId =   :productId ")
+   public int updatePhotoByProductId(@Param("thumbnail") String thumbnail, @Param("photoUrl") String photoUrl,@Param("productId") long productId);
 
    @Modifying
-   @Query("update T_QuotationXKItem p set     p.photo2Url=:photo2Url    WHERE p.productId2 =   :productId ")
-   public int updatePhoto2ByProductId( @Param("photo2Url") String photo2Url,@Param("productId") long productId);
+   @Query("update T_QuotationXKItem p set     p.photo2Url=:photo2Url, p.thumbnail2=:thumbnail2    WHERE p.productId2 =   :productId ")
+   public int updatePhoto2ByProductId( @Param("thumbnail2") String thumbnail,@Param("photo2Url") String photo2Url,@Param("productId") long productId);
 
 }

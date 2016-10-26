@@ -45,7 +45,7 @@ public class Report_Excel_ProductMaterialList extends AbstractExcelReporter<Prod
 
         //以包起始的地方开始   jar 根目录开始。
         InputStream inputStream=	getClass().getClassLoader().getResourceAsStream(TEMPLATE_FILE_NAME) ;
-        String fileName=fileOutputDirectory+ File.separator+data.product.name+"材料清单.xls";
+        String fileName=fileOutputDirectory+ File.separator+data.product.name+(StringUtils.isEmpty(data.product.pVersion)?"":("_"+data.product.pVersion))+"材料清单.xls";
         //Create Workbook instance holding reference to .xlsx file
         workbook = new HSSFWorkbook(inputStream);
 

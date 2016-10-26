@@ -260,7 +260,10 @@ public class QuotationXKItem implements Serializable,Valuable {
 
     public String photo2Url;
 
+    public String thumbnail;
 
+
+    public String thumbnail2;
 
 
     public void updateProduct(Product product) {
@@ -270,7 +273,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
 
         productId=product.id;
-
+        thumbnail=product.thumbnail;
         photoUrl=product.url;
         productName=product.name;
         pVersion=product.pVersion;
@@ -304,7 +307,7 @@ public class QuotationXKItem implements Serializable,Valuable {
 
         productId2=product==null?0:product.id;
         photo2Url=product==null?"":product.url;
-
+        thumbnail2=product==null?"":product.thumbnail;
         productName2=product==null?"":product.name;
         pVersion2=product==null?"":product.pVersion;
         inBoxCount2=product==null?0:product.insideBoxQuantity;

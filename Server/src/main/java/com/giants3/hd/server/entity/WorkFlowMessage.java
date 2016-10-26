@@ -90,6 +90,7 @@ public class WorkFlowMessage
 
     public long checkTime;
     public String checkTimeString;
+    public String  thumbnail;
     public String url;
 
 

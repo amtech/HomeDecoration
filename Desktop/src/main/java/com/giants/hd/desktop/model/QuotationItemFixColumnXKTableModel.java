@@ -20,7 +20,7 @@ public class QuotationItemFixColumnXKTableModel extends  BaseTableModel<Quotatio
 
 
     public static final String COLUMN_PRODUCT="productName";
-     public static final String PHOTO_URL = "photoUrl";
+     public static final String PHOTO_URL = "thumbnail";
 
     public static String[] columnNames = new String[]{"序号","图片",                                 "品名", "配方号(折叠)",   "配方号(加强)" } ;
     public static int[] columnWidths = new int []{   40,  ImageUtils.MAX_PRODUCT_MINIATURE_HEIGHT,    100,        60,       60};
@@ -61,12 +61,12 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Strin
         if (fieldName[columnIndex].equals(PHOTO_URL))
         {
             String destUrl="";
-            if(!StringUtils.isEmpty(item.photoUrl))
+            if(!StringUtils.isEmpty(item.thumbnail))
             {
-                destUrl=item.photoUrl;
+                destUrl=item.thumbnail;
             }else
             {
-                destUrl=item.photo2Url;
+                destUrl=item.thumbnail2;
             }
 
             if(!StringUtils.isEmpty(destUrl))

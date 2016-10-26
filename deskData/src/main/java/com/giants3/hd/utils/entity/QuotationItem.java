@@ -130,12 +130,13 @@ public class QuotationItem implements Serializable,Valuable {
 
 
     public String photoUrl;
+    public  String thumbnail;
 
     public void updateProduct(Product product) {
 
 
         productId=product.id;
-
+        thumbnail=product.thumbnail;
         photoUrl=product.url;
         productName=product.name;
         pVersion=product.pVersion;

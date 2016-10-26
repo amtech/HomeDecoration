@@ -23,10 +23,14 @@ public class ImageUtils {
 
     public static final String TAG = "ImageUtils";
 
-    //产品微缩图尺寸
+    //产品展示默认图尺寸
     public static final int MAX_PRODUCT_MINIATURE_WIDTH = 100;
     public static final int MAX_PRODUCT_MINIATURE_HEIGHT = 100;
 
+
+
+    public static final int MAX_PRODUCT_THUMBNAIL_WIDTH = 300;
+    public static final int MAX_PRODUCT_THUMBNAIL_HEIGHT = 300;
     //材料微缩图尺寸
     public static final int MAX_MATERIAL_MINIATURE_WIDTH = 50;
     public static final int MAX_MATERIAL_MINIATURE_HEIGHT = 50;
@@ -44,7 +48,7 @@ public class ImageUtils {
      */
     public static final byte[] scaleProduct(String path) throws HdException {
 
-        return scale(path, MAX_PRODUCT_MINIATURE_WIDTH, MAX_PRODUCT_MINIATURE_HEIGHT);
+        return scale(path, MAX_PRODUCT_THUMBNAIL_WIDTH, MAX_PRODUCT_THUMBNAIL_HEIGHT);
 
 
     }

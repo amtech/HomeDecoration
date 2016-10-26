@@ -9,6 +9,8 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +18,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * quotation 业务处理 类
@@ -47,6 +53,9 @@ public class ProductService extends AbstractService implements InitializingBean,
     @Autowired
     private ProductPaintRepository productPaintRepository;
 
+    @Autowired
+    private WorkFlowMessageRepository workFlowMessageRepository;
+
 
     @Autowired
     private OrderItemWorkFlowRepository orderItemWorkFlowRepository;
@@ -64,6 +73,8 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     @Autowired
     private QuotationXKItemRepository quotationXKItemRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
 
     @Autowired
@@ -82,15 +93,29 @@ public class ProductService extends AbstractService implements InitializingBean,
     @Value("${tempfilepath}")
     private String tempFilePath;
 
+    //产品图片全部同步现场池
+    ExecutorService executorService  ;
+
+    @Autowired
+    PlatformTransactionManager platformTransactionManager;
+
+    TransactionTemplate transactionTemplate;
+
 
     @Override
     public void destroy() throws Exception {
 
+        transactionTemplate = null;
+        if(executorService!=null)
+        {
+
+            executorService.shutdown();
+        }
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        transactionTemplate = new TransactionTemplate(platformTransactionManager);
     }
 
 
@@ -296,28 +321,53 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         //所有同名的产品 都要遍历产品图片的url  同名 不同pversion的产品 可能共用同一张图片
         List<Product> products = productRepository.findByNameEquals(productName);
-        for (Product product : products) {
 
-            boolean changed = updateProductPhotoData(product);
 
-            if (changed) {
-                productRepository.save(product);
+        updateProductAndRelateImageInfo(products);
 
-                //   更新报价表中的图片url
-                quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.url, product.id);
-                quotationXKItemRepository.updatePhotoByProductId(product.url, product.id);
-                quotationXKItemRepository.updatePhoto2ByProductId(product.url, product.id);
-                productRepository.flush();
-                quotationItemRepository.flush();
-                quotationXKItemRepository.flush();
-            }
-
-        }
 
     }
 
     /**
-     * 更新产品的缩略图数据
+     * 更新产品图片相关的数据
+     *
+     * @param products
+     */
+
+    private int updateProductAndRelateImageInfo(List<Product> products) {
+
+
+        int updateCount = 0;
+
+        for (Product product : products) {
+            boolean changedPhoto = updateProductPhotoData(product);
+            if (changedPhoto) {
+                updateCount++;
+                productRepository.save(product);
+                //   更新报价表中的图片url
+                //更新报价表中的图片缩略图
+                quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.thumbnail, product.url, product.id);
+                quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
+                quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
+                orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
+                workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
+            }
+
+
+        }
+        quotationItemRepository.flush();
+        quotationXKItemRepository.flush();
+        orderItemRepository.flush();
+        workFlowMessageRepository.flush();
+        productRepository.flush();
+
+
+        return updateCount;
+
+    }
+
+    /**
+     * 更新产品的原圖，缩略图数据
      *
      * @param product
      * @return boolean  是否修改数据
@@ -335,18 +385,50 @@ public class ProductService extends AbstractService implements InitializingBean,
 
                 product.setLastPhotoUpdateTime(Calendar.getInstance().getTimeInMillis());
                 product.setUrl("");
+                clearThumbnailFile(product.thumbnail);
+                product.thumbnail = "";
                 return true;
             }
 
         } else {
             long lastPhotoUpdateTime = FileUtils.getFileLastUpdateTime(file);
             String newUrl = FileUtils.getProductPictureURL(product.name, product.pVersion, lastPhotoUpdateTime);
-            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url))
-
+            //三种情况下 更新图片路径  1 图片已经被修改。  2  新图片路径与旧路径不一致  3 缩略图未生成
+            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail)) {
 
                 product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
-            product.setUrl(newUrl);
-            return true;
+                product.setUrl(newUrl);
+                clearThumbnailFile(product.thumbnail);
+                //構建縮略路径 保证文件夹存在
+                String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
+                String thumbnailUrl = FileUtils.getProductThumbnailUrl(product);
+                FileUtils.makeDirs(thumbnailPath);
+                try {
+
+                    byte[] bytes = ImageUtils.scaleProduct(filePath);
+                    if (bytes != null) {
+                        InputStream in = new ByteArrayInputStream(bytes);
+                        BufferedImage bufferedImage = ImageIO.read(in);
+                        in.close();
+                        final FileOutputStream output = new FileOutputStream(thumbnailPath);
+                        ImageIO.write(bufferedImage, "jpg", output);
+                        output.flush();
+                        output.close();
+                        product.thumbnail = thumbnailUrl;
+                    } else {
+                        System.out.println("filePath cant not be scale --" + filePath);
+                    }
+                } catch (HdException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                return true;
+            }
 
 
         }
@@ -357,52 +439,111 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     }
 
+    /**
+     * 清除縮微圖片
+     *
+     * @param thumbnailUrl
+     */
+    private void clearThumbnailFile(String thumbnailUrl) {
+        if (StringUtils.isEmpty(thumbnailUrl)) return;
+        String fileName = thumbnailUrl.replace(FileUtils.DOWNLOAD_PRODUCT_PATH, productFilePath).replace(FileUtils.URL_PATH_SEPARATOR, FileUtils.SEPARATOR);
+        File file = new File(fileName);
+        if (file.exists())
+            file.delete();
 
-    @Transactional
-    public RemoteData<Void> asyncProduct() {
-        int count = 0;
+
+    }
+
+
+    public RemoteData<Void> syncAllProductPhoto() {
+
         //遍历所有产品
-        //一次处理20条记录
+        //一次处理100条记录
+        long count = productRepository.count();
+        final int pageSize = 100;
+        int pageCount = (int) ((count - 1) / pageSize + 1);
+        int updateCount = 0;
 
-        int pageIndex = 0;
-        int pageSize = 20;
+        if(executorService==null)
+        {
+            executorService=Executors.newFixedThreadPool(5);
+        }
+        Collection<Future<Integer>> futures = new LinkedList<Future<Integer>>();
+        for (int i = 0; i < pageCount; ++i) {
+            final int pageIndex = i;
+            futures.add(executorService.submit(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
 
+
+                    int size = transactionTemplate.execute(new TransactionCallback<Integer>() {
+                        @Override
+                        public Integer doInTransaction(TransactionStatus status) {
+
+                            return asyncProductPhotoPartlyAndCommit(pageIndex, pageSize);
+
+                        }
+                    });
+                    return size;
+
+                }
+            }));
+        }
+
+            //等待所有线程结束
+            for (Future<Integer> future : futures) {
+                try {
+
+                    updateCount += future.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            return wrapMessageData(count > 0 ? "同步产品数据图片成功，共成功同步" + updateCount + "款产品！" : "所有产品图片已经都是最新的。");
+        }
+
+//    /**
+//     * 同步所有与产品图片相关的数据， 更新图片url 至最新。
+//     */
+//    @Transactional
+//    public RemoteData<Void> syncProductPhotoRelateData() {
+//
+//        //遍历所有产品
+//        //一次处理100条记录
+//        long count = 30000;
+//        int pageSize =1;
+//        int pageCount = (int) ((count - 1) / pageSize + 1);
+//        int updateCount=0;
+//        for (int i = 0; i < pageCount; i++) {
+//            updateCount+= asyncProductPhotoPartlyAndCommit(i, pageSize);
+//        }
+//
+//
+//        return wrapMessageData(count > 0 ? "同步产品数据图片成功，共成功同步" + updateCount + "款产品！" : "所有产品图片已经都是最新的。");
+//    }
+
+
+        /**
+         * 图片更新  部分更新就提交
+         *
+         * @param pageIndex
+         * @param pageSize
+         * @return
+         */
+
+    public int asyncProductPhotoPartlyAndCommit(int pageIndex, int pageSize) {
 
         Page<Product> productPage = null;
-
-        do {
-            Pageable pageable = constructPageSpecification(pageIndex++, pageSize);
-            productPage = productRepository.findAll(pageable);
-
-            for (Product product : productPage.getContent()) {
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        productPage = productRepository.findAll(pageable);
+        int updateCount = updateProductAndRelateImageInfo(productPage.getContent());
+        return updateCount;
 
 
-                boolean changedPhoto = updateProductPhotoData(product);
-
-
-                if (changedPhoto) {
-                    count++;
-                    productRepository.save(product);
-
-
-                    //   更新报价表中的图片url
-                    //更新报价表中的图片缩略图
-                    quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.url, product.id);
-                    quotationXKItemRepository.updatePhotoByProductId(product.url, product.id);
-                    quotationXKItemRepository.updatePhoto2ByProductId(product.url, product.id);
-                }
-
-
-            }
-            quotationItemRepository.flush();
-            quotationXKItemRepository.flush();
-            productRepository.flush();
-
-
-        } while (productPage.hasNext());
-
-
-        return wrapMessageData(count > 0 ? "同步产品数据图片成功，共成功同步" + count + "款产品！" : "所有产品图片已经都是最新的。");
     }
 
 
@@ -415,7 +556,8 @@ public class ProductService extends AbstractService implements InitializingBean,
      * @return
      */
     @Transactional
-    public RemoteData<ProductDetail> copyProductDetail(User user, long productId, String newProductName, String version, boolean copyPicture) {
+    public RemoteData<ProductDetail> copyProductDetail(User user, long productId, String newProductName, String
+            version, boolean copyPicture) {
 
         if (productRepository.findFirstByNameEqualsAndPVersionEquals(newProductName, version) != null) {
 
@@ -564,6 +706,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     /**
      * 记录产品修改信息
      */
+
     public void updateProductLog(Product product, User user) {
 
         //记录数据当前修改着相关信息

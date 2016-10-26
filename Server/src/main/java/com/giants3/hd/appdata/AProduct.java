@@ -57,5 +57,5 @@ public class AProduct implements Serializable {
 	public  float fob;
 	public float price;
 	public String url;
-
+	public String thumbnail;
 }

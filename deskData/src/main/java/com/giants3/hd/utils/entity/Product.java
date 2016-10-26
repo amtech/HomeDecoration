@@ -320,6 +320,12 @@ public class Product implements Serializable {
 	public String attaches="";
 
 	/**
+	 *縮略圖路徑
+	 */
+
+	public  String thumbnail;
+
+	/**
 	 * 图片url
 	 */
 

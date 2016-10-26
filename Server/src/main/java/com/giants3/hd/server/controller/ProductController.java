@@ -365,19 +365,7 @@ public class ProductController extends BaseController {
     }
 
 
-    /**
-     * 更新图片的最后一次修改的时间
-     */
-    private final void updateProductPhotoTime(Product product) {
 
-
-        String filePath = FileUtils.getProductPicturePath(productFilePath, product.name, product.pVersion);
-        long newLastUpdateTime = FileUtils.getFileLastUpdateTime(new File(filePath));
-        product.setLastPhotoUpdateTime(newLastUpdateTime);
-        product.url = FileUtils.getProductPictureURL(product.name, product.pVersion, product.lastPhotoUpdateTime);
-
-
-    }
     /**
      * 复制产品信息   即翻单
      * 检查是否存在同款记录  （product +version）
@@ -435,8 +423,8 @@ public class ProductController extends BaseController {
 
     @RequestMapping(value = "/syncPhoto", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public RemoteData<Void> asyncProduct() {
-        return productService.asyncProduct();
+    public RemoteData<Void> syncAllProductPhoto() {
+        return productService.syncAllProductPhoto();
 
     }
 

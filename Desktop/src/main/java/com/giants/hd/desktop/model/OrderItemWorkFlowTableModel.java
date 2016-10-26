@@ -17,7 +17,7 @@ public class OrderItemWorkFlowTableModel extends BaseTableModel<ErpOrderItem> {
     public static int[] columnWidth = new int[]{40, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 60, 60, 60, 100, 40, 80,80, 120, 400};
 
 
-    public static String[] fieldName = new String[]{"itm", "url", "os_no","prd_no", "pVersion", "bat_no", "ut", "qty","tranQty", "currentWorkFlow", "memo"};
+    public static String[] fieldName = new String[]{"itm", "thumbnail", "os_no","prd_no", "pVersion", "bat_no", "ut", "qty","tranQty", "currentWorkFlow", "memo"};
 
     public static Class[] classes = new Class[]{Object.class, ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class  };
     /**

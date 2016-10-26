@@ -103,66 +103,6 @@ public class ImageLoader {
 
 
     }
-
-
-//    public void loadImageData(final ImageByteDataReader byteDataReader, final String url, final double maxWidth, final double maxHeight) {
-//
-//
-//        Observable.create(new Observable.OnSubscribe<BufferedImage>() {
-//            @Override
-//            public void call(Subscriber<? super BufferedImage> subscriber) {
-//
-//                try {
-//                    String fileName = manager.cacheFile(url);
-//                    subscriber.onNext(ImageIO.read(new File(fileName)));
-//                    subscriber.onCompleted();
-//                } catch (IOException e) {
-//
-//                    subscriber.onError(e);
-//                }
-//
-//
-//            }
-//        }).map(new Func1<BufferedImage, byte[]>() {
-//            @Override
-//            public byte[] call(BufferedImage bufferedImage) {
-//                try {
-//                    return
-//
-//                            ImageUtils.scale(bufferedImage, (int) maxWidth, (int) maxHeight, true);
-//                } catch (HdException e) {
-//                    e.printStackTrace();
-//                    return new byte[0];
-//                }
-//
-//
-//            }
-//        })
-//                .subscribeOn(Schedulers.newThread()).observeOn(Schedulers.immediate()).subscribe(new Observer<byte[]>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//                e.printStackTrace();
-//                byteDataReader.onError("图片读取失败");
-//            }
-//
-//            @Override
-//            public void onNext(byte[] bufferedImage) {
-//
-//
-//                byteDataReader.setData(bufferedImage);
-//
-//            }
-//        });
-//
-//
-//    }
-
     private BufferedImage scaleImage(BufferedImage bufferedImage, double maxWidth, double maxHeight) {
         if (bufferedImage == null) return null;
         int width = bufferedImage.getWidth();
