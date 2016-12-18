@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.utils;
 
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.entity.Authority;
-import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity.User;
 
 import java.util.List;
@@ -155,18 +155,18 @@ public class AuthorityUtil {
 
     public boolean viewMaterialPicture() {
 
-        return isViewable(Module.NAME_MATERIAL_PICTURE);
+        return isViewable(ModuleConstant.NAME_MATERIAL_PICTURE);
     }
 
     public boolean viewProductPicture() {
 
-        return isViewable(Module.NAME_PRODUCT_PICTURE);
+        return isViewable(ModuleConstant.NAME_PRODUCT_PICTURE);
     }
 
     public boolean viewProductList() {
 
 
-        return isViewable(Module.NAME_PRODUCT);
+        return isViewable(ModuleConstant.NAME_PRODUCT);
 
     }
 
@@ -174,7 +174,7 @@ public class AuthorityUtil {
     public boolean viewMaterialList() {
 
 
-        return isViewable(Module.NAME_MATERIAL);
+        return isViewable(ModuleConstant.NAME_MATERIAL);
     }
 
 
@@ -197,7 +197,7 @@ public class AuthorityUtil {
      */
     public boolean viewStockModule() {
 
-        return isViewable(Module.NAME_STOCK);
+        return isViewable(ModuleConstant.NAME_STOCK);
 
 
     }
@@ -205,13 +205,13 @@ public class AuthorityUtil {
     public boolean viewQuotationList() {
 
 
-        return isViewable(Module.NAME_QUOTATION);
+        return isViewable(ModuleConstant.NAME_QUOTATION);
     }
 
     public boolean viewQuotationDeleteList() {
 
 
-        return isViewable(Module.NAME_QUOTATION_DELETE);
+        return isViewable(ModuleConstant.NAME_QUOTATION_DELETE);
     }
 
 
@@ -233,7 +233,7 @@ public class AuthorityUtil {
      */
     public boolean viewProcessList() {
 
-        return isViewable(Module.NAME_PROCESS);
+        return isViewable(ModuleConstant.NAME_PROCESS);
     }
 
 
@@ -245,7 +245,7 @@ public class AuthorityUtil {
     public boolean viewCustomerList() {
 
 
-        return isViewable(Module.NAME_CUSTOMER);
+        return isViewable(ModuleConstant.NAME_CUSTOMER);
 
     }
 
@@ -257,7 +257,7 @@ public class AuthorityUtil {
      */
     public boolean viewMaterialClassList() {
 
-        return isViewable(Module.NAME_MATERIAL_CLASS);
+        return isViewable(ModuleConstant.NAME_MATERIAL_CLASS);
 
 
     }
@@ -270,7 +270,7 @@ public class AuthorityUtil {
      */
     public boolean viewPackMaterialClassList() {
 
-        return isViewable(Module.NAME_PACK_MATERIAL_CLASS);
+        return isViewable(ModuleConstant.NAME_PACK_MATERIAL_CLASS);
 
 
     }
@@ -292,7 +292,7 @@ public class AuthorityUtil {
 
     public boolean viewUserList() {
 
-        return isViewable(Module.NAME_USER);
+        return isViewable(ModuleConstant.NAME_USER);
     }
 
 
@@ -302,7 +302,7 @@ public class AuthorityUtil {
 
     public boolean viewModuleList() {
 
-        return isViewable(Module.NAME_MODULE);
+        return isViewable(ModuleConstant.NAME_MODULE);
     }
 
     /**
@@ -311,7 +311,7 @@ public class AuthorityUtil {
 
     public boolean viewAuthorityList() {
 
-        return isViewable(Module.NAME_AUTHORITY);
+        return isViewable(ModuleConstant.NAME_AUTHORITY);
     }
 
 
@@ -332,7 +332,7 @@ public class AuthorityUtil {
      */
     public boolean viewSyncData() {
 
-        return isViewable(Module.NAME_SYNC_DATA);
+        return isViewable(ModuleConstant.NAME_SYNC_DATA);
     }
 
 
@@ -344,7 +344,7 @@ public class AuthorityUtil {
     public boolean viewPictureUpload() {
 
 
-        return isViewable(Module.NAME_PICTURE_UPLOAD);
+        return isViewable(ModuleConstant.NAME_PICTURE_UPLOAD);
     }
 
 
@@ -356,7 +356,7 @@ public class AuthorityUtil {
     public boolean addProduct() {
 
 
-        return isAddable(Module.NAME_PRODUCT);
+        return isAddable(ModuleConstant.NAME_PRODUCT);
 
 
     }
@@ -367,7 +367,7 @@ public class AuthorityUtil {
      * @return
      */
     public boolean addMaterial() {
-        return isAddable(Module.NAME_MATERIAL);
+        return isAddable(ModuleConstant.NAME_MATERIAL);
 
     }
 
@@ -380,54 +380,54 @@ public class AuthorityUtil {
     public boolean addQuotation() {
 
 
-        return isAddable(Module.NAME_QUOTATION);
+        return isAddable(ModuleConstant.NAME_QUOTATION);
 
 
     }
 
     public boolean editProduct() {
 
-        return editable(Module.NAME_PRODUCT);
+        return editable(ModuleConstant.NAME_PRODUCT);
     }
 
 
     public boolean deleteProduct() {
 
-        return deletable(Module.NAME_PRODUCT);
+        return deletable(ModuleConstant.NAME_PRODUCT);
     }
 
     public boolean exportProduct() {
-        return exportable(Module.NAME_PRODUCT);
+        return exportable(ModuleConstant.NAME_PRODUCT);
     }
 
     public boolean editQuotation() {
 
-        return editable(Module.NAME_QUOTATION);
+        return editable(ModuleConstant.NAME_QUOTATION);
     }
 
     public boolean exportQuotation() {
 
-        return exportable(Module.NAME_QUOTATION);
+        return exportable(ModuleConstant.NAME_QUOTATION);
     }
 
     public boolean deleteQuotation() {
 
-        return deletable(Module.NAME_QUOTATION);
+        return deletable(ModuleConstant.NAME_QUOTATION);
     }
 
     public boolean editMaterial() {
 
-        return editable(Module.NAME_MATERIAL);
+        return editable(ModuleConstant.NAME_MATERIAL);
     }
 
     public boolean deleteMaterial() {
 
-        return deletable(Module.NAME_MATERIAL);
+        return deletable(ModuleConstant.NAME_MATERIAL);
     }
 
     public boolean viewProductDelete() {
 
-        return isViewable(Module.NAME_PRODUCT_DELETE);
+        return isViewable(ModuleConstant.NAME_PRODUCT_DELETE);
     }
 
 
@@ -438,26 +438,26 @@ public class AuthorityUtil {
      */
     public boolean viewSysParam() {
 
-        return isViewable(Module.NAME_SYS_PARAM);
+        return isViewable(ModuleConstant.NAME_SYS_PARAM);
 
     }
 
     public boolean verifyQuotation() {
-        return isVerifiable(Module.NAME_QUOTATION);
+        return isVerifiable(ModuleConstant.NAME_QUOTATION);
 
     }
 
     public boolean viewProductReport() {
 
-        return isViewable(Module.NAME_PRODUCT_REPORT);
+        return isViewable(ModuleConstant.NAME_PRODUCT_REPORT);
     }
 
     public boolean viewTaskManage() {
-        return isViewable(Module.NAME_TASK_MANAGE);
+        return isViewable(ModuleConstant.NAME_TASK_MANAGE);
     }
 
     public boolean viewOrderMenu() {
-        return isViewable(Module.NAME_ORDER);
+        return isViewable(ModuleConstant.NAME_ORDER);
     }
 
     /**
@@ -466,7 +466,7 @@ public class AuthorityUtil {
      * @return
      */
     public boolean viewStockOutList() {
-        return isViewable(Module.NAME_STOCK_OUT);
+        return isViewable(ModuleConstant.NAME_STOCK_OUT);
     }
 
     /**
@@ -475,7 +475,7 @@ public class AuthorityUtil {
      * @return
      */
     public boolean editStockOut() {
-        return editable(Module.NAME_STOCK_OUT);
+        return editable(ModuleConstant.NAME_STOCK_OUT);
     }
 
 
@@ -485,7 +485,7 @@ public class AuthorityUtil {
      * @return
      */
     public boolean exportStockOut() {
-        return exportable(Module.NAME_STOCK_OUT);
+        return exportable(ModuleConstant.NAME_STOCK_OUT);
     }
 
     /**
@@ -496,7 +496,7 @@ public class AuthorityUtil {
     public boolean editOrder() {
 
 
-        return editable(Module.NAME_ORDER);
+        return editable(ModuleConstant.NAME_ORDER);
     }
 
     /**
@@ -505,7 +505,7 @@ public class AuthorityUtil {
      * @return
      */
     public boolean viewOrderReport() {
-        return isViewable(Module.NAME_ORDER_REPORT);
+        return isViewable(ModuleConstant.NAME_ORDER_REPORT);
     }
 
     /**
@@ -514,11 +514,24 @@ public class AuthorityUtil {
      * @return
      */
     public boolean viewWorkFlowMenu() {
-        return isViewable(Module.NAME_WORK_FLOW);
+        return isViewable(ModuleConstant.NAME_WORK_FLOW);
     }
 
 
     public boolean viewOrderWorkFlowReport() {
-        return isViewable(Module.NAME_ORDER_WORK_FLOW_REPORT);
+        return isViewable(ModuleConstant.NAME_ORDER_WORK_FLOW_REPORT);
+    }
+
+    public boolean viewStockInAndSubmit() {
+        return isViewable(ModuleConstant.NAME_STOCK_IN_AND_SUBMIT);
+    }
+
+    public boolean viewTransportOut() {
+        return isViewable(ModuleConstant.NAME_TRANSPORT_OUT);
+    }
+
+
+    public boolean viewXiaokuItemSearch() {
+        return isViewable(ModuleConstant.NAME_TRANSPORT_OUT_SEARCH);
     }
 }

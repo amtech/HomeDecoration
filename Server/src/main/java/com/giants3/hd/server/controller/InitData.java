@@ -9,10 +9,12 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.server.entity.AppVersion;
 import com.giants3.hd.server.entity.GlobalData;
 import com.giants3.hd.server.entity.Module;
-import com.sun.deploy.xml.XMLParser;
-import org.apache.commons.io.input.XmlStreamReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -24,6 +26,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
 import java.util.jar.JarFile;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,8 +38,7 @@ import java.util.zip.ZipFile;
 public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
-    private Log logger = LogFactory.getLog(InitData.class);
-
+    private static final Logger logger = Logger.getLogger(InitData.class);
     private static boolean isStart = false;
 
 
@@ -52,6 +54,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     WorkFlowRepository workFlowRepository;
+
     @Autowired
     TaskController taskController;
 
@@ -69,6 +72,14 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         if (!isStart) {
 
 
+
+            //logs debug message
+            if(logger.isDebugEnabled()){
+                logger.debug("getWelcome is executed!");
+            }
+
+//            //logs exception
+//            logger.error("This is Error message", new Exception("Testing"));
 
 
 

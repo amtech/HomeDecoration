@@ -1,13 +1,12 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.presenter.OrderWorkFlowReportPresenter;
-import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutPlan;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderWorkFlowReport;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity_erp.ErpOrderItem;
 
 
@@ -16,7 +15,6 @@ import rx.Subscriber;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * 订单生产流程报表界面
@@ -29,7 +27,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
     java.util.List<ErpOrderItem> items = null;
 
     public OrderWorkFlowReportInternalFrame() {
-        super(Module.TITLE_ORDER_WORK_FLOW_REPORT);
+        super(ModuleConstant.TITLE_ORDER_WORK_FLOW_REPORT);
 
         init();
 

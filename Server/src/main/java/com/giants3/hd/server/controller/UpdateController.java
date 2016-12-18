@@ -1,33 +1,33 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.noEntity.FileInfo;
-import com.giants3.hd.server.parser.DataParser;
-import com.giants3.hd.server.parser.RemoteDataParser;
-import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.service.UserService;
-import com.giants3.hd.utils.DigestUtils;
-import com.giants3.hd.utils.RemoteData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+        import com.giants3.hd.appdata.AUser;
+        import com.giants3.hd.server.entity.*;
+        import com.giants3.hd.server.noEntity.FileInfo;
+        import com.giants3.hd.server.parser.DataParser;
+        import com.giants3.hd.server.parser.RemoteDataParser;
+        import com.giants3.hd.server.repository.*;
+        import com.giants3.hd.server.service.UserService;
+        import com.giants3.hd.utils.DigestUtils;
+        import com.giants3.hd.utils.RemoteData;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.beans.factory.annotation.Qualifier;
+        import org.springframework.beans.factory.annotation.Value;
+        import org.springframework.stereotype.Controller;
+        import org.springframework.transaction.annotation.Transactional;
+        import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+        import javax.servlet.http.HttpServletRequest;
+        import java.io.File;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.List;
+        import java.util.Map;
 
 /**
  *
  * 应用更新
-* Created by davidleen29 on 20151015
-*/
+ * Created by davidleen29 on 20151015
+ */
 @Controller
 
 @RequestMapping("/update")
@@ -83,7 +83,7 @@ public class UpdateController extends  BaseController{
 
                 }
             }
-            }
+        }
 
         return wrapData();
     }

@@ -59,7 +59,12 @@
 
     >
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
+       <!-- <property name="mappingResources">
+            <list>
+                <value>orm/Users.hbm.xml</value>
 
+            </list>
+        </property>-->
         <property name="packagesToScan">
             <list>
                 <value>com.giants3.hd.server.entity</value>

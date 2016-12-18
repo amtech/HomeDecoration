@@ -1,6 +1,8 @@
 package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.StockSubmit;
+import com.giants3.hd.utils.entity.StockXiaoku;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import rx.Observable;
@@ -26,4 +28,13 @@ public interface StockRepository {
      * @return
      */
     Observable<RemoteData<ErpStockOutDetail>>  saveStockOutDetail(ErpStockOutDetail stockOutDetail);
+
+    Observable<RemoteData<StockSubmit>>  getStockInAndSubmitList(String key, String startDate, String endDate);
+
+    Observable<RemoteData<StockSubmit>> getStockXiaokuItemList(String ps_no );
+
+
+    Observable<RemoteData<StockSubmit>> getStockXiaokuItemList(String key,String dateStart,String dateEnd );
+
+    Observable<RemoteData<StockXiaoku>> getStockXiaokuList(String key,int pageIndex, int pageSize);
 }

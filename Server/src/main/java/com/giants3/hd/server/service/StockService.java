@@ -11,6 +11,8 @@ import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.StockSubmit;
+import com.giants3.hd.utils.entity.StockXiaoku;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,9 @@ public class StockService extends AbstractService {
     @Value("${attachfilepath}")
     private String attachfilepath;
 
+
+    ErpStockSubmitRepository erpStockSubmitRepository;
+
     @Override
     public void destroy() throws Exception {
         manager.close();
@@ -68,6 +73,7 @@ public class StockService extends AbstractService {
         EntityManagerHelper helper = EntityManagerHelper.getErp();
         manager = helper.getEntityManager();
         repository = new ErpStockOutRepository(manager);
+        erpStockSubmitRepository = new ErpStockSubmitRepository(manager);
     }
 
 
@@ -159,7 +165,7 @@ public class StockService extends AbstractService {
                 item.describe = stockOutItem.describe;
                 item.fengqianhao = stockOutItem.fengqianhao;
                 item.guihao = stockOutItem.guihao;
-                item.guixing=stockOutItem.guixing;
+                item.guixing = stockOutItem.guixing;
                 item.subRecord = stockOutItem.subRecord;
 
                 //保证 出库的数量有数据
@@ -178,7 +184,7 @@ public class StockService extends AbstractService {
                     additionItem.describe = stockOutItem.describe;
                     additionItem.fengqianhao = stockOutItem.fengqianhao;
                     additionItem.guihao = stockOutItem.guihao;
-                    additionItem.guixing=stockOutItem.guixing;
+                    additionItem.guixing = stockOutItem.guixing;
                     additionItem.stockOutQty = stockOutItem.stockOutQty;
                     item.subRecord = stockOutItem.subRecord;
                     additionItem.id = stockOutItem.id;
@@ -211,7 +217,7 @@ public class StockService extends AbstractService {
                 if (value != 0) return value;
                 value = Integer.compare(o1.itm, o2.itm);
                 if (value != 0) return value;
-                return Boolean.compare(o2.subRecord,o1.subRecord);
+                return Boolean.compare(o2.subRecord, o1.subRecord);
 
             }
         });
@@ -343,7 +349,7 @@ public class StockService extends AbstractService {
             stockOutItem.describe = item.describe;
             stockOutItem.fengqianhao = item.fengqianhao;
             stockOutItem.guihao = item.guihao;
-            stockOutItem.guixing=item.guixing;
+            stockOutItem.guixing = item.guixing;
             stockOutItem.subRecord = item.subRecord;
             stockOutItem.stockOutQty = item.stockOutQty;
             stockOutItemRepository.save(stockOutItem);
@@ -361,4 +367,52 @@ public class StockService extends AbstractService {
     }
 
 
+    /**
+     * 查询出 进货与缴库 列表
+     *
+     * @return
+     */
+    public RemoteData<StockSubmit> getStockInAndSubmitList(String startDate, String endData) {
+
+
+        return wrapData(erpStockSubmitRepository.getStockSubmitList(startDate, endData));
+    }
+
+    /**
+     * 根据日期 查询 销库明细列表
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public RemoteData<StockSubmit> getStockXiaokuItemList(String key,String startDate, String endDate) {
+
+        return wrapData(erpStockSubmitRepository.getStockXiaokuItemList(  key,startDate, endDate));
+    }
+    /**
+     * 获取销库单列表
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<StockXiaoku> getStockXiaokuList(String key,int pageIndex, int
+            pageSize) {
+
+          List<StockXiaoku> xiaokus=erpStockSubmitRepository.getStockXiaokuList(key,pageIndex, pageSize);
+
+
+        int totalCount = erpStockSubmitRepository.getXiaokuRecordCount(key);
+        return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, xiaokus);
+    }
+
+    /**
+     * 获取销库单明细数据列表
+     * @return
+     */
+    public RemoteData<StockSubmit> getStockXiaokuItemList( String ps_no) {
+
+          List<StockSubmit> submits=erpStockSubmitRepository.getStockXiaokuItemList(ps_no);
+
+
+       return wrapData(submits);
+    }
 }

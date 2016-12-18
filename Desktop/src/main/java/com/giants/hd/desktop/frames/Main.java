@@ -8,14 +8,14 @@ import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.local.PropertyWorker;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.ShortcutHelper;
-import com.giants.hd.desktop.viewImpl.Panel_Auth_Relates;
 import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.domain.interractor.StockXiaokuItemSearchUseCase;
+import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
-import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.BufferData;
@@ -278,32 +278,30 @@ public class Main extends BaseFrame {
 
     /**
      * 生产流程菜单
+     *
      * @return
      */
     private JMenu createWorkFlowMenu() {
 
         //Build second menu in the menu bar.
-        JMenu menu = new JMenu(Module.TITLE_WORK_FLOW);
+        JMenu menu = new JMenu(ModuleConstant.TITLE_WORK_FLOW);
 
 
+        JMenuItem menuItem = new JMenuItem("生产流程配置");
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-            JMenuItem menuItem = new JMenuItem("生产流程配置");
-            menu.add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
 
+                WorkFlowFrame frame = new WorkFlowFrame();
+                addInterFrame(frame);
 
-                    WorkFlowFrame frame = new WorkFlowFrame();
-                    addInterFrame(frame);
-
-                }
-            });
-
+            }
+        });
 
 
         return menu;
-
 
 
     }
@@ -317,11 +315,11 @@ public class Main extends BaseFrame {
     private JMenu createStockManager() {
 
         //Build second menu in the menu bar.
-        JMenu menu = new JMenu(Module.TITLE_STOCK);
+        JMenu menu = new JMenu(ModuleConstant.TITLE_STOCK);
 
 
         if (AuthorityUtil.getInstance().viewStockOutList()) {
-            JMenuItem menuItem = new JMenuItem(Module.TITLE_STOCK_OUT);
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_STOCK_OUT);
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -336,13 +334,53 @@ public class Main extends BaseFrame {
         }
 
 
+        if (AuthorityUtil.getInstance().viewStockInAndSubmit()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_STOCK_IN_AND_SUBMIT);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    StockInAndSubmitFrame frame = new StockInAndSubmitFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+        }
+        if (AuthorityUtil.getInstance().viewTransportOut()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_TRANSPORT_OUT);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    StockXiaokuFrame frame = new StockXiaokuFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+        }
+
+        if (AuthorityUtil.getInstance().viewXiaokuItemSearch()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_TRANSPORT_OUT_SEARCH);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    StockOutSumitFrame frame = new StockOutSumitFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+        }
         return menu;
 
 
     }
-
-
-
 
 
     public JMenu createProduct() {
@@ -435,7 +473,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewMaterialPicture()) {
-            menuItem = new JMenuItem(Module.TITLE_MATERIAL_PICTURE);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_MATERIAL_PICTURE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -454,7 +492,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewProductDelete()) {
-            menuItem = new JMenuItem(Module.TITLE_PRODUCT_DELETE);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_PRODUCT_DELETE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -473,7 +511,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewProductReport()) {
-            menuItem = new JMenuItem(Module.TITLE_PRODUCT_REPORT);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_PRODUCT_REPORT);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -534,7 +572,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewQuotationDeleteList()) {
-            JMenuItem menuItem = new JMenuItem(Module.TITLE_QUOTATION_DELETE);
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_QUOTATION_DELETE);
 
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -622,7 +660,7 @@ public class Main extends BaseFrame {
         }
 
         if (AuthorityUtil.getInstance().viewPackMaterialClassList()) {
-            menuItem = new JMenuItem(Module.TITLE_PACK_MATERIAL_CLASS
+            menuItem = new JMenuItem(ModuleConstant.TITLE_PACK_MATERIAL_CLASS
             );
 
             menu.add(menuItem);
@@ -737,7 +775,7 @@ public class Main extends BaseFrame {
      */
     public JMenu createOrder() {
 
-             JMenu menu = new JMenu(Module.TITLE_ORDER);
+        JMenu menu = new JMenu(ModuleConstant.TITLE_ORDER);
         //
         JMenuItem menuItem = new JMenuItem("订单列表");
         menu.add(menuItem);
@@ -755,10 +793,8 @@ public class Main extends BaseFrame {
         });
 
 
-
-
-        if(AuthorityUtil.getInstance().viewOrderReport()) {
-            menuItem = new JMenuItem(Module.TITLE_ORDER_REPORT);
+        if (AuthorityUtil.getInstance().viewOrderReport()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_ORDER_REPORT);
             menu.add(menuItem);
 
             menuItem.addActionListener(new ActionListener() {
@@ -772,8 +808,8 @@ public class Main extends BaseFrame {
                 }
             });
         }
-        if(AuthorityUtil.getInstance().viewOrderWorkFlowReport()) {
-            menuItem = new JMenuItem(Module.TITLE_ORDER_WORK_FLOW_REPORT);
+        if (AuthorityUtil.getInstance().viewOrderWorkFlowReport()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_ORDER_WORK_FLOW_REPORT);
             menu.add(menuItem);
 
             menuItem.addActionListener(new ActionListener() {
@@ -817,7 +853,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewSyncData()) {
-            menuItem = new JMenuItem(Module.TITLE_SYNC_DATA);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_SYNC_DATA);
 
             menu.add(menuItem);
 
@@ -834,7 +870,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewSysParam()) {
-            menuItem = new JMenuItem(Module.TITLE_SYS_PARAM);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_SYS_PARAM);
             menu.add(menuItem);
 
 
@@ -854,7 +890,7 @@ public class Main extends BaseFrame {
         //任务定时面板
 
         if (AuthorityUtil.getInstance().viewTaskManage()) {
-            menuItem = new JMenuItem(Module.TITLE_TASK_MANAGE);
+            menuItem = new JMenuItem(ModuleConstant.TITLE_TASK_MANAGE);
             menu.add(menuItem);
 
 
@@ -879,8 +915,6 @@ public class Main extends BaseFrame {
         }
 
 
-
-
         menuItem = new JMenuItem("重启");
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
@@ -892,8 +926,8 @@ public class Main extends BaseFrame {
                     JOptionPane.showMessageDialog(Main.this, "重新启动应用程序");
 
                     Thread.sleep(500);
-                    Process p = Runtime.getRuntime().exec("java -Xmx1024M  -jar " +"估价系统.jar");
-                //退出程序
+                    Process p = Runtime.getRuntime().exec("java -Xmx1024M  -jar " + "估价系统.jar");
+                    //退出程序
                     System.exit(0);
                 } catch (IOException ex5) {
                     ex5.printStackTrace();

@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
-import java.sql.Statement;
 import java.util.List;
 
 
@@ -53,7 +52,7 @@ public class UseCaseFactory {
     private UseCaseFactory() {
 
 
-        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(), new FileModule(),new AuthModule()).injectMembers(this);
+        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(), new FileModule(), new AuthModule()).injectMembers(this);
 
     }
 
@@ -122,9 +121,9 @@ public class UseCaseFactory {
     }
 
 
-    public UseCase createOrderListUseCase(String key,long salesId, int pageIndex, int pageSize) {
+    public UseCase createOrderListUseCase(String key, long salesId, int pageIndex, int pageSize) {
 
-        return new GetOrderListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, salesId,pageIndex, pageSize, orderRepository);
+        return new GetOrderListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, salesId, pageIndex, pageSize, orderRepository);
     }
 
     public UseCase createOrderItemListUseCase(String os_no) {
@@ -146,12 +145,36 @@ public class UseCaseFactory {
      * @param pageSize
      * @return
      */
-    public UseCase createStockOutListUseCase(String key,long  salesId,int pageIndex, int pageSize) {
+    public UseCase createStockOutListUseCase(String key, long salesId, int pageIndex, int pageSize) {
 
-        return new GetStockOutListUseCase(Schedulers.newThread(), Schedulers.immediate(), key,salesId, pageIndex, pageSize, stockRepository);
+        return new GetStockOutListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, salesId, pageIndex, pageSize, stockRepository);
     }
 
+    /**
+     * 读取销库列表case
+     *
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public UseCase createStockXiaokuListUseCase(String key,  int pageIndex, int pageSize) {
 
+        return new GetStockXiaokuListUseCase(Schedulers.newThread(), Schedulers.immediate(),  key,pageIndex, pageSize, stockRepository);
+    }
+
+    /**
+     * 读取进库与缴库数据case
+     *
+     * @param key
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public UseCase createStockInAndSubmitListUseCase(String key, String startDate, String endDate) {
+
+        return new StockInAndSubmitListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, startDate, endDate, stockRepository);
+
+    }
     /**
      * 读取出库列表case
      *
@@ -191,6 +214,7 @@ public class UseCaseFactory {
 
     /**
      * 保存订单详情用例
+     *
      * @param orderDetail
      * @return
      */
@@ -200,43 +224,45 @@ public class UseCaseFactory {
 
     /**
      * 读取报价明细权限
+     *
      * @return
      */
     public UseCase createQuoteAuthListCase() {
 
-        return new GetQuoteAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+        return new GetQuoteAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(), authRepository);
     }
 
 
     /**
      * 读取订单明细权限
+     *
      * @return
      */
     public UseCase createOrderAuthListCase() {
 
-        return new GetOrderAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+        return new GetOrderAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(), authRepository);
     }
-
 
 
     /**
      * 读取出库明细权限
+     *
      * @return
      */
     public UseCase createStockOutAuthListCase() {
 
-        return new GetStockOutAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(),  authRepository);
+        return new GetStockOutAuthListUseCase(Schedulers.newThread(), Schedulers.immediate(), authRepository);
     }
 
     /**
      * 获取保存出库权限用例
+     *
      * @param stockOutAuths
      * @return
      */
     public UseCase createStockOutAuthSaveCase(List<StockOutAuth> stockOutAuths) {
 
-        return new SaveStockOutAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),stockOutAuths , authRepository);
-
+        return new SaveStockOutAuthUseCase(Schedulers.newThread(), Schedulers.immediate(), stockOutAuths, authRepository);
 
 
     }
@@ -244,44 +270,46 @@ public class UseCaseFactory {
 
     /**
      * 获取保存订单权限用例
+     *
      * @param orderAuths
      * @return
      */
     public UseCase createOrderAuthSaveCase(List<OrderAuth> orderAuths) {
 
-        return new SaveOrderAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),orderAuths , authRepository);
-
+        return new SaveOrderAuthUseCase(Schedulers.newThread(), Schedulers.immediate(), orderAuths, authRepository);
 
 
     }
 
     /**
      * 获取保存报价权限用例
+     *
      * @param quoteAuths
      * @return
      */
     public UseCase createQuoteAuthSaveCase(List<QuoteAuth> quoteAuths) {
 
-        return new SaveQuoteAuthUseCase(Schedulers.newThread(), Schedulers.immediate(),quoteAuths , authRepository);
-
+        return new SaveQuoteAuthUseCase(Schedulers.newThread(), Schedulers.immediate(), quoteAuths, authRepository);
 
 
     }
 
     /**
      * 订单报表查询
+     *
      * @param userId
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public UseCase createOrderReportUseCase(long userId,   String dateStart,String dateEnd, int pageIndex, int pageSize) {
-       return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), userId, dateStart,dateEnd,pageIndex, pageSize, orderRepository);
+    public UseCase createOrderReportUseCase(long userId, String dateStart, String dateEnd, int pageIndex, int pageSize) {
+        return new GetOrderReportUseCase(Schedulers.newThread(), Schedulers.immediate(), userId, dateStart, dateEnd, pageIndex, pageSize, orderRepository);
 
     }
 
     /**
      * 获取生产流程列表
+     *
      * @return
      */
     public UseCase createGetWorkFlowUseCase() {
@@ -289,18 +317,21 @@ public class UseCaseFactory {
         return new GetWorkFlowUseCase(
                 Schedulers.newThread(), Schedulers.immediate(), workFlowRepository);
     }
+
     /**
      * 保存生产流程列表
+     *
      * @return
      */
     public UseCase createSaveWorkFlowUseCase(List<WorkFlow> workFlows) {
 
         return new SaveWorkFlowUseCase(
-                Schedulers.newThread(), Schedulers.immediate(),workFlows, workFlowRepository);
+                Schedulers.newThread(), Schedulers.immediate(), workFlows, workFlowRepository);
     }
 
     /**
      * 获取用户列表
+     *
      * @return
      */
     public UseCase createGetUserListUseCase() {
@@ -311,22 +342,32 @@ public class UseCaseFactory {
 
     /**
      * 启动订单跟踪
+     *
      * @return
      */
     public UseCase startOrderTrackUseCase(String os_no) {
 
         return new StartOrderTrackUseCase(
-                Schedulers.newThread(), Schedulers.immediate(),os_no, workFlowRepository);
+                Schedulers.newThread(), Schedulers.immediate(), os_no, workFlowRepository);
     }
 
     public UseCase createUnCompleteOrderWorkFlowReportUseCase() {
 
-        return new UnCompleteOrderWorkFlowReportUseCase( Schedulers.newThread(), Schedulers.immediate(), orderRepository);
+        return new UnCompleteOrderWorkFlowReportUseCase(Schedulers.newThread(), Schedulers.immediate(), orderRepository);
 
     }
 
     public UseCase createOrderWorkFlowReportUseCase(String key, int pageIndex, int pageSize) {
 
-        return new  OrderWorkFlowReportUseCase( Schedulers.newThread(), Schedulers.immediate(), key,pageIndex,pageSize,orderRepository);
+        return new OrderWorkFlowReportUseCase(Schedulers.newThread(), Schedulers.immediate(), key, pageIndex, pageSize, orderRepository);
+    }
+
+    public UseCase createStockXiaokuItemListUseCase(String ps_no) {
+        return new StockXiaokuItemUseCase(Schedulers.newThread(), Schedulers.immediate(), ps_no, stockRepository);
+    }
+
+
+    public UseCase createStockXiaokuItemListUseCase(String key,final String startDate, final String endDate) {
+        return new StockXiaokuItemSearchUseCase(Schedulers.newThread(), Schedulers.immediate(), key,startDate,endDate, stockRepository);
     }
 }

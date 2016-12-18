@@ -954,4 +954,26 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + String.format("api/order/getWorkFlowOrderItem?key=%s&pageIndex=%d&pageSize=%d", key, pageIndex, pageSize));
     }
+
+    public static String getStockInAndSubmitList(String key, String startDate, String endDate) {
+        return additionInfo(BaseUrl + "api/stock/stockInAndSubmitList?key=" + key + "&startDate=" + startDate + "&endDate=" + endDate );
+
+
+    }
+
+    public static String getStockXiaokuItemList(String ps_no) {
+        return additionInfo(BaseUrl + "api/stock/xiaokuItemList?ps_no=" + ps_no   );
+
+    }
+
+
+    public static String getStockXiaokuItemList(String key,String dateStart,String dateEnd) {
+        return additionInfo(BaseUrl + "api/stock/xiaokuItemSearch?key=" + key + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd  );
+
+    }
+
+    public static String getStockXiaokuList(String key,int pageIndex, int pageSize) {
+        return additionInfo(BaseUrl + String.format("api/stock/xiaokuList?key=%s&pageIndex=%d&pageSize=%d", key, pageIndex, pageSize));
+
+    }
 }

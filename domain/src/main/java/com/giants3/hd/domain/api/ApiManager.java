@@ -161,6 +161,9 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(WorkFlow.class, new TypeToken<RemoteData<WorkFlow>>() {
         }.getType());
+        tokenMaps.put(StockSubmit.class, new TypeToken<RemoteData<StockSubmit>>() {
+        }.getType()); tokenMaps.put(StockXiaoku.class, new TypeToken<RemoteData<StockXiaoku>>() {
+        }.getType());
     }
 
     @Inject
@@ -1765,6 +1768,31 @@ public class ApiManager {
         String url = HttpUrl.getOrderWorkFlowReport( key,pageIndex,pageSize);
         String result = client.getWithStringReturned(url);
         RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
+        return remoteData;
+    }
+
+    public RemoteData<StockSubmit> getStockInAndSubmitList(String key, String startDate, String endDate) throws HdException {
+        String url = HttpUrl.getStockInAndSubmitList( key,startDate,endDate);
+        String result = client.getWithStringReturned(url);
+        RemoteData<StockSubmit> remoteData = invokeByReflect(result, StockSubmit.class);
+        return remoteData;
+    }
+    public RemoteData<StockSubmit> getStockXiaokuItemList(String ps_no) throws HdException {
+        String url = HttpUrl.getStockXiaokuItemList(ps_no);
+        String result = client.getWithStringReturned(url);
+        RemoteData<StockSubmit> remoteData = invokeByReflect(result, StockSubmit.class);
+        return remoteData;
+    }
+    public RemoteData<StockSubmit> getStockXiaokuItemList(final String key, final String dateStart, final String dateEnd) throws HdException {
+        String url = HttpUrl.getStockXiaokuItemList(key,dateStart,dateEnd);
+        String result = client.getWithStringReturned(url);
+        RemoteData<StockSubmit> remoteData = invokeByReflect(result, StockSubmit.class);
+        return remoteData;
+    }
+    public RemoteData<StockXiaoku> getStockXiaokuList(String key,int pageIndex, int pageSize) throws HdException {
+        String url = HttpUrl.getStockXiaokuList(key, pageIndex,pageSize);
+        String result = client.getWithStringReturned(url);
+        RemoteData<StockXiaoku> remoteData = invokeByReflect(result, StockXiaoku.class);
         return remoteData;
     }
 }

@@ -2,21 +2,17 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.presenter.OrderReportPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutPlan;
-import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.OrderReportViewer;
-import com.giants.hd.desktop.viewImpl.Panel_Order_List;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Report;
-import com.giants.hd.desktop.viewImpl.Panel_Stock_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Module;
 import com.giants3.hd.utils.entity_erp.ErpOrder;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import rx.Subscriber;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +26,7 @@ public class OrderReportInternalFrame extends BaseInternalFrame implements Order
 
     java.util.List<OrderReportItem> items=null;
     public OrderReportInternalFrame( ) {
-        super(Module.TITLE_ORDER_REPORT);
+        super(ModuleConstant.TITLE_ORDER_REPORT);
 
         init();
 
