@@ -63,6 +63,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value="柜号"/>
             </properties>
           </component>
@@ -72,6 +73,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value="封签号"/>
             </properties>
           </component>
@@ -81,6 +83,7 @@
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value="发票号"/>
             </properties>
           </component>
@@ -90,6 +93,7 @@
               <forms/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value=""/>
             </properties>
           </component>
@@ -99,6 +103,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value="柜型"/>
             </properties>
           </component>
@@ -108,6 +113,7 @@
               <forms/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value=""/>
             </properties>
           </component>
@@ -117,6 +123,7 @@
               <forms/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value=""/>
             </properties>
           </component>
@@ -126,6 +133,7 @@
               <forms/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value=""/>
             </properties>
           </component>
@@ -135,6 +143,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <font size="18"/>
               <text value="拖车"/>
             </properties>
           </component>
@@ -144,6 +153,27 @@
               <forms/>
             </constraints>
             <properties>
+              <font size="18"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="5bc31" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font size="18"/>
+              <text value="总体积"/>
+            </properties>
+          </component>
+          <component id="78534" class="javax.swing.JLabel" binding="ztj">
+            <constraints>
+              <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <font size="18"/>
               <text value=""/>
             </properties>
           </component>

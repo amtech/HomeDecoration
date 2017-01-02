@@ -28,6 +28,9 @@ public class SysParamDialog extends BaseDialog {
     private JTextField tf_manageRatioXK;
     private JTextField tf_manageRatioNormal;
     private JTextField tf_manageRatioForeign;
+    private JTextField priceOfStockProductIn;
+    private JTextField priceOfStockProductOutToTrunk;
+    private JTextField priceOfStockProductFactoryIn;
     GlobalData oldData;
     GlobalData newData;
     @Inject
@@ -56,7 +59,7 @@ public class SysParamDialog extends BaseDialog {
                     return ;
                 }
 
-               if(newData.equals(oldData))
+               if(newData.isGlobalSettingEquals(oldData))
                {
 
                    JOptionPane.showMessageDialog(getParent(),"数据无改变");
@@ -122,6 +125,19 @@ public class SysParamDialog extends BaseDialog {
             globalData.manageRatioXK= Float.valueOf(tf_manageRatioXK.getText().trim());
             globalData.repairPrice= Float.valueOf(tf_repairePrice.getText().trim());
             globalData.manageRatioForeign= Float.valueOf(tf_manageRatioForeign.getText().trim());
+
+
+
+            globalData.priceOfStockProductIn= Float.valueOf(priceOfStockProductIn.getText().trim());
+            globalData.priceOfStockProductFactoryIn= Float.valueOf(priceOfStockProductFactoryIn.getText().trim());
+            globalData.priceOfStockProductOutToTrunk= Float.valueOf(priceOfStockProductOutToTrunk.getText().trim());
+
+
+//            priceOfStockProductIn.setText(String.valueOf(globalData.priceOfStockProductIn));
+//            priceOfStockProductFactoryIn.setText(String.valueOf(globalData.priceOfStockProductFactoryIn));
+//            priceOfStockProductOutToTrunk.setText(String.valueOf(globalData.priceOfStockProductOutToTrunk));
+
+
         }catch (Throwable t)
         {
             throw   HdUIException.create("输入的数据有错， 请输入数字,不能为空");
@@ -146,6 +162,11 @@ public class SysParamDialog extends BaseDialog {
         tf_manageRatioXK.setText(String.valueOf(globalData.manageRatioXK))  ;
         tf_repairePrice.setText(String.valueOf(globalData.repairPrice))  ;
         tf_manageRatioForeign.setText(String.valueOf(globalData.manageRatioForeign))  ;
+
+
+        priceOfStockProductIn.setText(String.valueOf(globalData.priceOfStockProductIn));
+        priceOfStockProductFactoryIn.setText(String.valueOf(globalData.priceOfStockProductFactoryIn));
+        priceOfStockProductOutToTrunk.setText(String.valueOf(globalData.priceOfStockProductOutToTrunk));
 
 
     }

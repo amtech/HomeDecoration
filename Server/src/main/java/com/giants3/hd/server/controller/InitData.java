@@ -1,32 +1,23 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.WorkFlow;
-import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.repository.AppVersionRepository;
+import com.giants3.hd.server.repository.ModuleRepository;
+
+import com.giants3.hd.server.repository.WorkFlowRepository;
+import com.giants3.hd.server.service.GlobalDataService;
 import com.giants3.hd.server.service.ProductService;
-import com.giants3.hd.server.xml.AndroidManifest;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.server.entity.AppVersion;
-import com.giants3.hd.server.entity.GlobalData;
-import com.giants3.hd.server.entity.Module;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
-import java.util.jar.JarFile;
-
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -50,10 +41,15 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
     @Autowired
-    GlobalDataRepository globalDataRepository;
+    GlobalDataService globalDataService;
 
     @Autowired
     WorkFlowRepository workFlowRepository;
+//
+//    @Autowired
+//    TestXmlRepository testXmlRepository;
+
+
 
     @Autowired
     TaskController taskController;
@@ -72,9 +68,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         if (!isStart) {
 
 
-
             //logs debug message
-            if(logger.isDebugEnabled()){
+            if (logger.isDebugEnabled()) {
                 logger.debug("getWelcome is executed!");
             }
 
@@ -82,28 +77,25 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 //            logger.error("This is Error message", new Exception("Testing"));
 
 
+//            testXmlRepository.save(new Testxml());
 
-      List< Module> moduleList=     Module.getInitDataList();
-            int newSize=moduleList.size();
+            List<Module> moduleList = Module.getInitDataList();
+            int newSize = moduleList.size();
 
-            int existSize=moduleRepository.findAll().size();
+            int existSize = moduleRepository.findAll().size();
             //模块数据初始化
-            if(existSize!=newSize)
-            {
+            if (existSize != newSize) {
 
-                for(Module module:Module.getInitDataList())
-                {
+                for (Module module : Module.getInitDataList()) {
 
-                    Module oldModule=moduleRepository.findFirstByNameEquals(module.name);
-                    if(oldModule==null)
-                    {
-                        oldModule=new Module();
-                        oldModule.name=module.name;
-                        oldModule.title=module.title;
+                    Module oldModule = moduleRepository.findFirstByNameEquals(module.name);
+                    if (oldModule == null) {
+                        oldModule = new Module();
+                        oldModule.name = module.name;
+                        oldModule.title = module.title;
                         moduleRepository.save(module);
 
                     }
-
 
 
                 }
@@ -113,39 +105,31 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             }
 
 
-
-
             //版本数据初始化。
 
-            AppVersion appVersion=null;
+            AppVersion appVersion = null;
 
-             File f=new File(appFilePath);
-            if(f.isDirectory())
-            {
+            File f = new File(appFilePath);
+            if (f.isDirectory()) {
 
-                File[] files=f.listFiles();
+                File[] files = f.listFiles();
 
-                for(File aFile : files)
-                {
+                for (File aFile : files) {
 
-                    if(aFile.getName().endsWith(".jar"))
-                    {
-                        String fileName=aFile.getName();
+                    if (aFile.getName().endsWith(".jar")) {
+                        String fileName = aFile.getName();
                         //读取相关的版本配置文件
-                        Properties properties=    readZipFile(aFile.getAbsolutePath(),"version.properties");
-                        appVersion=new AppVersion();
-                            appVersion.memo=properties.getProperty("Version_Spec");
-                            appVersion.versionName=properties.getProperty("Version_Name");
-                            String versionCodeString=properties.getProperty("Version_Number");
-                            appVersion.updateTime= Calendar.getInstance().getTimeInMillis();
-                            appVersion.timeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date( appVersion.updateTime));
-                            appVersion.versionCode= StringUtils.isEmpty(versionCodeString)?-1:Integer.valueOf(versionCodeString);
-                            appVersion.appName=fileName;
-                            appVersion.fileSize=aFile.length();
-                            break;
-
-
-
+                        Properties properties = readZipFile(aFile.getAbsolutePath(), "version.properties");
+                        appVersion = new AppVersion();
+                        appVersion.memo = properties.getProperty("Version_Spec");
+                        appVersion.versionName = properties.getProperty("Version_Name");
+                        String versionCodeString = properties.getProperty("Version_Number");
+                        appVersion.updateTime = Calendar.getInstance().getTimeInMillis();
+                        appVersion.timeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(appVersion.updateTime));
+                        appVersion.versionCode = StringUtils.isEmpty(versionCodeString) ? -1 : Integer.valueOf(versionCodeString);
+                        appVersion.appName = fileName;
+                        appVersion.fileSize = aFile.length();
+                        break;
 
 
                     }
@@ -156,30 +140,22 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             }
 
 
-            if(appVersion!=null)
-            {
+            if (appVersion != null) {
                 //核对客户端最新版本
-                AppVersion oldVersion=appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(appVersion.appName);
+                AppVersion oldVersion = appVersionRepository.findFirstByAppNameEqualsOrderByVersionCodeDescUpdateTimeDesc(appVersion.appName);
 
-                if(oldVersion==null)
-                {
+                if (oldVersion == null) {
 
                     appVersionRepository.save(appVersion);
-                }else
-
-                if(oldVersion.versionCode<appVersion.versionCode)
-                {
+                } else if (oldVersion.versionCode < appVersion.versionCode) {
                     //添加记录
                     appVersionRepository.save(appVersion);
 
-                }else
-                if(oldVersion.versionCode==appVersion.versionCode)
-                {
+                } else if (oldVersion.versionCode == appVersion.versionCode) {
                     //版本一致  文件大小不一致。  使用当前文件大小
 
-                    if(oldVersion.fileSize!=appVersion.fileSize)
-                    {
-                        appVersion.id=oldVersion.id;
+                    if (oldVersion.fileSize != appVersion.fileSize) {
+                        appVersion.id = oldVersion.id;
                         //修改当前记录
                         appVersionRepository.save(appVersion);
 
@@ -189,44 +165,28 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                 }
 
 
-
-
             }
 
 
-
-
-
-
             //检查全局项目数据 不存在 则构建一份数据（使用默认值）
-       List<GlobalData> globalDatas=     globalDataRepository.findAll();
-        if(globalDatas.size()==0)
-        {
-            GlobalData globalData=new GlobalData();
-            globalDataRepository.save(globalData);
-        }
-
-
+            GlobalData globalData = globalDataService.findCurrentGlobalData();
+            if (globalData == null) {
+                globalData = new GlobalData();
+                globalDataService.save(globalData);
+            }
 
 
             // 生产流程数据初始化
 
-            List<WorkFlow> workFlows=workFlowRepository.findAll();
-            if(workFlows.size()==0)
-            {
-                 workFlowRepository.save(WorkFlow.initWorkFlowData());
-                productService.setDefaultWorkFlowIds( );
+            List<WorkFlow> workFlows = workFlowRepository.findAll();
+            if (workFlows.size() == 0) {
+                workFlowRepository.save(WorkFlow.initWorkFlowData());
+                productService.setDefaultWorkFlowIds();
 
             }
 
 
-
-
         }
-
-
-
-
 
 
         //定时任务启动
@@ -234,19 +194,13 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         taskController.resume();
 
 
-
-
-
         //开启检查是否有未完成的产品统计数据计算
 
 
-                materialController.updateProductData(null);
+        materialController.updateProductData(null);
 
 
-
-
-
-            isStart = true;
+        isStart = true;
 
 
         System.out.println("spring 容器初始化完毕================================================");
@@ -254,21 +208,20 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     }
 
 
-
     public static Properties readZipFile(String zipFilePath, String relativeFilePath) {
 
         Properties
-                properties=new Properties();
+                properties = new Properties();
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
             Enumeration<? extends ZipEntry> e = zipFile.entries();
 
             while (e.hasMoreElements()) {
-                ZipEntry entry =  e.nextElement();
+                ZipEntry entry = e.nextElement();
                 // if the entry is not directory and matches relative file then extract it
                 if (!entry.isDirectory() && entry.getName().equals(relativeFilePath)) {
                     InputStream bis = zipFile.getInputStream(entry);
-                    Reader reader=new InputStreamReader(bis,"UTF-8");
+                    Reader reader = new InputStreamReader(bis, "UTF-8");
                     properties.load(reader);
                     reader.close();
                     bis.close();
@@ -284,8 +237,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         }
         return properties;
     }
-
-
 
 
 }

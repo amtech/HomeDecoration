@@ -55,10 +55,7 @@ public class WorkFlow {
     public static final List<WorkFlow> initWorkFlowData() {
 
         ArrayList<WorkFlow> workFlows = new ArrayList<>();
-
-
         WorkFlow workFlow;
-
         workFlow = new WorkFlow();
         workFlow.name = STEP_1;
         workFlow.flowStep = FIRST_STEP;

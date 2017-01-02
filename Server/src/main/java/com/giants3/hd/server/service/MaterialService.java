@@ -44,7 +44,7 @@ public class MaterialService extends AbstractService {
     private ProductRepository productRepository;
 
     @Autowired
-    private GlobalDataRepository globalDataRepository;
+    private GlobalDataService globalDataService;
 
 
     @Autowired
@@ -226,7 +226,7 @@ public class MaterialService extends AbstractService {
         {
 
             List<ProductToUpdate> productIds=page.getContent();
-       GlobalData globalData=globalDataRepository.findAll().get(0);
+       GlobalData globalData=globalDataService.findCurrentGlobalData();
 
 
 

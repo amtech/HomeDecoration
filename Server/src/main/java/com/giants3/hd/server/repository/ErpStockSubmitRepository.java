@@ -1,5 +1,6 @@
 package com.giants3.hd.server.repository;
 
+import com.giants3.hd.server.entity.GlobalData;
 import com.giants3.hd.server.entity_erp.ErpStockOut;
 import com.giants3.hd.server.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.FloatHelper;
@@ -27,28 +28,7 @@ public class ErpStockSubmitRepository {
 //进货单表身
 //    select * FROM  TF_PSS WHERE PS_ID='PC' AND WH='CP'
 
-    public static Map<Integer,Float> typePriceMap=null;
-    public static Map<Integer,String> typeAreaMap=null;
 
-    static
-    {
-        typePriceMap=new HashMap<>();
-
-       //厂家入库
-        typePriceMap.put(2,0f);
-        //缴库
-        typePriceMap.put(1,3.2f);
-        //出库到货柜
-        typePriceMap.put(3,3.3f);
-
-        typeAreaMap=new HashMap<>();
-        //厂家入库
-        typeAreaMap.put(2,"厂家到仓库");
-        //缴库
-        typeAreaMap.put(1,"车间到仓库");
-        //出库到货柜
-        typeAreaMap.put(3,"仓库到装柜");
-    }
 
 
 
@@ -175,22 +155,10 @@ public  static final String stockXiaoKuRecordCountSql=  " select  count(*) from 
                 .addScalar("khxg", StringType.INSTANCE)
                 .addScalar("dept", StringType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(StockSubmit.class)).list();
-        for(StockSubmit submit:list)
-        {
 
 
 
 
-            submit.dd=StringUtils.isEmpty(submit.dd)||submit.dd.length()<10?submit.dd:submit.dd.substring(0,10);
-            float price=typePriceMap.get(submit.type);
-            submit.area=typeAreaMap.get(submit.type);
-
-            submit.xs=submit.qty/submit.so_zxs;
-            submit.zxgtj=submit.xgtj*submit.xs;
-            submit.price=price;
-            submit.cost= FloatHelper.scale(submit.price*submit.zxgtj,2);
-
-        }
         return list;
     }
 

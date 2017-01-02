@@ -19,9 +19,11 @@ import java.util.List;
  * Created by davidleen29 on 2016/9/17.
  */
 public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
-    private JPanel root;
+    private JComponent rootPanel;
     private JButton save;
     private JHdTable tb;
+    private JButton saveType;
+    private JHdTable jt_arrageType;
 
 
     WorkFlowModel workFlowModel;
@@ -60,7 +62,7 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
      */
     @Override
     public JComponent getRoot() {
-        return root;
+        return rootPanel;
     }
 
     @Override

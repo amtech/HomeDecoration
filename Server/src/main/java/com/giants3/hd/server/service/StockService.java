@@ -7,10 +7,7 @@ import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
-import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.StockSubmit;
 import com.giants3.hd.utils.entity.StockXiaoku;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * 客户  业务处理 类
@@ -41,6 +36,8 @@ public class StockService extends AbstractService {
 
     @Autowired
     StockOutItemRepository stockOutItemRepository;
+    @Autowired
+    GlobalDataService globalDataService;
     @Autowired
     StockOutAuthRepository stockOutAuthRepository;
 
@@ -375,7 +372,9 @@ public class StockService extends AbstractService {
     public RemoteData<StockSubmit> getStockInAndSubmitList(String startDate, String endData) {
 
 
-        return wrapData(erpStockSubmitRepository.getStockSubmitList(startDate, endData));
+        final List<StockSubmit> stockSubmitList = erpStockSubmitRepository.getStockSubmitList(startDate, endData);
+        updateStockSubmitList(stockSubmitList);
+        return wrapData(stockSubmitList);
     }
 
     /**
@@ -386,7 +385,13 @@ public class StockService extends AbstractService {
      */
     public RemoteData<StockSubmit> getStockXiaokuItemList(String key,String startDate, String endDate) {
 
-        return wrapData(erpStockSubmitRepository.getStockXiaokuItemList(  key,startDate, endDate));
+
+
+
+        final List<StockSubmit> stockXiaokuItemList = erpStockSubmitRepository.getStockXiaokuItemList(key, startDate, endDate);
+
+        updateStockSubmitList(stockXiaokuItemList);
+        return wrapData(stockXiaokuItemList);
     }
     /**
      * 获取销库单列表
@@ -411,8 +416,58 @@ public class StockService extends AbstractService {
     public RemoteData<StockSubmit> getStockXiaokuItemList( String ps_no) {
 
           List<StockSubmit> submits=erpStockSubmitRepository.getStockXiaokuItemList(ps_no);
-
+           updateStockSubmitList(submits);
 
        return wrapData(submits);
     }
+
+
+    /**
+     * 更新搬运库相关单价区域数据
+     * @param stockSubmits
+     */
+    private  void updateStockSubmitList(List<StockSubmit> stockSubmits)
+    {
+
+
+        GlobalData globalData=globalDataService.findCurrentGlobalData();
+        if(globalData==null) return ;
+      Map<Integer,Float>  typePriceMap=new HashMap<>();
+
+        //厂家入库
+        typePriceMap.put(2,globalData.priceOfStockProductFactoryIn);
+        //缴库
+        typePriceMap.put(1,globalData.priceOfStockProductIn);
+        //出库到货柜
+        typePriceMap.put(3,globalData.priceOfStockProductOutToTrunk);
+
+        Map<Integer,String>  typeAreaMap=new HashMap<>();
+        //厂家入库
+        typeAreaMap.put(2,"厂家到仓库");
+        //缴库
+        typeAreaMap.put(1,"车间到仓库");
+        //出库到货柜
+        typeAreaMap.put(3,"仓库到装柜");
+
+
+        for(StockSubmit submit:stockSubmits)
+        {
+
+
+
+
+            submit.dd=StringUtils.isEmpty(submit.dd)||submit.dd.length()<10?submit.dd:submit.dd.substring(0,10);
+            float price=typePriceMap.get(submit.type);
+            submit.area=typeAreaMap.get(submit.type);
+
+            submit.xs=submit.qty/submit.so_zxs;
+            submit.zxgtj=submit.xgtj*submit.xs;
+            submit.price=price;
+            submit.cost= FloatHelper.scale(submit.price*submit.zxgtj,2);
+
+        }
+    }
+
+
+
 }

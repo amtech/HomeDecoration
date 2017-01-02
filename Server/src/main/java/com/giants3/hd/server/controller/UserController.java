@@ -5,6 +5,7 @@ import com.giants3.hd.server.noEntity.BufferData;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.CustomerService;
+import com.giants3.hd.server.service.GlobalDataService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.ConstantData;
@@ -63,7 +64,8 @@ public class UserController extends BaseController {
     private MaterialClassRepository materialClassRepository;
 
     @Autowired
-    private GlobalDataRepository globalDataRepository;
+    GlobalDataService globalDataService;
+
 
     @Autowired
     private ProductService productService;
@@ -198,7 +200,7 @@ public class UserController extends BaseController {
 
 
         //读取第一条数据   总共就一条
-        bufferData.globalData = globalDataRepository.findAll().get(0);
+        bufferData.globalData = globalDataService.findCurrentGlobalData();
         bufferData.factories = factoryRepository.findAll();
         List<ProductDetail> demos = new ArrayList<>();
         ProductDetail productDetail = null;

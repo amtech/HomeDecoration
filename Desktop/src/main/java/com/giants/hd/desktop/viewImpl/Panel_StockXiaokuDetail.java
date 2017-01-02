@@ -26,6 +26,7 @@ public class Panel_StockXiaokuDetail  extends BasePanel{
     private JLabel guixing;
     private JLabel fengqian;
     private JLabel tcgs;
+    private JLabel ztj;
 
     StockInAndSubmitTableModel tableModel;
 
@@ -61,6 +62,17 @@ public class Panel_StockXiaokuDetail  extends BasePanel{
     {
 
         tableModel.setDatas(remoteData.datas);
+
+
+        //计算出总体积
+        float ztjValue=0;
+        for(StockSubmit submit:remoteData.datas
+                )
+        {
+            ztjValue+=submit.zxgtj;
+        }
+
+        ztj.setText(String.valueOf(ztjValue));
     }
 
     public void bindData(StockXiaoku xiaoku)

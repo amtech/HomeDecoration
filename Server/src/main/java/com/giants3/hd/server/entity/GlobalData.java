@@ -84,6 +84,31 @@ public class GlobalData implements Serializable {
     public float manageRatioForeign=0.15f;
 
 
+    /**
+     * 货品入库单价（车间到仓库）  元/立方米
+     */
+    public  float  priceOfStockProductIn;
+
+
+
+    /**
+     * 货品入库单价（厂家到仓库）  元/立方米  默认都为0
+     */
+    public  float  priceOfStockProductFactoryIn;
+
+
+    /**
+     * 货品出库到货柜单价 元/立方米
+     */
+    public  float  priceOfStockProductOutToTrunk;
+
+
+    /**
+     * 配置参数 更新日期  yyyy-mm-dd-hh-mm-ss
+     */
+    public  String  updateTime;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,6 +127,75 @@ public class GlobalData implements Serializable {
         if (Float.compare(that.manageRatioXK, manageRatioXK) != 0) return false;
         if (Float.compare(that.manageRatioForeign, manageRatioForeign) != 0) return false;
         return Float.compare(that.manageRatioNormal, manageRatioNormal) == 0;
+
+    }
+
+    public  boolean isGlobalSettingEquals(GlobalData that)
+    {
+
+        //判断是否产品相关的配置改变
+        if( !isProductRelateDataEquals(that))return false;
+
+        return isStockProductRelateEquals(that);
+
+
+    }
+
+    /**
+     * 判断是否产品相关的配置数据改变（包含材料）
+     * @param that
+     * @return
+     */
+    public boolean isProductRelateDataEquals(GlobalData that) {
+        if (this == that) return true;
+
+
+
+        if (Float.compare(that.exportRate, exportRate) != 0) return false;
+        if (Float.compare(that.cost_price_ratio, cost_price_ratio) != 0) return false;
+        if (Float.compare(that.addition, addition) != 0) return false;
+        if (Float.compare(that.price_of_export, price_of_export) != 0) return false;
+
+        if (Float.compare(that.repairPrice, repairPrice) != 0) return false;
+        if (Float.compare(that.manageRatioXK, manageRatioXK) != 0) return false;
+        if (Float.compare(that.manageRatioForeign, manageRatioForeign) != 0) return false;
+        if( Float.compare(that.manageRatioNormal, manageRatioNormal) != 0) return false;
+
+
+       return isMaterialRelateEquals(that);
+
+
+    }
+
+
+    /**
+     * 判断是否材料相关的配置数据改变
+     * @param that
+     * @return
+     */
+    public boolean isMaterialRelateEquals(GlobalData that) {
+        if (this == that) return true;
+
+        if (Float.compare(that.price_of_diluent, price_of_diluent) != 0) return false;
+        if (Float.compare(that.extra_ratio_of_diluent, extra_ratio_of_diluent) != 0) return false;
+        return true;
+
+    }
+
+
+
+    /**
+     * 判断是否材料相关的配置数据改变
+     * @param that
+     * @return
+     */
+    public boolean isStockProductRelateEquals(GlobalData that) {
+        if (this == that) return true;
+
+        if (Float.compare(that.priceOfStockProductFactoryIn, priceOfStockProductFactoryIn) != 0) return false;
+        if (Float.compare(that.priceOfStockProductOutToTrunk, priceOfStockProductOutToTrunk) != 0) return false;
+        if (Float.compare(that.priceOfStockProductIn, priceOfStockProductIn) != 0) return false;
+        return true;
 
     }
 

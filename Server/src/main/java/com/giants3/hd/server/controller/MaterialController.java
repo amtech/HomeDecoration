@@ -5,6 +5,7 @@ import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.GlobalDataService;
 import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
@@ -66,8 +67,11 @@ public class MaterialController extends BaseController {
 
 
 
- @Autowired
-    private GlobalDataRepository globalDataRepository;
+// @Autowired
+//    private GlobalDataRepository globalDataRepository;
+    @Autowired
+    private GlobalDataService globalDataService;
+
 
     @Autowired
     private MaterialService materialService;
@@ -274,7 +278,7 @@ public class MaterialController extends BaseController {
 //       ErpPrdtRepository   repository=new ErpPrdtRepository(manager);
 
         //重置全局参数
-        globalData=globalDataRepository.findAll().get(0);
+        globalData=globalDataService.findCurrentGlobalData();
 
         EntityManagerHelper helper=EntityManagerHelper.getErp();
         EntityManager manager=helper.getEntityManager();
@@ -399,7 +403,7 @@ public class MaterialController extends BaseController {
 
 
                 //重置全局参数
-                globalData=globalDataRepository.findAll().get(0);
+                globalData=globalDataService.findCurrentGlobalData();
                 Set<Long> relateProductIds=new HashSet<>();
                     updatePriceRelateData(material,relateProductIds);
 
@@ -536,7 +540,7 @@ public class MaterialController extends BaseController {
         Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
         materialPriceRelateProduct.clear();
         if(globalData==null)
-          globalData=globalDataRepository.findAll().get(0);
+          globalData=globalDataService.findCurrentGlobalData();
 
 
         //价格发生变动， 调整有用到该材料的费用

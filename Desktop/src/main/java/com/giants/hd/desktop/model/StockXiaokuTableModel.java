@@ -9,7 +9,7 @@ import com.google.inject.Inject;
  */
 public class StockXiaokuTableModel extends BaseTableModel<StockXiaoku> {
 
-    public static String[] columnNames = new String[]{"单号","   柜数 ", "  柜号 ","  封签号 ", " 拖车公司 ", "客户", " 发票号", "柜型"};
+    public static String[] columnNames = new String[]{"单号","   柜数 ", "  柜号 ","  封签号 ", " 拖车公司 ", "", " 发票号", "柜型"};
     public static int[] columnWidth = new int[]{100,60, 100, 100,100,100,100,100};
 
 

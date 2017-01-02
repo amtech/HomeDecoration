@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.GlobalDataService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity.*;
@@ -26,7 +27,7 @@ public class    ApplicationController extends  BaseController {
 
 
     @Autowired
-    private GlobalDataRepository globalDataRepository;
+    private GlobalDataService globalDataService;
     @Autowired
     private ProductRepository productRepository;
 
@@ -51,114 +52,121 @@ public class    ApplicationController extends  BaseController {
     @ResponseBody
     RemoteData<GlobalData> findListByNames(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody GlobalData globalData) {
 
-        GlobalData oldData = globalDataRepository.findOne(globalData.id);
+        GlobalData oldData = globalDataService.find(globalData.id);
         if (oldData == null) {
 
             return wrapError("系统异常");
         }
 
 
-        if (oldData.equals(globalData)) {
+        if (oldData.isGlobalSettingEquals(globalData)) {
 
 
             return wrapError("全局参数无改变");
 
 
         }
+        //判断是否产品相关的材料信息改变
+        boolean isProductRelateChange=!oldData.isProductRelateDataEquals(globalData);
 
 
-        //判断是否材料相关的固定参数改变
-        boolean materialRelateChanged = Float.compare(oldData.extra_ratio_of_diluent, globalData.extra_ratio_of_diluent) != 0 || Float.compare(oldData.price_of_diluent, globalData.price_of_diluent) != 0;
 
 
-        //临时缓存数据
-        ProductPaintArrayList list = new ProductPaintArrayList();
-        //遍历所有产品数据
-        int pageIndex = 0;
-        int pageSize = 10;
-
-        Page<Product> productPage = null;
-
-        do {
-            Pageable pageable = constructPageSpecification(pageIndex++, pageSize);
-            productPage = productRepository.findAll(pageable);
-
-            //一次处理10条
-            for (Product product : productPage.getContent()) {
+        if(isProductRelateChange) {
 
 
-                boolean isForeignProduct = !Factory.CODE_LOCAl.equals(product.factoryCode);
+            //判断是否材料相关的固定参数改变
+            boolean materialRelateChanged =!oldData.isMaterialRelateEquals(globalData);
 
-                //外厂数据 只需更新 成本值
-                if (isForeignProduct) {
-                    product.updateForeignFactoryRelate(globalData);
-                } else
+            //临时缓存数据
+            ProductPaintArrayList list = new ProductPaintArrayList();
+            //遍历所有产品数据
+            int pageIndex = 0;
+            int pageSize = 10;
 
-                    //如果有跟油漆材料相关
-                    if (materialRelateChanged) {
+            Page<Product> productPage = null;
+
+            do {
+                Pageable pageable = constructPageSpecification(pageIndex++, pageSize);
+                productPage = productRepository.findAll(pageable);
+
+                //一次处理10条
+                for (Product product : productPage.getContent()) {
 
 
-                        List<ProductPaint> productPaints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(product.id);
+                    boolean isForeignProduct = !Factory.CODE_LOCAl.equals(product.factoryCode);
 
-                        //更新油漆材料中稀释剂用量
-                        list.clear();
-                        list.addAll(productPaints);
-                        list.updateQuantityOfIngredient(globalData);
-                        list.clear();
+                    //外厂数据 只需更新 成本值
+                    if (isForeignProduct) {
+                        product.updateForeignFactoryRelate(globalData);
+                    } else
 
-                        //重新计算各油漆的单价 金额
-                        for (ProductPaint paint : productPaints) {
-                            paint.updatePriceAndCostAndQuantity(globalData);
+                        //如果有跟油漆材料相关
+                        if (materialRelateChanged) {
+
+
+                            List<ProductPaint> productPaints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(product.id);
+
+                            //更新油漆材料中稀释剂用量
+                            list.clear();
+                            list.addAll(productPaints);
+                            list.updateQuantityOfIngredient(globalData);
+                            list.clear();
+
+                            //重新计算各油漆的单价 金额
+                            for (ProductPaint paint : productPaints) {
+                                paint.updatePriceAndCostAndQuantity(globalData);
+                            }
+
+
+                            //更新油漆数据
+                            productPaintRepository.save(productPaints);
+                            productPaintRepository.flush();
+
+                            //汇总计算油漆单价 金额
+                            float paintWage = 0;
+                            float paintCost = 0;
+                            for (ProductPaint paint : productPaints) {
+                                paintWage += paint.processPrice;
+                                paintCost += paint.cost;
+
+                            }
+                            //更新产品油漆统计数据 自动联动更新全局数据。
+                            product.updatePaintData(paintCost, paintWage,
+                                    globalData);
+
+
+                        } else {
+
+
+                            product.calculateTotalCost(globalData);
+
+
                         }
 
 
-                        //更新油漆数据
-                        productPaintRepository.save(productPaints);
-                        productPaintRepository.flush();
-
-                        //汇总计算油漆单价 金额
-                        float paintWage = 0;
-                        float paintCost = 0;
-                        for (ProductPaint paint : productPaints) {
-                            paintWage += paint.processPrice;
-                            paintCost += paint.cost;
-
-                        }
-                        //更新产品油漆统计数据 自动联动更新全局数据。
-                        product.updatePaintData(paintCost, paintWage,
-                                globalData);
+                    //保存全部数据
+                    //重新保存数据
+                    productRepository.save(product);
+                    productRepository.flush();
 
 
-                    } else {
+                    //增加历史操作记录
+                    OperationLog operationLog = OperationLog.createForGloBalDataChange(product, user);
+                    operationLogRepository.saveAndFlush(operationLog);
+
+                }
 
 
-                        product.calculateTotalCost(globalData);
+            } while (productPage.hasNext());
 
 
-                    }
-
-
-                //保存全部数据
-                //重新保存数据
-                productRepository.save(product);
-                productRepository.flush();
-
-
-                //增加历史操作记录
-                OperationLog operationLog = OperationLog.createForGloBalDataChange(product, user);
-                operationLogRepository.saveAndFlush(operationLog);
-
-            }
-
-
-        } while (productPage.hasNext());
-
-
+        }
         //更新全局数据
-        globalDataRepository.save(globalData);
+      GlobalData  saveResult=  globalDataService .save(globalData);
 
 
-        return wrapData(globalData);
+        return wrapData(saveResult);
     }
 
 

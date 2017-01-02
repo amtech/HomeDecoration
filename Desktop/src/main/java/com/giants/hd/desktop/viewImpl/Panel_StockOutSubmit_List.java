@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 
 /**
- * 界面   入库与缴库列表
+ * 界面   销库库列表
  * Created by davidleen29 on 2016/7/12.
  */
 public class Panel_StockOutSubmit_List extends BasePanel {
