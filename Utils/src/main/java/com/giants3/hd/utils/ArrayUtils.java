@@ -4,11 +4,7 @@ package com.giants3.hd.utils;
  * 数组方法的功能类
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
+import java.util.*;
 
 
 /**
@@ -79,12 +75,13 @@ public class ArrayUtils {
      *
      * @param <T>
      * @param list
+     * @deprecated  泛类型转换失败。
      */
 
     public static <T> T[] changeArrayToList(List<T> list) {
 
         int size = list.size();
-        T[] result = (T[]) new Object[size];
+        T[] result =   (T[])new    Object[size];
 
 
         for (int i = 0; i < size; i++) {
@@ -183,6 +180,14 @@ public class ArrayUtils {
                 return i;
         }
         return -1;
+    }
+
+    public  static  <T>  Vector<T> changeListToVector(List<T> list) {
+
+        int size=list.size();
+        Vector<T> vector=new Vector<>(size);
+        vector.addAll(list);
+        return vector;
     }
 }
 

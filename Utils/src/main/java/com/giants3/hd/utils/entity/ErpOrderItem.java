@@ -1,4 +1,4 @@
-package com.giants3.hd.server.entity_erp;
+package com.giants3.hd.utils.entity;
 
 /**
  * erp 订单货款信息
@@ -303,4 +303,17 @@ public class ErpOrderItem {
      * 订单当前数量    订单递交下流程 可能没有全部提交下去（特殊需求）
      */
     public int tranQty;
+
+
+    /**
+     *产品进度描述
+     */
+    public String workFlowDescribe;
+
+
+    /**
+     *  关联订单生产流程id
+     */
+
+    public long orderWorkFlowId;
 }

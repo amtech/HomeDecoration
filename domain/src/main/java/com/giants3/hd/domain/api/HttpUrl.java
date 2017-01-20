@@ -956,24 +956,74 @@ public class HttpUrl {
     }
 
     public static String getStockInAndSubmitList(String key, String startDate, String endDate) {
-        return additionInfo(BaseUrl + "api/stock/stockInAndSubmitList?key=" + key + "&startDate=" + startDate + "&endDate=" + endDate );
+        return additionInfo(BaseUrl + "api/stock/stockInAndSubmitList?key=" + key + "&startDate=" + startDate + "&endDate=" + endDate);
 
 
     }
 
     public static String getStockXiaokuItemList(String ps_no) {
-        return additionInfo(BaseUrl + "api/stock/xiaokuItemList?ps_no=" + ps_no   );
+        return additionInfo(BaseUrl + "api/stock/xiaokuItemList?ps_no=" + ps_no);
 
     }
 
 
-    public static String getStockXiaokuItemList(String key,String dateStart,String dateEnd) {
-        return additionInfo(BaseUrl + "api/stock/xiaokuItemSearch?key=" + key + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd  );
+    public static String getStockXiaokuItemList(String key, String dateStart, String dateEnd) {
+        return additionInfo(BaseUrl + "api/stock/xiaokuItemSearch?key=" + key + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd);
 
     }
 
-    public static String getStockXiaokuList(String key,int pageIndex, int pageSize) {
+    public static String getStockXiaokuList(String key, int pageIndex, int pageSize) {
         return additionInfo(BaseUrl + String.format("api/stock/xiaokuList?key=%s&pageIndex=%d&pageSize=%d", key, pageIndex, pageSize));
 
+    }
+
+
+    /**
+     * 流程类型
+     * @return
+     */
+    public static String getWorkFlowTypes() {
+        return additionInfo(BaseUrl + String.format("api/workFlow/types"));
+
+    }
+
+    /**
+     * 流程二级类型
+     * @return
+     */
+    public static String getWorkFlowSubTypes() {
+        return additionInfo(BaseUrl + String.format("api/workFlow/subTypes"));
+
+    }
+
+    public static String getWorkFlowOfProduct(long productId) {
+        return additionInfo(BaseUrl + String.format("api/workFlow/findWorkFlowByProductId?productId=%d",productId));
+    }
+
+    public static String saveWorkFlowProduct() {
+
+        return additionInfo(BaseUrl + "api/workFlow/saveWorkFlowProduct");
+
+    }
+
+    public static String getOutFactories() {
+
+        return additionInfo(BaseUrl + "api/factory/out/list");
+    }
+
+    public static String saveOutFactories() {
+        return additionInfo(BaseUrl + "api/factory/out/save");
+    }
+
+    public static String startOrderItemWorkFlow() {
+
+
+
+        return additionInfo(BaseUrl + "api/workFlow/startOrderItemWorkFlow");
+    }
+
+    public static String getOrderItemWorkFlowState(long orderItemId) {
+
+        return additionInfo(BaseUrl + String.format("api/workFlow/orderItemState?orderItemId=%s",orderItemId));
     }
 }

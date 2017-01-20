@@ -1,28 +1,12 @@
 package com.giants.hd.desktop.model;
 
-import com.giants.hd.desktop.frames.StockOutDetailFrame;
-import com.giants.hd.desktop.interf.Iconable;
-import com.giants.hd.desktop.interf.ImageByteDataReader;
-import com.giants.hd.desktop.local.ConstantData;
-import com.giants.hd.desktop.local.ImageLoader;
-import com.giants.hd.desktop.widget.AttachPanel;
-import com.giants.hd.desktop.widget.ImageLabel;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
 
 /**
  * 订单表格模型
@@ -36,8 +20,8 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String TITLE_PACKAGE_INFO = "包装信息";
     public static final String TITLE_MAITOU = "唛头";
     public static final String TITLE_GUAGOU = "挂钩说明";
-    public static String[] columnNames = new String[]{"序号", "图片", "货号", "配方号", "客号", TITLE_VERIFY_DATE, TITLE_SEND_DATE, TITLE_PACKAGE_INFO, "包装图片", TITLE_MAITOU, TITLE_GUAGOU, "单位", "单价", "数量", "金额", "箱数", "每箱数", "箱规", "立方数", "总立方数", "产品尺寸", "生产进度","备注"};
-    public static int[] columnWidth = new int[]{40, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 60, 60, 100, 100, 100, 100, 100, 150, 100, 40, 40, 40, 80, 120, 60, 120, 120, 120, 120,120, 400};
+    public static String[] columnNames = new String[]{"序号", "图片", "货号", "配方号", "客号", TITLE_VERIFY_DATE, TITLE_SEND_DATE, TITLE_PACKAGE_INFO, "包装图片", TITLE_MAITOU, TITLE_GUAGOU, "单位", "单价", "数量", "金额", "箱数", "每箱数", "箱规", "立方数", "总立方数", "产品尺寸", "生产进度", "备注"};
+    public static int[] columnWidth = new int[]{40, ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 60, 60, 100, 100, 100, 100, 100, 150, 100, 40, 40, 40, 80, 120, 60, 120, 120, 120, 120, 120, 400};
 
 
     public static final String VERIFY_DATE = "verifyDate";
@@ -49,9 +33,10 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
     public static final String PACK_ATTACHES = "packAttaches";
     public static final String UP = "up";
     public static final String AMT = "amt";
-    public static String[] fieldName = new String[]{"itm",     "thumbnail",        "prd_no",    "pVersion",  "bat_no",     VERIFY_DATE,  SEND_DATE,  PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg","currentWorkFlow", "memo"};
+    private static final String DESCRIBE = "workFlowDescribe";
+    public static String[] fieldName = new String[]{"itm", "thumbnail", "prd_no", "pVersion", "bat_no", VERIFY_DATE, SEND_DATE, PACKAGE_INFO, PACK_ATTACHES, MAITOU, GUAGOU, "ut", UP, "qty", AMT, "htxs", "so_zxs", "khxg", "xgtj", "zxgtj", "hpgg", DESCRIBE, "memo"};
 
-    public static Class[] classes = new Class[]{Object.class,  ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class, ImageIcon.class};
+    public static Class[] classes = new Class[]{Object.class, ImageIcon.class, Object.class, Object.class, Object.class, String.class, String.class, String.class, ImageIcon.class};
     /**
      * 单价是否可见
      */
@@ -106,9 +91,17 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
         if (item == null) return null;
 
 
-        if (columnIndex == StringUtils.index(fieldName, UP)||columnIndex == StringUtils.index(fieldName, AMT)) {
+        if (columnIndex == StringUtils.index(fieldName, UP) || columnIndex == StringUtils.index(fieldName, AMT)) {
 
-            if(!fobPriceVisible) return "***";
+            if (!fobPriceVisible) return "***";
+        }
+        if (columnIndex == StringUtils.index(fieldName, DESCRIBE)) {
+
+            Object value = super.getValueAt(rowIndex, columnIndex);
+            if (value==null||StringUtils.isEmpty(value.toString())) {
+                return "未排产";
+            }
+            return value;
         }
 
 
@@ -173,10 +166,10 @@ public class OrderItemTableModel extends BaseTableModel<ErpOrderItem> {
 
     /**
      * 设置单价是否可见
+     *
      * @param visible
      */
-    public void setFobPriceVisible(boolean visible)
-    {
-        this.fobPriceVisible=visible;
+    public void setFobPriceVisible(boolean visible) {
+        this.fobPriceVisible = visible;
     }
 }

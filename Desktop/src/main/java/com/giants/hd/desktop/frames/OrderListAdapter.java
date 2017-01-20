@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrder;
 
 /**
 * Created by david on 2016/3/29.

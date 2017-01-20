@@ -4,7 +4,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.OrderAuth;
 import com.giants3.hd.utils.entity.QuoteAuth;
 import com.giants3.hd.utils.entity.StockOutAuth;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import rx.Observable;
 

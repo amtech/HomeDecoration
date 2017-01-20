@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.dialogs.WorkFlowProductDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.presenter.ProductDetailPresenter;
 import com.giants.hd.desktop.viewImpl.BasePanel;
@@ -7,6 +8,7 @@ import com.giants.hd.desktop.viewImpl.Panel_ProductDetail;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductDelete;
 import com.giants3.hd.utils.noEntity.ProductDetail;
@@ -32,6 +34,7 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
     @Inject
     Panel_ProductDetail panel_productDetail;
     ProductDelete productDelete =null;
+
 
 
     java.util.List<String> attachStrings = new ArrayList<>();
@@ -180,6 +183,37 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
         }.go();
 
       //  panel_productDetail.showLoadingDialog("正在提交保存。。。·");
+
+
+    }
+
+
+    @Override
+    public void showProductWorkFlow() {
+
+
+//        if(detail==null) {
+//
+//            panel_productDetail.showMesssage("数据为空");
+//            return;
+//        }
+
+        if(panel_productDetail.getData().product.id<=0)
+        {
+            panel_productDetail.showMesssage("产品未建立，请先保存");
+            return;
+        }
+
+
+        Product product=panel_productDetail.getData().product;
+        WorkFlowProductDialog workFlowProductFrame=new WorkFlowProductDialog(this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
+
+        workFlowProductFrame.setVisible(true);
+
+
+
+
+
 
 
     }

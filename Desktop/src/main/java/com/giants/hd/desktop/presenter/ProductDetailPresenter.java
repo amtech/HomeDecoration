@@ -13,4 +13,6 @@ public interface ProductDetailPresenter extends  Presenter {
     void addPackagePicture(File[] selectedFiles);
 
     void save(ProductDetail productDetail);
+
+    void showProductWorkFlow();
 }

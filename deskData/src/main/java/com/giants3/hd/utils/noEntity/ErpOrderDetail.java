@@ -2,8 +2,8 @@ package com.giants3.hd.utils.noEntity;
 
 
 
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 
 import java.io.Serializable;
 import java.util.List;

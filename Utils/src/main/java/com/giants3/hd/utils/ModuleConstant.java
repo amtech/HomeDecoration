@@ -76,6 +76,9 @@ public class ModuleConstant {
     public static final String TITLE_TRANSPORT_OUT_SEARCH = "销库区间搜索";
     public static final String NAME_TRANSPORT_OUT_SEARCH  = "xiaokuItemSearch";
 
+    public static final String TITLE_OUT_FACTORY = "外厂家数据";
+    public static final String NAME_OUT_FACTORY  = "OutFactory";
+
 
     public static final String TITLE_MODULE = "模块列表";
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
@@ -90,6 +93,7 @@ public class ModuleConstant {
             TITLE_ORDER_WORK_FLOW_REPORT,
             TITLE_STOCK, TITLE_STOCK_OUT, TITLE_WORK_FLOW
             , TITLE_STOCK_IN_AND_SUBMIT, TITLE_TRANSPORT_OUT,TITLE_TRANSPORT_OUT_SEARCH
+            ,TITLE_OUT_FACTORY
 
 
     };
@@ -110,6 +114,8 @@ public class ModuleConstant {
             NAME_STOCK, NAME_STOCK_OUT, NAME_WORK_FLOW
 
             , NAME_STOCK_IN_AND_SUBMIT, NAME_TRANSPORT_OUT,NAME_TRANSPORT_OUT_SEARCH
+
+            ,NAME_OUT_FACTORY
     };
 
 

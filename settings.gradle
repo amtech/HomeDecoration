@@ -3,4 +3,4 @@ include ':Server',':Desktop',':Utils'
 include 'domain'
 include  'common'
 include 'deskData'
-
+//include ':SpringHibernateXmlDemo'

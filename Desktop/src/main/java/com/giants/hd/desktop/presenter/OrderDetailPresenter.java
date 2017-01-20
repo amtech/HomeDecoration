@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.presenter;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 
 import java.io.File;
 

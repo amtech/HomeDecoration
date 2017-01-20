@@ -153,6 +153,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     private JButton btn_add_pack_image;
     private AttachPanel pack_attaches;
     private JPanel panel_workflow;
+    private JButton workFlow;
 
 
     /**
@@ -1337,6 +1338,8 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         removeListeners();
 
+        workFlow.setVisible(detail==null||detail.product==null||detail.product.id<=0?false:true);
+
         if (detail == null) {
 
             productDetail = new ProductDetail();
@@ -1404,6 +1407,17 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         panel_attach.setTitle("产品附件");
 
 
+
+
+
+        workFlow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.showProductWorkFlow();
+            }
+        });
     }
 
 

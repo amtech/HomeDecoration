@@ -12,8 +12,8 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TextAreaCellEditor;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 
 import javax.swing.*;
@@ -137,7 +137,9 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
                     final ErpOrderItem finalItem = item;
                     popupMenuLocation.setLocation(e.getXOnScreen(), e.getYOnScreen());
                     JPopupMenu menu = new JPopupMenu();
-                    JMenuItem split = new JMenuItem("查看生产流程");
+
+
+                    JMenuItem split = new JMenuItem(finalItem.orderWorkFlowId<=0?"开始排产":"查看生产流程");
                     split.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {

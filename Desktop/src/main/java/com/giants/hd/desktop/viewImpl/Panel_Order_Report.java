@@ -13,7 +13,7 @@ import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;

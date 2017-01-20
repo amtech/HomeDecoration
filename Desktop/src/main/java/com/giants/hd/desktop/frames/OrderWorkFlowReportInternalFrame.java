@@ -7,7 +7,7 @@ import com.giants.hd.desktop.viewImpl.Panel_OrderWorkFlowReport;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 
 
 import rx.Subscriber;

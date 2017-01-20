@@ -1,23 +1,18 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.presenter.WorkFlowPresenter;
 import com.giants.hd.desktop.view.WorkFlowViewer;
-import com.giants.hd.desktop.viewImpl.Panel_Stock_List;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
-import com.google.gson.Gson;
-import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
+import com.giants3.hd.utils.entity.WorkFlowSubType;
 import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -52,6 +47,39 @@ public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowPresente
             }
         });
 
+
+
+        readSubTypeData();
+
+
+    }
+
+    private  void readSubTypeData()
+    {
+        UseCaseFactory.getInstance().createGetWorkFlowSubTypeUseCase().execute(new Subscriber<RemoteData<WorkFlowSubType>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                workFlowViewer.showMesssage(e.getMessage());
+
+            }
+
+
+            @Override
+            public void onNext(RemoteData<WorkFlowSubType> data) {
+
+
+                if(data.isSuccess())
+                workFlowViewer.setSubData(data.datas);
+
+            }
+
+        });
 
     }
     private  void  loadUsers()

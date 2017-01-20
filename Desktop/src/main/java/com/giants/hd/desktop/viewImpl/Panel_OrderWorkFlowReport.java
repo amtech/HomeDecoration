@@ -6,7 +6,7 @@ import com.giants.hd.desktop.presenter.OrderWorkFlowReportPresenter;
 import com.giants.hd.desktop.view.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

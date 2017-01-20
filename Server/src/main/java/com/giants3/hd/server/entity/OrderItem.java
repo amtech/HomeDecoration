@@ -65,4 +65,18 @@ public class OrderItem implements Serializable {
     public String thumbnail;
     public String url;
     public String ut;
+
+
+
+    /**
+     *产品进度描述
+     */
+    public String workFlowDescribe;
+
+
+    /**
+     *  关联订单生产流程id
+     */
+
+    public long orderWorkFlowId;
 }

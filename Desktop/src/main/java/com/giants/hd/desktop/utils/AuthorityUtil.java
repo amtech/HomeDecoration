@@ -534,4 +534,9 @@ public class AuthorityUtil {
     public boolean viewXiaokuItemSearch() {
         return isViewable(ModuleConstant.NAME_TRANSPORT_OUT_SEARCH);
     }
+
+    public boolean viewOutFactoryList() {
+
+        return isViewable(ModuleConstant.NAME_OUT_FACTORY);
+    }
 }

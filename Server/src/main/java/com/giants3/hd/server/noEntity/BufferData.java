@@ -36,6 +36,11 @@ public class BufferData implements Serializable{
     public List<WorkFlow> workFlows;
 
     /**
+     * 生产二级流程数据
+     */
+    public List<WorkFlowSubType> workFlowSubTypes;
+
+    /**
      * 订单权限
      */
     public OrderAuth orderAuth;

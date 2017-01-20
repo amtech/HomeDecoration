@@ -12,7 +12,6 @@ import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.domain.interractor.StockXiaokuItemSearchUseCase;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
@@ -82,6 +81,9 @@ public class Main extends BaseFrame {
 
 
         Guice.createInjector().injectMembers(this);
+
+        //保存全局引用
+        instance = this;
     }
 
     public static void main(String[] args) {
@@ -640,6 +642,23 @@ public class Main extends BaseFrame {
         }
 
 
+
+        if (AuthorityUtil.getInstance().viewOutFactoryList()) {
+            menuItem = new JMenuItem("外厂家列表");
+
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    OutFactoryDialog dialog = new OutFactoryDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+                }
+            });
+
+        }
+
         if (AuthorityUtil.getInstance().viewProcessList()) {
 
             menuItem = new JMenuItem("工序列表");
@@ -828,7 +847,9 @@ public class Main extends BaseFrame {
 
     }
 
-    private void addInterFrame(BaseInternalFrame baseInternalFrame) {
+
+
+   public void addInterFrame(BaseInternalFrame baseInternalFrame) {
 
 
         baseInternalFrame.setVisible(true); //necessary as of 1.3
@@ -836,6 +857,7 @@ public class Main extends BaseFrame {
         try {
             baseInternalFrame.setSelected(true);
         } catch (java.beans.PropertyVetoException exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -1108,5 +1130,10 @@ public class Main extends BaseFrame {
 
     }
 
+    //主界面的引用
+    static Main instance;
 
+    public static Main getInstance() {
+        return instance;
+    }
 }

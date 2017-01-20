@@ -1242,4 +1242,9 @@ public class ProductService extends AbstractService implements InitializingBean,
         productRepository.setDefaultWorkFlowIds(workFlowIndexStrings, workFlowNameStrings);
 
     }
+
+    public Product findProductById(long productId) {
+
+       return  productRepository.findOne(productId);
+    }
 }

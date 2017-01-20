@@ -8,7 +8,7 @@ import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrder;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

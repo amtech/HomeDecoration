@@ -1,7 +1,7 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity_erp.ErpOrder;
-import com.giants3.hd.server.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;

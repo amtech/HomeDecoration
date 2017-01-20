@@ -40,6 +40,11 @@ public class BufferData implements Serializable{
     public List<WorkFlow> workFlows;
 
     /**
+     * 生产二级流程数据
+     */
+    public List<WorkFlowSubType> workFlowSubTypes;
+
+    /**
      * 产品录入的模板数据
      */
     public List<ProductDetail> demos;
@@ -55,4 +60,6 @@ public class BufferData implements Serializable{
      * 出库单权限
      */
     public StockOutAuth stockOutAuth;
+
+
 }

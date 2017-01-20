@@ -1,5 +1,7 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.dialogs.WorkFlowOrderArrangeDialog;
+import com.giants.hd.desktop.dialogs.WorkFlowOrderItemStateDialog;
 import com.giants.hd.desktop.presenter.OrderDetailPresenter;
 import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
@@ -12,8 +14,9 @@ import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.OrderItemWorkFlow;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Subscriber;
@@ -35,6 +38,8 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     private String oldData;
     private OrderDetailViewer orderDetailViewer;
 
+    private String os_no;
+
     public OrderDetailFrame(String orderNo) {
         super();
         initPanel(orderNo);
@@ -49,6 +54,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     }
 
     private void initPanel(String os_no) {
+        this.os_no=os_no;
         setMinimumSize(new Dimension(1080, 800));
         orderDetailViewer = new Panel_Order_Detail(this);
         setContentPane(orderDetailViewer.getRoot());
@@ -333,6 +339,49 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
      */
     @Override
     public void showWorkFlow(ErpOrderItem finalItem) {
+
+        if(finalItem.id<=0)
+        {
+          orderDetailViewer.showMesssage("先保存订单");
+            return;
+        }
+
+
+
+
+        if(finalItem.orderWorkFlowId<=0)
+        {
+
+     //前往排产界面
+            WorkFlowOrderArrangeDialog dialog=new WorkFlowOrderArrangeDialog(this,finalItem);
+            dialog.setModal(true);
+            dialog.setVisible(true);
+            OrderItemWorkFlow result=dialog.getResult();
+            if(result!=null)
+            {
+
+                finalItem.orderWorkFlowId=result.id;
+                finalItem.workFlowDescribe=result.workFlowDiscribe;
+
+                loadOrderDetail(os_no);
+
+            }
+
+
+
+        }else{
+
+         //显示订单货款进度
+
+            WorkFlowOrderItemStateDialog dialog=new WorkFlowOrderItemStateDialog(this,finalItem.id);
+            dialog.setModal(true);
+            dialog.setVisible(true);
+
+        }
+
+
+
+
 
 
     }

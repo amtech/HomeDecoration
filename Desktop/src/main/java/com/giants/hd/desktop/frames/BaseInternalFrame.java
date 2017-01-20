@@ -58,4 +58,16 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements Prese
     public boolean hasModifyData() {
         return false;
     }
+
+
+    public void showInMain()
+    {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Main.getInstance().addInterFrame(BaseInternalFrame.this);
+            }
+        });
+
+    }
 }

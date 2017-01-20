@@ -4,8 +4,8 @@ import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.*;
@@ -162,7 +162,19 @@ public class ApiManager {
         tokenMaps.put(WorkFlow.class, new TypeToken<RemoteData<WorkFlow>>() {
         }.getType());
         tokenMaps.put(StockSubmit.class, new TypeToken<RemoteData<StockSubmit>>() {
-        }.getType()); tokenMaps.put(StockXiaoku.class, new TypeToken<RemoteData<StockXiaoku>>() {
+        }.getType());
+
+        tokenMaps.put(StockXiaoku.class, new TypeToken<RemoteData<StockXiaoku>>() {
+        }.getType());
+        tokenMaps.put(WorkFlowSubType.class, new TypeToken<RemoteData<WorkFlowSubType>>() {
+        }.getType());
+        tokenMaps.put(WorkFlowProduct.class, new TypeToken<RemoteData<WorkFlowProduct>>() {
+        }.getType());
+        tokenMaps.put(OutFactory.class, new TypeToken<RemoteData<OutFactory>>() {
+        }.getType());
+        tokenMaps.put(OrderItemWorkFlow.class, new TypeToken<RemoteData<OrderItemWorkFlow>>() {
+        }.getType());
+        tokenMaps.put(OrderItemWorkFlowState.class, new TypeToken<RemoteData<OrderItemWorkFlowState>>() {
         }.getType());
     }
 
@@ -1793,6 +1805,77 @@ public class ApiManager {
         String url = HttpUrl.getStockXiaokuList(key, pageIndex,pageSize);
         String result = client.getWithStringReturned(url);
         RemoteData<StockXiaoku> remoteData = invokeByReflect(result, StockXiaoku.class);
+        return remoteData;
+    }
+
+
+
+
+
+
+
+    public RemoteData<WorkFlowSubType> getWorkFlowSubTypes( ) throws HdException {
+        String url = HttpUrl.getWorkFlowSubTypes();
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowSubType> remoteData = invokeByReflect(result, WorkFlowSubType.class);
+        return remoteData;
+    }
+
+    public RemoteData<WorkFlowProduct> getWorkFlowOfProduct(long productId) throws HdException {
+
+        String url = HttpUrl.getWorkFlowOfProduct(productId);
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowProduct> remoteData = invokeByReflect(result, WorkFlowProduct.class);
+        return remoteData;
+    }
+
+    public RemoteData<WorkFlowProduct> saveWorkFlowProduct(WorkFlowProduct workFlowProduct) throws HdException {
+
+        String url = HttpUrl.saveWorkFlowProduct();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(workFlowProduct));
+        RemoteData<WorkFlowProduct> remoteData = invokeByReflect(result, WorkFlowProduct.class);
+        return remoteData;
+    }
+
+    /**
+     * 获取外厂数据
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<OutFactory> getOutFactories() throws HdException {
+        String url = HttpUrl.getOutFactories();
+        String result = client.getWithStringReturned(url );
+        RemoteData<OutFactory> remoteData = invokeByReflect(result, OutFactory.class);
+        return remoteData;
+    }
+    /**
+     * 保存外厂数据
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<OutFactory> saveOutFactories(List<OutFactory> datas) throws HdException {
+        String url = HttpUrl.saveOutFactories();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(datas) );
+        RemoteData<OutFactory> remoteData = invokeByReflect(result, OutFactory.class);
+        return remoteData;
+    }
+
+    /**
+     * 启动订单生产流程
+     * @param orderItemWorkFlow
+     * @return
+     */
+    public RemoteData<OrderItemWorkFlow> startOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow) throws HdException {
+        String url = HttpUrl.startOrderItemWorkFlow();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(orderItemWorkFlow) );
+        RemoteData<OrderItemWorkFlow> remoteData = invokeByReflect(result, OrderItemWorkFlow.class);
+        return remoteData;
+    }
+
+    public RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(long orderItemId) throws HdException {
+        String url = HttpUrl.getOrderItemWorkFlowState(orderItemId);
+        String result = client.getWithStringReturned(url  );
+        RemoteData<OrderItemWorkFlowState> remoteData = invokeByReflect(result, OrderItemWorkFlowState.class);
         return remoteData;
     }
 }

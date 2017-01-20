@@ -28,6 +28,10 @@ public class ConstantData {
 
 
     public  static final String  CLIENT_DESK="DESK";
+
+
+    public static  final String STRING_DIVIDER_SEMICOLON=";";
+    public static  final String STRING_DIVIDER_TO="-";
     ;
 
 }

@@ -1,13 +1,14 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.frames.StockOutDetailFrame;
 import com.giants.hd.desktop.model.WorkFlowModel;
+import com.giants.hd.desktop.model.WorkFlowSubTypeModel;
 import com.giants.hd.desktop.presenter.WorkFlowPresenter;
+import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
 import com.giants.hd.desktop.view.WorkFlowViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
+import com.giants3.hd.utils.entity.WorkFlowSubType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
 
 
     WorkFlowModel workFlowModel;
+    WorkFlowSubTypeModel workFlowSubTypeModel;
     WorkFlowPresenter presenter;
 
     public Panel_Work_Flow(final WorkFlowPresenter presenter) {
@@ -34,6 +36,15 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
         workFlowModel = new WorkFlowModel();
         workFlowModel.setRowAdjustable(false);
         tb.setModel(workFlowModel);
+
+        workFlowSubTypeModel = new WorkFlowSubTypeModel();
+        workFlowSubTypeModel.setRowAdjustable(false);
+        jt_arrageType.setModel(workFlowSubTypeModel);
+
+
+
+
+
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,6 +80,11 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
     public void setData(List<WorkFlow> datas) {
 
         workFlowModel.setDatas(datas);
+    }
+    @Override
+    public void setSubData(List<WorkFlowSubType> datas) {
+
+        workFlowSubTypeModel.setDatas(datas);
     }
 
     @Override

@@ -4,10 +4,7 @@ import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.noEntity.BufferData;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.service.CustomerService;
-import com.giants3.hd.server.service.GlobalDataService;
-import com.giants3.hd.server.service.ProductService;
-import com.giants3.hd.server.service.UserService;
+import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
@@ -75,6 +72,10 @@ public class UserController extends BaseController {
     private QuoteAuthRepository quoteAuthRepository;
     @Autowired
     private WorkFlowRepository workFlowRepository;
+    @Autowired
+    private WorkFlowService workFlowService;
+
+
 
     @Autowired
     private OrderAuthRepository orderAuthRepository;
@@ -115,7 +116,8 @@ public class UserController extends BaseController {
 
 
         try {
-            return userService.saveUserList(users);
+              userService.saveUserList(users);
+               return wrapData( userService.list());
         } catch (HdException e) {
             return wrapError(e.getMessage());
         }
@@ -124,7 +126,7 @@ public class UserController extends BaseController {
 
 
     @RequestMapping(value = "/initData", method = RequestMethod.POST)
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<BufferData> initData(@RequestBody User user) {
@@ -143,7 +145,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/getInitData", method = RequestMethod.GET)
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<BufferData> getInitData(@RequestParam(value = "userId") long userId) {
@@ -154,6 +156,8 @@ public class UserController extends BaseController {
         if (user == null) {
             return wrapError("未找到用户");
         }
+        //关闭密码返回
+        user.password="";
         BufferData bufferData = new BufferData();
         bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
         bufferData.customers = customerService.list();
@@ -166,7 +170,9 @@ public class UserController extends BaseController {
         bufferData.packMaterialTypes = packMaterialTypeRepository.findAll();
         bufferData.packs = packRepository.findAll();
         bufferData.pClasses = productClassRepository.findAll();
-        bufferData.salesmans = userRepository.findByIsSalesman(true);
+
+
+        bufferData.salesmans = userService.getSalesman();;
 
 
         QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
@@ -182,6 +188,11 @@ public class UserController extends BaseController {
         List<WorkFlow> workFlows = workFlowRepository.findAll();
 
         bufferData.workFlows = workFlows;
+        bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas
+        ;
+
+
+
 
         OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
         if (orderAuth == null) {

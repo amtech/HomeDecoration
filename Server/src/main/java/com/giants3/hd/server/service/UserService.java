@@ -7,6 +7,7 @@ import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -58,7 +59,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
      * @return
      */
     @Transactional(rollbackFor = {HdException.class})
-    public RemoteData<User> saveUserList(List<User> newUsers) throws HdException {
+    public void saveUserList(List<User> newUsers) throws HdException {
         List<User> oldUsers = userRepository.findAll();
 
         List<User> removed = new ArrayList<>();
@@ -97,6 +98,11 @@ public class UserService extends AbstractService implements InitializingBean, Di
 
 
                 user.id = oldData.id;
+                if(StringUtils.isEmpty(user.password))//没有修改密码
+                {
+                    //复制出旧密码，保证密码不变
+                    user.password= oldData.password;
+                }
 
             }
 
@@ -119,7 +125,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
         }
 
 
-        return wrapData( list());
+
     }
 
 
@@ -130,7 +136,12 @@ public class UserService extends AbstractService implements InitializingBean, Di
      */
     public List<User> list()
     {
-        return  userRepository.findByDeletedEqualsOrderByCode(false );
+
+
+        final List<User> users = userRepository.findByDeletedEqualsOrderByCode(false);
+        removePassword(users);
+
+        return users;
     }
 //    /**
 //     * 删除用户 进行关联判断
@@ -209,5 +220,22 @@ public class UserService extends AbstractService implements InitializingBean, Di
         }
 
         return salesNos;
+    }
+
+    public List<User> getSalesman() {
+
+        final List<User> byIsSalesman = userRepository.findByIsSalesman(true);
+        removePassword(byIsSalesman);
+        return byIsSalesman;
+    }
+
+
+    private  void removePassword(List<User> users)
+    {
+        //清除password
+        for(User user:users)
+        {
+            user.password="";
+        }
     }
 }

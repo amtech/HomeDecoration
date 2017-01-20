@@ -1,4 +1,4 @@
-package com.giants3.hd.utils.entity_erp;
+package com.giants3.hd.utils.entity;
 
 import com.giants3.hd.utils.StringUtils;
 
@@ -38,20 +38,21 @@ public class ErpOrder {
 
 
     /**
-     * 业务中文名
+     * 业务名  从报价系统读取
      */
     public String sal_name;
-
-    /** 用户中文名
-     * 从报价系统读取
-     */
-
-    public String sal_cname;
 
     /**
      * 验货日期
      */
     public String chk_dd;
+
+
+    /** 业务员中文名
+     * 从报价系统读取
+     */
+
+    public String sal_cname;
     /**
      * 预计交期
      */
@@ -77,6 +78,7 @@ public class ErpOrder {
     public String zhengmai;
     public String cemai;
     public String neheimai;
+
     /**
      * 左麦
      */
@@ -85,6 +87,8 @@ public class ErpOrder {
      * 右麦
      */
     public String youmai;
+
     public String memo;
     public  String attaches;
+
 }

@@ -3,7 +3,7 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.viewImpl.Panel_Order_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity_erp.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrder;
 import rx.Subscriber;
 
 import javax.swing.*;

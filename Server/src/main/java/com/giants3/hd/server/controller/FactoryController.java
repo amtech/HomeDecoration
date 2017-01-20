@@ -1,9 +1,10 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.FactoryRepository;
-import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.server.entity.Factory;
+import com.giants3.hd.server.entity.OutFactory;
+import com.giants3.hd.server.service.FactoryService;
+import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,62 +15,60 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
-* 产品类别
-*/
+ * 产品类别
+ */
 @Controller
 @RequestMapping("/factory")
-public class FactoryController extends BaseController{
+public class FactoryController extends BaseController {
 
 
     @Autowired
-    private FactoryRepository factoryRepository;
+    private FactoryService factoryService;
 
 
-
-
-
-
-    @RequestMapping(value="/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Factory> list( )   {
+    RemoteData<Factory> list() {
 
-        return  wrapData(factoryRepository.findAll());
+        return factoryService.listFactory();
     }
 
-    @RequestMapping(value="/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<Factory> save(@RequestBody  List<Factory> factories)   {
+    RemoteData<Factory> save(@RequestBody List<Factory> factories) {
 
 
-        for(Factory factory : factories)
-        {
-
-
-            Factory oldData= factoryRepository.findFirstByCodeEquals(factory.code);
-            if(oldData==null)
-            {
-                factory.id=-1;
-
-
-            }else
-            {
-                factory.id=oldData.id;
-
-
-
-            }
-            factoryRepository.save(factory);
-
-
-
-        }
-
-
-        return  list();
+        factoryService.save(factories);
+        return list();
     }
 
 
+    /**
+     * 外厂列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/out/list", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OutFactory> outList() {
 
+        return factoryService.listOutFactory();
+    } /**
+     * 外厂列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/out/save", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<OutFactory> saveOutList(@RequestBody List<OutFactory> factories) {
+
+
+        factoryService.saveOutList(factories);
+
+        return factoryService.listOutFactory();
+    }
 }

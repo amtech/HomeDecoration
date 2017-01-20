@@ -1,8 +1,8 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.entity_erp.ErpOrder;
-import com.giants3.hd.server.entity_erp.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
 import com.giants3.hd.server.noEntity.OrderReportItem;
@@ -51,6 +51,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     @Autowired
     OrderItemWorkFlowRepository orderItemWorkFlowRepository;
+
+
+    @Autowired
+    OrderItemWorkFlowRepository2 orderItemWorkFlowRepository2;
 
 
     @Autowired
@@ -214,11 +218,17 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 item.verifyDate = orderItem.verifyDate;
 
 
+                //订单流程数据
+                item.workFlowDescribe=orderItem.workFlowDescribe;
+                item.orderWorkFlowId=orderItem.orderWorkFlowId;
+
+
                 //绑定订单跟踪数据
                 WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItem.id);
                 if (workFlowOrderItem != null) {
                     item.currentWorkFlow = workFlowOrderItem.workFlowName;
                 }
+
 
             }
 

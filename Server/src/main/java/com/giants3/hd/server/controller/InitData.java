@@ -1,12 +1,13 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.entity.AppVersion;
+import com.giants3.hd.server.entity.GlobalData;
+import com.giants3.hd.server.entity.Module;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
-
 import com.giants3.hd.server.repository.WorkFlowRepository;
 import com.giants3.hd.server.service.GlobalDataService;
-import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,10 +46,11 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     WorkFlowRepository workFlowRepository;
+    @Autowired
+    WorkFlowService workFlowService;
 //
 //    @Autowired
 //    TestXmlRepository testXmlRepository;
-
 
 
     @Autowired
@@ -57,9 +59,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Value("${appfilepath}")
     private String appFilePath;
 
-
-    @Autowired
-    ProductService productService;
 
     @Autowired
     MaterialController materialController;
@@ -73,11 +72,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
                 logger.debug("getWelcome is executed!");
             }
 
-//            //logs exception
-//            logger.error("This is Error message", new Exception("Testing"));
-
-
-//            testXmlRepository.save(new Testxml());
 
             List<Module> moduleList = Module.getInitDataList();
             int newSize = moduleList.size();
@@ -176,16 +170,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             }
 
 
-            // 生产流程数据初始化
-
-            List<WorkFlow> workFlows = workFlowRepository.findAll();
-            if (workFlows.size() == 0) {
-                workFlowRepository.save(WorkFlow.initWorkFlowData());
-                productService.setDefaultWorkFlowIds();
-
-            }
-
-
+            workFlowService.initData();
         }
 
 
