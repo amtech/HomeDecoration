@@ -101,6 +101,10 @@ public class GlobalData implements Serializable {
      * 货品出库到货柜单价 元/立方米
      */
     public  float  priceOfStockProductOutToTrunk;
+    /**
+     * 分析表搬运工资单价  元/立方米
+     */
+    public  float  priceOfBanyun;
 
 
     /**
@@ -157,6 +161,7 @@ public class GlobalData implements Serializable {
         if (Float.compare(that.price_of_export, price_of_export) != 0) return false;
 
         if (Float.compare(that.repairPrice, repairPrice) != 0) return false;
+        if (Float.compare(that.priceOfBanyun, priceOfBanyun) != 0) return false;
         if (Float.compare(that.manageRatioXK, manageRatioXK) != 0) return false;
         if (Float.compare(that.manageRatioForeign, manageRatioForeign) != 0) return false;
         if( Float.compare(that.manageRatioNormal, manageRatioNormal) != 0) return false;

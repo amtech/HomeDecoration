@@ -57,9 +57,9 @@ public class OrderItem implements Serializable {
 
 
     //系统数据 附加，方便报表生成
-    public String bat_no;
+    public String batNo;
     public int qty;
-    public String prd_no;
+    public String prdNo;
     public  String pVersion;
 
     public String thumbnail;

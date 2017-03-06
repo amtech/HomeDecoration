@@ -3,9 +3,7 @@ package com.giants3.hd.domain.repositoryImpl;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.OrderRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
@@ -191,16 +189,16 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
      * @return
      */
     @Override
-    public Observable<RemoteData<ErpOrderItem>> getUnCompleteOrderWorkFlowReport() {
-        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItem>>() {
+    public Observable<RemoteData<OrderItemWorkFlowState>> getUnCompleteOrderWorkFlowReport() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderItemWorkFlowState>>() {
             @Override
-            public void call(Subscriber<? super RemoteData<ErpOrderItem>> subscriber) {
+            public void call(Subscriber<? super RemoteData<OrderItemWorkFlowState>> subscriber) {
 
 
 
 
                 try {
-                    RemoteData<ErpOrderItem> remoteData= apiManager.getUnCompleteOrderWorkFlowReport(   );
+                    RemoteData<OrderItemWorkFlowState> remoteData= apiManager.getUnCompleteOrderWorkFlowReport(   );
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);
@@ -234,6 +232,39 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
                 try {
                     RemoteData<ErpOrderItem> remoteData= apiManager.getOrderWorkFlowReport(  key,   pageIndex,   pageSize);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
+
+    @Override
+    public Observable<RemoteData<OrderItemWorkFlow>> getOrderItemWorkFlow(final long orderItemId) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderItemWorkFlow>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<OrderItemWorkFlow>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<OrderItemWorkFlow> remoteData= apiManager.getOrderItemWorkFlow(orderItemId);
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);

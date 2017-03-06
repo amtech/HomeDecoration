@@ -539,4 +539,10 @@ public class AuthorityUtil {
 
         return isViewable(ModuleConstant.NAME_OUT_FACTORY);
     }
+
+    public boolean viewProductArrangeType() {
+
+        return isViewable(ModuleConstant.NAME_PRODUCT_ARRANGE_TYPE);
+
+    }
 }

@@ -21,7 +21,7 @@ public class WorkFlowModel extends BaseTableModel<WorkFlow> {
     public static final String CHECKER_CODE = "checkerCode";
     public static final String CHECKER_NAME = "checkerName";
     public static final String CHECKER_CNAME = "checkerCName";
-    public static String[] fieldName = new String[]{"flowIndex", "name", USER_CODE, USER_NAME, USER_CNAME, CHECKER_CODE, CHECKER_NAME, CHECKER_CNAME};
+    public static String[] fieldName = new String[]{"flowStep", "name", USER_CODE, USER_NAME, USER_CNAME, CHECKER_CODE, CHECKER_NAME, CHECKER_CNAME};
 
     public static Class[] classes = new Class[]{Object.class, Object.class, User.class,User.class, User.class,User.class, User.class,User.class};
 

@@ -33,8 +33,10 @@ public class LoginDialog extends BaseDialog<User> {
 
     public LoginDialog( Window window) {
         super(window,"登录");
-        setContentPane(contentPane);
 
+        setMinimumSize(new Dimension(400,300));
+        setContentPane(contentPane);
+        pack();
 
         btn_login.addActionListener(new ActionListener() {
             @Override

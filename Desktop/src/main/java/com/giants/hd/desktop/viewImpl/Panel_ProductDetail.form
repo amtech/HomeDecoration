@@ -1036,7 +1036,7 @@
               <text value="修理工资"/>
             </properties>
           </component>
-          <component id="5d065" class="javax.swing.JTextField" binding="jtf_cost5">
+          <component id="5d065" class="javax.swing.JTextField" binding="jtf_cost_banyungongzi">
             <constraints>
               <grid row="5" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -1055,7 +1055,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="5木油漆"/>
+              <text value="搬运工资"/>
             </properties>
           </component>
           <component id="460d2" class="javax.swing.JTextField" binding="jtf_cost11_15">

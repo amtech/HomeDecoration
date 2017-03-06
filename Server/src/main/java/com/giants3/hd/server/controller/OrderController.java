@@ -1,9 +1,8 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.User;
-import com.giants3.hd.server.entity.WorkFlow;
-import com.giants3.hd.server.entity.WorkFlowMessage;
+import com.giants3.hd.server.entity.*;
+import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
@@ -11,6 +10,7 @@ import com.giants3.hd.server.noEntity.OrderReportItem;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.WorkFlowReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +27,8 @@ public class OrderController extends BaseController {
 
     @Autowired
     private ErpService erpService;
+    @Autowired
+    private WorkFlowService workFlowService;
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -57,6 +59,16 @@ public class OrderController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/searchOrderItem", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderItem> searchOrderItem(@RequestParam(value = "key") String key , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
+
+
+        return erpService.searchOrderItem(key,pageIndex,pageSize);
+    }
+
+
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -84,14 +96,16 @@ public class OrderController extends BaseController {
      * @param
      * @return
      */
+    @Deprecated
     @RequestMapping(value = "/startOrderTrack", method = RequestMethod.GET)
     public
     @ResponseBody
     RemoteData<Void> startTrack(@RequestParam(value = "os_no") String os_no) {
 
 
-        RemoteData<Void> detailRemoteData = erpService.startTrack(os_no);
-        return detailRemoteData;
+//        RemoteData<Void> detailRemoteData = erpService.startTrack(os_no);
+//        return detailRemoteData;
+        return null;
     }
 
 
@@ -188,15 +202,33 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/getOrderItemForTransform", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> getOrderItemForTransform(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
+    RemoteData<OrderItemWorkFlowState> getOrderItemForTransform(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
 
 
         return erpService.getOrderItemForTransform(user);
 
     }
 
+
+
     /**
-     * 获取可以发送流程的订单货款
+     * 获取制定订单的流程生产状态
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getOrderItemWorkState", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowReport> getOrderItemWorkState(@RequestParam(value = "orderItemId") long orderItemId) {
+
+
+        return erpService.getOrderItemWorkState(orderItemId);
+
+    }
+
+    /**
+     * 发送订单流程
      * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
      *
      * @param
@@ -206,14 +238,14 @@ public class OrderController extends BaseController {
     public
     @ResponseBody
     RemoteData<Void> sendWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-            , @RequestParam(value = "orderItemId") long orderItemId
-            , @RequestParam(value = "flowStep") int flowStep
+            , @RequestParam(value = "orderItemWorkFlowStateId") long orderItemWorkFlowStateId
+
             , @RequestParam(value = "tranQty") int tranQty
             , @RequestParam(value = "memo") String memo
     ) {
 
 
-        return erpService.sendWorkFlowMessage(user, orderItemId, flowStep, tranQty,memo);
+        return erpService.sendWorkFlowMessage(user, orderItemWorkFlowStateId,  tranQty,memo);
 
     }
 
@@ -270,7 +302,7 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/unCompleteOrderItem", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> getUnCompleteOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user   ) {
+    RemoteData<OrderItemWorkFlowState> getUnCompleteOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user   ) {
 
 
         return erpService.getUnCompleteOrderItem(user);
@@ -287,7 +319,7 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/getWorkFlowOrderItem", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> getWorkFlowOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+    RemoteData<OrderItemWorkFlowState> getWorkFlowOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
             , @RequestParam(value = "key") String key
             , @RequestParam(value = "pageIndex",defaultValue ="0") int pageIndex
             , @RequestParam(value = "pageSize",defaultValue ="20") int pageSize
@@ -302,5 +334,78 @@ public class OrderController extends BaseController {
 
     }
 
+
+
+    /**
+     * 查询 订单货款 生产进度数据
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/searchOrderItemWorkFlowState", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderItemWorkFlowState> searchOrderItemWorkFlowState(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+            , @RequestParam(value = "key") String key
+            , @RequestParam(value = "pageIndex",defaultValue ="0") int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue ="20") int pageSize
+
+
+    ) {
+
+
+        return workFlowService.searchOrderItemWorkFlowState(user,key,pageIndex,pageSize);
+
+
+
+    } /**
+     * //获取关联的流程信息
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getOrderItemWorkFlowState", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+            , @RequestParam(value = "orderItemId" ) long orderItemId
+            , @RequestParam(value = "workFlowStep" ) int workFlowStep
+
+
+    ) {
+
+
+        return workFlowService.getOrderItemWorkFlowState(orderItemId,workFlowStep);
+
+
+
+    }
+/**
+     *  获取订单的流程配置
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getOrderItemWorkFlow", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+            , @RequestParam(value = "orderItemId" ) long orderItemId
+
+
+
+    ) {
+
+
+        return workFlowService.getOrderItemWorkFlow(orderItemId);
+
+
+
+    }
 
 }

@@ -110,7 +110,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     private JTextField jtf_cost8;
     private JTextField jtf_cost6;
     private JTextField jtf_cost7;
-    private JTextField jtf_cost5;
+    private JTextField jtf_cost_banyungongzi;
     private JTextField jtf_cost11_15;
     private JTextField tf_price_dollar;
     private JTextField tf_volume;
@@ -1751,7 +1751,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
 
         photo.addMouseListener(new MouseInputAdapter() {
-            @Override
+             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() >= 2) {
@@ -1761,6 +1761,42 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                         ImageViewDialog.showProductDialog(getWindow(getRoot()), tf_product.getText().trim(), tf_version.getText().trim(), productDetail.product.url);
                     }
 
+                }
+
+
+            }
+
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mouseReleased(e);
+                showMenu(e);
+
+            }
+
+            private void showMenu(MouseEvent e) {
+                if(productDetail!=null&&productDetail.product!=null&&productDetail.product.id>0) {
+                    if (e.isPopupTrigger()) {
+
+                        JPopupMenu menu = new JPopupMenu();
+                        JMenuItem jMenuItem = new JMenuItem("修复缩略图");
+                        menu.add(jMenuItem);
+                        menu.show(e.getComponent(), e.getX(), e.getY());
+                        jMenuItem.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                presenter.correctThumbnail(productDetail.product.id);
+                            }
+                        });
+
+                    }
                 }
             }
         });
@@ -2061,12 +2097,13 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         jtf_cost1.setText(String.valueOf(product.cost1));
         jtf_cost6.setText(String.valueOf(product.cost6));
-        jtf_cost5.setText(String.valueOf(product.cost5));
+
         jtf_cost7.setText(String.valueOf(product.cost7));
         jtf_cost8.setText(String.valueOf(product.cost8));
         jtf_cost11_15.setText(String.valueOf(product.cost11_15));
 
         jtf_cost_repair.setText(String.valueOf(product.repairCost));
+        jtf_cost_banyungongzi.setText(String.valueOf(product.banyunCost));
 
         tf_product_cost.setText(String.valueOf(product.productCost));
         tf_cost4.setText(String.valueOf(product.cost4));

@@ -112,4 +112,49 @@ public class StockSubmit {
      * 货物传递的部门  本厂  外厂
      */
     public String dept;
+
+
+
+
+
+
+
+
+    //以下字段 from  StockXiaoku
+
+
+    /**
+     * 第  柜
+     */
+    public float xhdg;
+
+
+    /**
+     * 封签
+     */
+    public String xhfq;
+    ;
+
+    /**
+     * 柜号
+     */
+    public String xhgh;
+
+
+    /**
+     * 柜型号
+     */
+    public String xhgx;
+
+
+    /**
+     * 票号
+     */
+    public String xhph;
+
+
+    /**
+     * 拖车公司
+     */
+    public  String tcgs;
 }

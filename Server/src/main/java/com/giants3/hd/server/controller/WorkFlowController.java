@@ -3,10 +3,13 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.service.WorkFlowService;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 生产流程
@@ -31,6 +34,18 @@ public class WorkFlowController extends BaseController {
 
         return workFlowService.getWorkFlowSubTypes();
     }
+    /**
+     * 获取配置的二级流程类型数据
+     *
+     * @return
+     */
+    @RequestMapping(value = "/saveSubTypes", method = RequestMethod.POST)
+    public  @ResponseBody
+    RemoteData<WorkFlowSubType> saveSubTypes(@RequestBody List<WorkFlowSubType> workFlowSubTypes) {
+
+        return workFlowService.saveSubTypes(workFlowSubTypes);
+    }
+
 
     /**
      * 获取配置的一级流程类型数据
@@ -93,5 +108,10 @@ public class WorkFlowController extends BaseController {
         return  workFlowService.findOrderItemWorkFlowState(orderItemId    );
 
     }
+
+
+
+
+
 
 }

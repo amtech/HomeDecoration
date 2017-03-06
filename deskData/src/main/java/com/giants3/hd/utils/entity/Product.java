@@ -217,6 +217,11 @@ public class Product implements Serializable {
 	 */
 
 	public  float repairCost;
+	/**
+	 * 搬运工资  独立计算
+	 */
+
+	public  float banyunCost;
 
 
 	/**
@@ -727,6 +732,11 @@ public class Product implements Serializable {
 		repairCost=FloatHelper.scale(packQuantity<=0?0:packVolume*globalData.repairPrice/packQuantity);
 
 
+		//计算搬运工资
+		banyunCost=FloatHelper.scale(packQuantity<=0?0:packVolume*globalData.priceOfBanyun/packQuantity);
+
+
+
 		 GlobalData configData= globalData ;
 
 
@@ -738,8 +748,8 @@ public class Product implements Serializable {
 		}
 
 
-		//计算成本价   (实际成本+修理工资)*（1+管理系数）
-		cost=FloatHelper.scale((productCost+repairCost)*(1+manageRatio));
+		//计算成本价   (实际成本+修理工资+搬运成本)*（1+管理系数）
+		cost=FloatHelper.scale((productCost+repairCost+banyunCost)*(1+manageRatio));
 
 
 

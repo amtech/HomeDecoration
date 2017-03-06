@@ -5,6 +5,7 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -44,10 +46,12 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     OrderItemRepository orderIemRepository;
 
     @Autowired
-    WorkFlowRepository workFlowRepository;
+    OrderRepository orderRepository;
 
     @Autowired
-    OrderItemWorkFlowRepository orderItemWorkFlowRepository;
+    WorkFlowRepository workFlowRepository;
+
+
     @Autowired
     OrderItemWorkFlowRepository2 orderItemWorkFlowRepository2;
     @Autowired
@@ -78,28 +82,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     }
 
 
-    /**
-     * 获取产品的生产流程
-     *
-     * @param orderItemId
-     * @return
-     */
-    public List<WorkFlowOrderItem> getOrderItemWorkFlows(long orderItemId) {
-        return orderItemWorkFlowRepository.findByOrderItemIdEquals(orderItemId);
-    }
 
 
-    public WorkFlowOrderItem createOrderItemWorkFlow(long orderItemId, Long[] workFlowIds) {
-
-        WorkFlowOrderItem workFlowOrderItem = new WorkFlowOrderItem();
-        workFlowOrderItem.orderItemId = orderItemId;
-
-        // workFlowOrderItem.processFlowIds= StringUtils.combine(workFlowIds);
-
-
-        return workFlowOrderItem;
-
-    }
 
 
     /**
@@ -193,23 +177,32 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     @Transactional(rollbackFor = {HdException.class})
     public void startOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow) {
 
-
-
-
-
         //初始化， 发送第一步
 
 
-            String[] workFlowIds=orderItemWorkFlow.workFlowIds.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+            String[] workFlowSteps=orderItemWorkFlow.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
             String[] workFlowNames=orderItemWorkFlow.workFlowNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
             String[] workFlowTypes=orderItemWorkFlow.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
             String[] productTypes=orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
             String[] productTypeNames=orderItemWorkFlow.productTypeNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-            String[] factoryIds=orderItemWorkFlow.productFactoryIds.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-            String[] factoryNames=orderItemWorkFlow.productFactoryNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+            String[] factoryIds=orderItemWorkFlow.conceptusFactoryIds.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+            String[] factoryNames=orderItemWorkFlow.conceptusFactoryNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+
         OrderItem orderItem = orderIemRepository.findOne(orderItemWorkFlow.orderItemId);
 
+        Order order=orderRepository.findFirstByOsNoEquals(orderItem.osNo);
+        if(order!=null)
+        {
+            orderItemWorkFlow.orderId=order.id;
+            orderItemWorkFlow.orderName=order.osNo;
+
+        }else
+        {
+            logger.error("can not find order  by osName:"+orderItem.osNo);
+        }
+
         StringBuilder describe=new StringBuilder();
+
 
 
 
@@ -231,6 +224,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
 
+
             //不同产品类型，对应不同的厂家排厂
             for(int i=0;i<size;i++) {
 
@@ -238,12 +232,15 @@ public class WorkFlowService extends AbstractService implements InitializingBean
                 orderItemWorkFlowState.orderId=orderItemWorkFlow.orderId;
                 orderItemWorkFlowState.orderItemId=orderItemWorkFlow.orderItemId;
                 orderItemWorkFlowState.orderName=orderItemWorkFlow.orderName;
+                orderItemWorkFlowState.productFullName= StringUtils.isEmpty(orderItem.pVersion)?orderItem.prdNo:(orderItem.prdNo+"-"+orderItem.pVersion);
+                orderItemWorkFlowState.photoThumb= orderItem.thumbnail;
+                orderItemWorkFlowState.pictureUrl= orderItem.url;
                 orderItemWorkFlowState.workFlowType=workFlowTypes[0];
-                orderItemWorkFlowState.workFlowId=Long.valueOf(workFlowIds[0]);
+                orderItemWorkFlowState.workFlowStep=Integer.valueOf(workFlowSteps[0]);
                 orderItemWorkFlowState.workFlowName=workFlowNames[0];
 
                 orderItemWorkFlowState.nextWorkFlowType=workFlowTypes[1];
-                orderItemWorkFlowState.nextWorkFlowId=Long.valueOf(workFlowIds[1]);
+                orderItemWorkFlowState.nextWorkFlowStep=Integer.valueOf(workFlowSteps[1]);
                 orderItemWorkFlowState.nextWorkFlowName=workFlowNames[1];
 
 
@@ -252,13 +249,14 @@ public class WorkFlowService extends AbstractService implements InitializingBean
                     orderItemWorkFlowState.productTypeName = productTypeNames[i];
 
 
-                    orderItemWorkFlowState.factoryId = Long.parseLong(factoryIds[i]);
-                    orderItemWorkFlowState.workFlowName = factoryNames[i];
+                    orderItemWorkFlowState.factoryId =  factoryIds[i];
+                    orderItemWorkFlowState.factoryName = factoryNames[i];
                     orderItemWorkFlowState.qty = orderItem.qty;
 
 
                 }
                 orderItemWorkFlowState.qty = orderItem.qty;
+                orderItemWorkFlowState.unSendQty = orderItem.qty;
                 orderItemWorkFlowState.orderQty = orderItem.qty;
                 orderItemWorkFlowState.createTime = Calendar.getInstance().getTimeInMillis();
                 orderItemWorkFlowState.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
@@ -275,6 +273,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         orderItemWorkFlow.workFlowDiscribe=describe.toString();
+
+
         orderItemWorkFlow = orderItemWorkFlowRepository2.save(orderItemWorkFlow);
 
 
@@ -314,8 +314,83 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     public RemoteData<OrderItemWorkFlowState> findOrderItemWorkFlowState(long orderItemId) {
 
 
-        List<OrderItemWorkFlowState>   list=orderItemWorkFlowStateRepository.findAll();
+        List<OrderItemWorkFlowState>   list=orderItemWorkFlowStateRepository.findByQtyIsGreaterThanAndOrderItemIdEqualsOrderByOrderNameDescCreateTimeDesc(0,orderItemId);
         return wrapData(list);
 
+    }
+
+    public RemoteData<OrderItemWorkFlowState> searchOrderItemWorkFlowState(User user, String key, int pageIndex, int pageSize) {
+
+
+
+
+
+
+        return null;
+
+
+    }
+
+    /**
+     * 保存产品排厂类型
+     * @param workFlowSubTypes
+     * @return
+     */
+    @Transactional
+    public RemoteData<WorkFlowSubType> saveSubTypes(List<WorkFlowSubType> workFlowSubTypes) {
+
+
+
+
+        for(WorkFlowSubType workFlowSubType:workFlowSubTypes)
+        {
+
+            if(workFlowSubType.id<=0)
+            {
+
+               if( workFlowSubType.typeId<=0|| workFlowSubTypeRepository.findFirstByTypeIdEquals(workFlowSubType.typeId)!=null)
+               {
+
+                   return wrapError("类型Id,不能为空，且不能相同");
+               }
+            }
+
+        }
+
+        return wrapData(workFlowSubTypeRepository.save(workFlowSubTypes));
+
+
+
+    }
+
+    /**
+     *获取关联的流程信息
+     * @param orderItemId
+     * @param workFlowStep
+     * @return
+     */
+    public RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(long orderItemId, int workFlowStep) {
+
+        List<OrderItemWorkFlowState> states=orderItemWorkFlowStateRepository.findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(orderItemId,workFlowStep,0);
+
+        List<OrderItemWorkFlowState> result=new ArrayList<>();
+         for ( OrderItemWorkFlowState state:states)
+         {
+             if(state.nextWorkFlowStep>0)
+                 result.add(state);
+
+         }
+
+    return wrapData(result);
+
+    }
+
+    public RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(long orderItemId) {
+
+
+
+         OrderItemWorkFlow  orderItemWorkFlow=orderItemWorkFlowRepository2.findFirstByOrderItemIdEquals(orderItemId);
+        if(orderItemWorkFlow==null) return wrapData();
+        return wrapData(orderItemWorkFlow);
     }
 }

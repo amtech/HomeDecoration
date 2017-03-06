@@ -349,8 +349,8 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
 
 
-        if(finalItem.orderWorkFlowId<=0)
-        {
+//        if(finalItem.orderWorkFlowId<=0)
+//        {
 
      //前往排产界面
             WorkFlowOrderArrangeDialog dialog=new WorkFlowOrderArrangeDialog(this,finalItem);
@@ -369,15 +369,15 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
 
 
 
-        }else{
-
-         //显示订单货款进度
-
-            WorkFlowOrderItemStateDialog dialog=new WorkFlowOrderItemStateDialog(this,finalItem.id);
-            dialog.setModal(true);
-            dialog.setVisible(true);
-
-        }
+//        }else{
+//
+//         //显示订单货款进度
+//
+//            WorkFlowOrderItemStateDialog dialog=new WorkFlowOrderItemStateDialog(this,finalItem.id);
+//            dialog.setModal(true);
+//            dialog.setVisible(true);
+//
+//        }
 
 
 

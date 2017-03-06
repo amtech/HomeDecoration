@@ -1,16 +1,15 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.*;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ErpOrderDetail;
 import com.giants3.hd.server.noEntity.OrderReportItem;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
-import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.*;
+import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.WorkFlowReport;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +49,13 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
     @Autowired
-    OrderItemWorkFlowRepository orderItemWorkFlowRepository;
-
-
-    @Autowired
     OrderItemWorkFlowRepository2 orderItemWorkFlowRepository2;
 
 
     @Autowired
     WorkFlowMessageRepository workFlowMessageRepository;
+    @Autowired
+    OrderItemWorkFlowStateRepository orderItemWorkFlowStateRepository;
 
     @Autowired
     WorkFlowRepository workFlowRepository;
@@ -219,14 +216,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
                 //订单流程数据
-                item.workFlowDescribe=orderItem.workFlowDescribe;
-                item.orderWorkFlowId=orderItem.orderWorkFlowId;
+                item.workFlowDescribe = orderItem.workFlowDescribe;
+                item.orderWorkFlowId = orderItem.orderWorkFlowId;
 
 
                 //绑定订单跟踪数据
-                WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItem.id);
+                OrderItemWorkFlow workFlowOrderItem = orderItemWorkFlowRepository2.findFirstByOrderItemIdEquals(orderItem.id);
                 if (workFlowOrderItem != null) {
-                    item.currentWorkFlow = workFlowOrderItem.workFlowName;
+                    item.workFlowDescribe = workFlowOrderItem.workFlowDiscribe;
                 }
 
 
@@ -297,10 +294,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         orderItem.qty = erpOrderItem.qty;
         orderItem.ut = erpOrderItem.ut;
-        orderItem.prd_no = erpOrderItem.prd_no;
+        orderItem.prdNo = erpOrderItem.prd_no;
         orderItem.pVersion = erpOrderItem.pVersion;
         orderItem.url = erpOrderItem.url;
-        orderItem.bat_no = erpOrderItem.bat_no;
+        orderItem.batNo = erpOrderItem.bat_no;
 
 
     }
@@ -454,9 +451,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     private void bindReportData(OrderReportItem orderReportItem, OrderItem orderItem, Order order) {
         orderReportItem.cus_no = order.cus_no;
         orderReportItem.os_no = order.osNo;
-        orderReportItem.cus_prd_no = orderItem.bat_no;
+        orderReportItem.cus_prd_no = orderItem.batNo;
         orderReportItem.qty = orderItem.qty;
-        orderReportItem.prd_no = orderItem.prd_no;
+        orderReportItem.prd_no = orderItem.prdNo;
         orderReportItem.url = orderItem.url;
         orderReportItem.thumbnail = orderItem.thumbnail;
         orderReportItem.sendDate = orderItem.sendDate;
@@ -511,97 +508,97 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     }
 
-    /**
-     * 启动订单跟踪
-     * 该订单下的所有产品 走产品流程
-     */
-    @Transactional
-    public RemoteData<Void> startTrack(String os_no) {
-
-
-        Order order = orderRepository.findFirstByOsNoEquals(os_no);
-        List<OrderItem> orderItems = orderItemRepository.findByOsNoEqualsOrderByItm(os_no);
-
-        if (orderItems == null || orderItems.size() == 0)
-            return wrapError("该订单未保存，请选保存。");
-        ;
-        List<WorkFlowOrderItem> workFlows = orderItemWorkFlowRepository.findByOrderNameEquals(os_no);
-        if (workFlows == null || workFlows.size() == 0) {
-
-
-            for (OrderItem orderItem : orderItems) {
-                WorkFlowOrderItem workFlowOrderItem = new WorkFlowOrderItem();
-                workFlowOrderItem.orderId = order.id;
-                workFlowOrderItem.orderName = order.osNo;
-                workFlowOrderItem.orderItemId = orderItem.id;
-                workFlowOrderItem.productName = orderItem.prd_no + (StringUtils.isEmpty(orderItem.pVersion) ? "" : ("-" + orderItem.pVersion));
-                workFlowOrderItem.tranQty = orderItem.qty;
-
-                //设置当前为初始状态
-                Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prd_no, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
-
-                if (product == null)
-                    return wrapError("该订单中有货款，没有产品资料，请补全。");
-                ;
-                if (product != null) {
-                    workFlowOrderItem.workFlowStep = WorkFlow.FIRST_STEP;
-                    workFlowOrderItem.workFlowName = WorkFlow.STEP_1;
-                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
-                    workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
-                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
-                    workFlowOrderItem.workFlowNames = product.workFlowNames;
-                    //默认第一个流程发起提交
-                    workFlowOrderItem.workFlowState = 1;
-                    workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
-                    workFlowOrderItem.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
-
-
-                }
-
-
-                //构建信息发出消息
-                //
-
-                WorkFlowMessage workFlowMessage = new WorkFlowMessage();
-                workFlowMessage.orderId = order.id;
-                workFlowMessage.orderName = order.osNo;
-                workFlowMessage.orderItemId = orderItem.id;
-                workFlowMessage.orderItemQty = orderItem.qty;
-                workFlowMessage.transportQty = orderItem.qty;
-
-                workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
-                workFlowMessage.fromFlowStep = workFlowOrderItem.workFlowStep;
-                workFlowMessage.fromFlowName = workFlowOrderItem.workFlowName;
-
-
-                workFlowMessage.toFlowStep = Integer.valueOf(StringUtils.split(workFlowOrderItem.workFlowSteps, StringUtils.PRODUCT_NAME_COMMA)[1]);
-                workFlowMessage.toFlowName = StringUtils.split(workFlowOrderItem.workFlowNames, StringUtils.PRODUCT_NAME_COMMA)[1];
-
-                workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
-                workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
-                workFlowMessage.state = WorkFlowMessage.STATE_SEND;
-                workFlowMessage.unit = product.pUnitName;
-                workFlowMessage.productId = product.id;
-                workFlowMessage.productName = product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion));
-                workFlowMessage.url = product.url;
-
-                workFlowMessageRepository.save(workFlowMessage);
-
-
-                workFlows.add(workFlowOrderItem);
-
-
-            }
-            orderItemWorkFlowRepository.save(workFlows);
-
-
-        }
-
-
-        return wrapData();
-
-
-    }
+//    /**
+//     * 启动订单跟踪
+//     * 该订单下的所有产品 走产品流程
+//     */
+//    @Transactional
+//    public RemoteData<Void> startTrack(String os_no) {
+//
+//
+//        Order order = orderRepository.findFirstByOsNoEquals(os_no);
+//        List<OrderItem> orderItems = orderItemRepository.findByOsNoEqualsOrderByItm(os_no);
+//
+//        if (orderItems == null || orderItems.size() == 0)
+//            return wrapError("该订单未保存，请选保存。");
+//        ;
+//        List<WorkFlowOrderItem> workFlows = orderItemWorkFlowRepository.findByOrderNameEquals(os_no);
+//        if (workFlows == null || workFlows.size() == 0) {
+//
+//
+//            for (OrderItem orderItem : orderItems) {
+//                WorkFlowOrderItem workFlowOrderItem = new WorkFlowOrderItem();
+//                workFlowOrderItem.orderId = order.id;
+//                workFlowOrderItem.orderName = order.osNo;
+//                workFlowOrderItem.orderItemId = orderItem.id;
+//                workFlowOrderItem.productName = orderItem.prd_no + (StringUtils.isEmpty(orderItem.pVersion) ? "" : ("-" + orderItem.pVersion));
+//                workFlowOrderItem.tranQty = orderItem.qty;
+//
+//                //设置当前为初始状态
+//                Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prd_no, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
+//
+//                if (product == null)
+//                    return wrapError("该订单中有货款，没有产品资料，请补全。");
+//                ;
+//                if (product != null) {
+//                    workFlowOrderItem.workFlowStep = WorkFlow.FIRST_STEP;
+//                    workFlowOrderItem.workFlowName = WorkFlow.STEP_1;
+//                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
+//                    workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
+//                    workFlowOrderItem.workFlowSteps = product.workFlowSteps;
+//                    workFlowOrderItem.workFlowNames = product.workFlowNames;
+//                    //默认第一个流程发起提交
+//                    workFlowOrderItem.workFlowState = 1;
+//                    workFlowOrderItem.createTime = Calendar.getInstance().getTimeInMillis();
+//                    workFlowOrderItem.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+//
+//
+//                }
+//
+//
+//                //构建信息发出消息
+//                //
+//
+//                WorkFlowMessage workFlowMessage = new WorkFlowMessage();
+//                workFlowMessage.orderId = order.id;
+//                workFlowMessage.orderName = order.osNo;
+//                workFlowMessage.orderItemId = orderItem.id;
+//                workFlowMessage.orderItemQty = orderItem.qty;
+//                workFlowMessage.transportQty = orderItem.qty;
+//
+//                workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
+//                workFlowMessage.fromFlowStep = workFlowOrderItem.workFlowStep;
+//                workFlowMessage.fromFlowName = workFlowOrderItem.workFlowName;
+//
+//
+//                workFlowMessage.toFlowStep = Integer.valueOf(StringUtils.split(workFlowOrderItem.workFlowSteps, StringUtils.PRODUCT_NAME_COMMA)[1]);
+//                workFlowMessage.toFlowName = StringUtils.split(workFlowOrderItem.workFlowNames, StringUtils.PRODUCT_NAME_COMMA)[1];
+//
+//                workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
+//                workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+//                workFlowMessage.state = WorkFlowMessage.STATE_SEND;
+//                workFlowMessage.unit = product.pUnitName;
+//                workFlowMessage.productId = product.id;
+//                workFlowMessage.productName = product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion));
+//                workFlowMessage.url = product.url;
+//
+//                workFlowMessageRepository.save(workFlowMessage);
+//
+//
+//                workFlows.add(workFlowOrderItem);
+//
+//
+//            }
+//            orderItemWorkFlowRepository.save(workFlows);
+//
+//
+//        }
+//
+//
+//        return wrapData();
+//
+//
+//    }
 
 
     /**
@@ -632,10 +629,160 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                     wrapError("未找到该订单货款 :" + message.orderName + "   " + message.productName);
         }
 
-        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(message.orderItemId);
-        if (workFlowOrderItem == null) {
-            return
-                    wrapError("未找到该货款流程数据 :" + message.orderName + "   " + message.productName);
+
+        OrderItemWorkFlowState state = orderItemWorkFlowStateRepository.findOne(message.orderItemWorkFlowStateId);
+
+
+        if (state == null) {
+            return wrapError("未找到对应的流程状态信息");
+
+        }
+
+
+        //上流程 数量整理
+        state.sendingQty -= message.transportQty;
+        state.qty -= message.transportQty;
+        state.sentQty+=message.transportQty;
+
+
+
+
+        orderItemWorkFlowStateRepository.save(state);
+
+
+        OrderItemWorkFlow orderItemWorkFlow = orderItemWorkFlowRepository2.findFirstByOrderItemIdEquals(state.orderItemId);
+
+        String[] workFlowSteps = orderItemWorkFlow.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        String[] workFlowNames = orderItemWorkFlow.workFlowNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        String[] workFlowTypes = orderItemWorkFlow.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        String[] productTypes = orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+
+        int beforeStepIndex = ArrayUtils.indexOnArray(workFlowSteps, String.valueOf(state.workFlowStep));
+
+
+        OrderItemWorkFlowState newState = orderItemWorkFlowStateRepository.findFirstByQtyIsGreaterThanAndOrderItemIdEqualsAndWorkFlowStepEqualsAndFactoryIdEqualsAndProductTypeEqualsOrderByOrderNameDescCreateTimeDesc(0, state.orderItemId, state.nextWorkFlowStep, state.factoryId, state.productType);
+        if (newState == null) {
+            newState = GsonUtils.fromJson(GsonUtils.toJson(state), OrderItemWorkFlowState.class);
+            newState.id = 0;
+            newState.qty = message.transportQty;
+            newState.sendingQty = 0;
+            newState.unSendQty = newState.qty;
+            newState.sentQty=0;
+            newState.workFlowStep = newState.nextWorkFlowStep;
+            newState.workFlowName = newState.nextWorkFlowName;
+            newState.workFlowType = newState.nextWorkFlowType;
+        } else {
+
+            //数量合并累加
+            newState.qty += message.transportQty;
+            newState.unSendQty += message.transportQty;
+        }
+
+
+        newState.createTime = Calendar.getInstance().getTimeInMillis();
+        newState.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+
+
+
+        int length = workFlowSteps.length;
+
+        int currentWorkFlowIndex = ArrayUtils.indexOnArray(workFlowSteps, String.valueOf(newState.workFlowStep));
+        int nextWorkFlowStep
+                = currentWorkFlowIndex == length - 1 ? 0 : Integer.valueOf(workFlowSteps[currentWorkFlowIndex + 1]);
+        String nextWorkFlowName = currentWorkFlowIndex == length - 1 ? "" : workFlowNames[currentWorkFlowIndex + 1];
+        String nextWorkFlowType = currentWorkFlowIndex == length - 1 ? "" : workFlowTypes[currentWorkFlowIndex + 1];
+
+        //当前是 分散处理。
+        boolean needGroupUp = "1".equals(state.workFlowType) && "0".equals(newState.workFlowType);
+        if (needGroupUp) {
+            newState.nextWorkFlowStep = 0;
+            newState.nextWorkFlowName = "";
+            newState.nextWorkFlowType = "";
+
+        } else {
+
+
+            //附上下一节点流程数据
+            newState.nextWorkFlowStep = nextWorkFlowStep;
+            newState.nextWorkFlowName = nextWorkFlowName;
+            newState.nextWorkFlowType = nextWorkFlowType;
+
+
+        }
+
+
+        newState = orderItemWorkFlowStateRepository.save(newState);
+
+
+        //检查数据合并
+
+        //查找当前订单 当前节点的所有状态数据
+        if (needGroupUp) {
+            List<OrderItemWorkFlowState> relateStates = orderItemWorkFlowStateRepository.findByQtyIsGreaterThanAndOrderItemIdEqualsAndWorkFlowStepEqualsOrderByOrderNameDescCreateTimeDesc(0, newState.orderItemId, newState.workFlowStep);
+
+
+            //需要合并
+            if (!StringUtils.isEmpty(newState.factoryId) && "0".equals(newState.workFlowType)) {
+
+                //多少个产品类型 就会派发多少个厂家跟进度。
+                if (relateStates.size() == productTypes.length) {
+
+
+                    boolean isAllPrepared = true;
+                    for (OrderItemWorkFlowState aState : relateStates) {
+                        if (aState.qty != state.orderQty) {
+
+                            isAllPrepared = false;
+
+                            break;
+                        }
+
+
+                    }
+
+
+                    //清除分厂家的进度信息（设置零）， 汇总数据（新数据 配置数量，清除厂家数据）。
+                    if (isAllPrepared) {
+
+                        newState = GsonUtils.fromJson(GsonUtils.toJson(newState), OrderItemWorkFlowState.class);
+                        for (OrderItemWorkFlowState aState : relateStates) {
+
+                            aState.qty = 0;
+                            aState.sendingQty = 0;
+                            aState.unSendQty = 0;
+
+                        }
+                        orderItemWorkFlowStateRepository.save(relateStates);
+
+
+                        newState.id = 0;
+                        newState.nextWorkFlowStep = nextWorkFlowStep;
+                        newState.nextWorkFlowName = nextWorkFlowName;
+                        newState.nextWorkFlowType = nextWorkFlowType;
+                        newState.qty = newState.orderQty;
+                        newState.unSendQty = newState.orderQty;
+                        newState.sendingQty = 0;
+
+                        newState.factoryId = "";
+                        newState.factoryName = "";
+                        newState.productType = "";
+                        newState.productTypeName = "";
+
+                        orderItemWorkFlowStateRepository.save(newState);
+
+                        //删除记录， 合成新记录。
+
+                    }
+
+
+                }
+
+
+            }
+
+
         }
 
 
@@ -644,10 +791,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
         if (message.state == WorkFlowMessage.STATE_SEND) {
-        //有审核人
+            //有审核人
             if (workFlow.checkerId > 0) {
                 message.state = WorkFlowMessage.STATE_RECEIVE;
-                workFlowOrderItem.workFlowState = 1;
+
             } else {
                 //无审核人 系统自动审核通过
                 message.state = WorkFlowMessage.STATE_PASS;
@@ -656,15 +803,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             }
 
-            //不管有无审核人 ，只要接收就进入下一流程
-                //进入目标流程
-                workFlowOrderItem.workFlowName = workFlow.name;
-                workFlowOrderItem.workFlowStep = workFlow.flowStep;
-                workFlowOrderItem.workFlowState = 0;
-                workFlowOrderItem.tranQty = message.transportQty;
-
-
-
 
         } else if (message.state == WorkFlowMessage.STATE_REWORK) {
             //返工 状态 自动通过。
@@ -672,14 +810,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             message.receiveTime = Calendar.getInstance().getTimeInMillis();
             message.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
-            //进入目标流程
-            workFlowOrderItem.workFlowName = workFlow.name;
-            workFlowOrderItem.workFlowStep = workFlow.flowStep;
-            workFlowOrderItem.workFlowState = 0;
-            workFlowOrderItem.tranQty = message.transportQty;
 
         }
-        orderItemWorkFlowRepository.save(workFlowOrderItem);
 
         workFlowMessageRepository.save(message);
 
@@ -722,12 +854,11 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                     wrapError("未找到该订单货款 :" + message.orderName + "   " + message.productName);
         }
 
-        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(message.orderItemId);
+        OrderItemWorkFlow workFlowOrderItem = orderItemWorkFlowRepository2.findFirstByOrderItemIdEquals(message.orderItemId);
         if (workFlowOrderItem == null) {
             return
                     wrapError("未找到该货款流程数据 :" + message.orderName + "   " + message.productName);
         }
-
 
 
         message.state = WorkFlowMessage.STATE_PASS;
@@ -735,7 +866,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
 
-        orderItemWorkFlowRepository.save(workFlowOrderItem);
+        orderItemWorkFlowRepository2.save(workFlowOrderItem);
 
 
         workFlowMessageRepository.save(message);
@@ -747,11 +878,11 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
     /**
-     * 获取指定用户可以操作的生产流程转移的订单items
+     * 获取指定用户可以操作的生产流程转移的订单流程items
      *
      * @return
      */
-    public RemoteData<ErpOrderItem> getOrderItemForTransform(User loginUser) {
+    public RemoteData<OrderItemWorkFlowState> getOrderItemForTransform(User loginUser) {
 
 
         /**
@@ -770,52 +901,29 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             steps[i] = workFlows.get(i).flowStep;
 
         }
-        //已经发送 或者 已经接受未审核的  都不能再发。
-        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepInAndWorkFlowStateEqualsOrderByOrderNameDesc(steps, 0);
 
+        List<OrderItemWorkFlowState> workFlowStates = orderItemWorkFlowStateRepository.findByWorkFlowStepInAndQtyIsGreaterThanOrderByOrderNameDesc(steps, 0);
 
-        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+        List<OrderItemWorkFlowState> validData = new ArrayList<>();
 
-        return wrapData(erpOrderItems);
-
-
-    }
-
-    private List<ErpOrderItem> convertWorkFlowItemToErpOrderItem(List<WorkFlowOrderItem> orderItems) {
-        List<ErpOrderItem> erpOrderItems = new ArrayList<>();
-        for (WorkFlowOrderItem orderItem : orderItems) {
-
-            ErpOrderItem erpOrderItem = new ErpOrderItem();
-            erpOrderItem.id = orderItem.orderItemId;
-            erpOrderItem.os_no = orderItem.orderName;
-            erpOrderItem.prd_name = orderItem.productName;
-
-            erpOrderItem.currentWorkFlow = orderItem.workFlowName;
-            erpOrderItem.currentWorkStep = orderItem.workFlowStep;
-            erpOrderItem.currentWorkState = orderItem.workFlowState;
-            erpOrderItem.tranQty = orderItem.tranQty;
-
-            OrderItem oItem = orderItemRepository.findOne(orderItem.orderItemId);
-            if (oItem != null) {
-
-                erpOrderItem.qty = oItem.qty;
-                erpOrderItem.prd_no = oItem.prd_no;
-                erpOrderItem.pVersion = oItem.pVersion;
-                erpOrderItem.ut = oItem.ut;
-                erpOrderItem.bat_no = oItem.bat_no;
-                erpOrderItem.pVersion = oItem.pVersion;
-                erpOrderItem.prd_no = oItem.prd_no;
-                erpOrderItem.url = oItem.url;
-                erpOrderItem.thumbnail = oItem.thumbnail;
-                erpOrderItem.sendDate = oItem.sendDate;
-                erpOrderItem.verifyDate = oItem.verifyDate;
-
+        for (OrderItemWorkFlowState state : workFlowStates) {
+            if (state.unSendQty > 0 && !StringUtils.isEmpty(state.nextWorkFlowName)) {
+                validData.add(state);
             }
-            erpOrderItems.add(erpOrderItem);
+
         }
 
-        return erpOrderItems;
+//        //已经发送 或者 已经接受未审核的  都不能再发。
+//        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepInAndWorkFlowStateEqualsOrderByOrderNameDesc(steps, 0);
+//
+//
+//        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+
+        return wrapData(validData);
+
+
     }
+
 
     /**
      * 获取生产流程表
@@ -866,7 +974,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             WorkFlow workFlow = workFlows.get(i);
             flowSteps[i] = workFlow.flowStep;
         }
-        int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_RECEIVE, WorkFlowMessage.STATE_REWORK};
+        int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_REWORK}; //WorkFlowMessage.STATE_RECEIVE,
         List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepIn(state, flowSteps);
 
         return wrapData(workFlowMessages);
@@ -877,47 +985,79 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * 向指定流程发起生产提交
      *
      * @param user
-     * @param orderItemId
-     * @param flowStep
-     * @param tranQty
+     * @param orderItemWorFlowStateId 订单项对应流程状态id
+     * @param tranQty                 传递数量
+     * @param memo                    备注
      */
 
 
     @Transactional
-    public RemoteData<Void> sendWorkFlowMessage(User user, long orderItemId, int flowStep, int tranQty, String memo) {
+    public RemoteData<Void> sendWorkFlowMessage(User user, long orderItemWorFlowStateId, int tranQty, String memo) {
 
 
-        WorkFlowOrderItem workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
-        if (workFlowOrderItem == null) return wrapError("订单数据不存在");
+        OrderItemWorkFlowState workFlowOrderItemState = orderItemWorkFlowStateRepository.findOne(orderItemWorFlowStateId);
+        if (workFlowOrderItemState == null)
+            return wrapError("订单流程状态数据不存在");
 
+        if (workFlowOrderItemState.nextWorkFlowStep <= 0)
+            return wrapError("该订单下一流程数据不存在");
 
-        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(flowStep);
-        if (workFlow == null) {
-            return wrapError("目标流程：" + flowStep + " 不存在");
+        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(workFlowOrderItemState.nextWorkFlowStep);
+        if (workFlow == null)
+            return wrapError("数据异常，该订单下一流程数据不存在");
+
+        if (tranQty > workFlowOrderItemState.unSendQty) {
+
+            return wrapError("提交数量超过当前流程数量");
         }
 
-
-        workFlowOrderItem.workFlowState = 1;
-        orderItemWorkFlowRepository.save(workFlowOrderItem);
-
-        OrderItem orderItem = orderItemRepository.findOne(workFlowOrderItem.orderItemId);
+        OrderItem orderItem = orderItemRepository.findOne(workFlowOrderItemState.orderItemId);
         //设置当前为初始状态
-        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prd_no, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
+        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(orderItem.prdNo, StringUtils.isEmpty(orderItem.pVersion) ? "" : orderItem.pVersion);
         if (product == null)
             return wrapError("该订单中有货款，没有产品资料，请补全。");
+
+
+        //扣减数量
+        workFlowOrderItemState.unSendQty -= tranQty;
+        workFlowOrderItemState.sendingQty += tranQty;
+        orderItemWorkFlowStateRepository.save(workFlowOrderItemState);
+
+
+        //构建消息
+
+
+//        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(workFlowOrderItemState.nextWorkFlowStep);
+//        if (workFlow == null) {
+//            return wrapError("目标流程：" + workFlowOrderItemState.nextWorkFlowStep + " 不存在");
+//        }
+
+//        WorkFlowOrderItem workFlowOrderItemState = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(state.orderItemId);
+//        if (workFlowOrderItemState == null) return wrapError("订单数据不存在");
+//
+//
+//
+//
+//        workFlowOrderItemState.workFlowState = 1;
+//        orderItemWorkFlowRepository.save(workFlowOrderItemState);
+
+
         //构建信息发出消息
         WorkFlowMessage workFlowMessage = new WorkFlowMessage();
-        workFlowMessage.orderId = workFlowOrderItem.id;
-        workFlowMessage.orderName = workFlowOrderItem.orderName;
-        workFlowMessage.orderItemId = workFlowOrderItem.orderItemId;
+
+
+        workFlowMessage.orderItemWorkFlowStateId = workFlowOrderItemState.id;
+        workFlowMessage.orderId = workFlowOrderItemState.orderId;
+        workFlowMessage.orderName = workFlowOrderItemState.orderName;
+        workFlowMessage.orderItemId = workFlowOrderItemState.orderItemId;
         workFlowMessage.orderItemQty = orderItem.qty;
         workFlowMessage.transportQty = tranQty;
         workFlowMessage.memo = memo;
         workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
-        workFlowMessage.fromFlowStep = workFlowOrderItem.workFlowStep;
-        workFlowMessage.fromFlowName = workFlowOrderItem.workFlowName;
-        workFlowMessage.toFlowStep = workFlow.flowStep;
-        workFlowMessage.toFlowName = workFlow.name;
+        workFlowMessage.fromFlowStep = workFlowOrderItemState.workFlowStep;
+        workFlowMessage.fromFlowName = workFlowOrderItemState.workFlowName;
+        workFlowMessage.toFlowStep = workFlowOrderItemState.nextWorkFlowStep;
+        workFlowMessage.toFlowName = workFlowOrderItemState.nextWorkFlowName;
         workFlowMessage.createTime = Calendar.getInstance().getTimeInMillis();
         workFlowMessage.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
         workFlowMessage.state = WorkFlowMessage.STATE_SEND;
@@ -925,6 +1065,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         workFlowMessage.productId = product.id;
         workFlowMessage.productName = product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("-" + product.pVersion));
         workFlowMessage.url = product.url;
+
+        workFlowMessage.factoryName = workFlowOrderItemState.factoryName;
+        workFlowMessage.productTypeName = workFlowOrderItemState.productTypeName;
+
         workFlowMessageRepository.save(workFlowMessage);
 
 
@@ -961,30 +1105,30 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         return wrapData(workFlowMessageRepository.findByFromFlowStepInOrderByCreateTimeDesc(steps));
     }
 
-    public RemoteData<ErpOrderItem> getUnCompleteOrderItem(User user) {
+
+    public RemoteData<OrderItemWorkFlowState> getUnCompleteOrderItem(User user) {
 
 
-        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepNotOrderByCreateTimeDesc(WorkFlow.FINAL_STEP);
+        List<OrderItemWorkFlowState> orderItems = orderItemWorkFlowStateRepository.findByQtyIsGreaterThanOrderByOrderNameDescCreateTimeDesc(0);
 
-        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
 
-        return wrapData(erpOrderItems);
+        return wrapData(orderItems);
 
 
     }
 
-    public RemoteData<ErpOrderItem> getWorkFlowOrderItem(User user, String key, int pageIndex, int pageSize) {
+    public RemoteData<OrderItemWorkFlowState> getWorkFlowOrderItem(User user, String key, int pageIndex, int pageSize) {
 
         String keyForSearch = "%" + key + "%";
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
 
-        Page<WorkFlowOrderItem> pageValue = orderItemWorkFlowRepository.findByOrderNameLikeOrProductNameLikeOrderByOrderNameDesc(keyForSearch, keyForSearch, pageable);
+        Page<OrderItemWorkFlowState> pageValue = orderItemWorkFlowStateRepository.findByOrderNameLikeAndQtyIsGreaterThanOrProductFullNameLikeAndQtyIsGreaterThanOrderByOrderNameDescCreateTimeDesc(keyForSearch, 0, keyForSearch, 0, pageable);
 
-        List<WorkFlowOrderItem> orderItems = pageValue.getContent();
 
-        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), pageValue.getContent());
 
-        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), erpOrderItems);
+
+        // return wrapData(orderItemWorkFlowStateRepository.findByOrderNameLikeOrProductFullNameLikeOrderNameDescCreateTimeDesc(key,key));
 
 
     }
@@ -1032,8 +1176,100 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         workFlowMessageRepository.save(workFlowMessage);
 
-//        workFlowRepository.
         return wrapData();
+
+
+    }
+
+    /**
+     * 获取制定订单的流程生产状态
+     *
+     * @param orderItemId
+     * @return
+     */
+    public RemoteData<WorkFlowReport> getOrderItemWorkState(long orderItemId) {
+
+
+        OrderItemWorkFlow workFlowOrderItem = orderItemWorkFlowRepository2.findFirstByOrderItemIdEquals(orderItemId);
+
+        if (workFlowOrderItem == null)
+
+        {
+            return wrapError("未找到该订单,该订单未排厂");
+
+        }
+
+
+        String[] workFlowSteps = workFlowOrderItem.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        String[] workFlowNames = workFlowOrderItem.workFlowNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        String[] workFlowTypes = workFlowOrderItem.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+        int size = workFlowSteps.length;
+
+        String[] productTypes = workFlowOrderItem.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+        int productTypeSize = 1;
+        if (workFlowOrderItem.produceType == ProduceType.SELF_MADE) {
+            try {
+                productTypeSize = workFlowOrderItem.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON).length;
+            } catch (Throwable t) {
+            }
+        }
+
+        List<WorkFlowReport> workFlowReports = new ArrayList<>();
+
+
+        for (int i = 0; i < size; i++) {
+
+            WorkFlowReport report = new WorkFlowReport();
+            int workFlowStep = Integer.valueOf(workFlowSteps[i]);
+            int workFlowType=Integer.valueOf(workFlowTypes[i]);
+            report.orderItemId = orderItemId;
+            report.orderName = workFlowOrderItem.orderName;
+            report.workFlowStep = workFlowStep;
+            report.workFlowName = workFlowNames[i];
+
+
+            List<OrderItemWorkFlowState> workFlowStates = orderItemWorkFlowStateRepository.findByOrderItemIdEqualsAndWorkFlowStepEquals(orderItemId, workFlowStep);
+
+            //无状态数据 表示流程未到。
+            if (workFlowStates.size() == 0)
+                report.percentage = 0;
+            else {
+
+
+                int divideSize=workFlowType==0?1:productTypeSize;
+
+                for (OrderItemWorkFlowState state : workFlowStates) {
+
+                    if( state.nextWorkFlowStep>0) {
+                        //当前数量为0 表示已经全部发出
+                        report.percentage +=    (float) (state.sentQty) / state.orderQty;
+                    }
+
+                }
+
+                report.percentage /= divideSize;
+            }
+            workFlowReports.add(report);
+
+
+        }
+
+
+        return wrapData(workFlowReports);
+    }
+
+    public RemoteData<OrderItem> searchOrderItem(String key, int pageIndex, int pageSize) {
+
+
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        String keyForSearch = "%" + key.trim() + "%";
+
+        Page<OrderItem> pageValue = orderItemRepository.findByOsNoLikeOrPrdNoLikeOrderByOsNoDesc(keyForSearch, keyForSearch, pageable);
+
+
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), pageValue.getContent());
 
 
     }

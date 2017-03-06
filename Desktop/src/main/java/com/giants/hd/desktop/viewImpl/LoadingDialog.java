@@ -19,10 +19,20 @@ public class LoadingDialog extends JDialog {
 
 
 
+	public static  void  init(Window toppestWindow)
+	{
+		loadingDialog=	new LoadingDialog(toppestWindow,null);
+	}
+
+	static LoadingDialog loadingDialog=null;
+
+
+
 	public LoadingDialog(Window owner,
 						 ActionListener cancleListener) {
 		super(owner);
 		iniDialog(DEFAULT_MESSAGE, cancleListener);
+
 
 	}
 
@@ -61,6 +71,7 @@ public class LoadingDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				setVisible(false);
+				dispose();
 				cancleListener.actionPerformed(e);
 			}
 		});
@@ -74,7 +85,7 @@ public class LoadingDialog extends JDialog {
 		setResizable(true);
 		setSize(500, 100);
 		setLocationRelativeTo(getParent()); // 设置此窗口相对于指定组件的位�?
-		 setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
+		 setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
 	}
 

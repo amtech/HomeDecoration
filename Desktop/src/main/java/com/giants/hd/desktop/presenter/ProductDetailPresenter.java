@@ -15,4 +15,9 @@ public interface ProductDetailPresenter extends  Presenter {
     void save(ProductDetail productDetail);
 
     void showProductWorkFlow();
+
+    /**
+     * 修复缩略图
+     */
+    void correctThumbnail(long productId);
 }

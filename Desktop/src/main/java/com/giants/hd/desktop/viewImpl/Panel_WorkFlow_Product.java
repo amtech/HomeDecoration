@@ -9,6 +9,7 @@ import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.sun.java.swing.SwingUtilities3;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.swing.*;
@@ -87,6 +88,7 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
     public void setData(WorkFlowProduct workFlowProduct) {
 
 
+
         //新数据不绑定
         if (workFlowProduct.id <= 0) return;
         String[] temp = workFlowProduct.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
@@ -100,19 +102,33 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
 
 
         //一级流程
-        temp = workFlowProduct.workFlowIds.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        temp = workFlowProduct.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
         String[] configSubTypeStrings=workFlowProduct.workFlowTypes==null?null:workFlowProduct.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
           size = workFlows.length;
 
         for (int i = 0; i < size; i++) {
             WorkFlow workFlow = workFlows[i];
-            final int indexOnArray = ArrayUtils.indexOnArray(temp, String.valueOf(workFlow.id));
+            final int indexOnArray = ArrayUtils.indexOnArray(temp, String.valueOf(workFlow.flowStep));
             workFlowCheckBoxes.get(i).setSelected(indexOnArray >= 0);
             configSubtypes.get(i).setEnabled(indexOnArray>=0);
 
-            configSubtypes.get(i).setSelected(indexOnArray>-1&& configSubTypeStrings!=null&&configSubTypeStrings.length> indexOnArray&&"1".equals(  configSubTypeStrings[indexOnArray]));
+
+
+              boolean config = indexOnArray > -1 && configSubTypeStrings != null && configSubTypeStrings.length > indexOnArray && "1".equals(configSubTypeStrings[indexOnArray]);
+
+            configSubtypes.get(i).setSelected(config);
+
+            //设置默认值
+            if(configSubTypeStrings==null||configSubTypeStrings.length==0)
+            {
+                configSubtypes.get(i).setSelected(i<3);
+            }
+
 
         }
+
+
+
     }
 
 
@@ -158,7 +174,7 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
         for (int i = 0; i < size; i++) {
             if (workFlowCheckBoxes.get(i).isSelected()) {
                 WorkFlow workFlow = workFlows[i] ;
-                stringBuilder.append(workFlow.id).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+                stringBuilder.append(workFlow.flowStep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
                 nameStringBuilder.append(workFlow.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
                 configSubTypeStrings.append(configSubtypes.get(i).isSelected()?1:0).append(ConstantData.STRING_DIVIDER_SEMICOLON);
             }
@@ -171,7 +187,7 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
             configSubTypeStrings.setLength(configSubTypeStrings.length() - 1);
         }
 
-        workFlowProduct.workFlowIds = stringBuilder.toString();
+        workFlowProduct.workFlowSteps = stringBuilder.toString();
         workFlowProduct.workFlowNames=nameStringBuilder.toString();
         workFlowProduct.workFlowTypes=configSubTypeStrings.toString();
 
@@ -226,6 +242,13 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
 
             panel_work_flow.add(panelBaseOnWorkFlow);
         }
+        //默认设置， 前三个流程
+        for(int i=0;i<configSubtypes.size();i++)
+        {
+            configSubtypes.get(i).setSelected(i<3);
+        }
+
+
         panel_work_flow.setMaximumSize(new Dimension(600, 500));
         panel_work_flow.setPreferredSize(new Dimension(600, 500));
 
@@ -239,12 +262,14 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
 
         final JCheckBox jCheckBox = new JCheckBox(workFlow.name);
         workFlowCheckBoxes.add(jCheckBox);
+        //所有流程默认选择
+        jCheckBox.setSelected(true);
         jPanel.add(jCheckBox);
         final Dimension preferredSize = new Dimension(200, 30);
         jCheckBox.setPreferredSize(preferredSize);
         jCheckBox.setMinimumSize(preferredSize);
 
-        final JCheckBox subType = new JCheckBox("是否配置二级流程");
+        final JCheckBox subType = new JCheckBox("是否按类型排厂");
         jPanel.add(subType);
         configSubtypes.add(subType);
         return jPanel;

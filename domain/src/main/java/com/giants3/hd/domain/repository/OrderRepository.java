@@ -3,6 +3,8 @@ package com.giants3.hd.domain.repository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.OrderItemWorkFlow;
+import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import rx.Observable;
@@ -46,7 +48,9 @@ public interface OrderRepository {
      * 获取未出库订单货款
      * @return
      */
-    Observable<RemoteData<ErpOrderItem>> getUnCompleteOrderWorkFlowReport();
+    Observable<RemoteData<OrderItemWorkFlowState>> getUnCompleteOrderWorkFlowReport();
 
     Observable<RemoteData<ErpOrderItem>> getOrderWorkFlowReport(String key, int pageIndex, int pageSize);
+
+    Observable<RemoteData<OrderItemWorkFlow>> getOrderItemWorkFlow(long orderItemId);
 }

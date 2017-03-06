@@ -28,7 +28,9 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
 
     List<OrderItem> findByOsNoEqualsOrderByItm(String osNo);
 
+    Page<OrderItem> findByOsNoLikeOrPrdNoLikeOrderByOsNoDesc(String key,String key1,Pageable pageable);
+
     @Modifying
-    @Query("update T_OrderItem p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.prd_no =   :prd_no  and  p.pVersion= :pVersion")
+    @Query("update T_OrderItem p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.prdNo =   :prd_no  and  p.pVersion= :pVersion")
     int updateUrlByProductInfo(@Param("thumbnail") String thumbnail,@Param("photoUrl") String url, @Param("prd_no")  String  prd_no,@Param("pVersion")  String  pVersion);
 }

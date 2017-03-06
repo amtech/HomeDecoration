@@ -87,7 +87,10 @@ public class ErpStockOutItem   implements Serializable{
     public String thumbnail;
     public String url;
     public String unit;
-
+    //产品尺寸(厘米)
+    public String specCm;
+    //产品尺寸(英寸)
+    public String specInch;
     /**
      * 版本号， id_no  格式为 13A0760->223311  使用不方便，用 pversion 存放223311
      */

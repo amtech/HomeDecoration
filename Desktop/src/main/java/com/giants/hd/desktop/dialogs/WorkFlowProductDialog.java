@@ -37,92 +37,33 @@ public class WorkFlowProductDialog extends BaseDialog<WorkFlowProduct> implement
 
     public WorkFlowProductDialog(Window window, long productId, String productName) {
         super(window, productName + "产品生产流程配置详情");
+
+
+        setMinimumSize(new Dimension(800,600));
         setContentPane(getCustomContentPane());
         this.productId = productId;
         this.productName = productName;
 
-        setMinimumSize(new Dimension(800,600));
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-
                 readData();
-//            }
-//        });
-
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                loadUsers();
-//            }
-//        });
 
 
-//     readSubTypeData();
+
+
 
 
     }
 
-    private void readSubTypeData() {
-        UseCaseFactory.getInstance().createGetWorkFlowSubTypeUseCase().execute(new BaseSubscriber<RemoteData<WorkFlowSubType>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-                super.onError(e);
-
-               // workFlowViewer.showMesssage(e.getMessage());
-
-            }
 
 
-            @Override
-            public void onNext(RemoteData<WorkFlowSubType> data) {
 
 
-//                if(data.isSuccess())
-//                workFlowViewer.setSubData(data.datas);
-
-            }
-
-        });
-
-    }
-
-    private void loadUsers() {
-
-        UseCaseFactory.getInstance().createGetUserListUseCase().execute(new Subscriber<List<User>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-                workFlowViewer.showMesssage(e.getMessage());
-
-            }
 
 
-            @Override
-            public void onNext(List<User> users) {
+
+    public void readData() {
 
 
-                //  workFlowViewer.setUserList(users);
-
-            }
-
-        });
-
-    }
-
-
-    private void readData() {
+        System.out.println("readData...............");
 
         UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
             @Override
@@ -140,7 +81,7 @@ public class WorkFlowProductDialog extends BaseDialog<WorkFlowProduct> implement
 
             @Override
             public void onNext(RemoteData<WorkFlowProduct> workFlowRemoteData) {
-
+                workFlowViewer.hideLoadingDialog();
                 if (workFlowRemoteData.isSuccess()) {
 
                     if (workFlowRemoteData.totalCount > 0)
@@ -167,7 +108,7 @@ public class WorkFlowProductDialog extends BaseDialog<WorkFlowProduct> implement
     public void setData(WorkFlowProduct datas) {
         oldData = GsonUtils.toJson(datas);
         this.data = datas;
-         workFlowViewer.setData(datas);
+        workFlowViewer.setData(datas);
     }
 
 

@@ -234,5 +234,43 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             }
         });
     }
+
+
+    /**
+     * 保存排厂类型列表
+     *
+     * @param datas
+     * @return
+     */
+    @Override
+    public Observable saveWorkFlowSubTypeList(final List<WorkFlowSubType> datas) {
+
+
+        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowSubType>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<WorkFlowSubType>> subscriber) {
+
+
+                try {
+                    RemoteData<WorkFlowSubType> remoteData = apiManager.saveWorkFlowSubTypeList( datas);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+
+
+    }
 }
 

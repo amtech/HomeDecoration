@@ -1,6 +1,7 @@
 package com.giants3.hd.domain.repository;
 
 
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Observable;
@@ -25,4 +26,6 @@ public interface ProductRepository {
     Observable<List<Product>> loadByProductNameRandom(String productNames, boolean withCopy);
 
     Observable<ProductDetail> loadByProductNo(String prdNo);
+
+    Observable<RemoteData<Void>> correctThumbnail(long productId);
 }

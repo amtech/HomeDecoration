@@ -81,11 +81,13 @@ public abstract class BasePanel implements AbstractViewer {
 
     public void hideLoadingDialog() {
 
-        if (dialog != null) {
-            dialog.setVisible(false);
-            dialog.dispose();
-            dialog = null;
-        }
+
+
+//        if (dialog != null) {
+//            dialog.setVisible(false);
+//            dialog.dispose();
+//            dialog = null;
+//        }
     }
 
     public void showMesssage(String message) {
@@ -117,18 +119,30 @@ public abstract class BasePanel implements AbstractViewer {
     public void showLoadingDialog(String hint) {
 
 
-        if (dialog == null) {
+        //重複多次新建loading dialog 會導致程序一次， 先關閉
 
-            dialog = new LoadingDialog(getWindow(getRoot()), new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                }
-            });
-            dialog.setMessage(hint);
-
-        }
-        dialog.setVisible(true);
+//
+//        if (dialog == null) {
+//
+//            final JComponent root = getRoot();
+//
+//            System.out.println("root:"+root);
+//
+//            final Window window = getWindow(root);
+//
+//            System.out.println("window:"+window);
+//            dialog = new LoadingDialog(window, new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//
+//                }
+//            });
+//            dialog.setMessage(hint);
+//
+//
+//
+//        }
+//        dialog.setVisible(true);
     }
 
 

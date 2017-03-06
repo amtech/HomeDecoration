@@ -28,4 +28,14 @@ public class WorkFlow {
     public String checkerName;
     public String checkerCName;
     public String checkerCode;
+
+
+    /**
+     * 是否自制关联流程
+     */
+    public  boolean isSelfMade;
+    /**
+     * 是否外购关联流程
+     */
+    public  boolean  isPurchased;
 }

@@ -3,14 +3,15 @@ package com.giants3.hd.domain.interractor;
 import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity.OutFactory;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
+import java.sql.Statement;
 import java.util.List;
 
 
@@ -52,6 +53,7 @@ public class UseCaseFactory {
 
     @Inject
     FactoryRepository factoryRepository;
+
     private UseCaseFactory() {
 
 
@@ -160,9 +162,9 @@ public class UseCaseFactory {
      * @param pageSize
      * @return
      */
-    public UseCase createStockXiaokuListUseCase(String key,  int pageIndex, int pageSize) {
+    public UseCase createStockXiaokuListUseCase(String key, int pageIndex, int pageSize) {
 
-        return new GetStockXiaokuListUseCase(Schedulers.newThread(), Schedulers.immediate(),  key,pageIndex, pageSize, stockRepository);
+        return new GetStockXiaokuListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, pageIndex, pageSize, stockRepository);
     }
 
     /**
@@ -178,6 +180,7 @@ public class UseCaseFactory {
         return new StockInAndSubmitListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, startDate, endDate, stockRepository);
 
     }
+
     /**
      * 读取出库列表case
      *
@@ -320,7 +323,8 @@ public class UseCaseFactory {
         return new GetWorkFlowUseCase(
                 Schedulers.newThread(), Schedulers.immediate(), workFlowRepository);
     }
- /**
+
+    /**
      * 获取生产流程二级流程列表
      *
      * @return
@@ -343,13 +347,12 @@ public class UseCaseFactory {
     }
 
 
-
     /**
      * 保存产品相关生产流程列表
      *
      * @return
      */
-    public UseCase createSaveWorkProductUseCase( WorkFlowProduct  workFlowProduct) {
+    public UseCase createSaveWorkProductUseCase(WorkFlowProduct workFlowProduct) {
 
         return new SaveWorkFlowProductUseCase(
                 Schedulers.newThread(), Schedulers.immediate(), workFlowProduct, workFlowRepository);
@@ -394,24 +397,25 @@ public class UseCaseFactory {
     }
 
 
-    public UseCase createStockXiaokuItemListUseCase(String key,final String startDate, final String endDate) {
-        return new StockXiaokuItemSearchUseCase(Schedulers.newThread(), Schedulers.immediate(), key,startDate,endDate, stockRepository);
+    public UseCase createStockXiaokuItemListUseCase(String key, final String startDate, final String endDate) {
+        return new StockXiaokuItemSearchUseCase(Schedulers.newThread(), Schedulers.immediate(), key, startDate, endDate, stockRepository);
     }
 
     /**
      * 获取产品的生产流程配置信息
+     *
      * @param productId
      * @return
      */
     public UseCase createGetWorkFlowOfProduct(long productId) {
 
-        return new GetWorkFlowOfProduct(Schedulers.newThread(), Schedulers.immediate(),productId, workFlowRepository);
+        return new GetWorkFlowOfProduct(Schedulers.newThread(), Schedulers.immediate(), productId, workFlowRepository);
     }
-
 
 
     /**
      * 获取产品的生产流程配置信息
+     *
      * @param
      * @return
      */
@@ -421,22 +425,44 @@ public class UseCaseFactory {
     }
 
     public UseCase createSaveOutFactoryListUseCase(List<OutFactory> datas) {
-        return new SaveOutFactoryListUseCase(Schedulers.newThread(), Schedulers.immediate(),datas, factoryRepository);
+        return new SaveOutFactoryListUseCase(Schedulers.newThread(), Schedulers.immediate(), datas, factoryRepository);
+    }
+
+    /**
+     * 保存排厂类型列表
+     *
+     * @param datas
+     * @return
+     */
+    public UseCase createSaveWorkFlowSubTypeListUseCase(List<WorkFlowSubType> datas) {
+        return new SaveWorkFlowSubTypeListUseCase(Schedulers.newThread(), Schedulers.immediate(), datas, workFlowRepository);
     }
 
 
     /**
      * 启动订单生产流程
-     * @return
+     *
      * @param orderItemWorkFlow
+     * @return
      */
     public UseCase createStartOrderItemWorkFlowUseCase(OrderItemWorkFlow orderItemWorkFlow) {
-        return new  StartOrderItemWorkFlowUseCase(Schedulers.newThread(), Schedulers.immediate(),orderItemWorkFlow, factoryRepository);
+        return new StartOrderItemWorkFlowUseCase(Schedulers.newThread(), Schedulers.immediate(), orderItemWorkFlow, factoryRepository);
 
     }
 
     public UseCase createGetOrderItemWorkFlowState(long orderItemId) {
-        return new  GetOrderItemWorkFlowState(Schedulers.newThread(), Schedulers.immediate(),orderItemId, workFlowRepository);
+        return new GetOrderItemWorkFlowState(Schedulers.newThread(), Schedulers.immediate(), orderItemId, workFlowRepository);
 
+    }
+
+
+    public UseCase createCorrectThumbnaiUseCase(long productId) {
+        return new CorrectThumbnaiUseCase(Schedulers.newThread(), Schedulers.immediate(), productId, productRepository);
+
+
+    }
+
+    public UseCase createGetOrderItemWorkFlow(long orderItemId) {
+        return new GetOrderItemWorkFlowUseCase(Schedulers.newThread(), Schedulers.immediate(), orderItemId, orderRepository);
     }
 }

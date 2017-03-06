@@ -12,4 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WorkFlowSubTypeRepository extends JpaRepository<WorkFlowSubType,Long> {
 
 
+
+    public WorkFlowSubType findFirstByTypeIdEquals(int typeId);
 }

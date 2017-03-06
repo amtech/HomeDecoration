@@ -24,7 +24,7 @@ public class OrderItemWorkFlow {
 
 
 
-    public String workFlowIds;
+    public String workFlowSteps;
     public String workFlowNames;
     /**
      * 流程类型 0 主流程，1 二级流程
@@ -41,13 +41,13 @@ public class OrderItemWorkFlow {
 
 
     /**
-     *产品类型对应的厂家ids
+     *    胚体产品类型对应的厂家ids  加工户
      */
-    public String productFactoryIds;
+    public String conceptusFactoryIds;
     /**
-     * 产品类型对应的厂家名称
+     *  胚体产品类型对应的厂家名称 加工户
      */
-    public String productFactoryNames;
+    public String conceptusFactoryNames;
 
 
 
@@ -55,4 +55,22 @@ public class OrderItemWorkFlow {
      *产品进度描述
      */
     public String workFlowDiscribe;
+
+
+
+    /**
+     *  生产方式
+     *  @see  com.giants3.hd.utils.ProduceType
+     *
+     */
+    public int produceType;
+
+    /**
+     * 生产厂家  外厂 ，自制为空
+     */
+    public String produceFactoryId;
+    /**
+     * 生产厂家  外厂 ，自制为空
+     */
+    public String produceFactoryName;
 }

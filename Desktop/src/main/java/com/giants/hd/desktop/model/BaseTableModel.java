@@ -237,6 +237,9 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
                 obj = fields[columnIndex].get(data);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+            }catch (Throwable t)
+            {
+                t.printStackTrace();
             }
         }
 

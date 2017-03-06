@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class OutFactoryModel extends  BaseTableModel<OutFactory> {
 
-    public static String[] columnNames = new String[]{                    "名称",  "负责人"  ,"电话","地址" };
-    public static int[] columnWidth=new int[]{        100 ,100, 100,ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{           "编号",         "名称"   };
+    public static int[] columnWidth=new int[]{      100,  100   };
 
-    public static String[] fieldName = new String[]{  "name",  "manager","telephone","address"};
+    public static String[] fieldName = new String[]{  "dep",  "name" };
 
-    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class };
+    public  static Class[] classes = new Class[]{Object.class,Object.class  };
 
 
     @Inject
@@ -28,35 +28,8 @@ public class OutFactoryModel extends  BaseTableModel<OutFactory> {
     }
 
 
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-
-        return true;
-    }
 
 
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
-        OutFactory outFactory=getItem(rowIndex);
-        String stringValue=String.valueOf(aValue);
-        switch (columnIndex)
-        {
-            case 0:
-                outFactory.name=stringValue;
-                break;
-            case 1:
-                outFactory.manager=stringValue;
-                break;
-            case 2:
-                outFactory.telephone=stringValue;
-                break;
-            case 3:
-                outFactory.address=stringValue;
-                break;
-
-        }
-    }
 
 
     @Override

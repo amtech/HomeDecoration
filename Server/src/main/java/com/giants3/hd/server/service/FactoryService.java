@@ -1,7 +1,8 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.Factory;
-import com.giants3.hd.server.entity.OutFactory;
+import com.giants3.hd.utils.entity.OutFactory;
+import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.FactoryRepository;
 import com.giants3.hd.server.repository.OutFactoryRepository;
 import com.giants3.hd.utils.RemoteData;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -23,10 +24,23 @@ public class FactoryService extends AbstractService {
     @Autowired
     private FactoryRepository factoryRepository;
 
-    @Autowired
+    EntityManager manager;
+
+
     private OutFactoryRepository outFactoryRepository;
 
+    @Override
+    public void destroy() throws Exception {
+        manager.close();
+    }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        EntityManagerHelper helper = EntityManagerHelper.getErp();
+        manager = helper.getEntityManager();
+        outFactoryRepository = new OutFactoryRepository(manager);
+
+    }
     /**
      * 获取最新的全局配置数据表
      *
@@ -91,56 +105,7 @@ public class FactoryService extends AbstractService {
     @Transactional(rollbackFor = {HdException.class})
     public void saveOutList(List<OutFactory> factories) {
 
-
-        List<OutFactory> oldFactories = outFactoryRepository.findAll();
-
-        List<OutFactory> removed = new ArrayList<>();
-
-        for (OutFactory oldFactory : oldFactories) {
-            boolean foundInNew = false;
-            for (OutFactory newUser : factories) {
-
-                if (oldFactory.id == newUser.id) {
-                    foundInNew = true;
-                }
-
-
-            }
-            if (!foundInNew) {
-                removed.add(oldFactory);
-            }
-
-        }
-
-        for (OutFactory factory : factories) {
-            OutFactory oldData = outFactoryRepository.findFirstByNameEquals(factory.name);
-            if (oldData == null) {
-                factory.id = -1;
-
-
-            } else {
-                factory.id = oldData.id;
-
-            }
-            outFactoryRepository.save(factory);
-
-
-            /**
-             *  删除不存在item
-             */
-            for (OutFactory deleteFactory : removed) {
-
-//                if(quotationRepository.findFirstByCustomerIdEquals(deletedCustomer.id)!=null)
-//                {
-//                    throw HdException.create("不能删除客户【"+deletedCustomer.name+"】,目前有报价单关联着");
-//                }
-                outFactoryRepository.delete(deleteFactory);
-
-
-            }
-
-        }
-
+        //加工户信息 来自erp，不做修改维护
 
 
     }

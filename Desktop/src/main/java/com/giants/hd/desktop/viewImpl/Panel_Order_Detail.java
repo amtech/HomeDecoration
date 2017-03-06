@@ -305,18 +305,18 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
 
 
 
-        //检查是否已经启动生产流程追踪
-        boolean hasStartTrack = false;
-        for (ErpOrderItem orderItem : orderDetail.items) {
-            if (!StringUtils.isEmpty(orderItem.currentWorkFlow)) {
-                hasStartTrack = true;
-                break;
-            }
-        }
-
-        btn_track.setEnabled(!hasStartTrack);
-        btn_track.setText(!hasStartTrack?"启动生产流程":"生产流程已经启动");
-
+//        //检查是否已经启动生产流程追踪
+//        boolean hasStartTrack = false;
+//        for (ErpOrderItem orderItem : orderDetail.items) {
+//            if (!StringUtils.isEmpty(orderItem.currentWorkFlow)) {
+//                hasStartTrack = true;
+//                break;
+//            }
+//        }
+//
+//        btn_track.setEnabled(!hasStartTrack);
+//        btn_track.setText(!hasStartTrack?"启动生产流程":"生产流程已经启动");
+        btn_track.setVisible(false);
 
     }
 

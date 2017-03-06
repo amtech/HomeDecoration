@@ -13,7 +13,9 @@ public class StockXiaokuTableModel extends BaseTableModel<StockXiaoku> {
     public static int[] columnWidth = new int[]{100,60, 100, 100,100,100,100,100};
 
 
-    public static String[] fieldName = new String[]{"ps_no","xhdg","xhgh", "xhfq", "tcgs", "", "xhph", "xhgx"};
+    private static final String XHGH = "xhgh";
+    private static final String XHDG = "xhdg";
+    public static String[] fieldName = new String[]{"ps_no", XHDG, XHGH, "xhfq", "tcgs", "", "xhph", "xhgx"};
 
     public static Class[] classes = new Class[]{Object.class, Number.class};
 
@@ -30,6 +32,25 @@ public class StockXiaokuTableModel extends BaseTableModel<StockXiaoku> {
 
     }
 
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Object o= super.getValueAt(rowIndex, columnIndex);
+
+        if(XHDG.equals(fieldName[columnIndex]))
+        {
+
+            try{
+
+                return Float.valueOf(o.toString()).intValue();
+            }catch (Throwable t)
+            {
+                t.printStackTrace();
+            }
+        }
+
+        return o;
+    }
 
     @Override
     public int[] getColumnWidth() {

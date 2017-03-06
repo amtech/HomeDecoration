@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity.OutFactory;
 import rx.Observable;
 
 import java.util.List;

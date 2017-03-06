@@ -20,35 +20,55 @@ public class BaseDialog<T> extends JDialog implements Presenter{
     public BaseDialog(Window window)
     {
         this(window, "默认对话框");
-        setLocationRelativeTo(window);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        dialogInit();
     }
 
     public BaseDialog(Window window, String title) {
         super(window, title);
+        setModal(true);
         setLocationRelativeTo(window);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        dialogInit();
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        initDialog();
     }
 
-    @Override
-    protected  void dialogInit()
-     {
 
+    protected  void initDialog()
+    {
 
-
-         super.dialogInit();
          addWindowListener(new WindowAdapter() {
-             public void windowClosing(WindowEvent e) {
-                 dispose();
+                               public void windowClosing(WindowEvent e) {
 
-             }
-         });
+                                   System.out.println("closing........");
+                                   close();
+                               }
+
+                             public void windowClosed(WindowEvent e) {
+                                 removeWindowListener(this);
+                                 System.out.println("windowClosed........");
+                                 getContentPane().removeAll();
+                                 final Window owner = BaseDialog.this.getOwner();
+                                 if (owner != null) {
+                                     owner.remove(BaseDialog.this);
+                                 }
+
+                             }
+                               /**
+                                * Invoked when a window has been opened.
+                                *
+                                * @param e
+                                */
+
+                           }
+         );
+
+
+
          setMinimumSize(new Dimension(400,400));
          Guice.createInjector().injectMembers(this);
      }
+
+
+
 
 
    public  T getResult()
@@ -67,6 +87,7 @@ public class BaseDialog<T> extends JDialog implements Presenter{
     @Override
     public void close() {
 
+        setVisible(false);
         dispose();
     }
 

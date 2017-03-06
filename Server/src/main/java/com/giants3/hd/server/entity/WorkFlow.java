@@ -15,15 +15,23 @@ import java.util.List;
 public class WorkFlow {
 
     public static final String STEP_1 = "白胚制作";
-    public static final int FIRST_STEP = 0;
-    public static final int FINAL_STEP = 8;
+
+
+
+
+
+
+
+    public static final int FINAL_STEP = 3000;
+
+
+
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    public static final int FLOW_STEP_2 = 1;
-    public static final String STEP_2 = "白胚仓";
+
 
     public String name;
 
@@ -51,6 +59,15 @@ public class WorkFlow {
     public String checkerCode;
 
 
+    /**
+     * 是否自制关联流程
+     */
+    public  boolean isSelfMade;
+    /**
+     * 是否外购关联流程
+     */
+    public  boolean  isPurchased;
+
 
     public static final List<WorkFlow> initWorkFlowData() {
 
@@ -58,45 +75,68 @@ public class WorkFlow {
         WorkFlow workFlow;
         workFlow = new WorkFlow();
         workFlow.name = STEP_1;
-        workFlow.flowStep = FIRST_STEP;
+        workFlow.flowStep = 1101;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
-        workFlow.name = STEP_2;
-        workFlow.flowStep = FLOW_STEP_2;
+        workFlow.name = "白胚仓";
+        workFlow.flowStep = 1102;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "喷塑";
-        workFlow.flowStep = 2;
+        workFlow.flowStep = 1103;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "颜色";
-        workFlow.flowStep = 3;
+        workFlow.flowStep = 1104;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
         workFlow.name = "组装";
-        workFlow.flowStep = 4;
+        workFlow.flowStep = 1105;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
 
         workFlow = new WorkFlow();
         workFlow.name = "验收";
-        workFlow.flowStep = 5;
+        workFlow.flowStep = 1106;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "包装";
-        workFlow.flowStep = 6;
+        workFlow.flowStep = 1107;
+        workFlow.isPurchased=false;
+        workFlow.isSelfMade=true;
+        workFlows.add(workFlow);
+
+        workFlow = new WorkFlow();
+        workFlow.name = "成品制作";
+        workFlow.flowStep = 1200;
+        workFlow.isPurchased=true;
+        workFlow.isSelfMade=false;
         workFlows.add(workFlow);
 
         workFlow = new WorkFlow();
         workFlow.name = "成品仓";
-        workFlow.flowStep = 7;
+        workFlow.flowStep = 2000;
+        workFlow.isPurchased=true;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
 
 
@@ -104,10 +144,15 @@ public class WorkFlow {
         workFlow = new WorkFlow();
         workFlow.name = "出库";
         workFlow.flowStep = FINAL_STEP;
+        workFlow.isPurchased=true;
+        workFlow.isSelfMade=true;
         workFlows.add(workFlow);
         return workFlows;
 
 
     }
+
+
+
 
 }

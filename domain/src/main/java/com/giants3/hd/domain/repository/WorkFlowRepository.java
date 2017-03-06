@@ -38,4 +38,11 @@ public interface WorkFlowRepository {
      * @return
      */
     Observable<RemoteData<OrderItemWorkFlowState>> getOrderItemWorkFlowState(long orderItemId);
+
+    /**
+     * 报春
+     * @param datas
+     * @return
+     */
+    Observable saveWorkFlowSubTypeList(List<WorkFlowSubType> datas);
 }

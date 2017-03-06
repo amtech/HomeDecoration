@@ -131,4 +131,32 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
             }
         });
     }
+
+    @Override
+    public Observable<RemoteData<Void>> correctThumbnail(final long productId) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<Void>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<Void> remoteData= apiManager.correctProductThumbnail(productId);
+
+
+                        subscriber.onNext(remoteData  );
+                        subscriber.onCompleted();
+
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
 }

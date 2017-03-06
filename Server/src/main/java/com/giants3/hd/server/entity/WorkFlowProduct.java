@@ -32,9 +32,9 @@ public class WorkFlowProduct  implements Serializable{
 
 
     /**
-     * 对应流程id列表  符号；隔开
+     * 对应流程step列表  符号；隔开
      */
-    public String workFlowIds;
+    public String workFlowSteps;
     /**
      * 对应流程name列表  符号；隔开
      */

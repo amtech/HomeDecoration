@@ -11,6 +11,7 @@ import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.entity.OutFactory;
 import rx.Subscriber;
 
 import javax.swing.*;

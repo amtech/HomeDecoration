@@ -12,6 +12,7 @@ import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
+import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.OutFactory;
 import com.giants3.hd.utils.entity.ProductProcess;
@@ -38,7 +39,7 @@ public class OutFactoryDialog extends BaseDialog<WorkFlowProduct> implements Out
 
     public OutFactoryDialog(Window window) {
         super(window);
-        setTitle("外厂家列表");
+        setTitle(ModuleConstant.TITLE_OUT_FACTORY);
         setMinimumSize(new Dimension(800, 600));
         outFactoryViewer = new Panel_OutFactory_LIst(this);
         setContentPane( outFactoryViewer.getRoot());

@@ -57,8 +57,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     private WorkFlowMessageRepository workFlowMessageRepository;
 
 
-    @Autowired
-    private OrderItemWorkFlowRepository orderItemWorkFlowRepository;
+
     @Autowired
     private ProductLogRepository productLogRepository;
 
@@ -1246,5 +1245,28 @@ public class ProductService extends AbstractService implements InitializingBean,
     public Product findProductById(long productId) {
 
        return  productRepository.findOne(productId);
+    }
+
+    /**
+     * 修复产品图片
+     * @param productId
+     * @return
+     */
+    @Transactional
+    public RemoteData<Void> correctThumbnail(long productId) {
+
+
+        Product product=productRepository.findOne(productId);
+        if(product==null)
+            return wrapError("产品不存在");
+
+
+        List<Product> products=new ArrayList<>();
+        products.add(product);
+        updateProductAndRelateImageInfo(products);
+
+
+
+        return wrapData();
     }
 }

@@ -192,11 +192,7 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
     public void showProductWorkFlow() {
 
 
-//        if(detail==null) {
-//
-//            panel_productDetail.showMesssage("数据为空");
-//            return;
-//        }
+
 
         if(panel_productDetail.getData().product.id<=0)
         {
@@ -205,10 +201,16 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
         }
 
 
-        Product product=panel_productDetail.getData().product;
-        WorkFlowProductDialog workFlowProductFrame=new WorkFlowProductDialog(this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Product product=panel_productDetail.getData().product;
+                WorkFlowProductDialog workFlowProductFrame=new WorkFlowProductDialog(ProductDetailFrame.this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
 
-        workFlowProductFrame.setVisible(true);
+                workFlowProductFrame.setVisible(true);
+            }
+        });
+
 
 
 
@@ -334,6 +336,48 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
                 }
             }
         }.go();
+
+
+    }
+
+
+    /**
+     * 修复缩略图
+     */
+    @Override
+    public void correctThumbnail(long productId) {
+
+
+
+        //上传图片
+        UseCaseFactory.getInstance().createCorrectThumbnaiUseCase( productId).execute(new Subscriber<RemoteData<Void>>() {
+            @Override
+            public void onCompleted() {
+                panel_productDetail.hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                panel_productDetail.hideLoadingDialog();
+                panel_productDetail.showMesssage(e.getMessage());
+            }
+
+            @Override
+            public void onNext(RemoteData<Void> data) {
+
+                if(data.isSuccess())
+                panel_productDetail.showMesssage("图片修复成功");
+                else
+                {
+                    panel_productDetail.showMesssage(data.message);
+                }
+            }
+        });
+        panel_productDetail.showLoadingDialog("处理中。。。");
+
+
+
+
 
 
     }

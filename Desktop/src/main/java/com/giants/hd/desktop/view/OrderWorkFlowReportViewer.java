@@ -3,6 +3,7 @@ package com.giants.hd.desktop.view;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 
 /**
@@ -14,5 +15,5 @@ public interface OrderWorkFlowReportViewer extends    AbstractViewer {
 
     void setData(RemoteData<ErpOrderItem> erpOrderRemoteData);
 
-    void setUnCompleteData(RemoteData<ErpOrderItem> remoteData);
+    void setUnCompleteData(RemoteData<OrderItemWorkFlowState> remoteData);
 }

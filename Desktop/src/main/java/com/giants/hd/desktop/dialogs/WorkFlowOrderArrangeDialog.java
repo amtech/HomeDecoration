@@ -7,9 +7,10 @@ import com.giants3.hd.domain.BaseSubscriber;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
+import com.giants3.hd.utils.ProduceType;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import com.giants3.hd.utils.entity.OutFactory;
 import rx.Subscriber;
 
 import javax.swing.*;
@@ -42,15 +43,64 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
         setContentPane(getCustomContentPane());
 
         setMinimumSize(new Dimension(800, 600));
-        orderItemWorkFlow = new OrderItemWorkFlow();
-        orderItemWorkFlow.orderId = 0;
-        orderItemWorkFlow.orderName = erpOrderItem.os_no;
-        orderItemWorkFlow.orderItemId = erpOrderItem.id;
-        orderItemWorkFlow.orderItemIndex = erpOrderItem.itm;
+        readOrderItemWorkFlow(erpOrderItem);
+        workFlowViewer.bindOrderData(erpOrderItem);
         readOutFactoryData();
 
-        checkProductConfig(erpOrderItem.productId, erpOrderItem.prd_name);
 
+
+
+
+    }
+
+    private void readOrderItemWorkFlow(final ErpOrderItem erpOrderItem)
+    {
+
+        UseCaseFactory.getInstance().createGetOrderItemWorkFlow(erpOrderItem.id).execute(new BaseSubscriber<RemoteData<OrderItemWorkFlow>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                super.onError(e);
+
+
+
+                e.printStackTrace();
+
+            }
+
+
+            @Override
+            public void onNext(RemoteData<OrderItemWorkFlow> data) {
+
+
+                if(data.isSuccess()&&data.datas!=null&&data.datas.size()>0)
+                {
+                    orderItemWorkFlow=data.datas.get(0);
+                    bindOrderItemWorkFlow(orderItemWorkFlow);
+                }
+                else
+                {
+                    orderItemWorkFlow = new OrderItemWorkFlow();
+                    orderItemWorkFlow.orderName = erpOrderItem.os_no;
+                    orderItemWorkFlow.orderItemId = erpOrderItem.id;
+                    orderItemWorkFlow.orderItemIndex = erpOrderItem.itm;
+
+
+
+
+                }
+
+                checkProductConfig(erpOrderItem.productId, erpOrderItem.prd_name);
+
+
+            }
+
+        });
 
 
     }
@@ -105,7 +155,14 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
                 }
 
-                setWorkFlowProduct(workFlowProduct);
+
+                if(workFlowProduct!=null) {
+
+                    setWorkFlowProduct(workFlowProduct);
+                }else
+                {
+                    dispose();
+                }
 
 
             }
@@ -120,17 +177,30 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
         this.workFlowProduct = workFlowProduct;
 
 
-        orderItemWorkFlow.workFlowIds = workFlowProduct.workFlowIds;
-        orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
-        orderItemWorkFlow.workFlowTypes = workFlowProduct.workFlowTypes;
-        orderItemWorkFlow.productTypes = workFlowProduct.productTypes;
-        orderItemWorkFlow.productTypeNames = workFlowProduct.productTypeNames;
+        if(orderItemWorkFlow.id<=0) {
+
+            orderItemWorkFlow.workFlowSteps = workFlowProduct.workFlowSteps;
+            orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
+            orderItemWorkFlow.workFlowTypes = workFlowProduct.workFlowTypes;
+
+
+            orderItemWorkFlow.productTypes = workFlowProduct.productTypes;
+            orderItemWorkFlow.productTypeNames = workFlowProduct.productTypeNames;
+            bindOrderItemWorkFlow(orderItemWorkFlow);
+        }
 
 
 
 
+        //
 
 
+
+    }
+
+
+    private   void  bindOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow)
+    {
         final String[] productTypes=orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
         final String[] productTypeNames=orderItemWorkFlow.productTypeNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
 
@@ -140,9 +210,7 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
                 workFlowViewer.setProductTypes(productTypes,productTypeNames,outFactories);
             }
         });
-
     }
-
 
     /**
      * 读取外厂家数据
@@ -169,6 +237,8 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
                 if (data.isSuccess()) {
                     outFactories = data.datas;
+
+                    workFlowViewer.setOutFactories(outFactories);
                 }
             }
 
@@ -297,38 +367,87 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
         }
 
 
-        String[] productTypes=orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        if(factories==null||factories.size()!=productTypes.length)
-        {
-            workFlowViewer.showMesssage("数据异常");
-            return;
+        boolean isSelfMade=workFlowViewer.getSelectArrangeType()==ProduceType.SELF_MADE;
 
+
+        if(isSelfMade)
+        {
+            orderItemWorkFlow.workFlowSteps = workFlowProduct.workFlowSteps;
+            orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
+            orderItemWorkFlow.workFlowTypes = workFlowProduct.workFlowTypes;
+
+        }else
+        {
+            List<WorkFlow> selectWorkFlows=workFlowViewer.getSelectedWorkFlows();
+
+            int size=selectWorkFlows.size();
+            StringBuilder workFlowSteps=new StringBuilder();
+            StringBuilder workFlowNames=new StringBuilder();
+            StringBuilder workFlowTypes=new StringBuilder();
+            for (int i = 0; i < size; i++) {
+
+                WorkFlow workFlow=selectWorkFlows.get(i);
+                workFlowSteps.append(workFlow.flowStep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+                workFlowNames.append(workFlow.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+                workFlowTypes.append(0).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+            }
+            orderItemWorkFlow.workFlowSteps = workFlowSteps.toString();
+            orderItemWorkFlow.workFlowNames =  workFlowNames.toString();
+            orderItemWorkFlow.workFlowTypes =  workFlowTypes.toString();
         }
 
 
-        StringBuilder ids=new StringBuilder();
-        StringBuilder names=new StringBuilder();
-        int size=productTypes.length;
-        for(int i=0;i<size;i++)
+        if(isSelfMade) {
+
+
+            String[] productTypes = orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+            if (factories == null || factories.size() != productTypes.length) {
+                workFlowViewer.showMesssage("数据异常");
+                return;
+
+            }
+
+
+            StringBuilder ids = new StringBuilder();
+            StringBuilder names = new StringBuilder();
+            int size = productTypes.length;
+            for (int i = 0; i < size; i++) {
+                OutFactory outFactory = factories.get(i);
+                ids.append(outFactory.dep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+                names.append(outFactory.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+
+
+            }
+
+
+            if (size > 0) {
+                ids.setLength(ids.length() - 1);
+                names.setLength(names.length() - 1);
+            }
+
+
+            orderItemWorkFlow.conceptusFactoryIds = ids.toString();
+            orderItemWorkFlow.conceptusFactoryNames = names.toString();
+        }else
         {
-            OutFactory outFactory=factories.get(i);
-            ids.append(outFactory.id).append(ConstantData.STRING_DIVIDER_SEMICOLON);
 
-            names.append(outFactory.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-
+            orderItemWorkFlow.conceptusFactoryIds = "";
+            orderItemWorkFlow.conceptusFactoryNames =  "";
         }
 
 
-        if(size>0)
-        {
-            ids.setLength(ids.length()-1);
-            names.setLength(names.length()-1);
-        }
+        orderItemWorkFlow.produceType=isSelfMade? ProduceType.SELF_MADE: ProduceType.PURCHASE;
 
 
-        orderItemWorkFlow.productFactoryIds=ids.toString();
-        orderItemWorkFlow.productFactoryNames=names.toString();
+        OutFactory productFactory=workFlowViewer.getProduceFactory();
+
+        orderItemWorkFlow.produceFactoryId=isSelfMade?"":productFactory.dep;
+        orderItemWorkFlow.produceFactoryName=isSelfMade?"":productFactory.name;
+
+        //orderItemWorkFlow.workFlowTypes
+
 
 
 

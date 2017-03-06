@@ -7,8 +7,10 @@ import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity.OutFactory;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.*;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -1767,11 +1769,11 @@ public class ApiManager {
 
     }
 
-    public RemoteData<ErpOrderItem> getUnCompleteOrderWorkFlowReport() throws HdException {
+    public RemoteData<OrderItemWorkFlowState> getUnCompleteOrderWorkFlowReport() throws HdException {
 
         String url = HttpUrl.getUnCompleteOrderWorkFlowReport( );
         String result = client.getWithStringReturned(url);
-        RemoteData<ErpOrderItem> remoteData = invokeByReflect(result, ErpOrderItem.class);
+        RemoteData<OrderItemWorkFlowState> remoteData = invokeByReflect(result, OrderItemWorkFlowState.class);
         return remoteData;
 
     }
@@ -1876,6 +1878,44 @@ public class ApiManager {
         String url = HttpUrl.getOrderItemWorkFlowState(orderItemId);
         String result = client.getWithStringReturned(url  );
         RemoteData<OrderItemWorkFlowState> remoteData = invokeByReflect(result, OrderItemWorkFlowState.class);
+        return remoteData;
+    }
+
+    /**
+     * 保存排厂类型列表
+     * @param datas
+     * @return
+     */
+    public RemoteData<WorkFlowSubType> saveWorkFlowSubTypeList(List<WorkFlowSubType> datas) throws HdException {
+
+
+        String url = HttpUrl.saveWorkFlowSubTypeList( );
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(datas));
+        RemoteData<WorkFlowSubType> remoteData = invokeByReflect(result, WorkFlowSubType.class);
+        return remoteData;
+
+
+    }
+
+    /**
+     * 修复产品缩略图图片
+     * @param productId
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Void> correctProductThumbnail(long productId) throws HdException {
+
+        String url = HttpUrl.correctProductThumbnail(productId );
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
+    }
+
+    public RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(long orderItemId) throws HdException {
+
+        String url = HttpUrl.getOrderItemWorkFlow(orderItemId );
+        String result = client.getWithStringReturned(url);
+        RemoteData<OrderItemWorkFlow> remoteData = invokeByReflect(result, OrderItemWorkFlow.class);
         return remoteData;
     }
 }

@@ -2,6 +2,7 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.model.StockInAndSubmitTableModel;
+import com.giants.hd.desktop.model.StockOutSubmitTableModel;
 import com.giants.hd.desktop.presenter.StockInAndSubmitPresenter;
 import com.giants.hd.desktop.presenter.StockOutSubmitPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
@@ -36,7 +37,7 @@ public class Panel_StockOutSubmit_List extends BasePanel {
     private JButton export;
 
     @Inject
-    StockInAndSubmitTableModel tableModel;
+    StockOutSubmitTableModel tableModel;
 
     @Override
     public JComponent getRoot() {

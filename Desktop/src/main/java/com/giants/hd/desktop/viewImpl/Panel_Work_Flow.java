@@ -23,8 +23,7 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
     private JComponent rootPanel;
     private JButton save;
     private JHdTable tb;
-    private JButton saveType;
-    private JHdTable jt_arrageType;
+
 
 
     WorkFlowModel workFlowModel;
@@ -39,7 +38,7 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
 
         workFlowSubTypeModel = new WorkFlowSubTypeModel();
         workFlowSubTypeModel.setRowAdjustable(false);
-        jt_arrageType.setModel(workFlowSubTypeModel);
+
 
 
 
@@ -84,7 +83,7 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
     @Override
     public void setSubData(List<WorkFlowSubType> datas) {
 
-        workFlowSubTypeModel.setDatas(datas);
+
     }
 
     @Override

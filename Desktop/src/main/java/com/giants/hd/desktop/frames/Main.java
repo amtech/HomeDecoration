@@ -197,6 +197,7 @@ public class Main extends BaseFrame {
         //ask for login
 
         LoginDialog dialog = new LoginDialog(frame);
+        dialog.setLocationRelativeTo(frame);
         dialog.setModal(true);
         dialog.setVisible(true);
 
@@ -644,7 +645,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewOutFactoryList()) {
-            menuItem = new JMenuItem("外厂家列表");
+            menuItem = new JMenuItem(ModuleConstant.TITLE_OUT_FACTORY);
 
             menu.add(menuItem);
 
@@ -652,6 +653,22 @@ public class Main extends BaseFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     OutFactoryDialog dialog = new OutFactoryDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+                }
+            });
+
+        }
+
+
+        if (AuthorityUtil.getInstance().viewProductArrangeType()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_PRODUCT_ARRANGE_TYPE);
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ProductArrangeTypeDialog dialog = new ProductArrangeTypeDialog(Main.this);
                     dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
                 }

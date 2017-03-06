@@ -23,12 +23,16 @@ public class OrderItemWorkFlowState {
     public long orderId;
     public String orderName;
     public String productFullName;
-    public long workFlowId;
+    public String photoThumb;
+    public String pictureUrl;
+
+
+    public int workFlowStep;
     public String workFlowName;
     public String workFlowType;//0一级  1 二级（厂家排厂）
 
 
-    public long nextWorkFlowId;
+    public int nextWorkFlowStep;
     public String nextWorkFlowName;
     public String nextWorkFlowType;//0一级  1 二级（厂家排厂）
 
@@ -38,7 +42,7 @@ public class OrderItemWorkFlowState {
 
 
 
-    public long factoryId;
+    public String factoryId;
     public String factoryName;
     //订单数量
     public int orderQty;
@@ -46,7 +50,20 @@ public class OrderItemWorkFlowState {
     //当前数量
     public  int qty;
 
+    /**
+     * 正在发送中的数量
+     */
+    public int sendingQty;
+    /**
+     * 未发送数量
+     */
+    public int unSendQty;
 
+
+    /**
+     *    已经发送数量
+     */
+    public int  sentQty;
 
     public  long  createTime;
     public  String createTimeString;

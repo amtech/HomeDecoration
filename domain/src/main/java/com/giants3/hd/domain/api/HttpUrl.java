@@ -1026,4 +1026,23 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + String.format("api/workFlow/orderItemState?orderItemId=%s",orderItemId));
     }
+
+    /**
+     * 保存排厂类型列表
+     * @return
+     */
+    public static String saveWorkFlowSubTypeList() {
+
+
+        return additionInfo(BaseUrl +  "api/workFlow/saveSubTypes");
+
+    }
+
+    public static String correctProductThumbnail(long productId) {
+        return additionInfo(BaseUrl +  "api/product/correctThumbnail?productId="+productId);
+    }
+
+    public static String getOrderItemWorkFlow(long orderItemId) {
+        return additionInfo(BaseUrl + "api/order/getOrderItemWorkFlow?orderItemId="+orderItemId);
+    }
 }

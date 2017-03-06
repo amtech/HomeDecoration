@@ -42,6 +42,10 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:d:grow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
@@ -131,7 +135,7 @@
               </component>
               <component id="4ae85" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="29" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="33" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -141,7 +145,7 @@
               </component>
               <component id="9f3ab" class="javax.swing.JTextField" binding="tf_extra_ratio_diluent">
                 <constraints>
-                  <grid row="29" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="33" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <forms defaultalign-horz="false"/>
@@ -168,7 +172,7 @@
               </component>
               <component id="88ad7" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="33" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="37" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -177,7 +181,7 @@
               </component>
               <component id="69ceb" class="javax.swing.JTextField" binding="tf_price_diluent">
                 <constraints>
-                  <grid row="33" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="37" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <forms defaultalign-horz="false"/>
@@ -213,7 +217,7 @@
               </component>
               <component id="a72c5" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="29" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="33" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -222,7 +226,7 @@
               </component>
               <component id="3aaa7" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="33" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="37" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -231,7 +235,7 @@
               </component>
               <component id="be52" class="javax.swing.JButton" binding="save">
                 <constraints>
-                  <grid row="44" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="48" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -268,7 +272,7 @@
               </component>
               <component id="38725" class="javax.swing.JSeparator">
                 <constraints>
-                  <grid row="26" column="2" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="30" column="2" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -365,7 +369,7 @@
               </component>
               <component id="ea625" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="38" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="42" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -374,7 +378,7 @@
               </component>
               <component id="ec701" class="javax.swing.JTextField" binding="priceOfStockProductIn">
                 <constraints>
-                  <grid row="38" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="42" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <forms defaultalign-horz="false"/>
@@ -383,7 +387,7 @@
               </component>
               <component id="703c4" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="38" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="42" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -392,7 +396,7 @@
               </component>
               <component id="95dd2" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="40" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="44" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -401,7 +405,7 @@
               </component>
               <component id="3b7c4" class="javax.swing.JTextField" binding="priceOfStockProductFactoryIn">
                 <constraints>
-                  <grid row="40" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="44" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <forms defaultalign-horz="false"/>
@@ -410,7 +414,7 @@
               </component>
               <component id="1f6c5" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="40" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="44" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -419,7 +423,7 @@
               </component>
               <component id="7e3a2" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="42" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="46" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
@@ -428,7 +432,7 @@
               </component>
               <component id="52fa9" class="javax.swing.JTextField" binding="priceOfStockProductOutToTrunk">
                 <constraints>
-                  <grid row="42" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="46" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                   <forms defaultalign-horz="false"/>
@@ -437,7 +441,7 @@
               </component>
               <component id="9c48c" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="42" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="46" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -446,8 +450,35 @@
               </component>
               <component id="a2613" class="javax.swing.JSeparator">
                 <constraints>
-                  <grid row="36" column="2" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="40" column="2" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="8ab68" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties>
+                  <text value="分析表搬运单价(元/M3)"/>
+                </properties>
+              </component>
+              <component id="c61cc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="26" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <text value="分析表搬运工资=搬运单价*包装体积/包装个数"/>
+                </properties>
+              </component>
+              <component id="cd73e" class="javax.swing.JTextField" binding="tf_priceOfBanyun">
+                <constraints>
+                  <grid row="26" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties/>
               </component>

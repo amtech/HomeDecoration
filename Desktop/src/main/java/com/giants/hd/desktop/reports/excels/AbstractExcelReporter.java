@@ -127,7 +127,13 @@ public abstract class AbstractExcelReporter<T> {
         cell.setCellValue(value);
 
     }
+    protected void addNumber(Sheet sheet, int value, int column, int rowUpdate) {
+        Row row = getRow(sheet,rowUpdate);
+        Cell cell = row.getCell(column, Row.CREATE_NULL_AS_BLANK);
 
+        cell.setCellValue(value);
+
+    }
 
     private Row getRow(Sheet sheet,int rowUpdate)
     {

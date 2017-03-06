@@ -63,23 +63,6 @@ public class Panel_StockXiaoku_List extends BasePanel {
         });
 
 
-        tb.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-
-//                if(presenter!=null&&e.getClickCount()==2)
-//                {
-//                    int row = tb.getSelectedRow();
-//                    int modelRow = tb.convertRowIndexToModel(row);
-//                    ErpStockOut erpOrder = tableModel.getItem(modelRow);
-//                    presenter.onListItemClick(erpOrder);
-//                }
-
-
-            }
-        });
-
 
         pageController.setListener(new PageListener() {
             @Override

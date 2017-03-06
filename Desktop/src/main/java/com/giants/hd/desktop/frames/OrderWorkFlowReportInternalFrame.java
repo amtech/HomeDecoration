@@ -10,6 +10,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 
 
+import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 import rx.Subscriber;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
     OrderWorkFlowReportViewer viewer;
 
 
-    java.util.List<ErpOrderItem> items = null;
+    java.util.List<OrderItemWorkFlowState> items = null;
 
     public OrderWorkFlowReportInternalFrame() {
         super(ModuleConstant.TITLE_ORDER_WORK_FLOW_REPORT);
@@ -57,7 +58,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
     public void searchUnDoneOrder( ) {
 
 
-        UseCaseFactory.getInstance().createUnCompleteOrderWorkFlowReportUseCase(  ).execute(new Subscriber<RemoteData<ErpOrderItem>>() {
+        UseCaseFactory.getInstance().createUnCompleteOrderWorkFlowReportUseCase(  ).execute(new Subscriber<RemoteData<OrderItemWorkFlowState>>() {
             @Override
             public void onCompleted() {
                 viewer.hideLoadingDialog();
@@ -70,7 +71,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
             }
 
             @Override
-            public void onNext(RemoteData<ErpOrderItem> orderReportItemRemoteData) {
+            public void onNext(RemoteData<OrderItemWorkFlowState> orderReportItemRemoteData) {
 
                 setUnCompleteRemoteData(orderReportItemRemoteData);
             }
@@ -81,7 +82,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
 
     }
 
-    private void setUnCompleteRemoteData(RemoteData<ErpOrderItem> remoteData) {
+    private void setUnCompleteRemoteData(RemoteData<OrderItemWorkFlowState> remoteData) {
         if (remoteData.isSuccess())
             items = remoteData.datas;
         viewer.setUnCompleteData(remoteData);

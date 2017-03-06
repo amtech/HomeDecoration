@@ -1,13 +1,15 @@
 package com.giants3.hd.utils.entity;
 
 /**
- * 外厂家数据
+ * 加工户数据  外厂家数据
  * Created by davidleen29 on 2017/1/14.
  */
+
 public class OutFactory {
 
 
-    public long  id;
+    //部门
+    public String dep;
     public String name;
     public String manager;
     public String telephone;
@@ -17,6 +19,6 @@ public class OutFactory {
 
     @Override
     public String toString() {
-        return name+"("+manager+")";
+        return dep+" 【"+name+"】";
     }
 }

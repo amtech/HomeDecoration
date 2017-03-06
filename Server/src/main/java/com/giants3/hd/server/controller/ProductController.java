@@ -488,5 +488,23 @@ public class ProductController extends BaseController {
         return wrapData(productMaterials);
 
     }
+    /**
+     *  修复产品图片缩略图
+     *
+     * @return
+     */
+    @RequestMapping(value = "/correctThumbnail", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> correctThumbnail( @RequestParam(value = "productId") long productId) {
+
+
+
+
+      return   productService.correctThumbnail(productId);
+
+
+
+    }
 
 }
