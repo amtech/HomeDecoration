@@ -63,6 +63,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
         //设置权限相关
         orderDetailViewer.setEditable(AuthorityUtil.getInstance().editOrder());
         orderDetailViewer.setPriceVisible(CacheManager.getInstance().isOrderPriceVisible());
+        orderDetailViewer.setCanViewProduct(AuthorityUtil.getInstance().viewProductList());
         loadOrderDetail(os_no);
     }
 
@@ -145,7 +146,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
                     @Override
                     public void run() {
 
-                        new ProductPaintReport().export(productDetail, orderDetail.erpOrder, orderItem);
+                        new ProductPaintReport(productDetail, orderDetail.erpOrder, orderItem).report();
                     }
                 });
 

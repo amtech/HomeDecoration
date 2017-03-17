@@ -178,6 +178,8 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(OrderItemWorkFlowState.class, new TypeToken<RemoteData<OrderItemWorkFlowState>>() {
         }.getType());
+        tokenMaps.put(Zhilingdan.class, new TypeToken<RemoteData<Zhilingdan>>() {
+        }.getType());
     }
 
     @Inject
@@ -1916,6 +1918,30 @@ public class ApiManager {
         String url = HttpUrl.getOrderItemWorkFlow(orderItemId );
         String result = client.getWithStringReturned(url);
         RemoteData<OrderItemWorkFlow> remoteData = invokeByReflect(result, OrderItemWorkFlow.class);
+        return remoteData;
+    }
+
+    /**
+     * 查询指令单状态
+     * @param osName
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Zhilingdan> searchZhiling(String osName,String startDate, String endDate) throws HdException {
+
+        String url = HttpUrl.searchZhiling(osName,startDate,endDate );
+        String result = client.getWithStringReturned(url);
+        RemoteData<Zhilingdan> remoteData = invokeByReflect(result, Zhilingdan.class);
+        return remoteData;
+    }
+
+    public RemoteData<Void> synchronizeProductOnEquationUpdate() throws HdException {
+
+        String url = HttpUrl.synchronizeProductOnEquationUpdate(  );
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
         return remoteData;
     }
 }

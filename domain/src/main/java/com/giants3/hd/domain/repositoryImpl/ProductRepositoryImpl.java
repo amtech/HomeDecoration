@@ -132,6 +132,39 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
         });
     }
 
+    /**
+     * 公式改变时候， 进行产品表的数据同步。
+     *
+     * @return
+     */
+    @Override
+    public Observable<RemoteData<Void>> synchronizeProductOnEquationUpdate() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<Void>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<Void> remoteData= apiManager.synchronizeProductOnEquationUpdate( );
+
+
+                    subscriber.onNext(remoteData  );
+                    subscriber.onCompleted();
+
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
+
     @Override
     public Observable<RemoteData<Void>> correctThumbnail(final long productId) {
         return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
@@ -158,5 +191,8 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
 
             }
         });
+
+
+
     }
 }

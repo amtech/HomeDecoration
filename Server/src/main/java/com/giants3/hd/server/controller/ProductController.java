@@ -507,4 +507,45 @@ public class ProductController extends BaseController {
 
     }
 
+
+    /**
+     *  产品公式调整
+     *
+     * @return
+     */
+    @RequestMapping(value = "/adjustEquation", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> adjustEquation(  ) {
+
+
+
+
+            //  productService.remoteUpdateEquationTasks();
+
+
+              productService.startUpdateEquationTask();
+
+
+
+
+
+
+
+
+
+
+
+        return   wrapData() ;
+
+
+
+    }
+
+
+
+
+
+
+
 }

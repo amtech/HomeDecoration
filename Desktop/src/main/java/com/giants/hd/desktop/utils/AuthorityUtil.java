@@ -22,13 +22,59 @@ public class AuthorityUtil {
 
 
     /**
+     * 判断是否业务员
+     *
+     *
+     * @return
+     */
+    public  boolean cannotViewProductPrice( ) {
+
+        return !canViewProductPrice();
+    }
+
+
+    /**
+     * 判断是否可以查看产品分析表的价格信息
+     *
+     *
+     * @return
+     */
+    public  boolean canViewProductPrice( ) {
+
+        return canViewPrice(ModuleConstant.NAME_PRODUCT);
+
+    }
+
+
+    /**
+     * 判断是否可以查看价格信息
+     *
+     *
+     * @return
+     */
+    public  boolean canViewPrice( String module) {
+        if (isAdmin())
+            return true;
+        for (Authority authority : getAuthority()) {
+            if (module.equals(authority.module.name) && authority.viewPrice) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAdmin() {
+        return CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN);
+    }
+
+    /**
      * 查看模块是否有查看权限
      *
      * @param moduleName
      * @return
      */
     private boolean isViewable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.viewable) {
@@ -49,7 +95,7 @@ public class AuthorityUtil {
      * @return
      */
     private boolean isVerifiable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.checkable) {
@@ -69,7 +115,7 @@ public class AuthorityUtil {
      * @return
      */
     private boolean isAddable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.addable) {
@@ -88,7 +134,7 @@ public class AuthorityUtil {
      * @return
      */
     private boolean editable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.editable) {
@@ -109,7 +155,7 @@ public class AuthorityUtil {
      * @return
      */
     private boolean deletable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.deletable) {
@@ -129,7 +175,7 @@ public class AuthorityUtil {
      * @return
      */
     private boolean exportable(String moduleName) {
-        if (CacheManager.getInstance().bufferData.loginUser.name.equals(User.ADMIN))
+        if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {
             if (moduleName.equals(authority.module.name) && authority.exportable) {
@@ -513,7 +559,7 @@ public class AuthorityUtil {
      *
      * @return
      */
-    public boolean viewWorkFlowMenu() {
+    public boolean viewWorkFlow() {
         return isViewable(ModuleConstant.NAME_WORK_FLOW);
     }
 
@@ -544,5 +590,21 @@ public class AuthorityUtil {
 
         return isViewable(ModuleConstant.NAME_PRODUCT_ARRANGE_TYPE);
 
+    }
+
+    public boolean viewEquation() {
+
+        return isViewable(ModuleConstant.NAME_EQUATION);
+    }
+
+
+    public boolean viewZhilingdan() {
+
+        return isViewable(ModuleConstant.NAME_ZHILINGDAN);
+    }
+
+    public boolean viewWorkFlowModule() {
+
+        return isViewable(ModuleConstant.NAME_WORK_FLOW_MODULE);
     }
 }

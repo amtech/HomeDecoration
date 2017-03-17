@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
@@ -22,7 +23,8 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     static final String COLUMN_QTY = "quantity";
     public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ",   "  物料编码   ", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
     public static int[] columnWidths = new int []{       40 ,   80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
-     public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName",COLUMN_QTY, "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type","price",COLUMN_AMOUNT,"memo"};
+    private static final String PRICE = "price";
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName",COLUMN_QTY, "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type", PRICE,COLUMN_AMOUNT,"memo"};
     public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class, Material.class, Material.class };
 
     public  static boolean[] editables = new boolean[]{false,true, true, true,  true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
@@ -51,6 +53,16 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+
+
+
+        if(fieldName[columnIndex].equals(COLUMN_AMOUNT)||fieldName[columnIndex].equals(PRICE))
+        {
+            if(AuthorityUtil.getInstance().cannotViewProductPrice())
+                return "";
+        }
+
+
         Object value= super.getValueAt(rowIndex, columnIndex);
 
 

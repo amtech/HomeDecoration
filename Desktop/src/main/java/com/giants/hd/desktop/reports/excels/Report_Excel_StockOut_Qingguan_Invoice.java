@@ -227,18 +227,23 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
         //实际数据超出范围 插入空行
         duplicateRow(workbook, writableSheet, startItemRow, defaultRowCount, dataSize);
         int row = 0;
+        int totalXs=0;
         for (int i = 0; i < dataSize; i++) {
             row = i + startItemRow;
             ErpStockOutItem outItem = items.get(i);
             addString(writableSheet, outItem.bat_no, 0, row);
             addString(writableSheet, outItem.prd_no, 1, row);
             addString(writableSheet, outItem.unit, 2, row);
+
+            //单款箱数
+            final int xs = (outItem.stockOutQty-1) / outItem.so_zxs+1;
+            totalXs+=xs;
             //净重
-            addNumber(writableSheet, outItem.stockOutQty, 3, row);
+            addNumber(writableSheet, xs, 3, row);
             //数量
-            addNumber(writableSheet, outItem.qty, 4, row);
+            addNumber(writableSheet, outItem.stockOutQty, 4, row);
 //描述
-           // addString(writableSheet, outItem.describe, 5, row);
+             addString(writableSheet, outItem.describe, 5, row);
             //fob
 
             addNumber(writableSheet, outItem.up, 6, row);
@@ -249,26 +254,26 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
             //cbm
             addNumber(writableSheet, outItem.xgtj, 8, row);
 
-            addString(writableSheet, outItem.khxg, 9, row);
+            addString(writableSheet, outItem.specInch, 9, row);
 
         }
 
 
         row++;
         //添加上汇总行
-        int totalQty = 0;
+
         int totalStockOutQty = 0;
         float totalAmt = 0;
         for (int i = 0; i < dataSize; i++) {
 
             totalStockOutQty += items.get(i).stockOutQty;
-            totalQty += items.get(i).qty;
+
             totalAmt += FloatHelper.scale(items.get(i).stockOutQty * items.get(i).up
             );
             ;
         }
-        addString(writableSheet, totalStockOutQty + " /CTNS", 3, row);
-        addString(writableSheet, totalQty + " /PCS", 4, row);
+        addString(writableSheet, totalXs + " /CTNS", 3, row);
+        addString(writableSheet, totalStockOutQty + " /PCS", 4, row);
         addNumber(writableSheet, totalAmt, 7, row);
 
 
@@ -324,6 +329,8 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
 
 
         int row = startItemRow;
+
+        int totalXs=0;
         for (String guihao :keys) {
 
 
@@ -339,12 +346,19 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
                 addString(writableSheet, outItem.bat_no, 0, row);
                 addString(writableSheet, outItem.prd_no, 1, row);
                 addString(writableSheet, outItem.unit, 2, row);
-                //净重
-                addNumber(writableSheet, outItem.stockOutQty, 3, row);
+
+
+
+
+                //单款箱数
+                final int xs = (outItem.stockOutQty-1) / outItem.so_zxs+1;
+                totalXs+=xs;
+
+                addNumber(writableSheet, xs, 3, row);
                 //数量
-                addNumber(writableSheet, outItem.qty, 4, row);
+                addNumber(writableSheet, outItem.stockOutQty, 4, row);
 //描述
-              //  addString(writableSheet, outItem.describe, 5, row);
+               addString(writableSheet, outItem.describe, 5, row);
                 //fob
 
                 addNumber(writableSheet, outItem.up, 6, row);
@@ -353,7 +367,7 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
                 addNumber(writableSheet, FloatHelper.scale(outItem.up * outItem.stockOutQty), 7, row);
 
                 //Product size (inch)
-                addString(writableSheet, outItem.khxg, 8, row);
+                addString(writableSheet, outItem.specInch, 8, row);
 
 
 
@@ -366,19 +380,18 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
 
 
         //添加上汇总行
-        int totalQty = 0;
-        int totalStockOutQty = 0;
+        int totalStockOutQty=0;
         float totalAmt = 0;
         for (int i = 0; i < dataSize; i++) {
 
             totalStockOutQty += items.get(i).stockOutQty;
-            totalQty += items.get(i).qty;
+
             totalAmt += FloatHelper.scale(items.get(i).stockOutQty * items.get(i).up
             );
             ;
         }
-        addString(writableSheet, totalStockOutQty + " /CTNS", 3, row);
-        addString(writableSheet, totalQty + " /PCS", 4, row);
+        addString(writableSheet, totalXs + " /CTNS", 3, row);
+        addString(writableSheet, totalStockOutQty + " /PCS", 4, row);
         addNumber(writableSheet, totalAmt, 7, row);
 
     }
@@ -452,8 +465,7 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
         duplicateRow(workbook, writableSheet, startItemRow, defaultRowCount, dataSize+keys.size());
 
 
-        //体积
-        float tiji=0;
+
         //订单体积
         float orderTiji=0;
         //总提交  sum(体积*数量)
@@ -517,9 +529,8 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
 
 
 
-                tiji+= (xg[0]*xg[1]*xg[2])/1000000;
 
-                orderTiji=tiji*xs;
+                orderTiji=outItem.xgtj*xs;
                 totalTiji+=orderTiji;
 
 
@@ -544,9 +555,9 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends AbstractExcelReporte
 
 
                 //  cbm
-                addNumber(writableSheet, FloatHelper.scale(tiji), 17, row);
+                addNumber(writableSheet, FloatHelper.scale(outItem.xgtj,3), 17, row);
                 //ttl cbm
-                addNumber(writableSheet, FloatHelper.scale(orderTiji), 18, row);
+                addNumber(writableSheet, FloatHelper.scale(orderTiji,3), 18, row);
 
                 //Product size (inch)
                 addString(writableSheet, outItem.specInch, 19, row);

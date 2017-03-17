@@ -506,12 +506,20 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 
 				case PackMaterialClass.CLASS_BOX:
 					if(pWidth<15) wWidth=pWidth*2;
-					if( pLong+pWidth>130)
+//					if( pLong+pWidth>130)
+//					{
+//						newQuota=(pLong/100+pWidth/100+0.17f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+//					}else
+//					{
+//						newQuota=(pLong/100+pWidth/100+0.09f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+//					}
+//公式修改 2017-03-07
+					if( wWidth<17)
 					{
-						newQuota=(pLong/100+pWidth/100+0.17f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+						newQuota=(wLong/100+wWidth/100+0.07f)*(2*wWidth/100+wHeight/100+0.04f)*2*quantity;
 					}else
 					{
-						newQuota=(pLong/100+pWidth/100+0.09f)*(wWidth/100+pHeight/100+0.07f)*2*quantity;
+						newQuota=(wLong/100+wWidth/100+0.07f)*(wWidth/100+pHeight/100+0.04f)*2*quantity;
 					}
 
 
@@ -520,10 +528,18 @@ public class ProductMaterial  implements Serializable,Summariable ,Valuable {
 				case
 						PackMaterialClass.CLASS_INSIDE_BOX:
 
-					 	newQuota = (pLong / 100 + pWidth / 100 + 0.07f) * (pWidth / 100 + pHeight / 100 + 0.04f) * 2 * quantity;
 
-
+					//newQuota = (pLong / 100 + pWidth / 100 + 0.07f) * (pWidth / 100 + pHeight / 100 + 0.04f) * 2 * quantity;
+					//公式修改 2017-03-07
+					if( wWidth<6.5)
+					{
+						newQuota=(wLong/100+wWidth/100+0.07f)*(2*wWidth/100+wHeight/100+0.04f)*2*quantity;
+					}else
+					{
+						newQuota=(wLong/100+wWidth/100+0.07f)*(wWidth/100+pHeight/100+0.04f)*2*quantity;
+					}
 					break;
+
 
 				case
 						PackMaterialClass.CLASS_CAIHE:

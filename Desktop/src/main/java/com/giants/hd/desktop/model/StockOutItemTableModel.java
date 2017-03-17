@@ -97,7 +97,7 @@ public class StockOutItemTableModel extends BaseTableModel<ErpStockOutItem> {
         }
         if(columnIndex==StringUtils.index(fieldName,ZXGTJ))
         {
-            return FloatHelper.scale(item.stockOutQty*item.xgtj);
+            return FloatHelper.scale(item.stockOutQty/item.so_zxs*item.xgtj);
         }
         if(columnIndex==StringUtils.index(fieldName,AMT))
         {

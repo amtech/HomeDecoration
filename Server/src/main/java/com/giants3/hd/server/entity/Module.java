@@ -28,7 +28,7 @@ public class Module implements Serializable {
     @Override
     public String toString() {
 
-        return "[" + name + "] " + title;
+        return   title+"[" + name + "] " ;
     }
 
 

@@ -28,4 +28,11 @@ public interface ProductRepository {
     Observable<ProductDetail> loadByProductNo(String prdNo);
 
     Observable<RemoteData<Void>> correctThumbnail(long productId);
+
+    /**
+     *  公式改变时候， 进行产品表的数据同步。
+     * @return
+     */
+    Observable<RemoteData<Void>> synchronizeProductOnEquationUpdate();
+
 }

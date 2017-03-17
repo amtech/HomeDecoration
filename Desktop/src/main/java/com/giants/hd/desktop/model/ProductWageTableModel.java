@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductProcess;
 import com.giants3.hd.utils.entity.ProductWage;
@@ -16,7 +17,9 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> implemen
     public static String[] columnNames = new String[]{"序号","工序编码", "工序名称", " 工价 ", " 金额 ","备注                    "};
     public static int[] columnWidths=new int[]{    40,      150,        200,        80,      100,   ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"processCode", "processName", "price", "amount", "memo" };
+    private static final String AMOUNT = "amount";
+    private static final String PRICE = "price";
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"processCode", "processName", PRICE, AMOUNT, "memo" };
     public  static Class[] classes = new Class[]{Object.class,ProductProcess.class, ProductProcess.class  };
 
     public  static boolean[] editables = new boolean[]{false,true, true, true, false, true};
@@ -37,9 +40,22 @@ public class ProductWageTableModel extends  BaseTableModel<ProductWage> implemen
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+
+
+        if(fieldName[columnIndex].equals(AMOUNT)||fieldName[columnIndex].equals(PRICE))
+        {
+            if(AuthorityUtil.getInstance().cannotViewProductPrice())
+                return "";
+        }
+
+
         Object value= super.getValueAt(rowIndex, columnIndex);
 
-        if(fieldName[columnIndex].equals("amount")&&value instanceof Float&&product!=null&&product.packQuantity!=0)
+
+
+
+
+        if(fieldName[columnIndex].equals(AMOUNT)&&value instanceof Float&&product!=null&&product.packQuantity!=0)
         {
 
             float floatValue=Float.valueOf(value.toString());

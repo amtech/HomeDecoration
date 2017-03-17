@@ -19,7 +19,6 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
-import com.giants.hd.desktop.widget.StepLayoutManager;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.domain.api.ApiManager;
@@ -29,6 +28,7 @@ import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.logic.ProductLogic;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.google.inject.Inject;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -152,7 +152,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     private JTextArea ta_packinfo;
     private JButton btn_add_pack_image;
     private AttachPanel pack_attaches;
-    private JPanel panel_workflow;
+
     private JButton workFlow;
 
 
@@ -247,10 +247,13 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      */
     ProductDetailPresenter presenter;
 
+    private boolean cannotViewPrice=false;
+
 
     public Panel_ProductDetail() {
         super();
         globalData = CacheManager.getInstance().bufferData.globalData;
+        cannotViewPrice=!AuthorityUtil.getInstance().canViewPrice(ModuleConstant.NAME_PRODUCT);
         initComponent();
 
 
@@ -355,7 +358,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 productDetail.paints = productPaintModel.getDatas();
                 productDetail.packMaterials = packMaterialTableModel.getDatas();
                 productDetail.packWages = packWageTableModel.getDatas();
-                productDetail.updateProductStatistics(globalData);
+                ProductLogic.updateProductStatistics(productDetail,globalData);
                 bindStatisticsValue(productDetail.product);
 
             }
@@ -695,9 +698,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                     tf_volume.setText(String.valueOf(productDetail.product.packVolume));
                     tf_gangza.setText(String.valueOf(productDetail.product.gangza));
-                    tf_fob.setText(String.valueOf(productDetail.product.fob));
-                    tf_price.setText(String.valueOf(productDetail.product.price));
-                    tf_cost.setText(String.valueOf(productDetail.product.cost));
+                    tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.fob));
+                    tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.price));
+                    tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.cost));
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
@@ -743,9 +746,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                 productDetail.product.updateCostOnForignFactory(globalData, productCost);
 
-                tf_fob.setText(String.valueOf(productDetail.product.fob));
-                tf_price.setText(String.valueOf(productDetail.product.price));
-                tf_cost.setText(String.valueOf(productDetail.product.cost));
+                tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.fob));
+                tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.price));
+                tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.cost));
 
 
             }
@@ -872,6 +875,14 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
             }
         });
 
+    }
+
+    /**
+     * 判断是否不能查看单价
+     * @return
+     */
+    private boolean cannotViewProductPrice() {
+        return cannotViewPrice;
     }
 
 
@@ -1237,9 +1248,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         jp_pack.setData(product.xiankang);
 
 
-        tf_fob.setText(product == null ? "" : String.valueOf(product.fob));
-        tf_cost.setText(product == null ? "" : String.valueOf(product.cost));
-        tf_price.setText(product == null ? "" : String.valueOf(product.price));
+        tf_fob.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.fob));
+        tf_cost.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.cost));
+        tf_price.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.price));
 
 
         String[] fileNames = StringUtils.isEmpty(product.attaches) ? new String[]{} : product.attaches.split(";");
@@ -1261,30 +1272,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      * @param product
      */
     private void bindWorkFlowData(Product product) {
-        //绑定生产流程数据
 
-        String productWorkFlows = product.workFlowSteps;
-        String[] indexs = StringUtils.split(productWorkFlows, StringUtils.PRODUCT_NAME_COMMA);
-        int count = CacheManager.getInstance().bufferData.workFlows.size();
-        for (int i = 0; i < count; i++) {
-            Component c = panel_workflow.getComponent(i);
-            if (c instanceof JCheckBox) {
-
-                WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
-
-                boolean existed = false;
-                for (String s : indexs) {
-                    if (s.equals(String.valueOf(workFlow.flowStep))) {
-                        existed = true;
-                        break;
-                    }
-
-                }
-
-
-                ((JCheckBox) c).setSelected(existed);
-            }
-        }
     }
 
 
@@ -1296,29 +1284,29 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     public void getWorkFlowData(Product product) {
 
 
-        StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder nameBuilder = new StringBuilder();
-        int count = CacheManager.getInstance().bufferData.workFlows.size();
-        for (int i = 0; i < count; i++) {
-            Component c = panel_workflow.getComponent(i);
-            if (c instanceof JCheckBox) {
-                if (((JCheckBox) c).isSelected()) {
-                    WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
-                    stringBuilder.append(workFlow.flowStep).append(StringUtils.PRODUCT_NAME_COMMA);
-                    nameBuilder.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
-
-                }
-
-
-            }
-        }
-        if (stringBuilder.length() > 0)
-            stringBuilder.setLength(stringBuilder.length() - 1);
-        if (nameBuilder.length() > 0)
-            nameBuilder.setLength(nameBuilder.length() - 1);
-
-        product.workFlowSteps = stringBuilder.toString();
-        product.workFlowNames = nameBuilder.toString();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        StringBuilder nameBuilder = new StringBuilder();
+//        int count = CacheManager.getInstance().bufferData.workFlows.size();
+//        for (int i = 0; i < count; i++) {
+//            Component c = panel_workflow.getComponent(i);
+//            if (c instanceof JCheckBox) {
+//                if (((JCheckBox) c).isSelected()) {
+//                    WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
+//                    stringBuilder.append(workFlow.flowStep).append(StringUtils.PRODUCT_NAME_COMMA);
+//                    nameBuilder.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
+//
+//                }
+//
+//
+//            }
+//        }
+//        if (stringBuilder.length() > 0)
+//            stringBuilder.setLength(stringBuilder.length() - 1);
+//        if (nameBuilder.length() > 0)
+//            nameBuilder.setLength(nameBuilder.length() - 1);
+//
+//        product.workFlowSteps = stringBuilder.toString();
+//        product.workFlowNames = nameBuilder.toString();
 
     }
 
@@ -1860,14 +1848,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 }
             }
         });
-        panel_workflow.removeAll();
-        panel_workflow.setLayout(new StepLayoutManager(10, 10));
-        for (WorkFlow workFlow : CacheManager.getInstance().bufferData.workFlows) {
-            JCheckBox jCheckBox = new JCheckBox(workFlow.name);
 
-            panel_workflow.add(jCheckBox);
-
-        }
 
         //配置表格的自定义编辑输入   //工序
 
@@ -2084,32 +2065,32 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      */
     private void bindStatisticsValue(Product product) {
         if (product == null) return;
-        jtf_paint_cost.setText(String.valueOf(product.paintCost));
-        jtf_paint_wage.setText(String.valueOf(product.paintWage));
-        jtf_assemble_cost.setText(String.valueOf(product.assembleCost));
-        jtf_assemble_wage.setText(String.valueOf(product.assembleWage));
+        jtf_paint_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.paintCost));
+        jtf_paint_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.paintWage));
+        jtf_assemble_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.assembleCost));
+        jtf_assemble_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.assembleWage));
 
-        jtf_conceptus_cost.setText(String.valueOf(product.conceptusCost));
-        jtf_conceptus_wage.setText(String.valueOf(product.conceptusWage));
+        jtf_conceptus_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.conceptusCost));
+        jtf_conceptus_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.conceptusWage));
 
-        jtf_pack_cost.setText(String.valueOf(product.packCost));
-        jtf_pack_wage.setText(String.valueOf(product.packWage));
+        jtf_pack_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.packCost));
+        jtf_pack_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.packWage));
 
-        jtf_cost1.setText(String.valueOf(product.cost1));
-        jtf_cost6.setText(String.valueOf(product.cost6));
+        jtf_cost1.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost1));
+        jtf_cost6.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost6));
 
-        jtf_cost7.setText(String.valueOf(product.cost7));
-        jtf_cost8.setText(String.valueOf(product.cost8));
-        jtf_cost11_15.setText(String.valueOf(product.cost11_15));
+        jtf_cost7.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost7));
+        jtf_cost8.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost8));
+        jtf_cost11_15.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost11_15));
 
-        jtf_cost_repair.setText(String.valueOf(product.repairCost));
-        jtf_cost_banyungongzi.setText(String.valueOf(product.banyunCost));
+        jtf_cost_repair.setText(cannotViewProductPrice() ?"***":String.valueOf(product.repairCost));
+        jtf_cost_banyungongzi.setText(cannotViewProductPrice() ?"***":String.valueOf(product.banyunCost));
 
-        tf_product_cost.setText(String.valueOf(product.productCost));
-        tf_cost4.setText(String.valueOf(product.cost4));
-        tf_fob.setText(String.valueOf(product.fob));
-        tf_price.setText(String.valueOf(product.price));
-        tf_cost.setText(String.valueOf(product.cost));
+        tf_product_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.productCost));
+        tf_cost4.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost4));
+        tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(product.fob));
+        tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(product.price));
+        tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost));
         tf_volume.setText(String.valueOf(product.packVolume));
         tf_long.setText(String.valueOf(product.packLong));
         tf_width.setText(String.valueOf(product.packWidth));

@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
-import java.sql.Statement;
 import java.util.List;
 
 
@@ -464,5 +463,19 @@ public class UseCaseFactory {
 
     public UseCase createGetOrderItemWorkFlow(long orderItemId) {
         return new GetOrderItemWorkFlowUseCase(Schedulers.newThread(), Schedulers.immediate(), orderItemId, orderRepository);
+    }
+
+    public UseCase createSearchZhilingdanUseCase(String osName, String startDate, String endDate) {
+        return new SearchZhilingdanUseCase(Schedulers.newThread(), Schedulers.immediate(), osName,   startDate,   endDate, workFlowRepository);
+    }
+
+    /**
+     * 公式改变时候， 进行产品表的数据同步。
+     * @return
+     */
+    public UseCase createSynchronizeProductOnEquationUpdate() {
+
+
+        return new SynchronizeProductOnEquationUpdateUseCase(Schedulers.newThread(), Schedulers.immediate() ,   productRepository);
     }
 }

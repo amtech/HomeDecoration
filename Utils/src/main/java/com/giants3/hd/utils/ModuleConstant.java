@@ -84,7 +84,27 @@ public class ModuleConstant {
     public static final String NAME_PRODUCT_ARRANGE_TYPE  = "product_arrange_type";
 
 
+
+    public static final String TITLE_EQUATION = "计算公式说明";
+    public static final String NAME_EQUATION  = "SYSTEM_QUOTATION";
+
+
+
+    public static final String TITLE_ZHILINGDAN = "物控查询";
+    public static final String NAME_ZHILINGDAN  = "ZHILINGDAN__";
+
+    public static final String TITLE_WORK_FLOW_MODULE = "流程模块";
+    public static final String NAME_WORK_FLOW_MODULE  = "WORKFLOW_MODULE";
+
+
     public static final String TITLE_MODULE = "模块列表";
+
+
+
+
+
+
+
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
             TITLE_PRODUCT_REPORT,
             TITLE_QUOTATION, TITLE_AUTHORITY, TITLE_SYNC_DATA, TITLE_PICTURE_UPLOAD, TITLE_MATERIAL_CLASS,
@@ -99,6 +119,17 @@ public class ModuleConstant {
             , TITLE_STOCK_IN_AND_SUBMIT, TITLE_TRANSPORT_OUT,TITLE_TRANSPORT_OUT_SEARCH
             ,TITLE_OUT_FACTORY
             ,TITLE_PRODUCT_ARRANGE_TYPE
+            ,TITLE_EQUATION
+
+
+
+            ,TITLE_ZHILINGDAN
+            ,TITLE_WORK_FLOW_MODULE
+
+
+
+
+
 
 
     };
@@ -122,6 +153,20 @@ public class ModuleConstant {
 
             ,NAME_OUT_FACTORY
             ,NAME_PRODUCT_ARRANGE_TYPE
+            ,NAME_EQUATION
+
+
+
+            ,NAME_ZHILINGDAN
+            ,NAME_WORK_FLOW_MODULE
+
+
+
+
+
+
+
+
     };
 
 

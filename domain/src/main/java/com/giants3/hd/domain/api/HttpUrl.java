@@ -1045,4 +1045,22 @@ public class HttpUrl {
     public static String getOrderItemWorkFlow(long orderItemId) {
         return additionInfo(BaseUrl + "api/order/getOrderItemWorkFlow?orderItemId="+orderItemId);
     }
+
+
+    /**
+     *  指令单查询
+     * @param osName
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static String searchZhiling(String osName,   String startDate,    String endDate) {
+        return additionInfo(BaseUrl + String.format("api/erpWork/searchZhiling?osName=%s&startDate=%s&endDate=%s",osName,startDate,endDate));
+    }
+
+
+    public static String synchronizeProductOnEquationUpdate() {
+
+        return additionInfo(BaseUrl + "api/product/adjustEquation" );
+    }
 }

@@ -1,6 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
+import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.entity.GlobalData;
@@ -27,8 +28,9 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
     public static int[] columnWidths = new int []{      40,   80,             80,    60,     100,        120,       80,        40,     60,       60,      60,          60,        60, ConstantData.MAX_COLUMN_WIDTH };
 
 
-
-        public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "quantity", "price", "cost", "materialQuantity","ingredientQuantity","memo"};
+    private static final String PRICE = "price";
+    private static final String COST = "cost";
+    public static String[] fieldName = new String[]{ ConstantData.COLUMN_INDEX,"processCode", "processName", "processPrice","materialCode", "materialName", "ingredientRatio", "unitName", "quantity", PRICE, COST, "materialQuantity","ingredientQuantity","memo"};
     public static Class[] classes = new Class[]{Object.class,String.class, String.class, Object.class,  Material.class,Material.class, Object.class, String.class };
 
     public static boolean[] editables = new boolean[]{false,true, true, true, true,true,  true, false, true, false, false, false,false, true };
@@ -39,6 +41,18 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         super(new ProductPaintArrayList(),columnNames, fieldName, classes, ProductPaint.class);
     }
 
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+
+
+        if(fieldName[columnIndex].equals(COST)||fieldName[columnIndex].equals(PRICE))
+        {
+            if(AuthorityUtil.getInstance().cannotViewProductPrice())
+                return "";
+        }
+        return super.getValueAt(rowIndex, columnIndex);
+    }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {

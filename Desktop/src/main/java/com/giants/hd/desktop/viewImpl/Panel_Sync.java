@@ -8,6 +8,10 @@ import javax.swing.*;
 public class Panel_Sync extends BasePanel {
     private JPanel root;
     public JButton btn_erp_sync;
+    public JButton equationUpdate;
+
+
+
 
     @Override
     public JComponent getRoot() {

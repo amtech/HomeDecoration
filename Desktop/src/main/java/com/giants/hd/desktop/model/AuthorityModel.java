@@ -9,12 +9,12 @@ import com.google.inject.Inject;
  */
 public class AuthorityModel extends  BaseTableModel<Authority> {
 
-    public static String[] columnNames = new String[]{    "模块名称 ","查看", "添加", "修改"  ,"删除","导入","导出","审核" };
-    public static int[] columnWidth=new int[]{   200,    40,40,   40, 40 ,40, 40 ,40, 40  };
+    public static String[] columnNames = new String[]{    "模块名称 ","查看", "添加", "修改"  ,"删除","导入","导出","审核","查看价格" };
+    public static int[] columnWidth=new int[]{   200,    40,40,   40, 40 ,40, 40 ,40, 40 ,60 };
 
-    public static String[] fieldName = new String[]{ "module","viewable", "addable",  "editable","deletable","importable","exportable","checkable"};
+    public static String[] fieldName = new String[]{ "module","viewable", "addable",  "editable","deletable","importable","exportable","checkable","viewPrice"};
 
-    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class, Boolean.class, Boolean.class ,Boolean.class, Boolean.class,Boolean.class };
+    public  static Class[] classes = new Class[]{Object.class,Boolean.class, Boolean.class, Boolean.class, Boolean.class ,Boolean.class, Boolean.class,Boolean.class,Boolean.class };
 
 
     @Inject
@@ -67,6 +67,9 @@ public class AuthorityModel extends  BaseTableModel<Authority> {
             case 7:
                 authority.checkable=booleanValue;
                 break;
+            case 8:
+                    authority.viewPrice=booleanValue;
+                    break;
 
         }
 

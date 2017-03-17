@@ -21,4 +21,6 @@ public interface OrderDetailViewer extends  AbstractViewer {
     void showAttachFiles(List<String> attachStrings);
 
     void setPriceVisible(boolean priceVisible);
+
+    void setCanViewProduct(boolean b);
 }

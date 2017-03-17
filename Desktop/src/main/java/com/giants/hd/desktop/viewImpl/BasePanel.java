@@ -25,8 +25,8 @@ public abstract class BasePanel implements AbstractViewer {
         this.listener = listener;
     }
 
-    //加载进度条
-    LoadingDialog dialog;
+    //加载进度条 所有的view  只有一个顶级界面挂靠的进度条控件
+ private   static LoadingDialog dialog;
 
     public BasePanel() {
 
@@ -83,11 +83,20 @@ public abstract class BasePanel implements AbstractViewer {
 
 
 
-//        if (dialog != null) {
-//            dialog.setVisible(false);
-//            dialog.dispose();
-//            dialog = null;
-//        }
+        if (dialog != null) {
+            dialog.setVisible(false);
+
+        }
+    }
+
+
+    @Override
+    public void showLoadingDialogCarfully() {
+
+
+
+        showLoadingDialog();
+
     }
 
     public void showMesssage(String message) {
@@ -122,27 +131,27 @@ public abstract class BasePanel implements AbstractViewer {
         //重複多次新建loading dialog 會導致程序一次， 先關閉
 
 //
-//        if (dialog == null) {
-//
-//            final JComponent root = getRoot();
-//
-//            System.out.println("root:"+root);
-//
-//            final Window window = getWindow(root);
-//
-//            System.out.println("window:"+window);
-//            dialog = new LoadingDialog(window, new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//
-//                }
-//            });
-//            dialog.setMessage(hint);
-//
-//
-//
-//        }
-//        dialog.setVisible(true);
+        if (dialog == null) {
+
+            final JComponent root =SwingUtilities.getRootPane( getRoot());
+
+            System.out.println("root:"+root);
+
+            final Window window = getWindow(root);
+
+            System.out.println("window:"+window);
+            dialog = new LoadingDialog(window, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            dialog.setMessage(hint);
+
+
+
+        }
+        dialog.setVisible(true);
     }
 
 

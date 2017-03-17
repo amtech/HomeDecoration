@@ -16,6 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -55,6 +56,8 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     @Autowired
     private WorkFlowMessageRepository workFlowMessageRepository;
+    @Autowired
+    private ProductEquationUpdateTempRepository productEquationUpdateTempRepository;
 
 
 
@@ -1268,5 +1271,59 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
         return wrapData();
+    }
+
+    /**
+     * 启动产品更新任务流程
+     */
+    @Transactional
+    public void startUpdateEquationTask() {
+
+        //删除当前存在的任务  如果有的话
+
+
+        productEquationUpdateTempRepository.deleteAll();
+
+
+        ProductEquationUpdateTemp productEquationUpdateTemp=new ProductEquationUpdateTemp();
+        Pageable pageable=new PageRequest(0,100) ;
+
+        Page<Product> page ;
+
+        int i=0;
+        do {
+
+
+             page=productRepository.findAll(pageable);
+            for(Product product:page.getContent())
+            {
+                productEquationUpdateTemp.productId=product.id;
+                productEquationUpdateTemp.id=-1;
+                productEquationUpdateTempRepository.save(productEquationUpdateTemp);
+                i++;
+            }
+
+            if(i>100)
+            {
+                productEquationUpdateTempRepository.flush();
+                i-=100;
+            }
+
+            if(page.hasNext())
+            {
+              pageable=  page.nextPageable();
+            }else
+            {
+                break;
+            }
+
+        }while (true);
+
+        productEquationUpdateTempRepository.flush();
+
+
+
+
+
     }
 }

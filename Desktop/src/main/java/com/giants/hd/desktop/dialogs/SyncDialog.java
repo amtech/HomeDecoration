@@ -1,10 +1,13 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.view.AbstractViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Sync;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.google.inject.Inject;
+import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +27,8 @@ public class SyncDialog extends BaseDialog<Void>  {
     @Inject
     Panel_Sync panel_photoSync;
 
+    AbstractViewer viewer;
+
     public SyncDialog(Window window)
     {
         super(window, "数据同步");
@@ -31,7 +36,10 @@ public class SyncDialog extends BaseDialog<Void>  {
 
 
         setContentPane(panel_photoSync.getRoot());
+
+        viewer=panel_photoSync;
         init();
+
 
 
     }
@@ -41,7 +49,6 @@ public class SyncDialog extends BaseDialog<Void>  {
 
     public void init()
     {
-
 
 
 
@@ -78,6 +85,55 @@ public class SyncDialog extends BaseDialog<Void>  {
                 }.go();
             }
         });
+
+
+
+
+        panel_photoSync.equationUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                UseCaseFactory.getInstance().createSynchronizeProductOnEquationUpdate().execute(new Subscriber<RemoteData<Void>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        viewer.hideLoadingDialog();
+                        viewer.showMesssage(e.getMessage());
+
+                    }
+
+
+                    @Override
+                    public void onNext(RemoteData<Void> data) {
+                        viewer.hideLoadingDialog();
+                        if(data.isSuccess())
+                        {
+
+                            viewer.showMesssage("同步已经提交");
+
+                        }else
+                        viewer.showMesssage(data.message);
+
+
+
+                    }
+
+                });
+                viewer.showLoadingDialog();
+
+
+
+
+
+            }
+        });
+
     }
 
 

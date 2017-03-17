@@ -59,6 +59,11 @@ public class Authority implements Serializable{
      */
     public boolean  exportable;
 
+    /**
+     * 可查看单价格，只对特性模块起作用
+     */
+    public  boolean  viewPrice;
+
 
     @Override
     public boolean equals(Object o) {
@@ -72,6 +77,7 @@ public class Authority implements Serializable{
         if (editable != authority.editable) return false;
         if (addable != authority.addable) return false;
         if (deletable != authority.deletable) return false;
+        if (viewPrice != authority.viewPrice) return false;
         if (importable != authority.importable) return false;
         if (checkable != authority.checkable) return false;
         if (exportable != authority.exportable) return false;
@@ -92,6 +98,7 @@ public class Authority implements Serializable{
         result = 31 * result + (importable ? 1 : 0);
         result = 31 * result + (checkable ? 1 : 0);
         result = 31 * result + (exportable ? 1 : 0);
+        result = 31 * result + (viewPrice ? 1 : 0);
         return result;
     }
 }

@@ -250,7 +250,7 @@ public class Main extends BaseFrame {
             menuBar.add(createOrder());
 
         //生产流程
-        if (AuthorityUtil.getInstance().viewWorkFlowMenu())
+        if (AuthorityUtil.getInstance().viewWorkFlowModule())
             menuBar.add(createWorkFlowMenu());
 
 
@@ -287,21 +287,40 @@ public class Main extends BaseFrame {
     private JMenu createWorkFlowMenu() {
 
         //Build second menu in the menu bar.
-        JMenu menu = new JMenu(ModuleConstant.TITLE_WORK_FLOW);
+        JMenu menu = new JMenu(ModuleConstant.TITLE_WORK_FLOW_MODULE);
+
+        if (AuthorityUtil.getInstance().viewWorkFlow()) {
+            JMenuItem menuItem = new JMenuItem("生产流程配置");
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
-        JMenuItem menuItem = new JMenuItem("生产流程配置");
-        menu.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+                    WorkFlowFrame frame = new WorkFlowFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
+        }
+        if (AuthorityUtil.getInstance().viewZhilingdan()) {
+
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_ZHILINGDAN);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
 
-                WorkFlowFrame frame = new WorkFlowFrame();
-                addInterFrame(frame);
+                    ZhilingdanFrame frame = new ZhilingdanFrame();
+                    addInterFrame(frame);
 
-            }
-        });
+                }
+            });
+
+
+        }
 
 
         return menu;
@@ -521,9 +540,9 @@ public class Main extends BaseFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    ProductReportDialog dialog = new ProductReportDialog(Main.this);
-//                    dialog.setLocationRelativeTo(getRootPane());
-                    dialog.setVisible(true);
+
+                    ProductReportInternalFrame materialListInternalFrame = new ProductReportInternalFrame();
+                    addInterFrame(materialListInternalFrame);
 
 
                 }
@@ -641,7 +660,6 @@ public class Main extends BaseFrame {
             });
 
         }
-
 
 
         if (AuthorityUtil.getInstance().viewOutFactoryList()) {
@@ -865,8 +883,7 @@ public class Main extends BaseFrame {
     }
 
 
-
-   public void addInterFrame(BaseInternalFrame baseInternalFrame) {
+    public void addInterFrame(BaseInternalFrame baseInternalFrame) {
 
 
         baseInternalFrame.setVisible(true); //necessary as of 1.3
@@ -933,6 +950,30 @@ public class Main extends BaseFrame {
             menu.add(menuItem);
 
 
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    TaskListInternalFrame taskListInternalFrame = new TaskListInternalFrame();
+
+                    taskListInternalFrame.setVisible(true); //necessary as of 1.3
+                    desktop.add(taskListInternalFrame);
+                    try {
+                        taskListInternalFrame.setSelected(true);
+                    } catch (java.beans.PropertyVetoException exception) {
+                    }
+
+                    // setContentPane(new Panel_Quotation().getRoot());
+
+                }
+            });
+        }
+        //查看公式
+
+        if (AuthorityUtil.getInstance().viewEquation()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_EQUATION);
+            menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

@@ -24,12 +24,24 @@ public class ErpStockSubmitRepository {
 
 
     private static final String ID_NO = "ID_NO";
-    public static final String stockInSql = "select os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK, ID_NO  ,BAT_NO,CUS_OS_NO,QTY  from TF_PSS WHERE  PS_ID='PC' AND WH='CP'  and  so_no like '%YF%' and  ID_NO  is not null ";
+
+
+    //数据库数据值大小写匹配问题处理。--- 全部转换成大写，避免因数据库数据大小写敏感导致查询失败。
+    private static final String CP_UPPER = " UPPER ('CP') ";
+    private static final String PC_UPPER = " UPPER ('PC') ";
+    private static final String YF_LIKE_UPPPER = " UPPER ('%YF%') ";
+    private static final String SO_UPPER = " UPPER ('SO') ";
+    private static final String SA_UPPER = " UPPER ('SA') ";
+    //数据库数据值大小写匹配问题处理。--- 全部转换成大写，避免因数据库数据大小写敏感导致查询失败。
+
+
+
+    public static final String stockInSql = "select os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK, ID_NO  ,BAT_NO,CUS_OS_NO,QTY  from TF_PSS WHERE  PS_ID=" + PC_UPPER + " AND WH=" + CP_UPPER + "  and  so_no like " + YF_LIKE_UPPPER + " and  ID_NO  is not null ";
 
     //缴库单
     //   select * FROM  TF_MM0 WHERE WH='CP'
 
-    public static final String submitSql = "select SO_NO ,PRD_NO, PRD_NAME  ,ID_NO  ,BAT_NO,CUS_OS_NO,QTY from TF_MM0 where wh='CP'";
+    public static final String submitSql = "select SO_NO ,PRD_NO, PRD_NAME  ,ID_NO  ,BAT_NO,CUS_OS_NO,QTY from TF_MM0 where wh=" + CP_UPPER;
 
     //材料信息
     public static final String bomSql = "select BOM_NO ,KHXG,SO_ZXS,XGTJ from TF_MF_BOM_Z  where KHXG IS NOT NULL   and bom_no =:" + ID_NO + " ";
@@ -39,28 +51,30 @@ public class ErpStockSubmitRepository {
     private static final String END_DATE = "endDate";
 
 
+
     /**
      * 查询厂家入库记录=
      */
-    public static final String stockInFromFactory = "   select ps.ps_no as no, ps.so_no,ps.PRD_NO,ps.PRD_NAME,ps.PRD_MARK,ps.BAT_NO,ps.CUS_OS_NO,ps.qty,ps.dd,ps.type,pos.id_no ,mps.dept from (select PRD_MARK as so_no ,PRD_NO,PRD_NAME, PRD_MARK, BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,2 as type ,ps_no from TF_PSS   WHERE  PS_ID='PC' AND WH='CP'  and  PRD_MARK like '%YF%'  and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as ps inner join ( select os_no ,prd_no,id_no FROM  TF_POS where OS_ID='SO' ) as pos  on ps.PRD_MARK=pos.os_no   and  ps.PRD_NO=pos.PRD_NO    inner join (select  cus_no  as dept ,ps_no from mf_pss  WHERE  PS_ID='PC'      and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + ")    as  mps  on mps.ps_no= ps.ps_no";
+    public static final String stockInFromFactory = "   select ps.ps_no as no, ps.so_no,ps.PRD_NO,ps.PRD_NAME,ps.PRD_MARK,ps.BAT_NO,ps.CUS_OS_NO,ps.qty,ps.dd,ps.type,pos.id_no ,mps.dept from (select PRD_MARK as so_no ,PRD_NO,PRD_NAME, PRD_MARK, BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,2 as type ,ps_no from TF_PSS   WHERE  PS_ID=" + PC_UPPER + " AND WH=" + CP_UPPER + "  and  PRD_MARK like " + YF_LIKE_UPPPER + "  and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as ps inner join ( select os_no ,prd_no,id_no FROM  TF_POS where OS_ID=" + SO_UPPER + " ) as pos  on ps.PRD_MARK=pos.os_no   and  ps.PRD_NO=pos.PRD_NO    inner join (select  cus_no  as dept ,ps_no from mf_pss  WHERE  PS_ID=" + PC_UPPER + "      and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + ")    as  mps  on mps.ps_no= ps.ps_no";
 
     //车间入库记录   缴库
-    public static final String StockSubmitSql = " select  mm_no as no,SO_NO ,PRD_NO,PRD_NAME,PRD_MARK  ,BAT_NO,CUS_OS_NO,QTY ,mm_dd as dd   ,1 as type , ID_NO ,'' as dept from TF_MM0 where wh='CP'   and mm_dd  >= :" + START_DATE + "  and mm_dd  <= :" + END_DATE;
+    public static final String StockSubmitSql = " select  mm_no as no,SO_NO ,PRD_NO,PRD_NAME,PRD_MARK  ,BAT_NO,CUS_OS_NO,QTY ,mm_dd as dd   ,1 as type , ID_NO ,'' as dept from TF_MM0 where wh=" + CP_UPPER + "   and mm_dd  >= :" + START_DATE + "  and mm_dd  <= :" + END_DATE;
 
     // +  StockSubmitSql+ "  union     "
     //查询入库与缴库的产品数据
-    public static final String stockInAndSubmitSql = "  select * from (" + StockSubmitSql + "  union     " + stockInFromFactory + "   ) as a  inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos   where OS_ID='SO' ) as c on a.so_no = c.os_no  order by a.dd desc   ";
+    public static final String stockInAndSubmitSql = "  select * from (" + StockSubmitSql + "  union     " + stockInFromFactory + "   ) as a  inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos   where OS_ID=" + SO_UPPER + " ) as c on a.so_no = c.os_no  order by a.dd desc   ";
+
     //出销库单
     //  select * FROM  TF_PSS WHERE PS_ID='SA' AND WH='CP'
-    public static final String stockOutTransportSql = " select * from (select os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dep  from TF_PSS WHERE  PS_ID='SA' AND WH='CP'  and  PRD_MARK like '%YF%' and  ID_NO  is not null and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as a   inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO order by a.dd desc ";
-    public static final String stockXiaoKuSql = " select PS_ID   ,PS_NO    ,TCGS  ,XHDG   ,XHFQ  ,XHGH     ,XHGX   ,XHPH from   MF_PSS_Z  WHERE PS_ID='SA' and ps_no like :ps_no  order by ps_no desc ";
-    public static final String stockXiaoKuRecordCountSql = " select  count(*) from   MF_PSS_Z  WHERE PS_ID='SA'    and ps_no like :ps_no   ";
+    public static final String stockOutTransportSql = " select * from (select os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dep  from TF_PSS WHERE  PS_ID=" + SA_UPPER + " AND WH=" + CP_UPPER + "  and  PRD_MARK like " + YF_LIKE_UPPPER + " and  ID_NO  is not null and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as a   inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO order by a.dd desc ";
+    public static final String stockXiaoKuSql = " select PS_ID   ,PS_NO    ,TCGS  ,XHDG   ,XHFQ  ,XHGH     ,XHGX   ,XHPH from   MF_PSS_Z  WHERE PS_ID=" + SA_UPPER + " and ps_no like :ps_no  order by ps_no desc ";
+    public static final String stockXiaoKuRecordCountSql = " select  count(*) from   MF_PSS_Z  WHERE PS_ID=" + SA_UPPER + "    and ps_no like :ps_no   ";
 
-    public static final String stockXiaokuItemSql = " select * from (select ps_no as no, os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dept,ITM  from TF_PSS WHERE  PS_ID='SA' AND WH='CP'   and ps_no  = :ps_no ) as a    inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos    ) as c on a.so_no = c.os_no order by a.ITM asc ";
+    public static final String stockXiaokuItemSql = " select * from (select ps_no as no, os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dept,ITM  from TF_PSS WHERE  PS_ID=" + SA_UPPER + " AND WH=" + CP_UPPER + "   and ps_no  = :ps_no ) as a    inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos    ) as c on a.so_no = c.os_no order by a.ITM asc ";
 
 
     //销库单明细日期区间查询  并关联销库记录数据
-    public static final String searchstockXiaokuItemSql = " select * from (select ps_no as no, os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dept,ITM  from TF_PSS WHERE  PS_ID='SA' AND WH='CP'   and ps_no  like :ps_no   and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as a    inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos where OS_ID='SO' ) as c on a.so_no = c.os_no    " +
+    public static final String searchstockXiaokuItemSql = " select * from (select ps_no as no, os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dept,ITM  from TF_PSS WHERE  PS_ID=" + SA_UPPER + " AND WH=" + CP_UPPER + "   and ps_no  like :ps_no   and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as a    inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos where OS_ID=" + SO_UPPER + " ) as c on a.so_no = c.os_no    " +
             " inner  join (select * from MF_PSS_Z ) as d on  a.no=d.ps_no " +//关联柜子相关数据
             "" +
             " order by  LEFT (convert(nvarchar(50),a.dd, 120) ,7) desc,cast (ISNULL(xhdg,0) as float)  ASC ";//按月降序  按柜号升序

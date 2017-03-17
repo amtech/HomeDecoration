@@ -27,7 +27,7 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements Prese
 
     public BaseInternalFrame(String title) {
         super(title ,
-                false, //resizable
+                true, //resizable
                 true, //closable
                 true, //maximizable
                 true);//iconifiable

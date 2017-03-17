@@ -490,4 +490,11 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
         orderItemTableModel.setFobPriceVisible(priceVisible);
     }
 
+
+    @Override
+    public void setCanViewProduct(boolean b) {
+
+        showDetail.setVisible(b);
+
+    }
 }

@@ -45,4 +45,6 @@ public interface WorkFlowRepository {
      * @return
      */
     Observable saveWorkFlowSubTypeList(List<WorkFlowSubType> datas);
+
+    Observable searchZhilingdan(String osName, String startDate, String endDate);
 }

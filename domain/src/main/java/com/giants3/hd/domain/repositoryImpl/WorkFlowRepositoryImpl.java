@@ -3,10 +3,7 @@ package com.giants3.hd.domain.repositoryImpl;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.WorkFlowRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import rx.Observable;
@@ -271,6 +268,34 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
         });
 
 
+    }
+
+
+    @Override
+    public Observable searchZhilingdan(final String osName, final String startDate, final String endDate) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Zhilingdan>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<Zhilingdan>> subscriber) {
+
+
+                try {
+                    RemoteData<Zhilingdan> remoteData = apiManager.searchZhiling( osName,startDate,endDate);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
     }
 }
 
