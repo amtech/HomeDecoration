@@ -5,7 +5,6 @@ import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.Quotation;
 import com.giants3.hd.utils.entity.QuotationItem;
 import com.giants3.hd.utils.exception.HdException;
@@ -21,16 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/** 通用报价模板2
+/**
+ * 通用报价模板2
  * 增加一列显示  材料成本汇总
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_NORMAL2 extends ExcelReportor {
 
 
-
-
     Workbook workbook;
+
     public Report_Excel_NORMAL2(QuotationFile modelName) {
         super(modelName);
     }
@@ -40,19 +39,15 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException {
 
 
-
-
         //Create Workbook instance holding reference to .xlsx file
-        InputStream inputStream=url.openStream();
+        InputStream inputStream = url.openStream();
         workbook = new HSSFWorkbook(inputStream);
-
-
 
 
         writeOnExcel(workbook.getSheetAt(0), quotationDetail);
 
 
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -60,46 +55,29 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
 
+    protected void writeOnExcel(Sheet writableSheet, QuotationDetail quotationDetail) throws IOException {
 
-    protected void writeOnExcel(Sheet writableSheet,QuotationDetail quotationDetail) throws   IOException {
 
+        int defaultRowCount = 7;
+        int startItemRow = 9;
 
-        int defaultRowCount=7;
-        int startItemRow=9;
-
-        int dataSize=quotationDetail.items.size();
+        int dataSize = quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(workbook,writableSheet,startItemRow,defaultRowCount,dataSize);
+        duplicateRow(workbook, writableSheet, startItemRow, defaultRowCount, dataSize);
 
 
-
-
-
-
-
-
-
-        Quotation quotation=quotationDetail.quotation;
+        Quotation quotation = quotationDetail.quotation;
         //表头
         //注入报价单号
-       addString(writableSheet, quotation.qNumber, 2, 1);
-
+        addString(writableSheet, quotation.qNumber, 2, 1);
 
 
         //报价日期
         addString(writableSheet, quotation.qDate, 14, 1);
-
-
-
-
 
 
         //TO
@@ -110,37 +88,24 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
         addString(writableSheet, quotation.salesman, 11, 7);
 
 
+        ApiManager apiManager = Guice.createInjector().getInstance(ApiManager.class);
+
+        for (int i = 0; i < dataSize; i++) {
 
 
-
-
-
-        ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
-
-        for (int i = 0; i <dataSize; i++) {
-
-
-
-
-
-
-            int rowUpdate=startItemRow+i;
-            QuotationItem item=quotationDetail.items.get(i);
+            int rowUpdate = startItemRow + i;
+            QuotationItem item = quotationDetail.items.get(i);
 
 
             //图片
 
+            if (isExportPicture())
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0 , rowUpdate ,0 , rowUpdate );
-
+                exportPicture(item.photoUrl, item.getFullProductName());
+            attachPicture(workbook, writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0, rowUpdate, 0, rowUpdate);
 
 
             //读取咸康数据
-
-
-
-
-
 
 
             //货号
@@ -148,26 +113,23 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
 
 
             //货号
-            addString(writableSheet, item.pVersion , 3, rowUpdate);
+            addString(writableSheet, item.pVersion, 3, rowUpdate);
 
 
-
-
-            addString(writableSheet, item.pVersion , 4, rowUpdate);
+            addString(writableSheet, item.pVersion, 4, rowUpdate);
 
             //成本汇总
-            ProductDetail productDetail=null;
+            ProductDetail productDetail = null;
             try {
-                RemoteData<ProductDetail> remoteData=apiManager.loadProductDetail(item.productId);
-                if(remoteData.isSuccess())
-                {
-                    productDetail=remoteData.datas.get(0);
+                RemoteData<ProductDetail> remoteData = apiManager.loadProductDetail(item.productId);
+                if (remoteData.isSuccess()) {
+                    productDetail = remoteData.datas.get(0);
 
                 }
             } catch (HdException e) {
                 e.printStackTrace();
             }
-            if(productDetail!=null) {
+            if (productDetail != null) {
                 String costMessage = "白胚：" + productDetail.product.conceptusCost;
                 costMessage += "\n组装：" + productDetail.product.assembleCost;
                 costMessage += "\n油漆：" + productDetail.product.paintCost;
@@ -177,14 +139,12 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
             }
 
 
-
             //材料比重
             addString(writableSheet, item.constitute.trim(), 6, rowUpdate);
 
 
-
             //单位
-            int lastIndex=item.unit.lastIndexOf("/");
+            int lastIndex = item.unit.lastIndexOf("/");
             addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 8, rowUpdate);
 
             //FOb
@@ -199,10 +159,9 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
             addNumber(writableSheet, item.packQuantity, 11, rowUpdate);
 
 
-
             //解析出长宽高
 
-            float[] result=     StringUtils.decouplePackageString(item.packageSize);
+            float[] result = StringUtils.decouplePackageString(item.packageSize);
 
 
             //包装长
@@ -216,10 +175,8 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
             addNumber(writableSheet, result[2], 17, rowUpdate);
 
 
-
             //包装体积
             addNumber(writableSheet, item.volumeSize, 18, rowUpdate);
-
 
 
             //产品规格
@@ -239,10 +196,6 @@ public class Report_Excel_NORMAL2 extends ExcelReportor {
 
 
         }
-
-
-
-
 
 
     }

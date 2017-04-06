@@ -6,12 +6,9 @@ import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
-import com.giants.hd.desktop.widget.ImageView;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.utils.entity.MaterialClass;
 import com.google.inject.Inject;
@@ -27,7 +24,7 @@ import java.awt.event.MouseEvent;
 /**
  * 材料列表面板
  */
-public class Panel_Material  extends  BasePanel{
+public class Panel_Material extends BasePanel {
     private JPanel panel1;
     private JTable tb_material;
     private JTextField jtf_value;
@@ -51,14 +48,10 @@ public class Panel_Material  extends  BasePanel{
     MaterialTableModel materialTableModel;
 
 
-
     public Panel_Material(final String value) {
 
 
-
         jtf_value.setText(value);
-
-
 
 
         btn_search.addActionListener(new ActionListener() {
@@ -87,7 +80,7 @@ public class Panel_Material  extends  BasePanel{
             public void onPageChanged(int pageIndex, int pageSize) {
 
 
-                search(jtf_value.getText().toString().trim(),pageIndex,pageSize);
+                search(jtf_value.getText().toString().trim(), pageIndex, pageSize);
 
 
             }
@@ -102,9 +95,8 @@ public class Panel_Material  extends  BasePanel{
 
             }
         });
-
-
-
+       tb_material.setDefaultRenderer(Object.class,new DefaultCellRenderer());
+       //  tb_material.setDefaultRenderer(ImageIcon.class,new DefaultTableCellRenderer());
 
 
         tb_material.addMouseListener(new MouseAdapter() {
@@ -113,8 +105,7 @@ public class Panel_Material  extends  BasePanel{
                 super.mouseClicked(e);
 
 
-                if(e.getClickCount()==2)
-                {
+                if (e.getClickCount() == 2) {
 
 
                     Material material = materialTableModel.getItem(tb_material.convertRowIndexToModel(tb_material.getSelectedRow()));
@@ -125,10 +116,9 @@ public class Panel_Material  extends  BasePanel{
                     if (column == 0) {
 
 
-                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material),material.code, material.url );
+                        ImageViewDialog.showMaterialDialog(SwingUtilities.getWindowAncestor(tb_material), material.code, material.url);
 
-                    }else {
-
+                    } else {
 
 
                         showDetailDialog(material);
@@ -167,22 +157,16 @@ public class Panel_Material  extends  BasePanel{
 //        });
 
         //初始化下拉框
-        MaterialClass aMaterialClass=new MaterialClass();
-        aMaterialClass.name="所有分类";
-        aMaterialClass.code="";
+        MaterialClass aMaterialClass = new MaterialClass();
+        aMaterialClass.name = "所有分类";
+        aMaterialClass.code = "";
         cb_class.addItem(aMaterialClass);
-        for(MaterialClass materialClass: CacheManager.getInstance().bufferData.materialClasses)
-        {
+        for (MaterialClass materialClass : CacheManager.getInstance().bufferData.materialClasses) {
             cb_class.addItem(materialClass);
         }
 
 
-
-
-
         btn_add.setVisible(AuthorityUtil.getInstance().addMaterial());
-
-
 
 
         //执行查询
@@ -197,35 +181,32 @@ public class Panel_Material  extends  BasePanel{
 
     /**
      * 显示详细界面
+     *
      * @param material
      */
-    private void showDetailDialog(Material material)
-    {
+    private void showDetailDialog(Material material) {
 
-        MaterialDetailFrame dialog=new MaterialDetailFrame(SwingUtilities.getWindowAncestor(getRoot()),material);
+        MaterialDetailFrame dialog = new MaterialDetailFrame(SwingUtilities.getWindowAncestor(getRoot()), material);
         dialog.pack();
         dialog.setMinimumSize(new Dimension(400, 600));
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);
 
 
-
     }
-    private  void  showImportDialog()
-    {
+
+    private void showImportDialog() {
 
         JDialog dialog = new JDialog(getWindow(getRoot()));
         dialog.setModal(true);
-        Panel_ImportMaterial panel = new Panel_ImportMaterial( );
+        Panel_ImportMaterial panel = new Panel_ImportMaterial();
         dialog.setContentPane(panel.getRoot());
-        dialog.setMinimumSize(new Dimension(400,300));
+        dialog.setMinimumSize(new Dimension(400, 300));
         dialog.pack();
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);
         search(jtf_value.getText().trim());
     }
-
-
 
 
     /**
@@ -234,24 +215,22 @@ public class Panel_Material  extends  BasePanel{
      * @param value
      */
 
-    public void search(final String value )
-    {
-        search(value,0,pagePanel.getPageSize());
+    public void search(final String value) {
+        search(value, 0, pagePanel.getPageSize());
     }
-    public void search(final String value,final int pageIndex, final int pageSize)
-    {
+
+    public void search(final String value, final int pageIndex, final int pageSize) {
 
 
-      final  String mClassId=((MaterialClass)cb_class.getSelectedItem()).code;
+        final String mClassId = ((MaterialClass) cb_class.getSelectedItem()).code;
 
 
-        new HdSwingWorker<Material,Object>( getWindow(getRoot()))
-        {
+        new HdSwingWorker<Material, Object>(getWindow(getRoot())) {
             @Override
             protected RemoteData<Material> doInBackground() throws Exception {
 
 
-                return   apiManager.loadMaterialByCodeOrName(value,mClassId, pageIndex, pageSize);
+                return apiManager.loadMaterialByCodeOrName(value, mClassId, pageIndex, pageSize);
 
             }
 
@@ -266,7 +245,57 @@ public class Panel_Material  extends  BasePanel{
         }.go();
 
 
+    }
 
 
+    /**
+     * 表格绘制 停用的红底显示
+     */
+    public class DefaultCellRenderer extends DefaultTableCellRenderer {
+
+
+        public DefaultCellRenderer() {
+           // setOpaque(true);
+
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Component component = super.getTableCellRendererComponent(table, value,
+                    isSelected, hasFocus, row, column);
+
+            MaterialTableModel model = (MaterialTableModel) table.getModel();
+            if(component instanceof  JLabel) {
+                JLabel jLabel = (JLabel) component;
+                if (value instanceof ImageIcon) {
+
+                    jLabel.setIcon((ImageIcon) value);
+                    jLabel.setText("");
+                } else {
+
+                    jLabel.setIcon(null);
+                    Material material = model.getItem(row);
+                    if (material != null) {
+
+                        if (material.outOfService)
+
+                            component.setForeground(Color.RED);
+
+                        else if (isSelected) {
+                            component.setForeground(Color.white);
+
+                        } else {
+                            component.setForeground(Color.black);
+                        }
+
+
+                    }
+
+                }
+            }
+
+            return component;
+        }
     }
 }

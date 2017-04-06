@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/** 报价导出咸康灯具模板
+/**
+ * 报价导出咸康灯具模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_XK_DENGJU extends ExcelReportor {
@@ -34,19 +35,15 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
 
 
-
-
         //Create Workbook instance holding reference to .xlsx file
-        InputStream inputStream=url.openStream();
+        InputStream inputStream = url.openStream();
         workbook = new HSSFWorkbook(inputStream);
-
-
 
 
         writeOnExcel(workbook.getSheetAt(0), quotationDetail);
 
 
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -54,29 +51,18 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
-    protected void writeOnExcel(Sheet writableSheet,QuotationDetail quotationDetail) throws IOException, HdException {
-        int defaultRowCount=10;
+    protected void writeOnExcel(Sheet writableSheet, QuotationDetail quotationDetail) throws IOException, HdException {
+        int defaultRowCount = 10;
 
-        int startRow=4;
-
-
+        int startRow = 4;
 
 
-
-        int dataSize=quotationDetail.items.size();
+        int dataSize = quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(workbook,writableSheet,startRow,defaultRowCount,dataSize);
-
-
-
-
+        duplicateRow(workbook, writableSheet, startRow, defaultRowCount, dataSize);
 
 
         //填充数据
@@ -86,29 +72,22 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
         //设计号  版本号
 //        label1 = new Label(7, 1, quotationDetail.quotation.qDate,format);
 //        writableSheet.addCell(label1);
-        addString(writableSheet,quotationDetail.quotation.qDate,7,1);
+        addString(writableSheet, quotationDetail.quotation.qDate, 7, 1);
 
 
+        ApiManager apiManager = Guice.createInjector().getInstance(ApiManager.class);
 
-
-        ApiManager apiManager= Guice.createInjector().getInstance(ApiManager.class);
-
-        for(int i=0;i<dataSize;i++)
-        {
-            int rowUpdate=startRow+i;
-            QuotationItem item=quotationDetail.items.get(i);
-
+        for (int i = 0; i < dataSize; i++) {
+            int rowUpdate = startRow + i;
+            QuotationItem item = quotationDetail.items.get(i);
 
 
             //图片
+            if (isExportPicture())
+                exportPicture(item.photoUrl, item.getFullProductName());
 
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
-
-
-
-
-
+            attachPicture(workbook, writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 4, rowUpdate, 4, rowUpdate);
 
 
             //行号
@@ -128,17 +107,14 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             //货号
 //            label1 = new Label(2, rowUpdate, item.productName.trim(),format);
 //            writableSheet.addCell(label1);
-            addString(writableSheet,item.productName,2,rowUpdate);
-
+            addString(writableSheet, item.productName, 2, rowUpdate);
 
 
             //材料比重
             //货号
 //            label1 = new Label(8, rowUpdate,   constitute);
 //            writableSheet.addCell(label1);
-            addString(writableSheet,item.constitute,8,rowUpdate);
-
-
+            addString(writableSheet, item.constitute, 8, rowUpdate);
 
 
             //净重
@@ -146,36 +122,30 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             addString(writableSheet, item.memo, 58, rowUpdate);
 
 
-
             //读取咸康数据
-            RemoteData<Xiankang> xiankangRemoteData=apiManager.loadXiankangDataByProductId(item.productId);
+            RemoteData<Xiankang> xiankangRemoteData = apiManager.loadXiankangDataByProductId(item.productId);
 
 
+            if (xiankangRemoteData.isSuccess() && xiankangRemoteData.datas.size() > 0) {
 
-
-
-
-            if(xiankangRemoteData.isSuccess()&&xiankangRemoteData.datas.size()>0)
-            {
-
-                Xiankang xiankang=xiankangRemoteData.datas.get(0);
+                Xiankang xiankang = xiankangRemoteData.datas.get(0);
                 Xiankang_Dengju xiankang_dengju = xiankang.xiankang_dengju;
 
                 //同款货号
 //                label1 = new Label(3, rowUpdate,  xiankang.getQitahuohao() ,format);
 //                writableSheet.addCell(label1);
 
-                addString(writableSheet, xiankang.getQitahuohao(),3,rowUpdate);
+                addString(writableSheet, xiankang.getQitahuohao(), 3, rowUpdate);
 
                 //材料百分比
-                addString(writableSheet, xiankang.getQitahuohao(),8,rowUpdate);
+                addString(writableSheet, xiankang.getQitahuohao(), 8, rowUpdate);
 
                 //甲醛标示
 
-                addString(writableSheet, xiankang.getJiaquan(),9,rowUpdate);
+                addString(writableSheet, xiankang.getJiaquan(), 9, rowUpdate);
 
                 //包装描述
-                addString(writableSheet, xiankang.getPack_memo(),50,rowUpdate);
+                addString(writableSheet, xiankang.getPack_memo(), 50, rowUpdate);
 
 
                 //材质
@@ -183,20 +153,7 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
 //                writableSheet.addCell(label1);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                if(xiankang_dengju!=null) {
+                if (xiankang_dengju != null) {
 
 
                     addString(writableSheet, xiankang_dengju.getCaizhi(), 10, rowUpdate);
@@ -233,9 +190,6 @@ public class Report_Excel_XK_DENGJU extends ExcelReportor {
             }
 
         }
-
-
-
 
 
     }

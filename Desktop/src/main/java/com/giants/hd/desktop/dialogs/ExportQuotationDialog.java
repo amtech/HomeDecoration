@@ -24,6 +24,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
     private JTextField jtf_path;
     private JButton btn_file;
     private JButton btn_confirm;
+    private JCheckBox withPicture;
 
     private static String lastSelectedPath="";
 
@@ -87,8 +88,10 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
 
 
 
+                boolean isExportPicture=withPicture.isSelected();
 
-                doExportWork((QuotationFile) cb_model.getSelectedItem(),jtf_path.getText().trim());
+
+                doExportWork((QuotationFile) cb_model.getSelectedItem(),jtf_path.getText().trim(),isExportPicture);
             }
         });
 
@@ -120,7 +123,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
      * @param file
      * @param exportPath
      */
-    private void doExportWork( final QuotationFile file, final String exportPath) {
+    private void doExportWork(final QuotationFile file, final String exportPath, final boolean  isExportPicture) {
 
 
         new HdSwingWorker<Void,Void>(ExportQuotationDialog.this)
@@ -129,6 +132,7 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
             protected RemoteData<Void> doInBackground() throws Exception {
 
             ExcelReportor reporter= reportFactory.createExcelReportor(file);
+                reporter.setExportPicture(isExportPicture);
                 reporter.report(detail, exportPath);
 
             //    ExportHelper.exportQuotation(detail, modelName, exportPath);

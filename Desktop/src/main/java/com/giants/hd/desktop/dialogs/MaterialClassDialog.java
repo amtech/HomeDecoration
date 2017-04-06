@@ -4,6 +4,7 @@ import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.MaterialClassTableModel;
 import com.giants.hd.desktop.reports.EXCEL_TYPE;
+import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.RemoteData;
@@ -22,6 +23,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,28 +40,25 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
     private JButton btn_save;
     private JButton btn_import;
     private JHdTable jtable;
+    private JButton btn_add;
 
     @Inject
     ApiManager apiManager;
 
-     @Inject
-     MaterialClassTableModel classTableModel;
+    @Inject
+    MaterialClassTableModel classTableModel;
 
 
-
-
-    public MaterialClassDialog(Window window)
-    {
+    public MaterialClassDialog(Window window) {
         super(window);
 
     }
 
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         setContentPane(contentPane);
-        setTitle( "材料分类列表");
+        setTitle("材料分类列表");
         jtable.setModel(classTableModel);
 
         //保存数据
@@ -71,6 +71,22 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
             }
         });
 
+        btn_add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                MaterialClassUpdateDialog materialClassUpdateDialog = new MaterialClassUpdateDialog(MaterialClassDialog.this);
+                materialClassUpdateDialog.setVisible(true);
+                MaterialClass materialClass = materialClassUpdateDialog.getResult();
+                if (materialClass != null) {
+                    //重新加载
+                    doLoadWork();
+
+                }
+
+
+            }
+        });
 
         btn_import.addActionListener(new ActionListener() {
             @Override
@@ -94,7 +110,7 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
                     try {
                         List<MaterialClass> datas = readDataFromXLS(path);
                         classTableModel.setDatas(datas);
-                       // doSaveWork( );
+                        // doSaveWork( );
                     } catch (Throwable e1) {
                         e1.printStackTrace();
                         JOptionPane.showMessageDialog(MaterialClassDialog.this, "文件读失败:" + e1.getMessage());
@@ -106,29 +122,47 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
             }
         });
 
+        jtable.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getClickCount() == 2) {
+                    final int[] selectedRowSOnModel = JTableUtils.getSelectedRowSOnModel(jtable);
+                    if (selectedRowSOnModel == null || selectedRowSOnModel.length < 1) return;
+                    MaterialClass selectedData = classTableModel.getItem(selectedRowSOnModel[0]);
+                    MaterialClassUpdateDialog materialClassUpdateDialog = new MaterialClassUpdateDialog(MaterialClassDialog.this, selectedData);
+                    materialClassUpdateDialog.setVisible(true);
+                    MaterialClass materialClass = materialClassUpdateDialog.getResult();
+                    if (materialClass != null) {
+                        //重新加载
+                        doLoadWork();
+
+                    }
+
+                }
+            }
+        });
     }
-
-
 
 
     /**
      * 从excel 表格中读取分类数据·
+     *
      * @param path
      * @return
      */
-    private  List<MaterialClass> readDataFromXLS(String path) throws IOException {
+    private List<MaterialClass> readDataFromXLS(String path) throws IOException {
 
-        String fileType=path.substring(path.lastIndexOf(".")+1);
+        String fileType = path.substring(path.lastIndexOf(".") + 1);
 
 
         InputStream is = new FileInputStream(path);
         Workbook rwb;
-        if(EXCEL_TYPE.XLSX.equals(fileType))
-        {
-            rwb=new XSSFWorkbook(is);
-        }else {
-            rwb=new HSSFWorkbook(is);
+        if (EXCEL_TYPE.XLSX.equals(fileType)) {
+            rwb = new XSSFWorkbook(is);
+        } else {
+            rwb = new HSSFWorkbook(is);
         }
 
 
@@ -140,21 +174,18 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
         int rsRows = st.getLastRowNum();
 
 
-        List<MaterialClass> materials=new ArrayList<>();
-//        int batchSize=10;
-//        ObjectPool<Material> materialObjectPool= PoolCenter.getObjectPool(Material.class, batchSize);
+        List<MaterialClass> materials = new ArrayList<>();
         MaterialClass materialClass;
 
         for (int i = 1; i < rsRows; i++) {
 
-            Row row=st.getRow(i);
-            if(row==null)
+            Row row = st.getRow(i);
+            if (row == null)
                 continue;
 
             Cell cell = row.getCell(0, Row.RETURN_BLANK_AS_NULL);
             String value = cell.getStringCellValue();
-            if(StringUtils.isEmpty(value))
-            {
+            if (StringUtils.isEmpty(value)) {
                 //如果编码为空 直接跳过
                 continue;
 
@@ -167,57 +198,50 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
             try {
                 materialClass.wLong = (float) row.getCell(1, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.wLong=0;
+                materialClass.wLong = 0;
             }
             try {
-                materialClass.wWidth =(float) row.getCell(2, Row.RETURN_BLANK_AS_NULL).getNumericCellValue()  ;
+                materialClass.wWidth = (float) row.getCell(2, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.wWidth=0;
+                materialClass.wWidth = 0;
             }
             try {
                 materialClass.wHeight = (float) row.getCell(3, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.wHeight=0;
+                materialClass.wHeight = 0;
             }
 
             try {
-                materialClass.available =(float) row.getCell(4, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
+                materialClass.available = (float) row.getCell(4, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.available=1;
+                materialClass.available = 1;
             }
 
             try {
-                materialClass.discount =(float) row.getCell(5, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
+                materialClass.discount = (float) row.getCell(5, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.discount=0;
+                materialClass.discount = 0;
             }
 
             try {
                 materialClass.type
                         = (int) row.getCell(6, Row.RETURN_BLANK_AS_NULL).getNumericCellValue();
             } catch (Throwable t) {
-                materialClass.type=-1;
+                materialClass.type = -1;
             }
 
 
-
-
-            materialClass.name =  row.getCell(7, Row.RETURN_BLANK_AS_NULL).getStringCellValue()  ;
+            materialClass.name = row.getCell(7, Row.RETURN_BLANK_AS_NULL).getStringCellValue();
 
             materials.add(materialClass);
 
-            }
+        }
 
 
         rwb.close();
         is.close();
 
         return materials;
-
-
-
-
-
 
 
     }
@@ -233,8 +257,7 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
     }
 
     @Override
-    protected   RemoteData<MaterialClass> saveData(List<MaterialClass> datas)throws HdException
-    {
+    protected RemoteData<MaterialClass> saveData(List<MaterialClass> datas) throws HdException {
 
         return apiManager.saveMaterialClasses(datas);
     }

@@ -1,29 +1,19 @@
 package com.giants.hd.desktop.model;
 
-import com.giants.hd.desktop.interf.Iconable;
-import com.giants.hd.desktop.local.ConstantData;
-import com.giants.hd.desktop.local.ImageLoader;
-import com.giants.hd.desktop.local.LocalFileHelper;
-import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
-import org.apache.commons.collections.map.LRUMap;
 
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
  * 表格模型基类
+ * 旧的模型   数组形式表示列
  */
 
-public abstract class BaseTableModel<T> extends AbstractTableModel {
+public abstract class BaseTableModel<T> extends AbsTableModel<T> {
 
 
     public String[] columnNames;
@@ -32,8 +22,6 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
     public Class[] classes;
     //是否合成字段  以.为二级字段。
     public boolean[] combineField;
-    List<T> datas;
-    public Class<T> itemClass;
 
 
     protected int MiniRowCount = 20;
@@ -54,24 +42,38 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
     }
 
 
+    /**
+     * 调整表结构
+     *
+     * @param columnNames
+     * @param fieldName
+     * @param classes
+     */
+    public void updateStructure(String[] columnNames, String[] fieldName, Class[] classes) {
+        this.classes = classes;
+        this.fieldName = fieldName;
+        this.columnNames = columnNames;
+
+        fireTableStructureChanged();
+    }
+
+
     public BaseTableModel(List<T> datas, String[] columnNames, String[] fieldName, Class[] classes, Class<T> itemClass) {
-        this.datas = datas;
+        super(datas, itemClass);
 
         this.classes = classes;
         this.fieldName = fieldName;
         this.columnNames = columnNames;
-        this.itemClass = itemClass;
         int size = fieldName.length;
         fields = new Field[size];
-        combineField=new boolean[size];
+        combineField = new boolean[size];
         for (int i = 0; i < size; i++) {
-            combineField[i]=fieldName[i].indexOf(StringUtils.STRING_SPLIT_DOT)>-1;
+            combineField[i] = fieldName[i].indexOf(StringUtils.STRING_SPLIT_DOT) > -1;
 
-            if (combineField[i])
-            {
+            if (combineField[i]) {
 
 
-            }else {
+            } else {
 
 
                 try {
@@ -139,12 +141,6 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
         return columnNames[column];
     }
 
-    public List<T> getDatas() {
-
-
-        return datas;
-    }
-
 
     public List<T> getValuableDatas() {
         ArrayList<T> newArrays = new ArrayList<>();
@@ -186,144 +182,6 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    @Override
-    public int getRowCount() {
-        return datas.size();
-    }
-
-
-    public T getItem(int rowIndex) {
-        if (rowIndex < 0 || rowIndex >= datas.size()) return null;
-        return datas.get(rowIndex);
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-
-
-        if (fieldName[columnIndex].equals(ConstantData.COLUMN_INDEX)) {
-            return rowIndex + 1;
-        }
-
-
-
-        T data =getItem(rowIndex);
-        Object obj = null;
-        //复合字段数据
-        if(combineField[columnIndex])
-        {
-           String[] fields=fieldName[columnIndex].split(StringUtils.STRING_SPLIT_DOT);
-              obj=data;
-            for(String field:fields)
-            {
-                try {
-                    obj= obj.getClass().getField(field).get(obj);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }else {
-
-            //单字段处理
-            if (fields[columnIndex] == null)
-                return null;
-
-
-
-            try {
-                obj = fields[columnIndex].get(data);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }catch (Throwable t)
-            {
-                t.printStackTrace();
-            }
-        }
-
-
-        //数字为0  显示空字符串
-        if (obj instanceof Number) {
-            if (Math.abs(((Number) obj).floatValue()) <= 0.00001)
-                return "";
-            else if (obj instanceof Float) {
-                //    make the float value 3.0  to show in 3 ,without the fraction.
-                return FloatHelper.scale((Float) obj, 5);
-            }
-        } else
-            //显示图片
-            if (getColumnClass(columnIndex).equals(ImageIcon.class)) {
-                if (obj instanceof byte[])
-                    return new ImageIcon((byte[]) obj);
-                //图片url
-                if (obj instanceof String) {
-                    return loadImage(rowIndex, columnIndex, (String) obj);
-                }
-
-            }
-
-        return obj
-                ;
-
-
-    }
-
-
-//    private static StringBuilder sb = new StringBuilder();
-//    ExecutorService service= Executors.newSingleThreadExecutor();
-    protected Object loadImage(final int row, final int column, String url) {
-
-
-//        Runtime runtime = Runtime.getRuntime();
-//        sb.setLength(0);
-//        sb.append("totalMemory:" + runtime.totalMemory() / 1024 / 1024).append("\n");
-//        sb.append("freeMemory:" + runtime.freeMemory() / 1024 / 1024).append("\n");
-//        sb.append("maxMemory:" + runtime.maxMemory() / 1024 / 1024).append("\n");
-//
-//
-//     final   String message=sb.toString();
-//        sb.setLength(0);
-//        service .submit(new Runnable() {
-//            @Override
-//            public void run() {
-//                LocalFileHelper.writeString("runtime.txt",message );
-//            }
-//        });
-
-
-        String[] fileNames = url.split(";");
-
-        if (fileNames == null || fileNames.length == 0 || StringUtils.isEmpty(fileNames[0])) return "";
-        final String destUrl = HttpUrl.loadPicture(fileNames[0]);
-        ImageIcon data = (ImageIcon) pictureMaps.get(destUrl);
-        if (data != null)
-            System.out.println(pictureMaps.size() + "  hit   " + destUrl);
-        if (data == null) {
-
-            ImageLoader.getInstance().displayImage(new Iconable() {
-                @Override
-                public void setIcon(ImageIcon icon) {
-                    pictureMaps.put(destUrl, icon);
-                    fireTableCellUpdated(row, column);
-                }
-
-                @Override
-                public void onError(String message) {
-                    pictureMaps.put(destUrl, new ImageIcon(new byte[0]));
-
-                }
-            }, destUrl, getColumnWidth() == null ? 50 : getColumnWidth()[column], getRowHeight());
-
-            return null;
-
-        } else {
-            return data;
-        }
-
-
-    }
 
     /**
      * \
@@ -402,6 +260,16 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
     }
 
 
+    @Override
+    public  int getColumnWidth(int column) {
+
+        int[] widthArray = getColumnWidth();
+        if (widthArray != null) {
+            return widthArray[column];
+        }
+        return super.getColumnWidth(column);
+    }
+
     /**
      * 定制列宽度
      *
@@ -409,18 +277,6 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
      */
     public int[] getColumnWidth() {
         return null;
-    }
-
-
-    /**
-     * 返回 设置行高
-     *
-     * @return
-     */
-    public int getRowHeight() {
-
-        return
-                0;
     }
 
 
@@ -475,11 +331,26 @@ public abstract class BaseTableModel<T> extends AbstractTableModel {
 
 
     /**
-     * 表格中使用的图片缓存
-     * 异步加载的图片缓存
-     * 最多50
+     * 是否有.连接的字段
+     *
+     * @param column
+     * @return
      */
-    private static LRUMap pictureMaps = new LRUMap(50, 0.75f, false);
+    @Override
+    protected boolean isCombineField(int column) {
 
 
+        return combineField[column];
+    }
+
+
+    @Override
+    protected String getFieldName(int column) {
+        return fieldName[column];
+    }
+
+    @Override
+    protected Field getField(int column) {
+        return fields[column];
+    }
 }

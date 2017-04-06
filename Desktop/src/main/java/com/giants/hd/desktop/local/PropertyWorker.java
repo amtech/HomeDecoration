@@ -30,14 +30,7 @@ public class PropertyWorker {
 
         //以包起始的地方开始   jar 根目录开始。
 		InputStream inputStream=	PropertyWorker.class.getClassLoader().getResourceAsStream(PROPERTY_FILE) ;
-
-
-
-
 		if(inputStream!=null) {
-
-
-
 
 
 		Properties props = new Properties();
@@ -125,4 +118,7 @@ public class PropertyWorker {
 		}
 		return appVersion;
 	}
+
+
+
 }

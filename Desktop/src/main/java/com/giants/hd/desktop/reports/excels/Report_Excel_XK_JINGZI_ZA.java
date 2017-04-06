@@ -111,7 +111,9 @@ public class Report_Excel_XK_JINGZI_ZA extends ExcelReportor {
             String productName=item.productId>0?item.productName:item.productName2;
             String pVersion=item.productId>0?item.pVersion:item.pVersion2;
             String unit=item.productId>0?item.unit:item.unit;
+            if(isExportPicture())
 
+                exportPicture(photoUrl,item.getFullProductName() );
             attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(photoUrl),4, rowUpdate ,4, rowUpdate);
 
 

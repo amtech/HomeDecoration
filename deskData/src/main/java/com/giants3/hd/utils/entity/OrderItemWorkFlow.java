@@ -52,7 +52,7 @@ public class OrderItemWorkFlow {
 
 
     /**
-     *  生产方式
+     *  生产方式  自制， 购买
      */
     public int produceType;
 

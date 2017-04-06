@@ -55,7 +55,7 @@ public class PackMaterialClassTableModel extends BaseTableModel<PackMaterialClas
 
 
         //如果材料分类名称是预定义的 不能修改。
-        if(COLUMN_NAME.equals(fieldName[columnIndex] ) && ArrayUtils.indexOnArray(PackMaterialClass.PRESERVED_CLASS,materialClass.getName())>-1)
+        if(COLUMN_NAME.equals(fieldName[columnIndex] ) &&!StringUtils.isEmpty(materialClass.getName())&& ArrayUtils.indexOnArray(PackMaterialClass.PRESERVED_CLASS,materialClass.getName())>-1)
             return false;
 
 

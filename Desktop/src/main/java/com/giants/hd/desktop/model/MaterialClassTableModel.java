@@ -37,10 +37,7 @@ public class MaterialClassTableModel extends BaseTableModel<MaterialClass> {
     }
 
 
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
-    }
+
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {

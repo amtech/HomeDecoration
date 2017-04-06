@@ -23,4 +23,11 @@ public interface MaterialRepository extends JpaRepository<Material,Long> {
 
 
     public Material findFirstByNameEquals(String name);
+
+
+
+    public Material findFirstByClassIdEquals(String classId);
+
+
+
 }

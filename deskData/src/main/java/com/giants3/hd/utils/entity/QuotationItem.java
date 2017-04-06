@@ -218,4 +218,10 @@ public class QuotationItem implements Serializable,Valuable {
         result = 31 * result + (memo != null ? memo.hashCode() : 0);
         return result;
     }
+
+
+    public String  getFullProductName()
+    {
+        return  productName+(StringUtils.isEmpty(pVersion)?"":("-"+pVersion));
+    }
 }

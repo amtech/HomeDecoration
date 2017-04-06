@@ -395,15 +395,20 @@ public class ProductService extends AbstractService implements InitializingBean,
         } else {
             long lastPhotoUpdateTime = FileUtils.getFileLastUpdateTime(file);
             String newUrl = FileUtils.getProductPictureURL(product.name, product.pVersion, lastPhotoUpdateTime);
-            //三种情况下 更新图片路径  1 图片已经被修改。  2  新图片路径与旧路径不一致  3 缩略图未生成
-            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail)) {
+
+            //構建縮略路径 保证文件夹存在
+            String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
+            boolean  thumbnailFileExist=new File(thumbnailPath).exists();
+            //四种情况下 更新图片路径  1 图片已经被修改。  2  新图片路径与旧路径不一致  3 缩略图未生成 4 缩略图对应图片不存在
+            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail)||!thumbnailFileExist) {
 
                 product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
                 product.setUrl(newUrl);
                 clearThumbnailFile(product.thumbnail);
-                //構建縮略路径 保证文件夹存在
-                String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
+
+
                 String thumbnailUrl = FileUtils.getProductThumbnailUrl(product);
+                //構建縮略路径 保证文件夹存在
                 FileUtils.makeDirs(thumbnailPath);
                 try {
 
@@ -437,6 +442,12 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
         return false;
+
+
+    }
+
+    private  void createThumbNailFileIfNotExist()
+    {
 
 
     }

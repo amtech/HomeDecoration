@@ -22,7 +22,9 @@ public class StringUtils {
 
     public static final String STRING_SPLIT_DOT =".";
     public static final String PRODUCT_NAME_SPILT ="-";
-    public static final String PRODUCT_NAME_COMMA =",";
+    public static final String STRING_SPLIT_COMMA =",";
+    public static final String PRODUCT_NAME_COMMA =STRING_SPLIT_COMMA;
+
     /**
      * 厘米字符串 转换成 英寸字符串
      *格式如下 999*999*999\n 888*888*88

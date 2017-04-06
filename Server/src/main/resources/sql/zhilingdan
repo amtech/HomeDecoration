@@ -1,10 +1,10 @@
 --查询指令单完成状态
 -- 参数  起止时间   订单号模糊查询
-select  zhiling.mo_dd, zhiling.mo_no,zhiling.prd_no,zhiling.prd_name,zhiling.prd_mark, isnull(zhiling.qty_rsv,0) as qty_rsv,zhiling.mrp_no, zhiling.so_no as os_no, isnull(caigou.qty,0) as caigouqty,caigou.os_no as caigou_no,caigou.os_dd as caigou_dd,jinhuo.ps_no as jinhuo_no, jinhuo.ps_dd as jinhuo_dd ,isnull(jinhuo.qty,0) as jinhuoqty,  isnull(baseinfo.need_days,0) as need_days,isnull(baseinfo.need_dd,0) as need_dd    from (
+select  zhiling.mo_dd, zhiling.mo_no,zhiling.prd_no,zhiling.prd_name,zhiling.prd_mark, isnull(zhiling.qty_rsv,0) as qty_rsv,zhiling.mrp_no, zhiling.so_no as os_no, zhiling.mo_no_add as real_prd_name ,isnull(caigou.qty,0) as caigouqty,caigou.os_no as caigou_no,caigou.os_dd as caigou_dd,jinhuo.ps_no as jinhuo_no, jinhuo.ps_dd as jinhuo_dd ,isnull(jinhuo.qty,0) as jinhuoqty,  isnull(baseinfo.need_days,0) as need_days,isnull(baseinfo.need_dd,0) as need_dd    from (
            --制令单
-        select b.mo_dd,a.mo_no,a.prd_no,a.prd_name,a.prd_mark,a.qty_rsv,b.so_no,b.mrp_no   from
+        select b.mo_dd,a.mo_no,a.prd_no,a.prd_name,a.prd_mark,a.qty_rsv,b.so_no,b.mrp_no  ,b.mo_no_add from
                             (
-                              select  mo_dd, mo_no,  so_no, mrp_no  from mf_mo       where   mo_dd >=:startdate and  mo_dd <= :enddate and so_no like :osname
+                              select  mo_dd, mo_no,  so_no, mrp_no ,mo_no_add from mf_mo       where   mo_dd >=:startdate and  mo_dd <= :enddate and so_no like :osname
 
                             )  b inner join
                            (
@@ -24,7 +24,7 @@ select  zhiling.mo_dd, zhiling.mo_no,zhiling.prd_no,zhiling.prd_name,zhiling.prd
   left   join  --关联采购单
 
   (                                                                                              --进行时间过滤
-   select os_dd,prd_no,prd_mark,qty,qt_no,mrp_nos,os_no  from tf_pos where os_id= upper('po')  and  os_dd >=:startdate
+   select os_dd,prd_no,prd_mark,qty,qt_no,mrp_nos,os_no   from tf_pos where os_id= upper('po')  and  os_dd >=:startdate
    ) as caigou   on zhiling.prd_no=caigou.prd_no  and zhiling.so_no=caigou.qt_no and zhiling.mrp_no=caigou.mrp_nos and zhiling.prd_mark=caigou.prd_mark
 
    left   join  -- 关联进货单

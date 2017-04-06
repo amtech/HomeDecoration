@@ -1,9 +1,5 @@
 package com.giants.hd.desktop.presenter;
 
-import com.giants3.hd.utils.entity_erp.ErpOrderItem;
-
-import java.io.File;
-
 /**
  *
  *   权限明细详情展示层接口

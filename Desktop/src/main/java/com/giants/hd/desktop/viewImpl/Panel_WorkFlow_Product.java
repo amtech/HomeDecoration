@@ -9,8 +9,6 @@ import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
-import com.sun.java.swing.SwingUtilities3;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +86,6 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
     public void setData(WorkFlowProduct workFlowProduct) {
 
 
-
         //新数据不绑定
         if (workFlowProduct.id <= 0) return;
         String[] temp = workFlowProduct.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
@@ -100,33 +97,29 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
         }
 
 
-
         //一级流程
         temp = workFlowProduct.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        String[] configSubTypeStrings=workFlowProduct.workFlowTypes==null?null:workFlowProduct.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-          size = workFlows.length;
+        String[] configSubTypeStrings = workFlowProduct.workFlowTypes == null ? null : workFlowProduct.workFlowTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+        size = workFlows.length;
 
         for (int i = 0; i < size; i++) {
             WorkFlow workFlow = workFlows[i];
             final int indexOnArray = ArrayUtils.indexOnArray(temp, String.valueOf(workFlow.flowStep));
             workFlowCheckBoxes.get(i).setSelected(indexOnArray >= 0);
-            configSubtypes.get(i).setEnabled(indexOnArray>=0);
+            configSubtypes.get(i).setEnabled(indexOnArray >= 0);
 
 
-
-              boolean config = indexOnArray > -1 && configSubTypeStrings != null && configSubTypeStrings.length > indexOnArray && "1".equals(configSubTypeStrings[indexOnArray]);
+            boolean config = indexOnArray > -1 && configSubTypeStrings != null && configSubTypeStrings.length > indexOnArray && "1".equals(configSubTypeStrings[indexOnArray]);
 
             configSubtypes.get(i).setSelected(config);
 
             //设置默认值
-            if(configSubTypeStrings==null||configSubTypeStrings.length==0)
-            {
-                configSubtypes.get(i).setSelected(i<3);
+            if (configSubTypeStrings == null || configSubTypeStrings.length == 0) {
+                configSubtypes.get(i).setSelected(i < 3);
             }
 
 
         }
-
 
 
     }
@@ -142,7 +135,7 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
 
 
         StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder nameStringBuilder=new StringBuilder();
+        StringBuilder nameStringBuilder = new StringBuilder();
         int size = workFlowSubTypes.size();
         for (int i = 0; i < size; i++) {
             if (workFlowSubTypeChecks.get(i).isSelected()) {
@@ -161,61 +154,31 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
         workFlowProduct.productTypeNames = nameStringBuilder.toString();
 
 
-
-
-
-
         //一级流程
         stringBuilder.setLength(0);
-          size = workFlows.length;
+        size = workFlows.length;
         nameStringBuilder.setLength(0);
 
-        StringBuilder configSubTypeStrings=new StringBuilder();
+        StringBuilder configSubTypeStrings = new StringBuilder();
         for (int i = 0; i < size; i++) {
             if (workFlowCheckBoxes.get(i).isSelected()) {
-                WorkFlow workFlow = workFlows[i] ;
+                WorkFlow workFlow = workFlows[i];
                 stringBuilder.append(workFlow.flowStep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
                 nameStringBuilder.append(workFlow.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
-                configSubTypeStrings.append(configSubtypes.get(i).isSelected()?1:0).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+                configSubTypeStrings.append(configSubtypes.get(i).isSelected() ? 1 : 0).append(ConstantData.STRING_DIVIDER_SEMICOLON);
             }
 
         }
-        if (stringBuilder.length() > 0)
-        {
+        if (stringBuilder.length() > 0) {
             stringBuilder.setLength(stringBuilder.length() - 1);
             nameStringBuilder.setLength(nameStringBuilder.length() - 1);
             configSubTypeStrings.setLength(configSubTypeStrings.length() - 1);
         }
 
         workFlowProduct.workFlowSteps = stringBuilder.toString();
-        workFlowProduct.workFlowNames=nameStringBuilder.toString();
-        workFlowProduct.workFlowTypes=configSubTypeStrings.toString();
-
-
-
-
-
-
-
+        workFlowProduct.workFlowNames = nameStringBuilder.toString();
+        workFlowProduct.workFlowTypes = configSubTypeStrings.toString();
     }
-
-
-//    @Override
-//    public void setSubData(List<WorkFlowSubType> datas) {
-//        workFlowSubTypes=datas;
-//        workFlowSubTypeChecks=new ArrayList<>();
-//        for (WorkFlowSubType subType:datas)
-//        {
-//            JCheckBox jCheckBox=new JCheckBox(subType.typeName);
-//            workFlowSubTypeChecks.add(jCheckBox);
-//            subtypes.add(jCheckBox);
-//
-//        }
-//
-//
-//
-//
-//    }
 
 
     private void init() {
@@ -243,9 +206,8 @@ public class Panel_WorkFlow_Product extends BasePanel implements WorkFlowProduct
             panel_work_flow.add(panelBaseOnWorkFlow);
         }
         //默认设置， 前三个流程
-        for(int i=0;i<configSubtypes.size();i++)
-        {
-            configSubtypes.get(i).setSelected(i<3);
+        for (int i = 0; i < configSubtypes.size(); i++) {
+            configSubtypes.get(i).setSelected(i < 3);
         }
 
 

@@ -1,5 +1,7 @@
 package com.giants3.hd.server.entity;
 
+import com.giants3.hd.utils.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,10 +29,9 @@ public class OrderItemWorkFlow {
     public String workFlowSteps;
     public String workFlowNames;
     /**
-     * 流程类型 0 主流程，1 二级流程
+     * 0，0，1；0，1，1  格式， 表示对应的类型是否配置改流程  {@see productTypes} 0,0,0 表示不在细分， 需要汇总数据处理。
      */
-    public String  workFlowTypes;
-
+    public String configs;
     /**
      * 二级流程配置  铁or木orPU 或者任意组合。 ；隔开
      * <p/>
@@ -73,4 +74,5 @@ public class OrderItemWorkFlow {
      * 生产厂家  外厂 ，自制为空
      */
     public String produceFactoryName;
+    public String  workFlowTypes;
 }

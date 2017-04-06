@@ -14,6 +14,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import java.io.File;
 import java.util.*;
-import java.util.logging.Logger;
+
 
 /**
 * 材料信息控制类。
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 public class MaterialController extends BaseController {
 
     private static final String TAG="MaterialController";
-
+    private static final Logger logger = Logger.getLogger(MaterialController.class);
     @Autowired
     private MaterialRepository materialRepository;
 
@@ -258,7 +259,7 @@ public class MaterialController extends BaseController {
              }
 
         if(isNew||!isSameData)
-        Logger.getLogger(TAG).info("material :"+prdt.prd_no+",isNew="+isNew+",isSame:"+isSameData);
+            logger.info("material :"+prdt.prd_no+",isNew="+isNew+",isSame:"+isSameData);
 
 
 
@@ -286,7 +287,7 @@ public class MaterialController extends BaseController {
         List<Prdt>  datas=repository.list();
         helper.closeEntityManager();
         int size=datas.size();
-       Logger.getLogger(TAG).info("syncErp total  material size :"+size);
+        logger.info("syncErp total  material size :"+size);
 
         List<MaterialClass> materialClasses=materialClassRepository.findAll();
 
@@ -327,10 +328,10 @@ public class MaterialController extends BaseController {
                 }
             }
            // if(!foundClass)
-               // Logger.getLogger(TAG).info("material :"+prdt.prd_no+" didnot found its class :"+classId);
+               //logger.info("material :"+prdt.prd_no+" didnot found its class :"+classId);
 
 
-           // Logger.getLogger(TAG).info("material :"+prdt.prd_no+",flowStep="+i);
+           // logger.info("material :"+prdt.prd_no+",flowStep="+i);
             savePrdt(prdt,relateProductIds);
 
             materialRepository.flush();
@@ -349,7 +350,7 @@ public class MaterialController extends BaseController {
         if(relateProductIds.size()>0)
         {
 
-            Logger.getLogger(TAG).info("   relateProduct Count :"+relateProductIds.size());
+            logger.info("   relateProduct Count :"+relateProductIds.size());
 
 
 
@@ -489,7 +490,7 @@ public class MaterialController extends BaseController {
 
         long count=productToUpdateRepository.count();
         if(count<=0 ) return;
-        Logger.getLogger(TAG).info("product to update for statis data, count:"+count
+        logger.info("product to update for statis data, count:"+count
         );
 
         //异步启动
@@ -537,7 +538,7 @@ public class MaterialController extends BaseController {
      * @return 与单价相关的 产品列表
      */
     private void updatePriceRelateData(  Material material,Set<Long > productIds) {
-        Logger.getLogger("TEST").info("price of material:"+material.code+" has changed!");
+        logger.info("price of material:"+material.code+" has changed!");
         materialPriceRelateProduct.clear();
         if(globalData==null)
           globalData=globalDataService.findCurrentGlobalData();
@@ -594,7 +595,7 @@ public class MaterialController extends BaseController {
         }
 
 
-        Logger.getLogger("TEST").info(" material:"+material.code+",new Price : "+material.price+" has related product count:"+materialPriceRelateProduct.size());
+        logger.info(" material:"+material.code+",new Price : "+material.price+" has related product count:"+materialPriceRelateProduct.size());
 
         productIds.addAll(materialPriceRelateProduct);
         materialPriceRelateProduct.clear();
@@ -663,6 +664,49 @@ public class MaterialController extends BaseController {
     @ResponseBody
     RemoteData<MaterialClass> listClass( )   {
         return wrapData(materialClassRepository.findAll());
+    }
+
+
+
+
+  /**
+     * 删除材料类型类别
+     * @return
+     */
+
+    @RequestMapping(value = "/deleteClass",method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> deleteClass( @RequestParam(value = "materialClassId" ) long materialClassId    )   {
+
+
+
+        return  materialService.deleteClass(materialClassId);
+
+
+
+    }
+
+
+
+
+    /**
+     * 更新材料类型类别
+     * @return
+     */
+
+    @RequestMapping(value = "/updateClass",method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<MaterialClass> updateClass( @RequestBody  MaterialClass materialClass)   {
+
+
+
+        return  materialService.updateClass(materialClass);
+
+
+
+
     }
 
 

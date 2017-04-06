@@ -1,13 +1,13 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.server.parser.RemoteDataParser;
+import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.parser.DataParser;
+import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -21,17 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 权限
-* Created by davidleen29 on 2014/9/18.
-*/
+ * Created by davidleen29 on 2014/9/18.
+ */
 @Controller
 
 @RequestMapping("/authority")
-public class AuthorityController extends  BaseController{
-
-
-
+public class AuthorityController extends BaseController {
 
 
     @Autowired
@@ -63,39 +59,35 @@ public class AuthorityController extends  BaseController{
     UserService userService;
     @Autowired
     @Qualifier("CustomImplName")
-    DataParser<User,AUser>  dataParser;
+    DataParser<User, AUser> dataParser;
 
-    @RequestMapping(value="/findByUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/findByUser", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Authority> findByUser( @RequestParam(value = "userId" ) long userId)   {
+    RemoteData<Authority> findByUser(@RequestParam(value = "userId") long userId) {
 
 
+        User user = userRepository.findOne(userId);
 
-        User user=userRepository.findOne(userId);
-
-        List<Module> modules=moduleRepository.findAll();
-        List<Authority> authorities=authorityRepository.findByUser_IdEquals(userId);
-        List<Authority> unConfigAuthorities=new ArrayList<>();
-        int moduleSize=modules.size();
+        List<Module> modules = moduleRepository.findAll();
+        List<Authority> authorities = authorityRepository.findByUser_IdEquals(userId);
+        List<Authority> unConfigAuthorities = new ArrayList<>();
+        int moduleSize = modules.size();
         for (int i = 0; i < moduleSize; i++) {
 
-            Module module=modules.get(i);
-            boolean found=false;
-            for(Authority authority:authorities)
-            {
-                if(authority.module.id==module.id)
-                {
-                    found=true;
+            Module module = modules.get(i);
+            boolean found = false;
+            for (Authority authority : authorities) {
+                if (authority.module.id == module.id) {
+                    found = true;
                     break;
                 }
             }
 
-            if(!found)
-            {
-                Authority authority=new Authority();
-                authority.module=module;
-                authority.user=user;
+            if (!found) {
+                Authority authority = new Authority();
+                authority.module = module;
+                authority.user = user;
                 unConfigAuthorities.add(authority);
 
             }
@@ -106,155 +98,151 @@ public class AuthorityController extends  BaseController{
         authorities.addAll(unConfigAuthorities);
 
 
-
-     return    wrapData(authorities  );
-
-
-
+        return wrapData(authorities);
 
 
     }
 
 
-    @RequestMapping(value="/saveList", method = RequestMethod.POST)
+    @RequestMapping(value = "/saveList", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<Authority> save( @RequestParam(value = "userId" ) long userId,@RequestBody List<Authority> authorities)   {
+    RemoteData<Authority> save(@RequestParam(value = "userId") long userId, @RequestBody List<Authority> authorities) {
 
 
-        User user=userRepository.findOne(userId);
-        List<Authority> newData=new ArrayList<>();
+        User user = userRepository.findOne(userId);
+        List<Authority> newData = new ArrayList<>();
 
-        for(Authority authority : authorities)
-        {
-            authority.user=user;
+        for (Authority authority : authorities) {
+            authority.user = user;
 
-         Authority findSameAuthority=   authorityRepository.findFirstByUser_IdEqualsAndModule_IdEquals(authority.user.id, authority.module.id);
+            Authority findSameAuthority = authorityRepository.findFirstByUser_IdEqualsAndModule_IdEquals(authority.user.id, authority.module.id);
 
             //保证数据新增或者修改 不存在重复增加
-            if(findSameAuthority==null)
-            {
-                authority.id=-1;
-            }else
-            {
-                authority.id=findSameAuthority.id;
+            if (findSameAuthority == null) {
+                authority.id = -1;
+            } else {
+                authority.id = findSameAuthority.id;
             }
 
-            newData.add( authorityRepository.save(authority));
+            newData.add(authorityRepository.save(authority));
         }
 
 
-        return  wrapData(newData);
+        return wrapData(newData);
     }
 
 
     /**
      * 提供给移动端调用的接口
-     * @param request
-     * @param params
-     * @return
-     */
-    @RequestMapping(value="/aLogin", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RemoteData<AUser> aLogin(HttpServletRequest request, @RequestBody Map<String,String> params)  {
-
-
-          String userName=params.get("userName");
-        String password=params.get("password");
-        String client=params.get("client");
-        String version=params.get("version");
-
-        RemoteData<User> userRemoteData= doLogin(request,userName,password,client,version);
-        RemoteData<AUser> result= RemoteDataParser.parse(userRemoteData, dataParser);
-
-
-        if(result.isSuccess())
-        {
-
-            AUser loginUser=result.datas.get(0);
-            loginUser.token=result.token;
-
-
-
-        }
-
-
-        return  result;
-
-
-    }
-    /**
-     * 提供给移动端调用的接口
-     * @param request
-     * @param params
-     * @return
-     */
-    @RequestMapping(value="/aLogin2", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RemoteData<AUser> aLogin2(HttpServletRequest request, @RequestBody Map<String,String> params)  {
-
-
-        String userName=params.get("userName");
-        String password=params.get("password");
-        String client=params.get("client");
-        String version=params.get("version");
-
-        RemoteData<User> userRemoteData= doLogin2(userName,password,client,version,request.getRemoteAddr());
-        RemoteData<AUser> result= RemoteDataParser.parse(userRemoteData, dataParser);
-
-
-        if(result.isSuccess())
-        {
-
-            AUser loginUser=result.datas.get(0);
-            loginUser.token=result.token;
-            List<Authority>  authorities  =authorityRepository.findByUser_IdEquals(loginUser.id);
-            QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(loginUser.id);
-            loginUser.authorities=authorities;
-            loginUser.quoteAuth=quoteAuth;
-        }
-
-
-        return  result;
-
-
-    }
-
-    /**
      *
+     * @param request
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/aLogin", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<AUser> aLogin(HttpServletRequest request, @RequestBody Map<String, String> params) {
+
+
+        String userName = params.get("userName");
+        String password = params.get("password");
+        String client = params.get("client");
+        String version = params.get("version");
+
+        RemoteData<User> userRemoteData = doLogin(request, userName, password, client, version);
+        RemoteData<AUser> result = RemoteDataParser.parse(userRemoteData, dataParser);
+
+
+        if (result.isSuccess()) {
+
+            AUser loginUser = result.datas.get(0);
+            loginUser.token = result.token;
+
+
+        }
+
+
+        return result;
+
+
+    }
+
+    /**
+     * 提供给移动端调用的接口
+     *
+     * @param request
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/aLogin2", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<AUser> aLogin2(HttpServletRequest request, @RequestBody Map<String, String> params) {
+
+
+        String userName = params.get("userName");
+        String password = params.get("password");
+        String client = params.get("client");
+        int version = 0;
+        try {
+            version = Integer.valueOf(params.get("version"));
+        } catch (Throwable t) {
+        }
+
+        RemoteData<User> userRemoteData = doLogin2(userName, password, client, version, request.getRemoteAddr());
+        RemoteData<AUser> result = RemoteDataParser.parse(userRemoteData, dataParser);
+
+
+        if (result.isSuccess()) {
+
+            AUser loginUser = result.datas.get(0);
+            loginUser.token = result.token;
+            List<Authority> authorities = authorityRepository.findByUser_IdEquals(loginUser.id);
+            QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(loginUser.id);
+            loginUser.authorities = authorities;
+            loginUser.quoteAuth = quoteAuth;
+        }
+
+
+        return result;
+
+
+    }
+
+    /**
      * @param request
      * @param user
      * @param appVersion
      * @return
      * @see AuthorityController#
-     *
      */
     @Deprecated
-    @RequestMapping(value="/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<User> login( HttpServletRequest request, @RequestBody User user,@RequestParam(value="appVersion",required = false,defaultValue = "")String appVersion)   {
+    RemoteData<User> login(HttpServletRequest request, @RequestBody User user, @RequestParam(value = "appVersion", required = false, defaultValue = "") String appVersion) {
 
 
-       return doLogin(request,user.name,user.password,"DESKTOP",appVersion);
+        return doLogin(request, user.name, user.password, "DESKTOP", appVersion);
     }
 
 
     /**
      * 登录接口2  密码加密
+     *
      * @param request
      * @param user
      * @param appVersion
      * @return
      */
-    @RequestMapping(value="/login2", method = RequestMethod.POST)
+    @RequestMapping(value = "/login2", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<User> login2( HttpServletRequest request, @RequestBody User user,@RequestParam(value="appVersion",required = false,defaultValue = "")String appVersion,@RequestParam(value="client",required = false,defaultValue = "DESKTOP")String client)   {
+    RemoteData<User> login2(HttpServletRequest request, @RequestBody User user, @RequestParam(value = "appVersion", required = false, defaultValue = "0") int appVersion, @RequestParam(value = "client", required = false, defaultValue = "DESKTOP") String client) {
 
-        return doLogin2(user.name,user.password,client,appVersion,request.getRemoteAddr());
+        return doLogin2(user.name, user.password, client, appVersion, request.getRemoteAddr());
     }
 
     /**
@@ -264,50 +252,49 @@ public class AuthorityController extends  BaseController{
      * @param password
      * @param client
      * @param version
-     * @param  loginIp
+     * @param loginIp
      * @return
      */
-    private  RemoteData<User> doLogin2(   String userName, String password,String client,String version, String loginIp)   {
+    private RemoteData<User> doLogin2(String userName, String password, String client, int version, String loginIp) {
 
 
-        List<User> userList=userRepository.findByNameEquals(userName);
+        List<User> userList = userRepository.findByNameEquals(userName);
 
-        int size=userList.size();
-        if(size<=0)
-            return     wrapError("用户账户不存在");
-        if(size>1)
-            return     wrapError("存在重名用户，请联系管理员");
+        int size = userList.size();
+        if (size <= 0)
+            return wrapError("用户账户不存在");
+        if (size > 1)
+            return wrapError("存在重名用户，请联系管理员");
 
-        User findUser=userList.get(0);
+        User findUser = userList.get(0);
 
-        if(! DigestUtils.md5(findUser.password).equals(password))
-        {
-            return     wrapError("密码错误");
+        if (!DigestUtils.md5(findUser.password).equals(password)) {
+            return wrapError("密码错误");
         }
 
 
+        findUser.password = "***";
 
-
-
-
-
-        findUser.password="***";
-
-        RemoteData<User>  data= wrapData(findUser);
-        long loginTime=Calendar.getInstance().getTimeInMillis();
-        data.token= DigestUtils.md5(findUser.toString()+loginTime);
+        RemoteData<User> data = wrapData(findUser);
+        long loginTime = Calendar.getInstance().getTimeInMillis();
+        data.token = DigestUtils.md5(findUser.toString() + loginTime);
+        AppVersion appVersion = getAppVersion();
+        if (version>0&& appVersion != null && appVersion.versionCode > version) {
+            data.newVersionCode = appVersion.versionCode;
+            data.newVersionName = appVersion.versionName;
+        }
 
 
         //Session session= sessionRepository.findFirstByUser_IdEqualsEqualsOrderByLoginTimeDesc(findUser.id);
 
-        Session     session=new Session();
+        Session session = new Session();
         session.user
-                =findUser;
+                = findUser;
 
 
-        session.loginTime=loginTime;
-        session.token= data.token;
-        session.loginIp=loginIp;
+        session.loginTime = loginTime;
+        session.token = data.token;
+        session.loginIp = loginIp;
 
         sessionRepository.save(session);
 
@@ -317,46 +304,40 @@ public class AuthorityController extends  BaseController{
 
 
     @Deprecated
-    private  RemoteData<User> doLogin( HttpServletRequest request, String userName, String password,String client,String version)   {
+    private RemoteData<User> doLogin(HttpServletRequest request, String userName, String password, String client, String version) {
 
 
-        List<User> userList=userRepository.findByNameEquals(userName);
+        List<User> userList = userRepository.findByNameEquals(userName);
 
-        int size=userList.size();
-        if(size<=0)
-        return     wrapError("用户账户不存在");
-        if(size>1)
-            return     wrapError("存在重名用户，请联系管理员");
+        int size = userList.size();
+        if (size <= 0)
+            return wrapError("用户账户不存在");
+        if (size > 1)
+            return wrapError("存在重名用户，请联系管理员");
 
-        User findUser=userList.get(0);
-        if(!findUser.password.equals(password))
-        {
-            return     wrapError("密码错误");
+        User findUser = userList.get(0);
+        if (!findUser.password.equals(password)) {
+            return wrapError("密码错误");
         }
 
 
+        findUser.password = "***";
+
+        RemoteData<User> data = wrapData(findUser);
+        long loginTime = Calendar.getInstance().getTimeInMillis();
+        data.token = DigestUtils.md5(findUser.toString() + loginTime);
 
 
+        //Session session= sessionRepository.findFirstByUser_IdEqualsEqualsOrderByLoginTimeDesc(findUser.id);
+
+        Session session = new Session();
+        session.user
+                = findUser;
 
 
-
-        findUser.password="***";
-
-        RemoteData<User>  data= wrapData(findUser);
-        long loginTime=Calendar.getInstance().getTimeInMillis();
-        data.token= DigestUtils.md5(findUser.toString()+loginTime);
-
-
-       //Session session= sessionRepository.findFirstByUser_IdEqualsEqualsOrderByLoginTimeDesc(findUser.id);
-
-        Session     session=new Session();
-         session.user
-                    =findUser;
-
-
-        session.loginTime=loginTime;
-        session.token= data.token;
-        session.loginIp=request.getRemoteAddr();
+        session.loginTime = loginTime;
+        session.token = data.token;
+        session.loginIp = request.getRemoteAddr();
 
         sessionRepository.save(session);
 
@@ -364,94 +345,89 @@ public class AuthorityController extends  BaseController{
         return data;
     }
 
-    @RequestMapping(value="/moduleList", method = RequestMethod.GET)
+    @RequestMapping(value = "/moduleList", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Module> moduleList( )   {
+    RemoteData<Module> moduleList() {
 
 
-        return    wrapData(moduleRepository.findAll());
+        return wrapData(moduleRepository.findAll());
 
 
     }
 
 
-    @RequestMapping(value="/loadAppVersion", method = RequestMethod.GET)
+    @RequestMapping(value = "/loadAppVersion", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<AppVersion> loadAppVersion( )   {
+    RemoteData<AppVersion> loadAppVersion() {
 
 
-        AppVersion appVersion=appVersionRepository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
-        if(appVersion==null)
-        {
+        AppVersion appVersion = getAppVersion();
+        if (appVersion == null) {
             wrapError("无最新版本");
         }
 
-        return    wrapData(appVersion);
+        return wrapData(appVersion);
+
+
+    }
+
+    private AppVersion getAppVersion() {
+        return appVersionRepository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
+    }
+
+
+    @RequestMapping(value = "/findQuoteAuth", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuoteAuth> findQuoteAuth(@RequestParam(value = "userId") long userId) {
+
+
+        QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(userId);
+        return wrapData(quoteAuth);
 
 
     }
 
 
-
-
-    @RequestMapping(value="/findQuoteAuth", method = RequestMethod.GET)
+    @RequestMapping(value = "/quoteAuthList", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<QuoteAuth> findQuoteAuth(@RequestParam(value = "userId" ) long userId)   {
+    RemoteData<QuoteAuth> quoteAuthList() {
 
 
-        QuoteAuth quoteAuth=quoteAuthRepository.findFirstByUser_IdEquals(userId);
-        return    wrapData(quoteAuth);
+        List<User> users = userService.list();
 
 
-    }
-
-
-    @RequestMapping(value="/quoteAuthList", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<QuoteAuth> quoteAuthList( )   {
-
-
-
-        List<User> users=userService.list();
-
-
-        List<QuoteAuth> quoteAuths=quoteAuthRepository.findAll();
-       //移除user 为delete 的权限配置
-        List<QuoteAuth> tempQuoteAuthList=new ArrayList<>();
-        for(QuoteAuth quoteAuth:quoteAuths) {
-           if(quoteAuth.user.deleted) tempQuoteAuthList.add(quoteAuth);
+        List<QuoteAuth> quoteAuths = quoteAuthRepository.findAll();
+        //移除user 为delete 的权限配置
+        List<QuoteAuth> tempQuoteAuthList = new ArrayList<>();
+        for (QuoteAuth quoteAuth : quoteAuths) {
+            if (quoteAuth.user.deleted) tempQuoteAuthList.add(quoteAuth);
         }
         quoteAuths.removeAll(tempQuoteAuthList);
-
-
 
 
         tempQuoteAuthList.clear();
 
 
-        int size=users.size();
+        int size = users.size();
         for (int i = 0; i < size; i++) {
 
-            User user=users.get(i);
-            if(user.deleted) continue;
-            boolean found=false;
-            for(QuoteAuth quoteAuth:quoteAuths)
-            {
-                if(user.id==quoteAuth.user.id)
-                {
-                    found=true;
+            User user = users.get(i);
+            if (user.deleted) continue;
+            boolean found = false;
+            for (QuoteAuth quoteAuth : quoteAuths) {
+                if (user.id == quoteAuth.user.id) {
+                    found = true;
                     break;
                 }
             }
 
-            if(!found)
-            {
-                QuoteAuth authority=new QuoteAuth();
-                authority.user=user;
+            if (!found) {
+                QuoteAuth authority = new QuoteAuth();
+                authority.user = user;
                 tempQuoteAuthList.add(authority);
 
             }
@@ -462,54 +438,47 @@ public class AuthorityController extends  BaseController{
         quoteAuths.addAll(tempQuoteAuthList);
 
 
-
         return wrapData(quoteAuths);
     }
 
 
-    @RequestMapping(value="/orderAuthList", method = RequestMethod.GET)
+    @RequestMapping(value = "/orderAuthList", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<OrderAuth> orderAuthList( )   {
+    RemoteData<OrderAuth> orderAuthList() {
 
 
+        List<User> users = userService.list();
 
-        List<User> users=userService.list();
 
-
-        List<OrderAuth> auths=orderAuthRepository.findAll();
+        List<OrderAuth> auths = orderAuthRepository.findAll();
         //移除user 为delete 的权限配置
-        List<OrderAuth> tempAuthList=new ArrayList<>();
-        for(OrderAuth aAuth :auths) {
-            if(aAuth.user.deleted) tempAuthList.add(aAuth);
+        List<OrderAuth> tempAuthList = new ArrayList<>();
+        for (OrderAuth aAuth : auths) {
+            if (aAuth.user.deleted) tempAuthList.add(aAuth);
         }
         auths.removeAll(tempAuthList);
-
-
 
 
         tempAuthList.clear();
 
 
-        int size=users.size();
+        int size = users.size();
         for (int i = 0; i < size; i++) {
 
-            User user=users.get(i);
-            if(user.deleted) continue;
-            boolean found=false;
-            for(OrderAuth quoteAuth:auths)
-            {
-                if(user.id==quoteAuth.user.id)
-                {
-                    found=true;
+            User user = users.get(i);
+            if (user.deleted) continue;
+            boolean found = false;
+            for (OrderAuth quoteAuth : auths) {
+                if (user.id == quoteAuth.user.id) {
+                    found = true;
                     break;
                 }
             }
 
-            if(!found)
-            {
-                OrderAuth authority=new OrderAuth();
-                authority.user=user;
+            if (!found) {
+                OrderAuth authority = new OrderAuth();
+                authority.user = user;
                 tempAuthList.add(authority);
 
             }
@@ -520,55 +489,47 @@ public class AuthorityController extends  BaseController{
         auths.addAll(tempAuthList);
 
 
-
         return wrapData(auths);
     }
 
 
-
-    @RequestMapping(value="/stockOutAuthList", method = RequestMethod.GET)
+    @RequestMapping(value = "/stockOutAuthList", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<StockOutAuth> stockOutAuthList( )   {
+    RemoteData<StockOutAuth> stockOutAuthList() {
 
 
+        List<User> users = userService.list();
 
-        List<User> users=userService.list();
 
-
-        List<StockOutAuth> auths=stockOutAuthRepository.findAll();
+        List<StockOutAuth> auths = stockOutAuthRepository.findAll();
         //移除user 为delete 的权限配置
-        List<StockOutAuth> tempAuthList=new ArrayList<>();
-        for(StockOutAuth aAuth :auths) {
-            if(aAuth.user.deleted) tempAuthList.add(aAuth);
+        List<StockOutAuth> tempAuthList = new ArrayList<>();
+        for (StockOutAuth aAuth : auths) {
+            if (aAuth.user.deleted) tempAuthList.add(aAuth);
         }
         auths.removeAll(tempAuthList);
-
-
 
 
         tempAuthList.clear();
 
 
-        int size=users.size();
+        int size = users.size();
         for (int i = 0; i < size; i++) {
 
-            User user=users.get(i);
-            if(user.deleted) continue;
-            boolean found=false;
-            for(StockOutAuth quoteAuth:auths)
-            {
-                if(user.id==quoteAuth.user.id)
-                {
-                    found=true;
+            User user = users.get(i);
+            if (user.deleted) continue;
+            boolean found = false;
+            for (StockOutAuth quoteAuth : auths) {
+                if (user.id == quoteAuth.user.id) {
+                    found = true;
                     break;
                 }
             }
 
-            if(!found)
-            {
-                StockOutAuth authority=new StockOutAuth();
-                authority.user=user;
+            if (!found) {
+                StockOutAuth authority = new StockOutAuth();
+                authority.user = user;
                 tempAuthList.add(authority);
 
             }
@@ -579,67 +540,61 @@ public class AuthorityController extends  BaseController{
         auths.addAll(tempAuthList);
 
 
-
         return wrapData(auths);
     }
-    @RequestMapping(value="/saveQuoteList", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/saveQuoteList", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<QuoteAuth> saveQuoteList(  @RequestBody List<QuoteAuth> authorities)   {
+    RemoteData<QuoteAuth> saveQuoteList(@RequestBody List<QuoteAuth> authorities) {
 
 
+        List<QuoteAuth> newData = new ArrayList<>();
 
-        List<QuoteAuth> newData=new ArrayList<>();
+        for (QuoteAuth authority : authorities) {
 
-        for(QuoteAuth authority : authorities)
-        {
-
-            newData.add( quoteAuthRepository.save(authority));
+            newData.add(quoteAuthRepository.save(authority));
         }
 
 
-        return  wrapData(newData);
+        return wrapData(newData);
     }
 
 
-    @RequestMapping(value="/saveStockOutList", method = RequestMethod.POST)
+    @RequestMapping(value = "/saveStockOutList", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<StockOutAuth> saveStockOutList(  @RequestBody List<StockOutAuth> authorities)   {
+    RemoteData<StockOutAuth> saveStockOutList(@RequestBody List<StockOutAuth> authorities) {
 
 
+        List<StockOutAuth> newData = new ArrayList<>();
 
-        List<StockOutAuth> newData=new ArrayList<>();
+        for (StockOutAuth authority : authorities) {
 
-        for(StockOutAuth authority : authorities)
-        {
-
-            newData.add( stockOutAuthRepository.save(authority));
+            newData.add(stockOutAuthRepository.save(authority));
         }
 
 
-        return  wrapData(newData);
+        return wrapData(newData);
     }
 
 
-    @RequestMapping(value="/saveOrderList", method = RequestMethod.POST)
+    @RequestMapping(value = "/saveOrderList", method = RequestMethod.POST)
     public
     @ResponseBody
     @Transactional
-    RemoteData<OrderAuth> saveOrderList(  @RequestBody List<OrderAuth> authorities)   {
+    RemoteData<OrderAuth> saveOrderList(@RequestBody List<OrderAuth> authorities) {
 
 
+        List<OrderAuth> newData = new ArrayList<>();
 
-        List<OrderAuth> newData=new ArrayList<>();
+        for (OrderAuth authority : authorities) {
 
-        for(OrderAuth authority : authorities)
-        {
-
-            newData.add( orderAuthRepository.save(authority));
+            newData.add(orderAuthRepository.save(authority));
         }
 
 
-        return  wrapData(newData);
+        return wrapData(newData);
     }
 
 }

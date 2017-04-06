@@ -17,6 +17,15 @@ import javax.swing.*;
 public class QuotationItemFixColumnXKTableModel extends  BaseTableModel<QuotationXKItem>  {
 
 
+    private boolean hasVerify=false;
+
+    /**
+     * 设置是否已经审核
+     * @param hasVerify
+     */
+    public void setHasVerify(boolean hasVerify) {
+        this.hasVerify = hasVerify;
+    }
 
 
     public static final String COLUMN_PRODUCT="productName";
@@ -42,7 +51,8 @@ public  static Class[] classes = new Class[]{Object.class,ImageIcon.class, Strin
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
-
+        //已经审核 不能修改
+        if(hasVerify) return false;
 
 
          return editables[columnIndex];

@@ -42,16 +42,6 @@ public class HttpUrl {
 
     public static String additionInfo(String url) {
 
-
-        if (StringUtils.isEmpty(TOKEN)) {
-            return url;
-        }
-
-        if (url.contains("?")) {
-            url += "&token=" + TOKEN;
-        } else {
-            url += "?token=" + TOKEN;
-        }
         if (url.contains("?")) {
             url += "&appVersion=" + versionCode;
         } else {
@@ -63,6 +53,17 @@ public class HttpUrl {
         } else {
             url += "?client=" + ConstantData.CLIENT_DESK;
         }
+
+        if (StringUtils.isEmpty(TOKEN)) {
+            return url;
+        }
+
+        if (url.contains("?")) {
+            url += "&token=" + TOKEN;
+        } else {
+            url += "?token=" + TOKEN;
+        }
+
 
         return url;
     }
@@ -980,6 +981,7 @@ public class HttpUrl {
 
     /**
      * 流程类型
+     *
      * @return
      */
     public static String getWorkFlowTypes() {
@@ -989,6 +991,7 @@ public class HttpUrl {
 
     /**
      * 流程二级类型
+     *
      * @return
      */
     public static String getWorkFlowSubTypes() {
@@ -997,7 +1000,7 @@ public class HttpUrl {
     }
 
     public static String getWorkFlowOfProduct(long productId) {
-        return additionInfo(BaseUrl + String.format("api/workFlow/findWorkFlowByProductId?productId=%d",productId));
+        return additionInfo(BaseUrl + String.format("api/workFlow/findWorkFlowByProductId?productId=%d", productId));
     }
 
     public static String saveWorkFlowProduct() {
@@ -1018,49 +1021,59 @@ public class HttpUrl {
     public static String startOrderItemWorkFlow() {
 
 
-
         return additionInfo(BaseUrl + "api/workFlow/startOrderItemWorkFlow");
     }
 
     public static String getOrderItemWorkFlowState(long orderItemId) {
 
-        return additionInfo(BaseUrl + String.format("api/workFlow/orderItemState?orderItemId=%s",orderItemId));
+        return additionInfo(BaseUrl + String.format("api/workFlow/orderItemState?orderItemId=%s", orderItemId));
     }
 
     /**
      * 保存排厂类型列表
+     *
      * @return
      */
     public static String saveWorkFlowSubTypeList() {
 
 
-        return additionInfo(BaseUrl +  "api/workFlow/saveSubTypes");
+        return additionInfo(BaseUrl + "api/workFlow/saveSubTypes");
 
     }
 
     public static String correctProductThumbnail(long productId) {
-        return additionInfo(BaseUrl +  "api/product/correctThumbnail?productId="+productId);
+        return additionInfo(BaseUrl + "api/product/correctThumbnail?productId=" + productId);
     }
 
     public static String getOrderItemWorkFlow(long orderItemId) {
-        return additionInfo(BaseUrl + "api/order/getOrderItemWorkFlow?orderItemId="+orderItemId);
+        return additionInfo(BaseUrl + "api/order/getOrderItemWorkFlow?orderItemId=" + orderItemId);
     }
 
 
     /**
-     *  指令单查询
+     * 指令单查询
+     *
      * @param osName
      * @param startDate
      * @param endDate
      * @return
      */
-    public static String searchZhiling(String osName,   String startDate,    String endDate) {
-        return additionInfo(BaseUrl + String.format("api/erpWork/searchZhiling?osName=%s&startDate=%s&endDate=%s",osName,startDate,endDate));
+    public static String searchZhiling(String osName, String startDate, String endDate) {
+        return additionInfo(BaseUrl + String.format("api/erpWork/searchZhiling?osName=%s&startDate=%s&endDate=%s", osName, startDate, endDate));
     }
 
 
     public static String synchronizeProductOnEquationUpdate() {
 
-        return additionInfo(BaseUrl + "api/product/adjustEquation" );
+        return additionInfo(BaseUrl + "api/product/adjustEquation");
+    }
+
+    public static String updateMaterialClass() {
+
+        return additionInfo(BaseUrl + "api/material/updateClass");
+    }
+
+    public static String deleteMaterialClass(long materialClassId) {
+        return additionInfo(BaseUrl + "api/material/deleteClass?materialClassId=" + materialClassId);
     }
 }

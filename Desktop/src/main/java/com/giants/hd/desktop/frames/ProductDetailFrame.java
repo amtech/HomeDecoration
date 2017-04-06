@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.dialogs.WorkFlowConfigDialog;
 import com.giants.hd.desktop.dialogs.WorkFlowProductDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.presenter.ProductDetailPresenter;
@@ -205,7 +206,8 @@ public class ProductDetailFrame extends BaseFrame implements ProductDetailPresen
             @Override
             public void run() {
                 Product product=panel_productDetail.getData().product;
-                WorkFlowProductDialog workFlowProductFrame=new WorkFlowProductDialog(ProductDetailFrame.this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
+               // WorkFlowProductDialog workFlowProductFrame=new WorkFlowProductDialog(ProductDetailFrame.this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
+                WorkFlowConfigDialog workFlowProductFrame=new WorkFlowConfigDialog(ProductDetailFrame.this,product.id,product.name+ (StringUtils.isEmpty(product.pVersion)?"":("-"+product.pVersion)));
 
                 workFlowProductFrame.setVisible(true);
             }

@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
+import java.sql.Statement;
 import java.util.List;
 
 
@@ -34,6 +35,8 @@ public class UseCaseFactory {
     @Inject
     ProductRepository productRepository;
     @Inject
+    MaterialRepository materialRepository;
+    @Inject
     XiankangRepository xiankangRepository;
     @Inject
     QuotationRepository quotationRepository;
@@ -56,7 +59,10 @@ public class UseCaseFactory {
     private UseCaseFactory() {
 
 
-        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(), new StockModule(), new FileModule(), new AuthModule()).injectMembers(this);
+        Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(),
+                new StockModule(), new FileModule(), new AuthModule()
+                ,new MaterialModule()
+        ).injectMembers(this);
 
     }
 
@@ -477,5 +483,13 @@ public class UseCaseFactory {
 
 
         return new SynchronizeProductOnEquationUpdateUseCase(Schedulers.newThread(), Schedulers.immediate() ,   productRepository);
+    }
+
+    public UseCase createUpdateMaterialClassUseCase(MaterialClass materialClass) {
+        return new UpdateMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate() ,materialClass,   materialRepository);
+    }
+
+    public UseCase createDeleteMaterialClassUseCase(long materialClassId) {
+        return new DeleteMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate() ,materialClassId,   materialRepository);
     }
 }

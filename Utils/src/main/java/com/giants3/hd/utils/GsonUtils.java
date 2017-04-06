@@ -62,7 +62,18 @@ public class GsonUtils {
 
     }
 
+    /**
+     * 从文件输入流中
+     * @param inputStream
+     * @param typeOfT
+     * @param <T>
+     * @return
+     */
+    public   static  <T> T fromInputStream(InputStream inputStream, Type typeOfT)
+    {
 
+        return   gson.fromJson(new InputStreamReader(inputStream),typeOfT);
+    }
 
     public   static  <T> T fromJson(String json, Type typeOfT)
     {

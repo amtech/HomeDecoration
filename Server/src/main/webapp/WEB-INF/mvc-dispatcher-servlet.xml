@@ -20,7 +20,7 @@
 
 
     <context:component-scan base-package="com.giants3.hd.server"/>
-    <context:annotation-config />
+    <context:annotation-config/>
 
     <task:annotation-driven/>
 
@@ -71,6 +71,16 @@
             </list>
         </property>
 
+
+        <!--<property name="persistenceUnitPostProcessors">-->
+            <!--<list>-->
+                <!--<bean-->
+                        <!--class="org.springframework.data.jpa.support.ClasspathScanningPersistenceUnitPostProcessor">-->
+                    <!--<constructor-arg name="basePackage" value="com.giants3.hd.server.entity"/>-->
+                    <!--<property name="mappingFileNamePattern" value="*.hbm.xml"/>-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</property>-->
 
 
     </bean>
@@ -124,10 +134,8 @@
 
     <!--  开启这个配置，spring才能识别@Scheduled注解   -->
 
-     <!--<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>-->
-     <!--<task:scheduler id="qbScheduler" pool-size="10"/>-->
-
-
+    <!--<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>-->
+    <!--<task:scheduler id="qbScheduler" pool-size="10"/>-->
 
 
 </beans>

@@ -77,6 +77,7 @@ public class ErpWorkRepository {
                 .addScalar("qty_rsv", IntegerType.INSTANCE)
                 .addScalar("mrp_no", StringType.INSTANCE)
                 .addScalar("os_no", StringType.INSTANCE)
+                .addScalar("real_prd_name", StringType.INSTANCE)
 
                 .addScalar("caigou_no", StringType.INSTANCE)
                 .addScalar("caigouQty", IntegerType.INSTANCE)

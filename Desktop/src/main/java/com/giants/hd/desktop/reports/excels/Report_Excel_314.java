@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/**802 客户 模板
+/**
+ * 802 客户 模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_314 extends ExcelReportor {
@@ -28,19 +29,15 @@ public class Report_Excel_314 extends ExcelReportor {
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
 
 
-
-
         //Create Workbook instance holding reference to .xlsx file
-        InputStream inputStream=url.openStream();
+        InputStream inputStream = url.openStream();
         workbook = new HSSFWorkbook(inputStream);
 
 
+        writeOnExcel(quotationDetail, workbook.getSheetAt(0));
 
 
-        writeOnExcel(quotationDetail,workbook.getSheetAt(0)  );
-
-
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -48,39 +45,29 @@ public class Report_Excel_314 extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
-    protected void writeOnExcel(QuotationDetail quotationDetail, Sheet writableSheet ) throws   IOException, HdException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, Sheet writableSheet) throws IOException, HdException {
 
 
+        int defaultRowCount = 6;
+        int startItemRow = 1;
 
-
-        int defaultRowCount=6;
-        int startItemRow=1;
-
-        int dataSize=quotationDetail.items.size();
+        int dataSize = quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(workbook,writableSheet,startItemRow,defaultRowCount,dataSize);
+        duplicateRow(workbook, writableSheet, startItemRow, defaultRowCount, dataSize);
 
-        float pictureGap=0.1f;
-        for(int i=0;i<dataSize;i++)
-        {
-            int rowUpdate=startItemRow+i;
-            QuotationItem item=quotationDetail.items.get(i);
-
+        float pictureGap = 0.1f;
+        for (int i = 0; i < dataSize; i++) {
+            int rowUpdate = startItemRow + i;
+            QuotationItem item = quotationDetail.items.get(i);
 
 
+            if (isExportPicture())
 
-
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
-
-
-
+                exportPicture(item.photoUrl, item.getFullProductName());
+            attachPicture(workbook, writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 4, rowUpdate, 4, rowUpdate);
 
 
             addNumber(writableSheet, i + 1, 0, rowUpdate);
@@ -93,7 +80,7 @@ public class Report_Excel_314 extends ExcelReportor {
 
 
             //产品总尺寸  材质百分比
-            addString(writableSheet, item.spec+"\n" + item.constitute, 5, rowUpdate);
+            addString(writableSheet, item.spec + "\n" + item.constitute, 5, rowUpdate);
 
             //单价
             addNumber(writableSheet, item.price, 6, rowUpdate);
@@ -105,17 +92,12 @@ public class Report_Excel_314 extends ExcelReportor {
             addNumber(writableSheet, item.packQuantity, 9, rowUpdate);
 
             //外箱尺寸
-            addString(writableSheet, item.packageSize.trim() ,10,rowUpdate);
-
+            addString(writableSheet, item.packageSize.trim(), 10, rowUpdate);
 
 
         }
 
 
-
-
-
-
-   }
+    }
 
 }

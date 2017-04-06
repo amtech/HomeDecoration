@@ -687,10 +687,21 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
             private void update() {
 
+                int inboxCount=0;
+                try {
+                      inboxCount = Integer.valueOf(tf_inboxCount.getText().trim());
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+
+                int quantity=0;
+                try {
+                    quantity = Integer.valueOf(tf_quantity.getText().trim());
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
 
                 try {
-                    int inboxCount = Integer.valueOf(tf_inboxCount.getText().trim());
-                    int quantity = Integer.valueOf(tf_quantity.getText().trim());
                     float packLong = Float.valueOf(tf_long.getText().trim());
                     float packWidth = Float.valueOf(tf_width.getText().trim());
                     float packHeight = Float.valueOf(tf_height.getText().trim());
@@ -698,12 +709,14 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                     tf_volume.setText(String.valueOf(productDetail.product.packVolume));
                     tf_gangza.setText(String.valueOf(productDetail.product.gangza));
-                    tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.fob));
-                    tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.price));
-                    tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.cost));
-                } catch (Throwable t) {
+                    tf_fob.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.fob));
+                    tf_price.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.price));
+                    tf_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.cost));
+                }catch (Throwable t)
+                {
                     t.printStackTrace();
                 }
+
 
             }
         };

@@ -15,15 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/** 通用报价模板
+/**
+ * 通用报价模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_NORMAL extends ExcelReportor {
 
 
-
-
     Workbook workbook;
+
     public Report_Excel_NORMAL(QuotationFile modelName) {
         super(modelName);
     }
@@ -33,19 +33,15 @@ public class Report_Excel_NORMAL extends ExcelReportor {
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException {
 
 
-
-
         //Create Workbook instance holding reference to .xlsx file
-        InputStream inputStream=url.openStream();
+        InputStream inputStream = url.openStream();
         workbook = new HSSFWorkbook(inputStream);
-
-
 
 
         writeOnExcel(workbook.getSheetAt(0), quotationDetail);
 
 
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -53,46 +49,29 @@ public class Report_Excel_NORMAL extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
 
+    protected void writeOnExcel(Sheet writableSheet, QuotationDetail quotationDetail) throws IOException {
 
-    protected void writeOnExcel(Sheet writableSheet,QuotationDetail quotationDetail) throws   IOException {
 
+        int defaultRowCount = 7;
+        int startItemRow = 9;
 
-        int defaultRowCount=7;
-        int startItemRow=9;
-
-        int dataSize=quotationDetail.items.size();
+        int dataSize = quotationDetail.items.size();
 
         //实际数据超出范围 插入空行
-        duplicateRow(workbook,writableSheet,startItemRow,defaultRowCount,dataSize);
+        duplicateRow(workbook, writableSheet, startItemRow, defaultRowCount, dataSize);
 
 
-
-
-
-
-
-
-
-        Quotation quotation=quotationDetail.quotation;
+        Quotation quotation = quotationDetail.quotation;
         //表头
         //注入报价单号
-       addString(writableSheet, quotation.qNumber, 2, 1);
-
+        addString(writableSheet, quotation.qNumber, 2, 1);
 
 
         //报价日期
         addString(writableSheet, quotation.qDate, 14, 1);
-
-
-
-
 
 
         //TO
@@ -103,36 +82,22 @@ public class Report_Excel_NORMAL extends ExcelReportor {
         addString(writableSheet, quotation.salesman, 11, 7);
 
 
+        for (int i = 0; i < dataSize; i++) {
 
 
-
-
-
-
-
-        for (int i = 0; i <dataSize; i++) {
-
-
-
-
-
-
-            int rowUpdate=startItemRow+i;
-            QuotationItem item=quotationDetail.items.get(i);
+            int rowUpdate = startItemRow + i;
+            QuotationItem item = quotationDetail.items.get(i);
 
             //图片
 
+            if (isExportPicture())
+                exportPicture(item.photoUrl, item.getFullProductName());
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),0 , rowUpdate ,0 , rowUpdate );
 
+            attachPicture(workbook, writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0, rowUpdate, 0, rowUpdate);
 
 
             //读取咸康数据
-
-
-
-
-
 
 
             //货号
@@ -140,17 +105,15 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
             //货号
-            addString(writableSheet, item.pVersion , 3, rowUpdate);
-
+            addString(writableSheet, item.pVersion, 3, rowUpdate);
 
 
             //材料比重
             addString(writableSheet, item.constitute.trim(), 5, rowUpdate);
 
 
-
             //单位
-            int lastIndex=item.unit.lastIndexOf("/");
+            int lastIndex = item.unit.lastIndexOf("/");
             addString(writableSheet, lastIndex == -1 ? "1" : item.unit.substring(lastIndex + 1), 7, rowUpdate);
 
             //FOb
@@ -165,10 +128,9 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             addNumber(writableSheet, item.packQuantity, 10, rowUpdate);
 
 
-
             //解析出长宽高
 
-            float[] result=     StringUtils.decouplePackageString(item.packageSize);
+            float[] result = StringUtils.decouplePackageString(item.packageSize);
 
 
             //包装长
@@ -182,10 +144,8 @@ public class Report_Excel_NORMAL extends ExcelReportor {
             addNumber(writableSheet, result[2], 16, rowUpdate);
 
 
-
             //包装体积
             addNumber(writableSheet, item.volumeSize, 17, rowUpdate);
-
 
 
             //产品规格
@@ -205,10 +165,6 @@ public class Report_Excel_NORMAL extends ExcelReportor {
 
 
         }
-
-
-
-
 
 
     }

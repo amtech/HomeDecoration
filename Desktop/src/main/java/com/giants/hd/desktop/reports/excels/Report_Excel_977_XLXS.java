@@ -21,15 +21,16 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**977客户 模板
+/**
+ * 977客户 模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_977_XLXS extends ExcelReportor {
-    int styleRow=10;
+    int styleRow = 10;
 
     XSSFWorkbook workbook;
 
-    public Report_Excel_977_XLXS(QuotationFile modelName)   {
+    public Report_Excel_977_XLXS(QuotationFile modelName) {
         super(modelName);
 
 
@@ -40,19 +41,15 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException {
 
 
-
-
         //Create Workbook instance holding reference to .xlsx file
-        InputStream inputStream=url.openStream();
-           workbook = new XSSFWorkbook(inputStream);
-
-
+        InputStream inputStream = url.openStream();
+        workbook = new XSSFWorkbook(inputStream);
 
 
         writeOnSheet(workbook.getSheetAt(0), quotationDetail);
 
 
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -60,48 +57,41 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
 
-    protected void writeOnSheet(XSSFSheet sheet,QuotationDetail detail)
-    {
+    protected void writeOnSheet(XSSFSheet sheet, QuotationDetail detail) {
 
 
+        //  sheet.getRow(10).getRowStyle()
 
-      //  sheet.getRow(10).getRowStyle()
+        int startRow = 11;
 
-        int startRow=11;
-
-        int defaultRow=20;
-        int dataSize=detail.items.size();
-        duplicateRow(workbook,sheet,startRow,defaultRow,dataSize);
+        int defaultRow = 20;
+        int dataSize = detail.items.size();
+        duplicateRow(workbook, sheet, startRow, defaultRow, dataSize);
 
 
         for (int i = 0; i < dataSize; i++) {
 
-            QuotationItem item=detail.items.get(i);
-            int  rowUpdate=i+startRow;
+            QuotationItem item = detail.items.get(i);
+            int rowUpdate = i + startRow;
             //添加照片
 
 
             //图片
 
+            if (isExportPicture())
+                exportPicture(item.photoUrl, item.getFullProductName());
 
-                addPicture(sheet, HttpUrl.loadProductPicture(item.photoUrl),1,rowUpdate,1,rowUpdate);
+
+            addPicture(sheet, HttpUrl.loadProductPicture(item.photoUrl), 1, rowUpdate, 1, rowUpdate);
 
 //            attachPicture(writableSheet, HttpUrl.loadProductPicture(item.productName, item.pVersion), 1 + pictureGap / 2, rowUpdate + pictureGap / 2, 1 - pictureGap, 1 - pictureGap);
 
 
-
-
             //货号
             setCellValue(sheet, item.productName.trim(), 2, rowUpdate);
-
-
 
 
             //   材质百分比
@@ -113,25 +103,22 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
             //产品尺寸
 
-            String[]  specValue= groupSpec(StringUtils.decoupleSpecString(item.spec));
+            String[] specValue = groupSpec(StringUtils.decoupleSpecString(item.spec));
             setCellValue(sheet, specValue[0], 7, rowUpdate);
             setCellValue(sheet, specValue[1], 8, rowUpdate);
             setCellValue(sheet, specValue[2], 9, rowUpdate);
 
 
-
-
-
             //外箱尺寸
-           float[] packValue=  StringUtils.decouplePackageString(item.packageSize);
+            float[] packValue = StringUtils.decouplePackageString(item.packageSize);
 //
-             setCellValue(sheet, UnitUtils.cmToInch(packValue[0]), 10, rowUpdate);
+            setCellValue(sheet, UnitUtils.cmToInch(packValue[0]), 10, rowUpdate);
             setCellValue(sheet, UnitUtils.cmToInch(packValue[1]), 11, rowUpdate);
             setCellValue(sheet, UnitUtils.cmToInch(packValue[2]), 12, rowUpdate);
 
 
             //重量  英镑
-            setCellValue(sheet,item.weight, 13, rowUpdate);
+            setCellValue(sheet, item.weight, 13, rowUpdate);
 
 
             //cbf
@@ -150,29 +137,22 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
         }
 
 
-
-
-
-
     }
 
 
-    private void setCellValue(XSSFSheet sheet,String value, int column ,int rowUpdate)
-    {
+    private void setCellValue(XSSFSheet sheet, String value, int column, int rowUpdate) {
         Cell cell = sheet.getRow(rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
-        cell.setCellStyle(CellUtil.getCell(CellUtil.getRow(styleRow,sheet),column).getCellStyle());
+        cell.setCellStyle(CellUtil.getCell(CellUtil.getRow(styleRow, sheet), column).getCellStyle());
         cell.setCellValue(value);
 
     }
 
-    private void setCellValue(XSSFSheet sheet,double value, int column,int rowUpdate)
-    {
-        Row row=sheet.getRow(rowUpdate);
+    private void setCellValue(XSSFSheet sheet, double value, int column, int rowUpdate) {
+        Row row = sheet.getRow(rowUpdate);
         Cell cell = row.getCell(column);
-        if(cell==null)
-        {
-            cell=row.createCell(column,Cell.CELL_TYPE_NUMERIC);
-            cell.setCellStyle(CellUtil.getCell(CellUtil.getRow(styleRow,sheet),column).getCellStyle());
+        if (cell == null) {
+            cell = row.createCell(column, Cell.CELL_TYPE_NUMERIC);
+            cell.setCellStyle(CellUtil.getCell(CellUtil.getRow(styleRow, sheet), column).getCellStyle());
 
         }
         cell.setCellValue(value);
@@ -180,25 +160,22 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
     }
 
 
-
-    private void addPicture(XSSFSheet sheet,String url,int column, int row,int column2, int row2)  {
-
+    private void addPicture(XSSFSheet sheet, String url, int column, int row, int column2, int row2) {
 
 
+        float columnWidth = sheet.getColumnWidthInPixels(column);
+        float rowHeight = sheet.getRow(row).getHeightInPoints() / 3 * 4;
 
-        float columnWidth=sheet.getColumnWidthInPixels(column) ;
-           float rowHeight=sheet.getRow(row).getHeightInPoints()/3*4 ;
 
-
-        byte[] photo=null;
+        byte[] photo = null;
 
 
         try {
 
 
-            BufferedImage bufferedImage= ImageLoader.getInstance().loadImage(url );
-            if(bufferedImage!=null)
-            photo=   ImageUtils.scale(bufferedImage,(int)columnWidth*4, (int)rowHeight*4,true);
+            BufferedImage bufferedImage = ImageLoader.getInstance().loadImage(url);
+            if (bufferedImage != null)
+                photo = ImageUtils.scale(bufferedImage, (int) columnWidth * 4, (int) rowHeight * 4, true);
         } catch (HdException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -208,7 +185,7 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
         }
 
 
-        if(photo!=null ) {
+        if (photo != null) {
             int pictureIdx = workbook.addPicture(photo, Workbook.PICTURE_TYPE_PNG);
             Drawing drawing = sheet.createDrawingPatriarch();
             CreationHelper helper = workbook.getCreationHelper();
@@ -220,13 +197,13 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
             anchor.setRow1(row);
 //            anchor.setCol2(column+1);
 //            anchor.setRow2(row+1);
-      //  anchor.setDx1((int) (columnWidth / 10   ));
-         //   anchor.setDx2((int) (rowHeight / 10    ));
+            //  anchor.setDx1((int) (columnWidth / 10   ));
+            //   anchor.setDx2((int) (rowHeight / 10    ));
             anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
 
 
             Picture pict = drawing.createPicture(anchor, pictureIdx);
-             pict.resize(0.8);
+            pict.resize(0.8);
 
             //auto-size picture relative to its top-left corner
 
@@ -235,7 +212,6 @@ public class Report_Excel_977_XLXS extends ExcelReportor {
 
 //            pict.resize( columnWidth/pictureWidth,(float)rowHeight/pictureHeight);
         }
-
 
 
     }

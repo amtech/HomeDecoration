@@ -48,8 +48,15 @@ public class ZhilingdanCellRenderer extends DefaultTableCellRenderer {
                  component.setForeground(Color.RED);
 
              else
+             if(isSelected)
+             {
+                 component.setForeground(Color.WHITE);
 
+             }else
+             {
                  component.setForeground(Color.BLACK);
+             }
+
 
          }
 

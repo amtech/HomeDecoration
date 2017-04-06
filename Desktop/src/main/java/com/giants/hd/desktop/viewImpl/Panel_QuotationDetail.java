@@ -301,6 +301,7 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
 
 
+
         //重新导入
         btn_reimport.addActionListener(new ActionListener() {
             @Override
@@ -980,6 +981,18 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
         fixColumnXkModel.setExternalData(quotationXKItems);
 
 
+        boolean hasVerify=false;
+
+        if(data!=null&&data.quotation!=null)
+            hasVerify=data.quotation.isVerified;
+
+
+        model.setHasVerify(hasVerify);
+        xkModel.setHasVerify(hasVerify);
+        fixColumnModel.setHasVerify(hasVerify);
+        fixColumnXkModel.setHasVerify(hasVerify);
+
+
 
         //设置固定列表的宽度
         viewport.setPreferredSize(fixedTable.getPreferredSize());
@@ -1016,6 +1029,13 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
 
         //未审核 撤销审核按钮不可用
         btn_unVerify.setEnabled(data.quotation.isVerified);
+
+
+
+        //未审核才能重新导入产品信息
+        btn_reimport.setEnabled(!data.quotation.isVerified);
+        //未审核才能保存
+        btn_save.setEnabled(!data.quotation.isVerified);
         //审核后方可导出
         //btn_export.setEnabled(data.quotation.isVerified);
 

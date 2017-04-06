@@ -136,6 +136,11 @@ public class Report_Excel_127 extends ExcelReportor {
             addNumber(writableSheet, fob, 6, 41);
 
 
+            if(isExportPicture())
+
+                exportPicture(item.photoUrl,item.getFullProductName() );
+
+
              attachPicture(writableWorkbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0  , 8 , 5  , 48  );
 
 

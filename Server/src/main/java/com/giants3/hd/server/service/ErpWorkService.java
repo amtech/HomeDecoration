@@ -136,7 +136,9 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
         int day = de.greenrobot.common.DateUtils.getDayDifference(mmDate.getTime(), jinhuoDd.getTime());
 
-        return day > zhilingdan.need_days;
+
+        //进货单超期 要大于
+        return day > zhilingdan.need_days+zhilingdan.need_dd;
 
     }
 }

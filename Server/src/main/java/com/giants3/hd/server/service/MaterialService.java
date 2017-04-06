@@ -3,12 +3,14 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.server.controller.MaterialController;
 import com.giants3.hd.server.entity.GlobalData;
 import com.giants3.hd.server.entity.Material;
+import com.giants3.hd.server.entity.MaterialClass;
 import com.giants3.hd.server.entity.ProductToUpdate;
 import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +47,9 @@ public class MaterialService extends AbstractService {
 
     @Autowired
     private GlobalDataService globalDataService;
+
+    @Autowired
+    private MaterialClassRepository  materialClassRepository;
 
 
     @Autowired
@@ -285,5 +290,53 @@ public class MaterialService extends AbstractService {
     public void save(Material material) {
 
         materialRepository.save(material);
+    }
+
+
+    /**
+     * 更新材料分类。
+     * @param materialClass
+     * @return
+     */
+    public RemoteData<MaterialClass> updateClass(MaterialClass materialClass) {
+
+
+
+
+        return  wrapData(materialClassRepository.save(materialClass));
+
+
+
+    }
+
+    /**
+     * 删除材料类型类别
+     * @param materialClassId
+     * @return
+     */
+
+    @Transactional
+    public RemoteData<Void> deleteClass(long materialClassId) {
+
+
+        MaterialClass materialClass =materialClassRepository.findOne(materialClassId);
+        if(materialClass==null)
+            return wrapError("材料类别不存在");
+
+
+
+        Material material =materialRepository.findFirstByClassIdEquals(materialClass.code);
+        if(material!=null)
+        {
+
+            return wrapError("该材料类别正在使用，材料："+material.code+","+material.name+" ...等");
+        }
+
+
+        materialClassRepository.delete(materialClassId);
+
+
+
+        return wrapData();
     }
 }

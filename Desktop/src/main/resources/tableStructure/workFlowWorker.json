@@ -1,0 +1,38 @@
+[
+  {
+    "columnName": "流程编号",
+    "fileName": "workFlowStep",
+    "width": 60,
+    "aClass": "S"
+  },
+  {
+    "columnName": "流程名称",
+    "fileName": "workFlowName",
+    "width": 60,
+    "aClass": "S"
+  },
+  { 
+    "columnName": "工作人员",
+    "fileName": "userName",
+    "width": 60,
+    "aClass": "S"
+  },
+  {
+    "columnName": "发送/接受",
+    "fileName": "operateType",
+    "width": 60,
+    "aClass": "S"
+  },
+  {
+    "columnName": "发送/接收",
+    "fileName": "operateType",
+    "width": 60,
+    "aClass": "S"
+  },
+  {
+    "columnName": "排产类型",
+    "fileName": "arrangeType",
+    "width": 60,
+    "aClass": "S"
+  }
+]

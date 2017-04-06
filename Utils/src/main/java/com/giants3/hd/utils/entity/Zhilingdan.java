@@ -16,6 +16,9 @@ public class Zhilingdan {
     public  String  prd_no;
     public  String  prd_name;
 
+    public  String  real_prd_name;
+
+
     public String prd_mark;
 
     public int qty_rsv;
@@ -36,8 +39,13 @@ public class Zhilingdan {
     public String jinhuo_dd;
 
 
+    /**
+     * 进货超期时间限制 采购到进货
+     */
     public float  need_days;
-
+    /**
+     * 采购超期时间限制 下单到采购
+     */
     public int need_dd;
 
 

@@ -30,8 +30,16 @@ public   class ExcelReportor extends AbstractExcelReporter<QuotationDetail> {
     private static final int DEFAULT_PIXEL_A_POINT =1;
 
 
+    public boolean isExportPicture() {
+        return isExportPicture;
+    }
+
+    private  boolean  isExportPicture;
+
     protected QuotationFile file;
 
+
+    PictureFileExporter fileExporter;
     public ExcelReportor(QuotationFile file)
     {this.file=file;
 
@@ -40,12 +48,10 @@ public   class ExcelReportor extends AbstractExcelReporter<QuotationDetail> {
     public     void   report(QuotationDetail quotationDetail,String fileOutputDirectory) throws IOException,   HdException {
 
 
-
-
-
-
-
-        String outputFilePath=fileOutputDirectory +File.separator    + quotationDetail.quotation.qNumber +"."+ file.appendix;
+        final String filePath = fileOutputDirectory + File.separator + quotationDetail.quotation.qNumber;
+        String outputFilePath= filePath + "." + file.appendix;
+        if(fileExporter==null)
+            fileExporter=new PictureFileExporter(filePath);
         operation(quotationDetail, new URL(HttpUrl.loadQuotationFile(file.name, file.appendix)), outputFilePath);
 
 
@@ -69,5 +75,31 @@ public   class ExcelReportor extends AbstractExcelReporter<QuotationDetail> {
 
     }
 
+    /**
+     * 导出图片
+     * @param url
+     * @param fileName
+     */
+    protected  void exportPicture(String url,String fileName)
+    {
+
+        if(fileExporter!=null)
+        {
+            fileExporter.exportFile(url,fileName);
+        }
+
+    }
+
+
+    /**
+     * 设置是否导出图片
+     * @param exportPicture
+     */
+    public  void setExportPicture(boolean  exportPicture)
+    {
+
+        isExportPicture=exportPicture;
+
+    }
 
 }

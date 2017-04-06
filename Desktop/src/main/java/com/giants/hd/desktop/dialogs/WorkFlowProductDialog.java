@@ -43,13 +43,7 @@ public class WorkFlowProductDialog extends BaseDialog<WorkFlowProduct> implement
         setContentPane(getCustomContentPane());
         this.productId = productId;
         this.productName = productName;
-
                 readData();
-
-
-
-
-
 
     }
 
@@ -61,10 +55,7 @@ public class WorkFlowProductDialog extends BaseDialog<WorkFlowProduct> implement
 
 
     public void readData() {
-
-
         System.out.println("readData...............");
-
         UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
             @Override
             public void onCompleted() {

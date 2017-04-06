@@ -9,6 +9,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
+import de.greenrobot.common.io.IoUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -188,13 +189,10 @@ public class UpgradeDialog extends BaseDialog {
                 } catch (IOException ex) {
 
                 } finally {
-                    try {
-                        fos.close();
-                        bis.close();
-                        is.close();
+                    IoUtils.safeClose(fos);
+                    IoUtils.safeClose(bis);
+                    IoUtils.safeClose(is);
 
-                    } catch (IOException ex3) {
-                    }
                 }
 
 

@@ -420,4 +420,10 @@ public class QuotationXKItem implements Serializable,Valuable {
         result = 31 * result + (int) (quotationId ^ (quotationId >>> 32));
         return result;
     }
+
+    public String getFullProductName() {
+       String pName=  !StringUtils.isEmpty(productName)?pVersion:productName2;
+        String pVName=!StringUtils.isEmpty(pVersion)?pVersion:pVersion2;
+          return  pName+(StringUtils.isEmpty(pVName)?"":("-"+pVName));
+    }
 }

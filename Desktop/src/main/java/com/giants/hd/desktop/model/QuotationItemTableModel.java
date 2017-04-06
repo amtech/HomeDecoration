@@ -15,6 +15,17 @@ import com.google.inject.Inject;
 public class QuotationItemTableModel extends  BaseTableModel<QuotationItem>  {
 
 
+    private boolean hasVerify=false;
+
+    /**
+     * 设置是否已经审核
+     * @param hasVerify
+     */
+    public void setHasVerify(boolean hasVerify) {
+        this.hasVerify = hasVerify;
+    }
+
+
 
     public static final String COLUMN_SPEC="spec";
     public static final String COLUMN_COST="cost";
@@ -43,6 +54,8 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem>  {
 
 
 
+
+
         //如果有修改fob的权限   其他都不可以修改
         if(quoteAuth.fobEditable&&fieldName[columnIndex].equals(COLUMN_PRICE))
         {
@@ -50,6 +63,9 @@ public class QuotationItemTableModel extends  BaseTableModel<QuotationItem>  {
             return  true ;
 
         }
+
+        //已经审核 不能修改
+        if(hasVerify) return false;
 
          return editables[columnIndex];
     }

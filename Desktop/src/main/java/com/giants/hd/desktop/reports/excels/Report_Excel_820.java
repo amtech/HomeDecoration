@@ -16,7 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/**802 客户 模板
+/**
+ * 802 客户 模板
  * Created by davidleen29 on 2015/8/6.
  */
 public class Report_Excel_820 extends ExcelReportor {
@@ -27,24 +28,18 @@ public class Report_Excel_820 extends ExcelReportor {
     }
 
 
-
     @Override
     protected void operation(QuotationDetail quotationDetail, URL url, String outputFile) throws IOException, HdException {
 
 
+        InputStream inputStream = url.openStream();
+        Workbook workbook = new HSSFWorkbook(inputStream);
 
 
-
-        InputStream inputStream=url.openStream();
-     Workbook workbook = new HSSFWorkbook(inputStream);
+        writeOnExcel(quotationDetail, workbook);
 
 
-
-
-        writeOnExcel(quotationDetail,workbook  );
-
-
-        FileOutputStream fos=    new FileOutputStream(outputFile);
+        FileOutputStream fos = new FileOutputStream(outputFile);
 
         workbook.write(fos);
         workbook.close();
@@ -52,48 +47,33 @@ public class Report_Excel_820 extends ExcelReportor {
         fos.close();
 
 
-
-
-
-
     }
 
 
-
-    protected void writeOnExcel(QuotationDetail quotationDetail, Workbook writableWorkbook) throws  IOException, HdException {
+    protected void writeOnExcel(QuotationDetail quotationDetail, Workbook writableWorkbook) throws IOException, HdException {
 
 
         int size = quotationDetail.items.size();
 
-        AccumulateMap names=new AccumulateMap();
+        AccumulateMap names = new AccumulateMap();
 
 
-        Quotation quotation=quotationDetail.quotation;
+        Quotation quotation = quotationDetail.quotation;
 
 
-        for(int i=0;i< size;i++)
-        {
-            QuotationItem item=quotationDetail.items.get(i);
+        for (int i = 0; i < size; i++) {
+            QuotationItem item = quotationDetail.items.get(i);
 
             names.accumulate(item.productName);
 
 
-            int duplicateCount=  names.get(item.productName).intValue();
+            int duplicateCount = names.get(item.productName).intValue();
 
 
-            Sheet fromSheet=writableWorkbook.getSheetAt(0);
+            Sheet fromSheet = writableWorkbook.getSheetAt(0);
 
-            Sheet   writableSheet=writableWorkbook.createSheet(item.productName+(duplicateCount>1?("_"+(duplicateCount-1)):""));
-            POIUtils.copySheet(writableWorkbook,fromSheet,writableSheet,true);
-
-
-
-
-
-
-
-
-
+            Sheet writableSheet = writableWorkbook.createSheet(item.productName + (duplicateCount > 1 ? ("_" + (duplicateCount - 1)) : ""));
+            POIUtils.copySheet(writableWorkbook, fromSheet, writableSheet, true);
 
 
 //            //移除照片
@@ -112,19 +92,17 @@ public class Report_Excel_820 extends ExcelReportor {
 //            }
 
 
-
 //            Label       label;
 //
 //            jxl.jxl.biff.biff.Number num ;
 //            WritableImage image;
             // 插入日期
 
-                    //报价日期
+            //报价日期
             addString(writableSheet, quotation.qDate, 10, 0);
 
             //货号
             addString(writableSheet, item.productName, 6, 11);
-
 
 
             //主要成分
@@ -139,11 +117,10 @@ public class Report_Excel_820 extends ExcelReportor {
             addString(writableSheet, item.packageSize, 6, 16);
 
             //每箱数目
-            int unitSize=1;
+            int unitSize = 1;
             try {
-                unitSize= Integer.valueOf(item.unit.substring(item.unit.lastIndexOf("/")));
-            }catch (Throwable t)
-            {
+                unitSize = Integer.valueOf(item.unit.substring(item.unit.lastIndexOf("/")));
+            } catch (Throwable t) {
 
             }
 
@@ -154,35 +131,30 @@ public class Report_Excel_820 extends ExcelReportor {
             addNumber(writableSheet, item.volumeSize, 6, 20);
 
 
-
             //fob
-            float fob=item.price;
+            float fob = item.price;
             addNumber(writableSheet, fob, 9, 18);
             addNumber(writableSheet, fob, 10, 18);
 
 
+            if (isExportPicture())
 
 
+                exportPicture(item.photoUrl, item.getFullProductName());
 
-                attachPicture(writableWorkbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0  , 10  , 4  , 23  );
 
-
+            attachPicture(writableWorkbook, writableSheet, HttpUrl.loadProductPicture(item.photoUrl), 0, 10, 4, 23);
 
 
             //覆盖样品数据
-             addString(writableSheet,"",5,25);
-            addString(writableSheet,"",13, 18);
-            addString(writableSheet,"",13, 19);
+            addString(writableSheet, "", 5, 25);
+            addString(writableSheet, "", 13, 18);
+            addString(writableSheet, "", 13, 19);
 
 
         }
 
 
-
-
-
-
-
-   }
+    }
 
 }

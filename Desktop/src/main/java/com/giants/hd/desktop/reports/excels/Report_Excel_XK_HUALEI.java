@@ -114,8 +114,11 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 
 
             //图片
+            final String productUrl = !StringUtils.isEmpty(item.photoUrl) ? item.photoUrl : item.photo2Url;
+            if(isExportPicture())
+                exportPicture(productUrl,item.getFullProductName() );
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(!StringUtils.isEmpty(item.photoUrl)?item.photoUrl:item.photo2Url), 4  , rowUpdate  ,4, rowUpdate);
+                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(productUrl), 4  , rowUpdate  ,4, rowUpdate);
 
 
             //读取咸康数据
@@ -143,7 +146,7 @@ public class Report_Excel_XK_HUALEI extends ExcelReportor {
 //            writableSheet.addCell(label1);
 
 
-            addString(writableSheet,!StringUtils.isEmpty(item.productName)?item.pVersion:item.productName2 ,2,rowUpdate);
+            addString(writableSheet,!StringUtils.isEmpty(item.productName)?item.productName:item.productName2 ,2,rowUpdate);
 
 
 

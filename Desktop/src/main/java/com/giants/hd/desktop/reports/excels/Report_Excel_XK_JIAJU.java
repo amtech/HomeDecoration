@@ -98,8 +98,11 @@ public class Report_Excel_XK_JIAJU extends ExcelReportor {
 
             //图片
 
+            if(isExportPicture())
 
-                attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
+                exportPicture(item.photoUrl,item.getFullProductName() );
+
+            attachPicture(workbook,writableSheet, HttpUrl.loadProductPicture(item.photoUrl),4 , rowUpdate ,4, rowUpdate);
 
 
 

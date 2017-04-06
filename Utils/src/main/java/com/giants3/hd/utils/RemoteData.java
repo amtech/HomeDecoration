@@ -30,7 +30,18 @@ public class RemoteData<T> implements Serializable{
 
 
     public boolean isTest=ConstantData.FOR_TEST;
+
+    /**
+     * 后台登陆效验码
+     */
     public String token;
+
+
+    /**
+     * 最新版本号。 不同客户端返回不一样。
+     */
+    public int newVersionCode;
+    public String newVersionName;
 
 
     public RemoteData()

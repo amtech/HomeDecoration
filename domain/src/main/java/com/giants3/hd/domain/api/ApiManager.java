@@ -1944,4 +1944,23 @@ public class ApiManager {
         RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
         return remoteData;
     }
+
+    /**
+     * 更新材料分类
+     * @param materialClass
+     * @return
+     */
+    public RemoteData<MaterialClass> updateMaterialClass(MaterialClass materialClass) throws HdException {
+        String url = HttpUrl.updateMaterialClass(  );
+        String result = client.postWithStringReturned(url,GsonUtils.toJson(materialClass));
+        RemoteData<MaterialClass> remoteData = invokeByReflect(result, MaterialClass.class);
+        return remoteData;
+    }
+
+    public RemoteData<Void> deleteMaterialClass(long materialClassId) throws HdException {
+        String url = HttpUrl.deleteMaterialClass(  materialClassId);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
+    }
 }
