@@ -78,12 +78,12 @@ public class Main extends BaseFrame {
             HttpUrl.iniBaseUrl(baseUrl);
 
 
-        Config.DEBUG=false;
-        try{
+        Config.DEBUG = false;
+        try {
 
-            boolean isDebug= Boolean.parseBoolean(PropertyWorker.readData("isDebug"));
-            Config.DEBUG=isDebug;
-        }catch (Throwable t){
+            boolean isDebug = Boolean.parseBoolean(PropertyWorker.readData("isDebug"));
+            Config.DEBUG = isDebug;
+        } catch (Throwable t) {
             t.printStackTrace();
         }
 
@@ -310,6 +310,36 @@ public class Main extends BaseFrame {
 
 
                     WorkFlowFrame frame = new WorkFlowFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
+        }
+        if (AuthorityUtil.getInstance().viewWorkFlowWorker()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_WORKER);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    WorkFlowWorkerFrame frame = new WorkFlowWorkerFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
+        }
+        if (AuthorityUtil.getInstance().viewWorkFlowArranger()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_ARRANGER);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    WorkFlowArrangerFrame frame = new WorkFlowArrangerFrame();
                     addInterFrame(frame);
 
                 }
@@ -884,6 +914,20 @@ public class Main extends BaseFrame {
 
 
                     OrderWorkFlowReportInternalFrame orderWorkFlowReportInternalFrame = new OrderWorkFlowReportInternalFrame();
+                    addInterFrame(orderWorkFlowReportInternalFrame);
+
+                }
+            });
+        }   if (AuthorityUtil.getInstance().viewOrderItemForArrange()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_ORDER_ITEM_FOR_ARRANGE);
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    OrderItemForArrangeListFrame orderWorkFlowReportInternalFrame = new OrderItemForArrangeListFrame();
                     addInterFrame(orderWorkFlowReportInternalFrame);
 
                 }

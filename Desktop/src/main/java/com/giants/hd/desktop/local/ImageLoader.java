@@ -71,6 +71,11 @@ public class ImageLoader {
                     e.printStackTrace();
                     subscriber.onError(e);
                 }
+                catch(Throwable t)
+                {
+                    t.printStackTrace();
+                    subscriber.onError(t);
+                }
 
 
             }
@@ -97,7 +102,7 @@ public class ImageLoader {
 
             @Override
             public void onNext(ImageIcon bufferedImage) {
-                iconable.setIcon(bufferedImage);
+                iconable.setIcon(bufferedImage,url );
             }
         });
 

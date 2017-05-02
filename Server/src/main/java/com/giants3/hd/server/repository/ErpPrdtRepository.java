@@ -1,17 +1,10 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity_erp.CST_STD;
-import com.giants3.hd.server.entity_erp.Prdt;
+import com.giants3.hd.utils.entity_erp.Prdt;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;

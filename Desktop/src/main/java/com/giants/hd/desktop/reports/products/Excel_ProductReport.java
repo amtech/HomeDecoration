@@ -9,15 +9,12 @@ import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.ProductMaterial;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;

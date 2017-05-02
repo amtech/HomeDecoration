@@ -2,33 +2,24 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.appdata.AProduct;
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
-import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -424,9 +415,45 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/syncPhoto", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public RemoteData<Void> syncAllProductPhoto() {
+
+
+
+
         return productService.syncAllProductPhoto();
 
     }
+
+      /**
+     * 全局更新
+     * <p/>
+     * 这个操作非常耗时。
+     * 同步产品图片数据
+     *
+     * @return
+     */
+
+    @RequestMapping(value = "/syncRelateProductPicture", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public RemoteData<Void> syncRelateProductPicture() {
+
+
+        long  count=productService.getProductCount();
+        final int pageSize = 100;
+        int pageCount = (int) ((count - 1) / pageSize + 1);
+        for (int i = 0; i < pageCount; ++i) {
+
+
+             productService.syncRelateProductPicture(i,pageSize,pageCount);
+        }
+
+
+
+        return wrapMessageData(  "所有报价，订单，等关联的产品图片已经都是最新。");
+
+    }
+
+
+
 
 
     @RequestMapping(value = "/searchDelete", method = RequestMethod.GET)

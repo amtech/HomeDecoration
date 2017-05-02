@@ -21,9 +21,11 @@ public class ProductTableModel extends BaseTableModel<Product> {
     public static final String COLUMN_SPEC="spec";
 
     public static final String COLUMN_SHOW_COST="column_show_cost";
-    public static String[] columnNames = new String[]{"图片", "货号","版本号","包装类型", "规格", "单位", "类别", "日期","材料成本","厂家编号","厂家名称","备注"};
-    public static int[] columnWidth=new int[]{ ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 120, 60, 100,200,40, 60,120 ,    120, 80,80,ConstantData.MAX_COLUMN_WIDTH};
-    public static String[] fieldName = new String[]{"thumbnail", "name",  "pVersion","pack",COLUMN_SPEC,"pUnitName", "pClassName", "rDate",COLUMN_SHOW_COST,"factoryCode","factoryName","memo"};
+    private static final String COLUMN_PACK_SPEC = "column_packSpec";
+    public static String[] columnNames = new String[]{"图片", "货号","版本号","包装类型", "规格","箱规", "单位", "类别", "日期","材料成本","厂家编号","厂家名称","备注"};
+    public static int[] columnWidth=new int[]{ ImageUtils.MAX_PRODUCT_MINIATURE_WIDTH, 120, 60, 100,120,150,40, 60,120 ,    120, 80,80,ConstantData.MAX_COLUMN_WIDTH};
+
+    public static String[] fieldName = new String[]{"thumbnail", "name",  "pVersion","pack",COLUMN_SPEC, COLUMN_PACK_SPEC,"pUnitName", "pClassName", "rDate",COLUMN_SHOW_COST,"factoryCode","factoryName","memo"};
 
     public  static Class[] classes = new Class[]{ImageIcon.class, Object.class, Object.class, Object.class, Object.class, Object.class};
 
@@ -61,25 +63,25 @@ public class ProductTableModel extends BaseTableModel<Product> {
         if(product.id<=0) return null;
 
         //显示成本简易显示信息
-        if(COLUMN_SHOW_COST.equals(fieldName[columnIndex]))
-        {
+        switch ( fieldName[columnIndex]) {
+            case COLUMN_SHOW_COST:
+                if (!viewPrice) return "";
+                String value = "";
+                value += "白胚 : " + product.conceptusCost + StringUtils.row_separator;
+                value += "组装 : " + product.assembleCost + StringUtils.row_separator;
+                value += "油漆 : " + product.paintCost + StringUtils.row_separator;
+                value += "包装 : " + product.packCost + StringUtils.row_separator;
 
-            if(!viewPrice) return "";
+                return value;
+
+            case COLUMN_PACK_SPEC:
+
+                return product.insideBoxQuantity+"/"+product.packQuantity+"/"+product.packLong+"*"+product.packWidth+"*"+product.packHeight;
+
+                default:
+            return super.getValueAt(rowIndex, columnIndex);
+        }
 
 
-            String value="";
-            value+="白胚 : "+product.conceptusCost+ StringUtils.row_separator;
-            value+="组装 : "+product.assembleCost+ StringUtils.row_separator;
-            value+="油漆 : "+product.paintCost+ StringUtils.row_separator;
-            value+="包装 : "+product.packCost+ StringUtils.row_separator;
-
-            return value;
-
-
-
-
-        }else
-
-        return super.getValueAt(rowIndex, columnIndex);
     }
 }

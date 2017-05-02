@@ -20,7 +20,7 @@ public interface ProductRepository {
      * 获取产品信息 根据 产品名称顺序取值
      *
      */
-    Observable<List<Product>> loadByProductNameBetween(String startName,String endName,boolean withCopy);
+    Observable<List<Product>> loadByProductNameBetween(String startName, String endName, boolean withCopy);
 
 
     Observable<List<Product>> loadByProductNameRandom(String productNames, boolean withCopy);
@@ -34,5 +34,7 @@ public interface ProductRepository {
      * @return
      */
     Observable<RemoteData<Void>> synchronizeProductOnEquationUpdate();
+
+    Observable<RemoteData<Void>> syncRelateProductPicture();
 
 }

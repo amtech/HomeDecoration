@@ -6,8 +6,8 @@ import com.giants3.hd.server.service.QuotationService;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.noEntity.QuotationDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -65,7 +65,7 @@ public class QuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    RemoteData<Quotation> search(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "salesmanId", required = false, defaultValue = "-1") long salesmanId
+    RemoteData<Quotation> search(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "salesmanId", required = false, defaultValue = "-1") long salesmanId
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {

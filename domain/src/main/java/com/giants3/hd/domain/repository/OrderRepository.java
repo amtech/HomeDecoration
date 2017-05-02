@@ -24,6 +24,8 @@ public interface OrderRepository {
 
     Observable getOrderItemList(String or_no);
 
+    Observable searchOrderItemList(String key, int pageIndex, int pageSize);
+
     Observable<ErpOrderDetail> getOrderOutDetail(String os_no);
 
     /**
@@ -53,4 +55,11 @@ public interface OrderRepository {
     Observable<RemoteData<ErpOrderItem>> getOrderWorkFlowReport(String key, int pageIndex, int pageSize);
 
     Observable<RemoteData<OrderItemWorkFlow>> getOrderItemWorkFlow(long orderItemId);
+
+    /**
+     * 撤销订单排厂
+     * @param orderItemWorkFlowId
+     * @return
+     */
+    Observable cancelOrderWorkFlow(long orderItemWorkFlowId);
 }

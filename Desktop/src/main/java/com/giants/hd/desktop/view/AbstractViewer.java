@@ -44,6 +44,8 @@ public interface AbstractViewer {
         void hideLoadingDialog();
         void showMesssage(String message);
 
+        boolean showConfirmMessage(String message);
+
     /**
      * 显示等待框处理 ，只有在一些需要长时间加载的界面上使用
      * @deprecated

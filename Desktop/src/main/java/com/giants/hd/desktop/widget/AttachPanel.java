@@ -103,7 +103,7 @@ public class AttachPanel extends JPanel {
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 jLable.setIcon(icon);
                 jLable.setText("");
 //                final ImageIcon icon1 = new ImageIcon(AttachPanel.class.getClassLoader().getResource("icons/logo.jpg"));

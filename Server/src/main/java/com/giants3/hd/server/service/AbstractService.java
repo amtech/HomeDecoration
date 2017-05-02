@@ -1,8 +1,7 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.WorkFlowProduct;
-import com.giants3.hd.server.entity.WorkFlowSubType;
 import com.giants3.hd.utils.RemoteData;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by david on 2016/2/15.
  */
 public  abstract  class AbstractService implements InitializingBean, DisposableBean {
-
+    protected     Logger logger  ;
     @Override
     public void destroy() throws Exception {
 
@@ -24,6 +23,7 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        logger=Logger.getLogger(getClass());
 
     }
     /**

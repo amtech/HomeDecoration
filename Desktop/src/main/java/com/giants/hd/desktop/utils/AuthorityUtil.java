@@ -607,4 +607,20 @@ public class AuthorityUtil {
 
         return isViewable(ModuleConstant.NAME_WORK_FLOW_MODULE);
     }
+
+    public boolean viewWorkFlowWorker() {
+        return isViewable(ModuleConstant.NAME_WORK_FLOW_WORKER);
+    }
+    public boolean viewWorkFlowArranger() {
+        return isViewable(ModuleConstant.NAME_WORK_FLOW_ARRANGER);
+    }
+
+    /**
+     * 订单排厂列表
+     * @return
+     */
+    public boolean viewOrderItemForArrange() {
+
+        return isViewable(ModuleConstant.NAME_ORDER_ITEM_FOR_ARRANGE);
+    }
 }

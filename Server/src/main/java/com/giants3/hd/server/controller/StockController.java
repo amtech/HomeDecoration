@@ -1,9 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.User;
-import com.giants3.hd.server.entity_erp.ErpStockOut;
-import com.giants3.hd.server.noEntity.ErpStockOutDetail;
+import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.service.StockService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;

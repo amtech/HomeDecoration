@@ -2,16 +2,18 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
+import com.giants.hd.desktop.model.WorkFlowArrangeTableModel;
 import com.giants.hd.desktop.presenter.OrderItemWorkFlowPresenter;
+import com.giants.hd.desktop.utils.Config;
+import com.giants.hd.desktop.utils.TableStructureUtils;
 import com.giants.hd.desktop.view.OrderItemWorkFlowViewer;
+import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ProduceType;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.entity.OutFactory;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,25 +35,27 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
     private JLabel photo;
     private JLabel order;
     private JLabel product;
-    private JRadioButton isSelfMade;
-    private JRadioButton isPurchased;
+
 
     private JComboBox jbFactory;
     private JPanel panel_purchase;
-    private JPanel panel_work_flow;
+
+    private JLabel produceType;
+    private JHdTable jt;
+    private JButton btn_reimport;
+    private JButton cancelArrange;
+    private JLabel state;
 
 
-    //流程相关的panel列表
-    private List<JComponent> workFlowPanels = new ArrayList<>();
     private List<JComboBox<OutFactory>> factories;
     private OrderItemWorkFlowPresenter presenter;
 
 
-    private List<WorkFlowSubType> workFlowSubTypes;
-    private List<JCheckBox> workFlowSubTypeChecks;
     private WorkFlow[] workFlows;
-    private Boolean[] workFlowStates;
 
+
+    WorkFlowArrangeTableModel workFlowArrangeTableModel;
+    List<WorkFlowArrangeTableModel.WorkFlowConfig> data;
 
     /**
      * 自制生产流程列表
@@ -62,11 +66,9 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
      * 外购产品的流程列表
      */
     List<WorkFlow> purchaseWorkFlowList;
-    //是否配置一级选择框
-    private List<JCheckBox> workFlowCheckBoxes;
 
-    //是否配置二级菜单选择框
-    private List<JCheckBox> configSubtypes;
+
+    private List<OutFactory> outFactories;
 
 
     public Panel_OrderItemWorkFlow(final OrderItemWorkFlowPresenter presenter) {
@@ -85,35 +87,33 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
             }
         });
 
-
-        ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(isPurchased);
-        buttonGroup.add(isSelfMade);
-
-        final ActionListener l = new ActionListener() {
+        cancelArrange.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                System.out.print(e.getSource());
 
-                boolean isSelfMadeClick = e.getSource() == isSelfMade;
-                showWorkFlows(isSelfMadeClick);
-
-
+                presenter.cancelArrange();
             }
-        };
-        isPurchased.addActionListener(l);
-        isSelfMade.addActionListener(l);
-        isSelfMade.setSelected(true);
+        });
+
+        btn_reimport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                presenter.reimportProduct();
+            }
+        });
+
+        workFlowArrangeTableModel = new WorkFlowArrangeTableModel(WorkFlowArrangeTableModel.WorkFlowConfig.class, TableStructureUtils.getWorkFlowArrange());
+        jt.setModel(workFlowArrangeTableModel);
+
         int size = CacheManager.getInstance().bufferData.workFlows.size();
-        //排厂类型列表
-        workFlowSubTypes = CacheManager.getInstance().bufferData.workFlowSubTypes;
-        workFlowStates = new Boolean[size];
+
         workFlows = new WorkFlow[size];
         for (int i = 0; i < size; i++) {
 
             workFlows[i] = CacheManager.getInstance().bufferData.workFlows.get(i);
-            workFlowStates[i] = false;
+
         }
 
 
@@ -128,55 +128,12 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
         }
 
 
+        data = new ArrayList<>();
         init();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                showWorkFlows(true);
-            }
-        });
-
 
     }
 
-    private void showWorkFlows(boolean isSelfMade) {
-
-        panel_types.setVisible(isSelfMade);
-        panel_purchase.setVisible(!isSelfMade);
-
-
-        int size = workFlowPanels.size();
-        int visibleSize = 0;
-        panel_work_flow.removeAll();
-        for (int i = 0; i < size; i++) {
-
-            WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
-
-            JComponent jComponent = workFlowPanels.get(i);
-            final boolean visible = workFlow.isSelfMade && isSelfMade || workFlow.isPurchased && !isSelfMade;
-            jComponent.setVisible(visible);
-            if (visible) {
-                visibleSize++;
-                panel_work_flow.add(jComponent);
-            }
-
-        }
-
-        panel_work_flow.setLayout(new GridLayout(visibleSize, 1, 10, 5));
-        panel_work_flow.setPreferredSize(new Dimension(600, visibleSize * 40));
-        panel_work_flow.setEnabled(isSelfMade);
-
-
-
-        for(JCheckBox comboBox:configSubtypes)
-        {
-            comboBox.setVisible(isSelfMade);
-
-        }
-        presenter.pack();
-
-    }
 
     /**
      * 获取实际控件
@@ -215,6 +172,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
 
     @Override
     public void setOutFactories(List<OutFactory> outFactories) {
+        this.outFactories = outFactories;
         Vector<OutFactory> outFactoryVector = ArrayUtils.changeListToVector(outFactories);
         ComboBoxModel comboBoxModel = new DefaultComboBoxModel(outFactoryVector);
         jbFactory.setModel(comboBoxModel);
@@ -232,25 +190,130 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
     public List<WorkFlow> getSelectedWorkFlows() {
 
 
-
-
         return purchaseWorkFlowList;
 
 
-
     }
+
 
     @Override
-    public int getSelectArrangeType() {
+    public void bindOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow) {
 
 
 
-        if(isSelfMade.isSelected())
-            return ProduceType.SELF_MADE;
-            else
-         return ProduceType.PURCHASE;
+        final boolean isSelfMade = orderItemWorkFlow.produceType == ProduceType.SELF_MADE;
+        produceType.setText(isSelfMade ? "自制" : "外购");
+
+
+        panel_types.setVisible(isSelfMade);
+        panel_purchase.setVisible(!isSelfMade);
+
+
+        Config.log("orderItemWorkFlow.workFlowSteps:" + orderItemWorkFlow.workFlowSteps);
+        String[] workFlowSteps = StringUtils.split(orderItemWorkFlow.workFlowSteps);
+
+        List<WorkFlow> orderWorkFlows = new ArrayList<>();
+        for (String s : workFlowSteps) {
+            for (WorkFlow workFlow : workFlows) {
+
+                final boolean equals = String.valueOf(workFlow.flowStep).equals(s);
+
+                if (equals) {
+                    orderWorkFlows.add(workFlow);
+                }
+            }
+        }
+
+        data.clear();
+        for (WorkFlow workFlow : orderWorkFlows) {
+
+            WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = new WorkFlowArrangeTableModel.WorkFlowConfig();
+            workFlowConfig.workFlowStep = workFlow.flowStep;
+            workFlowConfig.workFlowName = workFlow.name;
+            data.add(workFlowConfig);
+
+
+        }
+        workFlowArrangeTableModel.setDatas(data);
+
+
+        if (orderItemWorkFlow.produceType == ProduceType.PURCHASE) {
+            int index = findFactoryIndex(orderItemWorkFlow.produceFactoryId);
+            jbFactory.setSelectedIndex(index);
+        }
+
+
+        if (isSelfMade) {
+            String[] factoryIds = StringUtils.split(orderItemWorkFlow.conceptusFactoryIds);
+
+            if (factoryIds != null && factoryIds.length > 0) {
+                for (int i = 0; i < factories.size(); i++) {
+                    JComboBox checkbox = factories.get(i);
+
+                    int index = findFactoryIndex(factoryIds[i]);
+                    checkbox.setSelectedIndex(index);
+
+                }
+            }
+
+
+            String[] configs = StringUtils.split(orderItemWorkFlow.configs);
+
+            String[] productTypeNames = StringUtils.split(orderItemWorkFlow.productTypeNames);
+
+
+            int
+                    productTypeLength = productTypeNames.length;
+
+            int length = data.size();
+            for (int i = 0; i < length; i++) {
+                String config = configs[i];
+                final WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = this.data.get(i);
+                String[] productTypeConfig = StringUtils.split(config, StringUtils.STRING_SPLIT_COMMA);
+
+                for (int j = 0; j < productTypeLength; j++) {
+
+
+                    final boolean selected = !(String.valueOf(WorkFlow.STEP_SKIP).equals(productTypeConfig[j]));
+
+                    switch (productTypeNames[j]) {
+                        case WorkFlowSubType.TYPE_NAME_TIE:
+                            workFlowConfig.tiejian = selected;
+                            break;
+                        case WorkFlowSubType.TYPE_NAME_MU:
+                            workFlowConfig.mujian = selected;
+                            break;
+                        case WorkFlowSubType.TYPE_NAME_PU:
+                            workFlowConfig.pu = selected;
+                            break;
+                    }
+
+
+                }
+
+
+            }
+        }
+
 
     }
+
+    private int findFactoryIndex(String dept) {
+
+        int index = -1;
+        for (int i = 0; i < outFactories.size(); i++) {
+
+            OutFactory outFactory = outFactories.get(i);
+            if (outFactory.dep.equals(dept)) {
+                index = i;
+                break;
+            }
+
+        }
+        return index;
+
+    }
+
 
     @Override
     public void bindOrderData(ErpOrderItem erpOrderItem) {
@@ -260,7 +323,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 photo.setIcon(icon);
             }
 
@@ -276,7 +339,6 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
     public void setProductTypes(String[] productTypes, String[] productTypeNames, java.util.List<OutFactory> outFactoryList) {
 
 
-
         int size = productTypes.length;
         panel_types.setLayout(new GridLayout(size, 1, 10, 10));
         List<WorkFlowSubType> subTypes = CacheManager.getInstance().bufferData.workFlowSubTypes;
@@ -290,7 +352,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
             panelBaseOnWorkFlow.setMinimumSize(preferredSize);
             panel_types.add(panelBaseOnWorkFlow);
         }
-        presenter.pack();
+//        presenter.pack();
     }
 
     private JComponent createPanelBaseOnWorkFlow(String workFlowType, String workFlowTypeName, List<OutFactory> outFactoryList) {
@@ -328,60 +390,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
     private void init() {
 
 
-        workFlowSubTypeChecks = new ArrayList<>();
-        for (WorkFlowSubType subType : workFlowSubTypes) {
-            JCheckBox jCheckBox = new JCheckBox(subType.typeName);
-            workFlowSubTypeChecks.add(jCheckBox);
-
-
-        }
-
-        int size = workFlows.length;
-        panel_work_flow.setLayout(new GridLayout(size, 1, 10, 5));
-
-        configSubtypes = new ArrayList<>();
-        workFlowCheckBoxes = new ArrayList<>();
-        workFlowPanels = new ArrayList<>();
-        for (WorkFlow workFlow : workFlows) {
-            final JComponent panelBaseOnWorkFlow = createPanelBaseOnWorkFlow(workFlow);
-            workFlowPanels.add(panelBaseOnWorkFlow);
-//            final Dimension preferredSize = new Dimension(600, 30);
-//            panelBaseOnWorkFlow.setPreferredSize(preferredSize);
-//            panelBaseOnWorkFlow.setMinimumSize(preferredSize);
-
-            panel_work_flow.add(panelBaseOnWorkFlow);
-        }
-        //默认设置， 前三个流程
-        for (int i = 0; i < configSubtypes.size(); i++) {
-            configSubtypes.get(i).setSelected(i < 3);
-        }
-
-
-        panel_work_flow.setMaximumSize(new Dimension(600, 500));
-
-
     }
 
 
-    private JComponent createPanelBaseOnWorkFlow(WorkFlow workFlow) {
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new FlowLayout());
-
-        final JCheckBox jCheckBox = new JCheckBox(workFlow.name);
-        workFlowCheckBoxes.add(jCheckBox);
-        jCheckBox.setEnabled(false);
-        //所有流程默认选择
-        jCheckBox.setSelected(true);
-        jPanel.add(jCheckBox);
-        final Dimension preferredSize = new Dimension(200, 30);
-        jCheckBox.setPreferredSize(preferredSize);
-        jCheckBox.setMinimumSize(preferredSize);
-
-
-        final JCheckBox subType = new JCheckBox("是否按类型排厂");
-        jPanel.add(subType);
-        subType.setEnabled(false);
-        configSubtypes.add(subType);
-        return jPanel;
-    }
 }

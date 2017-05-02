@@ -70,19 +70,19 @@ public class WorkFlowModel extends BaseTableModel<WorkFlow> {
     }
 
     private void setManager(User user, WorkFlow workFlow) {
-        workFlow.userId = user.id;
-        workFlow.userCode = user.code;
-        workFlow.userCName = user.chineseName;
-        workFlow.userName = user.name;
+//        workFlow.userId = user.id;
+//        workFlow.userCode = user.code;
+//        workFlow.userCName = user.chineseName;
+//        workFlow.userName = user.name;
     }
 
 
     private void setChecker(WorkFlow workFlow,User checker)
     {
-        workFlow.checkerId = checker.id;
-        workFlow.checkerCode = checker.code;
-        workFlow.checkerCName = checker.chineseName;
-        workFlow.checkerName = checker.name;
+//        workFlow.checkerId = checker.id;
+//        workFlow.checkerCode = checker.code;
+//        workFlow.checkerCName = checker.chineseName;
+//        workFlow.checkerName = checker.name;
     }
 
 

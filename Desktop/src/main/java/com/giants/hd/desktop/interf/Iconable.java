@@ -8,6 +8,6 @@ import javax.swing.*;
 public interface Iconable {
 
 
-      void setIcon(ImageIcon icon);
+      void setIcon(ImageIcon icon, String url);
       void onError(String message);
 }

@@ -1,10 +1,10 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -86,11 +86,12 @@ public class WorkFlowController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/startOrderItemWorkFlow", method = RequestMethod.POST)
-    public  @ResponseBody RemoteData<OrderItemWorkFlow> startOrderItemWorkFlow(@RequestBody OrderItemWorkFlow workFlowProduct) {
+    public  @ResponseBody RemoteData<OrderItemWorkFlow> startOrderItemWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestBody OrderItemWorkFlow workFlowProduct) {
 
-           workFlowService.startOrderItemWorkFlow(  workFlowProduct   );
+            RemoteData<OrderItemWorkFlow>      result=     workFlowService.startOrderItemWorkFlow( user, workFlowProduct   );
+        return result;
 
-        return workFlowService.findWorkFlowByOrderItemId(workFlowProduct.orderItemId);
+
 
     }
 
@@ -111,6 +112,94 @@ public class WorkFlowController extends BaseController {
 
 
 
+    /**
+     * 查询流程工作人表
+     * @return
+     */
+    @RequestMapping(value = "/workers", method = RequestMethod.GET)
+    public  @ResponseBody RemoteData<WorkFlowWorker> findWorkers( ) {
+
+        return  workFlowService.findWorkers(     );
+
+    }
+    /**
+     * 查询流程工作人表
+     * @return
+     */
+    @RequestMapping(value = "/arrangers", method = RequestMethod.GET)
+    public  @ResponseBody RemoteData<WorkFlowArranger> findArrangers( ) {
+
+        return  workFlowService.findArrangers(     );
+
+    }
+/**
+     * 保存流程工作人表
+     * @return
+     */
+    @RequestMapping(value = "/saveWorker", method = RequestMethod.POST)
+    public  @ResponseBody RemoteData<WorkFlowWorker> saveWorker(@RequestBody WorkFlowWorker workFlowWorker ) {
+
+        return  workFlowService.saveWorker(  workFlowWorker   );
+
+    }
+
+/**
+     * 保存排厂工作人表
+     * @return
+     */
+    @RequestMapping(value = "/saveArranger", method = RequestMethod.POST)
+    public  @ResponseBody RemoteData<WorkFlowArranger> saveArranger(@RequestBody WorkFlowArranger workFlowWorker ) {
+
+        return  workFlowService.saveArranger(  workFlowWorker   );
+
+    }
+
+/**
+     * 删除排厂工作人表
+     * @return
+     */
+    @RequestMapping(value = "/deleteArranger", method = RequestMethod.POST)
+    public  @ResponseBody RemoteData<Void> deleteArranger(@RequestParam(value = "id")     long id) {
+
+        return  workFlowService.deleteWorkFlowArranger(  id   );
+
+    }
+
+/**
+     * 删除流程节点工作人
+     * @return
+     */
+    @RequestMapping(value = "/deleteWorker", method = RequestMethod.POST)
+    public  @ResponseBody RemoteData<Void> deleteWorker(@RequestParam(value = "id")     long id) {
+
+        return  workFlowService.deleteWorkFlowWorker(  id   );
+
+    }
+
+    /**读取指定订单流程，流程的消息列表
+     *  cancelOrderWorkFlow?orderItemWorkFlowId
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/workFlowMessage", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+
+            , @RequestParam(value = "orderItemWorkFlowId" ) long orderItemWorkFlowId
+            , @RequestParam(value = "workFlowStep" ) int workFlowStep
+
+
+    ) {
+
+
+        return workFlowService.getOrderItemWorkFlowMessage(user,orderItemWorkFlowId,workFlowStep);
+
+
+
+    }
 
 
 

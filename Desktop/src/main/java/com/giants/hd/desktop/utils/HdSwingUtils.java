@@ -22,7 +22,7 @@ public class HdSwingUtils {
      * @Param component
      *
      */
-    public static  void showDetailPanel(Product product ,Component component)
+    public static  void showDetailPanel(Product product , Component component)
     {
 
 

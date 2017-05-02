@@ -1,13 +1,13 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;

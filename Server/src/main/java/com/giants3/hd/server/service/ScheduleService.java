@@ -1,8 +1,7 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.component.TaskJob;
-import com.giants3.hd.server.entity.HdTask;
-import com.giants3.hd.server.entity.HdTaskLog;
+import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.entity.HdTaskLog;
 import com.giants3.hd.server.interf.Job;
 import com.giants3.hd.server.repository.QuotationRepository;
 import com.giants3.hd.server.repository.TaskLogRepository;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -76,6 +76,7 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
             public void actionPerformed(ActionEvent e) {
 
                 MaterialClassUpdateDialog materialClassUpdateDialog = new MaterialClassUpdateDialog(MaterialClassDialog.this);
+                materialClassUpdateDialog.setLocationByPlatform(true);
                 materialClassUpdateDialog.setVisible(true);
                 MaterialClass materialClass = materialClassUpdateDialog.getResult();
                 if (materialClass != null) {
@@ -132,6 +133,7 @@ public class MaterialClassDialog extends BaseSimpleDialog<MaterialClass> {
                     if (selectedRowSOnModel == null || selectedRowSOnModel.length < 1) return;
                     MaterialClass selectedData = classTableModel.getItem(selectedRowSOnModel[0]);
                     MaterialClassUpdateDialog materialClassUpdateDialog = new MaterialClassUpdateDialog(MaterialClassDialog.this, selectedData);
+                    materialClassUpdateDialog.setLocationByPlatform(true);
                     materialClassUpdateDialog.setVisible(true);
                     MaterialClass materialClass = materialClassUpdateDialog.getResult();
                     if (materialClass != null) {

@@ -1,7 +1,5 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity_erp.ErpStockOutItem;
-import com.giants3.hd.server.entity_erp.Prdt;
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Zhilingdan;
@@ -10,18 +8,9 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**

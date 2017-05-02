@@ -115,6 +115,10 @@ public class ErpOrderItem {
      * 包装附件列表  由产品信息关联过来。
      */
     public String packAttaches;
+    /**
+     * 设定好的产品生产类型 0 未设定 1 自制  2 外购
+     */
+    public int produceType;
 
 
     public String getOs_no() {
@@ -316,4 +320,19 @@ public class ErpOrderItem {
      */
 
     public long orderWorkFlowId;
+
+
+    /**
+     * 产品是否已经配置流程
+     */
+    public boolean hasProductWorkFlowSet;
+
+
+
+
+
+    /**
+     * 是否可以排厂
+     */
+    public boolean canArrange;
 }

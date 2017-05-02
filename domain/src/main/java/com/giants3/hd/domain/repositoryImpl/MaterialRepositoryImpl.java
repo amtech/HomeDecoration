@@ -4,13 +4,10 @@ import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.MaterialRepository;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.MaterialClass;
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
-
-import java.util.List;
 
 /**
  * Created by davidleen29 on 2017/4/2.

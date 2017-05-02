@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by davidleen29 on 2017/4/2.
  */
-public class WorkFlowArrangeTableModel extends  BaseListTableModel<Panel_WorkFlow_Config.WorkFlowConfig> {
+public class WorkFlowArrangeTableModel extends  BaseListTableModel<WorkFlowArrangeTableModel.WorkFlowConfig> {
 
 
 
@@ -24,11 +24,7 @@ public class WorkFlowArrangeTableModel extends  BaseListTableModel<Panel_WorkFlo
     }
 
 
-    public  void setWorkFlowArrangeData(WorkFlowArrangeData workFlowArrangeData)
-    {
 
-
-    }
 
     /**
      * Returns false.  This is the default implementation for all cells.
@@ -57,7 +53,7 @@ public class WorkFlowArrangeTableModel extends  BaseListTableModel<Panel_WorkFlo
 
 
 
-        Panel_WorkFlow_Config.WorkFlowConfig  item=getItem(rowIndex);
+        WorkFlowConfig  item=getItem(rowIndex);
 
         boolean booleanValue=false;
         try{
@@ -83,4 +79,14 @@ public class WorkFlowArrangeTableModel extends  BaseListTableModel<Panel_WorkFlo
 
 
     }
+
+
+    public static class WorkFlowConfig {
+        public int workFlowStep;
+        public String workFlowName;
+        public boolean tiejian;
+        public boolean mujian;
+        public boolean pu;
+    }
+
 }

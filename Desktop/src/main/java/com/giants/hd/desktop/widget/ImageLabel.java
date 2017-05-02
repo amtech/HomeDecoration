@@ -3,11 +3,8 @@ package com.giants.hd.desktop.widget;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by davidleen29 on 2016/7/31.
@@ -23,7 +20,7 @@ public class ImageLabel extends JLabel {
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 backgroundImage =icon.getImage();
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override

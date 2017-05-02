@@ -2,17 +2,21 @@ package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.model.AbsTableModel;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.JTableUtils;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serializable;
 
 /**
- *  自定义表格
- *
- *  拦截setModel 方法， 满足一定条件 定制列宽  行高
+ * 自定义表格
+ * <p/>
+ * 拦截setModel 方法， 满足一定条件 定制列宽  行高
  */
 public class JHdTable extends JTable {
 
@@ -29,8 +33,24 @@ public class JHdTable extends JTable {
     public JHdTable() {
 
 
+        // setDefaultRenderer(Action.class,new ActionCellRenderer());
 
-       // setDefaultRenderer(ImageIcon.class,new ImageIconCellRenderer());
+//       setDefaultRenderer(Action.class,new ButtonRenderer());
+//        setDefaultEditor(Action.class,
+//                new ButtonEditor(new JCheckBox()));
+//
+//
+//          TableColumn operate=null;
+//        try {
+//            operate=getColumn("操作");
+//        }catch (Throwable t){
+//            Config.log(t.getLocalizedMessage());
+//            t.printStackTrace();
+//        }
+//        if(operate!=null) {
+//            operate.setCellRenderer(new ButtonRenderer());
+//            operate.setCellEditor(new ButtonEditor(new JCheckBox()));
+//        }
     }
 
     @Override
@@ -38,48 +58,42 @@ public class JHdTable extends JTable {
         super.setModel(dataModel);
 
 
-        if(dataModel instanceof AbsTableModel)
-        {
+        if (dataModel instanceof AbsTableModel) {
 
-            AbsTableModel absTableModel=(AbsTableModel)dataModel;
+            AbsTableModel absTableModel = (AbsTableModel) dataModel;
             //配置行高
-            int rowHeight=absTableModel.getRowHeight();
-            if(rowHeight>0)
-            {
+            int rowHeight = absTableModel.getRowHeight();
+            if (rowHeight > 0) {
                 setRowHeight(rowHeight);
             }
         }
 
 
-
-        if(dataModel instanceof BaseTableModel)
-        {
+        if (dataModel instanceof BaseTableModel) {
 
 
             //配置定制列宽
-            BaseTableModel baseTableModel=(BaseTableModel)dataModel;
-            int[] columnWidths=baseTableModel.getColumnWidth();
-            JTableUtils.setJTableColumnsWidth(this,columnWidths);
+            BaseTableModel baseTableModel = (BaseTableModel) dataModel;
+            int[] columnWidths = baseTableModel.getColumnWidth();
+            JTableUtils.setJTableColumnsWidth(this, columnWidths);
 
             //配置多行文本展示。
-            int[] multiLineTextColumnIndexes=baseTableModel.getMultiLineColumns();
+            int[] multiLineTextColumnIndexes = baseTableModel.getMultiLineColumns();
 
-            if(multiLineTextColumnIndexes!=null&&multiLineTextColumnIndexes.length>0) {
+            if (multiLineTextColumnIndexes != null && multiLineTextColumnIndexes.length > 0) {
 
-                DefaultTableCellRenderer renderer=      new DefaultTableCellRenderer() {
+                DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
 
 
                     @Override
                     protected void setValue(Object value) {
 
                         String valueString = value == null ? "" : value.toString();
-                         super.setValue(HdSwingUtils.multiLineForLabel(valueString));
+                        super.setValue(HdSwingUtils.multiLineForLabel(valueString));
                     }
 
                     @Override
                     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
-
 
 
                         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -87,23 +101,60 @@ public class JHdTable extends JTable {
                 };
 //             TableCellRenderer renderer=new TextAreaCellRenderer();
                 TableColumnModel columnModel = getColumnModel();
-                for(int index:multiLineTextColumnIndexes)
-                {
+                for (int index : multiLineTextColumnIndexes) {
                     TableColumn column = columnModel.getColumn(index);
                     column.setCellRenderer(renderer);
                 }
-
 
 
             }
         }
 
 
-
     }
 
 
-    private class ImageIconCellRenderer extends DefaultTableCellRenderer  {
+    private class ActionCellRenderer extends JPanel implements TableCellRenderer, Serializable  {
+
+
+        private JButton jButton;
+
+        public ActionCellRenderer() {
+            jButton = new JButton();
+            setLayout(new BorderLayout());
+            add(jButton);
+            jButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    if(Config.DEBUG
+                            )
+                    {
+                        Config.log("action click...........");
+                    }
+                }
+            });
+        }
+
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            if (table == null) {
+                jButton.setText("");
+            } else
+
+                jButton.setText(String.valueOf(value));
+
+            setBackground(Color.BLUE);
+
+            return this;
+        }
+    }
+
+
+    private class ImageIconCellRenderer extends DefaultTableCellRenderer {
         /**
          * Returns the component used for drawing the cell.  This method is
          * used to configure the renderer appropriately before drawing.
@@ -159,23 +210,104 @@ public class JHdTable extends JTable {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
 
-
-            Component component=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-            if (table==null)
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (table == null)
                 return component;
-            ImageIcon icon=null;
-            String text="";
-            if(value instanceof  ImageIcon)
-            {
+            ImageIcon icon = null;
+            String text = "";
+            if (value instanceof ImageIcon) {
 
 
-                icon=(ImageIcon)value;
-            }else
-            {text="loading...";}
+                icon = (ImageIcon) value;
+            } else {
+                text = "loading...";
+            }
 
             setIcon(icon);
             setText(text);
             return component;
         }
     }
+    /**
+     * @version 1.0 11/09/98
+     */
+
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(table.getForeground());
+                setBackground(UIManager.getColor("Button.background"));
+            }
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    /**
+     * @version 1.0 11/09/98
+     */
+
+    class ButtonEditor extends DefaultCellEditor {
+        protected JButton button;
+
+        private String label;
+
+        private boolean isPushed;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                                                     boolean isSelected, int row, int column) {
+            if (isSelected) {
+                button.setForeground(table.getSelectionForeground());
+                button.setBackground(table.getSelectionBackground());
+            } else {
+                button.setForeground(table.getForeground());
+                button.setBackground(table.getBackground());
+            }
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                //
+                //
+                JOptionPane.showMessageDialog(button, label + ": Ouch!");
+                // System.out.println(label + ": Ouch!");
+            }
+            isPushed = false;
+            return new String(label);
+        }
+
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
+    }
+
 }

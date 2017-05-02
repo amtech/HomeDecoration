@@ -1,7 +1,7 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AProduct;
-import com.giants3.hd.server.entity.Product;
+import com.giants3.hd.utils.entity.Product;
 import org.springframework.stereotype.Component;
 
 /**  桌面端Product 转换成app 端AProduct数据

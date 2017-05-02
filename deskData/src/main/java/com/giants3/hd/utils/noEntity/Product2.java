@@ -1,7 +1,7 @@
 package com.giants3.hd.utils.noEntity;
 
 
-        import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.utils.entity.Product;
 
 /**
  * Created by davidleen29 on 2015/8/5.

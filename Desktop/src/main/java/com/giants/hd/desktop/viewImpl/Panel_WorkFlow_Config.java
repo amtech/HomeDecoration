@@ -3,9 +3,12 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.model.TableField;
 import com.giants.hd.desktop.model.WorkFlowArrangeTableModel;
 import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
+import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.TableStructureUtils;
 import com.giants.hd.desktop.view.WorkFlowConfigViewer;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.ProduceType;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
@@ -26,18 +29,19 @@ import java.util.List;
 public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigViewer {
 
 
-    private static final String MUJIAN = "木件";
-    private static final String PU = "PU";
-    private static final String TIEJIAN = "铁件";
+
     List<TableField> tableFields;
 
-    List<WorkFlowConfig> data;
+    List<WorkFlowArrangeTableModel.WorkFlowConfig> data;
+
 
     WorkFlowArrangeTableModel tableModel;
+    private List<WorkFlow> workFlows;
+
 
     public Panel_WorkFlow_Config(final WorkFlowProductPresenter presenter) {
         this.tableFields = TableStructureUtils.getWorkFlowArrange();
-        tableModel = new WorkFlowArrangeTableModel(WorkFlowConfig.class, tableFields);
+        tableModel = new WorkFlowArrangeTableModel(WorkFlowArrangeTableModel.WorkFlowConfig.class, tableFields);
 
         table.setModel(tableModel);
 
@@ -48,6 +52,13 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
             }
         });
 
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(selfMade);
+        buttonGroup.add(purchase);
+
+
+        configPurchaseField();
+
 
     }
 
@@ -55,30 +66,36 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
     private JHdTable table;
     private JPanel check_group;
     private JButton save;
+    private JRadioButton purchase;
+    private JRadioButton selfMade;
+    private JComboBox cb_group;
 
     List<JCheckBox> jCheckBoxes;
     List<WorkFlowSubType> workFlowSubTypes;
 
 
-    public static class WorkFlowConfig {
-        public int workFlowStep;
-        public String workFlowName;
-        public boolean tiejian;
-        public boolean mujian;
-        public boolean pu;
-    }
-
     @Override
     public void setWorkFlows(List<WorkFlow> workFlows, List<WorkFlowSubType> subTypes) {
+        this.workFlows = workFlows;
 
         data = new ArrayList<>();
+
         for (WorkFlow workFlow : workFlows) {
-            WorkFlowConfig workFlowConfig = new WorkFlowConfig();
+
+            WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = new WorkFlowArrangeTableModel.WorkFlowConfig();
             workFlowConfig.workFlowStep = workFlow.flowStep;
             workFlowConfig.workFlowName = workFlow.name;
-            data.add(workFlowConfig);
+            if (workFlow.isSelfMade) {
+
+                data.add(workFlowConfig);
+            } else {
+
+
+            }
+
         }
         tableModel.setDatas(data);
+
 
         this.workFlowSubTypes = subTypes;
         jCheckBoxes = new ArrayList<>();
@@ -96,6 +113,20 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
             check_group.add(checkBox);
         }
 
+
+        cb_group.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(workFlows)));
+
+
+        int index = Math.max(5, workFlows.size() - 3);
+        cb_group.setSelectedIndex(index);
+
+
+    }
+
+    private void configPurchaseField() {
+
+        List<TableField> configField = new ArrayList<>();
+        configField.addAll(tableFields);
 
     }
 
@@ -137,10 +168,6 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
     }
 
 
-    public void setProductTypes() {
-    }
-
-
     /**
      * 获取实际控件
      *
@@ -155,62 +182,96 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
     public void setData(WorkFlowProduct workFlowProduct) {
 
 
-        String[] steps = StringUtils.split(workFlowProduct.workFlowSteps);
-        if (StringUtils.isEmpty(workFlowProduct.configs))
-            return;
-
-        String[] configs = StringUtils.split(workFlowProduct.configs);
-        String[] productTypeNames = StringUtils.split(workFlowProduct.productTypeNames);
-
-
-        int workFlowSubTypeSize=workFlowSubTypes.size();
-        for (int i = 0; i < workFlowSubTypeSize; i++) {
-
-            WorkFlowSubType subType=workFlowSubTypes.get(i);
-
-            jCheckBoxes.get(i).setSelected(StringUtils.index(productTypeNames,subType.typeName)>-1);
-
+        int index = -1;
+        final int size = workFlows.size();
+        for (int i = 0; i < size; i++) {
+            WorkFlow workFlow = workFlows.get(i);
+            if (workFlow.flowStep == workFlowProduct.groupStep) {
+                index = i;
+            }
         }
+        if (index != -1)
+            cb_group.setSelectedIndex(index);
+
+
+        final boolean isSelfMade = workFlowProduct.produceType == ProduceType.SELF_MADE;
+        selfMade.setSelected(isSelfMade);
+        purchase.setSelected(!isSelfMade);
 
 
 
-        int length = productTypeNames.length;
-
-        int workFlowLength = steps.length;
-        for (int i = 0; i < workFlowLength; i++) {
-            String config = configs[i];
 
 
-            String[] productTypeConfig = StringUtils.split(config, StringUtils.STRING_SPLIT_COMMA);
+        if (StringUtils.isEmpty(workFlowProduct.configs)) {
 
-            for (int j = 0; j < length; j++) {
+            for (int i = 0; i < data.size(); i++) {
 
-                final WorkFlowConfig workFlowConfig = this.data.get(i);
-                final boolean selected = "1".equals(  productTypeConfig[j])  ;
-                System.out.println("  "+productTypeNames[j]+"  "+selected );
-                switch (productTypeNames[j]) {
-                    case TIEJIAN:
+                final WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = this.data.get(i);
 
 
-                        workFlowConfig.tiejian = selected;
-
-                        break;
-                    case MUJIAN:
-
-                        workFlowConfig.mujian = selected;
-
-                        break;
-                    case PU:
 
 
-                        workFlowConfig.pu = selected;
-                        break;
-                }
+                    workFlowConfig.mujian = true;
+
+                    if (WorkFlow.STEP_NAME_PENGSUO.equals(workFlowConfig.workFlowName)) {
+                        workFlowConfig.mujian = false;
+
+                    }
+                    workFlowConfig.tiejian = true;
+
 
 
             }
 
+            tableModel.fireTableDataChanged();
+            return;
+        }
+        String[] configs = StringUtils.split(workFlowProduct.configs);
+        String[] productTypeNames = StringUtils.split(workFlowProduct.productTypeNames);
 
+
+        int workFlowSubTypeSize = workFlowSubTypes.size();
+        for (int i = 0; i < workFlowSubTypeSize; i++) {
+            WorkFlowSubType subType = workFlowSubTypes.get(i);
+            jCheckBoxes.get(i).setSelected(StringUtils.index(productTypeNames, subType.typeName) > -1);
+        }
+
+
+        int length = productTypeNames.length;
+        String[] steps = StringUtils.split(workFlowProduct.workFlowSteps);
+        int workFlowLength = steps.length;
+
+        for (int i = 0; i < workFlowLength; i++) {
+
+            final WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = this.data.get(i);
+
+
+                String config = configs[i];
+
+
+                String[] productTypeConfig = StringUtils.split(config, StringUtils.STRING_SPLIT_COMMA);
+
+                for (int j = 0; j < length; j++) {
+
+
+                    final boolean selected = !(String.valueOf(WorkFlow.STEP_SKIP).equals(productTypeConfig[j]));
+
+                    switch (productTypeNames[j]) {
+                        case WorkFlowSubType.TYPE_NAME_TIE:
+                            workFlowConfig.tiejian = selected;
+                            break;
+                        case WorkFlowSubType.TYPE_NAME_MU:
+                            workFlowConfig.mujian = selected;
+                            break;
+                        case WorkFlowSubType.TYPE_NAME_PU:
+                            workFlowConfig.pu = selected;
+                            break;
+                    }
+
+
+
+
+            }
         }
 
         tableModel.setDatas(this.data);
@@ -252,36 +313,50 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
         data.productTypeNames = StringUtils.combine(productTypeNames);
 
 
+        WorkFlow workFlow = (WorkFlow) cb_group.getSelectedItem();
+        data.groupStep = workFlow.flowStep;
+
         String[] configs = new String[length];
         StringBuilder config = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            WorkFlowConfig workFlowConfig = this.data.get(i);
+            WorkFlowArrangeTableModel.WorkFlowConfig workFlowConfig = this.data.get(i);
             workFlowSteps[i] = String.valueOf(workFlowConfig.workFlowStep);
             workFLowNames[i] = workFlowConfig.workFlowName;
-            if (typeLength > 0) {
-                config.setLength(0);
-                for (int j = 0; j < typeLength; j++) {
+            if (Config.DEBUG) {
+                Config.log(" workFlowSteps:" + workFLowNames[i]);
+            }
 
-                    WorkFlowSubType subType = checkSubTypes.get(j);
-                    switch (subType.typeName) {
-                        case TIEJIAN:
-                            config.append(workFlowConfig.tiejian ? 1 : 0);
-                            break;
-                        case MUJIAN:
-                            config.append(workFlowConfig.mujian ? 1 : 0);
-                            break;
-                        case  PU:
-                            config.append(workFlowConfig.pu ? 1 : 0);
-                            break;
+
+                int workFlowConfigValue;
+
+                workFlowConfigValue = WorkFlow.STEP_NORMAL;
+
+                if (typeLength > 0) {
+                    config.setLength(0);
+                    for (int j = 0; j < typeLength; j++) {
+
+                        WorkFlowSubType subType = checkSubTypes.get(j);
+
+
+                        switch (subType.typeName) {
+                            case WorkFlowSubType.TYPE_NAME_TIE:
+                                config.append(workFlowConfig.tiejian ? workFlowConfigValue : WorkFlow.STEP_SKIP);
+                                break;
+                            case WorkFlowSubType.TYPE_NAME_MU:
+                                config.append(workFlowConfig.mujian ? workFlowConfigValue : WorkFlow.STEP_SKIP);
+                                break;
+                            case WorkFlowSubType.TYPE_NAME_PU:
+                                config.append(workFlowConfig.pu ? workFlowConfigValue : WorkFlow.STEP_SKIP);
+                                break;
+                        }
+                        config.append(StringUtils.STRING_SPLIT_COMMA);
+
+
                     }
-                    config.append(StringUtils.STRING_SPLIT_COMMA);
-
+                    config.setLength(config.length() - 1);
+                    configs[i] = config.toString();
 
                 }
-                config.setLength(config.length() - 1);
-                configs[i] = config.toString();
-
-            }
 
         }
 
@@ -289,6 +364,7 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
         data.workFlowSteps = StringUtils.combine(workFlowSteps);
         data.workFlowNames = StringUtils.combine(workFLowNames);
         data.configs = StringUtils.combine(configs);
+        data.produceType = selfMade.isSelected() ? ProduceType.SELF_MADE : ProduceType.PURCHASE;
 
     }
 }

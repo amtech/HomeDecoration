@@ -1,16 +1,13 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.mvp.WorkFlowOrderArrangeModel;
 import com.giants.hd.desktop.presenter.OrderItemWorkFlowPresenter;
 import com.giants.hd.desktop.view.OrderItemWorkFlowViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderItemWorkFlow;
 import com.giants3.hd.domain.BaseSubscriber;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ConstantData;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.ProduceType;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.entity.OutFactory;
 import rx.Subscriber;
 
 import javax.swing.*;
@@ -22,8 +19,8 @@ import java.util.List;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> implements OrderItemWorkFlowPresenter {
-    private final ErpOrderItem erpOrderItem;
+public class WorkFlowOrderArrangeDialog extends MVPDialog<OrderItemWorkFlow, OrderItemWorkFlowViewer, WorkFlowOrderArrangeModel> implements OrderItemWorkFlowPresenter {
+
     OrderItemWorkFlowViewer workFlowViewer;
 
 
@@ -31,30 +28,31 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
     private WorkFlowProduct data;
 
 
-    List<OutFactory> outFactories;
-
-    List<WorkFlowSubType> subTypes;
-    private WorkFlowProduct workFlowProduct;
-    OrderItemWorkFlow orderItemWorkFlow;
-
     public WorkFlowOrderArrangeDialog(Window window, ErpOrderItem erpOrderItem) {
         super(window, "订单生产流程配置");
-        this.erpOrderItem = erpOrderItem;
-        setContentPane(getCustomContentPane());
+
+        workFlowViewer = getViewer();
+
+        getModel().setOrderItem(erpOrderItem);
+
 
         setMinimumSize(new Dimension(800, 600));
-        readOrderItemWorkFlow(erpOrderItem);
-        workFlowViewer.bindOrderData(erpOrderItem);
         readOutFactoryData();
+        loadProductWorkFlow(erpOrderItem.productId);
 
+        workFlowViewer.bindOrderData(erpOrderItem);
 
-
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                readOrderItemWorkFlow(getModel().getOrderItem());
+            }
+        });
 
 
     }
 
-    private void readOrderItemWorkFlow(final ErpOrderItem erpOrderItem)
-    {
+    private void readOrderItemWorkFlow(final ErpOrderItem erpOrderItem) {
 
         UseCaseFactory.getInstance().createGetOrderItemWorkFlow(erpOrderItem.id).execute(new BaseSubscriber<RemoteData<OrderItemWorkFlow>>() {
             @Override
@@ -68,7 +66,6 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
                 super.onError(e);
 
 
-
                 e.printStackTrace();
 
             }
@@ -78,26 +75,23 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
             public void onNext(RemoteData<OrderItemWorkFlow> data) {
 
 
-                if(data.isSuccess()&&data.datas!=null&&data.datas.size()>0)
-                {
-                    orderItemWorkFlow=data.datas.get(0);
-                    bindOrderItemWorkFlow(orderItemWorkFlow);
-                }
-                else
-                {
+                OrderItemWorkFlow orderItemWorkFlow;
+                if (data.isSuccess() && data.datas != null && data.datas.size() > 0) {
+
+                    orderItemWorkFlow = data.datas.get(0);
+
+
+                } else {
                     orderItemWorkFlow = new OrderItemWorkFlow();
                     orderItemWorkFlow.orderName = erpOrderItem.os_no;
+                    orderItemWorkFlow.productFullName = erpOrderItem.prd_name;
                     orderItemWorkFlow.orderItemId = erpOrderItem.id;
                     orderItemWorkFlow.orderItemIndex = erpOrderItem.itm;
 
 
-
-
                 }
-
-                checkProductConfig(erpOrderItem.productId, erpOrderItem.prd_name);
-
-
+                getModel().setOrderItemWorkFlow(orderItemWorkFlow);
+                bindOrderItemWorkFlow();
             }
 
         });
@@ -109,7 +103,7 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
     /**
      * 检查产品是否已经配置流程
      */
-    private void checkProductConfig(final long productId, final String productName) {
+    private void loadProductWorkFlow(final long productId) {
 
         UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new BaseSubscriber<RemoteData<WorkFlowProduct>>() {
             @Override
@@ -122,7 +116,6 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
                 super.onError(e);
 
-                // workFlowViewer.showMesssage(e.getMessage());
 
             }
 
@@ -138,31 +131,7 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
                 }
 
 
-                if (workFlowProduct.id <= 0) {
-
-
-                    //显示产品流程配置界面
-
-                    WorkFlowProductDialog workFlowProductFrame = new WorkFlowProductDialog(WorkFlowOrderArrangeDialog.this, productId, productName);
-                    workFlowProductFrame.setModal(true);
-                    workFlowProductFrame.setVisible(true);
-                    workFlowProduct = workFlowProductFrame.getResult();
-                    if (workFlowProduct == null) {
-
-                        setVisible(false);
-
-                    }
-
-                }
-
-
-                if(workFlowProduct!=null) {
-
-                    setWorkFlowProduct(workFlowProduct);
-                }else
-                {
-                    dispose();
-                }
+                setWorkFlowProduct(workFlowProduct);
 
 
             }
@@ -174,40 +143,33 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
     private void setWorkFlowProduct(WorkFlowProduct workFlowProduct) {
 
-        this.workFlowProduct = workFlowProduct;
 
-
-        if(orderItemWorkFlow.id<=0) {
-
-            orderItemWorkFlow.workFlowSteps = workFlowProduct.workFlowSteps;
-            orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
-            orderItemWorkFlow.workFlowTypes = workFlowProduct.workFlowTypes;
-
-
-            orderItemWorkFlow.productTypes = workFlowProduct.productTypes;
-            orderItemWorkFlow.productTypeNames = workFlowProduct.productTypeNames;
-            bindOrderItemWorkFlow(orderItemWorkFlow);
-        }
-
-
-
-
-        //
-
+        getModel().setProductWorkFlow(workFlowProduct);
+        bindOrderItemWorkFlow();
 
 
     }
 
 
-    private   void  bindOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow)
-    {
-        final String[] productTypes=orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        final String[] productTypeNames=orderItemWorkFlow.productTypeNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+    private void bindOrderItemWorkFlow() {
 
+
+        final OrderItemWorkFlow orderItemWorkFlow = getModel().getOrderItemWorkFlow();
+        final List<OutFactory> outFactories = getModel().getOutFactories();
+        if (outFactories == null || orderItemWorkFlow == null) return;
+
+        workFlowViewer.setOutFactories(outFactories);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                workFlowViewer.setProductTypes(productTypes,productTypeNames,outFactories);
+
+
+                if (orderItemWorkFlow.produceType == ProduceType.SELF_MADE) {
+                    final String[] productTypes = orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+                    final String[] productTypeNames = orderItemWorkFlow.productTypeNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
+                    workFlowViewer.setProductTypes(productTypes, productTypeNames, outFactories);
+                }
+                workFlowViewer.bindOrderItemWorkFlow(orderItemWorkFlow);
             }
         });
     }
@@ -236,9 +198,8 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
 
                 if (data.isSuccess()) {
-                    outFactories = data.datas;
-
-                    workFlowViewer.setOutFactories(outFactories);
+                    getModel().setFactories(data.datas);
+                    bindOrderItemWorkFlow();
                 }
             }
 
@@ -246,103 +207,6 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
     }
 
-
-    private void readData() {
-
-//        UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
-//            @Override
-//            public void onCompleted() {
-//                workFlowViewer.hideLoadingDialog();
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                e.printStackTrace();
-//                workFlowViewer.hideLoadingDialog();
-//                workFlowViewer.showMesssage(e.getMessage());
-//            }
-//
-//
-//            @Override
-//            public void onNext(RemoteData<WorkFlowProduct> workFlowRemoteData) {
-//
-//                if (workFlowRemoteData.isSuccess()) {
-//
-//                    if (workFlowRemoteData.totalCount > 0)
-//                        setData(workFlowRemoteData.datas.get(0));
-//                    else {
-//
-//                        final WorkFlowProduct data = new WorkFlowProduct();
-//                        data.productId = productId;
-//                        setData(data);
-//                        workFlowViewer.showMesssage("该产品未建立生产进度信息");
-//                        return;
-//                    }
-//                }
-//
-//
-//            }
-//
-//
-//        });
-//        workFlowViewer.showLoadingDialog();
-    }
-
-
-    public void setData(WorkFlowProduct datas) {
-        oldData = GsonUtils.toJson(datas);
-        this.data = datas;
-        // workFlowViewer.setData(datas);
-    }
-
-
-    protected Container getCustomContentPane() {
-        workFlowViewer = new Panel_OrderItemWorkFlow(this);
-        return workFlowViewer.getRoot();
-    }
-
-
-//    @Override
-//    public void save() {
-//
-//
-//        workFlowViewer.getData(data);
-//
-//
-//        if (!hasModifyData()) {
-//            workFlowViewer.showMesssage("数据无改动");
-//            return;
-//        }
-//
-//        UseCaseFactory.getInstance().createSaveWorkProductUseCase(data).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                e.printStackTrace();
-//                workFlowViewer.hideLoadingDialog();
-//                workFlowViewer.showMesssage(e.getMessage());
-//            }
-//
-//
-//            @Override
-//            public void onNext(RemoteData<WorkFlowProduct> workFlowRemoteData) {
-//                workFlowViewer.hideLoadingDialog();
-//                if (workFlowRemoteData.isSuccess()) {
-//                    setData(workFlowRemoteData.datas.get(0));
-//                    workFlowViewer.showMesssage("保存成功");
-//                }
-//
-//
-//            }
-//
-//
-//        });
-//        workFlowViewer.showLoadingDialog();
-//    }
 
     @Override
     public boolean hasModifyData() {
@@ -354,102 +218,83 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
     public void save() {
 
 
-        if(orderItemWorkFlow==null) return;
-        if(orderItemWorkFlow.productTypes==null)
-            return ;
-        List<OutFactory> factories;
-        try {
-            factories=workFlowViewer.getArrangedFactories();
-        } catch (Exception e) {
-            e.printStackTrace();
-            workFlowViewer.showMesssage(e.getMessage());
-            return ;
-        }
+        OrderItemWorkFlow orderItemWorkFlow = getModel().getOrderItemWorkFlow();
+        WorkFlowProduct workFlowProduct = getModel().getWorkFlowProduct();
+        if (orderItemWorkFlow == null) return;
 
 
-        boolean isSelfMade=workFlowViewer.getSelectArrangeType()==ProduceType.SELF_MADE;
+        final boolean isSelfMade = orderItemWorkFlow.produceType == ProduceType.SELF_MADE;
+
+        if (!isSelfMade) {
 
 
-        if(isSelfMade)
-        {
-            orderItemWorkFlow.workFlowSteps = workFlowProduct.workFlowSteps;
-            orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
-            orderItemWorkFlow.workFlowTypes = workFlowProduct.workFlowTypes;
+            List<WorkFlow> selectWorkFlows = workFlowViewer.getSelectedWorkFlows();
 
-        }else
-        {
-            List<WorkFlow> selectWorkFlows=workFlowViewer.getSelectedWorkFlows();
+            int size = selectWorkFlows.size();
+            StringBuilder workFlowSteps = new StringBuilder();
+            StringBuilder workFlowNames = new StringBuilder();
 
-            int size=selectWorkFlows.size();
-            StringBuilder workFlowSteps=new StringBuilder();
-            StringBuilder workFlowNames=new StringBuilder();
-            StringBuilder workFlowTypes=new StringBuilder();
             for (int i = 0; i < size; i++) {
 
-                WorkFlow workFlow=selectWorkFlows.get(i);
+                WorkFlow workFlow = selectWorkFlows.get(i);
                 workFlowSteps.append(workFlow.flowStep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
                 workFlowNames.append(workFlow.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
-                workFlowTypes.append(0).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+
 
             }
             orderItemWorkFlow.workFlowSteps = workFlowSteps.toString();
-            orderItemWorkFlow.workFlowNames =  workFlowNames.toString();
-            orderItemWorkFlow.workFlowTypes =  workFlowTypes.toString();
+            orderItemWorkFlow.workFlowNames = workFlowNames.toString();
+
+            orderItemWorkFlow.configs = "";
+        } else {
+            orderItemWorkFlow.workFlowSteps = workFlowProduct.workFlowSteps;
+            orderItemWorkFlow.workFlowNames = workFlowProduct.workFlowNames;
+            orderItemWorkFlow.configs = workFlowProduct.configs;
         }
 
 
-        if(isSelfMade) {
+        if (isSelfMade) {
 
 
-            String[] productTypes = orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-            if (factories == null || factories.size() != productTypes.length) {
-                workFlowViewer.showMesssage("数据异常");
+            //获取配体厂家
+            List<OutFactory> factories;
+            try {
+                factories = workFlowViewer.getArrangedFactories();
+            } catch (Exception e) {
+                e.printStackTrace();
+                workFlowViewer.showMesssage(e.getMessage());
                 return;
+            }
+            StringBuilder conceptusFactoryIds = new StringBuilder();
+            StringBuilder conceptusFactoryNames = new StringBuilder();
 
+            for (OutFactory factory : factories) {
+                conceptusFactoryIds.append(factory.dep).append(StringUtils.STRING_SPLIT_SEMICOLON);
+                conceptusFactoryNames.append(factory.name).append(StringUtils.STRING_SPLIT_SEMICOLON);
+
+            }
+            if (conceptusFactoryIds.length() > 0) {
+                conceptusFactoryIds.setLength(conceptusFactoryIds.length() - 1);
+                conceptusFactoryNames.setLength(conceptusFactoryNames.length() - 1);
             }
 
 
-            StringBuilder ids = new StringBuilder();
-            StringBuilder names = new StringBuilder();
-            int size = productTypes.length;
-            for (int i = 0; i < size; i++) {
-                OutFactory outFactory = factories.get(i);
-                ids.append(outFactory.dep).append(ConstantData.STRING_DIVIDER_SEMICOLON);
+            orderItemWorkFlow.conceptusFactoryIds = conceptusFactoryIds.toString();
+            orderItemWorkFlow.conceptusFactoryNames = conceptusFactoryNames.toString();
 
-                names.append(outFactory.name).append(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-
-            }
-
-
-            if (size > 0) {
-                ids.setLength(ids.length() - 1);
-                names.setLength(names.length() - 1);
-            }
-
-
-            orderItemWorkFlow.conceptusFactoryIds = ids.toString();
-            orderItemWorkFlow.conceptusFactoryNames = names.toString();
-        }else
-        {
-
+        } else {
             orderItemWorkFlow.conceptusFactoryIds = "";
-            orderItemWorkFlow.conceptusFactoryNames =  "";
+            orderItemWorkFlow.conceptusFactoryNames = "";
         }
 
 
-        orderItemWorkFlow.produceType=isSelfMade? ProduceType.SELF_MADE: ProduceType.PURCHASE;
+        orderItemWorkFlow.produceType = workFlowProduct.produceType;
 
 
-        OutFactory productFactory=workFlowViewer.getProduceFactory();
+        OutFactory productFactory = workFlowViewer.getProduceFactory();
 
-        orderItemWorkFlow.produceFactoryId=isSelfMade?"":productFactory.dep;
-        orderItemWorkFlow.produceFactoryName=isSelfMade?"":productFactory.name;
-
-        //orderItemWorkFlow.workFlowTypes
-
-
-
+        orderItemWorkFlow.produceFactoryId = isSelfMade ? "" : productFactory.dep;
+        orderItemWorkFlow.produceFactoryName = isSelfMade ? "" : productFactory.name;
 
 
         UseCaseFactory.getInstance().createStartOrderItemWorkFlowUseCase(orderItemWorkFlow).execute(new Subscriber<RemoteData<OrderItemWorkFlow>>() {
@@ -472,8 +317,7 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
 
                 workFlowViewer.hideLoadingDialog();
 
-                if(data.isSuccess()&&data.datas.size()>0)
-                {
+                if (data.isSuccess() && data.datas.size() > 0) {
                     setResult(data.datas.get(0));
 
                     workFlowViewer.showMesssage("排厂成功！");
@@ -486,12 +330,83 @@ public class WorkFlowOrderArrangeDialog extends BaseDialog<OrderItemWorkFlow> im
         });
 
 
-
-
         workFlowViewer.showLoadingDialog("正在启动订单生产流程。。。");
 
 
+    }
 
+    @Override
+    public void reimportProduct() {
+
+
+        getModel().updateProductWorkFlowToOrder();
+        workFlowViewer.bindOrderItemWorkFlow(getModel().getOrderItemWorkFlow());
+
+
+    }
+
+
+    @Override
+    protected OrderItemWorkFlowViewer createViewer() {
+        return new Panel_OrderItemWorkFlow(this);
+    }
+
+    @Override
+    protected WorkFlowOrderArrangeModel createModel() {
+        return new WorkFlowOrderArrangeModel();
+    }
+
+
+    /**
+     * 全部撤销排厂
+     */
+    @Override
+    public void cancelArrange() {
+
+
+        OrderItemWorkFlow orderItemWorkFlow = getModel().getOrderItemWorkFlow();
+        if (orderItemWorkFlow.id <= 0) {
+            //
+            viewer.showMesssage("订单未配置生产流程");
+            return;
+        }
+
+        if (!viewer.showConfirmMessage("该操作会删除所有排厂信息，并重新排厂")) return;
+
+
+        UseCaseFactory.getInstance().CreateCancelOrderWorkFlowUseCase(orderItemWorkFlow.id).execute(new Subscriber<RemoteData<OrderItemWorkFlow>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                workFlowViewer.hideLoadingDialog();
+                workFlowViewer.showMesssage(e.getMessage());
+
+            }
+
+
+            @Override
+            public void onNext(RemoteData<OrderItemWorkFlow> data) {
+
+                workFlowViewer.hideLoadingDialog();
+
+                if (data.isSuccess()) {
+
+                    workFlowViewer.showMesssage("排厂撤销成功！");
+
+
+                }
+
+            }
+
+        });
+
+
+        workFlowViewer.showLoadingDialog("正在启动订单生产流程。。。");
 
 
     }

@@ -11,28 +11,51 @@
     "width": 60,
     "aClass": "S"
   },
-  { 
-    "columnName": "工作人员",
+  {
+    "columnName": "用户名",
     "fileName": "userName",
-    "width": 60,
-    "aClass": "S"
+    "width": 80,
+    "aClass": "S",
+    "isCombineField": false
   },
+
   {
-    "columnName": "发送/接受",
-    "fileName": "operateType",
+    "columnName": "铁",
+    "fileName": "tie",
     "width": 60,
-    "aClass": "S"
+    "aClass": "B",
+    "isCombineField": false
   },
+
   {
-    "columnName": "发送/接收",
-    "fileName": "operateType",
+    "columnName": "木",
+    "fileName": "mu",
     "width": 60,
-    "aClass": "S"
+    "aClass": "B",
+    "isCombineField": false
   },
+
   {
-    "columnName": "排产类型",
-    "fileName": "arrangeType",
+    "columnName": "PU",
+    "fileName": "pu",
     "width": 60,
-    "aClass": "S"
+    "aClass": "B",
+    "isCombineField": false
+  },
+
+  {
+    "columnName": "接收",
+    "fileName": "receive",
+    "width": 60,
+    "aClass": "B",
+    "isCombineField": false
+  },
+
+  {
+    "columnName": "发送",
+    "fileName": "send",
+    "width": 60,
+    "aClass": "B",
+    "isCombineField": false
   }
 ]

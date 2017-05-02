@@ -2,6 +2,7 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -17,12 +18,14 @@ public abstract class UploadPictureDialog extends BaseDialog {
     protected JButton uploadPicture;
     protected JButton syncPicture;
     protected JCheckBox pictureOverride;
+    protected JButton asyncRelate;
+    protected JLabel asyncRelateMessage;
 
     public UploadPictureDialog(Window window) {
         super(window,"图片管理");
         setContentPane(contentPane);
-
-
+        asyncRelate.setVisible(false);
+        asyncRelateMessage.setVisible(false);
 
 
 
@@ -101,10 +104,43 @@ public abstract class UploadPictureDialog extends BaseDialog {
                 }.go();
             }
         });
+        asyncRelate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                new HdSwingWorker<Void,Object>(UploadPictureDialog.this)
+                {
+
+                    @Override
+                    protected RemoteData<Void> doInBackground() throws Exception {
+
+
+                        return  syncRelatePicture();
+
+                    }
+
+                    @Override
+                    public void onResult(RemoteData<Void> data) {
+
+                        JOptionPane.showMessageDialog(UploadPictureDialog.this,data.message);
+
+                    }
+                }.go();
+
+
+            }
+        });
 
 
     }
 
+
+    protected RemoteData<Void> syncRelatePicture() throws HdException {
+
+            return null;
+
+
+    }
 
 
     private File getSelectedFile()

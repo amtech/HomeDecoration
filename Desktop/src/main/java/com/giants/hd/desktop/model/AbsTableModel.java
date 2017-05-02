@@ -3,6 +3,7 @@ package com.giants.hd.desktop.model;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.local.ImageLoader;
+import com.giants.hd.desktop.utils.Config;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
@@ -64,14 +65,28 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel {
         final String destUrl = HttpUrl.loadPicture(fileNames[0]);
         ImageIcon data = (ImageIcon) pictureMaps.get(destUrl);
         if (data != null)
-            System.out.println(pictureMaps.size() + "  hit   " + destUrl);
+
+            if(Config.DEBUG)
+            {
+
+                Config.log("row:"+row+",url:"+destUrl+" ,hit  "+pictureMaps.size());
+            }
+
+
         if (data == null) {
 
             ImageLoader.getInstance().displayImage(new Iconable() {
                 @Override
-                public void setIcon(ImageIcon icon) {
-                    pictureMaps.put(destUrl, icon);
-                    fireTableCellUpdated(row, column);
+                public void setIcon(ImageIcon icon, String url) {
+                    pictureMaps.put(url, icon);
+                    if(Config.DEBUG)
+                    {
+
+                        Config.log("row:"+row+",url:"+destUrl+",url2:"+url);
+                        Config.log("url equals ? ="+url.equals(destUrl));
+                    }
+                   // fireTableCellUpdated(row, column);
+                    fireTableDataChanged( );
                 }
 
                 @Override
@@ -97,7 +112,7 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel {
      * 异步加载的图片缓存
      * 最多50
      */
-    private static LRUMap pictureMaps = new LRUMap(50, 0.75f, false);
+    private static LRUMap pictureMaps = new LRUMap(100, 0.75f, false);
 
 
     /**
@@ -214,7 +229,6 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel {
                 if (obj instanceof String) {
                     return loadImage(rowIndex, columnIndex, (String) obj);
                 }
-
             }
 
         return obj

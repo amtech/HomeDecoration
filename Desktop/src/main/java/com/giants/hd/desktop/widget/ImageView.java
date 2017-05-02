@@ -4,7 +4,6 @@ import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * 展示图片的控件
@@ -26,7 +25,7 @@ public class ImageView extends JLabel {
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                  setText("");
                 ImageView.this.setIcon(icon);
 

@@ -1,10 +1,12 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.server.entity.Material;
+import com.giants3.hd.utils.entity.Material;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
 * 材料
@@ -27,6 +29,8 @@ public interface MaterialRepository extends JpaRepository<Material,Long> {
 
 
     public Material findFirstByClassIdEquals(String classId);
+
+     List< Material> findByClassIdEquals(String classId);
 
 
 

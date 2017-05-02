@@ -1,6 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity.OrderItemWorkFlowState;
+import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,4 +47,9 @@ public interface OrderItemWorkFlowStateRepository extends JpaRepository<OrderIte
     List<OrderItemWorkFlowState> findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(long orderItemId, int workFlowStep, int qty);
 //    List<OrderItemWorkFlowState> findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThanAndNextWorkFlowStepGreaterThan(long orderItemId, int workFlowStep,int qty);
 
+
+    /**
+     * s删除所有订单相关的流程记录数据
+     */
+      int deleteByOrderItemIdEquals(long orderItemId);
 }

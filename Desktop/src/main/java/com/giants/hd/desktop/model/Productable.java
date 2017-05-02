@@ -14,5 +14,5 @@ public interface Productable {
      * @param product
      * @param rowIndex  模型行号
      */
-    public    void setProduct(Product product,int rowIndex);
+    public    void setProduct(Product product, int rowIndex);
 }

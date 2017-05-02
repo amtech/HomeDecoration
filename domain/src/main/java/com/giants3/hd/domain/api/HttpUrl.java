@@ -826,6 +826,13 @@ public class HttpUrl {
 
     }
 
+
+    public static String searchOrderItemList(String key, final int pageIndex, final int pageSize) {
+
+        return additionInfo(BaseUrl + "api/order/searchOrderItems?key=" + key + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize);
+
+    }
+
     /**
      * 根据产品no 读取产品详情
      *
@@ -1075,5 +1082,49 @@ public class HttpUrl {
 
     public static String deleteMaterialClass(long materialClassId) {
         return additionInfo(BaseUrl + "api/material/deleteClass?materialClassId=" + materialClassId);
+    }
+
+    public static String loadWorkFlowWorks() {
+        return additionInfo(BaseUrl + "api/workFlow/workers");
+    }
+
+    public static String saveWorkFlowWorker() {
+
+        return additionInfo(BaseUrl + "api/workFlow/saveWorker");
+    }
+
+    public static String saveWorkFlowArranger() {
+
+        return additionInfo(BaseUrl + "api/workFlow/saveArranger");
+    }
+
+    public static String getWorkFlowArrangers() {
+        return additionInfo(BaseUrl + "api/workFlow/arrangers");
+    }
+
+    public static String deleteWorkFlowWorker(long workFlowWorkerId) {
+        return additionInfo(BaseUrl + "api/workFlow/deleteWorker?id=" + workFlowWorkerId);
+    }
+
+    public static String deleteWorkFlowArranger(long workFlowArrangerId) {
+        return additionInfo(BaseUrl + "api/workFlow/deleteArranger?id=" + workFlowArrangerId);
+    }
+
+    public static String syncRelateProductPicture() {
+
+
+        return additionInfo(BaseUrl + "api/product/syncRelateProductPicture");
+    }
+
+    /**
+     * 撤销排厂生产记录
+     *
+     * @param orderItemWorkFlowId
+     * @return
+     */
+    public static String cancelOrderWorkFlow(long orderItemWorkFlowId) {
+
+        return additionInfo(BaseUrl + "api/order/cancelOrderWorkFlow?orderItemWorkFlowId=" + orderItemWorkFlowId);
+
     }
 }

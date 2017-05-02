@@ -1,6 +1,6 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.server.entity.Product;
+import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.StringUtils;
 
 import java.io.File;

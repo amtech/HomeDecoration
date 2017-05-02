@@ -1,17 +1,20 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
+import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.view.WorkFlowConfigViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlow_Config;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
 import rx.Subscriber;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,16 +24,10 @@ import java.util.List;
  */
 public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements WorkFlowProductPresenter {
     WorkFlowConfigViewer workFlowViewer;
-
-
     private String oldData;
     private WorkFlowProduct data;
-
     long productId;
     String productName;
-
-
-    List<WorkFlowSubType> subTypes;
 
     public WorkFlowConfigDialog(Window window, long productId, String productName) {
         super(window, productName + "产品生产流程配置详情");
@@ -40,9 +37,23 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
         setContentPane(getCustomContentPane());
         this.productId = productId;
         this.productName = productName;
-        workFlowViewer.setWorkFlows(CacheManager.getInstance().bufferData.workFlows,CacheManager.getInstance().bufferData.workFlowSubTypes);
+        final List<WorkFlow> allWorkFlows = CacheManager.getInstance().bufferData.workFlows;
 
-        readData();
+        List<WorkFlow> workFlows=new ArrayList<>();
+        for(WorkFlow workFlow:allWorkFlows)
+        {
+            if(workFlow.isSelfMade)
+            {
+                workFlows.add(workFlow);
+            }
+        }
+        final List<WorkFlowSubType> workFlowSubTypes = CacheManager.getInstance().bufferData.workFlowSubTypes;
+
+
+
+        workFlowViewer.setWorkFlows(workFlows, workFlowSubTypes);
+
+         readData();
 
     }
 
@@ -52,20 +63,20 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
         UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
             @Override
             public void onCompleted() {
-                workFlowViewer.hideLoadingDialog();
+             //   workFlowViewer.hideLoadingDialog();
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                workFlowViewer.hideLoadingDialog();
-                workFlowViewer.showMesssage(e.getMessage());
+               // workFlowViewer.hideLoadingDialog();
+               // workFlowViewer.showMesssage(e.getMessage());
             }
 
 
             @Override
             public void onNext(RemoteData<WorkFlowProduct> workFlowRemoteData) {
-                workFlowViewer.hideLoadingDialog();
+               // workFlowViewer.hideLoadingDialog();
                 if (workFlowRemoteData.isSuccess()) {
 
                     if (workFlowRemoteData.totalCount > 0)
@@ -75,8 +86,8 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
                         final WorkFlowProduct data = new WorkFlowProduct();
                         data.productId = productId;
                         setData(data);
-                        workFlowViewer.showMesssage("该产品未建立生产进度信息");
-                        return;
+                       // workFlowViewer.showMesssage("该产品未建立生产进度信息");
+
                     }
                 }
 
@@ -85,7 +96,7 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
 
 
         });
-        workFlowViewer.showLoadingDialog();
+       // workFlowViewer.showLoadingDialog();
     }
 
 
@@ -93,6 +104,10 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
         oldData = GsonUtils.toJson(datas);
         this.data = datas;
         workFlowViewer.setData(datas);
+        if(Config.DEBUG)
+        {
+            Config.log("oldData:"+oldData);
+        }
     }
 
 
@@ -150,6 +165,11 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
 
     @Override
     public boolean hasModifyData() {
+
+        if(Config.DEBUG)
+        {
+            Config.log("data:"+data+",oldData:"+oldData);
+        }
 
         return data != null && !GsonUtils.toJson(data).equals(oldData);
     }

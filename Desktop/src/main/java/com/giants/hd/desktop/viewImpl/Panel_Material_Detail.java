@@ -247,7 +247,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 lb_photo.setIcon(icon);
             }
 

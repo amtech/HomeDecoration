@@ -15,6 +15,7 @@ import com.giants.hd.desktop.presenter.ProductDetailPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.view.ProductDetailViewer;
@@ -247,13 +248,13 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      */
     ProductDetailPresenter presenter;
 
-    private boolean cannotViewPrice=false;
+    private boolean cannotViewPrice = false;
 
 
     public Panel_ProductDetail() {
         super();
         globalData = CacheManager.getInstance().bufferData.globalData;
-        cannotViewPrice=!AuthorityUtil.getInstance().canViewPrice(ModuleConstant.NAME_PRODUCT);
+        cannotViewPrice = !AuthorityUtil.getInstance().canViewPrice(ModuleConstant.NAME_PRODUCT);
         initComponent();
 
 
@@ -305,22 +306,34 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      */
     private void addListeners() {
 
-        //数量改变
-        tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+
         tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
+
+        //数量改变
+
+        updatePackListenersBaseOnFactory((Factory) cb_factory.getSelectedItem());
+
 
 //        //修改规格监听
         //    ta_spec_cm.getDocument().addDocumentListener(ta_spec_cmListener);
 //        //修改规格监听
         // ta_spec_inch.getDocument().addDocumentListener(ta_spec_inchListener);
 
-
+        //设置厂家监听
+        cb_factory.addItemListener(cb_factoryItemListener);
     }
 
 
     public void removeListeners() {
         //数量改变
-        tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
+
+        clearPackQuantityListener();
+        tf_long.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+        tf_width.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+        tf_height.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+        tf_product_cost.getDocument().removeDocumentListener(tf_foreign_relate_documentListener);
+
+
         tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
 
 
@@ -328,7 +341,8 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         ta_spec_cm.getDocument().removeDocumentListener(ta_spec_cmListener);
 //        //修改规格监听
         ta_spec_inch.getDocument().removeDocumentListener(ta_spec_inchListener);
-
+        //设置厂家分类
+        cb_factory.removeItemListener(cb_factoryItemListener);
 
 //
 //        //注册表模型的监听
@@ -358,7 +372,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 productDetail.paints = productPaintModel.getDatas();
                 productDetail.packMaterials = packMaterialTableModel.getDatas();
                 productDetail.packWages = packWageTableModel.getDatas();
-                ProductLogic.updateProductStatistics(productDetail,globalData);
+                ProductLogic.updateProductStatistics(productDetail, globalData);
                 bindStatisticsValue(productDetail.product);
 
             }
@@ -430,6 +444,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                 } catch (Throwable t) {
 
+                    if (Config.DEBUG) {
+                        t.printStackTrace();
+                    }
                 }
 
 
@@ -575,58 +592,22 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
             public void itemStateChanged(ItemEvent e) {
 
 
+
+
+                if(Config.DEBUG)
+                {
+
+                    Config.log("itemStateChanged..................");
+                }
                 if (e.getStateChange() == ItemEvent.SELECTED) {
 
 
-                    //TODO   update view   show or hide some items
-                    boolean isSelfProduct = ((Factory) e.getItem()).code.equals(Factory.CODE_LOCAl);
-                    //设置港杂费是否显示
-
-                    lb_gangza.setVisible(!isSelfProduct);
-                    tf_gangza.setVisible(!isSelfProduct);
-
-                    //实际成本是否可输入  外厂可输入
-                    tf_product_cost.setEnabled(!isSelfProduct);
-                    tf_product_cost.setEditable(!isSelfProduct);
+                    final Factory factory = (Factory) e.getItem();
 
 
-                    //包装内盒，长宽高是否可输入
-                    //内盒可以手动输入
-//                    tf_inboxCount.setEditable(!isSelfProduct);
-//                    tf_inboxCount.setEnabled(!isSelfProduct);
-                    tf_long.setEnabled(!isSelfProduct);
-                    tf_long.setEditable(!isSelfProduct);
-                    tf_width.setEnabled(!isSelfProduct);
-                    tf_width.setEditable(!isSelfProduct);
-                    tf_height.setEnabled(!isSelfProduct);
-                    tf_height.setEditable(!isSelfProduct);
+                    updatePanelStateBaseOnFactory(factory);
 
-
-                    tab_list.setVisible(isSelfProduct);
-                    panel_xiankang.setVisible(isSelfProduct);
-
-
-                    if (isSelfProduct) {
-
-                        tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
-
-                        tf_quantity.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
-                        tf_long.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
-                        tf_width.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
-                        tf_height.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
-                        tf_product_cost.getDocument().removeDocumentListener(tf_foreign_relate_documentListener);
-
-                    } else {
-                        tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
-
-                        tf_quantity.getDocument().addDocumentListener(tf_packSizeDocumentListener);
-                        tf_long.getDocument().addDocumentListener(tf_packSizeDocumentListener);
-                        tf_width.getDocument().addDocumentListener(tf_packSizeDocumentListener);
-                        tf_height.getDocument().addDocumentListener(tf_packSizeDocumentListener);
-                        tf_product_cost.getDocument().addDocumentListener(tf_foreign_relate_documentListener);
-
-                    }
-                    getWindow(getRoot()).pack();
+                    updatePackListenersBaseOnFactory(factory);
 
 
                 }
@@ -664,6 +645,8 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         tf_packSizeDocumentListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
+
+
                 update();
             }
 
@@ -673,7 +656,6 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-
 
                         update();
                     }
@@ -687,14 +669,20 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
             private void update() {
 
-                int inboxCount=0;
+
+                if (Config.DEBUG) {
+                    Config.log("updating。。。。。。。。。。。。。。。");
+                }
+
+
+                int inboxCount = 0;
                 try {
-                      inboxCount = Integer.valueOf(tf_inboxCount.getText().trim());
+                    inboxCount = Integer.valueOf(tf_inboxCount.getText().trim());
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
 
-                int quantity=0;
+                int quantity = 0;
                 try {
                     quantity = Integer.valueOf(tf_quantity.getText().trim());
                 } catch (Throwable t) {
@@ -712,8 +700,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                     tf_fob.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.fob));
                     tf_price.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.price));
                     tf_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.cost));
-                }catch (Throwable t)
-                {
+                } catch (Throwable t) {
                     t.printStackTrace();
                 }
 
@@ -759,9 +746,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                 productDetail.product.updateCostOnForignFactory(globalData, productCost);
 
-                tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.fob));
-                tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.price));
-                tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(productDetail.product.cost));
+                tf_fob.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.fob));
+                tf_price.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.price));
+                tf_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.cost));
 
 
             }
@@ -891,7 +878,69 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     }
 
     /**
+     * 根据内外厂不同更新界面状态
+     *
+     * @param factory
+     */
+    private void updatePanelStateBaseOnFactory(Factory factory) {
+        boolean isSelfProduct = factory.code.equals(Factory.CODE_LOCAl);
+        //设置港杂费是否显示
+
+        lb_gangza.setVisible(!isSelfProduct);
+        tf_gangza.setVisible(!isSelfProduct);
+
+        //实际成本是否可输入  外厂可输入
+        tf_product_cost.setEnabled(!isSelfProduct);
+        tf_product_cost.setEditable(!isSelfProduct);
+
+
+        //包装内盒，长宽高是否可输入
+        //内盒可以手动输入
+//                    tf_inboxCount.setEditable(!isSelfProduct);
+//                    tf_inboxCount.setEnabled(!isSelfProduct);
+        tf_long.setEnabled(!isSelfProduct);
+        tf_long.setEditable(!isSelfProduct);
+        tf_width.setEnabled(!isSelfProduct);
+        tf_width.setEditable(!isSelfProduct);
+        tf_height.setEnabled(!isSelfProduct);
+        tf_height.setEditable(!isSelfProduct);
+
+
+        tab_list.setVisible(isSelfProduct);
+        panel_xiankang.setVisible(isSelfProduct);
+
+
+//
+        getWindow(getRoot()).pack();
+    }
+
+
+    private void updatePackListenersBaseOnFactory(Factory factory) {
+        boolean isSelfProduct = factory.code.equals(Factory.CODE_LOCAl);
+        if (isSelfProduct) {
+
+            tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+            tf_quantity.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+            tf_long.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+            tf_width.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+            tf_height.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+            tf_product_cost.getDocument().removeDocumentListener(tf_foreign_relate_documentListener);
+
+        } else {
+
+            tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
+            tf_quantity.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+            tf_long.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+            tf_width.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+            tf_height.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+            tf_product_cost.getDocument().addDocumentListener(tf_foreign_relate_documentListener);
+
+        }
+    }
+
+    /**
      * 判断是否不能查看单价
+     *
      * @return
      */
     private boolean cannotViewProductPrice() {
@@ -1001,8 +1050,6 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         //日期格式验证
         product.setrDate(tf_dateValue);
-
-        getWorkFlowData(product);
 
 
         //附件
@@ -1174,7 +1221,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 photo.setIcon(icon);
             }
 
@@ -1225,21 +1272,23 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         cb_class.setSelectedIndex(selectClassIndex);
 
 
-        //设置厂家分类
-        cb_factory.removeItemListener(cb_factoryItemListener);
-        int selectedFactory = 0;
+        int selectedFactoryIndex = -1;
+        Factory selectedFactory = null;
         if (product != null)
             for (int i = 0, count = cb_factory.getItemCount(); i < count; i++) {
 
                 if (cb_factory.getItemAt(i).code.equals(product.factoryCode)) {
-
-                    selectedFactory = i;
+                    selectedFactory = cb_factory.getItemAt(i);
+                    selectedFactoryIndex = i;
                     break;
                 }
 
             }
-        cb_factory.addItemListener(cb_factoryItemListener);
-        cb_factory.setSelectedIndex(selectedFactory);
+        if (selectedFactoryIndex > -1) {
+            cb_factory.setSelectedIndex(selectedFactoryIndex);
+            updatePanelStateBaseOnFactory(selectedFactory);
+
+        }
 
 
         //设置包装信息
@@ -1261,9 +1310,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         jp_pack.setData(product.xiankang);
 
 
-        tf_fob.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.fob));
-        tf_cost.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.cost));
-        tf_price.setText(cannotViewProductPrice() ?"***":product == null ? "" : String.valueOf(product.price));
+        tf_fob.setText(cannotViewProductPrice() ? "***" : product == null ? "" : String.valueOf(product.fob));
+        tf_cost.setText(cannotViewProductPrice() ? "***" : product == null ? "" : String.valueOf(product.cost));
+        tf_price.setText(cannotViewProductPrice() ? "***" : product == null ? "" : String.valueOf(product.price));
 
 
         String[] fileNames = StringUtils.isEmpty(product.attaches) ? new String[]{} : product.attaches.split(";");
@@ -1274,52 +1323,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         ta_packinfo.setText(product.packInfo);
         fileNames = StringUtils.isEmpty(product.packAttaches) ? new String[]{} : product.packAttaches.split(";");
         pack_attaches.setAttachFiles(fileNames);
-        bindWorkFlowData(product);
 
-
-    }
-
-    /**
-     * 绑定生产流程数据
-     *
-     * @param product
-     */
-    private void bindWorkFlowData(Product product) {
-
-    }
-
-
-    /**
-     * 获取生产流程数据
-     *
-     * @return
-     */
-    public void getWorkFlowData(Product product) {
-
-
-//        StringBuilder stringBuilder = new StringBuilder();
-//        StringBuilder nameBuilder = new StringBuilder();
-//        int count = CacheManager.getInstance().bufferData.workFlows.size();
-//        for (int i = 0; i < count; i++) {
-//            Component c = panel_workflow.getComponent(i);
-//            if (c instanceof JCheckBox) {
-//                if (((JCheckBox) c).isSelected()) {
-//                    WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
-//                    stringBuilder.append(workFlow.flowStep).append(StringUtils.PRODUCT_NAME_COMMA);
-//                    nameBuilder.append(workFlow.name).append(StringUtils.PRODUCT_NAME_COMMA);
-//
-//                }
-//
-//
-//            }
-//        }
-//        if (stringBuilder.length() > 0)
-//            stringBuilder.setLength(stringBuilder.length() - 1);
-//        if (nameBuilder.length() > 0)
-//            nameBuilder.setLength(nameBuilder.length() - 1);
-//
-//        product.workFlowSteps = stringBuilder.toString();
-//        product.workFlowNames = nameBuilder.toString();
 
     }
 
@@ -1339,7 +1343,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         removeListeners();
 
-        workFlow.setVisible(detail==null||detail.product==null||detail.product.id<=0?false:true);
+        workFlow.setVisible(detail == null || detail.product == null || detail.product.id <= 0 ? false : true);
 
         if (detail == null) {
 
@@ -1360,7 +1364,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
 
         //非删除数据 添加对数据的监听。
-        if (productDelete != null)
+        if (productDelete == null)
             addListeners();
 
 
@@ -1406,9 +1410,6 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         pack_attaches.setTitle("包装附件");
         panel_attach.setTitle("产品附件");
-
-
-
 
 
         workFlow.addActionListener(new ActionListener() {
@@ -1752,7 +1753,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
 
         photo.addMouseListener(new MouseInputAdapter() {
-             @Override
+            @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() >= 2) {
@@ -1783,7 +1784,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
             }
 
             private void showMenu(MouseEvent e) {
-                if(productDetail!=null&&productDetail.product!=null&&productDetail.product.id>0) {
+                if (productDetail != null && productDetail.product != null && productDetail.product.id > 0) {
                     if (e.isPopupTrigger()) {
 
                         JPopupMenu menu = new JPopupMenu();
@@ -2078,32 +2079,32 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
      */
     private void bindStatisticsValue(Product product) {
         if (product == null) return;
-        jtf_paint_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.paintCost));
-        jtf_paint_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.paintWage));
-        jtf_assemble_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.assembleCost));
-        jtf_assemble_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.assembleWage));
+        jtf_paint_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.paintCost));
+        jtf_paint_wage.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.paintWage));
+        jtf_assemble_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.assembleCost));
+        jtf_assemble_wage.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.assembleWage));
 
-        jtf_conceptus_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.conceptusCost));
-        jtf_conceptus_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.conceptusWage));
+        jtf_conceptus_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.conceptusCost));
+        jtf_conceptus_wage.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.conceptusWage));
 
-        jtf_pack_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.packCost));
-        jtf_pack_wage.setText(cannotViewProductPrice() ?"***":String.valueOf(product.packWage));
+        jtf_pack_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.packCost));
+        jtf_pack_wage.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.packWage));
 
-        jtf_cost1.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost1));
-        jtf_cost6.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost6));
+        jtf_cost1.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost1));
+        jtf_cost6.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost6));
 
-        jtf_cost7.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost7));
-        jtf_cost8.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost8));
-        jtf_cost11_15.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost11_15));
+        jtf_cost7.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost7));
+        jtf_cost8.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost8));
+        jtf_cost11_15.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost11_15));
 
-        jtf_cost_repair.setText(cannotViewProductPrice() ?"***":String.valueOf(product.repairCost));
-        jtf_cost_banyungongzi.setText(cannotViewProductPrice() ?"***":String.valueOf(product.banyunCost));
+        jtf_cost_repair.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.repairCost));
+        jtf_cost_banyungongzi.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.banyunCost));
 
-        tf_product_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.productCost));
-        tf_cost4.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost4));
-        tf_fob.setText(cannotViewProductPrice() ?"***":String.valueOf(product.fob));
-        tf_price.setText(cannotViewProductPrice() ?"***":String.valueOf(product.price));
-        tf_cost.setText(cannotViewProductPrice() ?"***":String.valueOf(product.cost));
+        tf_product_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.productCost));
+        tf_cost4.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost4));
+        tf_fob.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.fob));
+        tf_price.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.price));
+        tf_cost.setText(cannotViewProductPrice() ? "***" : String.valueOf(product.cost));
         tf_volume.setText(String.valueOf(product.packVolume));
         tf_long.setText(String.valueOf(product.packLong));
         tf_width.setText(String.valueOf(product.packWidth));
@@ -2113,19 +2114,38 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         //to avoid fire listener  first check value changed or not  and remove listener and rebind.
         if (!tf_quantity.getText().trim().equals(String.valueOf(product.packQuantity))) {
-            tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
+            clearPackQuantityListener();
             tf_quantity.setText(String.valueOf(product.packQuantity));
-            tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+            if (Config.DEBUG) {
+                Config.log("product.packQuantity:" + product.packQuantity);
+            }
+            resetPackQuantityListener();
         }
 
 //        if (!tf_inboxCount.getText().trim().equals(String.valueOf(product.insideBoxQuantity))) {insideBoxQuantity
         tf_inboxCount.getDocument().removeDocumentListener(tf_inboxCountListener);
         tf_inboxCount.setText(String.valueOf(product.insideBoxQuantity));
         tf_inboxCount.getDocument().addDocumentListener(tf_inboxCountListener);
-//       tf_inboxCountListener }
+
 
     }
 
+    private void clearPackQuantityListener() {
+        tf_quantity.getDocument().removeDocumentListener(tf_quantityListener);
+        tf_quantity.getDocument().removeDocumentListener(tf_packSizeDocumentListener);
+
+    }
+
+    private void resetPackQuantityListener() {
+        Factory factory = (Factory) cb_factory.getSelectedItem();
+        boolean isSelfProduct = factory.code.equals(Factory.CODE_LOCAl);
+
+        if (isSelfProduct)
+            tf_quantity.getDocument().addDocumentListener(tf_quantityListener);
+        else
+            tf_quantity.getDocument().addDocumentListener(tf_packSizeDocumentListener);
+
+    }
 
     /**
      * 绑定英寸规格数据

@@ -12,11 +12,59 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="ef19d" binding="check_group" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="ef19d" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints border-constraint="North"/>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="b406f" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text value="排厂类型"/>
+                </properties>
+              </component>
+              <grid id="d970e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="def07" class="javax.swing.JRadioButton" binding="purchase">
+                    <constraints/>
+                    <properties>
+                      <text value="外排"/>
+                    </properties>
+                  </component>
+                  <component id="9b514" class="javax.swing.JRadioButton" binding="selfMade">
+                    <constraints/>
+                    <properties>
+                      <text value="自制"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <hspacer id="6000f">
+                <constraints/>
+              </hspacer>
+              <hspacer id="1e1fb">
+                <constraints/>
+              </hspacer>
+              <grid id="ac4b0" binding="check_group" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties/>
+                <border type="none" title="自制分类"/>
+                <children/>
+              </grid>
+              <component id="d722" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text value="汇总节点"/>
+                </properties>
+              </component>
+              <component id="3ab6e" class="javax.swing.JComboBox" binding="cb_group">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
           </grid>
         </children>
       </grid>

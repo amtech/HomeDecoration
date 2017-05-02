@@ -1,15 +1,12 @@
 package com.giants3.hd.domain.interractor;
 
-import com.giants3.hd.utils.RemoteData;
-import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
- * 上传临时文件用例
- * Created by david on 2015/10/7.
+ * 默认的用例
+ * Created by davidleeen29 on 2015/10/7.
  */
-public class DefaultUseCase extends UseCase {
+public abstract class DefaultUseCase extends UseCase {
 
 
     public DefaultUseCase() {
@@ -17,14 +14,5 @@ public class DefaultUseCase extends UseCase {
 
     }
 
-    @Override
-    protected Observable buildUseCaseObservable() {
-        return Observable.create(new Observable.OnSubscribe<RemoteData<String>>() {
-            @Override
-            public void call(Subscriber<? super RemoteData<String>> subscriber) {
 
-                subscriber.onError(new Exception("this is default case"));
-            }
-        });
-    }
 }

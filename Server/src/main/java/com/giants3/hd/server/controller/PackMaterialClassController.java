@@ -3,7 +3,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.PackMaterialClassRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.PackMaterialClass;
+import com.giants3.hd.utils.entity.PackMaterialClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;

@@ -3,7 +3,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.repository.OperationLogRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.OperationLog;
+import com.giants3.hd.utils.entity.OperationLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -44,4 +44,11 @@ public class TableStructureUtils {
         return fromJson("workFlowArrange.json");
 
     }
+
+    public static List<TableField> getWorkFlowWorker() {
+        return fromJson("workFlowWorker.json");
+    }
+    public static List<TableField> getWorkFlowArranger() {
+        return fromJson("workFlowArranger.json");
+    }
 }

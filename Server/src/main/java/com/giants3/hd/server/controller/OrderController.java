@@ -1,16 +1,13 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.*;
 import com.giants3.hd.server.service.WorkFlowService;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.server.noEntity.ErpOrderDetail;
-import com.giants3.hd.server.noEntity.OrderReportItem;
+import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.utils.noEntity.OrderReportItem;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.WorkFlowReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -72,20 +69,20 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderDetail> findOrderItems(@RequestParam(value = "os_no") String os_no) {
+    RemoteData<ErpOrderDetail> findOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "os_no") String os_no) {
 
 
-        return erpService.getOrderDetail(os_no);
+        return erpService.getOrderDetail(user,os_no);
     }
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<ErpOrderDetail> save(@RequestBody ErpOrderDetail stockOutDetail) {
+    RemoteData<ErpOrderDetail> save(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestBody ErpOrderDetail stockOutDetail) {
 
 
-        RemoteData<ErpOrderDetail> detailRemoteData = erpService.saveOrderDetail(stockOutDetail);
+        RemoteData<ErpOrderDetail> detailRemoteData = erpService.saveOrderDetail(user,stockOutDetail);
         return detailRemoteData;
     }
 
@@ -407,5 +404,56 @@ public class OrderController extends BaseController {
 
 
     }
+
+    /**
+     *  获取订单的流程配置
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/searchOrderItems", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<ErpOrderItem> searchOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+
+            , @RequestParam(value = "key" ) String key
+            , @RequestParam(value = "pageIndex" ,defaultValue = "0") int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue = "50") int pageSize
+
+
+    ) {
+
+
+        return erpService.searchOrderItems(user, key,pageIndex,pageSize);
+
+
+
+    }
+    /**
+     *  cancelOrderWorkFlow?orderItemWorkFlowId
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/cancelOrderWorkFlow", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> cancelOrderWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+
+            , @RequestParam(value = "orderItemWorkFlowId" ) long orderItemWorkFlowId
+
+
+    ) {
+
+
+        return erpService.cancelOrderWorkFlow(user,orderItemWorkFlowId);
+
+
+
+    }
+
 
 }

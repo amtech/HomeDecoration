@@ -66,7 +66,21 @@ public class JTableUtils {
         return rows;
 
     }
+    /**
+     * 获取被选中行数据 基于模型（model）。
+     * @param table
+     * @return
+     */
+    public static final int  getFirstSelectedRowSOnModel(JTable table)
+    {
 
+
+        int[] rows=getSelectedRowSOnModel(table);
+        if(rows==null||rows.length==0) return -1;
+        return rows[0];
+
+
+    }
 
 
 }

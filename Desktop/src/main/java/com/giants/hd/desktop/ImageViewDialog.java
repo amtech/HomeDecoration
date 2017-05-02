@@ -191,7 +191,7 @@ public class ImageViewDialog extends JDialog {
 
         ImageLoader.getInstance().displayImage(new Iconable() {
             @Override
-            public void setIcon(ImageIcon icon) {
+            public void setIcon(ImageIcon icon, String url) {
                 picture.setText("");
                 picture.setIcon(icon);
                 picture.requestFocusInWindow();

@@ -10,10 +10,7 @@ import com.giants.hd.desktop.view.OrderDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.entity.OrderItemWorkFlow;
@@ -341,44 +338,7 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter 
     @Override
     public void showWorkFlow(ErpOrderItem finalItem) {
 
-        if(finalItem.id<=0)
-        {
-          orderDetailViewer.showMesssage("先保存订单");
-            return;
-        }
 
-
-
-
-//        if(finalItem.orderWorkFlowId<=0)
-//        {
-
-     //前往排产界面
-            WorkFlowOrderArrangeDialog dialog=new WorkFlowOrderArrangeDialog(this,finalItem);
-            dialog.setModal(true);
-            dialog.setVisible(true);
-            OrderItemWorkFlow result=dialog.getResult();
-            if(result!=null)
-            {
-
-                finalItem.orderWorkFlowId=result.id;
-                finalItem.workFlowDescribe=result.workFlowDiscribe;
-
-                loadOrderDetail(os_no);
-
-            }
-
-
-
-//        }else{
-//
-//         //显示订单货款进度
-//
-//            WorkFlowOrderItemStateDialog dialog=new WorkFlowOrderItemStateDialog(this,finalItem.id);
-//            dialog.setModal(true);
-//            dialog.setVisible(true);
-//
-//        }
 
 
 

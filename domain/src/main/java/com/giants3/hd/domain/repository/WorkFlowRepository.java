@@ -1,10 +1,7 @@
 package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.utils.entity.*;
 import rx.Observable;
 
 import java.util.List;
@@ -47,4 +44,16 @@ public interface WorkFlowRepository {
     Observable saveWorkFlowSubTypeList(List<WorkFlowSubType> datas);
 
     Observable searchZhilingdan(String osName, String startDate, String endDate);
+
+    Observable loadWorkFlowWorkers();
+
+    Observable saveWorkFlowWorker(WorkFlowWorker workFlowWorker);
+
+    Observable saveWorkFlowArranger(WorkFlowArranger workFlowArranger);
+
+    Observable getWorkFlowArrangers();
+
+    Observable deleteWorkFlowWorker(long workFlowWorkerId);
+
+    Observable deleteWorkFlowArranger(long workFlowArrangerId);
 }

@@ -1,7 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.server.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.QuoteAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

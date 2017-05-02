@@ -1,12 +1,12 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.QuoteAuth;
-import com.giants3.hd.server.entity.User;
+import com.giants3.hd.utils.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.server.repository.QuotationRepository;
 import com.giants3.hd.server.repository.QuoteAuthRepository;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.Quotation;
-import com.giants3.hd.server.noEntity.QuotationDetail;
+import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;

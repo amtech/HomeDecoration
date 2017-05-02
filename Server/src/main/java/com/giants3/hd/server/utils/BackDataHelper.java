@@ -1,11 +1,11 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.server.entity.Material;
-import com.giants3.hd.server.entity.MaterialDelete;
-import com.giants3.hd.server.entity.ProductDelete;
-import com.giants3.hd.server.entity.QuotationDelete;
-import com.giants3.hd.server.noEntity.ProductDetail;
-import com.giants3.hd.server.noEntity.QuotationDetail;
+import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.utils.entity.MaterialDelete;
+import com.giants3.hd.utils.entity.ProductDelete;
+import com.giants3.hd.utils.entity.QuotationDelete;
+import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.exception.HdException;
 

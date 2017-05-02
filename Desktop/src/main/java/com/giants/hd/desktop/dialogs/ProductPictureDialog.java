@@ -19,6 +19,8 @@ public class ProductPictureDialog extends UploadPictureDialog {
         setTitle("产品图片管理");
         uploadPicture.setText("上传图片并同步");
         syncPicture.setText("所有产品图片同步");
+        asyncRelate.setVisible(true);
+        asyncRelateMessage.setVisible(true);
     }
 
 
@@ -32,5 +34,13 @@ public class ProductPictureDialog extends UploadPictureDialog {
     @Override
     protected RemoteData<Void> syncPicture() throws HdException {
         return apiManager.syncProductPhoto();
+    }
+
+    @Override
+    protected RemoteData<Void> syncRelatePicture() throws HdException {
+
+        return apiManager.syncRelateProductPicture();
+
+
     }
 }

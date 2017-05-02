@@ -1,7 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.WxTxtMsg;
+import com.giants3.hd.utils.entity.WxTxtMsg;
 import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.service.WeixinService;
 import com.giants3.hd.server.utils.FileUtils;

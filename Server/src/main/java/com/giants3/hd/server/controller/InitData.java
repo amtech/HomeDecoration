@@ -1,12 +1,14 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.AppVersion;
-import com.giants3.hd.server.entity.GlobalData;
-import com.giants3.hd.server.entity.Module;
+import com.giants3.hd.utils.entity.AppVersion;
+import com.giants3.hd.utils.entity.GlobalData;
+import com.giants3.hd.utils.entity.Module;
+import com.giants3.hd.server.interf.TargetVersion;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.repository.WorkFlowRepository;
 import com.giants3.hd.server.service.GlobalDataService;
+import com.giants3.hd.server.service.TableRestoreService;
 import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
@@ -48,6 +50,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     WorkFlowRepository workFlowRepository;
     @Autowired
     WorkFlowService workFlowService;
+    @Autowired
+    TableRestoreService tableRestoreService;
 //
 //    @Autowired
 //    TestXmlRepository testXmlRepository;
@@ -58,6 +62,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Value("${appfilepath}")
     private String appFilePath;
+    @Value("${serverVersion}")
+    private int serverVersion;
 
 
     @Autowired
@@ -67,10 +73,22 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         if (!isStart) {
 
 
+
+//
+//            if(true)
+//            return;
+
             //logs debug message
             if (logger.isDebugEnabled()) {
                 logger.debug("getWelcome is executed!");
             }
+//
+////            tableRestoreService.restoreTable();
+//            if (serverVersion== TargetVersion.VERSION_RESTORE_PACK_FROM_QUOTATION)
+//            {
+//
+//                tableRestoreService.restoreOutFactoryProductPackInfoFromQuotation(globalDataService.findCurrentGlobalData());
+//            }
 
 
             List<Module> moduleList = Module.getInitDataList();

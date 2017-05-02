@@ -1,12 +1,8 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.Authority;
-import com.giants3.hd.server.entity.Customer;
-import com.giants3.hd.server.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.Customer;
 
-import com.giants3.hd.server.entity.User;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -30,7 +26,6 @@ public class CustomerService extends AbstractService  {
 
     @Autowired
     private QuotationRepository quotationRepository;
-
 
 
 
@@ -132,4 +127,9 @@ public class CustomerService extends AbstractService  {
         return false
                 ;
     }
+
+
+
+
+
 }

@@ -28,7 +28,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<WorkFlow> remoteData = apiManager.getWorkFlowList( );
+                    RemoteData<WorkFlow> remoteData = apiManager.getWorkFlowList();
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -48,14 +48,14 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
     }
 
     @Override
-    public Observable<RemoteData<WorkFlow>> saveWorkFlowList( final List<WorkFlow> workFlows) {
+    public Observable<RemoteData<WorkFlow>> saveWorkFlowList(final List<WorkFlow> workFlows) {
         return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlow>>() {
             @Override
             public void call(Subscriber<? super RemoteData<WorkFlow>> subscriber) {
 
 
                 try {
-                    RemoteData<WorkFlow> remoteData = apiManager.saveWorkFlowList( workFlows);
+                    RemoteData<WorkFlow> remoteData = apiManager.saveWorkFlowList(workFlows);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -120,7 +120,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<WorkFlowSubType> remoteData = apiManager.getWorkFlowSubTypes( );
+                    RemoteData<WorkFlowSubType> remoteData = apiManager.getWorkFlowSubTypes();
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -148,7 +148,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<WorkFlowProduct> remoteData = apiManager.getWorkFlowOfProduct( productId);
+                    RemoteData<WorkFlowProduct> remoteData = apiManager.getWorkFlowOfProduct(productId);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -177,7 +177,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<WorkFlowProduct> remoteData = apiManager.saveWorkFlowProduct( workFlowProduct);
+                    RemoteData<WorkFlowProduct> remoteData = apiManager.saveWorkFlowProduct(workFlowProduct);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -213,7 +213,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<OrderItemWorkFlowState> remoteData = apiManager.getOrderItemWorkFlowState( orderItemId);
+                    RemoteData<OrderItemWorkFlowState> remoteData = apiManager.getOrderItemWorkFlowState(orderItemId);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -249,7 +249,7 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<WorkFlowSubType> remoteData = apiManager.saveWorkFlowSubTypeList( datas);
+                    RemoteData<WorkFlowSubType> remoteData = apiManager.saveWorkFlowSubTypeList(datas);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -279,7 +279,174 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
 
                 try {
-                    RemoteData<Zhilingdan> remoteData = apiManager.searchZhiling( osName,startDate,endDate);
+                    RemoteData<Zhilingdan> remoteData = apiManager.searchZhiling(osName, startDate, endDate);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+    @Override
+    public Observable loadWorkFlowWorkers() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowWorker>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<WorkFlowWorker>> subscriber) {
+
+
+                try {
+                    RemoteData<WorkFlowWorker> remoteData = apiManager.loadWorkFlowWorks();
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+
+    @Override
+    public Observable saveWorkFlowWorker(final WorkFlowWorker workFlowWorker) {
+
+        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowWorker>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<WorkFlowWorker>> subscriber) {
+
+
+                try {
+                    RemoteData<WorkFlowWorker> remoteData = apiManager.saveWorkFlowWorker(workFlowWorker);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public Observable saveWorkFlowArranger(final WorkFlowArranger workFlowArranger) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowArranger>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<WorkFlowArranger>> subscriber) {
+
+
+                try {
+                    RemoteData<WorkFlowArranger> remoteData = apiManager.saveWorkFlowArranger(workFlowArranger);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+
+    @Override
+    public Observable getWorkFlowArrangers() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowArranger>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<WorkFlowArranger>> subscriber) {
+
+
+                try {
+                    RemoteData<WorkFlowArranger> remoteData = apiManager.getWorkFlowArrangers();
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+    @Override
+    public Observable deleteWorkFlowWorker(final long workFlowWorkerId) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<Void>> subscriber) {
+
+
+                try {
+                    RemoteData<Void> remoteData = apiManager.deleteWorkFlowWorker(workFlowWorkerId);
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+    @Override
+    public Observable deleteWorkFlowArranger(final long workFlowArrangerId) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<Void>> subscriber) {
+
+
+                try {
+                    RemoteData<Void> remoteData = apiManager.deleteWorkFlowArranger(workFlowArrangerId);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();

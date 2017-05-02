@@ -1,7 +1,7 @@
 package com.giants3.hd.server.repository;
 
 
-import com.giants3.hd.server.entity.Product;
+import com.giants3.hd.utils.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -53,4 +53,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Modifying
     @Query("update T_Product p set    p.workFlowSteps=:workFlowSteps ,p.workFlowNames=:workFlowNames")
     public void setDefaultWorkFlowIds(@Param("workFlowSteps") String workFlowSteps ,@Param("workFlowNames") String workFlowNames );
+
+    /**
+     *   查询制定厂家的产品
+     */
+
+    List<Product> findByFactoryCodeEquals(String s);
 }

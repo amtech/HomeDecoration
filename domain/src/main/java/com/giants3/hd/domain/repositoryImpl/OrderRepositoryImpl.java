@@ -88,6 +88,40 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
         });
     }
 
+ @Override
+    public Observable searchOrderItemList(final String key , final int pageIndex, final int pageSize) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItem>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<ErpOrderItem>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<ErpOrderItem> remoteData= apiManager.searchOrderItemList(key,pageIndex,pageSize);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData
+                        );
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+    }
+
 
     @Override
     public Observable<ErpOrderDetail> getOrderOutDetail(final String os_no) {
@@ -285,5 +319,47 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
             }
         });
+    }
+
+    /**
+     * 撤销订单排厂
+     *
+     * @param orderItemWorkFlowId
+     * @return
+     */
+    @Override
+    public Observable cancelOrderWorkFlow(final long orderItemWorkFlowId) {
+
+
+        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderItemWorkFlow>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<OrderItemWorkFlow>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<OrderItemWorkFlow> remoteData= apiManager.cancelOrderWorkFlow(orderItemWorkFlowId);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+
     }
 }

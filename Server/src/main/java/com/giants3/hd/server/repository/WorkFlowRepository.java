@@ -1,8 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.server.entity.Factory;
-import com.giants3.hd.server.entity.WorkFlow;
+import com.giants3.hd.utils.entity.WorkFlow;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.AppVersion;
-import com.giants3.hd.server.entity.Material;
+import com.giants3.hd.utils.entity.AppVersion;
+import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
@@ -10,8 +10,6 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
 import de.greenrobot.common.io.IoUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

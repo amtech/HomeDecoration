@@ -1,10 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.CustomerRepository;
 import com.giants3.hd.server.service.CustomerService;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.server.entity.Customer;
+import com.giants3.hd.utils.entity.Customer;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

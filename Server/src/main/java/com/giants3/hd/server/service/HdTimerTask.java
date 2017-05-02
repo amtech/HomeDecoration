@@ -1,8 +1,8 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.controller.MaterialController;
-import com.giants3.hd.server.entity.HdTask;
-import com.giants3.hd.server.entity.HdTaskLog;
+import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.entity.HdTaskLog;
 import com.giants3.hd.server.repository.TaskLogRepository;
 import com.giants3.hd.server.repository.TaskRepository;
 import com.giants3.hd.utils.DateFormats;

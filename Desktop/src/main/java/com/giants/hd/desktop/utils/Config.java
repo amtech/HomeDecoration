@@ -5,4 +5,10 @@ package com.giants.hd.desktop.utils;
  */
 public class Config {
     public static boolean DEBUG=false;
+
+    public static void log(String s) {
+
+        System.out.println(s);
+
+    }
 }

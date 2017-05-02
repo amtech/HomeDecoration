@@ -1,8 +1,8 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.server.entity.HdTask;
-import com.giants3.hd.server.entity.HdTaskLog;
+import com.giants3.hd.utils.entity.HdTask;
+import com.giants3.hd.utils.entity.HdTaskLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

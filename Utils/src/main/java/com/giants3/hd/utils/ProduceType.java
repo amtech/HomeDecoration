@@ -5,6 +5,8 @@ package com.giants3.hd.utils;
  * Created by davidleen29 on 2017/2/27.
  */
 public class ProduceType {
+
+    public static final int  NOT_SET=0;
     /**
      * 自制
      */

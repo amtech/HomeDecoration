@@ -1,6 +1,6 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.Factory;
+import com.giants3.hd.utils.entity.Factory;
 import com.giants3.hd.utils.entity.OutFactory;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.FactoryRepository;

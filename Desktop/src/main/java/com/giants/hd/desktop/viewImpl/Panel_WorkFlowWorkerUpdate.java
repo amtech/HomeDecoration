@@ -1,0 +1,160 @@
+package com.giants.hd.desktop.viewImpl;
+
+import com.giants.hd.desktop.presenter.WorkFlowWorkerUpdatePresenter;
+import com.giants.hd.desktop.view.WorkFlowWorkerUpdateViewer;
+import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.utils.entity.WorkFlow;
+import com.giants3.hd.utils.entity.WorkFlowWorker;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+/**
+ * 材料分类修改添加 删除
+ * Created by davidleen29 on 2017/4/2.
+ */
+public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWorkerUpdateViewer {
+
+    private final WorkFlowWorkerUpdatePresenter presenter;
+    private JPanel root;
+    private JButton btn_save;
+    private JButton btn_delete;
+    private JComboBox cb_workFlow;
+    private JCheckBox receive;
+    private JCheckBox send;
+    private JCheckBox tie;
+    private JCheckBox mu;
+    private JCheckBox pu;
+    private JComboBox cb_user;
+    private List<User> users;
+    private List<WorkFlow> workFlows;
+
+
+    public Panel_WorkFlowWorkerUpdate(final WorkFlowWorkerUpdatePresenter presenter) {
+        super();
+
+        this.presenter = presenter;
+
+
+        btn_save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.save();
+
+            }
+        });
+
+        btn_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.delete();
+
+            }
+        });
+
+    }
+    @Override
+    public void bindWorkFlows(List<WorkFlow> workFlows)
+    {
+        this.workFlows = workFlows;
+
+        cb_workFlow.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(workFlows)));
+
+
+    }
+
+    @Override
+    public void bindUsers(List<User> users)
+    {
+        this.users = users;
+
+        cb_user.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(users)));
+
+
+    }
+    @Override
+    public void bindData(WorkFlowWorker workFlowWorker) {
+
+
+        btn_delete.setVisible(workFlowWorker != null && workFlowWorker.id > 0);
+         if (workFlowWorker == null) return;
+
+        User selected=null;
+        for(User user:users)
+        {
+            if(user.id==workFlowWorker.userId)
+            {
+                selected=user;
+                break;
+            }
+        }
+        if(selected!=null)
+        cb_user.setSelectedItem(selected);
+
+
+        WorkFlow  selectedWorkFlow=null;
+        for(WorkFlow workFlow:workFlows)
+        {
+            if(workFlow.id==workFlowWorker.userId)
+            {
+                selectedWorkFlow=workFlow;
+                break;
+            }
+        }
+        if(selectedWorkFlow!=null)
+            cb_workFlow.setSelectedItem(selectedWorkFlow);
+
+
+
+        receive.setSelected(workFlowWorker.receive);
+        send.setSelected(workFlowWorker.send);
+        tie.setSelected(workFlowWorker.tie);
+        mu.setSelected(workFlowWorker.mu);
+        pu.setSelected(workFlowWorker.pu);
+
+
+
+
+
+    }
+
+    @Override
+    public void getData(WorkFlowWorker workFlowWorker) {
+
+
+     User user= (User) cb_user.getSelectedItem();
+        if(user!=null)
+        {
+            workFlowWorker.userId=user.id;
+            workFlowWorker.userName=user.code+user.name+user.chineseName;
+        } WorkFlow workFlow= (WorkFlow) cb_workFlow.getSelectedItem();
+        if(workFlow!=null)
+        {
+            workFlowWorker.workFlowId=workFlow.id;
+            workFlowWorker.workFlowStep=workFlow.flowStep;
+            workFlowWorker.workFlowName=workFlow.name;
+        }
+        workFlowWorker.receive=receive.isSelected();
+        workFlowWorker.send=send.isSelected();
+        workFlowWorker.tie=tie.isSelected();
+        workFlowWorker.mu=mu.isSelected();
+        workFlowWorker.pu=pu.isSelected();
+    }
+
+    /**
+     * 获取实际控件
+     *
+     * @return
+     */
+    @Override
+    public JComponent getRoot() {
+        return root;
+    }
+}

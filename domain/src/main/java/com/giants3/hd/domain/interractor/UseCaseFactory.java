@@ -141,6 +141,11 @@ public class UseCaseFactory {
 
         return new GetOrderItemListUseCase(Schedulers.newThread(), Schedulers.immediate(), os_no, orderRepository);
     }
+    public UseCase searchOrderItemListUseCase(String key,int pageIndex, int pageSize) {
+
+
+        return new SearchOrderItemListUseCase(Schedulers.newThread(), Schedulers.immediate(), key,  pageIndex,   pageSize, orderRepository);
+    }
 
     public UseCase createGetProductByPrdNo(String prdNo) {
         return new GetProductByPrdNoUseCase(Schedulers.newThread(), Schedulers.immediate(), prdNo, productRepository);
@@ -491,5 +496,52 @@ public class UseCaseFactory {
 
     public UseCase createDeleteMaterialClassUseCase(long materialClassId) {
         return new DeleteMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate() ,materialClassId,   materialRepository);
+    }
+
+    public UseCase createGetWorkFlowWorkerUseCase() {
+
+        return new GetWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() , workFlowRepository);
+
+    }
+
+    public UseCase createSaveWorkFlowWorkerUseCase(WorkFlowWorker workFlowWorker) {
+        return new UpdateWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowWorker,   workFlowRepository);
+    }
+
+    public UseCase createSaveWorkFlowArrangerUseCase(WorkFlowArranger workFlowArranger) {
+        return new UpdateWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowArranger,   workFlowRepository);
+    }
+
+    public UseCase createGetWorkFlowArrangerUseCase() {
+
+        return new GetWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,   workFlowRepository);
+    }
+
+    public UseCase createDeleteWorkFlowWorkerUseCase(long workFlowWorkerId) {
+
+
+        return new DeleteWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowWorkerId, workFlowRepository);
+
+    }
+
+    public UseCase createDeleteWorkFlowArrangerUseCase(long workFlowArrangerId) {
+        return new DeleteWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowArrangerId, workFlowRepository);
+    }
+
+
+    /**
+     * 同步所有产品关联的图片
+     * @return
+     */
+    public UseCase createSyncRelateProductPictureUseCase()
+    {
+
+        return new  SyncRelateProductPictureUseCase(Schedulers.newThread(), Schedulers.immediate() , productRepository);
+    }
+
+    public UseCase CreateCancelOrderWorkFlowUseCase(long orderItemWorkFlowId) {
+
+
+        return  new CancelOrderWorkFlowUseCase(orderItemWorkFlowId, orderRepository );
     }
 }

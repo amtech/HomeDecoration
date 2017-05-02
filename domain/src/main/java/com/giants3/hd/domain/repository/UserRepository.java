@@ -1,6 +1,5 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.entity.User;
 import rx.Observable;
 

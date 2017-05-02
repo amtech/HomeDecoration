@@ -1,7 +1,7 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.server.entity.Session;
+import com.giants3.hd.utils.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

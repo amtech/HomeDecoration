@@ -2,7 +2,7 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.entity_erp.Prdt;
+import com.giants3.hd.utils.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.GlobalDataService;
@@ -12,6 +12,7 @@ import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.pools.ObjectPool;
 import com.giants3.hd.utils.pools.PoolCenter;
 import org.apache.log4j.Logger;

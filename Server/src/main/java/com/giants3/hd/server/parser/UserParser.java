@@ -1,7 +1,7 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AUser;
-import com.giants3.hd.server.entity.User;
+import com.giants3.hd.utils.entity.User;
 import org.springframework.stereotype.Component;
 
 /**  桌面端User 转换成app 端User 数据

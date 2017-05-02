@@ -1,7 +1,7 @@
 package com.giants3.hd.appdata;
 
-import com.giants3.hd.server.entity.Authority;
-import com.giants3.hd.server.entity.QuoteAuth;
+import com.giants3.hd.utils.entity.Authority;
+import com.giants3.hd.utils.entity.QuoteAuth;
 
 import java.io.Serializable;
 import java.util.List;

@@ -135,6 +135,11 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
                     }
                     if (item == null) return;
                     final ErpOrderItem finalItem = item;
+
+
+
+
+
                     popupMenuLocation.setLocation(e.getXOnScreen(), e.getYOnScreen());
                     JPopupMenu menu = new JPopupMenu();
 

@@ -1,29 +1,17 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.presenter.OutFactoryPresenter;
-import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
 import com.giants.hd.desktop.view.OutFactoryViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OutFactory_LIst;
-import com.giants.hd.desktop.viewImpl.Panel_ProductProcess;
-import com.giants.hd.desktop.viewImpl.Panel_WorkFlow_Product;
-import com.giants.hd.desktop.widget.TableMouseAdapter;
-import com.giants.hd.desktop.widget.TablePopMenu;
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.OutFactory;
-import com.giants3.hd.utils.entity.ProductProcess;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.exception.HdException;
-import com.google.inject.Inject;
 import rx.Subscriber;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**

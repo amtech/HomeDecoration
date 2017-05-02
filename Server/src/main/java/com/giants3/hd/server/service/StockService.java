@@ -1,15 +1,13 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.entity_erp.ErpStockOut;
-import com.giants3.hd.server.entity_erp.ErpStockOutItem;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
-import com.giants3.hd.server.noEntity.ErpStockOutDetail;
+import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.utils.*;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
+import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

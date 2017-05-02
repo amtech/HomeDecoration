@@ -1,13 +1,13 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.server.noEntity.BufferData;
-import com.giants3.hd.server.noEntity.ProductDetail;
+import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -232,6 +232,12 @@ public class UserController extends BaseController {
 
         }
         bufferData.demos = demos;
+
+
+        //读取排厂权限
+        bufferData.workFlowArranger=workFlowService.getWorkFlowArranger(user.id);
+        //读取流程节点工作人员
+        bufferData.workFlowWorkers=workFlowService.getWorkFlowWorkers(user.id);
 
 
         return wrapData(bufferData);

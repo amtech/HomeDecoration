@@ -51,9 +51,27 @@ public class ErpOrderRepository {
     public static final String SQL_ORDER_LIST_COUNT_CHECK_DATE =SQL_ORDER_LIST_COUNT+ CheckDateWhereCause;
     public static final String SQL_ORDER_LIST_COUNT_WITH_SALES = " select  count(p.os_no) as count  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO    "  +SALE_WHERE_CAUSE;
 
-    public static String sql_item_1 = "   select os_no,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from tf_pos  where os_id=:OS_ID and os_no =:OS_NO ";
-    public static String sql_item_2 = " select isnull(htxs,0) as htxs,isnull(so_zxs,0) as so_zxs ,khxg,isnull(xgtj,0) as xgtj , isnull(zxgtj,0) as zxgtj ,hpgg ,os_no,itm from tf_pos_z    where os_id=:OS_ID and os_no =:OS_NO ";
-    public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,b.* from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no ,a.itm asc";
+    private static final String OS_NO_CONDITION_EQUALS = " os_no = ";
+    private static final String OS_NO_CONDITION_LIKE = " os_no like ";
+    public static String sql_item_1 = "   select os_no,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from tf_pos  where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO ";
+    public static String sql_item_2 = " select isnull(htxs,0) as htxs,isnull(so_zxs,0) as so_zxs ,khxg,isnull(xgtj,0) as xgtj , isnull(zxgtj,0) as zxgtj ,hpgg ,os_no,itm from tf_pos_z    where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO ";
+
+    /**
+     * 订单指定查询细项
+     */
+    public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg,b.xgtj , b.zxgtj ,b.hpgg  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no DESC ,a.itm asc";
+
+
+    /**
+     * 订单item模糊查询
+     */
+    public static final String SEARCH_ORDER_ITEMS=SQL_ORDER_ITEM_LIST.replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE);
+
+
+    /**
+     * 订单item模糊查询 总记录数
+     */
+    public static final String SEARCH_COUNT_ORDER_ITEMS=(" select count(*) from ("+sql_item_1 +") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm ").replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE);
 
     //模糊查找  os_no like  ：os_no  and  chk_dd in[]
     public static final String SQL_ORDER_LIST_SEARCH_WITH_CHECK_DATE = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,a.chk_dd  ,b.so_data from  (select p.os_dd  ,p.chk_dd  ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+  CheckDateWhereCause+" )  a  LEFT JOIN\n" +
@@ -203,8 +221,25 @@ public class ErpOrderRepository {
     public List<ErpOrderItem> findItemsByOrderNo(String orderNo) {
 
 
-        List<ErpOrderItem> result = em.createNativeQuery(SQL_ORDER_ITEM_LIST).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, orderNo)
-                .unwrap(SQLQuery.class)
+        final Query query = em.createNativeQuery(SQL_ORDER_ITEM_LIST).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, orderNo);
+        List<ErpOrderItem> result = getOrderItemListQuery(query).list();
+
+
+
+
+
+
+
+        return result;
+
+
+    }
+
+    private org.hibernate.Query getOrderItemListQuery(Query query)
+    {
+
+
+        org.hibernate.Query hQuery=   query .unwrap(SQLQuery.class)
                 .addScalar("os_no", StringType.INSTANCE)
                 .addScalar("itm", IntegerType.INSTANCE)
                 .addScalar("bat_no", StringType.INSTANCE)
@@ -220,17 +255,43 @@ public class ErpOrderRepository {
                 .addScalar("xgtj", FloatType.INSTANCE)
                 .addScalar("zxgtj", FloatType.INSTANCE)
                 .addScalar("hpgg", StringType.INSTANCE)
-                .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class)).list();
+                .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class));
+        return hQuery;
+
+    }
+    /**
+     * 查看订单item
+     *
+     * @param key
+     * @return
+     */
+    public List<ErpOrderItem> findItemsByOrderNoLike(String key,int pageIndex,int pageSize) {
+       Query  query=   em.createNativeQuery(
+                SEARCH_ORDER_ITEMS).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO,  "%" + key + '%');
 
 
-
-
+        List<ErpOrderItem> result = getOrderItemListQuery(query).setFirstResult(pageIndex*pageSize).setMaxResults(pageSize).list();
 
 
 
         return result;
 
 
+    }
+
+
+    /**
+     * 查找指定条件的 订单项目数量， 这个可以优化
+     * @param key
+     * @return
+     */
+
+    public  int getCountOfSearchOrderItem(String key)
+    {
+
+        return (Integer) em.createNativeQuery(SEARCH_COUNT_ORDER_ITEMS ).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%')
+
+                .getSingleResult();
     }
 
 

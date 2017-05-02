@@ -184,7 +184,7 @@ public class ArrayUtils {
 
     public  static  <T>  Vector<T> changeListToVector(List<T> list) {
 
-        int size=list.size();
+         int size=list.size();
         Vector<T> vector=new Vector<>(size);
         vector.addAll(list);
         return vector;

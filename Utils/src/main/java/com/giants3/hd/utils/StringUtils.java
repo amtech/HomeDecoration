@@ -255,6 +255,17 @@ public class StringUtils {
             stringBuilder.setLength(stringBuilder.length()-1);
 
         return stringBuilder.toString();
+    } public static final String combine(int[] intArrays )
+    {
+
+
+        StringBuilder stringBuilder=new StringBuilder();
+        for(int s:intArrays)
+            stringBuilder.append(s).append(STRING_SPLIT_SEMICOLON);
+        if(stringBuilder.length()>0)
+            stringBuilder.setLength(stringBuilder.length()-1);
+
+        return stringBuilder.toString();
     }
     public   static final <T> String combine(T[] strings )
     {

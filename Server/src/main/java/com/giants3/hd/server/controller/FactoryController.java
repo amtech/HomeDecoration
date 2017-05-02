@@ -1,7 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.entity.Factory;
+import com.giants3.hd.utils.entity.Factory;
 import com.giants3.hd.utils.entity.OutFactory;
 import com.giants3.hd.server.service.FactoryService;
 import com.giants3.hd.utils.RemoteData;

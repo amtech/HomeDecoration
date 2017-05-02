@@ -1,6 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.server.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.StockSubmit;
 import com.giants3.hd.utils.entity.StockXiaoku;

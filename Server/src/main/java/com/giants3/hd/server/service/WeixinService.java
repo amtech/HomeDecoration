@@ -1,6 +1,5 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.WxTxtMsg;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;

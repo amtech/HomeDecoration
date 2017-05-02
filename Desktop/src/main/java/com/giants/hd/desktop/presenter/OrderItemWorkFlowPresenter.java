@@ -2,7 +2,7 @@ package com.giants.hd.desktop.presenter;
 
 /**
  *
- *   权限明细详情展示层接口
+ *
  * Created by davidleen29 on 2016/7/14.
  */
 public interface OrderItemWorkFlowPresenter extends  Presenter {
@@ -10,5 +10,12 @@ public interface OrderItemWorkFlowPresenter extends  Presenter {
 
     void save();
 
-    void pack();
+
+
+    void reimportProduct();
+
+    /**
+     * 全部撤销排厂
+     */
+    void cancelArrange();
 }

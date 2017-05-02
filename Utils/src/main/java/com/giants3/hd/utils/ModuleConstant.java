@@ -101,7 +101,14 @@ public class ModuleConstant {
 
 
 
+    public static final String TITLE_WORK_FLOW_WORKER = "流程人员配置";
+    public static final String NAME_WORK_FLOW_WORKER  = "WORK_FLOW_WORKER";
 
+    public static final String TITLE_WORK_FLOW_ARRANGER = "排厂人员配置";
+    public static final String NAME_WORK_FLOW_ARRANGER  = "WORK_FLOW_ARRANGER";
+
+    public static final String TITLE_ORDER_ITEM_FOR_ARRANGE = "排厂订单列表";
+    public static final String NAME_ORDER_ITEM_FOR_ARRANGE  = "ORDER_ITEM_FOR_ARRANGE";
 
 
 
@@ -125,6 +132,9 @@ public class ModuleConstant {
 
             ,TITLE_ZHILINGDAN
             ,TITLE_WORK_FLOW_MODULE
+            ,TITLE_WORK_FLOW_WORKER
+            ,TITLE_WORK_FLOW_ARRANGER
+            ,TITLE_ORDER_ITEM_FOR_ARRANGE
 
 
 
@@ -159,6 +169,9 @@ public class ModuleConstant {
 
             ,NAME_ZHILINGDAN
             ,NAME_WORK_FLOW_MODULE
+            ,NAME_WORK_FLOW_WORKER
+            ,NAME_WORK_FLOW_ARRANGER
+            ,NAME_ORDER_ITEM_FOR_ARRANGE
 
 
 
