@@ -83,7 +83,7 @@ public class LoginDialog extends BaseDialog<User> {
                 if(Config.DEBUG)
                 {
 
-                    tf_password.setText("xin2975");
+                    tf_password.setText("xin2975.");
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {

@@ -440,27 +440,33 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
 
     @Override
     public Observable deleteWorkFlowArranger(final long workFlowArrangerId) {
-        return Observable.create(new Observable.OnSubscribe<RemoteData<Void>>() {
+
+     return    crateObservable(new ApiCaller<Void>() {
             @Override
-            public void call(Subscriber<? super RemoteData<Void>> subscriber) {
+            public RemoteData<Void> call() throws HdException {
+              return   apiManager.deleteWorkFlowArranger(workFlowArrangerId);
+            }
+        });
+
+    }
+
+    @Override
+    public Observable getWorkFlowEventList() {
+        return crateObservable(new ApiCaller<WorkFlowEvent>() {
+            @Override
+            public RemoteData<WorkFlowEvent> call() throws HdException {
+                return apiManager.getWorkFLowEventList();
+            }
+        });
+    }
 
 
-                try {
-                    RemoteData<Void> remoteData = apiManager.deleteWorkFlowArranger(workFlowArrangerId);
-                    if (remoteData.isSuccess()) {
-                        subscriber.onNext(remoteData);
-                        subscriber.onCompleted();
-
-                    } else {
-                        subscriber.onError(HdException.create(remoteData.message));
-
-                    }
-
-                } catch (HdException e) {
-                    subscriber.onError(e);
-                }
-
-
+    @Override
+    public Observable getWorkFlowEventWorkerList() {
+        return crateObservable(new ApiCaller<WorkFlowEventWorker>() {
+            @Override
+            public RemoteData<WorkFlowEventWorker> call() throws HdException {
+                return apiManager.getWorkFLowEventWorkerList();
             }
         });
     }

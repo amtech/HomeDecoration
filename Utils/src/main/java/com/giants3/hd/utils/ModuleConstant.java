@@ -110,6 +110,9 @@ public class ModuleConstant {
     public static final String TITLE_ORDER_ITEM_FOR_ARRANGE = "排厂订单列表";
     public static final String NAME_ORDER_ITEM_FOR_ARRANGE  = "ORDER_ITEM_FOR_ARRANGE";
 
+    public static final String TITLE_WORK_FLOW_ITEM_EVENT_CONFIG = "流程事件配置";
+    public static final String NAME_WORK_FLOW_ITEM_EVENT_CONFIG  = "WORK_FLOW_ITEM_EVENT_CONFIG";
+
 
 
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
@@ -135,6 +138,7 @@ public class ModuleConstant {
             ,TITLE_WORK_FLOW_WORKER
             ,TITLE_WORK_FLOW_ARRANGER
             ,TITLE_ORDER_ITEM_FOR_ARRANGE
+            ,TITLE_WORK_FLOW_ITEM_EVENT_CONFIG
 
 
 
@@ -172,6 +176,7 @@ public class ModuleConstant {
             ,NAME_WORK_FLOW_WORKER
             ,NAME_WORK_FLOW_ARRANGER
             ,NAME_ORDER_ITEM_FOR_ARRANGE
+            ,NAME_WORK_FLOW_ITEM_EVENT_CONFIG
 
 
 

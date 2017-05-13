@@ -11,6 +11,15 @@
         <class>com.giants3.hd.utils.entity.Authority</class>
         <class>com.giants3.hd.utils.entity.GlobalData</class>
         <class>com.giants3.hd.utils.entity.Customer</class>
+
+
+        <class>com.giants3.hd.utils.entity.ErpWorkFlowReport</class>
+        <class>com.giants3.hd.utils.entity.ErpOrderItemWorkFlowState</class>
+
+
+
+
+
         <class>com.giants3.hd.utils.entity.Flow</class>
         <class>com.giants3.hd.utils.entity.Factory</class>
 

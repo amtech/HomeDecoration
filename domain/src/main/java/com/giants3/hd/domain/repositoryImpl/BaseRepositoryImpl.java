@@ -4,6 +4,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.HdTask;
 import com.giants3.hd.utils.exception.HdException;
 import com.google.inject.Guice;
+import rx.Observable;
 import rx.Subscriber;
 
 import java.util.List;
@@ -47,5 +48,47 @@ public class BaseRepositoryImpl  {
 
 
 
+    }
+
+
+    /**
+     * 执行 Observable 统一构建方法
+     * @param caller
+     * @param <T>
+     * @return
+     */
+    public <T> Observable<RemoteData<T>>   crateObservable(final ApiCaller<T> caller)
+    {
+
+        return Observable.create(new Observable.OnSubscribe<RemoteData<T>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<T>> subscriber) {
+
+
+                try {
+                    RemoteData<T> remoteData = caller.call();
+                    if (remoteData.isSuccess()) {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    } else {
+                        subscriber.onError(HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+            }
+        });
+    }
+
+
+
+    interface  ApiCaller<T>
+    {
+        RemoteData<T> call()throws  HdException;
     }
 }

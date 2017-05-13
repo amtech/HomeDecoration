@@ -121,7 +121,7 @@ public class Product implements Serializable {
 
 
 	/**
-	 * 规格描述
+	 * 规格描述  英寸形式
 	 * @return
 	 */
 	@Basic

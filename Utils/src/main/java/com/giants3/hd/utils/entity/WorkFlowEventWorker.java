@@ -40,15 +40,12 @@ public class WorkFlowEventWorker implements Serializable {
      * 用户name
      */
     public String  userName;
-    /**
-     * 发送 1 ，接收 2
-     */
-    public  int operateType;
 
-    /**
-     * 排产类型   铁001 木  010 pu 100  all 111
-     */
-    public  int  produceType;
+
+
+
+
+
 
 
 

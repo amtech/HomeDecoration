@@ -1,9 +1,6 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialDelete;
-import com.giants3.hd.utils.entity.ProductDelete;
-import com.giants3.hd.utils.entity.QuotationDelete;
+import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.utils.noEntity.QuotationDetail;
 import com.giants3.hd.utils.GsonUtils;
@@ -25,8 +22,14 @@ public class BackDataHelper {
 
 
             String gsonString = GsonUtils.toJson(data);
+
+            File file =new File(fileFilePath);
+            if(!file.exists())
+            {
+                file.getParentFile().mkdirs();
+            }
             //文件形式保存
-            FileOutputStream fileOutputStream = new FileOutputStream(fileFilePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             outputStreamWriter.write(gsonString);
             outputStreamWriter.flush();
@@ -56,8 +59,6 @@ public class BackDataHelper {
 
             reader.close();
             fileInputStream.close();
-
-            ;
 
 
         } catch (IOException io) {
@@ -132,4 +133,47 @@ public class BackDataHelper {
 
         delete(deleteQuotationFilePath + quotationDelete.toString());
     }
+
+
+    /**
+     * 保存產品分析表的數據到文件 做备份
+     * @param productDetail
+     * @param operationLog
+     * @param fileDirectory
+     */
+    public static void   backProductModifyData(ProductDetail productDetail, OperationLog operationLog,String fileDirectory)
+    {
+
+        if(productDetail==null) return;
+        String filePath=fileDirectory+productDetail.product.getFullName()+File.separator+operationLog.id;
+
+        back(productDetail,filePath);
+
+
+
+
+    }
+
+    /**
+     * 恢复指定產品分析表的數據
+     * @param productName
+     * @param operationLogId
+     * @param fileDirectory
+     */
+    public static ProductDetail   restoreProductModifyData(String productName , long operationLogId, String fileDirectory)
+    {
+
+
+        String filePath=fileDirectory+productName+File.separator+ operationLogId;
+
+
+      ProductDetail productDetail=read(filePath,ProductDetail.class);
+
+        return productDetail;
+
+
+
+
+    }
+
 }

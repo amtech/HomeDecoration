@@ -59,7 +59,7 @@ public class ErpOrderRepository {
     /**
      * 订单指定查询细项
      */
-    public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg,b.xgtj , b.zxgtj ,b.hpgg  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no DESC ,a.itm asc";
+    public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg, isnull(b.xgtj,0) as xgtj , isnull(b.zxgtj,0) as zxgtj  ,b.hpgg  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no DESC ,a.itm asc";
 
 
     /**

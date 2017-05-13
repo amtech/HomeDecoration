@@ -21,7 +21,19 @@ public class ObjectUtils {
 
     }
 
+    /**
+     * 利用json深度拷贝对象。
+     * @param object
+     */
+    public static   <T>  T  deepCopyWidthJson(T object,Class<T> aClass)
+    {
+        if(object==null) return null;
 
+        //深度复制对象，
+        return   GsonUtils.fromJson(GsonUtils.toJson(object),aClass);
+
+
+    }
 
     /**
      * Serialize the given object to a byte array.

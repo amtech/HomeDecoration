@@ -22,7 +22,7 @@ import java.util.List;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements WorkFlowProductPresenter {
+public class WorkFlowConfigDialog extends BaseMVPDialog<WorkFlowProduct,WorkFlowConfigViewer> implements WorkFlowProductPresenter {
     WorkFlowConfigViewer workFlowViewer;
     private String oldData;
     private WorkFlowProduct data;
@@ -31,10 +31,8 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
 
     public WorkFlowConfigDialog(Window window, long productId, String productName) {
         super(window, productName + "产品生产流程配置详情");
-
-
         setMinimumSize(new Dimension(800, 600));
-        setContentPane(getCustomContentPane());
+        workFlowViewer=getViewer();
         this.productId = productId;
         this.productName = productName;
         final List<WorkFlow> allWorkFlows = CacheManager.getInstance().bufferData.workFlows;
@@ -63,14 +61,14 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
         UseCaseFactory.getInstance().createGetWorkFlowOfProduct(productId).execute(new Subscriber<RemoteData<WorkFlowProduct>>() {
             @Override
             public void onCompleted() {
-             //   workFlowViewer.hideLoadingDialog();
+             workFlowViewer.hideLoadingDialog();
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-               // workFlowViewer.hideLoadingDialog();
-               // workFlowViewer.showMesssage(e.getMessage());
+                workFlowViewer.hideLoadingDialog();
+                workFlowViewer.showMesssage(e.getMessage());
             }
 
 
@@ -86,7 +84,7 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
                         final WorkFlowProduct data = new WorkFlowProduct();
                         data.productId = productId;
                         setData(data);
-                       // workFlowViewer.showMesssage("该产品未建立生产进度信息");
+                       workFlowViewer.showMesssage("该产品未建立生产进度信息");
 
                     }
                 }
@@ -96,7 +94,7 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
 
 
         });
-       // workFlowViewer.showLoadingDialog();
+       workFlowViewer.showLoadingDialog();
     }
 
 
@@ -111,10 +109,6 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
     }
 
 
-    protected Container getCustomContentPane() {
-        workFlowViewer = new Panel_WorkFlow_Config(this);
-        return workFlowViewer.getRoot();
-    }
 
 
     @Override
@@ -172,5 +166,10 @@ public class WorkFlowConfigDialog extends BaseDialog<WorkFlowProduct> implements
         }
 
         return data != null && !GsonUtils.toJson(data).equals(oldData);
+    }
+
+    @Override
+    protected WorkFlowConfigViewer createViewer() {
+        return new Panel_WorkFlow_Config(this);
     }
 }

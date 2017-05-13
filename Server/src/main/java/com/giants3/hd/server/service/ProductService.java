@@ -1,6 +1,7 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.entity.*;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
@@ -29,6 +30,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
@@ -88,14 +90,15 @@ public class ProductService extends AbstractService implements InitializingBean,
     private WorkFlowRepository workFlowRepository;
 
 
-    @Value("${deleteProductFilePath}")
-    private String deleteProductPath;
+    @Value("${productBackFilePath}")
+    private String productBackFilePath;
     //附件文件夹
     @Value("${attachfilepath}")
     private String attachfilepath;
     //临时文件夹
     @Value("${tempfilepath}")
-    private String tempFilePath;
+    private String tempFilePath; //临时文件夹
+
 
     //产品图片全部同步现场池
     ExecutorService executorService;
@@ -336,18 +339,17 @@ public class ProductService extends AbstractService implements InitializingBean,
      *
      * @param products
      */
-    private int updateProductAndRelateImageInfo(List<Product> products ) {
+    private int updateProductAndRelateImageInfo(List<Product> products) {
 
-      return   updateProductAndRelateImageInfo(products,true);
+        return updateProductAndRelateImageInfo(products, true);
     }
 
     /**
-     *
      * @param products
      * @param updateRelateTable 是否级联更新关联的表
      * @return
      */
-    private int updateProductAndRelateImageInfo(List<Product> products,boolean updateRelateTable) {
+    private int updateProductAndRelateImageInfo(List<Product> products, boolean updateRelateTable) {
 
 
         int updateCount = 0;
@@ -357,8 +359,7 @@ public class ProductService extends AbstractService implements InitializingBean,
             if (changedPhoto) {
                 updateCount++;
                 productRepository.save(product);
-                if(updateRelateTable)
-                {
+                if (updateRelateTable) {
                     //   更新报价表中的图片url
                     //更新报价表中的图片缩略图
                     quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.thumbnail, product.url, product.id);
@@ -370,11 +371,8 @@ public class ProductService extends AbstractService implements InitializingBean,
             }
 
 
-
-
         }
-        if(updateRelateTable)
-        {
+        if (updateRelateTable) {
 
             quotationItemRepository.flush();
             quotationXKItemRepository.flush();
@@ -447,12 +445,9 @@ public class ProductService extends AbstractService implements InitializingBean,
                         logger.error("filePath cant not be scale --" + filePath);
 
                     }
-                } catch (HdException e) {
+                } catch (Throwable  e) {
                     e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("product:"+product.getFullName()+",图片需要同步， 但是同步失败,原因："+e.getMessage());
                 }
 
 
@@ -492,6 +487,7 @@ public class ProductService extends AbstractService implements InitializingBean,
     /**
      * 同步所有产品图片， 将文件夹与产品的图片字段匹配
      * 不更新关联的表
+     *
      * @return
      */
     public RemoteData<Void> syncAllProductPhoto() {
@@ -518,7 +514,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                         @Override
                         public Integer doInTransaction(TransactionStatus status) {
 
-                            return asyncProductPhotoPartlyAndCommit(pageIndex, pageSize,false);
+                            return asyncProductPhotoPartlyAndCommit(pageIndex, pageSize, false);
 
                         }
                     });
@@ -551,42 +547,40 @@ public class ProductService extends AbstractService implements InitializingBean,
      * @return
      */
     @Transactional
-    public int  syncRelateProductPicture(int pageIndex,int pageSize,int pageCount) {
-
+    public int syncRelateProductPicture(int pageIndex, int pageSize, int pageCount) {
 
 
         long time;
 
 
-
-            time=Calendar.getInstance().getTimeInMillis();
-
-
-            Page<Product> productPage = null;
-            Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-            productPage = productRepository.findAll(pageable);
+        time = Calendar.getInstance().getTimeInMillis();
 
 
-            List<Product> products = productPage.getContent();
-
-            for (Product product : products) {
-
-                //   更新报价表中的图片url
-                //更新报价表中的图片缩略图
-                quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.thumbnail, product.url, product.id);
-                quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
-                quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
-                orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
-                workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
-            }
+        Page<Product> productPage = null;
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        productPage = productRepository.findAll(pageable);
 
 
-            quotationItemRepository.flush();
-            quotationXKItemRepository.flush();
-            orderItemRepository.flush();
-            workFlowMessageRepository.flush();
+        List<Product> products = productPage.getContent();
 
-            logger.info("update product relate table picture "+pageIndex+",pageCount:"+pageCount+",use time"+((Calendar.getInstance().getTimeInMillis()-time)/1000));
+        for (Product product : products) {
+
+            //   更新报价表中的图片url
+            //更新报价表中的图片缩略图
+            quotationItemRepository.updatePhotoAndPhotoUrlByProductId(product.thumbnail, product.url, product.id);
+            quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
+            quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
+            orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
+            workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
+        }
+
+
+        quotationItemRepository.flush();
+        quotationXKItemRepository.flush();
+        orderItemRepository.flush();
+        workFlowMessageRepository.flush();
+
+        logger.info("update product relate table picture " + pageIndex + ",pageCount:" + pageCount + ",use time" + ((Calendar.getInstance().getTimeInMillis() - time) / 1000));
 
 
         return 0;
@@ -620,21 +614,20 @@ public class ProductService extends AbstractService implements InitializingBean,
      *
      * @param pageIndex
      * @param pageSize
-     * @param  updateRelateTable 更新关联的表
+     * @param updateRelateTable 更新关联的表
      * @return
      */
 
-    public int asyncProductPhotoPartlyAndCommit(int pageIndex, int pageSize,boolean updateRelateTable) {
+    public int asyncProductPhotoPartlyAndCommit(int pageIndex, int pageSize, boolean updateRelateTable) {
 
         Page<Product> productPage = null;
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         productPage = productRepository.findAll(pageable);
-        int updateCount = updateProductAndRelateImageInfo(productPage.getContent(),updateRelateTable);
+        int updateCount = updateProductAndRelateImageInfo(productPage.getContent(), updateRelateTable);
         return updateCount;
 
 
     }
-
 
 
     /**
@@ -798,7 +791,7 @@ public class ProductService extends AbstractService implements InitializingBean,
      * 记录产品修改信息
      */
 
-    public void updateProductLog(Product product, User user) {
+    public OperationLog updateProductLog(Product product, User user) {
 
         //记录数据当前修改着相关信息
         ProductLog productLog = productLogRepository.findFirstByProductIdEquals(product.id);
@@ -815,7 +808,10 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         //增加历史操作记录
         OperationLog operationLog = OperationLog.createForProductModify(product, user);
-        operationLogRepository.save(operationLog);
+        operationLog = operationLogRepository.save(operationLog);
+
+
+        return operationLog;
 
 
     }
@@ -828,8 +824,29 @@ public class ProductService extends AbstractService implements InitializingBean,
      * @param productDetail
      * @return
      */
-    @Transactional
-    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail) {
+    @Transactional(rollbackFor = Throwable.class)
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail)
+
+    {
+      return  saveProductDetail(user,productDetail,true);
+
+    }
+
+
+
+
+
+    @Transactional(rollbackFor = Throwable.class)
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail,boolean checkUpdateTime)
+    {
+
+
+
+
+
+        ProductDetail oldDetail= ObjectUtils.deepCopyWidthJson( findProductDetailById(productDetail.product.id),ProductDetail.class);
+
+
 
 
         long productId = productDetail.product.id;
@@ -850,17 +867,13 @@ public class ProductService extends AbstractService implements InitializingBean,
         /**
          * 未生成id 添加记录
          */
-        if (!productRepository.exists(productId)) {
-
-            //更新缩略图
-            updateProductPhotoData(newProduct);
-        } else {
-            //找出旧的记录
+        if ( productRepository.exists(productId)) {
+           //找出旧的记录
             Product oldData = productRepository.findOne(productId);
 
 
             //检查一致性  最近更新时间是否一致。
-            if (oldData.lastUpdateTime != newProduct.lastUpdateTime) {
+            if (checkUpdateTime&&(oldData.lastUpdateTime != newProduct.lastUpdateTime)) {
                 return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
                         + " 已经被改变，请刷新数据重新保存。");
             }
@@ -870,6 +883,12 @@ public class ProductService extends AbstractService implements InitializingBean,
             if (!(oldData.name.equals(newProduct.name) && oldData.pVersion.equals(newProduct.pVersion))) {
                 updateProductPhotoData(newProduct);
             }
+
+        } else {
+
+            //更新缩略图
+            updateProductPhotoData(newProduct);
+
         }
 
 
@@ -877,31 +896,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         newProduct.lastUpdateTime = Calendar.getInstance().getTimeInMillis();
 
 
-        // updateProductPhotoTime(newProduct);
 
-
-//        //检查附件数据是否有改变
-//        Product oldProduct = productRepository.findOne(productId);
-//        String oldAttachFiles = oldProduct == null ? "" : oldProduct.attaches;
-//        if (!newProduct.attaches.equals(oldAttachFiles)) {
-//
-//            newProduct.attaches=
-//            //更新附件文件
-//            String filePrefix
-//                    ="Product_"+newProduct.name + "_" + newProduct.pVersion + "_";
-//            newProduct.attaches= AttachFileUtils.updateProductAttaches(newProduct.attaches,oldAttachFiles,filePrefix,attachfilepath,tempFilePath);
-//
-//        }
-//        String oldPackAttaches = oldProduct == null ? "" : oldProduct.packAttaches;
-//        if (!newProduct.packAttaches.equals(oldPackAttaches)) {
-//
-//
-//            //更新包装附件文件
-//            String filePrefix
-//                    ="Product_"+"Pack_"+newProduct.name + "_" + newProduct.pVersion + "_";
-//            newProduct.packAttaches= AttachFileUtils.updateProductAttaches(newProduct.packAttaches,oldPackAttaches,filePrefix,attachfilepath,tempFilePath);
-//
-//        }
 
         //最新product 数据
         Product product = productRepository.save(newProduct);
@@ -910,11 +905,6 @@ public class ProductService extends AbstractService implements InitializingBean,
         productId = product.id;
 
 
-        //更新修改记录
-        updateProductLog(product, user);
-
-
-        //将此次修改记录插入历史修改记录表中。
 
 
         if (productDetail.paints != null) {
@@ -982,6 +972,25 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         if (productDetail.packWages != null)
             saveProductWage(productDetail.packWages, productId, Flow.FLOW_PACK);
+
+        //更新修改记录
+        //将此次修改记录插入历史修改记录表中。
+        OperationLog operationLog=updateProductLog(product, user);
+
+        //将修改前的数据缓存起来
+
+        if(oldDetail!=null)
+        {
+            BackDataHelper.backProductModifyData(oldDetail,operationLog,productBackFilePath);
+        }
+
+
+
+
+
+
+
+
 
 
         return returnFindProductDetailById(productId);
@@ -1093,7 +1102,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         }
 
 
-        ProductDetail detail = BackDataHelper.getProductDetail(deleteProductPath, productDelete);
+        ProductDetail detail = BackDataHelper.getProductDetail(productBackFilePath, productDelete);
 
         if (detail == null)
             return wrapError("备份文件读取失败");
@@ -1131,7 +1140,7 @@ public class ProductService extends AbstractService implements InitializingBean,
             productDeleteRepository.delete(deleteProductId);
 
             //移除备份的文件
-            BackDataHelper.deleteProduct(deleteProductPath, productDelete);
+            BackDataHelper.deleteProduct(productBackFilePath, productDelete);
 
         }
 
@@ -1184,15 +1193,12 @@ public class ProductService extends AbstractService implements InitializingBean,
         affectedRow = productPaintRepository.deleteByProductIdEquals(productId);
         //  logger.info("productPaintRepository delete affectedRow:" + affectedRow);
 
-        //TODO   save the delete item to the wareHouse .
-
-
+        //    save the delete item to the wareHouse .
         //备份产品数据
-
         ProductDelete productDelete = new ProductDelete();
         productDelete.setProductAndUser(product, user);
         ProductDelete newDelete = productDeleteRepository.save(productDelete);
-        BackDataHelper.backProduct(detail, deleteProductPath, newDelete);
+        BackDataHelper.backProduct(detail, productBackFilePath, newDelete);
 
 
         return wrapData();
@@ -1213,7 +1219,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         ProductDetail detail = null;
 
-        detail = BackDataHelper.getProductDetail(deleteProductPath, productDelete);
+        detail = BackDataHelper.getProductDetail(productBackFilePath, productDelete);
 
         if (detail == null)
             return wrapError("备份文件读取失败");
@@ -1412,5 +1418,57 @@ public class ProductService extends AbstractService implements InitializingBean,
     public long getProductCount() {
 
         return productRepository.count();
+    }
+
+
+
+
+    @Transactional(rollbackFor = Throwable.class)
+    public  RemoteData<Void> restoreProductDetailFromModifyLog(User LoginUser,long operationLogId)
+    {
+
+
+         OperationLog operationLog=  operationLogRepository.findOne(operationLogId);
+        if(operationLog==null)
+
+            return wrapError("未找到该操作记录");
+
+        if (Product.class.getSimpleName().equals(operationLog.tableName))
+        {
+
+            Product product=productRepository.findOne(operationLog.recordId);
+            if(product==null)
+            {
+                return    wrapError("未找到该关联的产品数据");
+            }
+
+            ProductDetail productDetail=BackDataHelper.restoreProductModifyData(product.getFullName(),operationLogId,productBackFilePath);
+
+
+            if(productDetail==null)
+                return wrapError("恢复分析表全部数据记录失败");
+
+
+           RemoteData<ProductDetail> result= saveProductDetail(LoginUser,productDetail,false);
+            if(result.isSuccess())
+            {
+                return wrapData();
+            }else
+            {
+                return wrapError(result.message);
+            }
+
+
+        }else
+        {
+
+            return wrapError("该操作记录不支持恢复数据");
+        }
+
+
+
+
+
+
     }
 }

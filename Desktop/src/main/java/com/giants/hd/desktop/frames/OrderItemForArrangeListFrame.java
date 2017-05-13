@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.dialogs.ErpOrderItemProcessDialog;
 import com.giants.hd.desktop.dialogs.WorkFlowConfigDialog;
 import com.giants.hd.desktop.dialogs.WorkFlowOrderArrangeDialog;
 import com.giants.hd.desktop.presenter.OrderItemForArrangeListPresenter;
@@ -154,6 +155,13 @@ public class OrderItemForArrangeListFrame extends BaseInternalFrame implements O
     @Override
     public void onListItemClick(ErpOrderItem data) {
 
+
+
+
+
+        //跳转 排厂列表
+
+        ErpOrderItemProcessDialog erpOrderItemProcessDialog;
 
 
 

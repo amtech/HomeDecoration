@@ -66,6 +66,14 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
     @Autowired
+    WorkFlowEventRepository workFlowEventRepository;
+
+
+    @Autowired
+    WorkFlowEventWorkerRepository workFlowEventWorkerRepository;
+
+
+    @Autowired
 
     ErpService erpService;
 
@@ -229,15 +237,15 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
         OrderItem orderItem = orderIemRepository.findOne(orderItemWorkFlow.orderItemId);
 
-        Order order = orderRepository.findFirstByOsNoEquals(orderItem.osNo);
-        if (order != null) {
-            orderItemWorkFlow.orderId = order.id;
-            orderItemWorkFlow.orderName = order.osNo;
-
-
-        } else {
-            logger.error("can not find order  by osName:" + orderItem.osNo);
-        }
+//        Order order = orderRepository.findFirstByOsNoEquals(orderItem.osNo);
+//        if (order != null) {
+//            orderItemWorkFlow.orderId = order.id;
+//            orderItemWorkFlow.orderName = order.osNo;
+//
+//
+//        } else {
+//            logger.error("can not find order  by osName:" + orderItem.osNo);
+//        }
 
         orderItemWorkFlow.productFullName = orderItem.prdNo;
 
@@ -475,6 +483,22 @@ public class WorkFlowService extends AbstractService implements InitializingBean
         return wrapData(messages);
 
 
+
+
+    }
+
+    public RemoteData<WorkFlowEvent> findWorkFlowEvents() {
+
+
+        List<WorkFlowEvent> result=workFlowEventRepository.findAll();
+        return wrapData(result);
+
+
+    }public RemoteData<WorkFlowEventWorker> findWorkFlowEventWorkers() {
+
+
+        List<WorkFlowEventWorker> result=workFlowEventWorkerRepository.findAll();
+        return wrapData(result);
 
 
     }

@@ -9,10 +9,10 @@ import com.google.inject.Inject;
  */
 public class OperationLogModel extends  BaseTableModel<OperationLog> {
 
-    public static String[] columnNames = new String[]{" 时间", "编号 ",  "名称" ,"中文名称 ","操作类型" ,"操作表","记录id","相关信息" };
-    public static int[] columnWidth=new int[]{   120,        60 ,60,120,60,60,40,200};
+    public static String[] columnNames = new String[]{"id"," 时间", "编号 ",  "名称" ,"中文名称 ","操作类型" ,"操作表","记录id","相关信息" };
+    public static int[] columnWidth=new int[]{ 100,  120,        60 ,60,120,60,60,40,200};
 
-    public static String[] fieldName = new String[]{"timeString", "userCode", "userName", "userCName","operationType", "tableName","recordId", "message"};
+    public static String[] fieldName = new String[]{"id","timeString", "userCode", "userName", "userCName","operationType", "tableName","recordId", "message"};
 
     public  static Class[] classes = new Class[]{ };
 

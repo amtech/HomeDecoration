@@ -2,6 +2,7 @@ package com.giants3.hd.server.repository;
 
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.ErpOrderItemProcess;
 import com.giants3.hd.utils.entity.Zhilingdan;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -24,6 +25,7 @@ public class ErpWorkRepository {
 
 
     public   String SQL_ZHILINGDAN = "";
+    public   String SQL_ORDER_ITEM_PROCESS = "";
 
 
     private EntityManager em;
@@ -37,6 +39,7 @@ public class ErpWorkRepository {
 
 
                 SQL_ZHILINGDAN = SqlScriptHelper.readScript("zhilingdan");
+            SQL_ORDER_ITEM_PROCESS = SqlScriptHelper.readScript("orderItemProcess.sql");
 
 
         }
@@ -89,6 +92,39 @@ public class ErpWorkRepository {
         return orders;
     }
 
+    /**
+     * 查询指令单完成状态表
+     *
+     * @param os_no
+     * @param prd_no
+     * @return
+     */
+    public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no, String prd_no) {
+
+
+        Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS)
+                .setParameter("os_no", os_no.trim())
+                .setParameter("prd_no", prd_no.trim());
+        List<ErpOrderItemProcess> orders = query.unwrap(SQLQuery.class)
+                .addScalar("mo_dd", StringType.INSTANCE)
+                .addScalar("mo_no", StringType.INSTANCE)
+                .addScalar("prd_no", StringType.INSTANCE)
+                .addScalar("mrp_no", StringType.INSTANCE)
+                .addScalar("os_no", StringType.INSTANCE)
+                .addScalar("sta_dd", StringType.INSTANCE)
+
+                .addScalar("end_dd", StringType.INSTANCE)
+                .addScalar("itm", IntegerType.INSTANCE)
+                .addScalar("mrp_no", StringType.INSTANCE)
+
+                .addScalar("jgh", StringType.INSTANCE)
+                .addScalar("scsx", StringType.INSTANCE)
+                .addScalar("qty", IntegerType.INSTANCE)
+                .setResultTransformer(Transformers.aliasToBean(ErpOrderItemProcess.class)).list();
+
+
+        return orders;
+    }
 
 
 }

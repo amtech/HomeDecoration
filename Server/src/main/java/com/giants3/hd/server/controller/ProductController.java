@@ -54,7 +54,7 @@ public class ProductController extends BaseController {
     private String productFilePath;
 
 
-    @Value("${deleteProductFilePath}")
+    @Value("${productBackFilePath}")
     private String deleteProductPath;
 
     @Autowired
@@ -337,6 +337,26 @@ public class ProductController extends BaseController {
     RemoteData<ProductDetail> saveProductDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody ProductDetail productDetail) {
 
         return productService.saveProductDetail(user,productDetail);
+    }
+
+
+
+
+
+
+  /**
+     * 由操作纪录恢复产品分析表数据
+     *
+     * @param user
+     * @param operationLogId
+     * @return
+     */
+    @RequestMapping(value = "/restoreFromModify", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Void> restoreFromModify(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody long operationLogId) {
+
+        return productService.restoreProductDetailFromModifyLog(user,operationLogId);
     }
 
 

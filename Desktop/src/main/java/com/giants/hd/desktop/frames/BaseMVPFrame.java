@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.mvp.DefaultModel;
 import com.giants.hd.desktop.view.AbstractViewer;
 
 import java.awt.*;
@@ -7,28 +8,20 @@ import java.awt.*;
 /**
  * Created by davidleen29 on 2017/4/7.
  */
-public  abstract  class BaseMVPFrame<T extends AbstractViewer> extends  BaseInternalFrame {
+public  abstract  class BaseMVPFrame<V  extends AbstractViewer> extends  MVPFrame< V, DefaultModel> {
 
 
-    T viewer;
+
 
     public BaseMVPFrame(String title) {
         super(title);
     }
 
+
     @Override
-    protected Container getCustomContentPane() {
-        viewer=createViewer();
-        if(viewer!=null)
-            return   viewer.getRoot();
-        return null;
+    public DefaultModel createModel() {
+        return new DefaultModel();
     }
 
-    protected  abstract  T createViewer();
 
-    protected T getViewer()
-    {
-
-        return viewer;
-    }
 }

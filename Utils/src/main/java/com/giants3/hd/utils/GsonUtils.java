@@ -75,6 +75,25 @@ public class GsonUtils {
         return   gson.fromJson(new InputStreamReader(inputStream),typeOfT);
     }
 
+
+    /**
+     * 从文件输入流中
+     * @param inputStream
+     * @param typeOfT
+     * @param <T>
+     * @return
+     */
+    public   static  <T> T fromInputStreamUTF8(InputStream inputStream ,Type typeOfT)
+    {
+
+        try {
+            return   gson.fromJson(new InputStreamReader(inputStream, "UTF-8"),typeOfT);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return   gson.fromJson(new InputStreamReader(inputStream ),typeOfT);
+        }
+    }
+
     public   static  <T> T fromJson(String json, Type typeOfT)
     {
           return   gson.fromJson(json,typeOfT);

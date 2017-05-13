@@ -11,8 +11,8 @@ import com.google.inject.Inject;
  */
 public class WorkFlowModel extends BaseTableModel<WorkFlow> {
 
-    public static String[] columnNames = new String[]{"流程序号", "流程名称", "负责人编号", "负责人名称","负责人中文名","审核人编号","审核人名称","审核人中文名"};
-    public static int[] columnWidth = new int[]{80, 100, 100, 100,100,100,100,100, 100};
+    public static String[] columnNames = new String[]{"流程序号", "流程名称",};
+    public static int[] columnWidth = new int[]{80, 100, };
 
 
     public static final String USER_CODE = "userCode";
@@ -21,9 +21,9 @@ public class WorkFlowModel extends BaseTableModel<WorkFlow> {
     public static final String CHECKER_CODE = "checkerCode";
     public static final String CHECKER_NAME = "checkerName";
     public static final String CHECKER_CNAME = "checkerCName";
-    public static String[] fieldName = new String[]{"flowStep", "name", USER_CODE, USER_NAME, USER_CNAME, CHECKER_CODE, CHECKER_NAME, CHECKER_CNAME};
+    public static String[] fieldName = new String[]{"flowStep", "name"};
 
-    public static Class[] classes = new Class[]{Object.class, Object.class, User.class,User.class, User.class,User.class, User.class,User.class};
+    public static Class[] classes = new Class[]{Object.class, Object.class};
 
 
     @Inject

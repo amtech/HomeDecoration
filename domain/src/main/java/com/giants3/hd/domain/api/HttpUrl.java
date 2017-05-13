@@ -1127,4 +1127,17 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/order/cancelOrderWorkFlow?orderItemWorkFlowId=" + orderItemWorkFlowId);
 
     }
+
+
+    public static String restoreProductDetailFromOperationLog() {
+
+        return additionInfo(BaseUrl + "api/product/restoreFromModify");
+    }
+
+    public static String loadWorkFlowEvents() {
+        return additionInfo(BaseUrl + "api/workFlow/events");
+    }
+    public static String loadWorkFlowEventWorkers() {
+        return additionInfo(BaseUrl + "api/workFlow/eventWorkers");
+    }
 }

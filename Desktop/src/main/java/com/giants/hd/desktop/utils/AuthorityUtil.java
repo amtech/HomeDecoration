@@ -623,4 +623,9 @@ public class AuthorityUtil {
 
         return isViewable(ModuleConstant.NAME_ORDER_ITEM_FOR_ARRANGE);
     }
+
+    public boolean viewWorkFLowEventConfig() {
+
+        return isViewable(ModuleConstant.NAME_WORK_FLOW_ITEM_EVENT_CONFIG);
+    }
 }

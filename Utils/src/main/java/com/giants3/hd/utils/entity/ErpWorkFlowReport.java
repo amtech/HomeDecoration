@@ -5,29 +5,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**每个流程节点上 的事项
- *
- * Created by davidleen29 on 2017/3/20.
+/**流程报告数据
+ * Created by davidleen29 on 2017/2/28.
  */
-@Entity(name = "T_WorkFlowEvent")
-public class WorkFlowEvent {
+@Entity(name="T_ErpWorkFlowReport")
+public class ErpWorkFlowReport {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    public String name;
 
 
 
-    //流程节点信息
-    public long workFlowId;
-    public int workFlowStep;
+    public String workFlowCode;
     public String workFlowName;
-
-
-
-
-
-
+    public String osNo;
+    public String prdNo;
+    /**
+     * 完成百分比。
+     */
+    public float percentage;
 
 }

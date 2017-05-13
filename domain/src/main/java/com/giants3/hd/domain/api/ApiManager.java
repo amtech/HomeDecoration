@@ -180,6 +180,10 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(WorkFlowArranger.class, new TypeToken<RemoteData<WorkFlowArranger>>() {
         }.getType());
+        tokenMaps.put(WorkFlowEvent.class, new TypeToken<RemoteData<WorkFlowEvent>>() {
+        }.getType());
+        tokenMaps.put(WorkFlowEventWorker.class, new TypeToken<RemoteData<WorkFlowEventWorker>>() {
+        }.getType());
     }
 
     @Inject
@@ -264,6 +268,21 @@ public class ApiManager {
         RemoteData<ProductDetail> productRemoteData = invokeByReflect(result, ProductDetail.class);
 
 
+        return productRemoteData;
+
+
+    }  /**
+     * 保存产品数据
+     *
+     * @param operationLogId
+     * @return
+     */
+    public RemoteData<Void> restoreProductDetailFromOperationLog(long operationLogId) throws HdException {
+
+
+        String url = HttpUrl.restoreProductDetailFromOperationLog();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(operationLogId));
+        RemoteData<Void> productRemoteData = invokeByReflect(result, Void.class);
         return productRemoteData;
 
 
@@ -2046,5 +2065,19 @@ public class ApiManager {
         String result = client.getWithStringReturned(url);
         RemoteData<OrderItemWorkFlow> remoteData = invokeByReflect(result, OrderItemWorkFlow.class);
         return remoteData;
+    }
+
+    public RemoteData<WorkFlowEvent> getWorkFLowEventList() throws HdException {
+        String url = HttpUrl.loadWorkFlowEvents();
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowEvent> remoteData = invokeByReflect(result, WorkFlowEvent.class);
+        return remoteData;
+
+    }public RemoteData<WorkFlowEventWorker> getWorkFLowEventWorkerList() throws HdException {
+        String url = HttpUrl.loadWorkFlowEventWorkers();
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowEventWorker> remoteData = invokeByReflect(result, WorkFlowEventWorker.class);
+        return remoteData;
+
     }
 }

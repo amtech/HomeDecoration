@@ -25,7 +25,7 @@ public class TableStructureUtils {
 
         //以包起始的地方开始   jar 根目录开始。
         InputStream inputStream = TableStructureUtils.class.getClassLoader().getResourceAsStream(DIRECTORY + jsonFileName);
-        List<TableField> tableFields = GsonUtils.fromInputStream(inputStream, typeToken);
+        List<TableField> tableFields = GsonUtils.fromInputStreamUTF8(inputStream, typeToken);
 
         try {
             inputStream.close();

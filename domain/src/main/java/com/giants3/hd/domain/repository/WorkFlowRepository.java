@@ -56,4 +56,7 @@ public interface WorkFlowRepository {
     Observable deleteWorkFlowWorker(long workFlowWorkerId);
 
     Observable deleteWorkFlowArranger(long workFlowArrangerId);
+
+    Observable getWorkFlowEventList();
+    Observable getWorkFlowEventWorkerList();
 }

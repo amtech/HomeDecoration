@@ -193,7 +193,7 @@ public class Main extends BaseFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 //点击了退出系统按钮
-                int option = JOptionPane.showConfirmDialog(frame, "确定要退出吗？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+                int option = JOptionPane.showConfirmDialog(frame, "确定要退出吗?", " 提示", JOptionPane.OK_CANCEL_OPTION);
                 if (JOptionPane.OK_OPTION == option) {
                     //点击了确定按钮
                     frame.dispose();
@@ -344,6 +344,23 @@ public class Main extends BaseFrame {
 
                 }
             });
+
+        }
+        if (AuthorityUtil.getInstance().viewWorkFLowEventConfig()) {
+
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_ITEM_EVENT_CONFIG);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    WorkFlowEventConfigFrame frame = new WorkFlowEventConfigFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
 
         }
         if (AuthorityUtil.getInstance().viewZhilingdan()) {

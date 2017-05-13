@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
-import java.sql.Statement;
 import java.util.List;
 
 
@@ -543,5 +542,15 @@ public class UseCaseFactory {
 
 
         return  new CancelOrderWorkFlowUseCase(orderItemWorkFlowId, orderRepository );
+    }
+
+    public UseCase createGetWorkFlowEventListUseCase() {
+
+        return  new GetWorkFlowEventListUseCase( workFlowRepository );
+    }
+
+    public UseCase createGetWorkFlowEvenWorkerListtUseCase() {
+
+        return  new GetWorkFlowEventWorkerListUseCase( workFlowRepository );
     }
 }

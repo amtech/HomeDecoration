@@ -14,6 +14,7 @@ import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -70,6 +71,7 @@ public class Client {
     public String getWithStringReturned(String url) throws HdException {
 
         Logger.getLogger(TAG).info(url);
+
         String result = get(url, new AsyncCompletionHandler<String>() {
             @Override
             public String onCompleted(Response response) throws Exception {
@@ -199,10 +201,22 @@ public class Client {
 
     private <T> T execute(AsyncHandler<T> handler, AsyncHttpClient.BoundRequestBuilder builder) throws HdException {
         try {
+
+            long time= Calendar.getInstance().getTimeInMillis();
             T result = builder.execute(handler).get();
 
 
-            //  Log.d(TAG, "接收数据 ：     " + result);
+            //特殊处理  避免请求结果太快返回，
+            if(Calendar.getInstance().getTimeInMillis()-time<500)
+            {
+                try {
+                    Thread.sleep(500);
+                }catch (Throwable t){}
+            }
+
+
+            Logger.getLogger(TAG).info("time user in :"+ ( Calendar.getInstance().getTimeInMillis()-time)+"in " +Thread.currentThread());
+
             return result
                     ;
         } catch (InterruptedException e) {

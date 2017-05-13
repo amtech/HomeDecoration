@@ -132,6 +132,27 @@ public class WorkFlowController extends BaseController {
         return  workFlowService.findArrangers(     );
 
     }
+    /**
+     * 查询流程事件列表
+     * @return
+     */
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    public  @ResponseBody RemoteData<WorkFlowEvent> findWorkFlowEvents( ) {
+
+        return  workFlowService.findWorkFlowEvents(     );
+
+
+    }   /**
+     * 查询流程事件工作人表
+     * @return
+     */
+    @RequestMapping(value = "/eventWorkers", method = RequestMethod.GET)
+    public  @ResponseBody RemoteData<WorkFlowEventWorker> findWorkFlowEventWorkers( ) {
+
+        return  workFlowService.findWorkFlowEventWorkers(     );
+
+
+    }
 /**
      * 保存流程工作人表
      * @return
