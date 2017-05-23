@@ -1,14 +1,12 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.mvp.DefaultModel;
-import com.giants.hd.desktop.view.AbstractViewer;
-
-import java.awt.*;
+import com.giants.hd.desktop.mvp.model.DefaultModel;
+import com.giants.hd.desktop.mvp.IViewer;
 
 /**
  * Created by davidleen29 on 2017/4/7.
  */
-public  abstract  class BaseMVPFrame<V  extends AbstractViewer> extends  MVPFrame< V, DefaultModel> {
+public  abstract  class BaseMVPFrame<V  extends IViewer> extends  MVPFrame< V, DefaultModel> {
 
 
 

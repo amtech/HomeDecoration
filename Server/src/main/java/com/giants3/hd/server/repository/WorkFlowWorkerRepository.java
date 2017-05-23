@@ -15,13 +15,13 @@ public interface WorkFlowWorkerRepository extends JpaRepository<WorkFlowWorker, 
     /**
      * 查找指定流程指定工作人的记录
      * @param userId
-     * @param workFlowId
+     * @param workFlowCode
      * @return
      */
-      List<WorkFlowWorker>  findByUserIdEqualsAndWorkFlowIdEquals(long userId,long workFlowId);
-       WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowIdEqualsAndReceiveEquals(long userId,long workFlowId,boolean canReceive);
+      List<WorkFlowWorker>  findByUserIdEqualsAndWorkFlowCodeEquals(long userId,String  workFlowCode);
+       WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(long userId,String  workFlowCode,boolean canReceive);
       List< WorkFlowWorker>   findByUserIdEqualsAndReceiveEquals(long userId, boolean canReceive);
-     WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowIdEqualsAndSendEquals(long userId,long workFlowId,boolean canSend);
+     WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndSendEquals(long userId,String  workFlowCode,boolean canSend);
 
     List<WorkFlowWorker> findByUserIdEqualsAndSendEquals(long userId, boolean canSend);
 }

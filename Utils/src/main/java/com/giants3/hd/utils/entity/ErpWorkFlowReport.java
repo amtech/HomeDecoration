@@ -15,16 +15,21 @@ public class ErpWorkFlowReport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-
-
-
     public String workFlowCode;
+    public int workFlowStep;
     public String workFlowName;
     public String osNo;
     public String prdNo;
+    public int itm;
+    public String pVersion;
     /**
      * 完成百分比。
      */
     public float percentage;
 
+
+    /**
+     * 当前流程的类型数量  铁 木
+     */
+    public int typeCount;
 }

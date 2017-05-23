@@ -1,20 +1,15 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.ZhilingdanPresenter;
-import com.giants.hd.desktop.view.ZhilingdanViewer;
+import com.giants.hd.desktop.mvp.presenter.ZhilingdanIPresenter;
+import com.giants.hd.desktop.mvp.viewer.ZhilingdanViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Zhilingdan;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.Zhilingdan;
-import com.ning.http.util.DateUtils;
-import org.apache.poi.ss.usermodel.DateUtil;
 import rx.Subscriber;
 
 import java.awt.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +20,7 @@ import java.util.List;
  *
  * Created by david on 20160303
  */
-public class ZhilingdanFrame extends BaseInternalFrame implements ZhilingdanPresenter {
+public class ZhilingdanFrame extends BaseInternalFrame implements ZhilingdanIPresenter {
     ZhilingdanViewer workFlowViewer;
     private List<Zhilingdan> datas;
 

@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.MaterialClassUpdatePresenter;
-import com.giants.hd.desktop.view.MaterialClassUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.MaterialClassUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.MaterialClassUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_MaterialClassUpdate;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
@@ -15,7 +15,7 @@ import java.awt.*;
 /**
  * 材料分类更新
  */
-public class MaterialClassUpdateDialog extends BaseDialog<MaterialClass> implements MaterialClassUpdatePresenter {
+public class MaterialClassUpdateDialog extends BaseDialog<MaterialClass> implements MaterialClassUpdateIPresenter {
 
 
     MaterialClass oldData;

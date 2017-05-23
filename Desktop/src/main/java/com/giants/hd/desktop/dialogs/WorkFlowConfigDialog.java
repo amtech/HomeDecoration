@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowProductIPresenter;
 import com.giants.hd.desktop.utils.Config;
-import com.giants.hd.desktop.view.WorkFlowConfigViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowConfigViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlow_Config;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
@@ -22,7 +22,7 @@ import java.util.List;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowConfigDialog extends BaseMVPDialog<WorkFlowProduct,WorkFlowConfigViewer> implements WorkFlowProductPresenter {
+public class WorkFlowConfigDialog extends BaseMVPDialog<WorkFlowProduct,WorkFlowConfigViewer> implements WorkFlowProductIPresenter {
     WorkFlowConfigViewer workFlowViewer;
     private String oldData;
     private WorkFlowProduct data;

@@ -1,12 +1,12 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockOutDetailIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Invoice;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_List;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Qingguan_Invoice;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.SwingFileUtils;
-import com.giants.hd.desktop.view.StockOutDetailViewer;
+import com.giants.hd.desktop.mvp.viewer.StockOutDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_StockOutDetail;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * 出库单详情模块
  */
-public class StockOutDetailFrame extends BaseFrame implements StockOutDetailPresenter {
+public class StockOutDetailFrame extends BaseFrame implements StockOutDetailIPresenter {
 
 
     StockOutDetailViewer stockOutDetailViewer;

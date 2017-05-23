@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.OrderWorkFlowReportPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderWorkFlowReportIPresenter;
 import com.giants.hd.desktop.utils.SwingFileUtils;
-import com.giants.hd.desktop.view.OrderWorkFlowReportViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderWorkFlowReport;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
@@ -10,6 +10,7 @@ import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 
 
+import com.giants3.hd.utils.entity.ErpOrderItemProcess;
 import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 import rx.Subscriber;
 
@@ -21,11 +22,11 @@ import java.io.File;
  * 订单生产流程报表界面
  * Created by david on 20160925
  */
-public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implements OrderWorkFlowReportPresenter {
+public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implements OrderWorkFlowReportIPresenter {
     OrderWorkFlowReportViewer viewer;
 
 
-    java.util.List<OrderItemWorkFlowState> items = null;
+    java.util.List<ErpOrderItemProcess> items = null;
 
     public OrderWorkFlowReportInternalFrame() {
         super(ModuleConstant.TITLE_ORDER_WORK_FLOW_REPORT);
@@ -58,7 +59,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
     public void searchUnDoneOrder( ) {
 
 
-        UseCaseFactory.getInstance().createUnCompleteOrderWorkFlowReportUseCase(  ).execute(new Subscriber<RemoteData<OrderItemWorkFlowState>>() {
+        UseCaseFactory.getInstance().createUnCompleteOrderWorkFlowReportUseCase(  ).execute(new Subscriber<RemoteData<ErpOrderItemProcess>>() {
             @Override
             public void onCompleted() {
                 viewer.hideLoadingDialog();
@@ -71,7 +72,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
             }
 
             @Override
-            public void onNext(RemoteData<OrderItemWorkFlowState> orderReportItemRemoteData) {
+            public void onNext(RemoteData<ErpOrderItemProcess> orderReportItemRemoteData) {
 
                 setUnCompleteRemoteData(orderReportItemRemoteData);
             }
@@ -82,7 +83,7 @@ public class OrderWorkFlowReportInternalFrame extends BaseInternalFrame implemen
 
     }
 
-    private void setUnCompleteRemoteData(RemoteData<OrderItemWorkFlowState> remoteData) {
+    private void setUnCompleteRemoteData(RemoteData<ErpOrderItemProcess> remoteData) {
         if (remoteData.isSuccess())
             items = remoteData.datas;
         viewer.setUnCompleteData(remoteData);

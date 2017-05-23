@@ -392,7 +392,7 @@ public class UseCaseFactory {
 
     public UseCase createUnCompleteOrderWorkFlowReportUseCase() {
 
-        return new UnCompleteOrderWorkFlowReportUseCase(Schedulers.newThread(), Schedulers.immediate(), orderRepository);
+        return new UnCompleteOrderWorkFlowReportUseCase( orderRepository);
 
     }
 
@@ -552,5 +552,11 @@ public class UseCaseFactory {
     public UseCase createGetWorkFlowEvenWorkerListtUseCase() {
 
         return  new GetWorkFlowEventWorkerListUseCase( workFlowRepository );
+    }
+
+    public UseCase createGetErpOrderItemProcessUseCase(String osNo, String prdNo) {
+        return  new GetErpOrderItemProcessUseCase(osNo,prdNo, workFlowRepository );
+    } public UseCase createGetErpOrderItemReportUseCase(String osNo, String prdNo) {
+        return  new GetErpOrderItemReportUseCase(osNo,prdNo, workFlowRepository );
     }
 }

@@ -1,10 +1,8 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
-import com.giants.hd.desktop.model.StockInAndSubmitTableModel;
 import com.giants.hd.desktop.model.StockOutSubmitTableModel;
-import com.giants.hd.desktop.presenter.StockInAndSubmitPresenter;
-import com.giants.hd.desktop.presenter.StockOutSubmitPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockOutSubmitIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.StockSubmit;
@@ -44,10 +42,10 @@ public class Panel_StockOutSubmit_List extends BasePanel {
         return root;
     }
 
-    StockOutSubmitPresenter presenter;
+    StockOutSubmitIPresenter presenter;
 
 
-    public Panel_StockOutSubmit_List(final StockOutSubmitPresenter presenter) {
+    public Panel_StockOutSubmit_List(final StockOutSubmitIPresenter presenter) {
         this.presenter = presenter;
 
         tb.setModel(tableModel);

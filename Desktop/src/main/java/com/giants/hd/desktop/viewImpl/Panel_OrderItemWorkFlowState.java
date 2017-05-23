@@ -1,9 +1,10 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.OrderItemWorkFlowStateModel;
-import com.giants.hd.desktop.presenter.OrderItemWorkFlowStatePresenter;
-import com.giants.hd.desktop.view.OrderItemWorkFlowStateViewer;
+import com.giants.hd.desktop.mvp.presenter.OrderItemWorkFlowStateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowStateViewer;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.utils.entity.ErpOrderItemProcess;
 import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 
 import javax.swing.*;
@@ -15,12 +16,12 @@ import java.util.List;
 public class Panel_OrderItemWorkFlowState extends BasePanel implements OrderItemWorkFlowStateViewer {
     private JPanel root;
     private JHdTable jt;
-    private OrderItemWorkFlowStatePresenter presenter;
+    private OrderItemWorkFlowStateIPresenter presenter;
 
 
     OrderItemWorkFlowStateModel tableModel;
 
-    public Panel_OrderItemWorkFlowState(OrderItemWorkFlowStatePresenter presenter) {
+    public Panel_OrderItemWorkFlowState(OrderItemWorkFlowStateIPresenter presenter) {
 
         this.presenter = presenter;
         tableModel = new OrderItemWorkFlowStateModel();
@@ -38,7 +39,7 @@ public class Panel_OrderItemWorkFlowState extends BasePanel implements OrderItem
     }
 
     @Override
-    public void setData(List<OrderItemWorkFlowState> datas) {
+    public void setData(List<ErpOrderItemProcess> datas) {
 
 
         tableModel.setDatas(datas);

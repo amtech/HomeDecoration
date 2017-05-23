@@ -34,7 +34,7 @@ public interface WorkFlowRepository {
      * @param orderItemId
      * @return
      */
-    Observable<RemoteData<OrderItemWorkFlowState>> getOrderItemWorkFlowState(long orderItemId);
+    Observable<RemoteData<ErpOrderItemProcess>> getOrderItemWorkFlowState(long orderItemId);
 
     /**
      * 报春
@@ -59,4 +59,7 @@ public interface WorkFlowRepository {
 
     Observable getWorkFlowEventList();
     Observable getWorkFlowEventWorkerList();
+
+    Observable getErpOrderItemProcess(String osNo, String prdNo);
+    Observable getErpOrderItemReport(String osNo, String prdNo);
 }

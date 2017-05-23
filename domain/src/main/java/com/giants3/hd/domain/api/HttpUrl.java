@@ -1137,7 +1137,22 @@ public class HttpUrl {
     public static String loadWorkFlowEvents() {
         return additionInfo(BaseUrl + "api/workFlow/events");
     }
+
     public static String loadWorkFlowEventWorkers() {
         return additionInfo(BaseUrl + "api/workFlow/eventWorkers");
+    }
+
+    public static String getErpOrderItemProcess(String osNo, String prdNo) {
+
+
+        return additionInfo(BaseUrl + "api/erpWork/findOrderItemProcess?os_no=" + osNo + "&prd_no=" + prdNo);
+
+
+    } public static String getErpOrderItemReport(String osNo, String prdNo) {
+
+
+        return additionInfo(BaseUrl + "api/erpWork/findOrderItemReport?os_no=" + osNo + "&prd_no=" + prdNo);
+
+
     }
 }

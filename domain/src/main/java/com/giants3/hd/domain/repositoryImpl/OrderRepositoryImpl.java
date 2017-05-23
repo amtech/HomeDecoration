@@ -223,16 +223,16 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
      * @return
      */
     @Override
-    public Observable<RemoteData<OrderItemWorkFlowState>> getUnCompleteOrderWorkFlowReport() {
-        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderItemWorkFlowState>>() {
+    public Observable<RemoteData<ErpOrderItemProcess>> getUnCompleteOrderWorkFlowReport() {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItemProcess>>() {
             @Override
-            public void call(Subscriber<? super RemoteData<OrderItemWorkFlowState>> subscriber) {
+            public void call(Subscriber<? super RemoteData<ErpOrderItemProcess>> subscriber) {
 
 
 
 
                 try {
-                    RemoteData<OrderItemWorkFlowState> remoteData= apiManager.getUnCompleteOrderWorkFlowReport(   );
+                    RemoteData<ErpOrderItemProcess> remoteData= apiManager.getUnCompleteOrderWorkFlowReport(   );
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);

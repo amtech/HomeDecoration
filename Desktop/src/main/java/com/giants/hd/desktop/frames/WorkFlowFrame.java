@@ -1,11 +1,12 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.WorkFlowPresenter;
-import com.giants.hd.desktop.view.WorkFlowViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
@@ -20,25 +21,18 @@ import java.util.List;
  *
  * Created by david on 20160303
  */
-public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowPresenter {
+public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowIPresenter {
     WorkFlowViewer workFlowViewer;
 
 
     private String oldData;
-    private List<WorkFlow> data;
+    private List<ErpWorkFlow> data;
     public WorkFlowFrame( ) {
-        super("生产流程配置");
+        super("生产流程");
 
 
 
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-
-                readData();
-            }
-        });
+        setData(ErpWorkFlow.WorkFlows);
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -49,39 +43,9 @@ public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowPresente
 
 
 
-        readSubTypeData();
-
-
     }
 
-    private  void readSubTypeData()
-    {
-        UseCaseFactory.getInstance().createGetWorkFlowSubTypeUseCase().execute(new Subscriber<RemoteData<WorkFlowSubType>>() {
-            @Override
-            public void onCompleted() {
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-                workFlowViewer.showMesssage(e.getMessage());
-
-            }
-
-
-            @Override
-            public void onNext(RemoteData<WorkFlowSubType> data) {
-
-
-                if(data.isSuccess())
-                workFlowViewer.setSubData(data.datas);
-
-            }
-
-        });
-
-    }
     private  void  loadUsers()
     {
 
@@ -112,43 +76,10 @@ public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowPresente
     }
 
 
-    private void readData()
-    {
-
-        UseCaseFactory.getInstance().createGetWorkFlowUseCase().execute(new Subscriber<RemoteData<WorkFlow>>() {
-            @Override
-            public void onCompleted() {
-                workFlowViewer.hideLoadingDialog();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                workFlowViewer.hideLoadingDialog();
-                workFlowViewer.showMesssage(e.getMessage());
-            }
 
 
-            @Override
-            public void onNext(RemoteData<WorkFlow> workFlowRemoteData) {
 
-                if(workFlowRemoteData.isSuccess())
-                {
-
-
-                    setData(workFlowRemoteData.datas);
-                }
-
-
-            }
-
-
-        });
-        workFlowViewer.showLoadingDialog();
-    }
-
-
-    public void setData(List<WorkFlow> datas)
+    public void setData(List<ErpWorkFlow> datas)
     {
         oldData= GsonUtils.toJson(datas);
         this.data=datas;
@@ -166,41 +97,41 @@ public class WorkFlowFrame extends BaseInternalFrame implements WorkFlowPresente
     @Override
     public void save( ) {
 
-        if(!hasModifyData())
-        {
-            workFlowViewer.showMesssage("数据无改动");
-            return;
-        }
-
-        UseCaseFactory.getInstance().createSaveWorkFlowUseCase(data).execute(new Subscriber<RemoteData<WorkFlow>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                workFlowViewer.hideLoadingDialog();
-                workFlowViewer.showMesssage(e.getMessage());
-            }
-
-
-            @Override
-            public void onNext(RemoteData<WorkFlow> workFlowRemoteData) {
-                workFlowViewer.hideLoadingDialog();
-                if(workFlowRemoteData.isSuccess())
-                {
-                    setData(workFlowRemoteData.datas);
-                    workFlowViewer.showMesssage("保存成功");
-                }
-
-
-            }
-
-
-        });
-        workFlowViewer.showLoadingDialog();
+//        if(!hasModifyData())
+//        {
+//            workFlowViewer.showMesssage("数据无改动");
+//            return;
+//        }
+//
+//        UseCaseFactory.getInstance().createSaveWorkFlowUseCase(data).execute(new Subscriber<RemoteData<WorkFlow>>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                e.printStackTrace();
+//                workFlowViewer.hideLoadingDialog();
+//                workFlowViewer.showMesssage(e.getMessage());
+//            }
+//
+//
+//            @Override
+//            public void onNext(RemoteData<WorkFlow> workFlowRemoteData) {
+//                workFlowViewer.hideLoadingDialog();
+//                if(workFlowRemoteData.isSuccess())
+//                {
+//                    setData(workFlowRemoteData.datas);
+//                    workFlowViewer.showMesssage("保存成功");
+//                }
+//
+//
+//            }
+//
+//
+//        });
+//        workFlowViewer.showLoadingDialog();
     }
 
     @Override

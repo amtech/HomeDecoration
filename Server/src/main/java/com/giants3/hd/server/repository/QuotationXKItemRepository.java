@@ -18,6 +18,7 @@ import java.util.List;
 public interface QuotationXKItemRepository extends JpaRepository<QuotationXKItem,Long> {
 
    public QuotationXKItem findFirstByProductIdEquals(long productId);
+   public QuotationXKItem findFirstByProductId2Equals(long productId);
 
    public List<QuotationXKItem> findByQuotationIdEqualsOrderByIIndex(long quotationId);
    int  deleteByQuotationIdEquals(long quotationId);

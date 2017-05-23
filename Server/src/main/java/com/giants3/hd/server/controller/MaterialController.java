@@ -378,6 +378,13 @@ public class MaterialController extends BaseController {
     RemoteData<Material> save(@RequestBody   Material  material  )   {
 
 
+        if(StringUtils.isEmpty(material.code)||StringUtils.isEmpty(material.name))
+        {
+            return wrapError("编码与名称不能为空");
+        }
+
+
+
         Material oldData = materialRepository.findOne(material.id);
         if(oldData==null)
         {

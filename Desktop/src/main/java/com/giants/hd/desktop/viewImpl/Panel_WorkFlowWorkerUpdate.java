@@ -1,8 +1,9 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.presenter.WorkFlowWorkerUpdatePresenter;
-import com.giants.hd.desktop.view.WorkFlowWorkerUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerUpdateViewer;
 import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowWorker;
@@ -13,12 +14,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
- * 材料分类修改添加 删除
+ * 流程节点人员改添加 删除
  * Created by davidleen29 on 2017/4/2.
  */
 public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWorkerUpdateViewer {
 
-    private final WorkFlowWorkerUpdatePresenter presenter;
+    private final WorkFlowWorkerUpdateIPresenter presenter;
     private JPanel root;
     private JButton btn_save;
     private JButton btn_delete;
@@ -33,7 +34,7 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
     private List<WorkFlow> workFlows;
 
 
-    public Panel_WorkFlowWorkerUpdate(final WorkFlowWorkerUpdatePresenter presenter) {
+    public Panel_WorkFlowWorkerUpdate(final WorkFlowWorkerUpdateIPresenter presenter) {
         super();
 
         this.presenter = presenter;
@@ -65,7 +66,7 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
     {
         this.workFlows = workFlows;
 
-        cb_workFlow.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(workFlows)));
+        cb_workFlow.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(ErpWorkFlow.WorkFlows)));
 
 
     }
@@ -134,11 +135,11 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
         {
             workFlowWorker.userId=user.id;
             workFlowWorker.userName=user.code+user.name+user.chineseName;
-        } WorkFlow workFlow= (WorkFlow) cb_workFlow.getSelectedItem();
+        } ErpWorkFlow workFlow= (ErpWorkFlow) cb_workFlow.getSelectedItem();
         if(workFlow!=null)
         {
-            workFlowWorker.workFlowId=workFlow.id;
-            workFlowWorker.workFlowStep=workFlow.flowStep;
+            workFlowWorker.workFlowCode=workFlow.code;
+            workFlowWorker.workFlowStep=workFlow.step;
             workFlowWorker.workFlowName=workFlow.name;
         }
         workFlowWorker.receive=receive.isSelected();

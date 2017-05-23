@@ -1,15 +1,11 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.WorkFlowArrangerTableModel;
-import com.giants.hd.desktop.model.WorkFlowWorkerTableModel;
-import com.giants.hd.desktop.presenter.WorkFlowArrangerPresenter;
-import com.giants.hd.desktop.presenter.WorkFlowWorkerPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowArrangerIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.WorkFlowArrangerViewer;
-import com.giants.hd.desktop.view.WorkFlowWorkerViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowArrangerViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.entity.WorkFlowArranger;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -28,9 +24,9 @@ public class Panel_Work_Flow_Arranger extends BasePanel implements WorkFlowArran
 
 
     WorkFlowArrangerTableModel model;
-    private WorkFlowArrangerPresenter presenter;
+    private WorkFlowArrangerIPresenter presenter;
 
-    public Panel_Work_Flow_Arranger(final WorkFlowArrangerPresenter presenter) {
+    public Panel_Work_Flow_Arranger(final WorkFlowArrangerIPresenter presenter) {
         this.presenter = presenter;
         this.model = new WorkFlowArrangerTableModel();
         jt.setModel(model);

@@ -2,16 +2,12 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.OrderItemArrangeTableModel;
-import com.giants.hd.desktop.model.OrderItemWorkFlowStateModel;
-import com.giants.hd.desktop.model.OrderItemWorkFlowTableModel;
-import com.giants.hd.desktop.presenter.OrderItemForArrangeListPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderItemForArrangeListIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.OrderItemForArrangeListViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderItemForArrangeListViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,11 +26,11 @@ public class Panel_OrderItemForArrangeList extends BasePanel implements OrderIte
     private JTextField tf_key;
     private JButton search;
     private Panel_Page pagePanel;
-    private OrderItemForArrangeListPresenter presenter;
+    private OrderItemForArrangeListIPresenter presenter;
 
     OrderItemArrangeTableModel unCompleteModel;
 
-    public Panel_OrderItemForArrangeList(final OrderItemForArrangeListPresenter presenter) {
+    public Panel_OrderItemForArrangeList(final OrderItemForArrangeListIPresenter presenter) {
         this.presenter = presenter;
 
         unCompleteModel = new OrderItemArrangeTableModel();

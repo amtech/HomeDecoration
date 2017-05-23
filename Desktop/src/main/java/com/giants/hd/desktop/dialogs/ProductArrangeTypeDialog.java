@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.ProductArrangeTypePresenter;
-import com.giants.hd.desktop.view.ProductArrangeTypeViewer;
+import com.giants.hd.desktop.mvp.presenter.ProductArrangeTypeIPresenter;
+import com.giants.hd.desktop.mvp.viewer.ProductArrangeTypeViewer;
 import com.giants.hd.desktop.viewImpl.Panel_ProductArrangeType_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * Created by davidleen29 on 2017/1/15.
  */
-public class ProductArrangeTypeDialog extends BaseDialog<WorkFlowSubType> implements ProductArrangeTypePresenter {
+public class ProductArrangeTypeDialog extends BaseDialog<WorkFlowSubType> implements ProductArrangeTypeIPresenter {
 
 
 

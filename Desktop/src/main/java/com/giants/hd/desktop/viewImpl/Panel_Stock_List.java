@@ -2,14 +2,12 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.StockOutTableModel;
-import com.giants.hd.desktop.presenter.StockListPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockListIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.StockOut;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.google.inject.Inject;
 
@@ -39,10 +37,10 @@ public class Panel_Stock_List extends BasePanel {
         return root;
     }
 
-    StockListPresenter presenter;
+    StockListIPresenter presenter;
 
 
-    public Panel_Stock_List(final StockListPresenter presenter) {
+    public Panel_Stock_List(final StockListIPresenter presenter) {
         this.presenter = presenter;
 
         tb.setModel(tableModel);

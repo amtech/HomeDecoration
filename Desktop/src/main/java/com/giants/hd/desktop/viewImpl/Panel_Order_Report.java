@@ -3,18 +3,15 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
-import com.giants.hd.desktop.model.OrderItemTableModel;
 import com.giants.hd.desktop.model.OrderReportItemTableModel;
-import com.giants.hd.desktop.presenter.OrderReportPresenter;
-import com.giants.hd.desktop.view.OrderReportViewer;
+import com.giants.hd.desktop.mvp.presenter.OrderReportIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OrderReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -35,7 +32,7 @@ import java.util.List;
  */
 public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
 
-    private final OrderReportPresenter orderReportPresenter;
+    private final OrderReportIPresenter orderReportPresenter;
 
     OrderReportItemTableModel orderReportItemTableModel;
     private JPanel root;
@@ -48,7 +45,7 @@ public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
     private JComboBox cb_sales;
     private JButton export;
 
-    public Panel_Order_Report(final OrderReportPresenter orderReportPresenter) {
+    public Panel_Order_Report(final OrderReportIPresenter orderReportPresenter) {
 
         this.orderReportPresenter = orderReportPresenter;
 

@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.Presenter;
+import com.giants.hd.desktop.mvp.IPresenter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Created by david on 2015/11/23.
  */
-public abstract class BaseInternalFrame extends JInternalFrame  implements Presenter{
+public abstract class BaseInternalFrame extends JInternalFrame  implements IPresenter {
 
 
     static int openFrameCount = 0;

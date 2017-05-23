@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.WorkFlowWorkerTableModel;
-import com.giants.hd.desktop.presenter.WorkFlowWorkerPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.WorkFlowWorkerViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.entity.WorkFlowWorker;
 
@@ -24,9 +24,9 @@ public class Panel_Work_Flow_Worker extends BasePanel implements WorkFlowWorkerV
 
 
     WorkFlowWorkerTableModel model;
-    private WorkFlowWorkerPresenter presenter;
+    private WorkFlowWorkerIPresenter presenter;
 
-    public Panel_Work_Flow_Worker(final WorkFlowWorkerPresenter presenter) {
+    public Panel_Work_Flow_Worker(final WorkFlowWorkerIPresenter presenter) {
         this.presenter = presenter;
         this.model = new WorkFlowWorkerTableModel();
         jt.setModel(model);

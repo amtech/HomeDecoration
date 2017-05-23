@@ -1,20 +1,12 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.dialogs.OutFactoryDialog;
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.OutFactoryModel;
-import com.giants.hd.desktop.presenter.OutFactoryPresenter;
-import com.giants.hd.desktop.view.OutFactoryViewer;
+import com.giants.hd.desktop.mvp.presenter.OutFactoryIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OutFactoryViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.widget.TableMouseAdapter;
-import com.giants.hd.desktop.widget.TablePopMenu;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.OutFactory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +18,10 @@ public class Panel_OutFactory_LIst extends  BasePanel implements OutFactoryViewe
     private JHdTable jt;
     private JButton save;
 
-    private OutFactoryPresenter presenter;
+    private OutFactoryIPresenter presenter;
     OutFactoryModel model;
 
-    public Panel_OutFactory_LIst(final OutFactoryPresenter presenter) {
+    public Panel_OutFactory_LIst(final OutFactoryIPresenter presenter) {
         this.presenter = presenter;
 
 

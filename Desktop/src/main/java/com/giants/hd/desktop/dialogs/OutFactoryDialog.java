@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.OutFactoryPresenter;
-import com.giants.hd.desktop.view.OutFactoryViewer;
+import com.giants.hd.desktop.mvp.presenter.OutFactoryIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OutFactoryViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OutFactory_LIst;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *  工序对话框
  */
-public class OutFactoryDialog extends BaseDialog<WorkFlowProduct> implements OutFactoryPresenter  {
+public class OutFactoryDialog extends BaseDialog<WorkFlowProduct> implements OutFactoryIPresenter {
 
 
 

@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.StockXiaokuPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockXiaokuIPresenter;
 import com.giants.hd.desktop.viewImpl.Panel_StockXiaoku_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
@@ -16,7 +16,7 @@ import java.awt.*;
  * <p/>
  * Created by david on 20161119
  */
-public class StockXiaokuFrame extends BaseInternalFrame implements StockXiaokuPresenter<StockSubmit> {
+public class StockXiaokuFrame extends BaseInternalFrame implements StockXiaokuIPresenter<StockSubmit> {
     Panel_StockXiaoku_List panel_stock_list;
 
     public StockXiaokuFrame() {

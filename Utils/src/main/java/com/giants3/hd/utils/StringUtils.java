@@ -363,4 +363,70 @@ public class StringUtils {
 
     }
 
+
+
+
+    /**
+     * 版本号， id_no  格式为 13A0760->223311  使用不方便，
+     */
+    public static final String SPLITE_ID_NO="->";
+    /**
+     * 版本号， id_no  格式为 13A0760->223311  使用不方便， 拆分方法
+     */
+    public static final String[] spliteId_no(String id_no)
+    {
+
+
+        int index=id_no.indexOf(SPLITE_ID_NO);
+        if(index==-1)
+        {
+            return new String[]{"",""};
+        }
+
+        return new String[]{
+
+                id_no.substring(0,index),
+                id_no.substring(index+SPLITE_ID_NO.length())
+
+        };
+
+
+    }
+    /**
+     * 版本号， id_no  格式为 13A0760->223311  使用不方便， 合并方法
+     */
+    public static final String combineToId_No(String productName,String pVersion)
+
+    {
+
+
+        return productName+SPLITE_ID_NO+pVersion;
+
+
+    }
+
+
+
+    public static final String  SQL_LIKE="%";
+    /**
+     * 数据库查询  模糊处理
+     * @param s
+     * @return
+     */
+    public static String sqlLike(String s) {
+
+
+        return SQL_LIKE+s.trim()+SQL_LIKE;
+
+    } /**
+     * 数据库查询  模糊处理
+     * @param s
+     * @return
+     */
+    public static String sqlLeftLike(String s) {
+
+
+        return SQL_LIKE+s.trim();
+
+    }
 }

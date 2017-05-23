@@ -1,27 +1,24 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.WorkFlowWorkerUpdatePresenter;
-import com.giants.hd.desktop.view.WorkFlowWorkerUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlowWorkerUpdate;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
 import com.giants3.hd.utils.entity.WorkFlowWorker;
 import rx.Subscriber;
 
 import java.awt.*;
-import java.util.List;
 
 /**
  * 产品关联的生产流程数据
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowWorkerUpdateDialog extends BaseMVPDialog<WorkFlowWorker, WorkFlowWorkerUpdateViewer> implements WorkFlowWorkerUpdatePresenter {
+public class WorkFlowWorkerUpdateDialog extends BaseMVPDialog<WorkFlowWorker, WorkFlowWorkerUpdateViewer> implements WorkFlowWorkerUpdateIPresenter {
 
 
     private String oldData;

@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.mvp.WorkFlowOrderArrangeModel;
-import com.giants.hd.desktop.presenter.OrderItemWorkFlowPresenter;
-import com.giants.hd.desktop.view.OrderItemWorkFlowViewer;
+import com.giants.hd.desktop.mvp.model.WorkFlowOrderArrangeModel;
+import com.giants.hd.desktop.mvp.presenter.OrderItemWorkFlowIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderItemWorkFlow;
 import com.giants3.hd.domain.BaseSubscriber;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
@@ -19,7 +19,7 @@ import java.util.List;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowOrderArrangeDialog extends MVPDialog<OrderItemWorkFlow, OrderItemWorkFlowViewer, WorkFlowOrderArrangeModel> implements OrderItemWorkFlowPresenter {
+public class WorkFlowOrderArrangeDialog extends MVPDialog<OrderItemWorkFlow, OrderItemWorkFlowViewer, WorkFlowOrderArrangeModel> implements OrderItemWorkFlowIPresenter {
 
     OrderItemWorkFlowViewer workFlowViewer;
 

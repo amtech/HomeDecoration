@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.view.AbstractViewer;
+import com.giants.hd.desktop.mvp.IViewer;
 import com.google.inject.Guice;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 /**
  * 基础模本类。  提供guice注射等等功能  提供一些公共方法
  */
-public abstract class BasePanel implements AbstractViewer {
+public abstract class BasePanel implements IViewer {
 
     protected PanelListener listener;
     private Window window;

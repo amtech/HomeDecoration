@@ -1,15 +1,11 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.frames.ZhilingdanFrame;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.model.ZhilingdanModel;
-import com.giants.hd.desktop.presenter.ZhilingdanPresenter;
-import com.giants.hd.desktop.view.ZhilingdanViewer;
+import com.giants.hd.desktop.mvp.presenter.ZhilingdanIPresenter;
+import com.giants.hd.desktop.mvp.viewer.ZhilingdanViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.ZhilingdanCellRenderer;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
 import com.giants3.hd.utils.entity.Zhilingdan;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -34,11 +30,11 @@ public class Panel_Zhilingdan  extends  BasePanel implements ZhilingdanViewer{
     private JCheckBox showall;
     private JCheckBox caigouDD;
     private JCheckBox jinhuodd;
-    private ZhilingdanPresenter presenter;
+    private ZhilingdanIPresenter presenter;
 
     ZhilingdanModel zhilingdanModel;
       ZhilingdanCellRenderer renderer=null;
-    public Panel_Zhilingdan(final ZhilingdanPresenter presenter) {
+    public Panel_Zhilingdan(final ZhilingdanIPresenter presenter) {
 
         this.presenter = presenter;
 

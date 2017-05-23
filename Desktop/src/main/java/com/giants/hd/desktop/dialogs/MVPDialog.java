@@ -1,15 +1,15 @@
 package com.giants.hd.desktop.dialogs;
 
 
-import com.giants.hd.desktop.mvp.AbstractModel;
-import com.giants.hd.desktop.view.AbstractViewer;
+import com.giants.hd.desktop.mvp.IModel;
+import com.giants.hd.desktop.mvp.IViewer;
 
 import java.awt.*;
 
 /**
  * 所有对话框类的基类 提供注射功能
  */
-public abstract class MVPDialog<T, K extends AbstractViewer,M extends AbstractModel> extends BaseDialog<T> {
+public abstract class MVPDialog<T, K extends IViewer,M extends IModel> extends BaseDialog<T> {
 
 
     K viewer;

@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.WorkFlowEventTableModel;
-import com.giants.hd.desktop.presenter.WorkFlowEventConfigPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowEventConfigIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.WorkFlowEventConfigViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowEventConfigViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.entity.WorkFlowEvent;
 
@@ -24,9 +24,9 @@ public class Panel_Work_Flow_Event_List extends BasePanel implements WorkFlowEve
 
 
     WorkFlowEventTableModel model;
-    private WorkFlowEventConfigPresenter presenter;
+    private WorkFlowEventConfigIPresenter presenter;
 
-    public Panel_Work_Flow_Event_List(final WorkFlowEventConfigPresenter presenter) {
+    public Panel_Work_Flow_Event_List(final WorkFlowEventConfigIPresenter presenter) {
         this.presenter = presenter;
         this.model = new WorkFlowEventTableModel();
         jt.setModel(model);

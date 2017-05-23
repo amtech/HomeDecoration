@@ -183,8 +183,16 @@ public class ImageUtils {
 
             }
 
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
+            System.out.println("================================");
+
+            try {
+                BufferedImage bufferedImage = ImageIO.read(inputStream);
+                return bufferedImage;
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         return null;
     }

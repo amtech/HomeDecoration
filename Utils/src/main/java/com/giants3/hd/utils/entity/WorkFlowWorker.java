@@ -27,7 +27,7 @@ public class WorkFlowWorker implements Serializable {
     /**
      * 流程
      */
-    public long workFlowId;    /**
+    public String workFlowCode;    /**
      * 流程
      */
     public int workFlowStep;

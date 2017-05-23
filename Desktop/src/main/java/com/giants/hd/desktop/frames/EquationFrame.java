@@ -1,13 +1,9 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.EquationPresenter;
-import com.giants.hd.desktop.view.EquationViewer;
+import com.giants.hd.desktop.mvp.presenter.EquationIPresenter;
+import com.giants.hd.desktop.mvp.viewer.EquationViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Equation;
-import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrder;
-import rx.Subscriber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +13,7 @@ import java.awt.*;
  * 计算公式备注
  * Created by david on 2015/11/23.
  */
-public class EquationFrame extends BaseInternalFrame implements EquationPresenter {
+public class EquationFrame extends BaseInternalFrame implements EquationIPresenter {
     EquationViewer equationViewer;
     public EquationFrame( ) {
         super(ModuleConstant.TITLE_EQUATION);

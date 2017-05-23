@@ -3,7 +3,7 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.model.StockXiaokuTableModel;
-import com.giants.hd.desktop.presenter.StockXiaokuPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockXiaokuIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.StockXiaoku;
@@ -42,10 +42,10 @@ public class Panel_StockXiaoku_List extends BasePanel {
         return root;
     }
 
-    StockXiaokuPresenter presenter;
+    StockXiaokuIPresenter presenter;
 
 
-    public Panel_StockXiaoku_List(final StockXiaokuPresenter presenter) {
+    public Panel_StockXiaoku_List(final StockXiaokuIPresenter presenter) {
         this.presenter = presenter;
 
         tb.setModel(tableModel);

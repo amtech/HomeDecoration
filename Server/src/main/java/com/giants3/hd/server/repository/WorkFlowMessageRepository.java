@@ -18,16 +18,17 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
     List<WorkFlowMessage> findByStateInAndToFlowStepIn(int[] i, int[] flowSteps);
 
     List<WorkFlowMessage> findByFromFlowStepInOrderByCreateTimeDesc(int[] flowSteps);
-    List<WorkFlowMessage> findByToFlowStepEqualsAndOrderItemWorkFlowIdEqualsOrderByCreateTimeDesc(int  flowStep ,long  orderItemWorkFlowId);
+   List<WorkFlowMessage> findByToFlowStepEqualsAndOrderNameEqualsAndProductNameEqualsAndPVersionEqualsOrderByCreateTimeDesc(int  flowStep , String os_no,String prd_no,String pVersion );
+   List<WorkFlowMessage> findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(int  flowStep , String os_no,int itm   );
 
-    /**
-     *  删除指定订单的流程消息
-     * @param orderItemId
-     * @return
-     */
-    int deleteByOrderItemIdEquals(long orderItemId  );
+//    /**
+//     *  删除指定订单的流程消息
+//     * @param orderItemId
+//     * @return
+//     */
+//    int deleteByOrderItemIdEquals(long orderItemId  );
 
-    @Modifying
-    @Query("update T_WorkFlowMessage p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.productId =   :productId ")
-    int updateUrlByProductId(@Param("thumbnail") String thumbnail, @Param("photoUrl") String url,@Param("productId")  long productId);
+//    @Modifying
+//    @Query("update T_WorkFlowMessage p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.productId =   :productId ")
+//    int updateUrlByProductId(@Param("thumbnail") String thumbnail, @Param("photoUrl") String url,@Param("productId")  long productId);
 }

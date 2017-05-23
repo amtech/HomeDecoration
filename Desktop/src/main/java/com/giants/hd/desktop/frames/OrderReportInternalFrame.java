@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.OrderReportPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderReportIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutPlan;
 import com.giants.hd.desktop.utils.SwingFileUtils;
-import com.giants.hd.desktop.view.OrderReportViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Report;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
@@ -20,7 +20,7 @@ import java.io.IOException;
 /** 订单报表业务逻辑层
  * Created by david on 2015/11/23.
  */
-public class OrderReportInternalFrame extends BaseInternalFrame implements OrderReportPresenter{
+public class OrderReportInternalFrame extends BaseInternalFrame implements OrderReportIPresenter {
     OrderReportViewer orderReportViewer;
 
 

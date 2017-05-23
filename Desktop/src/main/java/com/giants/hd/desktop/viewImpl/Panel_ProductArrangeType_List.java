@@ -2,8 +2,8 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ProductArrangeTypeModel;
-import com.giants.hd.desktop.presenter.ProductArrangeTypePresenter;
-import com.giants.hd.desktop.view.ProductArrangeTypeViewer;
+import com.giants.hd.desktop.mvp.presenter.ProductArrangeTypeIPresenter;
+import com.giants.hd.desktop.mvp.viewer.ProductArrangeTypeViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
@@ -27,10 +27,10 @@ public class Panel_ProductArrangeType_List extends BasePanel implements ProductA
     private JHdTable jt;
     private JButton save;
 
-    private ProductArrangeTypePresenter presenter;
+    private ProductArrangeTypeIPresenter presenter;
     ProductArrangeTypeModel model;
 
-    public Panel_ProductArrangeType_List(final ProductArrangeTypePresenter presenter) {
+    public Panel_ProductArrangeType_List(final ProductArrangeTypeIPresenter presenter) {
         this.presenter = presenter;
 
 

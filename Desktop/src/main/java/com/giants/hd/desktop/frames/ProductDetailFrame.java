@@ -2,7 +2,7 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.dialogs.WorkFlowConfigDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.presenter.ProductDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.ProductDetailIPresenter;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_ProductDetail;
 import com.giants3.hd.domain.api.ApiManager;
@@ -23,7 +23,7 @@ import java.util.*;
 /**
  *  产品详细模块
  */
-public class ProductDetailFrame extends BaseFrame implements ProductDetailPresenter {
+public class ProductDetailFrame extends BaseFrame implements ProductDetailIPresenter {
 
 
 

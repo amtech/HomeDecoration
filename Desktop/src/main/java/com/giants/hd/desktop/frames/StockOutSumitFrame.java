@@ -1,7 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.StockOutSubmitPresenter;
-import com.giants.hd.desktop.reports.excels.Report_Excel_StockInAndSubmitList;
+import com.giants.hd.desktop.mvp.presenter.StockOutSubmitIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOutSubmitList;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.viewImpl.Panel_StockOutSubmit_List;
@@ -22,7 +21,7 @@ import java.io.IOException;
  * <p/>
  * Created by david on 20161119
  */
-public class StockOutSumitFrame extends BaseInternalFrame implements StockOutSubmitPresenter<StockSubmit> {
+public class StockOutSumitFrame extends BaseInternalFrame implements StockOutSubmitIPresenter<StockSubmit> {
     Panel_StockOutSubmit_List panel_stockOutSubmit_list;
 
 

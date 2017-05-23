@@ -1,8 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.frames.EquationFrame;
-import com.giants.hd.desktop.presenter.EquationPresenter;
-import com.giants.hd.desktop.view.EquationViewer;
+import com.giants.hd.desktop.mvp.presenter.EquationIPresenter;
+import com.giants.hd.desktop.mvp.viewer.EquationViewer;
 
 import javax.swing.*;
 
@@ -12,7 +11,7 @@ import javax.swing.*;
 public class Panel_Equation extends BasePanel implements EquationViewer {
     private JPanel root;
 
-    public Panel_Equation(EquationPresenter presenter) {
+    public Panel_Equation(EquationIPresenter presenter) {
 
     }
 

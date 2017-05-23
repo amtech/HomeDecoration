@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.dialogs.WorkFlowWorkerUpdateDialog;
-import com.giants.hd.desktop.presenter.WorkFlowWorkerPresenter;
-import com.giants.hd.desktop.view.WorkFlowWorkerViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow_Worker;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
@@ -17,7 +17,7 @@ import java.util.List;
  * 流程工作人配置表
  * Created by david on 2015/11/23.
  */
-public class WorkFlowWorkerFrame extends BaseMVPFrame<WorkFlowWorkerViewer> implements WorkFlowWorkerPresenter {
+public class WorkFlowWorkerFrame extends BaseMVPFrame<WorkFlowWorkerViewer> implements WorkFlowWorkerIPresenter {
 
 
     public WorkFlowWorkerFrame() {

@@ -1,8 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.Presenter;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.StringUtils;
+import com.giants.hd.desktop.mvp.IPresenter;
 import com.google.inject.Guice;
 
 import javax.imageio.ImageIO;
@@ -13,7 +11,7 @@ import java.awt.event.WindowEvent;
 /**
  *  所有frame 框架的基类
  */
-public class BaseFrame  extends JFrame  implements Presenter {
+public class BaseFrame  extends JFrame  implements IPresenter {
 
 
 

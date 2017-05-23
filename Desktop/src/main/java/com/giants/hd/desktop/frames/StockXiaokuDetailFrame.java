@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.StockXiaokuDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockXiaokuDetailIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockXiaoku;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.viewImpl.Panel_StockXiaokuDetail;
@@ -21,7 +21,7 @@ import java.io.IOException;
  * <p/>
  * Created by david on 20161119
  */
-public class StockXiaokuDetailFrame extends BaseFrame implements StockXiaokuDetailPresenter {
+public class StockXiaokuDetailFrame extends BaseFrame implements StockXiaokuDetailIPresenter {
     Panel_StockXiaokuDetail panel_stock_list;
     private StockXiaoku stockXiaoku;
     private java.util.List<StockSubmit> xiaokuItems;

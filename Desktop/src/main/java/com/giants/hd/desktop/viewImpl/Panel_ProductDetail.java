@@ -11,14 +11,14 @@ import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.presenter.ProductDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.ProductDetailIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
-import com.giants.hd.desktop.view.ProductDetailViewer;
+import com.giants.hd.desktop.mvp.viewer.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
@@ -246,7 +246,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     /**
      * 详情界面逻辑展示
      */
-    ProductDetailPresenter presenter;
+    ProductDetailIPresenter presenter;
 
     private boolean cannotViewPrice = false;
 
@@ -261,7 +261,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     }
 
 
-    public void setPresenter(ProductDetailPresenter presenter) {
+    public void setPresenter(ProductDetailIPresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -1214,7 +1214,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         //产品 版本号 一旦保存就不能再修改
         tf_product.setEditable(product.id <= 0);
-        tf_version.setEditable(product.id <= 0);
+        //tf_version.setEditable(product.id <= 0);
 
         jtf_mirror_size.setText(product == null ? "" : product.mirrorSize);
 
@@ -1410,16 +1410,17 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
         pack_attaches.setTitle("包装附件");
         panel_attach.setTitle("产品附件");
+        workFlow.setVisible(false);
 
 
-        workFlow.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-                presenter.showProductWorkFlow();
-            }
-        });
+//        workFlow.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//
+//                presenter.showProductWorkFlow();
+//            }
+//        });
     }
 
 

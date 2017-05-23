@@ -1,8 +1,10 @@
 package com.giants3.hd.server.repository;
 
 import com.giants3.hd.server.utils.SqlScriptHelper;
+import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.ErpOrderItemProcess;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.Zhilingdan;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -12,6 +14,7 @@ import org.hibernate.type.StringType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -22,10 +25,19 @@ import java.util.List;
 
 public class ErpWorkRepository {
 
-
+    //流程排序
+    private Comparator<ErpOrderItemProcess> comparator    = new Comparator<ErpOrderItemProcess>() {
+        @Override
+        public int compare(ErpOrderItemProcess o1, ErpOrderItemProcess o2) {
+            int o1Index= ErpWorkFlow.findIndexByCode(o1.mrpNo.substring(0,1));
+            int o2Index=ErpWorkFlow.findIndexByCode(o2.mrpNo.substring(0,1));
+            return o1Index-o2Index;
+        }
+    };;
 
     public   String SQL_ZHILINGDAN = "";
-    public   String SQL_ORDER_ITEM_PROCESS = "";
+
+    public   String SQL_ORDER_ITEM_PROCESS_BY_ITM = "";
 
 
     private EntityManager em;
@@ -39,7 +51,8 @@ public class ErpWorkRepository {
 
 
                 SQL_ZHILINGDAN = SqlScriptHelper.readScript("zhilingdan");
-            SQL_ORDER_ITEM_PROCESS = SqlScriptHelper.readScript("orderItemProcess.sql");
+
+            SQL_ORDER_ITEM_PROCESS_BY_ITM = SqlScriptHelper.readScript("orderItemProcess_itm.sql");
 
 
         }
@@ -92,39 +105,56 @@ public class ErpWorkRepository {
         return orders;
     }
 
-    /**
+ /**
      * 查询指令单完成状态表
      *
      * @param os_no
-     * @param prd_no
+     * @param itm
      * @return
      */
-    public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no, String prd_no) {
+    public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no,int itm) {
 
+        Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS_BY_ITM)
 
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS)
-                .setParameter("os_no", os_no.trim())
-                .setParameter("prd_no", prd_no.trim());
+                .setParameter("os_no", os_no)
+                .setParameter("itm", itm);
+        return getErpOrderItemProcesses(query);
+    }
+
+    private List<ErpOrderItemProcess> getErpOrderItemProcesses(Query query) {
         List<ErpOrderItemProcess> orders = query.unwrap(SQLQuery.class)
-                .addScalar("mo_dd", StringType.INSTANCE)
-                .addScalar("mo_no", StringType.INSTANCE)
-                .addScalar("prd_no", StringType.INSTANCE)
-                .addScalar("mrp_no", StringType.INSTANCE)
-                .addScalar("os_no", StringType.INSTANCE)
-                .addScalar("sta_dd", StringType.INSTANCE)
+                .addScalar("moDd", StringType.INSTANCE)
+                .addScalar("moNo", StringType.INSTANCE)
+                .addScalar("prdNo", StringType.INSTANCE)
+                .addScalar("mrpNo", StringType.INSTANCE)
+                .addScalar("osNo", StringType.INSTANCE)
+                .addScalar("idNo", StringType.INSTANCE)
+                .addScalar("staDd", StringType.INSTANCE)
 
-                .addScalar("end_dd", StringType.INSTANCE)
+                .addScalar("endDd", StringType.INSTANCE)
                 .addScalar("itm", IntegerType.INSTANCE)
-                .addScalar("mrp_no", StringType.INSTANCE)
+                .addScalar("mrpNo", StringType.INSTANCE)
 
                 .addScalar("jgh", StringType.INSTANCE)
                 .addScalar("scsx", StringType.INSTANCE)
                 .addScalar("qty", IntegerType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpOrderItemProcess.class)).list();
 
+        if(orders.size()>0) {
 
+            ArrayUtils.sortList(orders, comparator);
+            ErpOrderItemProcess chengping = orders.get(orders.size() - 1);
+            String pVersion=StringUtils.spliteId_no(chengping.idNo)[1];
+            for (ErpOrderItemProcess process : orders) {
+                process.pVersion = pVersion;
+                process.orderQty=chengping.qty;
+            }
+
+        }
         return orders;
     }
+
+
 
 
 }

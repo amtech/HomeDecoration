@@ -5,13 +5,12 @@ import com.giants.hd.desktop.dialogs.SplitStockOutItemDialog;
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
 import com.giants.hd.desktop.model.StockOutGuihaoModel;
 import com.giants.hd.desktop.model.StockOutItemTableModel;
-import com.giants.hd.desktop.presenter.StockOutDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockOutDetailIPresenter;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.StockOutDetailViewer;
+import com.giants.hd.desktop.mvp.viewer.StockOutDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 
@@ -53,7 +52,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JButton export_pack;
     private JTextField tf_guixing;
     private JButton export_qingguan;
-    private StockOutDetailPresenter presenter;
+    private StockOutDetailIPresenter presenter;
 
     private StockOutItemTableModel tableModel;
 
@@ -61,7 +60,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
     Point popupMenuLocation=new Point();
 
-    public Panel_StockOutDetail(StockOutDetailPresenter presenter) {
+    public Panel_StockOutDetail(StockOutDetailIPresenter presenter) {
         this.presenter = presenter;
         init();
     }

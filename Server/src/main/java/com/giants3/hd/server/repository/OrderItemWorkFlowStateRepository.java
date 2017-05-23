@@ -45,6 +45,7 @@ public interface OrderItemWorkFlowStateRepository extends JpaRepository<OrderIte
      * @return
      */
     List<OrderItemWorkFlowState> findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(long orderItemId, int workFlowStep, int qty);
+    List<OrderItemWorkFlowState> findByOrderNameEqualsAndProductFullNameEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(String os_no,String prd_no, int workFlowStep, int qty);
 //    List<OrderItemWorkFlowState> findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThanAndNextWorkFlowStepGreaterThan(long orderItemId, int workFlowStep,int qty);
 
 

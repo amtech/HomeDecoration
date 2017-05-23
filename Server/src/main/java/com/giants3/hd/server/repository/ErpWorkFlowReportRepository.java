@@ -14,4 +14,8 @@ public interface ErpWorkFlowReportRepository extends JpaRepository<ErpWorkFlowRe
 
 
     List<ErpWorkFlowReport> findByOsNoEqualsAndPrdNoEquals(String os_no, String prd_no);
+    List<ErpWorkFlowReport> findByOsNoEqualsAndPrdNoEqualsAndPVersionEquals(String os_no, String prd_no,String pVersion);
+    List<ErpWorkFlowReport> findByOsNoEqualsAndItmEquals(String os_no,int itm);
+
+     ErpWorkFlowReport  findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(String osNo,int itm,int fromFlowStep);
 }

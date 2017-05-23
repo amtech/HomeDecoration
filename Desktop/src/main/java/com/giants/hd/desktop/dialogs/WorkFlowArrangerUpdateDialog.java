@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.dialogs;
 
 
-import com.giants.hd.desktop.presenter.WorkFlowArrangerUpdatePresenter;
-import com.giants.hd.desktop.view.WorkFlowArrangerUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowArrangerUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowArrangerUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlowArrangerUpdate;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
@@ -18,7 +18,7 @@ import java.awt.*;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowArrangerUpdateDialog extends BaseMVPDialog<WorkFlowArranger, WorkFlowArrangerUpdateViewer> implements WorkFlowArrangerUpdatePresenter {
+public class WorkFlowArrangerUpdateDialog extends BaseMVPDialog<WorkFlowArranger, WorkFlowArrangerUpdateViewer> implements WorkFlowArrangerUpdateIPresenter {
 
 
     private String oldData;

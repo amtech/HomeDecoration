@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.presenter.StockListPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockListIPresenter;
 import com.giants.hd.desktop.viewImpl.Panel_Stock_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
@@ -17,7 +17,7 @@ import java.awt.*;
  *
  * Created by david on 2015/11/23.
  */
-public class StockListFrame extends BaseInternalFrame implements StockListPresenter<ErpStockOut> {
+public class StockListFrame extends BaseInternalFrame implements StockListIPresenter<ErpStockOut> {
     Panel_Stock_List panel_stock_list;
     public StockListFrame( ) {
         super(ModuleConstant.TITLE_STOCK_OUT);

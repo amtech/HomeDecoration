@@ -1,23 +1,15 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.dialogs.BaseSimpleDialog;
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.OrderAuthModel;
 import com.giants.hd.desktop.model.QuoteAuthModel;
 import com.giants.hd.desktop.model.StockOutAuthModel;
-import com.giants.hd.desktop.presenter.AuthRelateDetailPresenter;
-import com.giants.hd.desktop.view.AuthRelateDetailViewer;
+import com.giants.hd.desktop.mvp.presenter.AuthRelateDetailIPresenter;
+import com.giants.hd.desktop.mvp.viewer.AuthRelateDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.OrderAuth;
 import com.giants3.hd.utils.entity.QuoteAuth;
 import com.giants3.hd.utils.entity.StockOutAuth;
 import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.exception.HdException;
-import com.google.inject.Inject;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -45,9 +37,9 @@ public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailVie
     StockOutAuthModel stockOutAuthModel;
 
 
-    AuthRelateDetailPresenter presenter;
+    AuthRelateDetailIPresenter presenter;
 
-    public Panel_Auth_Relates(Window window, final AuthRelateDetailPresenter presenter) {
+    public Panel_Auth_Relates(Window window, final AuthRelateDetailIPresenter presenter) {
         super(window);
         this.presenter = presenter;
 

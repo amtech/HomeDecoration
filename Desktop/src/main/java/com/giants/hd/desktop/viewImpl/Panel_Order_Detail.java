@@ -3,9 +3,9 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.model.OrderItemTableModel;
-import com.giants.hd.desktop.presenter.OrderDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
-import com.giants.hd.desktop.view.OrderDetailViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.DateCellEditor;
 import com.giants.hd.desktop.widget.JHdTable;
@@ -59,9 +59,9 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
 
     private OrderItemTableModel orderItemTableModel;
 
-    private OrderDetailPresenter orderDetailPresenter;
+    private OrderDetailIPresenter orderDetailPresenter;
 
-    public Panel_Order_Detail(OrderDetailPresenter frame) {
+    public Panel_Order_Detail(OrderDetailIPresenter frame) {
 
         this.orderDetailPresenter = frame;
         orderItemTableModel = new OrderItemTableModel();

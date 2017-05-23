@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.Presenter;
+import com.giants.hd.desktop.mvp.IPresenter;
 import com.google.inject.Guice;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
  * 所有对话框类的基类 提供注射功能
  *
  */
-public class BaseDialog<T> extends JDialog implements Presenter{
+public class BaseDialog<T> extends JDialog implements IPresenter {
 
 
 

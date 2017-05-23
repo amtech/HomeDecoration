@@ -1,19 +1,16 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.dialogs.WorkFlowOrderArrangeDialog;
-import com.giants.hd.desktop.dialogs.WorkFlowOrderItemStateDialog;
-import com.giants.hd.desktop.presenter.OrderDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
 import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
-import com.giants.hd.desktop.view.OrderDetailViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.entity.OrderItemWorkFlow;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import rx.Subscriber;
@@ -27,7 +24,7 @@ import java.util.ArrayList;
  * 订单详情界面
  * Created by davidleen29 on 2015/8/24.
  */
-public class OrderDetailFrame extends BaseFrame implements OrderDetailPresenter {
+public class OrderDetailFrame extends BaseFrame implements OrderDetailIPresenter {
 
     java.util.List<String> attachStrings = new ArrayList<>();
 

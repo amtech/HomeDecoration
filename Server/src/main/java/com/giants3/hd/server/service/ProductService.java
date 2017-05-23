@@ -366,7 +366,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                     quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
                     quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
                     orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
-                    workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
+                    //workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
                 }
             }
 
@@ -571,7 +571,7 @@ public class ProductService extends AbstractService implements InitializingBean,
             quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
             quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
             orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
-            workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
+           // workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
         }
 
 
@@ -877,6 +877,31 @@ public class ProductService extends AbstractService implements InitializingBean,
                 return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
                         + " 已经被改变，请刷新数据重新保存。");
             }
+
+            //版本号被改变了
+            if (checkUpdateTime&&(!oldData.pVersion.equals(newProduct.pVersion))) {
+                //版本号被改变了。
+                //检查报价单
+                QuotationItem quotationItem=     quotationItemRepository.findFirstByProductIdEquals(oldData.id);
+                if(quotationItem!=null)
+                {
+                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
+                }
+                QuotationXKItem quotationXkItem=     quotationXKItemRepository.findFirstByProductIdEquals(oldData.id);
+                if(quotationXkItem!=null)
+                {
+                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
+                }
+                  quotationXkItem=     quotationXKItemRepository.findFirstByProductId2Equals(oldData.id);
+                if(quotationXkItem!=null)
+                {
+                    return wrapError("货号：" + oldData.getFullName()+ ", 不能修改版本号， 有报价单已经使用这款货 。");
+                }
+
+            }
+
+
+
 
 
             //如果产品名称修改  则修正缩略图

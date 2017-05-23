@@ -9,9 +9,9 @@ import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
 import com.giants.hd.desktop.model.*;
-import com.giants.hd.desktop.presenter.QuotationDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.QuotationDetailIPresenter;
 import com.giants.hd.desktop.utils.AuthorityUtil;
-import com.giants.hd.desktop.view.QuotationDetailView;
+import com.giants.hd.desktop.mvp.viewer.QuotationDetailView;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.QuotationItemPopMenu;
 import com.giants.hd.desktop.widget.header.ColumnGroup;
@@ -103,12 +103,12 @@ public class Panel_QuotationDetail extends BasePanel  implements QuotationDetail
     private List<QuotationItem> quotationItems=new ArrayList<>();
     private List<QuotationXKItem>  quotationXKItems=new ArrayList<>();
 
-    QuotationDetailPresenter presenter;
+    QuotationDetailIPresenter presenter;
 
 
 
     @Inject
-    public Panel_QuotationDetail(QuotationDetailPresenter presenter) {
+    public Panel_QuotationDetail(QuotationDetailIPresenter presenter) {
 
 
         init();

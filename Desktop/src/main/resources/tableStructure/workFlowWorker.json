@@ -12,6 +12,12 @@
     "aClass": "S"
   },
   {
+    "columnName": "流程代码",
+    "fileName": "workFlowCode",
+    "width": 60,
+    "aClass": "S"
+  },
+  {
     "columnName": "用户名",
     "fileName": "userName",
     "width": 80,

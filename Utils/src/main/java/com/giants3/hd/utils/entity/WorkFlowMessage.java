@@ -20,6 +20,7 @@ public class WorkFlowMessage
 
     public int fromFlowStep;
     public String  fromFlowName;
+    public String  fromFlowCode;
 
 
     /**
@@ -27,12 +28,10 @@ public class WorkFlowMessage
      */
     public int toFlowStep;
     public  String  toFlowName;
+    public  String  toFlowCode;
 
 
-    /**
-     * 订单项id
-     */
-    public long orderItemId;
+
 
 
 
@@ -44,21 +43,20 @@ public class WorkFlowMessage
 
 
 
-    /**
-     * 订单id
-     */
-    public  long orderId;
+
     public String orderName;
 
     /**
-     * 产品信息
+     * 产品在订单中序号
      */
-    public long productId;
+    public int itm;
     public String productName;
+    public String pVersion;
     /**
-     * 单位
+     * 排厂单号
      */
-    public String unit;
+    public String mrpNo;
+
 
 
 
@@ -102,20 +100,13 @@ public class WorkFlowMessage
     public  String memo;
 
 
-    /**
-     * 订单排厂id
-     */
-    public long orderItemWorkFlowId;
 
     /**
      * 订单项目流程状态id
      */
-    public long orderItemWorkFlowStateId;
+    public long orderItemProcessId;
     ;
 
-
-    //冗余字段
-    public String productTypeName;
 
 
     //冗余字段

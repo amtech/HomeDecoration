@@ -270,9 +270,9 @@ public class WorkFlowService extends AbstractService implements InitializingBean
         for (int i = 0; i < size; i++) {
 
             OrderItemWorkFlowState orderItemWorkFlowState = new OrderItemWorkFlowState();
-            orderItemWorkFlowState.orderId = orderItemWorkFlow.orderId;
-            orderItemWorkFlowState.orderItemId = orderItemWorkFlow.orderItemId;
-            orderItemWorkFlowState.orderItemWorkFLowId = orderItemWorkFlow.id;
+//            orderItemWorkFlowState.orderId = orderItemWorkFlow.orderId;
+//            orderItemWorkFlowState.orderItemId = orderItemWorkFlow.orderItemId;
+//            orderItemWorkFlowState.orderItemWorkFLowId = orderItemWorkFlow.id;
             orderItemWorkFlowState.orderName = orderItemWorkFlow.orderName;
             orderItemWorkFlowState.productFullName = StringUtils.isEmpty(orderItem.pVersion) ? orderItem.prdNo : (orderItem.prdNo + "-" + orderItem.pVersion);
             orderItemWorkFlowState.photoThumb = orderItem.thumbnail;
@@ -386,13 +386,14 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     /**
      * 获取关联的流程信息
      *
-     * @param orderItemId
+     * @param os_no
+     * @param prd_no
      * @param workFlowStep
      * @return
      */
-    public RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(long orderItemId, int workFlowStep) {
+    public RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(String os_no,String prd_no, int workFlowStep) {
 
-        List<OrderItemWorkFlowState> states = orderItemWorkFlowStateRepository.findByOrderItemIdEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(orderItemId, workFlowStep, 0);
+        List<OrderItemWorkFlowState> states = orderItemWorkFlowStateRepository.findByOrderNameEqualsAndProductFullNameEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(os_no,prd_no, workFlowStep, 0);
 
         List<OrderItemWorkFlowState> result = new ArrayList<>();
         for (OrderItemWorkFlowState state : states) {
@@ -406,8 +407,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     }
 
     public RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(long orderItemId) {
-
-
         OrderItemWorkFlow orderItemWorkFlow = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
         if (orderItemWorkFlow == null) return wrapData();
         return wrapData(orderItemWorkFlow);
@@ -427,7 +426,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         if (workFlowWorker.userId <= 0) return wrapError("未选择用户");
-        if (workFlowWorker.workFlowId <= 0) return wrapError("未选择流程");
+        if (StringUtils.isEmpty(workFlowWorker.workFlowName  ) ) return wrapError("未选择流程");
 
         return wrapData(workFlowWorkerRepository.save(workFlowWorker));
 
@@ -470,17 +469,13 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     }
 
-    public RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(User user, long orderItemWorkFlowId, int workFlowStep) {
+    public RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(User loginUser,String os_no,int  itm , int workFlowStep) {
 
 
 
-        List<WorkFlowMessage> messages=workFlowMessageRepository.findByToFlowStepEqualsAndOrderItemWorkFlowIdEqualsOrderByCreateTimeDesc(workFlowStep,orderItemWorkFlowId);
+         List<WorkFlowMessage> messages=workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowStep,  os_no,  itm);
 
-
-
-
-
-        return wrapData(messages);
+        return wrapData(messages );
 
 
 

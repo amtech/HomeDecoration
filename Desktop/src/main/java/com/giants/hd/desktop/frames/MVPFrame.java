@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.frames;
 
-import com.giants.hd.desktop.mvp.AbstractModel;
-import com.giants.hd.desktop.view.AbstractViewer;
+import com.giants.hd.desktop.mvp.IModel;
+import com.giants.hd.desktop.mvp.IViewer;
 
 import java.awt.*;
 
@@ -9,7 +9,7 @@ import java.awt.*;
  * mvp 结构frame
  * Created by davidleen29 on 2017/4/7.
  */
-public  abstract  class MVPFrame<V extends AbstractViewer,M extends AbstractModel> extends  BaseInternalFrame {
+public  abstract  class MVPFrame<V extends IViewer,M extends IModel> extends  BaseInternalFrame {
 
 
     V viewer;

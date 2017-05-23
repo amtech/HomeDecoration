@@ -1,18 +1,11 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.model.StockInAndSubmitTableModel;
-import com.giants.hd.desktop.model.StockOutTableModel;
-import com.giants.hd.desktop.presenter.StockInAndSubmitPresenter;
-import com.giants.hd.desktop.presenter.StockListPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockInAndSubmitIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.google.inject.Inject;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -49,10 +42,10 @@ public class Panel_StockInAndSubmit_List extends BasePanel {
         return root;
     }
 
-    StockInAndSubmitPresenter presenter;
+    StockInAndSubmitIPresenter presenter;
 
 
-    public Panel_StockInAndSubmit_List(final StockInAndSubmitPresenter presenter) {
+    public Panel_StockInAndSubmit_List(final StockInAndSubmitIPresenter presenter) {
         this.presenter = presenter;
 
         tb.setModel(tableModel);

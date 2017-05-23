@@ -209,14 +209,15 @@ public class WorkFlowController extends BaseController {
     RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
 
 
-            , @RequestParam(value = "orderItemWorkFlowId" ) long orderItemWorkFlowId
+            , @RequestParam(value = "os_no" ) String os_no
+            , @RequestParam(value = "itm" ) int itm
             , @RequestParam(value = "workFlowStep" ) int workFlowStep
 
 
     ) {
 
 
-        return workFlowService.getOrderItemWorkFlowMessage(user,orderItemWorkFlowId,workFlowStep);
+        return workFlowService.getOrderItemWorkFlowMessage(user,  os_no,  itm,workFlowStep);
 
 
 

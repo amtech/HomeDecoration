@@ -4,6 +4,8 @@ package com.giants3.hd.utils;
  * 数组方法的功能类
  */
 
+import com.giants3.hd.utils.entity.ErpOrderItemProcess;
+
 import java.util.*;
 
 
@@ -188,6 +190,25 @@ public class ArrayUtils {
         Vector<T> vector=new Vector<>(size);
         vector.addAll(list);
         return vector;
+    }
+
+    public static <T> void sortList(List<T> processes, Comparator  comparator) {
+
+
+
+        final int size = processes.size();
+        Object[] processArray=new Object[size];
+        for (int i = 0; i < size; i++) {
+            processArray[i]=processes.get(i);
+        }
+        Arrays.sort(processArray,comparator);
+        processes.clear();
+        for (int i = 0; i < size; i++) {
+
+            processes.add((T)processArray[i]);
+        }
+
+
     }
 }
 

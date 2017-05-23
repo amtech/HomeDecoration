@@ -2,10 +2,10 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.WorkFlowModel;
 import com.giants.hd.desktop.model.WorkFlowSubTypeModel;
-import com.giants.hd.desktop.presenter.WorkFlowPresenter;
-import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
-import com.giants.hd.desktop.view.WorkFlowViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowViewer;
 import com.giants.hd.desktop.widget.JHdTable;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
@@ -27,35 +27,34 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
 
 
     WorkFlowModel workFlowModel;
-    WorkFlowSubTypeModel workFlowSubTypeModel;
-    WorkFlowPresenter presenter;
 
-    public Panel_Work_Flow(final WorkFlowPresenter presenter) {
+    WorkFlowIPresenter presenter;
+
+    public Panel_Work_Flow(final WorkFlowIPresenter presenter) {
         this.presenter = presenter;
         workFlowModel = new WorkFlowModel();
         workFlowModel.setRowAdjustable(false);
         tb.setModel(workFlowModel);
 
-        workFlowSubTypeModel = new WorkFlowSubTypeModel();
-        workFlowSubTypeModel.setRowAdjustable(false);
+        save.setVisible(false);
 
 
 
 
 
 
-        save.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-                presenter.save( );
-            }
-        });
-
-
-
+//        save.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
 //
+//
+//                presenter.save( );
+//            }
+//        });
+
+
+
+
     }
 
 
@@ -76,26 +75,21 @@ public class Panel_Work_Flow extends BasePanel implements WorkFlowViewer {
     }
 
     @Override
-    public void setData(List<WorkFlow> datas) {
+    public void setData(List<ErpWorkFlow> datas) {
 
         workFlowModel.setDatas(datas);
-    }
-    @Override
-    public void setSubData(List<WorkFlowSubType> datas) {
-
-
     }
 
     @Override
     public void setUserList(List<User> users) {
 
-        JComboBox<User> comboBox = new JComboBox<>();
-        User empty =new User();
-        comboBox.addItem(empty);
-        for (User user : users)
-            comboBox.addItem(user);
-        DefaultCellEditor comboboxEditor = new DefaultCellEditor(comboBox);
-        tb.setDefaultEditor(User.class , comboboxEditor);
+//        JComboBox<User> comboBox = new JComboBox<>();
+//        User empty =new User();
+//        comboBox.addItem(empty);
+//        for (User user : users)
+//            comboBox.addItem(user);
+//        DefaultCellEditor comboboxEditor = new DefaultCellEditor(comboBox);
+//        tb.setDefaultEditor(User.class , comboboxEditor);
 
     }
 }

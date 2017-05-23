@@ -25,7 +25,9 @@ select  zhiling.mo_dd, zhiling.mo_no,zhiling.prd_no,zhiling.prd_name,zhiling.prd
 
   (                                                                                              --进行时间过滤
    select os_dd,prd_no,prd_mark,qty,qt_no,mrp_nos,os_no   from tf_pos where os_id= upper('po')  and  os_dd >=:startdate
-   ) as caigou   on zhiling.prd_no=caigou.prd_no  and zhiling.so_no=caigou.qt_no and zhiling.mrp_no=caigou.mrp_nos and zhiling.prd_mark=caigou.prd_mark
+   ) as caigou   on zhiling.prd_no=caigou.prd_no  and zhiling.so_no=caigou.qt_no and zhiling.mrp_no=caigou.mrp_nos
+
+    --and zhiling.prd_mark=caigou.prd_mark
 
    left   join  -- 关联进货单
     (

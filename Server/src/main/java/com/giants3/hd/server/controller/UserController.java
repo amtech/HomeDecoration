@@ -234,8 +234,7 @@ public class UserController extends BaseController {
         bufferData.demos = demos;
 
 
-        //读取排厂权限
-        bufferData.workFlowArranger=workFlowService.getWorkFlowArranger(user.id);
+
         //读取流程节点工作人员
         bufferData.workFlowWorkers=workFlowService.getWorkFlowWorkers(user.id);
 

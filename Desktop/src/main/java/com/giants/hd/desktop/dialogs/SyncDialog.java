@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants.hd.desktop.view.AbstractViewer;
+import com.giants.hd.desktop.mvp.IViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Sync;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
@@ -27,7 +27,7 @@ public class SyncDialog extends BaseDialog<Void>  {
     @Inject
     Panel_Sync panel_photoSync;
 
-    AbstractViewer viewer;
+    IViewer viewer;
 
     public SyncDialog(Window window)
     {

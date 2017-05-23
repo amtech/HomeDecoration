@@ -156,21 +156,7 @@ public class OrderController extends BaseController {
     }
 
 
-    /**
-     * 接收生产流程递交
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/receiveWorkFlowMessage", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<Void> receiveWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "workFlowMsgId") long workFlowMsgId) {
 
-
-        return erpService.receiveOrderItemWorkFlow(user, workFlowMsgId);
-
-    }
 
 
     /**
@@ -224,51 +210,10 @@ public class OrderController extends BaseController {
 
     }
 
-    /**
-     * 发送订单流程
-     * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/sendWorkFlowMessage", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<Void> sendWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-            , @RequestParam(value = "orderItemWorkFlowStateId") long orderItemWorkFlowStateId
-
-            , @RequestParam(value = "tranQty") int tranQty
-            , @RequestParam(value = "memo") String memo
-    ) {
-
-
-        return erpService.sendWorkFlowMessage(user, orderItemWorkFlowStateId,  tranQty,memo);
-
-    }
 
 
 
 
-    /**
-     * 流程审核拒绝  返工
-     * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/rejectWorkFlowMessage", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<Void> rejectWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-            , @RequestParam(value = "workFlowMsgId") long workFlowMsgId
-            , @RequestParam(value = "toWorkFlowStep") int toWorkFlowStep
-            , @RequestParam(value = "reason") String reason
-    ) {
-
-
-        return erpService.rejectWorkFlowMessage(user, workFlowMsgId, toWorkFlowStep, reason);
-
-    }
     /**
      * 获取可以发送流程的订单货款
      * sendWorkFlowMessage?orderItemId=%d%flowStep=%d&tranQty=%d
@@ -299,7 +244,7 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/unCompleteOrderItem", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<OrderItemWorkFlowState> getUnCompleteOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user   ) {
+    RemoteData<ErpOrderItemProcess> getUnCompleteOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user   ) {
 
 
         return erpService.getUnCompleteOrderItem(user);
@@ -368,14 +313,14 @@ public class OrderController extends BaseController {
     @ResponseBody
     RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
 
-            , @RequestParam(value = "orderItemId" ) long orderItemId
+            , @RequestParam(value = "os_no" ) String os_no   , @RequestParam(value = "prd_no" ) String prd_no
             , @RequestParam(value = "workFlowStep" ) int workFlowStep
 
 
     ) {
 
 
-        return workFlowService.getOrderItemWorkFlowState(orderItemId,workFlowStep);
+        return workFlowService.getOrderItemWorkFlowState(os_no,prd_no,workFlowStep);
 
 
 
@@ -416,16 +361,10 @@ public class OrderController extends BaseController {
     public
     @ResponseBody
     RemoteData<ErpOrderItem> searchOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-
-
             , @RequestParam(value = "key" ) String key
             , @RequestParam(value = "pageIndex" ,defaultValue = "0") int pageIndex
-            , @RequestParam(value = "pageSize",defaultValue = "50") int pageSize
-
-
+            , @RequestParam(value = "pageSize",defaultValue = "30") int pageSize
     ) {
-
-
         return erpService.searchOrderItems(user, key,pageIndex,pageSize);
 
 
@@ -444,7 +383,6 @@ public class OrderController extends BaseController {
 
 
             , @RequestParam(value = "orderItemWorkFlowId" ) long orderItemWorkFlowId
-
 
     ) {
 

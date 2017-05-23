@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.StockInAndSubmitTableModel;
-import com.giants.hd.desktop.presenter.StockXiaokuDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.StockXiaokuDetailIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.StockSubmit;
@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
  * Created by davidleen29 on 2016/12/12.
  */
 public class Panel_StockXiaokuDetail  extends BasePanel{
-    private final StockXiaokuDetailPresenter presenter;
+    private final StockXiaokuDetailIPresenter presenter;
     private JPanel rootpanel;
     private JHdTable tb;
     private JButton export;
@@ -30,7 +30,7 @@ public class Panel_StockXiaokuDetail  extends BasePanel{
 
     StockInAndSubmitTableModel tableModel;
 
-    public Panel_StockXiaokuDetail(final StockXiaokuDetailPresenter presenter) {
+    public Panel_StockXiaokuDetail(final StockXiaokuDetailIPresenter presenter) {
         this.presenter = presenter;
         tableModel=new StockInAndSubmitTableModel();
         tb.setModel(tableModel);

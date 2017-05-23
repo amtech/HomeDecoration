@@ -206,14 +206,14 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
      * @return
      */
     @Override
-    public Observable<RemoteData<OrderItemWorkFlowState>> getOrderItemWorkFlowState(final long orderItemId) {
-        return Observable.create(new Observable.OnSubscribe<RemoteData<OrderItemWorkFlowState>>() {
+    public Observable<RemoteData<ErpOrderItemProcess>> getOrderItemWorkFlowState(final long orderItemId) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<ErpOrderItemProcess>>() {
             @Override
-            public void call(Subscriber<? super RemoteData<OrderItemWorkFlowState>> subscriber) {
+            public void call(Subscriber<? super RemoteData<ErpOrderItemProcess>> subscriber) {
 
 
                 try {
-                    RemoteData<OrderItemWorkFlowState> remoteData = apiManager.getOrderItemWorkFlowState(orderItemId);
+                    RemoteData<ErpOrderItemProcess> remoteData = apiManager.getOrderItemWorkFlowState(orderItemId);
                     if (remoteData.isSuccess()) {
                         subscriber.onNext(remoteData);
                         subscriber.onCompleted();
@@ -467,6 +467,26 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             @Override
             public RemoteData<WorkFlowEventWorker> call() throws HdException {
                 return apiManager.getWorkFLowEventWorkerList();
+            }
+        });
+    }
+
+
+    @Override
+    public Observable getErpOrderItemProcess(final String osNo, final String prdNo) {
+        return crateObservable(new ApiCaller<ErpOrderItemProcess>() {
+            @Override
+            public RemoteData<ErpOrderItemProcess> call() throws HdException {
+                return apiManager.getErpOrderItemProcess(  osNo,  prdNo);
+            }
+        });
+    }
+    @Override
+    public Observable getErpOrderItemReport(final String osNo, final String prdNo) {
+        return crateObservable(new ApiCaller<ErpWorkFlowReport>() {
+            @Override
+            public RemoteData<ErpWorkFlowReport> call() throws HdException {
+                return apiManager.getErpOrderItemReport(  osNo,  prdNo);
             }
         });
     }

@@ -2,10 +2,10 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.TableField;
 import com.giants.hd.desktop.model.WorkFlowArrangeTableModel;
-import com.giants.hd.desktop.presenter.WorkFlowProductPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowProductIPresenter;
 import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.TableStructureUtils;
-import com.giants.hd.desktop.view.WorkFlowConfigViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowConfigViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ProduceType;
@@ -39,7 +39,7 @@ public class Panel_WorkFlow_Config extends BasePanel implements WorkFlowConfigVi
     private List<WorkFlow> workFlows;
 
 
-    public Panel_WorkFlow_Config(final WorkFlowProductPresenter presenter) {
+    public Panel_WorkFlow_Config(final WorkFlowProductIPresenter presenter) {
         this.tableFields = TableStructureUtils.getWorkFlowArrange();
         tableModel = new WorkFlowArrangeTableModel(WorkFlowArrangeTableModel.WorkFlowConfig.class, tableFields);
 

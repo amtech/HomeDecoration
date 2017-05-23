@@ -3,11 +3,12 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.OrderItemWorkFlowStateModel;
 import com.giants.hd.desktop.model.OrderItemWorkFlowTableModel;
-import com.giants.hd.desktop.presenter.OrderWorkFlowReportPresenter;
-import com.giants.hd.desktop.view.OrderWorkFlowReportViewer;
+import com.giants.hd.desktop.mvp.presenter.OrderWorkFlowReportIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.utils.entity.ErpOrderItemProcess;
 import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
 
 import javax.swing.*;
@@ -25,11 +26,11 @@ public class Panel_OrderWorkFlowReport extends BasePanel implements OrderWorkFlo
     private JTextField tf_key;
     private JButton search;
     private Panel_Page pagePanel;
-    private OrderWorkFlowReportPresenter presenter;
+    private OrderWorkFlowReportIPresenter presenter;
 
     OrderItemWorkFlowStateModel unCompleteModel;
     OrderItemWorkFlowTableModel workFlowTableModel;
-    public Panel_OrderWorkFlowReport(final OrderWorkFlowReportPresenter presenter) {
+    public Panel_OrderWorkFlowReport(final OrderWorkFlowReportIPresenter presenter) {
         this.presenter = presenter;
 
         unCompleteModel = new OrderItemWorkFlowStateModel();
@@ -95,7 +96,7 @@ public class Panel_OrderWorkFlowReport extends BasePanel implements OrderWorkFlo
 
 
     @Override
-    public void setUnCompleteData(RemoteData<OrderItemWorkFlowState> remoteData) {
+    public void setUnCompleteData(RemoteData<ErpOrderItemProcess> remoteData) {
 
 
 

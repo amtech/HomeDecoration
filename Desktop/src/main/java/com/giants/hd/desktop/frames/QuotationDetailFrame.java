@@ -2,7 +2,7 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.local.HdUIException;
-import com.giants.hd.desktop.presenter.QuotationDetailPresenter;
+import com.giants.hd.desktop.mvp.presenter.QuotationDetailIPresenter;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_QuotationDetail;
 import com.giants3.hd.domain.api.ApiManager;
@@ -15,13 +15,11 @@ import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * 报价单详情模块
  */
-public class QuotationDetailFrame extends BaseFrame implements QuotationDetailPresenter {
+public class QuotationDetailFrame extends BaseFrame implements QuotationDetailIPresenter {
 
 
     @Inject

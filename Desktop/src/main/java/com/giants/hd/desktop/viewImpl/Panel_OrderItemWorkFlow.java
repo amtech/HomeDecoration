@@ -3,10 +3,10 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.model.WorkFlowArrangeTableModel;
-import com.giants.hd.desktop.presenter.OrderItemWorkFlowPresenter;
+import com.giants.hd.desktop.mvp.presenter.OrderItemWorkFlowIPresenter;
 import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.TableStructureUtils;
-import com.giants.hd.desktop.view.OrderItemWorkFlowViewer;
+import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
@@ -48,7 +48,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
 
 
     private List<JComboBox<OutFactory>> factories;
-    private OrderItemWorkFlowPresenter presenter;
+    private OrderItemWorkFlowIPresenter presenter;
 
 
     private WorkFlow[] workFlows;
@@ -71,7 +71,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
     private List<OutFactory> outFactories;
 
 
-    public Panel_OrderItemWorkFlow(final OrderItemWorkFlowPresenter presenter) {
+    public Panel_OrderItemWorkFlow(final OrderItemWorkFlowIPresenter presenter) {
 
         this.presenter = presenter;
 

@@ -7,16 +7,14 @@ import rx.Scheduler;
 /** 订单报表查询用例
  * Created by david on 2015/10/7.
  */
-public class UnCompleteOrderWorkFlowReportUseCase extends UseCase {
+public class UnCompleteOrderWorkFlowReportUseCase extends DefaultUseCase {
 
 
 
     private OrderRepository orderRepository;
 
 
-    public UnCompleteOrderWorkFlowReportUseCase(Scheduler threadExecutor, Scheduler postExecutionThread,  OrderRepository orderRepository) {
-        super(threadExecutor, postExecutionThread);
-
+    public UnCompleteOrderWorkFlowReportUseCase(   OrderRepository orderRepository) {
 
         this.orderRepository = orderRepository;
     }

@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.presenter.WorkFlowArrangerUpdatePresenter;
-import com.giants.hd.desktop.view.WorkFlowArrangerUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowArrangerUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowArrangerUpdateViewer;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlow;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Panel_WorkFlowArrangerUpdate extends BasePanel implements WorkFlowArrangerUpdateViewer {
 
-    private final WorkFlowArrangerUpdatePresenter presenter;
+    private final WorkFlowArrangerUpdateIPresenter presenter;
     private JPanel root;
     private JButton btn_save;
     private JButton btn_delete;
@@ -30,7 +30,7 @@ public class Panel_WorkFlowArrangerUpdate extends BasePanel implements WorkFlowA
     private List<WorkFlow> workFlows;
 
 
-    public Panel_WorkFlowArrangerUpdate(final WorkFlowArrangerUpdatePresenter presenter) {
+    public Panel_WorkFlowArrangerUpdate(final WorkFlowArrangerUpdateIPresenter presenter) {
         super();
 
         this.presenter = presenter;

@@ -25,7 +25,7 @@ public class BufferData implements Serializable{
     public   List<Pack> packs=new ArrayList<>();
     public   List<MaterialClass> materialClasses;
     public   List<MaterialType> materialTypes;
-    //public    List<MaterialEquation> materialEquations=new ArrayList<>();
+
     public   List<User> salesmans;
     public List<Authority> authorities;
     public QuoteAuth quoteAuth;
@@ -63,10 +63,7 @@ public class BufferData implements Serializable{
 
 
 
-    /**
-     * 流程相关权限（登录用户的）
-     */
-    public  WorkFlowArranger workFlowArranger;
+
 
     /**
      * 流程相关权限（登录用户的）

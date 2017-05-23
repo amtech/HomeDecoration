@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants.hd.desktop.presenter.MaterialClassUpdatePresenter;
-import com.giants.hd.desktop.view.MaterialClassUpdateViewer;
+import com.giants.hd.desktop.mvp.presenter.MaterialClassUpdateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.MaterialClassUpdateViewer;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.MaterialClass;
 
@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
  */
 public class Panel_MaterialClassUpdate extends BasePanel implements MaterialClassUpdateViewer {
 
-    private final MaterialClassUpdatePresenter presenter;
+    private final MaterialClassUpdateIPresenter presenter;
     private JPanel root;
     private JTextField tf_code;
     private JTextField tf_name;
@@ -30,7 +30,7 @@ public class Panel_MaterialClassUpdate extends BasePanel implements MaterialClas
     private JFormattedTextField ftf_discount;
 
 
-    public Panel_MaterialClassUpdate(final MaterialClassUpdatePresenter presenter) {
+    public Panel_MaterialClassUpdate(final MaterialClassUpdateIPresenter presenter) {
         super();
 
         this.presenter = presenter;

@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.dialogs;
 
-import com.giants.hd.desktop.presenter.AuthRelateDetailPresenter;
-import com.giants.hd.desktop.view.AuthRelateDetailViewer;
+import com.giants.hd.desktop.mvp.presenter.AuthRelateDetailIPresenter;
+import com.giants.hd.desktop.mvp.viewer.AuthRelateDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Auth_Relates;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * n 细分权限业务处理层
  */
-public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailPresenter {
+public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPresenter {
 
 
     @Inject

@@ -1,20 +1,15 @@
 package com.giants.hd.desktop.dialogs;
 
 
-import com.giants.hd.desktop.presenter.OrderItemWorkFlowStatePresenter;
-import com.giants.hd.desktop.view.OrderItemWorkFlowStateViewer;
-import com.giants.hd.desktop.viewImpl.Panel_OrderItemWorkFlow;
+import com.giants.hd.desktop.mvp.presenter.OrderItemWorkFlowStateIPresenter;
+import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowStateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderItemWorkFlowState;
 import com.giants3.hd.domain.BaseSubscriber;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ConstantData;
-import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity.OutFactory;
-import rx.Subscriber;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -23,7 +18,7 @@ import java.util.List;
  * <p/>
  * Created by david on 20160303
  */
-public class WorkFlowOrderItemStateDialog extends BaseDialog implements OrderItemWorkFlowStatePresenter {
+public class WorkFlowOrderItemStateDialog extends BaseDialog implements OrderItemWorkFlowStateIPresenter {
 
     private final long orderItemId;
     OrderItemWorkFlowStateViewer workFlowViewer;
@@ -55,7 +50,7 @@ public class WorkFlowOrderItemStateDialog extends BaseDialog implements OrderIte
      */
     private void readOrderItemState(final long orderItemId) {
 
-        UseCaseFactory.getInstance().createGetOrderItemWorkFlowState(orderItemId).execute(new BaseSubscriber<RemoteData<OrderItemWorkFlowState>>() {
+        UseCaseFactory.getInstance().createGetOrderItemWorkFlowState(orderItemId).execute(new BaseSubscriber<RemoteData<ErpOrderItemProcess>>() {
             @Override
             public void onCompleted() {
 
@@ -72,7 +67,7 @@ public class WorkFlowOrderItemStateDialog extends BaseDialog implements OrderIte
 
 
             @Override
-            public void onNext(RemoteData<OrderItemWorkFlowState> data) {
+            public void onNext(RemoteData<ErpOrderItemProcess> data) {
 
 
                 if (data.isSuccess()  ) {
@@ -92,7 +87,7 @@ public class WorkFlowOrderItemStateDialog extends BaseDialog implements OrderIte
 
     }
 
-    private void setData(List<OrderItemWorkFlowState> datas) {
+    private void setData(List<ErpOrderItemProcess> datas) {
 
 
         workFlowViewer.setData(datas);
