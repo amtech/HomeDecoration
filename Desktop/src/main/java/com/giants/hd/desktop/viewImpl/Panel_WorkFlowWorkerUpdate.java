@@ -31,7 +31,7 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
     private JCheckBox pu;
     private JComboBox cb_user;
     private List<User> users;
-    private List<WorkFlow> workFlows;
+    private List<ErpWorkFlow> workFlows;
 
 
     public Panel_WorkFlowWorkerUpdate(final WorkFlowWorkerUpdateIPresenter presenter) {
@@ -62,7 +62,7 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
 
     }
     @Override
-    public void bindWorkFlows(List<WorkFlow> workFlows)
+    public void bindWorkFlows(List<ErpWorkFlow> workFlows)
     {
         this.workFlows = workFlows;
 
@@ -100,10 +100,10 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
         cb_user.setSelectedItem(selected);
 
 
-        WorkFlow  selectedWorkFlow=null;
-        for(WorkFlow workFlow:workFlows)
+        ErpWorkFlow  selectedWorkFlow=null;
+        for(ErpWorkFlow workFlow:workFlows)
         {
-            if(workFlow.id==workFlowWorker.userId)
+            if(workFlow.step==workFlowWorker.workFlowStep)
             {
                 selectedWorkFlow=workFlow;
                 break;

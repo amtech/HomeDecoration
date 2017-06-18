@@ -1154,5 +1154,20 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/erpWork/findOrderItemReport?os_no=" + osNo + "&prd_no=" + prdNo);
 
 
+    }public static String getWorkFlowArea( ) {
+
+
+        return additionInfo(BaseUrl + "api/workFlow/area");
+
+
+    }
+
+    public static String saveWorkFlowArea() {
+        return additionInfo(BaseUrl + "api/workFlow/saveArea");
+
+    }
+
+    public static String deleteWorkFlowArea(long id) {
+        return additionInfo(BaseUrl + "api/workFlow/deleteArea?id="+id);
     }
 }

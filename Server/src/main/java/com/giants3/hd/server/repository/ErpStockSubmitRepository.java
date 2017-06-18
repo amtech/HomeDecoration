@@ -55,10 +55,10 @@ public class ErpStockSubmitRepository {
     /**
      * 查询厂家入库记录=
      */
-    public static final String stockInFromFactory = "   select ps.ps_no as no, ps.so_no,ps.PRD_NO,ps.PRD_NAME,ps.PRD_MARK,ps.BAT_NO,ps.CUS_OS_NO,ps.qty,ps.dd,ps.type,pos.id_no ,mps.dept from (select PRD_MARK as so_no ,PRD_NO,PRD_NAME, PRD_MARK, BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,2 as type ,ps_no from TF_PSS   WHERE  PS_ID=" + PC_UPPER + " AND WH=" + CP_UPPER + "  and  PRD_MARK like " + YF_LIKE_UPPPER + "  and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as ps inner join ( select os_no ,prd_no,id_no FROM  TF_POS where OS_ID=" + SO_UPPER + " ) as pos  on ps.PRD_MARK=pos.os_no   and  ps.PRD_NO=pos.PRD_NO    inner join (select  cus_no  as dept ,ps_no from mf_pss  WHERE  PS_ID=" + PC_UPPER + "      and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + ")    as  mps  on mps.ps_no= ps.ps_no";
+    public static final String stockInFromFactory = "   select ps.ps_no as no, ps.so_no,ps.itm,ps.PRD_NO,ps.PRD_NAME,ps.PRD_MARK,ps.BAT_NO,ps.CUS_OS_NO,ps.qty,ps.dd,ps.type,pos.id_no ,mps.dept from (select PRD_MARK as so_no ,itm,PRD_NO,PRD_NAME, PRD_MARK, BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,2 as type ,ps_no from TF_PSS   WHERE  PS_ID=" + PC_UPPER + " AND WH=" + CP_UPPER + "  and  PRD_MARK like " + YF_LIKE_UPPPER + "  and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as ps inner join ( select os_no ,itm,prd_no,id_no FROM  TF_POS where OS_ID=" + SO_UPPER + " ) as pos  on ps.PRD_MARK=pos.os_no   and  ps.itm=pos.itm    inner join (select  cus_no  as dept ,ps_no from mf_pss  WHERE  PS_ID=" + PC_UPPER + "      and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + ")    as  mps  on mps.ps_no= ps.ps_no";
 
     //车间入库记录   缴库
-    public static final String StockSubmitSql = " select  mm_no as no,SO_NO ,PRD_NO,PRD_NAME,PRD_MARK  ,BAT_NO,CUS_OS_NO,QTY ,mm_dd as dd   ,1 as type , ID_NO ,'' as dept from TF_MM0 where wh=" + CP_UPPER + "   and mm_dd  >= :" + START_DATE + "  and mm_dd  <= :" + END_DATE;
+    public static final String StockSubmitSql = " select  mm_no as no,SO_NO ,itm ,PRD_NO,PRD_NAME,PRD_MARK  ,BAT_NO,CUS_OS_NO,QTY ,mm_dd as dd   ,1 as type , ID_NO ,'' as dept from TF_MM0 where wh=" + CP_UPPER + "   and mm_dd  >= :" + START_DATE + "  and mm_dd  <= :" + END_DATE;
 
     // +  StockSubmitSql+ "  union     "
     //查询入库与缴库的产品数据
@@ -156,6 +156,7 @@ public class ErpStockSubmitRepository {
 
                 .addScalar("no", StringType.INSTANCE)
                 .addScalar("so_no", StringType.INSTANCE)
+                .addScalar("itm", IntegerType.INSTANCE)
                 .addScalar("cus_no", StringType.INSTANCE)
                 .addScalar("dd", StringType.INSTANCE)
                 .addScalar("prd_no", StringType.INSTANCE)

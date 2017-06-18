@@ -10,12 +10,26 @@ import java.util.List;
 public class ErpWorkFlow {
 
 
-    public static String[] CODES = new String[]{"A",  "D", "B","C",""};
+    public static final String FIRST_STEP_CODE = "S";
+    public static final String SECOND_STEP_CODE = "A";
+    public static final String CODE_ZUZHUANG = "B";
+    //生产完成状态码
+    public static final int STATE_COMPLETE = 99;
+    //生产进行流程状态码
+    public static final int STATE_WORKING= 9;
 
-    public static String[] NAMES = new String[]{"白胚", "颜色", "组装", "包装","成品仓"};
+
+    public static final int PICTURE_COUNT = 3;
+    public static final String CODE_CHENGPIN = "E";
+    public static final String CODE_YANSE = "D";
+    public static final String CODE_MU = "M";
+    public static final String CODE_TIE = "T";
+    public static String[] CODES = new String[]{FIRST_STEP_CODE, SECOND_STEP_CODE, CODE_YANSE,  "C", CODE_CHENGPIN};
+
+    public static String[] NAMES = new String[]{"胚体加工","白胚", "颜色",  "组装包装","成品仓"};
     public static final int FIRST_STEP = 1000;
-    public static final int LAST_STEP = 5000;
-    public static int[] STEPS = new int[]{FIRST_STEP, 2000, 3000, 4000, LAST_STEP};
+    public static final int LAST_STEP = 6000;
+    public static int[] STEPS = new int[]{FIRST_STEP,2000, 3000,   5000, LAST_STEP};
 
 
     public ErpWorkFlow() {
@@ -78,5 +92,18 @@ public class ErpWorkFlow {
                 return i;
         }
         return index;
+    }
+
+    public static int  findPrevious(int flowStep) {
+
+        final int length = STEPS.length;
+
+
+        for (int i = 0; i < length; i++) {
+            if(STEPS[i]==flowStep)
+                return STEPS[i-1];
+        }
+        return  -1;
+
     }
 }

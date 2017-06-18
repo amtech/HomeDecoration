@@ -8,6 +8,7 @@ import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.WorkFlow;
 import com.giants3.hd.utils.entity.WorkFlowProduct;
 import com.giants3.hd.utils.entity.WorkFlowSubType;
@@ -35,7 +36,7 @@ public class WorkFlowConfigDialog extends BaseMVPDialog<WorkFlowProduct,WorkFlow
         workFlowViewer=getViewer();
         this.productId = productId;
         this.productName = productName;
-        final List<WorkFlow> allWorkFlows = CacheManager.getInstance().bufferData.workFlows;
+        final List<WorkFlow> allWorkFlows = null;
 
         List<WorkFlow> workFlows=new ArrayList<>();
         for(WorkFlow workFlow:allWorkFlows)

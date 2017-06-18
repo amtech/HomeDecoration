@@ -367,6 +367,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
+              <toolTipText value="=出厂价/ 美金汇率"/>
             </properties>
           </component>
           <component id="84e6e" class="javax.swing.JTextField" binding="tf_price">
@@ -378,6 +379,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
+              <toolTipText value="（内厂）=成本价/ 利润比例     （外厂）=成本价*（1+管理费用比率）"/>
             </properties>
           </component>
           <component id="8614c" class="javax.swing.JTextField" binding="tf_cost">

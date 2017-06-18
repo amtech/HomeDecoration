@@ -316,6 +316,9 @@ public class Main extends BaseFrame {
             });
 
         }
+
+
+
         if (AuthorityUtil.getInstance().viewWorkFlowWorker()) {
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_WORKER);
             menu.add(menuItem);

@@ -6,42 +6,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- *  流程跳转确认信
- *
+ * 流程跳转确认信
+ * <p/>
  * Created by davidleen29 on 2016/9/3.
  */
 @Entity(name = "T_WorkFlowMessage")
-public class WorkFlowMessage
-{
+public class WorkFlowMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
 
     public int fromFlowStep;
-    public String  fromFlowName;
-    public String  fromFlowCode;
+    public String fromFlowName;
+    public String fromFlowCode;
 
 
     /**
      * 接受流程id
      */
     public int toFlowStep;
-    public  String  toFlowName;
-    public  String  toFlowCode;
-
-
-
-
-
+    public String toFlowName;
+    public String toFlowCode;
 
 
     /**
      * 订单数量
      */
     public int orderItemQty;
-
-
 
 
     public String orderName;
@@ -58,8 +50,6 @@ public class WorkFlowMessage
     public String mrpNo;
 
 
-
-
     /**
      * 移交数量
      */
@@ -72,33 +62,34 @@ public class WorkFlowMessage
     public String name;
 
 
-
-
     /**
      * 当前状态  0 未处理  1 已经接受  2 审核通过 3  审核拒绝  4 返工
      */
-    public int  state;
-
-
+    public int state;
 
 
     public String createTimeString;
     public long createTime;
 
-    public   long receiveTime;
+    public long receiveTime;
     public String receiveTimeString;
 
 
     public long checkTime;
     public String checkTimeString;
-    public String  thumbnail;
+    public String thumbnail;
     public String url;
 
 
+    /**
+     * 提交备注
+     */
+    public String sendMemo;
 
 
-    public  String memo;
 
+
+    public String memo;
 
 
     /**
@@ -108,38 +99,49 @@ public class WorkFlowMessage
     ;
 
 
-
     //冗余字段
     public String factoryName;
 
 
     /**
+     * 流程递交的图片信息， 三张图片， 由流程接收者拍摄
+     */
+    public String pictures;
+
+
+    /**
+     * 交接区域
+     */
+    public String area;
+
+
+    /**
      * 返工
      */
-    public static final int STATE_REWORK =4;
+    public static final int STATE_REWORK = 4;
 
     /**
      * 审核不通过
      */
-    public static final int STATE_REJECT=3;
+    public static final int STATE_REJECT = 3;
     /**
      * 已接收
      */
-    public static final int STATE_PASS=2;
+    public static final int STATE_PASS = 2;
 
     /**
      * 已接收
      */
-    public static final int STATE_RECEIVE=1;
+    public static final int STATE_RECEIVE = 1;
 
     /**
      * 发送
      */
-    public static final int STATE_SEND=0;
+    public static final int STATE_SEND = 0;
 
 
-    public static  final  String NAME_SUBMIT="提交";
-    public static  final  String NAME_REWORK="返工";
+    public static final String NAME_SUBMIT = "提交";
+    public static final String NAME_REWORK = "返工";
 
 
 }

@@ -187,6 +187,7 @@ public class ApiManager {
         tokenMaps.put(ErpOrderItemProcess.class, new TypeToken<RemoteData<ErpOrderItemProcess>>() {
         }.getType());
         tokenMaps.put(ErpWorkFlowReport.class, new TypeToken<RemoteData<ErpWorkFlowReport>>() {
+        }.getType()); tokenMaps.put(WorkFlowArea.class, new TypeToken<RemoteData<WorkFlowArea>>() {
         }.getType());
     }
 
@@ -2106,5 +2107,25 @@ public class ApiManager {
         RemoteData<ErpWorkFlowReport> remoteData = invokeByReflect(result, ErpWorkFlowReport.class);
         return remoteData;
 
+    } public RemoteData<WorkFlowArea> getWorkFlowAreas( ) throws HdException {
+        String url = HttpUrl.getWorkFlowArea( );
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
+        return remoteData;
+
+    }
+
+    public RemoteData<WorkFlowArea> saveWorkFlowArea(WorkFlowArea data) throws HdException {
+        String url = HttpUrl.saveWorkFlowArea( );
+        String result = client.postWithStringReturned(url,GsonUtils.toJson(data));
+        RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
+        return remoteData;
+    }
+
+    public RemoteData<WorkFlowArea> deleteWorkFlowArea(long id) throws HdException {
+        String url = HttpUrl.deleteWorkFlowArea( id);
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
+        return remoteData;
     }
 }

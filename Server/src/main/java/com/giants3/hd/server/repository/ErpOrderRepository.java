@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 从第三方数据库读取erpOrder数据相关 订单
  */
-public class ErpOrderRepository {
+public class ErpOrderRepository  extends ErpRepository{
 
 
     public static final String KEY_ORDER = "SO";
@@ -235,30 +235,6 @@ public class ErpOrderRepository {
 
     }
 
-    private org.hibernate.Query getOrderItemListQuery(Query query)
-    {
-
-
-        org.hibernate.Query hQuery=   query .unwrap(SQLQuery.class)
-                .addScalar("os_no", StringType.INSTANCE)
-                .addScalar("itm", IntegerType.INSTANCE)
-                .addScalar("bat_no", StringType.INSTANCE)
-                .addScalar("prd_no", StringType.INSTANCE)
-                .addScalar("prd_name", StringType.INSTANCE)
-                .addScalar("id_no", StringType.INSTANCE)
-                .addScalar("up", FloatType.INSTANCE)
-                .addScalar("qty", IntegerType.INSTANCE)
-                .addScalar("amt", FloatType.INSTANCE)
-                .addScalar("htxs", IntegerType.INSTANCE)
-                .addScalar("so_zxs", IntegerType.INSTANCE)
-                .addScalar("khxg", StringType.INSTANCE)
-                .addScalar("xgtj", FloatType.INSTANCE)
-                .addScalar("zxgtj", FloatType.INSTANCE)
-                .addScalar("hpgg", StringType.INSTANCE)
-                .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class));
-        return hQuery;
-
-    }
     /**
      * 查看订单item
      *
@@ -349,4 +325,6 @@ public class ErpOrderRepository {
                 .setParameter("chk_dd_start", dateStart).setParameter("chk_dd_end",dateEnd)
                 .getSingleResult();
     }
+
+
 }

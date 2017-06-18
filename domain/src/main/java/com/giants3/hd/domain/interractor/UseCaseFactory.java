@@ -559,4 +559,18 @@ public class UseCaseFactory {
     } public UseCase createGetErpOrderItemReportUseCase(String osNo, String prdNo) {
         return  new GetErpOrderItemReportUseCase(osNo,prdNo, workFlowRepository );
     }
+
+    public UseCase createGetWorkFlowAreaListUseCase() {
+
+        return  new GetWorkFlowEventAreaListUseCase( workFlowRepository );
+    }
+
+    public UseCase createSaveWorkFlowAreaUseCase(WorkFlowArea data) {
+        return  new SaveWorkFlowAreaUseCase( data,workFlowRepository );
+
+    }
+
+    public UseCase createDeleteWorkFlowAreaUseCase(long id) {
+        return  new DeleteWorkFlowAreaUseCase( id,workFlowRepository );
+    }
 }

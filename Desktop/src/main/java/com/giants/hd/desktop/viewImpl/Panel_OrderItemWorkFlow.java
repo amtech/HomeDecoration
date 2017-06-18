@@ -107,12 +107,12 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
         workFlowArrangeTableModel = new WorkFlowArrangeTableModel(WorkFlowArrangeTableModel.WorkFlowConfig.class, TableStructureUtils.getWorkFlowArrange());
         jt.setModel(workFlowArrangeTableModel);
 
-        int size = CacheManager.getInstance().bufferData.workFlows.size();
+        int size = 0;
 
         workFlows = new WorkFlow[size];
         for (int i = 0; i < size; i++) {
 
-            workFlows[i] = CacheManager.getInstance().bufferData.workFlows.get(i);
+            workFlows[i] = null;
 
         }
 
@@ -120,7 +120,7 @@ public class Panel_OrderItemWorkFlow extends BasePanel implements OrderItemWorkF
         selfMadeWorkFlowList = new ArrayList<>();
         purchaseWorkFlowList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            final WorkFlow workFlow = CacheManager.getInstance().bufferData.workFlows.get(i);
+            final WorkFlow workFlow =null;
             if (workFlow.isSelfMade)
                 selfMadeWorkFlowList.add(workFlow);
             if (workFlow.isPurchased)

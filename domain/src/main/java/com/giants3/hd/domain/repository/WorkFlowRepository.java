@@ -62,4 +62,11 @@ public interface WorkFlowRepository {
 
     Observable getErpOrderItemProcess(String osNo, String prdNo);
     Observable getErpOrderItemReport(String osNo, String prdNo);
+
+    Observable getWorkFlowAreaList();
+
+    Observable saveWorkFlowArea(WorkFlowArea data);
+
+    Observable deleteWorkFlowArea(long id);
+
 }

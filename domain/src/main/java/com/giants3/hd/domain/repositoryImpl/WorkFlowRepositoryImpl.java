@@ -490,5 +490,34 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             }
         });
     }
+
+
+    @Override
+    public Observable getWorkFlowAreaList() {
+        return crateObservable(  new ApiCaller<WorkFlowArea>() {
+            @Override
+            public RemoteData<WorkFlowArea> call() throws HdException {
+                return apiManager.getWorkFlowAreas(   );
+            }
+        });
+    }
+
+    @Override
+    public Observable saveWorkFlowArea(final WorkFlowArea data) {
+        return crateObservable(  new ApiCaller<WorkFlowArea>() {
+            @Override
+            public RemoteData<WorkFlowArea> call() throws HdException {
+                return apiManager.saveWorkFlowArea(  data );
+            }
+        });
+    }  @Override
+    public Observable deleteWorkFlowArea(final long id) {
+        return crateObservable(  new ApiCaller<WorkFlowArea>() {
+            @Override
+            public RemoteData<WorkFlowArea> call() throws HdException {
+                return apiManager.deleteWorkFlowArea(  id );
+            }
+        });
+    }
 }
 

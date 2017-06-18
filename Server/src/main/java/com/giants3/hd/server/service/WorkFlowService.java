@@ -74,6 +74,10 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
     @Autowired
+    WorkFlowAreaRepository workFlowAreaRepository;
+
+
+    @Autowired
 
     ErpService erpService;
 
@@ -473,7 +477,17 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
 
+
+
+
+
+
          List<WorkFlowMessage> messages=workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowStep,  os_no,  itm);
+
+
+
+
+
 
         return wrapData(messages );
 
@@ -494,6 +508,33 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
         List<WorkFlowEventWorker> result=workFlowEventWorkerRepository.findAll();
         return wrapData(result);
+
+
+    }
+
+
+
+
+
+    public  RemoteData<WorkFlowArea> findWorkFlowAreas()
+    {
+       return wrapData( workFlowAreaRepository.findAll());
+    }
+
+    public RemoteData<WorkFlowArea> saveWorkFlowArea(WorkFlowArea data) {
+
+
+
+        return wrapData(workFlowAreaRepository.save(data));
+
+
+    }
+
+    public RemoteData<WorkFlowArea> deleteWorkFlowArea(long id) {
+
+
+        workFlowAreaRepository.delete(id);
+        return wrapData( );
 
 
     }

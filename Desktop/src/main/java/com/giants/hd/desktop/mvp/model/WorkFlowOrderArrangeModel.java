@@ -72,7 +72,7 @@ public class WorkFlowOrderArrangeModel implements IModel {
 
 
         if (workFlowProduct.produceType == ProduceType.PURCHASE) {
-            final List<WorkFlow> workFlows = CacheManager.getInstance().bufferData.workFlows;
+            final List<WorkFlow> workFlows = null;
             int size = workFlows.size();
             List<WorkFlow> purchaseWorkFlowList = new ArrayList<>();
             List<WorkFlow> selfMadeWorkFlowList = new ArrayList<>();

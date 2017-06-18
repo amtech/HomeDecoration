@@ -44,6 +44,11 @@ public class User implements Serializable,Valuable {
     public boolean deleted;
 
 
+
+    public int position;
+    public String  positionName;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +63,8 @@ public class User implements Serializable,Valuable {
         if (chineseName != null ? !chineseName.equals(user.chineseName) : user.chineseName != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (positionName != null ? !positionName.equals(user.positionName) : user.positionName != null) return false;
+        if (position != user.position) return false;
         return !(tel != null ? !tel.equals(user.tel) : user.tel != null);
 
     }

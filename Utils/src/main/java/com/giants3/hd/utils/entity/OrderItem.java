@@ -79,4 +79,10 @@ public class OrderItem implements Serializable {
      */
 
     public long orderWorkFlowId;
+
+
+    /**
+     * 订单状态
+     */
+    public int workFlowState;
 }

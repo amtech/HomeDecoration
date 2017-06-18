@@ -1,10 +1,12 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.utils.entity.Product;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.entity.Product;
+import de.greenrobot.common.io.IoUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -18,6 +20,7 @@ public class FileUtils {
 
 
     public static final String IMAGE_JPG = "jpg";
+    public static final String SUFFIX_JPG = ".jpg";
     public static final String DOWNLOAD_PATH = "api/file/download/";
     public static final String DOWNLOAD_MATERIAL_CODE = DOWNLOAD_PATH + "material/%s/%s.%s?type=%s&mClass=%s";
     public static final String DOWNLOAD_PRODUCT_NAME_P_VERSION = DOWNLOAD_PATH + "product/%s/%s/%s.%s?type=%s";
@@ -35,6 +38,7 @@ public class FileUtils {
      * url 中 对路径的表示， 获取文件资源时， 将这个标识改成  SEPARATOR
      */
     public static final String URL_PATH_SEPARATOR = "___";
+
     /**
      * /**获取图片路径 url  相对路径 容器根目录
      *
@@ -290,18 +294,21 @@ public class FileUtils {
      * @param absoluteFilePath
      */
     public static void makeDirs(String absoluteFilePath) {
-
-        int
-                index = absoluteFilePath.lastIndexOf(FileUtils.SEPARATOR);
-        if (index > -1) {
-
-            String directoryPath = absoluteFilePath.substring(0, index);
-
-            File file = new File(directoryPath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-        }
+        File newFile = new File(absoluteFilePath);
+        File parentFile = newFile.getParentFile();
+        if (!parentFile.exists())
+            parentFile.mkdirs();
+//        int
+//                index = absoluteFilePath.lastIndexOf(FileUtils.SEPARATOR);
+//        if (index > -1) {
+//
+//            String directoryPath = absoluteFilePath.substring(0, index);
+//
+//            File file = new File(directoryPath);
+//            if (!file.exists()) {
+//                file.mkdirs();
+//            }
+//        }
 
     }
 
@@ -314,15 +321,40 @@ public class FileUtils {
     }
 
 
-    public static String getProductThumbnailUrl(  Product product) {
-        String thumbnailDirectory =    FileUtils.getProductDirectoryName(product.name) + FileUtils.URL_PATH_SEPARATOR;
-       return  DOWNLOAD_PRODUCT_THUMBNAIL+thumbnailDirectory+ product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("_" + product.pVersion)) + "_" + Calendar.getInstance().getTimeInMillis() + ".jpg";
+    public static String getProductThumbnailUrl(Product product) {
+        String thumbnailDirectory = FileUtils.getProductDirectoryName(product.name) + FileUtils.URL_PATH_SEPARATOR;
+        return DOWNLOAD_PRODUCT_THUMBNAIL + thumbnailDirectory + product.name + (StringUtils.isEmpty(product.pVersion) ? "" : ("_" + product.pVersion)) + "_" + Calendar.getInstance().getTimeInMillis() + ".jpg";
 
 
     }
 
 
+    /**
+     * @param file
+     * @param newFilePath
+     */
+    public static void copy(MultipartFile file, String newFilePath) throws IOException {
 
 
+
+        FileOutputStream fileOutputStream = null;
+        InputStream inputStream=null;
+        try {
+            FileUtils.makeDirs(newFilePath);
+            fileOutputStream = new FileOutputStream(newFilePath);
+
+            inputStream = file.getInputStream();
+            IOUtils.copy(inputStream, fileOutputStream);
+
+
+            fileOutputStream.flush();
+        } catch (Throwable  e) {
+            throw e;
+        }finally {
+            IoUtils.safeClose(fileOutputStream);
+            IoUtils.safeClose(inputStream);
+        }
 
     }
+
+}

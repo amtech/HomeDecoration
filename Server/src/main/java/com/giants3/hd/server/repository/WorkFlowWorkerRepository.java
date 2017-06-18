@@ -22,6 +22,7 @@ public interface WorkFlowWorkerRepository extends JpaRepository<WorkFlowWorker, 
        WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(long userId,String  workFlowCode,boolean canReceive);
       List< WorkFlowWorker>   findByUserIdEqualsAndReceiveEquals(long userId, boolean canReceive);
      WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndSendEquals(long userId,String  workFlowCode,boolean canSend);
+     WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowStepEquals (long userId,int   workFlowStep );
 
     List<WorkFlowWorker> findByUserIdEqualsAndSendEquals(long userId, boolean canSend);
 }

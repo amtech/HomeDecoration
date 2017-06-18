@@ -223,6 +223,75 @@ public class WorkFlowController extends BaseController {
 
     }
 
+   /**读取指定订单流程，流程的消息列表
+     *  cancelOrderWorkFlow?orderItemWorkFlowId
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/area", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowArea> findWorkFlowArea(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+
+
+
+
+    ) {
+
+
+        return workFlowService.findWorkFlowAreas( );
+
+
+
+    }
+
+    /**
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/saveArea", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowArea> saveWorkFlowArea(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+                                          ,    @RequestBody  WorkFlowArea  data
+
+
+
+    ) {
+
+
+        return workFlowService.saveWorkFlowArea(data );
+
+
+
+    }
+    /**
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/deleteArea", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowArea> deleteWorkFlowArea(
+
+            @RequestParam(value = "id" ) long id
+
+    ) {
+
+
+        return workFlowService.deleteWorkFlowArea(id );
+
+
+
+    }
+
 
 
 }

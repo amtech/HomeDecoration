@@ -24,6 +24,11 @@ public class StockSubmit {
      * 订单号
      */
     public String so_no;
+
+    /**
+     * 订单项次
+     */
+    public int itm;
     /**
      * 产品编号
      */

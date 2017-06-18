@@ -2,6 +2,7 @@ package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.CompanyPosition;
 import com.google.inject.Inject;
 
 import java.util.List;
@@ -11,12 +12,13 @@ import java.util.List;
  */
 public class UserModel extends  BaseTableModel<User> {
 
-    public static String[] columnNames = new String[]{ "编号 ",  "名称" ,"中文名称      ","密码" ,"电话","邮件","是否业务员" };
-    public static int[] columnWidth=new int[]{   80,        100 ,120,120,120,120,40};
+    public static String[] columnNames = new String[]{ "编号 ",  "名称" ,"中文名称      ","密码" ,"电话","邮件","是否业务员","  职位  " };
+    public static int[] columnWidth=new int[]{   80,        100 ,120,80,80,80,80,100};
 
-    public static String[] fieldName = new String[]{ "code", "name", "chineseName", "password","tel","email","isSalesman"};
+    private static final String POSITION = "positionName";
+    public static String[] fieldName = new String[]{ "code", "name", "chineseName", "password","tel","email","isSalesman", POSITION};
 
-    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class, Object.class, Object.class,Object.class,Boolean.class};
+    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class, Object.class, Object.class,Object.class,Boolean.class,CompanyPosition.class};
 
 
     @Inject
@@ -60,6 +62,19 @@ public class UserModel extends  BaseTableModel<User> {
                 break;
             case 6:
                 customer.isSalesman=Boolean.valueOf(stringValue);
+                break;
+
+
+            case 7:
+
+                if(aValue instanceof CompanyPosition)
+                {
+                    customer.positionName=   ((CompanyPosition) aValue).positionName;
+                    customer.position= ((CompanyPosition) aValue).position;
+
+
+                }
+
                 break;
 
         }

@@ -39,6 +39,12 @@ public class AUser   implements Serializable {
     public String  tel;
     public String token;
 
+    public String positionName;
+    public int position;
+
+
     public List<Authority> authorities;
     public QuoteAuth quoteAuth;
+
+
 }

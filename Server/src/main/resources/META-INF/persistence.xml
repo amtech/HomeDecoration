@@ -39,6 +39,7 @@
         <class>com.giants3.hd.utils.entity.OrderItemWorkFlow</class>
         <class>com.giants3.hd.utils.entity.OrderItemWorkFlowEvent</class>
         <class>com.giants3.hd.utils.entity.OrderItemWorkFlowState</class>
+        <class>com.giants3.hd.utils.entity.OrderItemWorkMemo</class>
 
         <class>com.giants3.hd.utils.entity.Pack</class>
         <class>com.giants3.hd.utils.entity.PClass</class>
@@ -52,6 +53,7 @@
         <class>com.giants3.hd.utils.entity.ProductWage</class>
         <class>com.giants3.hd.utils.entity.ProductPaint</class>
         <class>com.giants3.hd.utils.entity.ProductProcess</class>
+        <class>com.giants3.hd.utils.entity.ProductWorkMemo</class>
 
 
         <class>com.giants3.hd.utils.entity.QuoteAuth</class>
@@ -74,6 +76,7 @@
         <class>com.giants3.hd.utils.entity.User</class>
         <class>com.giants3.hd.utils.entity.WorkFlow</class>
         <class>com.giants3.hd.utils.entity.WorkFlowArranger</class>
+        <class>com.giants3.hd.utils.entity.WorkFlowArea</class>
         <class>com.giants3.hd.utils.entity.WorkFlowArrangeData</class>
         <class>com.giants3.hd.utils.entity.WorkFlowEvent</class>
         <class>com.giants3.hd.utils.entity.WorkFlowEventWorker</class>
@@ -98,7 +101,8 @@
 
         <class>com.giants3.hd.utils.entity.ErpOrderItemProcess</class>
 
-
+<!--127.0.0.1-->
+<!--192.168.10.198-->
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2008Dialect"/>
             <property name="hibernate.connection.url" value="jdbc:jtds:sqlserver://127.0.0.1:1433;databaseName=yunfei"/>

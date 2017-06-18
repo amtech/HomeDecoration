@@ -1,12 +1,15 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.dialogs.WorkFlowAreaUpdateDialog;
 import com.giants.hd.desktop.dialogs.WorkFlowArrangerUpdateDialog;
+import com.giants.hd.desktop.mvp.RemoteDataSubscriber;
 import com.giants.hd.desktop.mvp.presenter.WorkFlowEventConfigIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowEventConfigViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow_Event_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.WorkFlowArea;
 import com.giants3.hd.utils.entity.WorkFlowArranger;
 import com.giants3.hd.utils.entity.WorkFlowEvent;
 import rx.Subscriber;
@@ -33,37 +36,22 @@ public class WorkFlowEventConfigFrame extends BaseMVPFrame<WorkFlowEventConfigVi
     private void readData() {
 
 
-        UseCaseFactory.getInstance().createGetWorkFlowEventListUseCase().execute(new Subscriber<RemoteData<WorkFlowEvent>>() {
-            //            @Override
-            public void onCompleted() {
-                getViewer().hideLoadingDialog();
-            }
-
+        UseCaseFactory.getInstance().createGetWorkFlowEventListUseCase().execute(new RemoteDataSubscriber<WorkFlowEvent>(getViewer()) {
             @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                getViewer().hideLoadingDialog();
-                getViewer().showMesssage(e.getMessage());
+            protected void handleRemoteData(RemoteData<WorkFlowEvent> data) {
+                setData(data.datas);
             }
-
-
-            @Override
-            public void onNext(RemoteData<WorkFlowEvent> workFlowRemoteData) {
-                getViewer().hideLoadingDialog();
-                if (workFlowRemoteData.isSuccess()) {
-
-
-                    setData(workFlowRemoteData.datas);
-
-                } else
-
-                    getViewer().showMesssage(workFlowRemoteData.message);
-
-
-            }
-
-
         });
+        UseCaseFactory.getInstance().createGetWorkFlowAreaListUseCase().execute(new RemoteDataSubscriber<WorkFlowArea>(getViewer()) {
+
+
+            @Override
+            protected void handleRemoteData(RemoteData<WorkFlowArea> data) {
+                setArea(data.datas);
+            }
+        });
+
+
         getViewer().showLoadingDialog();
     }
 
@@ -71,6 +59,11 @@ public class WorkFlowEventConfigFrame extends BaseMVPFrame<WorkFlowEventConfigVi
 
 
         getViewer().bindData(datas);
+    }
+    private void setArea(List<WorkFlowArea> datas) {
+
+
+        getViewer().bindArea(datas);
     }
 
 
@@ -96,12 +89,43 @@ public class WorkFlowEventConfigFrame extends BaseMVPFrame<WorkFlowEventConfigVi
 
     @Override
     public void showOne(WorkFlowEvent workFLowEvent) {
-//        WorkFlowArrangerUpdateDialog dialog = new WorkFlowArrangerUpdateDialog(SwingUtilities.getWindowAncestor(this), workFLowEvent);
+//        WorkFlowAreaUpdateDialog dialog = new WorkFlowAreaUpdateDialog(SwingUtilities.getWindowAncestor(this), workFLowEvent);
 //        dialog.setLocationByPlatform(true);
 //        dialog.setVisible(true);
 //        WorkFlowArranger result = dialog.getResult();
 //        if (result != null) {
 //            readData();
 //        }
+    }
+
+
+    @Override
+    public void showOne(WorkFlowArea workFlowArea) {
+
+
+        WorkFlowAreaUpdateDialog dialog = new WorkFlowAreaUpdateDialog(SwingUtilities.getWindowAncestor(this), workFlowArea);
+        dialog.setLocationByPlatform(true);
+        dialog.setVisible(true);
+        WorkFlowArea result = dialog.getResult();
+        if (result != null) {
+            readData();
+        }
+
+    }
+
+
+    @Override
+    public void addOneArea() {
+
+
+        WorkFlowAreaUpdateDialog dialog = new WorkFlowAreaUpdateDialog(SwingUtilities.getWindowAncestor(this),null);
+        dialog.setLocationByPlatform(true);
+        dialog.setVisible(true);
+        WorkFlowArea result = dialog.getResult();
+        if (result != null) {
+            readData();
+        }
+
+
     }
 }

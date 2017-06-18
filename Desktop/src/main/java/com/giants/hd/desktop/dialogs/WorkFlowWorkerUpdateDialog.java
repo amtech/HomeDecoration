@@ -7,6 +7,7 @@ import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.entity.ErpWorkFlow;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.entity.WorkFlowWorker;
 import rx.Subscriber;
@@ -32,7 +33,7 @@ public class WorkFlowWorkerUpdateDialog extends BaseMVPDialog<WorkFlowWorker, Wo
         setMinimumSize(new Dimension(400, 400));
 
 
-        getViewer().bindWorkFlows(CacheManager.getInstance().bufferData.workFlows);
+        getViewer().bindWorkFlows(ErpWorkFlow.WorkFlows);
 
 
         loadUsers();

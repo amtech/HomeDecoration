@@ -628,4 +628,6 @@ public class AuthorityUtil {
 
         return isViewable(ModuleConstant.NAME_WORK_FLOW_ITEM_EVENT_CONFIG);
     }
+
+
 }

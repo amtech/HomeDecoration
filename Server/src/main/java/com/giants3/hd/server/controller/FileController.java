@@ -48,6 +48,8 @@ public class FileController extends BaseController {
     private String materialFilePath;
     @Value("${quotationfilepath}")
     private String quotationfilepath;
+    @Value("${workflowfilepath}")
+    private String workflowfilepath;
 
     @Value("${appfilepath}")
     private String appFilePath;
@@ -114,6 +116,8 @@ public class FileController extends BaseController {
         File newFile = new File(filePath);
         //防止图片被误删  备份图片
         if (newFile.exists()) {
+
+
             String coveredPath = FileUtils.getProductPicturePath(deleteProductFilePath, productName + "_back_" + DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS_LOG.format(Calendar.getInstance().getTime()), "", suffix);
             File coverFile = new File(coveredPath);
             //构建文件路径
@@ -173,13 +177,9 @@ public class FileController extends BaseController {
 
         String newPath = FileUtils.getMaterialPicturePath(materialFilePath, material.code, material.classId);
 
+        FileUtils.makeDirs(newPath);
         File file = new File(newPath);
-        if (!file.exists()) {
-            File parent = file.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-        }
+
 
         FileOutputStream fileOutputStream = null;
         try {
@@ -211,26 +211,18 @@ public class FileController extends BaseController {
      * @return
      */
     private RemoteData<Void> handleFileUpload(MultipartFile file, String newFilePath) {
-        FileOutputStream fileOutputStream = null;
-        InputStream inputStream = null;
+
+
+
+
         try {
-            File newFile = new File(newFilePath);
-            File parentFile = newFile.getParentFile();
-            if (!parentFile.exists())
-                parentFile.mkdirs();
-            fileOutputStream = new FileOutputStream(newFile);
-            inputStream = file.getInputStream();
-            IOUtils.copy(inputStream, fileOutputStream);
-            fileOutputStream.flush();
+
+            FileUtils.copy(file,newFilePath);
+
             return wrapMessageData("成功上传文件到" + newFilePath);
         } catch (IOException e) {
             e.printStackTrace();
             return wrapError("You failed to upload " + newFilePath + " => " + e.getMessage());
-        } finally {
-
-            IoUtils.safeClose(inputStream);
-            IoUtils.safeClose(fileOutputStream);
-
         }
 
 
@@ -268,6 +260,15 @@ public class FileController extends BaseController {
 
 
         return getProductFile(name, "", type);
+
+
+    }
+
+    @RequestMapping(value = "/download/workflows/{name}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getWorkFlowPicture(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+
+        return    new FileSystemResource(workflowfilepath +name+"."+type);
 
 
     }

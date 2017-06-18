@@ -70,8 +70,7 @@ public class UserController extends BaseController {
     private FactoryRepository factoryRepository;
     @Autowired
     private QuoteAuthRepository quoteAuthRepository;
-    @Autowired
-    private WorkFlowRepository workFlowRepository;
+
     @Autowired
     private WorkFlowService workFlowService;
 
@@ -185,9 +184,7 @@ public class UserController extends BaseController {
 
 
 
-        List<WorkFlow> workFlows = workFlowRepository.findAll();
 
-        bufferData.workFlows = workFlows;
         bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas
         ;
 

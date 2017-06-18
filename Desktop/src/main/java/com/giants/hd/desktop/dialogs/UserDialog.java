@@ -5,10 +5,13 @@ import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.entity.Customer;
+import com.giants3.hd.utils.entity.PackMaterialClass;
 import com.giants3.hd.utils.entity.User;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.CompanyPosition;
 import com.google.inject.Inject;
 
 import javax.swing.*;
@@ -75,6 +78,12 @@ public class UserDialog extends BaseSimpleDialog<User> {
 
             }
         }));
+
+
+        JComboBox<CompanyPosition> packMaterialClassComboBox = new JComboBox<>();
+        for (CompanyPosition packMaterialClass : CompanyPosition.POSITIONS)
+            packMaterialClassComboBox.addItem(packMaterialClass);
+        jt.setDefaultEditor(CompanyPosition.class, new DefaultCellEditor(packMaterialClassComboBox));
     }
     @Override
     public void doSomethingOnError(RemoteData<User> data) {

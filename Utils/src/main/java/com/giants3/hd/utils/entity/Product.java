@@ -257,7 +257,7 @@ public class Product implements Serializable {
 
 
 	/**
-	 * 出口价  即是FOB
+	 * 出口价  即是FOB  出产价格/美金汇率
 	 */
 	@Basic
 	public float fob;
@@ -983,7 +983,7 @@ public class Product implements Serializable {
 
 
 
-		//更新出厂价格(加上管理费用  即 除以换算比率)
+		//更新出厂价格(加上管理费用  即 除以换算比率)外厂是管理费用
 		price=FloatHelper.scale(cost*(1+globalData.manageRatioForeign));
 
 
