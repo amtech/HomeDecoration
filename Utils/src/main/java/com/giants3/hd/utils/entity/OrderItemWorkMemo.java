@@ -28,4 +28,11 @@ public class OrderItemWorkMemo {
 
     @Lob
     public String memo;
+
+
+
+    /**
+     * 是否已经审核
+     */
+    public  boolean checked;
 }

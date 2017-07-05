@@ -19,6 +19,7 @@ public class ErpOrderRepository  extends ErpRepository{
     public static final String KEY_ORDER = "SO";
     public static final String OS_ID = "OS_ID";
     public static final String KEY_OS_NO = "OS_NO";
+    public static final String KEY_PRD_NO= "PRD_NO";
     private static final String KEY_SALE_NO = "SAL_NO";
     public static final String CHK_DD_START = "chk_dd_start";
     public static final String CHK_DD_END = "chk_dd_end";
@@ -51,27 +52,40 @@ public class ErpOrderRepository  extends ErpRepository{
     public static final String SQL_ORDER_LIST_COUNT_CHECK_DATE =SQL_ORDER_LIST_COUNT+ CheckDateWhereCause;
     public static final String SQL_ORDER_LIST_COUNT_WITH_SALES = " select  count(p.os_no) as count  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO    "  +SALE_WHERE_CAUSE;
 
+    public  static final String OR_WHERE_PRD_LIKE_STUB ="orxxxxxxxxx";
+    public  static final String AND_WHERE_PRD_LIKE_STUB ="andxxxxxxxxx";
+    public  static final String OR_WHERE_PRD_LIKE_SQL =" or  prd_no like :PRD_NO ";
+    public  static final String AND_WHERE_PRD_LIKE_SQL =" and  prd_no like :PRD_NO ";
     private static final String OS_NO_CONDITION_EQUALS = " os_no = ";
     private static final String OS_NO_CONDITION_LIKE = " os_no like ";
-    public static String sql_item_1 = "   select os_no,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from tf_pos  where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO ";
-    public static String sql_item_2 = " select isnull(htxs,0) as htxs,isnull(so_zxs,0) as so_zxs ,khxg,isnull(xgtj,0) as xgtj , isnull(zxgtj,0) as zxgtj ,hpgg ,os_no,itm from tf_pos_z    where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO ";
+    public static String sql_item_1 = "   select os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from tf_pos  where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO " + OR_WHERE_PRD_LIKE_STUB;
+    public static String sql_item_2 = " select isnull(htxs,0) as htxs,isnull(so_zxs,0) as so_zxs ,khxg,isnull(xgtj,0) as xgtj , isnull(zxgtj,0) as zxgtj ,hpgg ,os_no,itm from tf_pos_z    where os_id=:OS_ID and "+ OS_NO_CONDITION_EQUALS +":OS_NO " ;
 
     /**
      * 订单指定查询细项
      */
-    public static final String SQL_ORDER_ITEM_LIST = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg, isnull(b.xgtj,0) as xgtj , isnull(b.zxgtj,0) as zxgtj  ,b.hpgg  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm order by a.os_no DESC ,a.itm asc";
+    public static final String SQL_ORDER_ITEM  = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg, isnull(b.xgtj,0) as xgtj , isnull(b.zxgtj,0) as zxgtj  ,b.hpgg, c.so_data,isnull(d.ut,'') as ut  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm " +
+            " left outer join (select os_no,so_data from mf_pos_z ) as c on a.os_no=c.os_no " +
+
+
+            " left outer join (select ut,prd_no from prdt where knd='2' "+ AND_WHERE_PRD_LIKE_STUB +") as d on d.prd_no=a.prd_no " +
+            " order by a.os_no DESC ,a.itm asc";
+ /**
+     * 订单指定查询细项
+     */
+    public static final String SQL_ORDER_ITEM_LIST = SQL_ORDER_ITEM.replace(OR_WHERE_PRD_LIKE_STUB,"").replace(AND_WHERE_PRD_LIKE_STUB,"");
 
 
     /**
      * 订单item模糊查询
      */
-    public static final String SEARCH_ORDER_ITEMS=SQL_ORDER_ITEM_LIST.replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE);
+    public static final String SEARCH_ORDER_ITEMS=SQL_ORDER_ITEM.replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE).replace(OR_WHERE_PRD_LIKE_STUB, OR_WHERE_PRD_LIKE_SQL).replace(AND_WHERE_PRD_LIKE_STUB, AND_WHERE_PRD_LIKE_SQL);
 
 
     /**
      * 订单item模糊查询 总记录数
      */
-    public static final String SEARCH_COUNT_ORDER_ITEMS=(" select count(*) from ("+sql_item_1 +") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm ").replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE);
+    public static final String SEARCH_COUNT_ORDER_ITEMS=(" select count(*) from ("+sql_item_1 +") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm ").replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE).replace(OR_WHERE_PRD_LIKE_STUB, OR_WHERE_PRD_LIKE_SQL).replace(AND_WHERE_PRD_LIKE_STUB, AND_WHERE_PRD_LIKE_SQL);
 
     //模糊查找  os_no like  ：os_no  and  chk_dd in[]
     public static final String SQL_ORDER_LIST_SEARCH_WITH_CHECK_DATE = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,a.chk_dd  ,b.so_data from  (select p.os_dd  ,p.chk_dd  ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+  CheckDateWhereCause+" )  a  LEFT JOIN\n" +
@@ -226,6 +240,12 @@ public class ErpOrderRepository  extends ErpRepository{
 
 
 
+        for(ErpOrderItem item:result )
+        {
+
+            item.so_data=StringUtils.clipSqlDateData(item.so_data);
+            item.os_dd=StringUtils.clipSqlDateData(item.os_dd);
+        }
 
 
 
@@ -242,11 +262,19 @@ public class ErpOrderRepository  extends ErpRepository{
      * @return
      */
     public List<ErpOrderItem> findItemsByOrderNoLike(String key,int pageIndex,int pageSize) {
-       Query  query=   em.createNativeQuery(
-                SEARCH_ORDER_ITEMS).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO,  "%" + key + '%');
+        final String value = StringUtils.sqlLike(key);
+        Query  query=   em.createNativeQuery(
+                SEARCH_ORDER_ITEMS).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, value).setParameter(KEY_PRD_NO, value);
 
 
         List<ErpOrderItem> result = getOrderItemListQuery(query).setFirstResult(pageIndex*pageSize).setMaxResults(pageSize).list();
+
+        for(ErpOrderItem item:result )
+        {
+
+            item.so_data=StringUtils.clipSqlDateData(item.so_data);
+            item.os_dd=StringUtils.clipSqlDateData(item.os_dd);
+        }
 
 
 
@@ -265,7 +293,8 @@ public class ErpOrderRepository  extends ErpRepository{
     public  int getCountOfSearchOrderItem(String key)
     {
 
-        return (Integer) em.createNativeQuery(SEARCH_COUNT_ORDER_ITEMS ).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%')
+        final String value = StringUtils.sqlLike(key);
+        return (Integer) em.createNativeQuery(SEARCH_COUNT_ORDER_ITEMS ).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, value).setParameter(KEY_PRD_NO, value)
 
                 .getSingleResult();
     }

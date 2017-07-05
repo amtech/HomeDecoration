@@ -7,16 +7,19 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.ErpOrderItem;
 import com.giants3.hd.utils.entity.ErpOrderItemProcess;
 import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.Zhilingdan;
-import com.giants3.hd.utils.entity_erp.ErpWorkFlowOrderItem;
+import com.giants3.hd.utils.entity_erp.WorkFlowMaterial;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.BlobType;
 import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,7 +30,7 @@ import java.util.List;
  */
 
 
-public class ErpWorkRepository  extends ErpRepository{
+public class ErpWorkRepository extends ErpRepository {
 
     //流程排序
     private Comparator<ErpOrderItemProcess> comparator = new Comparator<ErpOrderItemProcess>() {
@@ -41,9 +44,11 @@ public class ErpWorkRepository  extends ErpRepository{
     ;
 
     public String SQL_ZHILINGDAN = "";
+    public String SQL_WORK_FLOW_MATERIAL = "";
 
     public String SQL_ORDER_ITEM_PROCESS_BY_ITM = "";
     public String SQL_ORDER_ITEM_UNCOMPLETE = "";
+    public String SQL_ORDER_ITEM_HAS_START_AND_UNCOMPLETE = "";
 
 
     private EntityManager em;
@@ -55,10 +60,11 @@ public class ErpWorkRepository  extends ErpRepository{
 
 
             SQL_ZHILINGDAN = SqlScriptHelper.readScript("zhilingdan");
+            SQL_WORK_FLOW_MATERIAL = SqlScriptHelper.readScript("work_flow_material.sql");
 
             SQL_ORDER_ITEM_PROCESS_BY_ITM = SqlScriptHelper.readScript("orderItemProcess_itm.sql");
             SQL_ORDER_ITEM_UNCOMPLETE = SqlScriptHelper.readScript("unCompleteOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_COMPLETE);
-
+            SQL_ORDER_ITEM_HAS_START_AND_UNCOMPLETE = SqlScriptHelper.readScript("unCompleteAndStartWorkOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_WORKING);
         }
     }
 
@@ -117,14 +123,27 @@ public class ErpWorkRepository  extends ErpRepository{
      */
     public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no, int itm) {
 
+        return findOrderItemProcesses(os_no, itm, false);
+    }
+
+    /**
+     * 查询指令单完成状态表
+     *
+     * @param os_no
+     * @param itm
+     * @param includeZuzhuang 是否包含组装流程数据
+     * @return
+     */
+    public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no, int itm, boolean includeZuzhuang) {
+
         Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS_BY_ITM)
 
                 .setParameter("os_no", os_no)
                 .setParameter("itm", itm);
-        return getErpOrderItemProcesses(query);
+        return getErpOrderItemProcesses(query, includeZuzhuang);
     }
 
-    private List<ErpOrderItemProcess> getErpOrderItemProcesses(Query query) {
+    private List<ErpOrderItemProcess> getErpOrderItemProcesses(Query query, boolean includeZuzhuang) {
         List<ErpOrderItemProcess> orders = query.unwrap(SQLQuery.class)
                 .addScalar("moDd", StringType.INSTANCE)
                 .addScalar("moNo", StringType.INSTANCE)
@@ -204,14 +223,15 @@ public class ErpWorkRepository  extends ErpRepository{
 
             //移除组装流程
 
-            List<ErpOrderItemProcess> temp = new ArrayList<>();
+
+            List<ErpOrderItemProcess> zuzhuangTemp = new ArrayList<>();
             for (ErpOrderItemProcess process : orders) {
 
                 if (process.mrpNo.startsWith(ErpWorkFlow.CODE_ZUZHUANG)) {
-                    temp.add(process);
+                    zuzhuangTemp.add(process);
                 }
             }
-            orders.removeAll(temp);
+            orders.removeAll(zuzhuangTemp);
 
 
             ArrayUtils.sortList(orders, comparator);
@@ -221,12 +241,23 @@ public class ErpWorkRepository  extends ErpRepository{
             chengping.mrpNo = ErpWorkFlow.CODE_CHENGPIN + chengping.mrpNo;
 
 
+            String url = com.giants3.hd.server.utils.FileUtils.getErpProductPictureUrl(chengping.idNo, "");
+
             String pVersion = StringUtils.spliteId_no(chengping.idNo)[1];
             for (ErpOrderItemProcess process : orders) {
                 process.pVersion = pVersion;
                 process.orderQty = chengping.qty;
+                process.photoUrl = url;
+                process.photoThumb = url;
             }
 
+
+            //需要组装数据 重新添加上。只有在配置流程名称时候需要
+            //有组装 包装流程名称为  组装包装， 否则就叫做包装
+            if (includeZuzhuang) {
+                orders.addAll(zuzhuangTemp);
+
+            }
 
         }
         return orders;
@@ -239,31 +270,21 @@ public class ErpWorkRepository  extends ErpRepository{
      * @param key
      * @return
      */
-    public List<ErpWorkFlowOrderItem> searchUnCompleteOrderItems(String key) {
-
-        final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_UNCOMPLETE)
-                .setParameter("os_no", value)
-                .setParameter("prd_no", value);
-        final List<ErpWorkFlowOrderItem> workFlowOrderItemListQuery = getWorkFlowOrderItemListQuery(query);
+    public List<ErpOrderItem> searchUnCompleteOrderItems(String key) {
 
 
-        for(ErpWorkFlowOrderItem item:workFlowOrderItemListQuery){
-
-            item.pversion=StringUtils.spliteId_no(item.id_no)[1];
-        }
-        return workFlowOrderItemListQuery;
+        return getORderItemsFromSQL(SQL_ORDER_ITEM_UNCOMPLETE, key);
 
 
     }
 
 
-
-    private  List<ErpWorkFlowOrderItem> getWorkFlowOrderItemListQuery(Query query)
-    {
+    private List<ErpOrderItem> getWorkFlowOrderItemListQuery(Query query) {
 
 
-        return  query .unwrap(SQLQuery.class)
+        //增加字段 up
+
+        return query.unwrap(SQLQuery.class)
                 .addScalar("os_no", StringType.INSTANCE)
                 .addScalar("itm", IntegerType.INSTANCE)
                 .addScalar("bat_no", StringType.INSTANCE)
@@ -271,10 +292,92 @@ public class ErpWorkRepository  extends ErpRepository{
                 .addScalar("prd_name", StringType.INSTANCE)
                 .addScalar("id_no", StringType.INSTANCE)
                 .addScalar("qty", IntegerType.INSTANCE)
+                .addScalar("photoUpdateTime", IntegerType.INSTANCE)
+                .addScalar("ut", StringType.INSTANCE)
+                .addScalar("up", FloatType.INSTANCE)
+                .addScalar("amt", FloatType.INSTANCE)
+                .addScalar("hpgg", StringType.INSTANCE)
+                .addScalar("khxg", StringType.INSTANCE)
+                .addScalar("so_data", StringType.INSTANCE)
+                .addScalar("os_dd", StringType.INSTANCE)
                 .addScalar("amt", FloatType.INSTANCE)
                 .addScalar("workFlowState", IntegerType.INSTANCE)
                 .addScalar("workFlowDescribe", StringType.INSTANCE)
-                .setResultTransformer(Transformers.aliasToBean(ErpWorkFlowOrderItem.class)).list();
+                .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class)).list();
 
     }
+
+    public List<WorkFlowMaterial> searchWorkFlowMaterials(String osNo, int itm, String code) {
+
+
+        Query query = em.createNativeQuery(SQL_WORK_FLOW_MATERIAL)
+                .setParameter("os_no", osNo)
+                .setParameter("itm", itm)
+                .setParameter("mrp_no", StringUtils.sqlRightLike(code));
+
+
+        final List<WorkFlowMaterial> list = getList(query);
+
+        for (WorkFlowMaterial material : list) {
+
+            material.mo_dd = StringUtils.clipSqlDateData(material.mo_dd);
+        }
+        return list;
+
+
+    }
+
+
+    private List<WorkFlowMaterial> getList(Query query) {
+
+
+        return query.unwrap(SQLQuery.class)
+                .addScalar("os_no", StringType.INSTANCE)
+                .addScalar("itm", IntegerType.INSTANCE)
+                .addScalar("prd_no", StringType.INSTANCE)
+                .addScalar("prd_name", StringType.INSTANCE)
+                .addScalar("prd_mark", StringType.INSTANCE)
+                .addScalar("mrp_no", StringType.INSTANCE)
+                .addScalar("mo_no", StringType.INSTANCE)
+                .addScalar("mo_dd", StringType.INSTANCE)
+                .addScalar("qty_rsv", IntegerType.INSTANCE)
+                .addScalar("qty", IntegerType.INSTANCE)
+                .addScalar("real_prd_name", StringType.INSTANCE)
+                .addScalar("rem", StringType.INSTANCE)
+                .addScalar("ut", StringType.INSTANCE)
+
+                .setResultTransformer(Transformers.aliasToBean(WorkFlowMaterial.class)).list();
+
+    }
+
+
+
+    public List<ErpOrderItem> searchHasStartWorkFlowUnCompleteOrderItems(String key) {
+
+
+        return getORderItemsFromSQL(SQL_ORDER_ITEM_HAS_START_AND_UNCOMPLETE, key);
+
+    }
+
+
+    private List<ErpOrderItem> getORderItemsFromSQL(String sql, String key) {
+
+        final String value = StringUtils.sqlLike(key);
+        Query query = em.createNativeQuery(sql)
+                .setParameter("os_no", value)
+                .setParameter("prd_no", value);
+        final List<ErpOrderItem> workFlowOrderItemListQuery = getWorkFlowOrderItemListQuery(query);
+
+
+        for (ErpOrderItem item : workFlowOrderItemListQuery) {
+
+            item.pVersion = StringUtils.spliteId_no(item.id_no)[1];
+            item.so_data=StringUtils.clipSqlDateData(item.so_data);
+            item.os_dd=StringUtils.clipSqlDateData(item.os_dd);
+        }
+        return workFlowOrderItemListQuery;
+
+    }
+
+
 }

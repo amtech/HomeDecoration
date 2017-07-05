@@ -24,12 +24,17 @@ public class ErpWorkFlow {
     public static final String CODE_YANSE = "D";
     public static final String CODE_MU = "M";
     public static final String CODE_TIE = "T";
-    public static String[] CODES = new String[]{FIRST_STEP_CODE, SECOND_STEP_CODE, CODE_YANSE,  "C", CODE_CHENGPIN};
+    public static final String CODE_BAOZHUANG = "C";
+    public static String[] CODES = new String[]{FIRST_STEP_CODE, SECOND_STEP_CODE, CODE_YANSE, CODE_BAOZHUANG, CODE_CHENGPIN};
 
-    public static String[] NAMES = new String[]{"胚体加工","白胚", "颜色",  "组装包装","成品仓"};
+
+    public static String NAME_ZUZHUANG="组装";
+    public static String NAME_BAOZHUANG="包装";
+    public static String[] NAMES = new String[]{"胚体加工","白胚", "颜色",  NAME_ZUZHUANG+NAME_BAOZHUANG ,"成品仓"};
     public static final int FIRST_STEP = 1000;
     public static final int LAST_STEP = 6000;
-    public static int[] STEPS = new int[]{FIRST_STEP,2000, 3000,   5000, LAST_STEP};
+    public static final int SECOND_STEP = 2000;
+    public static int[] STEPS = new int[]{FIRST_STEP, SECOND_STEP, 3000,   5000, LAST_STEP};
 
 
     public ErpWorkFlow() {
@@ -44,9 +49,12 @@ public class ErpWorkFlow {
 
     public static List<ErpWorkFlow> WorkFlows;
 
+    public static List<ErpWorkFlow> erpRealWorkFlows;
+
     static {
         int count = CODES.length;
         WorkFlows = new ArrayList<>(count);
+        erpRealWorkFlows=new ArrayList<>(count-2);
         for (int i = 0; i < count; i++) {
 
             ErpWorkFlow workFlow;
@@ -55,7 +63,12 @@ public class ErpWorkFlow {
             workFlow.name = NAMES[i];
             workFlow.step = STEPS[i];
             WorkFlows.add(workFlow);
+            if(i>0&&i<count-1)
+            erpRealWorkFlows.add(workFlow);
+
         }
+
+
 
     }
 

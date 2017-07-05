@@ -6,7 +6,7 @@ import com.giants.hd.desktop.viewImpl.Panel_Zhilingdan;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.ModuleConstant;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Zhilingdan;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 import rx.Subscriber;
 
 import java.awt.*;

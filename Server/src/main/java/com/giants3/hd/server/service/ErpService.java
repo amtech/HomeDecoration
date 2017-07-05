@@ -2,7 +2,8 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.utils.AttachFileUtils;
+import com.giants3.hd.server.utils.*;
+import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
@@ -31,6 +32,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     ErpOrderRepository repository;
 
+    @Autowired
+    ErpWorkService erpWorkService;
+
     EntityManager manager;
 
     @Autowired
@@ -55,8 +59,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     @Autowired
     WorkFlowMessageRepository workFlowMessageRepository;
-    @Autowired
-    OrderItemWorkFlowStateRepository orderItemWorkFlowStateRepository;
+
 
     @Autowired
     WorkFlowRepository workFlowRepository;
@@ -64,6 +67,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     @Autowired
     WorkFlowProductRepository workFlowProductRepository;
+    @Autowired
+    ErpWorkFlowReportRepository workFlowReportRepository;
 
     @Autowired
     WorkFlowArrangerRepository workFlowArrangerRepository;
@@ -99,6 +104,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         EntityManagerHelper helper = EntityManagerHelper.getErp();
         manager = helper.getEntityManager();
         repository = new ErpOrderRepository(manager);
+
     }
 
 
@@ -206,15 +212,116 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
+    /**
+     * 查詢指定用戶可排厂的订单
+     *
+     * 胚体加工的用户（第一个流程的用户） 返回所有未完成的订单
+     *
+     *
+     * 其他流程的工作人员，返回当前流程关联的订单数据
+     *
+     * @param loginUser
+     * @param key
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     @Transactional
     public RemoteData<ErpOrderItem> searchOrderItems(User loginUser, String key, int pageIndex, int pageSize) {
 
+        List<WorkFlowWorker> workFlowWorkers=  workFlowWorkerRepository.findByUserIdEquals(loginUser.id       );
+        if(workFlowWorkers==null||workFlowWorkers.size()==0) //当前用户不是排产人员
+        return wrapData();
 
-        int totalCount = repository.getCountOfSearchOrderItem(key);
-        List<ErpOrderItem> orderItems = repository.findItemsByOrderNoLike(key, pageIndex, pageSize);
-        bindDataToOrderItem(loginUser, orderItems);
 
-        return wrapData(pageIndex, pageSize, (totalCount - 1) / pageSize + 1, totalCount, orderItems);
+        WorkFlowWorker firstStepWorker=workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowStepEquals(loginUser.id,ErpWorkFlow.FIRST_STEP);
+        List<ErpOrderItem > orderItems;
+        if(firstStepWorker==null)
+        {
+
+            //      非第一道的用户
+              orderItems=   erpWorkService.searchHasStartWorkFlowUnCompleteOrderItems(key);
+
+
+
+        }else {
+            orderItems=  erpWorkService.searchUnCompleteOrderItems(key);
+
+            List<ErpOrderItem> result=new ArrayList<>();
+
+            //过滤  进行产品排产过滤  【0-5000】 铁件  【5000-9999】木剑
+            for(ErpOrderItem erpOrderItem:orderItems)
+            {
+                int prd_no_code=-1;
+
+                try {
+                    prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3,   Math.min(7, erpOrderItem.prd_no.length())));
+                }catch (Throwable t)
+                {}
+                if(prd_no_code==-1)
+                {result.add(erpOrderItem);
+
+                }else
+                if(prd_no_code>=0&&prd_no_code<=5000&&firstStepWorker.tie)
+                {
+                    result.add(erpOrderItem);
+                }else
+                if(prd_no_code>5000&&prd_no_code<=9999&&firstStepWorker.mu){
+
+                    result.add(erpOrderItem);
+                }
+
+
+
+            }
+
+            orderItems=result;
+
+
+        }
+
+
+
+
+        //第一流程人员  不进行筛选
+        if(firstStepWorker==null) {
+            //流程过滤  如果当前流程已经完成100% 去除  ，如果上一流程未满100% 也去除
+
+            List<ErpOrderItem> result = new ArrayList<>();
+            for (ErpOrderItem erpOrderItem : orderItems) {
+
+
+
+                //遍历权限配置
+                for(WorkFlowWorker workFlowWorker:workFlowWorkers) {
+
+                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, workFlowWorker.workFlowStep);
+                    //如果当前流程已经完成100% 去除  ，
+                    if (report != null && report.percentage > 0.9999) continue;
+
+                    int previousStep = ErpWorkFlow.findPrevious(workFlowWorker.workFlowStep);
+                    //   上一道不受百分比控制 白胚加工
+                    if (previousStep != ErpWorkFlow.FIRST_STEP) {
+                        report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, previousStep);
+                        //如果上一流程未满100% 也去除//
+                        if (report == null || report.percentage < 1) continue;
+                    }
+
+
+                    result.add(erpOrderItem);
+                    break;
+                }
+            }
+
+
+            orderItems=result;
+        }
+//
+//
+
+
+
+        return wrapData(0,orderItems.size(),1,orderItems.size(),orderItems );
 
     }
 
@@ -238,10 +345,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             //  item.prd_no
 
             if (product != null) {
-                item.ut = product.pUnitName;
+
                 item.productId = product.id;
-                item.url = product.url;
-                item.thumbnail = product.thumbnail;
+
+
                 item.packAttaches = product.packAttaches;
                 item.packageInfo = product.packInfo;
 
@@ -702,52 +809,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
-    /**
-     * 获取指定用户可以操作的生产流程转移的订单流程items
-     *
-     * @return
-     */
-    public RemoteData<OrderItemWorkFlowState> getOrderItemForTransform(User loginUser) {
-
-
-        /**
-         * 找出负责人 ，并且不是最后一道流程,最后一道流程不能发起提交了。
-         */
-        List<WorkFlow> workFlows = workFlowRepository.findByUserIdEqualsAndFlowStepNot(loginUser.id, WorkFlow.FINAL_STEP);
-
-        if (workFlows == null || workFlows.size() == 0) {
-            return wrapError("你不是流程负责人，不能发送流程操作");
-        }
-
-
-        final int size = workFlows.size();
-        int[] steps = new int[size];
-        for (int i = 0; i < size; i++) {
-            steps[i] = workFlows.get(i).flowStep;
-
-        }
-
-        List<OrderItemWorkFlowState> workFlowStates = orderItemWorkFlowStateRepository.findByWorkFlowStepInAndQtyIsGreaterThanOrderByOrderNameDesc(steps, 0);
-
-        List<OrderItemWorkFlowState> validData = new ArrayList<>();
-
-        for (OrderItemWorkFlowState state : workFlowStates) {
-            if (state.unSendQty > 0 && !StringUtils.isEmpty(state.nextWorkFlowName)) {
-                validData.add(state);
-            }
-
-        }
-
-//        //已经发送 或者 已经接受未审核的  都不能再发。
-//        List<WorkFlowOrderItem> orderItems = orderItemWorkFlowRepository.findByWorkFlowStepInAndWorkFlowStateEqualsOrderByOrderNameDesc(steps, 0);
-//
-//
-//        List<ErpOrderItem> erpOrderItems = convertWorkFlowItemToErpOrderItem(orderItems);
-
-        return wrapData(validData);
-
-
-    }
 
 
     /**
@@ -809,6 +870,22 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     }
 
+    /**
+     * 未处理的流程消息数量
+     * @param loginUser
+     * @return
+     */
+    public int getUnHandleWorkFlowMessageCount(User loginUser)
+    {
+
+
+
+        RemoteData<WorkFlowMessage> remoteData=getUnHandleWorkFlowMessage(loginUser);
+
+
+        return remoteData.totalCount;
+
+    }
 
     /**
      * 获取指定用户发送的流程消息列表
@@ -847,107 +924,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     }
 
-    public RemoteData<OrderItemWorkFlowState> getWorkFlowOrderItem(User user, String key, int pageIndex, int pageSize) {
-
-        String keyForSearch = "%" + key + "%";
-        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-
-        Page<OrderItemWorkFlowState> pageValue = orderItemWorkFlowStateRepository.findByOrderNameLikeAndQtyIsGreaterThanOrProductFullNameLikeAndQtyIsGreaterThanOrderByOrderNameDescCreateTimeDesc(keyForSearch, 0, keyForSearch, 0, pageable);
 
 
-        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), pageValue.getContent());
 
 
-        // return wrapData(orderItemWorkFlowStateRepository.findByOrderNameLikeOrProductFullNameLikeOrderNameDescCreateTimeDesc(key,key));
-
-
-    }
-
-
-    /**
-     * 获取制定订单的流程生产状态
-     *
-     * @param orderItemId
-     * @return
-     */
-    public RemoteData<WorkFlowReport> getOrderItemWorkState(long orderItemId) {
-
-
-        OrderItemWorkFlow workFlowOrderItem = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
-
-        if (workFlowOrderItem == null)
-
-        {
-            return wrapError("未找到该订单,该订单未排厂");
-
-        }
-
-
-        String[] workFlowSteps = workFlowOrderItem.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        String[] workFlowNames = workFlowOrderItem.workFlowNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        String[] workFlowConfigs = StringUtils.split(workFlowOrderItem.configs);
-
-
-        int size = workFlowSteps.length;
-
-        String[] productTypes = workFlowOrderItem.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-
-        List<WorkFlowReport> workFlowReports = new ArrayList<>();
-
-
-        for (int i = 0; i < size; i++) {
-
-            WorkFlowReport report = new WorkFlowReport();
-            int workFlowStep = Integer.valueOf(workFlowSteps[i]);
-
-
-            String[] workFlowTypes = StringUtils.split(workFlowConfigs[i], StringUtils.STRING_SPLIT_COMMA);
-            int divideSize = 0;
-
-            //判断平均百分比数量
-            if (workFlowOrderItem.produceType == ProduceType.SELF_MADE) {
-                for (int index = 0; index < workFlowTypes.length; index++) {
-                    divideSize += Integer.valueOf(workFlowTypes[index]);
-                }
-            } else {
-                divideSize = 1;
-            }
-            divideSize = Math.max(divideSize, 1);
-
-            report.orderItemId = orderItemId;
-            report.orderName = workFlowOrderItem.orderName;
-            report.workFlowStep = workFlowStep;
-            report.workFlowName = workFlowNames[i];
-
-
-            List<OrderItemWorkFlowState> workFlowStates = orderItemWorkFlowStateRepository.findByOrderItemIdEqualsAndWorkFlowStepEquals(orderItemId, workFlowStep);
-
-            //无状态数据 表示流程未到。
-            if (workFlowStates.size() == 0)
-                report.percentage = 0;
-            else {
-
-
-                for (OrderItemWorkFlowState state : workFlowStates) {
-
-                    if (state.nextWorkFlowStep > 0) {
-                        //当前数量为0 表示已经全部发出
-                        report.percentage += (float) (state.sentQty) / state.orderQty;
-                    }
-
-                }
-
-                report.percentage /= divideSize;
-            }
-            workFlowReports.add(report);
-
-
-        }
-
-
-        return wrapData(workFlowReports);
-    }
 
     public RemoteData<OrderItem> searchOrderItem(String key, int pageIndex, int pageSize) {
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
@@ -964,43 +944,27 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<Void> cancelOrderWorkFlow(User loginUser, long orderItemWorkFlowId) {
 
 
-        OrderItemWorkFlow orderItemWorkFlow = orderItemWorkFlowRepository.findOne(orderItemWorkFlowId);
-        if (orderItemWorkFlow == null) {
-            return wrapError("该订单未排厂");
-        }
-
-
-        boolean isSelfMade = orderItemWorkFlow.produceType == ProduceType.SELF_MADE;
-
-        WorkFlowArranger workFlowArranger = null;
-        if (isSelfMade) {
-
-            workFlowArranger = workFlowArrangerRepository.findFirstByUserIdEqualsAndSelfMadeEquals(loginUser.id, true);
-        } else {
-            workFlowArranger = workFlowArrangerRepository.findFirstByUserIdEqualsAndPurchaseEquals(loginUser.id, true);
-        }
-
-        if (workFlowArranger == null) {
-            return wrapError("无权限撤销排厂操作");
-        }
-
-
-        int rowCount = orderItemWorkFlowStateRepository.deleteByOrderItemIdEquals(orderItemWorkFlow.orderItemId);
-
-        logger.info("删除订单" + orderItemWorkFlow.orderName + "," + orderItemWorkFlow.productFullName + "流程数据，共" + rowCount + "条");
-
-//        rowCount = workFlowMessageRepository.deleteByOrderItemIdEquals(orderItemWorkFlow.orderItemId);
-
-
-//        logger.info("删除订单" + orderItemWorkFlow.orderName + "," + orderItemWorkFlow.productFullName + "流程消息数据，共" + rowCount + "条");
-
-
-        orderItemWorkFlow.workFlowDiscribe = "";
-
-        orderItemWorkFlowRepository.save(orderItemWorkFlow);
 
         return wrapData();
 
+
+    }
+
+
+    public RemoteData<WorkFlowMessage> getWorkFlowMessageByOrderItem(User user, String osNo, int itm) {
+
+
+        return wrapData(workFlowMessageRepository.findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(osNo,itm));
+
+    }
+
+    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user) {
+
+
+
+
+
+        return wrapData(workFlowMessageRepository.findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(user.id,user.id));
 
     }
 

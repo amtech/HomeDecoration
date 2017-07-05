@@ -8,7 +8,9 @@ import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.entity_erp.ErpWorkFlowOrderItem;
+
+import com.giants3.hd.utils.entity_erp.WorkFlowMaterial;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -97,12 +102,12 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             zhilingdan.isJinhuoOverDue = isJinhuoOverDue(zhilingdan);
 
             //日期截断处理
-            if (!StringUtils.isEmpty(zhilingdan.caigou_dd))
-                zhilingdan.caigou_dd = zhilingdan.caigou_dd.substring(0, 10);
-            if (!StringUtils.isEmpty(zhilingdan.jinhuo_dd))
-                zhilingdan.jinhuo_dd = zhilingdan.jinhuo_dd.substring(0, 10);
-            if (!StringUtils.isEmpty(zhilingdan.mo_dd))
-                zhilingdan.mo_dd = zhilingdan.mo_dd.substring(0, 10);
+
+                zhilingdan.caigou_dd =StringUtils.clipSqlDateData( zhilingdan.caigou_dd) ;
+
+                zhilingdan.jinhuo_dd = StringUtils.clipSqlDateData(zhilingdan.jinhuo_dd) ;
+
+                zhilingdan.mo_dd = StringUtils.clipSqlDateData(zhilingdan.mo_dd) ;
 
 
         }
@@ -195,20 +200,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 //
 //    }
 
-    /**
-     * 查找指定订单的排厂数据
-     *
-     * @param os_no
-     * @return
-     */
 
-    public List<ErpOrderItemProcess> findOrderItemProcess(String os_no, int itm) {
-
-
-        return erpWorkRepository.findOrderItemProcesses(os_no, itm);
-
-
-    }
 
 
     /**
@@ -224,7 +216,8 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         //本地不存在 查询erp。
         if (ArrayUtils.isEmpty(byOsNoEqualsAndPrdNoEquals)) {
 
-            List<ErpOrderItemProcess> processes = findOrderItemProcess(os_no, itm);
+            List<ErpOrderItemProcess> processes =    erpWorkRepository.findOrderItemProcesses(os_no, itm,true);
+
             if (ArrayUtils.isEmpty(processes))
                 return wrapError("该订单未排厂");
 
@@ -233,6 +226,19 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
             //不以abcd开头的process 数据，就是成品数据
+
+
+
+            boolean  hasZuzhuang=false;
+            for(ErpOrderItemProcess process:processes)
+            {
+                if(process.mrpNo.startsWith(ErpWorkFlow.CODE_ZUZHUANG))
+                {hasZuzhuang=true;
+                    break;
+
+                }
+
+            }
 
 
             for (ErpWorkFlow erpWorkFlow : ErpWorkFlow.WorkFlows) {
@@ -249,7 +255,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
                     if (process.mrpNo.startsWith(erpWorkFlow.code)) {
                         findProcess = process;
-                        typeSet.add(process.mrpNo.substring(0,1));// 取头两位
+                        typeSet.add(process.mrpNo.substring(0,2));// 取头两位
 
                         hasThisFlow = true;
 
@@ -259,7 +265,18 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
                 if (!hasThisFlow) continue;
                 ErpWorkFlowReport erpWorkFlowReport = new ErpWorkFlowReport();
                 erpWorkFlowReport.workFlowCode = erpWorkFlow.code;
-                erpWorkFlowReport.workFlowName = erpWorkFlow.name;
+
+                //包装类型， 检查是否有组装
+                if(ErpWorkFlow.CODE_BAOZHUANG.equals(erpWorkFlow.code))
+                {
+
+
+                    erpWorkFlowReport.workFlowName = (hasZuzhuang?ErpWorkFlow.NAME_ZUZHUANG:"")+ErpWorkFlow.NAME_BAOZHUANG;
+                }else
+                {
+                    erpWorkFlowReport.workFlowName = erpWorkFlow.name;
+                }
+
                 erpWorkFlowReport.workFlowStep = erpWorkFlow.step;
                 erpWorkFlowReport.osNo = os_no;
                 erpWorkFlowReport.itm = itm;
@@ -280,14 +297,54 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
     /**
-     *
+     * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
      */
-    public List<ErpWorkFlowOrderItem> searchUnCompleteOrderItems(String key) {
+    public List<ErpOrderItem> searchUnCompleteOrderItems(String key) {
 
-        return erpWorkRepository.searchUnCompleteOrderItems(key);
+
+
+        //配置 url
+        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItems(key);
+
+
+        for (ErpOrderItem orderItem:erpWorkFlowOrderItems) {
+
+
+            orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no,String.valueOf(orderItem.photoUpdateTime));
+            orderItem.thumbnail =orderItem.url ;
+        }
+
+        return erpWorkFlowOrderItems;
 
 
     }
+
+
+
+
+    /**
+     *  查找已经开启流程活动，并且未完成的订单款项
+     */
+    public List<ErpOrderItem> searchHasStartWorkFlowUnCompleteOrderItems(String key) {
+
+
+
+        //配置 url
+        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchHasStartWorkFlowUnCompleteOrderItems(key);
+
+
+        for (ErpOrderItem orderItem:erpWorkFlowOrderItems) {
+
+
+            orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no, String.valueOf(orderItem.photoUpdateTime));
+            orderItem.thumbnail =orderItem.url ;
+        }
+
+        return erpWorkFlowOrderItems;
+
+
+    }
+
 
     /**
      * 查找指定节点可发送的订单流程数据
@@ -315,7 +372,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
         //查找前一个流程
-        if(flowStep!=ErpWorkFlow.FIRST_STEP)
+        if(flowStep!=ErpWorkFlow.FIRST_STEP&&flowStep!= ErpWorkFlow.SECOND_STEP)  //第一道第二道 都不需要上一道100%完成
         {
           int previousStep=  ErpWorkFlow.findPrevious(flowStep);
 
@@ -378,8 +435,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
                 process.nextWorkFlowName = nextFlow.name;
             }
 
-            process.photoUrl = product == null ? "" : product.url;
-            process.photoThumb = product == null ? "" : product.thumbnail;
+
 
 
             ErpOrderItemProcess localProcess = erpOrderItemProcessRepository.findFirstByMoNoEqualsAndMrpNoEquals(process.moNo,process.mrpNo);
@@ -390,7 +446,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
             //判断判断类型 铁木
             //只有白胚，颜色才区分铁木
-            if(process.mrpNo.startsWith(ErpWorkFlow.CODE_YANSE)||process.mrpNo.startsWith(ErpWorkFlow.SECOND_STEP_CODE))
+            if(process.mrpNo.startsWith(ErpWorkFlow.CODE_YANSE)||process.mrpNo.startsWith(ErpWorkFlow.SECOND_STEP_CODE)
+
+                    ||process.mrpNo.startsWith(ErpWorkFlow.FIRST_STEP_CODE)  //第一道也增加鐵木
+
+                    )
             {
 
                 String code=process.mrpNo.substring(1,2);
@@ -506,6 +566,8 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         erpOrderItemProcess.unSendQty -= tranQty;
         erpOrderItemProcess.sendingQty += tranQty;
 
+
+
         erpOrderItemProcess=   erpOrderItemProcessRepository.save(erpOrderItemProcess);
 
 
@@ -522,6 +584,9 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         workFlowMessage.sendMemo = memo == null ? "" : memo;
         workFlowMessage.area = workFlowArea.name  ;
         workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
+
+        workFlowMessage.senderId=user.id;
+        workFlowMessage.senderName=user.toString();
 
         workFlowMessage.fromFlowStep = erpOrderItemProcess.currentWorkFlowStep;
         workFlowMessage.fromFlowName = erpOrderItemProcess.currentWorkFlowName;
@@ -566,6 +631,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             workFlowMessage.state = WorkFlowMessage.STATE_PASS;
             workFlowMessage.receiveTime = Calendar.getInstance().getTimeInMillis();
             workFlowMessage.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+            workFlowMessage.receiverId=user.id;
+            workFlowMessage.receiverName=user.toString();
+
+
             workFlowMessageRepository.save(workFlowMessage);
 
 
@@ -668,6 +738,10 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             message.checkTime = Calendar.getInstance().getTimeInMillis();
             message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
+            message.receiverId=loginUser.id;
+            message.receiverName=loginUser.toString();
+
+
 
         } else if (message.state == WorkFlowMessage.STATE_REWORK) {
             //返工 状态 自动通过。
@@ -675,7 +749,8 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             message.receiveTime = Calendar.getInstance().getTimeInMillis();
             message.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
-
+            message.receiverId=loginUser.id;
+            message.receiverName=loginUser.toString();
         }
 
         workFlowMessageRepository.save(message);
@@ -864,4 +939,25 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         return wrapData();
 
     }
+
+
+    public RemoteData<WorkFlowMaterial> getWorkFlowMaterials(String osNo, int itm, String workFlowCode) {
+
+
+
+
+
+      List<WorkFlowMaterial>  result=erpWorkRepository.searchWorkFlowMaterials(osNo,itm,workFlowCode);
+
+
+
+
+
+        return wrapData(result);
+
+
+    }
+
+
+
 }

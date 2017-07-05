@@ -22,4 +22,10 @@ public class ProductWorkMemo {
 
     @Lob
     public String memo;
+
+
+
+
+
+
 }

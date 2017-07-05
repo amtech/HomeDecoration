@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.entity.Zhilingdan;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

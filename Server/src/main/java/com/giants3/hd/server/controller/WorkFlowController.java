@@ -5,6 +5,7 @@ import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.utils.noEntity.WorkFlowMemoAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -80,35 +81,11 @@ public class WorkFlowController extends BaseController {
         return  workFlowService.saveWorkFlowProduct(  workFlowProduct   );
 
     }
-/**
-     * 保存产品的流程配置信息
-     * @param workFlowProduct
-     * @return
-     */
-    @RequestMapping(value = "/startOrderItemWorkFlow", method = RequestMethod.POST)
-    public  @ResponseBody RemoteData<OrderItemWorkFlow> startOrderItemWorkFlow(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestBody OrderItemWorkFlow workFlowProduct) {
-
-            RemoteData<OrderItemWorkFlow>      result=     workFlowService.startOrderItemWorkFlow( user, workFlowProduct   );
-        return result;
-
-
-
-    }
 
 
 
 
-    /**
-     * 根据订单货款id查询 流程 信息
-     * @param orderItemId
-     * @return
-     */
-    @RequestMapping(value = "/orderItemState", method = RequestMethod.GET)
-    public  @ResponseBody RemoteData<OrderItemWorkFlowState> findOrderItemState(@RequestParam(value = "orderItemId")     long orderItemId) {
 
-        return  workFlowService.findOrderItemWorkFlowState(orderItemId    );
-
-    }
 
 
 
@@ -287,6 +264,51 @@ public class WorkFlowController extends BaseController {
 
 
         return workFlowService.deleteWorkFlowArea(id );
+
+
+
+    }
+ /**
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/memoAuth", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMemoAuth> getWorkFlowMemoAuth(
+            @ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+
+
+    ) {
+
+
+        return workFlowService.getWorkFlowMemoAuth(user );
+
+
+
+    }
+/**
+     *
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/checkMemo", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMemoAuth> checkWorkFlowMemo(
+            @ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+            ,
+            @RequestParam(value = "orderItemWorkMemoId" ) long orderItemWorkMemoId,
+            @RequestParam(value = "check" ) boolean check
+
+
+    ) {
+
+
+        return workFlowService.checkWorkFlowMemo(user,orderItemWorkMemoId,check );
 
 
 

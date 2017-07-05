@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.Zhilingdan;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 
 import java.util.List;
 

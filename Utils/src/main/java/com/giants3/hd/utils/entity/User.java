@@ -6,6 +6,7 @@ package com.giants3.hd.utils.entity;
 */
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
+import com.giants3.hd.utils.noEntity.CompanyPosition;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -44,8 +45,13 @@ public class User implements Serializable,Valuable {
     public boolean deleted;
 
 
-
+    /**
+     * {@link CompanyPosition#position}
+     */
     public int position;
+    /**
+     * {@link CompanyPosition#positionName}
+     */
     public String  positionName;
 
 

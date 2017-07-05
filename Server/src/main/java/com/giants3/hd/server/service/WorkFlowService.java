@@ -4,6 +4,8 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.CompanyPosition;
+import com.giants3.hd.utils.noEntity.WorkFlowMemoAuth;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -51,8 +53,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     @Autowired
     OrderItemWorkFlowRepository orderItemWorkFlowRepository;
-    @Autowired
-    OrderItemWorkFlowStateRepository orderItemWorkFlowStateRepository;
+
 
 
     @Autowired
@@ -75,7 +76,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     @Autowired
     WorkFlowAreaRepository workFlowAreaRepository;
-
+    @Autowired
+    OrderItemWorkMemoRepository orderItemWorkMemoRepository;
 
     @Autowired
 
@@ -193,150 +195,16 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     public void saveOrderItemWorkFlow(OrderItemWorkFlow orderItemWorkFlow) {
 
 
-
-
-
-
     }
 
 
-    /**
-     * 启动订单生产流程
-     *
-     * @param orderItemWorkFlow
-     */
-    @Transactional(rollbackFor = {HdException.class})
-    public RemoteData<OrderItemWorkFlow> startOrderItemWorkFlow(User loginUser, OrderItemWorkFlow orderItemWorkFlow) {
-
-
-        //人员验证
-        WorkFlowArranger workFlowArranger = null;
-        if (orderItemWorkFlow.produceType == ProduceType.SELF_MADE) {
-            workFlowArranger = workFlowArrangerRepository.findFirstByUserIdEqualsAndSelfMadeEquals(loginUser.id, true);
-        }
-        if (orderItemWorkFlow.produceType == ProduceType.PURCHASE) {
-            workFlowArranger = workFlowArrangerRepository.findFirstByUserIdEqualsAndPurchaseEquals(loginUser.id, true);
-        }
-
-        if (workFlowArranger == null) {
-            return wrapError("没有排厂权限");
-
-
-        }
-
-         if(!StringUtils.isEmpty(orderItemWorkFlow.workFlowDiscribe))
-         {
-             return wrapError("订单已经排厂");
-             //
-         }
-
-
-        //初始化， 发送第一步
-
-
-        String[] workFlowSteps = orderItemWorkFlow.workFlowSteps.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-
-        String[] workFlowNames = orderItemWorkFlow.workFlowNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-        OrderItem orderItem = orderIemRepository.findOne(orderItemWorkFlow.orderItemId);
-
-//        Order order = orderRepository.findFirstByOsNoEquals(orderItem.osNo);
-//        if (order != null) {
-//            orderItemWorkFlow.orderId = order.id;
-//            orderItemWorkFlow.orderName = order.osNo;
-//
-//
-//        } else {
-//            logger.error("can not find order  by osName:" + orderItem.osNo);
-//        }
-
-        orderItemWorkFlow.productFullName = orderItem.prdNo;
-
-        boolean isSelfMade = orderItemWorkFlow.produceType == ProduceType.SELF_MADE;
-        StringBuilder describe = new StringBuilder();
-
-
-        String[] factoryIds = StringUtils.split(isSelfMade ? orderItemWorkFlow.conceptusFactoryIds : orderItemWorkFlow.produceFactoryId);
-        String[] factoryNames = StringUtils.split(isSelfMade ? orderItemWorkFlow.conceptusFactoryNames : orderItemWorkFlow.produceFactoryName);
-
-
-        String[] productTypes = !isSelfMade ? null : orderItemWorkFlow.productTypes.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-        String[] productTypeNames = !isSelfMade ? null : orderItemWorkFlow.productTypeNames.split(ConstantData.STRING_DIVIDER_SEMICOLON);
-
-
-        int size = isSelfMade ? productTypes.length : 1;
-
-        //二级排厂  排给厂家
-
-
-        //不同产品类型， 对应不同的orderitemstate  就有多条流程记录  外厂就只有一条
-        for (int i = 0; i < size; i++) {
-
-            OrderItemWorkFlowState orderItemWorkFlowState = new OrderItemWorkFlowState();
-//            orderItemWorkFlowState.orderId = orderItemWorkFlow.orderId;
-//            orderItemWorkFlowState.orderItemId = orderItemWorkFlow.orderItemId;
-//            orderItemWorkFlowState.orderItemWorkFLowId = orderItemWorkFlow.id;
-            orderItemWorkFlowState.orderName = orderItemWorkFlow.orderName;
-            orderItemWorkFlowState.productFullName = StringUtils.isEmpty(orderItem.pVersion) ? orderItem.prdNo : (orderItem.prdNo + "-" + orderItem.pVersion);
-            orderItemWorkFlowState.photoThumb = orderItem.thumbnail;
-            orderItemWorkFlowState.pictureUrl = orderItem.url;
-            orderItemWorkFlowState.workFlowStep = Integer.valueOf(workFlowSteps[0]);
-            orderItemWorkFlowState.workFlowName = workFlowNames[0];
-            orderItemWorkFlowState.nextWorkFlowStep = Integer.valueOf(workFlowSteps[1]);
-            orderItemWorkFlowState.nextWorkFlowName = workFlowNames[1];
-            orderItemWorkFlowState.factoryId = factoryIds[i];
-            orderItemWorkFlowState.factoryName = factoryNames[i];
-
-
-            //自制有类型数据
-            if (isSelfMade) {
-                orderItemWorkFlowState.productType = productTypes[i];
-                orderItemWorkFlowState.productTypeName = productTypeNames[i];
-
-            }
-
-
-            orderItemWorkFlowState.qty = orderItem.qty;
-            orderItemWorkFlowState.unSendQty = orderItem.qty;
-            orderItemWorkFlowState.orderQty = orderItem.qty;
-            orderItemWorkFlowState.createTime = Calendar.getInstance().getTimeInMillis();
-            orderItemWorkFlowState.createTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
-            orderItemWorkFlowStateRepository.save(orderItemWorkFlowState);
-            describe.append(orderItemWorkFlowState.getMessage());
-            describe.append("\n\r");
-
-
-        }
-
-
-        orderItemWorkFlow.workFlowDiscribe = describe.toString();
-        orderItemWorkFlow = orderItemWorkFlowRepository.save(orderItemWorkFlow);
-
-
-
-        if (orderItem != null) {
-
-            orderItem.orderWorkFlowId = orderItemWorkFlow.id;
-            orderItem.workFlowDescribe = describe.toString();
-            orderIemRepository.save(orderItem);
-        }
-
-
-
-
-
-
-        return findWorkFlowByOrderItemId(orderItemWorkFlow.orderItemId);
-
-    }
 
 
     /**
      * 排厂自动发送流程信息
      */
-    private void sendMessageFromStart()
-    {}
+    private void sendMessageFromStart() {
+    }
 
     public RemoteData<OrderItemWorkFlow> findWorkFlowByOrderItemId(long orderItemId) {
 
@@ -344,21 +212,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
         return wrapData(orderItemWorkFlow);
     }
 
-    public RemoteData<OrderItemWorkFlowState> findOrderItemWorkFlowState(long orderItemId) {
 
 
-        List<OrderItemWorkFlowState> list = orderItemWorkFlowStateRepository.findByQtyIsGreaterThanAndOrderItemIdEqualsOrderByOrderNameDescCreateTimeDesc(0, orderItemId);
-        return wrapData(list);
-
-    }
-
-    public RemoteData<OrderItemWorkFlowState> searchOrderItemWorkFlowState(User user, String key, int pageIndex, int pageSize) {
-
-
-        return null;
-
-
-    }
 
     /**
      * 保存产品排厂类型
@@ -387,28 +242,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     }
 
-    /**
-     * 获取关联的流程信息
-     *
-     * @param os_no
-     * @param prd_no
-     * @param workFlowStep
-     * @return
-     */
-    public RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(String os_no,String prd_no, int workFlowStep) {
 
-        List<OrderItemWorkFlowState> states = orderItemWorkFlowStateRepository.findByOrderNameEqualsAndProductFullNameEqualsAndWorkFlowStepEqualsAndUnSendQtyGreaterThan(os_no,prd_no, workFlowStep, 0);
-
-        List<OrderItemWorkFlowState> result = new ArrayList<>();
-        for (OrderItemWorkFlowState state : states) {
-            if (state.nextWorkFlowStep > 0)
-                result.add(state);
-
-        }
-
-        return wrapData(result);
-
-    }
 
     public RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(long orderItemId) {
         OrderItemWorkFlow orderItemWorkFlow = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
@@ -430,7 +264,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         if (workFlowWorker.userId <= 0) return wrapError("未选择用户");
-        if (StringUtils.isEmpty(workFlowWorker.workFlowName  ) ) return wrapError("未选择流程");
+        if (StringUtils.isEmpty(workFlowWorker.workFlowName)) return wrapError("未选择流程");
 
         return wrapData(workFlowWorkerRepository.save(workFlowWorker));
 
@@ -473,25 +307,13 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     }
 
-    public RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(User loginUser,String os_no,int  itm , int workFlowStep) {
+    public RemoteData<WorkFlowMessage> getOrderItemWorkFlowMessage(User loginUser, String os_no, int itm, int workFlowStep) {
 
 
+        List<WorkFlowMessage> messages = workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowStep, os_no, itm);
 
 
-
-
-
-
-         List<WorkFlowMessage> messages=workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowStep,  os_no,  itm);
-
-
-
-
-
-
-        return wrapData(messages );
-
-
+        return wrapData(messages);
 
 
     }
@@ -499,30 +321,27 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     public RemoteData<WorkFlowEvent> findWorkFlowEvents() {
 
 
-        List<WorkFlowEvent> result=workFlowEventRepository.findAll();
+        List<WorkFlowEvent> result = workFlowEventRepository.findAll();
         return wrapData(result);
 
 
-    }public RemoteData<WorkFlowEventWorker> findWorkFlowEventWorkers() {
+    }
+
+    public RemoteData<WorkFlowEventWorker> findWorkFlowEventWorkers() {
 
 
-        List<WorkFlowEventWorker> result=workFlowEventWorkerRepository.findAll();
+        List<WorkFlowEventWorker> result = workFlowEventWorkerRepository.findAll();
         return wrapData(result);
 
 
     }
 
 
-
-
-
-    public  RemoteData<WorkFlowArea> findWorkFlowAreas()
-    {
-       return wrapData( workFlowAreaRepository.findAll());
+    public RemoteData<WorkFlowArea> findWorkFlowAreas() {
+        return wrapData(workFlowAreaRepository.findAll());
     }
 
     public RemoteData<WorkFlowArea> saveWorkFlowArea(WorkFlowArea data) {
-
 
 
         return wrapData(workFlowAreaRepository.save(data));
@@ -534,7 +353,65 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         workFlowAreaRepository.delete(id);
-        return wrapData( );
+        return wrapData();
+
+
+    }
+
+    /**
+     * 获取节点修改权限
+     *
+     * @param user
+     * @return
+     */
+    public RemoteData<WorkFlowMemoAuth> getWorkFlowMemoAuth(User user) {
+
+
+        final List<ErpWorkFlow> erpRealWorkFlows = ErpWorkFlow.erpRealWorkFlows;
+        int size = erpRealWorkFlows.size();
+        //只有厂长有审核权限
+        boolean checkable = user.position == CompanyPosition.FACTORY_DIRECTOR_CODE;
+        //管理人员可以修改
+        boolean modifiable = user.position == CompanyPosition.WORK_FLOW_MANAGER_CODE;
+
+
+        List<WorkFlowMemoAuth> workFlowMemoAuths = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            WorkFlowMemoAuth workFlowMemoAuth = new WorkFlowMemoAuth();
+
+            ErpWorkFlow erpWorkFlow = erpRealWorkFlows.get(i);
+            workFlowMemoAuth.workFlowStep = erpWorkFlow.step;
+            workFlowMemoAuth.checkable = checkable;
+
+
+            //流程节点人员 也可以修改
+            List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndWorkFlowStepEquals(user.id, erpWorkFlow.step);
+
+            //
+            workFlowMemoAuth.modifiable = modifiable || (workFlowWorkers != null && workFlowWorkers.size() > 0);
+            workFlowMemoAuths.add(workFlowMemoAuth);
+
+        }
+
+        return wrapData(workFlowMemoAuths);
+
+
+    }
+
+    public RemoteData<WorkFlowMemoAuth> checkWorkFlowMemo(User user, long orderItemWorkMemoId, boolean check) {
+
+
+        OrderItemWorkMemo orderItemWorkMemo=orderItemWorkMemoRepository.findOne(orderItemWorkMemoId);
+        if (orderItemWorkMemo==null)
+            return wrapError("备注信息未保存");
+
+
+        orderItemWorkMemo.checked=check;
+        orderItemWorkMemoRepository.save(orderItemWorkMemo);
+
+
+        return wrapData();
+
 
 
     }

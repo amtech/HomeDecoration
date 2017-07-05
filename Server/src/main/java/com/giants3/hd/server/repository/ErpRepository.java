@@ -33,6 +33,9 @@ public class ErpRepository {
                 .addScalar("xgtj", FloatType.INSTANCE)
                 .addScalar("zxgtj", FloatType.INSTANCE)
                 .addScalar("hpgg", StringType.INSTANCE)
+                .addScalar("ut", StringType.INSTANCE)
+                .addScalar("os_dd", StringType.INSTANCE)
+                .addScalar("so_data", StringType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class));
         return hQuery;
 

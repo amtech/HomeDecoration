@@ -75,6 +75,16 @@ public class WorkFlowMessage {
     public String receiveTimeString;
 
 
+
+
+     public long senderId;
+     public String senderName;
+
+     public long receiverId;
+     public String receiverName;
+
+
+
     public long checkTime;
     public String checkTimeString;
     public String thumbnail;

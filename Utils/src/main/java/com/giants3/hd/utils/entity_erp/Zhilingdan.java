@@ -1,4 +1,4 @@
-package com.giants3.hd.utils.entity;
+package com.giants3.hd.utils.entity_erp;
 
 /**
  *

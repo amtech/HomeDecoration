@@ -5,6 +5,7 @@ import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.noEntity.*;
 import com.google.gson.reflect.TypeToken;

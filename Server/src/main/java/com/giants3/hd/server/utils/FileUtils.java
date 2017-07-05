@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -29,6 +30,7 @@ public class FileUtils {
     public static final String DOWNLOAD_ATTACH_NAME = "/download/attach/{name}";
     public static final String DOWNLOAD_ATTACH_PATH = DOWNLOAD_PATH + "attach/";
     public static final String DOWNLOAD_PRODUCT_PATH = DOWNLOAD_PATH + "product/";
+    public static final String DOWNLOAD_ERP_PRODUCT_PHOTO = DOWNLOAD_PATH +"erpProduct/id_no/%s?upateTime=%s";
 
     public static final String DOWNLOAD_PRODUCT_THUMBNAIL = DOWNLOAD_PRODUCT_PATH + "thumbnail/";
     public static final String SEPARATOR = "/";
@@ -55,6 +57,30 @@ public class FileUtils {
 
     }
 
+
+    /**
+     * 构成Erp图片地址
+     *
+     */
+
+    public static final String  getErpProductPictureUrl(String id_no,String photoUpdateTime)
+    {
+        String encode="";
+        try {
+            encode = URLEncoder.encode(id_no, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+
+        }
+        catch (Throwable e)
+        {
+            e.printStackTrace();
+        }
+        return String.format(FileUtils.DOWNLOAD_ERP_PRODUCT_PHOTO,encode,photoUpdateTime) ;
+
+
+    }
     /**
      * /**获取材料图片路径 url  相对路径 容器根目录
      *

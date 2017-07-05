@@ -3,6 +3,7 @@ package com.giants3.hd.utils.entity;
 /**流程报告数据
  * Created by davidleen29 on 2017/2/28.
  */
+@Deprecated
 public class WorkFlowReport {
 
 

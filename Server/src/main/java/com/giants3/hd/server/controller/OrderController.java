@@ -155,6 +155,40 @@ public class OrderController extends BaseController {
         return remoteData;
     }
 
+ /**
+     * 获取生产流交接消息
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/workFlowMessageByOrderItem", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> getWorkFlowMessageByOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user , @RequestParam(value = "osNo") String osNo, @RequestParam(value = "itm") int itm) {
+
+        RemoteData<WorkFlowMessage> remoteData = erpService.getWorkFlowMessageByOrderItem(user,osNo,itm);
+        return remoteData;
+    }
+/**
+     * 我的生产流交接消息
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/myWorkFlowMessage", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> myWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user  ) {
+
+        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user );
+        return remoteData;
+    }
+
+
+
+
+
+
 
 
 
@@ -176,39 +210,8 @@ public class OrderController extends BaseController {
     }
 
 
-    /**
-     * 获取可以发送流程的订单货款
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/getOrderItemForTransform", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<OrderItemWorkFlowState> getOrderItemForTransform(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
 
 
-        return erpService.getOrderItemForTransform(user);
-
-    }
-
-
-
-    /**
-     * 获取制定订单的流程生产状态
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/getOrderItemWorkState", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<WorkFlowReport> getOrderItemWorkState(@RequestParam(value = "orderItemId") long orderItemId) {
-
-
-        return erpService.getOrderItemWorkState(orderItemId);
-
-    }
 
 
 
@@ -251,80 +254,10 @@ public class OrderController extends BaseController {
 
     }
 
-    /**
-     * 获取 订单货款 生产进度数据
-     *
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/getWorkFlowOrderItem", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<OrderItemWorkFlowState> getWorkFlowOrderItem(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-            , @RequestParam(value = "key") String key
-            , @RequestParam(value = "pageIndex",defaultValue ="0") int pageIndex
-            , @RequestParam(value = "pageSize",defaultValue ="20") int pageSize
-
-
-    ) {
-
-
-        return erpService.getWorkFlowOrderItem(user,key,pageIndex,pageSize);
 
 
 
-    }
 
-
-
-    /**
-     * 查询 订单货款 生产进度数据
-     *
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/searchOrderItemWorkFlowState", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<OrderItemWorkFlowState> searchOrderItemWorkFlowState(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-            , @RequestParam(value = "key") String key
-            , @RequestParam(value = "pageIndex",defaultValue ="0") int pageIndex
-            , @RequestParam(value = "pageSize",defaultValue ="20") int pageSize
-
-
-    ) {
-
-
-        return workFlowService.searchOrderItemWorkFlowState(user,key,pageIndex,pageSize);
-
-
-
-    } /**
-     * //获取关联的流程信息
-     *
-     *
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/getOrderItemWorkFlowState", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RemoteData<OrderItemWorkFlowState> getOrderItemWorkFlowState(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
-
-            , @RequestParam(value = "os_no" ) String os_no   , @RequestParam(value = "prd_no" ) String prd_no
-            , @RequestParam(value = "workFlowStep" ) int workFlowStep
-
-
-    ) {
-
-
-        return workFlowService.getOrderItemWorkFlowState(os_no,prd_no,workFlowStep);
-
-
-
-    }
 /**
      *  获取订单的流程配置
      *

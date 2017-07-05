@@ -1,6 +1,8 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.utils.noEntity.MessageInfo;
 import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.*;
@@ -74,6 +76,9 @@ public class UserController extends BaseController {
     @Autowired
     private WorkFlowService workFlowService;
 
+    @Autowired
+    private ErpService erpService;
+
 
 
     @Autowired
@@ -92,7 +97,7 @@ public class UserController extends BaseController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, BindingResult result) {
+    public String addUser(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, BindingResult result) {
 
         userRepository.save(user);
 
@@ -269,4 +274,24 @@ public class UserController extends BaseController {
 
 
     }
+
+
+
+
+    @RequestMapping(value = "/newMessage", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<MessageInfo> newMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user ) {
+
+
+
+
+        int count=erpService.getUnHandleWorkFlowMessageCount(user);
+
+        MessageInfo messageInfo=new MessageInfo();
+        messageInfo.newWorkFlowMessageCount=count;
+        return wrapData(messageInfo);
+
+    }
+
 }

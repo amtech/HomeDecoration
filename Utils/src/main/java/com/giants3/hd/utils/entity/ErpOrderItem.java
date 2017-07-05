@@ -46,7 +46,7 @@ public class ErpOrderItem {
     public String id_no;
 
     /**
-     * 单位 这个属性从报价系统读取。
+     * 单位
      */
     public String ut;
 
@@ -105,6 +105,9 @@ public class ErpOrderItem {
      * 图片路径
      */
     public String url;
+
+
+    public long  photoUpdateTime;
     /**
      * 产品配方号
      */
@@ -119,6 +122,30 @@ public class ErpOrderItem {
      * 设定好的产品生产类型 0 未设定 1 自制  2 外购
      */
     public int produceType;
+
+
+    /**
+     * 生产交期
+     */
+    public String so_data;
+
+ /**
+     * 合同日期
+     */
+    public String os_dd;
+
+
+
+    /**
+     * 訂單狀態碼
+     */
+    public int workFlowState;
+
+    /**
+     * 訂單狀態值
+     */
+    public String workFlowDescribe;
+
 
 
     public String getOs_no() {
@@ -309,10 +336,7 @@ public class ErpOrderItem {
     public int tranQty;
 
 
-    /**
-     *产品进度描述
-     */
-    public String workFlowDescribe;
+
 
 
     /**

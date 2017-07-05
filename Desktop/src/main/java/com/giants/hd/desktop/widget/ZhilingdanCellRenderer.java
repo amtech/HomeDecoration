@@ -1,14 +1,11 @@
 package com.giants.hd.desktop.widget;
 
-import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ZhilingdanModel;
-import com.giants3.hd.utils.entity.Zhilingdan;
+import com.giants3.hd.utils.entity_erp.Zhilingdan;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.List;
 
 /**
  * 指令单特殊定制表格绘制

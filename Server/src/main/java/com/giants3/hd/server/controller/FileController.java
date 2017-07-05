@@ -1,10 +1,9 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.Material;
 import com.giants3.hd.server.repository.AppVersionRepository;
-import com.giants3.hd.server.service.MaterialService;
-import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
@@ -14,7 +13,10 @@ import de.greenrobot.common.io.IoUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,8 @@ public class FileController extends BaseController {
 
     @Autowired
     MaterialService materialService;
+    @Autowired
+    ErpPhotoService erpPhotoService;
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
@@ -252,6 +256,34 @@ public class FileController extends BaseController {
         FileSystemResource resource = new FileSystemResource(productFilePath+ "thumbnail"+FileUtils.SEPARATOR+name.replace(FileUtils.URL_PATH_SEPARATOR,FileUtils.SEPARATOR)+"."+type);
 
         return resource;
+    }
+
+
+    /**
+     * 读取erp数据库的图片
+     * @param name
+     * @return
+     */
+    @RequestMapping(value = "/download/erpProduct/id_no/{name}", method = RequestMethod.GET)
+    @ResponseBody
+    public Resource getErpPhotoFile(@PathVariable  String name ,@RequestParam(value = "updateTime", defaultValue = "") String updateTime ) {
+
+
+
+
+
+        if(StringUtils.isEmpty(name)) return null;
+
+
+
+    File file=  erpPhotoService.getErpPhotoResource(name,updateTime) ;
+        if(file==null||!file.exists())return null;
+
+
+
+
+        return new FileSystemResource(file);
+
     }
 
     @RequestMapping(value = "/download/product/{name}/{updateTime}", method = RequestMethod.GET)

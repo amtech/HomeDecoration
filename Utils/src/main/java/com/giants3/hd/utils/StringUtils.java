@@ -418,7 +418,9 @@ public class StringUtils {
 
         return SQL_LIKE+s.trim()+SQL_LIKE;
 
-    } /**
+    }
+
+    /**
      * 数据库查询  模糊处理
      * @param s
      * @return
@@ -428,5 +430,30 @@ public class StringUtils {
 
         return SQL_LIKE+s.trim();
 
+    }  /**
+     * 数据库查询  模糊处理
+     * @param s
+     * @return
+     */
+    public static String sqlRightLike(String s) {
+
+
+        return s.trim()+SQL_LIKE;
+
+    }
+
+
+    /**
+     * 对sql 日期数据字符串截断， 取年月日数据
+     * @param value
+     * @return
+     */
+    public static String clipSqlDateData(String value) {
+
+
+
+        if(StringUtils.isEmpty(value)) return "";
+        if(value.length()<10) return value;
+        return value.substring(0,10);
     }
 }

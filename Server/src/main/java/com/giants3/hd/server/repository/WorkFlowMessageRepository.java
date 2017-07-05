@@ -18,6 +18,7 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
     List<WorkFlowMessage> findByStateInAndToFlowStepIn(int[] i, int[] flowSteps);
 
     List<WorkFlowMessage> findByFromFlowStepInOrderByCreateTimeDesc(int[] flowSteps);
+    List<WorkFlowMessage> findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(String osNo,int itm);
    List<WorkFlowMessage> findByToFlowStepEqualsAndOrderNameEqualsAndProductNameEqualsAndPVersionEqualsOrderByCreateTimeDesc(int  flowStep , String os_no,String prd_no,String pVersion );
    List<WorkFlowMessage> findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(int  flowStep , String os_no,int itm   );
 
@@ -31,4 +32,9 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
 //    @Modifying
 //    @Query("update T_WorkFlowMessage p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.productId =   :productId ")
 //    int updateUrlByProductId(@Param("thumbnail") String thumbnail, @Param("photoUrl") String url,@Param("productId")  long productId);
+
+
+
+    List<WorkFlowMessage> findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(long userId, long userId2     );
+
 }
