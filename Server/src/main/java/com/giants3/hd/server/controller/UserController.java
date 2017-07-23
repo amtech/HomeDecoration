@@ -1,16 +1,17 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.noEntity.BufferData;
-import com.giants3.hd.utils.noEntity.MessageInfo;
-import com.giants3.hd.utils.noEntity.ProductDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.*;
+import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.utils.noEntity.MessageInfo;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,7 +81,6 @@ public class UserController extends BaseController {
     private ErpService erpService;
 
 
-
     @Autowired
     private OrderAuthRepository orderAuthRepository;
 
@@ -120,8 +120,8 @@ public class UserController extends BaseController {
 
 
         try {
-              userService.saveUserList(users);
-               return wrapData( userService.list());
+            userService.saveUserList(users);
+            return wrapData(userService.list());
         } catch (HdException e) {
             return wrapError(e.getMessage());
         }
@@ -161,7 +161,7 @@ public class UserController extends BaseController {
             return wrapError("未找到用户");
         }
         //关闭密码返回
-        user.password="";
+        user.password = "";
         BufferData bufferData = new BufferData();
         bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
         bufferData.customers = customerService.list();
@@ -176,7 +176,8 @@ public class UserController extends BaseController {
         bufferData.pClasses = productClassRepository.findAll();
 
 
-        bufferData.salesmans = userService.getSalesman();;
+        bufferData.salesmans = userService.getSalesman();
+        ;
 
 
         QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
@@ -187,13 +188,8 @@ public class UserController extends BaseController {
         bufferData.quoteAuth = quoteAuth;
 
 
-
-
-
         bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas
         ;
-
-
 
 
         OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
@@ -236,9 +232,8 @@ public class UserController extends BaseController {
         bufferData.demos = demos;
 
 
-
         //读取流程节点工作人员
-        bufferData.workFlowWorkers=workFlowService.getWorkFlowWorkers(user.id);
+        bufferData.workFlowWorkers = workFlowService.getWorkFlowWorkers(user.id);
 
 
         return wrapData(bufferData);
@@ -257,9 +252,10 @@ public class UserController extends BaseController {
         User user = userRepository.findOne(userId);
         if (user != null) {
 
-            if (user.password.equals(oldPassword)) {
+            if (user.password.equals(oldPassword)|| DigestUtils.md5(oldPassword).equalsIgnoreCase(user.passwordMD5)) {
 
                 user.password = newPassword;
+                user.passwordMD5= DigestUtils.md5(newPassword);
                 userRepository.save(user);
                 return wrapData();
             } else {
@@ -275,21 +271,29 @@ public class UserController extends BaseController {
 
     }
 
+    @RequestMapping(value = "/updatePassword2", method = RequestMethod.GET)
 
+    public
+    @ResponseBody
+    RemoteData<Void> updatePassword2(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,
+            @RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword)
+
+     {
+
+        return userService.updatePassword(user,oldPassword,newPassword);
+    }
 
 
     @RequestMapping(value = "/newMessage", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<MessageInfo> newMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user ) {
+    RemoteData<MessageInfo> newMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user) {
 
 
+        int count = erpService.getUnHandleWorkFlowMessageCount(user);
 
-
-        int count=erpService.getUnHandleWorkFlowMessageCount(user);
-
-        MessageInfo messageInfo=new MessageInfo();
-        messageInfo.newWorkFlowMessageCount=count;
+        MessageInfo messageInfo = new MessageInfo();
+        messageInfo.newWorkFlowMessageCount = count;
         return wrapData(messageInfo);
 
     }

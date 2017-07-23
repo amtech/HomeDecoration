@@ -57,8 +57,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
     private String workflowfileurl;
     @Autowired
     ErpWorkFlowReportRepository erpWorkFlowReportRepository;
+//    @Autowired
+//    OrderItemRepository orderItemRepository;
+
     @Autowired
-    OrderItemRepository orderItemRepository;
+    OrderItemWorkStateRepository orderItemWorkStateRepository;
 
     @Autowired
     WorkFlowWorkerRepository workFlowWorkerRepository;
@@ -304,6 +307,35 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
         //配置 url
+        return getErpOrderItems(key);
+
+
+    }  /**
+     * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
+     * @param type  类型   下单未排  白胚未入  白胚  颜色  包装  产品库
+     */
+    public List<ErpOrderItem> searchUnCompleteOrderItems(String key,int type) {
+
+
+
+
+        final List<ErpOrderItem> erpOrderItems = getErpOrderItems(key);
+
+
+
+
+
+
+
+
+
+        return erpOrderItems;
+
+
+    }
+
+    private List<ErpOrderItem> getErpOrderItems(String key) {
+        //配置 url
         final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItems(key);
 
 
@@ -315,11 +347,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         }
 
         return erpWorkFlowOrderItems;
-
-
     }
-
-
 
 
     /**
@@ -389,8 +417,6 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             return wrapError("当前无可以提交流程");
 
 
-        Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(processes.get(0).prdNo, processes.get(0).pVersion);
-
 
         List<ErpOrderItemProcess> result = new ArrayList<>();
 
@@ -413,12 +439,13 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         }
 
 
-        for (ErpOrderItemProcess process : result)
-        {
+        //最后一道不需要验证排厂
+        if(workFlow.step!=ErpWorkFlow.LAST_STEP) {
+            for (ErpOrderItemProcess process : result) {
 
-            if(StringUtils.isEmpty(process.jgh))
-            {
-                return wrapError("当前流程未排厂加工户");
+                if (StringUtils.isEmpty(process.jgh)) {
+                    return wrapError("当前流程未排厂加工户");
+                }
             }
         }
 
@@ -429,11 +456,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             process.currentWorkFlowName = workFlow.name;
             process.unSendQty = process.qty;
 
-            if (nextFlow != null) {
-                process.nextWorkFlowCode = nextFlow.code;
-                process.nextWorkFlowStep = nextFlow.step;
-                process.nextWorkFlowName = nextFlow.name;
-            }
+
+                process.nextWorkFlowCode =nextFlow==null?"": nextFlow.code;
+                process.nextWorkFlowStep = nextFlow==null?0: nextFlow.step;
+                process.nextWorkFlowName =  nextFlow==null?"":nextFlow.name;
+
 
 
 
@@ -491,6 +518,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         erpOrderItemProcess.unSendQty = localData.unSendQty;
         erpOrderItemProcess.sendingQty = localData.sendingQty;
         erpOrderItemProcess.sentQty = localData.sentQty;
+        erpOrderItemProcess.so_zxs = localData.so_zxs;
 //        erpOrderItemProcess.sentQty=localData.sentQty;
     }
 
@@ -512,14 +540,17 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
 
-          WorkFlowArea workFlowArea=workFlowAreaRepository.findOne(areaId);
-        if(workFlowArea==null)
-        {
-            return wrapError("未选择交接区域");
-        }
-        //最后一个节点不需要验证下一流程数据
-        if (erpOrderItemProcess.nextWorkFlowStep <= 0&&erpOrderItemProcess.currentWorkFlowStep!=ErpWorkFlow.LAST_STEP)
-            return wrapError("该订单下一流程数据不存在");
+
+
+        WorkFlowArea workFlowArea   = workFlowAreaRepository.findOne(areaId);;
+        if(erpOrderItemProcess.currentWorkFlowStep!=ErpWorkFlow.LAST_STEP) {
+
+            if (workFlowArea == null) {
+                return wrapError("未选择交接区域");
+            }
+            //最后一个节点不需要验证下一流程数据
+            if (erpOrderItemProcess.nextWorkFlowStep <= 0  )
+                return wrapError("该订单下一流程数据不存在");
 
 //        WorkFlow workFlow = workFlowRepository.findFirstByFlowStepEquals(workFlowOrderItemState.currentWorkFlowStep);
 //        if (workFlow == null)
@@ -527,6 +558,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 //        WorkFlow newWorkFlow = workFlowRepository.findFirstByFlowStepEquals(workFlowOrderItemState.nextWorkFlowStep);
 //        if (newWorkFlow == null)
 //            return wrapError("数据异常，该订单下一流程数据不存在");
+        }
 
         if (tranQty > erpOrderItemProcess.unSendQty) {
 
@@ -544,22 +576,27 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
 
-        OrderItem orderItem=     orderItemRepository.findFirstByOsNoEqualsAndItmEquals(erpOrderItemProcess.osNo,erpOrderItemProcess.itm);
+        OrderItemWorkState orderItem=     orderItemWorkStateRepository.findFirstByOsNoEqualsAndItmEquals(erpOrderItemProcess.osNo,erpOrderItemProcess.itm);
 
         if(orderItem==null) {
-            orderItem = new OrderItem();
+            orderItem = new OrderItemWorkState();
             orderItem.osNo = erpOrderItemProcess.osNo;
             orderItem.itm = erpOrderItemProcess.itm;
-            orderItem.prdNo = erpOrderItemProcess.prdNo;
-            orderItem.pVersion = erpOrderItemProcess.pVersion;
             orderItem.url = erpOrderItemProcess.photoUrl;
-            orderItem.thumbnail = erpOrderItemProcess.photoThumb;
+            orderItem.prdNo = erpOrderItemProcess.prdNo;
+            orderItem.maxWorkFlowStep=erpOrderItemProcess.currentWorkFlowStep;
+            orderItem.maxWorkFlowCode=erpOrderItemProcess.currentWorkFlowCode;
+            orderItem.maxWorkFlowName=erpOrderItemProcess.currentWorkFlowName;
         }
 
         //标记当前订单生产状态
         orderItem.workFlowState=ErpWorkFlow.STATE_WORKING;
-        orderItem.workFlowDescribe=erpOrderItemProcess.currentWorkFlowCode+erpOrderItemProcess.currentWorkFlowName;
-        orderItem= orderItemRepository.save(orderItem);
+        orderItem.workFlowDescribe="消息发送自:"+erpOrderItemProcess.currentWorkFlowCode+erpOrderItemProcess.currentWorkFlowName;
+
+
+
+
+        orderItem= orderItemWorkStateRepository.save(orderItem);
 
 
         //扣减数量
@@ -582,7 +619,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         workFlowMessage.orderItemQty = erpOrderItemProcess.qty;
         workFlowMessage.transportQty = tranQty;
         workFlowMessage.sendMemo = memo == null ? "" : memo;
-        workFlowMessage.area = workFlowArea.name  ;
+        workFlowMessage.area =workFlowArea==null?"": workFlowArea.name  ;
         workFlowMessage.name = WorkFlowMessage.NAME_SUBMIT;
 
         workFlowMessage.senderId=user.id;
@@ -662,7 +699,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
                 orderItem.workFlowState=ErpWorkFlow.STATE_COMPLETE;
                 orderItem.workFlowDescribe="生产完成";
-                orderItemRepository.save(orderItem);
+                orderItemWorkStateRepository.save(orderItem);
             }
 
         }
@@ -754,6 +791,25 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         }
 
         workFlowMessageRepository.save(message);
+
+
+
+        OrderItemWorkState orderItem=     orderItemWorkStateRepository.findFirstByOsNoEqualsAndItmEquals(erpOrderItemProcess.osNo,erpOrderItemProcess.itm);
+
+        if(orderItem!=null)
+        {
+
+
+            if(orderItem.maxWorkFlowStep<message.toFlowStep)
+            {
+                orderItem.maxWorkFlowStep=message.toFlowStep;
+                orderItem.maxWorkFlowCode=message.toFlowCode;
+                orderItem.maxWorkFlowName=message.toFlowName;
+                orderItemWorkStateRepository.save(orderItem);
+            }
+
+        }
+
 
 
         return wrapData();
@@ -891,7 +947,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         return wrapData(orderItemWorkMemoRepository.findByOsNoEqualsAndItmEquals(osNo,itm));
     }
 
-    public RemoteData<Void> saveWorkMemo(int workFlowStep, String os_no, int itm, String orderItemWorkMemo, String prd_name, String pVersion, String productWorkMemo) {
+    public RemoteData<Void> saveWorkMemo(User loginUser,int workFlowStep, String os_no, int itm, String orderItemWorkMemo, String prd_name, String pVersion, String productWorkMemo) {
 
 
         ErpWorkFlow erpWorkFlow=ErpWorkFlow.findByStep(workFlowStep);
@@ -912,6 +968,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
         }
         orderItemWorkMemoData.memo=orderItemWorkMemo;
+        orderItemWorkMemoData.lastModifierId = loginUser.id;
+        orderItemWorkMemoData.lastModifierName=loginUser.toString();
+        orderItemWorkMemoData.lastModifyTime=Calendar.getInstance().getTimeInMillis();
+        orderItemWorkMemoData.lastModifyTimeString=DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
 
         orderItemWorkMemoRepository.save(orderItemWorkMemoData);
 
@@ -931,6 +992,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
         }
         productWorkMemoData.memo=productWorkMemo;
+
+        productWorkMemoData.lastModifierId = loginUser.id;
+        productWorkMemoData.lastModifierName=loginUser.toString();
+        productWorkMemoData.lastModifyTime=Calendar.getInstance().getTimeInMillis();
+        productWorkMemoData.lastModifyTimeString=DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
         productWorkMemoRepository.save(productWorkMemoData);
 

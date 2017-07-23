@@ -24,6 +24,10 @@ public class WorkFlowMaterial {
      * 已领用量
      */
     public  int qty;
+    /**
+     * 单位用量
+     */
+    public  float qty_std;
 
     public String os_no;
     public String mrp_no;

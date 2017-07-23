@@ -1,5 +1,7 @@
 package com.giants3.hd.utils;
 
+import com.giants3.hd.utils.entity.ErpOrderItem;
+
 /**
  * 字符串的功能类。
  */
@@ -455,5 +457,38 @@ public class StringUtils {
         if(StringUtils.isEmpty(value)) return "";
         if(value.length()<10) return value;
         return value.substring(0,10);
+    }
+
+    public static boolean isChar(String  value, int index) {
+
+
+
+        if(index>=0&&index<value.length()) {
+
+
+            return isAlpha(value.charAt(index));
+
+
+
+        }
+
+        return false;
+
+
+    }
+
+    /**
+     * 判断
+     * @param aChar
+     * @return
+     */
+    public static  boolean isAlpha(char aChar)
+    {
+        if((aChar>='a'&&aChar<='z' ) ||  (aChar>='A'&&aChar<='Z'))
+        {
+
+            return true;
+        }
+        return false;
     }
 }

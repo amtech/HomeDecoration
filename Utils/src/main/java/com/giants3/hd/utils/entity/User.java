@@ -4,6 +4,7 @@ package com.giants3.hd.utils.entity;
 * 用户列表
  * @see com.giants3.hd.server.entity.Authority
 */
+import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
 import com.giants3.hd.utils.noEntity.CompanyPosition;
@@ -28,6 +29,10 @@ public class User implements Serializable,Valuable {
     public String chineseName;
     @Basic
     public String password;
+
+
+    @Basic
+    public String passwordMD5;
 
 
 
@@ -106,5 +111,13 @@ public class User implements Serializable,Valuable {
      */
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(name);
+    }
+
+
+
+    public  boolean  isCorrectPassword(String passwordMd5)
+    {
+
+        return passwordMd5.equals(this.passwordMD5)|| passwordMd5.equals(DigestUtils.md5(this.password) );
     }
 }

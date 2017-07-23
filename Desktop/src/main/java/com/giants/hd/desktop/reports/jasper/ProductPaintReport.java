@@ -77,7 +77,7 @@ public class ProductPaintReport extends JRReport {
         orderItemReportData.salary=FloatHelper.scale(productDetail.product.paintWage);
 
         orderItemReportData.reportDate= DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime());
-        orderItemReportData.url= HttpUrl.loadProductPicture(productDetail.product.url);
+        orderItemReportData.url= HttpUrl.loadProductPicture(orderItem.url);
         orderItemReportData.prdName=productDetail.product==null?"test":productDetail.product.name;
 
         return  new ReportData(orderItemReportData);

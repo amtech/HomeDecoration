@@ -69,14 +69,6 @@ public class OrderItemArrangeTableModel extends BaseTableModel<ErpOrderItem> {
             }
 
 
-            if(!item.hasProductWorkFlowSet)
-            {
-                return "产品流程未配置";
-            }
-            if(!item.canArrange)
-            {
-                return "不能排厂";
-            }
 
             return "可以排厂";
 

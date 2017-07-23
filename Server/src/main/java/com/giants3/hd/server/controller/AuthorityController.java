@@ -133,41 +133,6 @@ public class AuthorityController extends BaseController {
     }
 
 
-    /**
-     * 提供给移动端调用的接口
-     *
-     * @param request
-     * @param params
-     * @return
-     */
-    @RequestMapping(value = "/aLogin", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RemoteData<AUser> aLogin(HttpServletRequest request, @RequestBody Map<String, String> params) {
-
-
-        String userName = params.get("userName");
-        String password = params.get("password");
-        String client = params.get("client");
-        String version = params.get("version");
-
-        RemoteData<User> userRemoteData = doLogin(request, userName, password, client, version);
-        RemoteData<AUser> result = RemoteDataParser.parse(userRemoteData, dataParser);
-
-
-        if (result.isSuccess()) {
-
-            AUser loginUser = result.datas.get(0);
-            loginUser.token = result.token;
-
-
-        }
-
-
-        return result;
-
-
-    }
 
     /**
      * 提供给移动端调用的接口
@@ -211,23 +176,6 @@ public class AuthorityController extends BaseController {
 
     }
 
-    /**
-     * @param request
-     * @param user
-     * @param appVersion
-     * @return
-     * @see AuthorityController#
-     */
-    @Deprecated
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RemoteData<User> login(HttpServletRequest request, @RequestBody User user, @RequestParam(value = "appVersion", required = false, defaultValue = "") String appVersion) {
-
-
-        return doLogin(request, user.name, user.password, "DESKTOP", appVersion);
-    }
-
 
     /**
      * 登录接口2  密码加密
@@ -249,13 +197,13 @@ public class AuthorityController extends BaseController {
      * 登录逻辑
      *
      * @param userName
-     * @param password
+     * @param passwordMd5
      * @param client
      * @param version
      * @param loginIp
      * @return
      */
-    private RemoteData<User> doLogin2(String userName, String password, String client, int version, String loginIp) {
+    private RemoteData<User> doLogin2(String userName, String passwordMd5, String client, int version, String loginIp) {
 
 
         List<User> userList = userRepository.findByNameEquals(userName);
@@ -268,7 +216,9 @@ public class AuthorityController extends BaseController {
 
         User findUser = userList.get(0);
 
-        if (!DigestUtils.md5(findUser.password).equals(password)) {
+
+
+        if (! findUser.isCorrectPassword(passwordMd5)) {
             return wrapError("密码错误");
         }
 

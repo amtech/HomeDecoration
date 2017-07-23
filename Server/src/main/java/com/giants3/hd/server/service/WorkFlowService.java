@@ -407,6 +407,15 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         orderItemWorkMemo.checked=check;
+
+
+            orderItemWorkMemo.lastCheckerId = user.id;
+            orderItemWorkMemo.lastCheckerName=user.toString();
+            orderItemWorkMemo.lastCheckTime=Calendar.getInstance().getTimeInMillis();
+            orderItemWorkMemo.lastCheckTimeString=DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
+
+
+
         orderItemWorkMemoRepository.save(orderItemWorkMemo);
 
 

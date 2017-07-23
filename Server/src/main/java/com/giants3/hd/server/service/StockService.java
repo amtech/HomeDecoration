@@ -1,11 +1,12 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.server.utils.*;
+import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,12 +139,14 @@ public class StockService extends AbstractService {
 
             item.pVersion = pVersion;
 
+            item.thumbnail=  item.url = FileUtils.getErpProductPictureUrl(item.id_no,"");
+
+
             //更新相关联的产品信息
             Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(productCode, pVersion);
             if (product != null) {
 
-                item.url = product.url;
-                item.thumbnail = product.thumbnail;
+
                 item.unit = product.pUnitName;
                 item.specCm=product.specCm;
                 item.specInch=product.spec;
@@ -455,8 +458,9 @@ public class StockService extends AbstractService {
 
 
 
+               submit.url=FileUtils.getErpProductPictureUrl(submit.id_no,"");
 
-            submit.dd=StringUtils.isEmpty(submit.dd)||submit.dd.length()<10?submit.dd:submit.dd.substring(0,10);
+            submit.dd=StringUtils.clipSqlDateData(submit.dd) ;
             float price=typePriceMap.get(submit.type);
             submit.area=typeAreaMap.get(submit.type);
 

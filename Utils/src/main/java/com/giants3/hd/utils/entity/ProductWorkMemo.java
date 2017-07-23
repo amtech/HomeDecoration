@@ -27,5 +27,9 @@ public class ProductWorkMemo {
 
 
 
+    public long lastModifierId;
+    public String lastModifierName;
+    public String lastModifyTimeString;
+    public  long  lastModifyTime;
 
 }

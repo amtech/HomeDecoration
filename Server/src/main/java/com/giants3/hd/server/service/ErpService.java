@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -254,10 +253,21 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             {
                 int prd_no_code=-1;
 
-                try {
-                    prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3,   Math.min(7, erpOrderItem.prd_no.length())));
-                }catch (Throwable t)
-                {}
+
+              if(  StringUtils.isChar(erpOrderItem.prd_no,2)) {
+                  try {
+                      //13A1221 形式   抽取字母后4位
+                      prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
+                  } catch (Throwable t) {
+                  }
+              }else if(StringUtils.isChar(erpOrderItem.prd_no,0))
+              {
+                  try {
+                      // A1221 形式   抽取字母后4位
+                      prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
+                  } catch (Throwable t) {
+                  }
+              }
                 if(prd_no_code==-1)
                 {result.add(erpOrderItem);
 
@@ -353,28 +363,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 item.packageInfo = product.packInfo;
 
 
-                WorkFlowProduct workFlowProduct = workFlowProductRepository.findFirstByProductIdEquals(product.id);
-                if (workFlowProduct != null) {
-                    item.produceType = workFlowProduct.produceType;
 
 
-                    WorkFlowArranger workFlowArranger = workFlowArrangerRepository.findFirstByUserIdEquals(loginUser.id);
-                    if (workFlowArranger == null) {
-                        item.canArrange = false;
-                    } else
-                        item.canArrange =  workFlowArranger.purchase && item.produceType == ProduceType.PURCHASE || workFlowArranger.selfMade && item.produceType== ProduceType.SELF_MADE;
 
-                } else {
-                    item.produceType = ProduceType.NOT_SET;
-                    item.canArrange = true;
-
-                }
-
-                item.hasProductWorkFlowSet = workFlowProduct != null;
 
 
             }
 
+            item.thumbnail=item.url= FileUtils.getErpProductPictureUrl(item.id_no,"");
 
             // 附加数据
             OrderItem orderItem = orderItemRepository.findFirstByOsNoEqualsAndItmEquals(item.os_no, item.itm);
@@ -391,9 +387,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 item.verifyDate = orderItem.verifyDate;
 
 
-                //订单流程数据
-                item.workFlowDescribe = orderItem.workFlowDescribe;
-                item.orderWorkFlowId = orderItem.orderWorkFlowId;
 
 
                 //绑定订单跟踪数据
@@ -601,6 +594,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 if ((salesId == -1 && loginUser.isAdmin()) || salesNos.indexOf(order.sal_no) > -1) {
                     OrderReportItem orderReportItem = new OrderReportItem();
                     bindReportData(orderReportItem, orderitem, order);
+
+                    //读取
+
+                 String id_no= repository.findId_noByOrderItem( orderitem.osNo, orderitem.itm);
+                    orderReportItem.id_no=id_no;
+                    orderReportItem.thumbnail=orderReportItem.url= com.giants3.hd.server.utils.FileUtils.getErpProductPictureUrl(id_no,"");
+
+
                     items.add(orderReportItem);
                 }
 
@@ -624,7 +625,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         orderReportItem.cus_prd_no = orderItem.batNo;
         orderReportItem.qty = orderItem.qty;
         orderReportItem.prd_no = orderItem.prdNo;
-        orderReportItem.url = orderItem.url;
+
         orderReportItem.thumbnail = orderItem.thumbnail;
         orderReportItem.sendDate = orderItem.sendDate;
         orderReportItem.verifyDate = orderItem.verifyDate;
@@ -864,7 +865,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             flowSteps[i] = workFlow.workFlowStep;
         }
         int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_REWORK}; //WorkFlowMessage.STATE_RECEIVE,
-        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepIn(state, flowSteps);
+        //读取未处理的 就是 receiverId=0
+        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepInAndReceiverIdEquals(state, flowSteps,0);
+
+
 
         return wrapData(workFlowMessages);
 

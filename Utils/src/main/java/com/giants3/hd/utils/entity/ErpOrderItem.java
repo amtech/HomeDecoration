@@ -140,11 +140,30 @@ public class ErpOrderItem {
      * 訂單狀態碼
      */
     public int workFlowState;
+    /**
+     * 货款流程步骤
+     */
+    public String maxWorkFlowCode;
+/**
+     * 货款流程步骤
+     */
+    public String maxWorkFlowName;
+/**
+     * 货款流程步骤
+     */
+    public int maxWorkFlowStep;
 
     /**
      * 訂單狀態值
      */
     public String workFlowDescribe;
+
+
+    /**
+     *
+     * 客户代号
+     */
+    public String cus_no;
 
 
 
@@ -314,49 +333,9 @@ public class ErpOrderItem {
 
 
 
-    /**
-     * 当前生产流程
-     */
-    public String currentWorkFlow;
-    /**
-     * 当前生产流程
-     */
-    public int currentWorkStep;
-
-
-    /**
-     * 当前生产状态  0 正常  1 已发送  2 已接收 3 已审核=0进入下一个流程
-     */
-    public int currentWorkState;
-
-
-    /**
-     * 订单当前数量    订单递交下流程 可能没有全部提交下去（特殊需求）
-     */
-    public int tranQty;
 
 
 
 
 
-    /**
-     *  关联订单生产流程id
-     */
-
-    public long orderWorkFlowId;
-
-
-    /**
-     * 产品是否已经配置流程
-     */
-    public boolean hasProductWorkFlowSet;
-
-
-
-
-
-    /**
-     * 是否可以排厂
-     */
-    public boolean canArrange;
 }

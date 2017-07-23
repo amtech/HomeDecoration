@@ -1,5 +1,7 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.utils.DigestUtils;
+import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Authority;
 import com.giants3.hd.utils.entity.QuoteAuth;
 
@@ -101,6 +103,10 @@ public class UserService extends AbstractService implements InitializingBean, Di
                 {
                     //复制出旧密码，保证密码不变
                     user.password= oldData.password;
+                    user.passwordMD5=oldData.passwordMD5;
+                }else
+                {
+                    user.passwordMD5= DigestUtils.md5(user.password);
                 }
 
             }
@@ -235,6 +241,53 @@ public class UserService extends AbstractService implements InitializingBean, Di
         for(User user:users)
         {
             user.password="";
+        }
+    }
+
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @Transactional
+    public RemoteData<Void> updatePassword(User loginUser,String oldPassword, String newPassword) {
+
+            String md5Old= DigestUtils.md5(loginUser.password);
+        if(oldPassword.equals(md5Old)|| oldPassword.equals(loginUser.passwordMD5))
+        {
+
+            loginUser.passwordMD5=newPassword;
+            userRepository.save(loginUser);
+
+            return wrapData();
+
+        }else
+        {
+            return  wrapError("旧密码不正确");
+        }
+
+
+
+    }
+
+    @Transactional
+    public void adjustPasswordToMd5() {
+
+        List<User> users=userRepository.findAll();
+        List<User> updateUsers=new ArrayList<>();
+        for(User user:users)
+        {
+            if(StringUtils.isEmpty(user.passwordMD5)&&!StringUtils.isEmpty(user.password))
+            {
+                user.passwordMD5=DigestUtils.md5(user.password);
+                updateUsers.add(user);
+            }
+        }
+
+        if(updateUsers.size()>0)
+        {
+            userRepository.save(updateUsers);
         }
     }
 }

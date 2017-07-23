@@ -15,7 +15,7 @@ import java.util.List;
 public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage, Long> {
 
 
-    List<WorkFlowMessage> findByStateInAndToFlowStepIn(int[] i, int[] flowSteps);
+    List<WorkFlowMessage> findByStateInAndToFlowStepInAndReceiverIdEquals(int[] i, int[] flowSteps,long userId);
 
     List<WorkFlowMessage> findByFromFlowStepInOrderByCreateTimeDesc(int[] flowSteps);
     List<WorkFlowMessage> findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(String osNo,int itm);

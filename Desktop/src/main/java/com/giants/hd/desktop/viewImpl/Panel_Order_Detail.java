@@ -139,25 +139,6 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
 
 
 
-
-                    popupMenuLocation.setLocation(e.getXOnScreen(), e.getYOnScreen());
-                    JPopupMenu menu = new JPopupMenu();
-
-
-                    JMenuItem split = new JMenuItem(finalItem.orderWorkFlowId<=0?"开始排产":"查看生产流程");
-                    split.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-
-                            orderDetailPresenter.showWorkFlow(finalItem);
-
-                        }
-                    });
-                    menu.add(split);
-
-                    //  取得右键点击所在行
-                    menu.show(e.getComponent(), e.getX(), e.getY());
-
                     return;
                 }
             }

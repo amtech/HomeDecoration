@@ -195,7 +195,7 @@ public class ErpWorkController extends BaseController {
      */
     @RequestMapping(value = "/saveWorkMemo", method = RequestMethod.POST)
     @ResponseBody
-    public RemoteData<Void> saveWorkMemo(@RequestBody Map<String, String> data
+    public RemoteData<Void> saveWorkMemo(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestBody Map<String, String> data
 
     ) {
 
@@ -208,7 +208,7 @@ public class ErpWorkController extends BaseController {
         String pVersion = (String) data.get("pVersion");
         String productWorkMemo = (String) data.get("productWorkMemo");
 
-        return erpWorkService.saveWorkMemo(workFlowStep, os_no, itm, orderItemWorkMemo, prd_name, pVersion, productWorkMemo);
+        return erpWorkService.saveWorkMemo(user,workFlowStep, os_no, itm, orderItemWorkMemo, prd_name, pVersion, productWorkMemo);
     }
 
     /**

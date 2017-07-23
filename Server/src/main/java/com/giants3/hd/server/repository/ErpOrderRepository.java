@@ -19,6 +19,7 @@ public class ErpOrderRepository  extends ErpRepository{
     public static final String KEY_ORDER = "SO";
     public static final String OS_ID = "OS_ID";
     public static final String KEY_OS_NO = "OS_NO";
+    public static final String KEY_ITM = "ITM";
     public static final String KEY_PRD_NO= "PRD_NO";
     private static final String KEY_SALE_NO = "SAL_NO";
     public static final String CHK_DD_START = "chk_dd_start";
@@ -355,5 +356,19 @@ public class ErpOrderRepository  extends ErpRepository{
                 .getSingleResult();
     }
 
+    /**
+     * 查询id_no
+     * @param osNo
+     * @param itm
+     * @return
+     */
+    public String  findId_noByOrderItem(String osNo, int itm) {
+        final Query query = em.createNativeQuery("select id_no from tf_pos where os_No =:"+KEY_OS_NO+" and itm=:"+KEY_ITM+" and os_id='SO'") .setParameter(KEY_OS_NO, osNo).setParameter(KEY_ITM,itm
+        );
+      return (String) query.getSingleResult() ;
 
+
+
+
+    }
 }

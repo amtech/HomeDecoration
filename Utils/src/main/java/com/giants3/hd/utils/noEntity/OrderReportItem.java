@@ -23,4 +23,8 @@ public class OrderReportItem {
      *  装柜日期
      */
     public String  sendDate;
+
+    public String id_no;
+
+
 }

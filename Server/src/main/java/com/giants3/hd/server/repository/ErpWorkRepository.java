@@ -156,6 +156,7 @@ public class ErpWorkRepository extends ErpRepository {
                 .addScalar("endDd", StringType.INSTANCE)
                 .addScalar("itm", IntegerType.INSTANCE)
                 .addScalar("mrpNo", StringType.INSTANCE)
+                .addScalar("so_zxs", IntegerType.INSTANCE)
 
                 .addScalar("jgh", StringType.INSTANCE)
                 .addScalar("scsx", StringType.INSTANCE)
@@ -230,6 +231,11 @@ public class ErpWorkRepository extends ErpRepository {
                 if (process.mrpNo.startsWith(ErpWorkFlow.CODE_ZUZHUANG)) {
                     zuzhuangTemp.add(process);
                 }
+
+                if (process.mrpNo.startsWith(ErpWorkFlow.CODE_BAOZHUANG)) {
+                    //包装流程， qty单位以箱   x每个箱装数， 成为正确的排厂数量
+                    process.qty=process.qty*process.so_zxs;
+                }
             }
             orders.removeAll(zuzhuangTemp);
 
@@ -298,10 +304,15 @@ public class ErpWorkRepository extends ErpRepository {
                 .addScalar("amt", FloatType.INSTANCE)
                 .addScalar("hpgg", StringType.INSTANCE)
                 .addScalar("khxg", StringType.INSTANCE)
+                .addScalar("so_zxs", IntegerType.INSTANCE)
                 .addScalar("so_data", StringType.INSTANCE)
+                .addScalar("cus_no", StringType.INSTANCE)
                 .addScalar("os_dd", StringType.INSTANCE)
                 .addScalar("amt", FloatType.INSTANCE)
                 .addScalar("workFlowState", IntegerType.INSTANCE)
+                .addScalar("maxWorkFlowStep", IntegerType.INSTANCE)
+                .addScalar("maxWorkFlowName", StringType.INSTANCE)
+                .addScalar("maxWorkFlowCode", StringType.INSTANCE)
                 .addScalar("workFlowDescribe", StringType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class)).list();
 
@@ -342,6 +353,7 @@ public class ErpWorkRepository extends ErpRepository {
                 .addScalar("mo_dd", StringType.INSTANCE)
                 .addScalar("qty_rsv", IntegerType.INSTANCE)
                 .addScalar("qty", IntegerType.INSTANCE)
+                .addScalar("qty_std", FloatType.INSTANCE)
                 .addScalar("real_prd_name", StringType.INSTANCE)
                 .addScalar("rem", StringType.INSTANCE)
                 .addScalar("ut", StringType.INSTANCE)

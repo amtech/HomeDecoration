@@ -1,5 +1,6 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity.Module;
@@ -52,6 +53,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     WorkFlowService workFlowService;
     @Autowired
     TableRestoreService tableRestoreService;
+    @Autowired
+    UserService userService;
 //
 //    @Autowired
 //    TestXmlRepository testXmlRepository;
@@ -189,6 +192,12 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
             workFlowService.initData();
+
+
+
+            userService.adjustPasswordToMd5();
+
+
         }
 
 

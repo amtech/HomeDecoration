@@ -68,21 +68,7 @@ public class OrderItem implements Serializable {
 
 
 
-    /**
-     *产品进度描述
-     */
-    public String workFlowDescribe;
 
 
-    /**
-     *  关联订单生产流程id
-     */
 
-    public long orderWorkFlowId;
-
-
-    /**
-     * 订单状态
-     */
-    public int workFlowState;
 }

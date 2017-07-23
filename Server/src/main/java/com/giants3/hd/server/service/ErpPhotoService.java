@@ -54,6 +54,9 @@ public class ErpPhotoService extends  AbstractService {
 
         String filePath=erpPhotolFilePath+fileName;
 
+        final File file = new File(filePath);
+        if(file.exists())
+            return file;
 
 
         //否则 从数据库读取文件 存放在指定文件， 然后返回该文件
@@ -75,7 +78,6 @@ public class ErpPhotoService extends  AbstractService {
     private  synchronized  File  readErpPhotToFile(String id_no,String filePath)
     {
         File file=new File(filePath);
-
         if(file.exists())return file;
 
         FileUtils.makeDirs(filePath);
