@@ -27,7 +27,7 @@ repositories {
 //        }
 //    }
 //}
-
+jar.manifest.attributes 'Main-Class': mainClassName
 jar {
     baseName = 'MyDesktop'
     version = '0.1.0'
