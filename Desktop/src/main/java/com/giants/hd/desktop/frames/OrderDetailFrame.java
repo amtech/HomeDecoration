@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.frames;
 
+import com.giants.hd.desktop.local.DownloadFileManager;
 import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
 import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
@@ -7,6 +8,7 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.*;
 import com.giants3.hd.utils.entity.ErpOrder;
@@ -18,7 +20,9 @@ import rx.Subscriber;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 订单详情界面
@@ -381,4 +385,98 @@ public class OrderDetailFrame extends BaseFrame implements OrderDetailIPresenter
         orderDetailViewer.showLoadingDialog();
 
     }
+
+    @Override
+    public void updateMaitouFile(File file) {
+
+
+        UseCaseFactory.getInstance().updateMaitouFileUseCase(orderDetail.erpOrder.os_no,file).execute(new Subscriber<RemoteData<String>>() {
+            @Override
+            public void onCompleted() {
+
+
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                orderDetailViewer.hideLoadingDialog();
+                orderDetailViewer.showMesssage(e.getMessage());
+            }
+
+
+            @Override
+            public void onNext(RemoteData<String> remoteData) {
+                orderDetailViewer.hideLoadingDialog();
+                if (remoteData.isSuccess()) {
+                    orderDetail.erpOrder.maitouUrl=remoteData.datas.get(0);
+
+                    setOrderDetail(orderDetail);
+
+
+                }
+
+            }
+
+
+        });
+        orderDetailViewer.showLoadingDialog();
+
+
+
+    }
+
+
+    @Override
+    public void viewMaitou() {
+
+
+
+        new SwingWorker<String ,Object>() {
+
+
+            @Override
+            protected String doInBackground() throws Exception {
+
+
+                final String filePath = DownloadFileManager.localFilePath + "xls/" + orderDetail.erpOrder.os_no+".XLS";
+                DownloadFileManager.download(HttpUrl.loadPicture(orderDetail.erpOrder.maitouUrl), filePath);
+                return filePath;
+            }
+
+
+            @Override
+            protected void done() {
+                super.done();
+                orderDetailViewer.hideLoadingDialog();
+
+                try {
+                    String filePath=get();
+                    Desktop.getDesktop().open(new File(filePath));
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        }.execute();
+
+
+        orderDetailViewer.showLoadingDialog("正在下载文件。。。");
+
+
+
+
+
+    }
 }
+
+
+

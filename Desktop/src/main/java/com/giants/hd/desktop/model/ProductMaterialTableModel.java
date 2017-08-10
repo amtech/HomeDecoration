@@ -19,15 +19,15 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
 
 
-    public static String[] columnNames = new String[]{"序号","物料编码", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static int[] columnWidths = new int []{     40,    100,        120,        40,   40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{"序号","物料编码", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","开法","类型","单价","金额","分件备注"};
+    public static int[] columnWidths = new int []{     40,    100,        120,        40,   40,  40, 40,  40,    40,  40,   80,    40,    60, 60,    40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
 
     private static final String PRICE = "price";
     private static final String AMOUNT = "amount";
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type", PRICE, AMOUNT,"memo"};
+    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"materialCode", "materialName", "quantity", "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","cutWay","type", PRICE, AMOUNT,"memo"};
     public  static Class[] classes = new Class[]{Object.class,Material.class, Material.class};
 
-    public  static boolean[] editables = new boolean[]{false,true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
+    public  static boolean[] editables = new boolean[]{false,true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,false,true };
 
     @Inject
     public ProductMaterialTableModel() {
@@ -118,7 +118,7 @@ public class ProductMaterialTableModel extends  BaseTableModel<ProductMaterial> 
 
                 break;
 
-            case 16:
+            case 17:
                 //设置备注
                 material.setMemo( aValue.toString());
                 break;

@@ -255,7 +255,7 @@ public class Main extends BaseFrame {
 
 
         if (AuthorityUtil.getInstance().viewQuotationModule())
-            menuBar.add(createReport());
+            menuBar.add(createQuotation());
 
 
         if (AuthorityUtil.getInstance().viewOrderMenu())
@@ -316,7 +316,6 @@ public class Main extends BaseFrame {
             });
 
         }
-
 
 
         if (AuthorityUtil.getInstance().viewWorkFlowWorker()) {
@@ -623,7 +622,7 @@ public class Main extends BaseFrame {
      * @return
      */
 
-    private JMenu createReport() {
+    private JMenu createQuotation() {
 
 
         JMenu menu = new JMenu("报价管理");
@@ -667,6 +666,24 @@ public class Main extends BaseFrame {
                     QuotationDeleteDialog dialog = new QuotationDeleteDialog(Main.this);
                     dialog.setLocationRelativeTo(getRootPane());
                     dialog.setVisible(true);
+
+                }
+            });
+        }
+
+
+        if (AuthorityUtil.getInstance().viewQuotationPictureExport()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_QUTOTATION_PICTURE_EXPORT
+            );
+            menu.add(menuItem);
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    QuotationPictureExportFrame quotationInternalFrame = new QuotationPictureExportFrame();
+                    addInterFrame(quotationInternalFrame);
+
 
                 }
             });

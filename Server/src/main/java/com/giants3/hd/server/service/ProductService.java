@@ -1,8 +1,6 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.server.entity.*;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.server.entity.ProductEquationUpdateTemp;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.BackDataHelper;
@@ -11,8 +9,8 @@ import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
+import com.giants3.hd.utils.noEntity.ProductDetail;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +28,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
@@ -415,10 +412,13 @@ public class ProductService extends AbstractService implements InitializingBean,
             String newUrl = FileUtils.getProductPictureURL(product.name, product.pVersion, lastPhotoUpdateTime);
 
             //構建縮略路径 保证文件夹存在
-            String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
-            boolean thumbnailFileExist = new File(thumbnailPath).exists();
+            //    String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
+            //   boolean thumbnailFileExist = new File(thumbnailPath).exists();
+
+            String oldThumbnailFilePath =  convertThumbnailUrlToPath(product.thumbnail);
+            boolean oldThumbnailFileExist = new File(oldThumbnailFilePath).exists();
             //四种情况下 更新图片路径  1 图片已经被修改。  2  新图片路径与旧路径不一致  3 缩略图未生成 4 缩略图对应图片不存在
-            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail) || !thumbnailFileExist) {
+            if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail)||!oldThumbnailFileExist  ) {
 
                 product.setLastPhotoUpdateTime(lastPhotoUpdateTime);
                 product.setUrl(newUrl);
@@ -426,6 +426,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
                 String thumbnailUrl = FileUtils.getProductThumbnailUrl(product);
+                String thumbnailPath =  convertThumbnailUrlToPath(thumbnailUrl);
                 //構建縮略路径 保证文件夹存在
                 FileUtils.makeDirs(thumbnailPath);
                 try {
@@ -445,9 +446,9 @@ public class ProductService extends AbstractService implements InitializingBean,
                         logger.error("filePath cant not be scale --" + filePath);
 
                     }
-                } catch (Throwable  e) {
+                } catch (Throwable e) {
                     e.printStackTrace();
-                    logger.error("product:"+product.getFullName()+",图片需要同步， 但是同步失败,原因："+e.getMessage());
+                    logger.error("product:" + product.getFullName() + ",图片需要同步， 但是同步失败,原因：" + e.getMessage());
                 }
 
 
@@ -475,10 +476,23 @@ public class ProductService extends AbstractService implements InitializingBean,
      */
     private void clearThumbnailFile(String thumbnailUrl) {
         if (StringUtils.isEmpty(thumbnailUrl)) return;
-        String fileName = thumbnailUrl.replace(FileUtils.DOWNLOAD_PRODUCT_PATH, productFilePath).replace(FileUtils.URL_PATH_SEPARATOR, FileUtils.SEPARATOR);
+        String fileName = convertThumbnailUrlToPath(thumbnailUrl);
+
         File file = new File(fileName);
         if (file.exists())
             file.delete();
+
+
+    }
+
+    /**
+     * 缩略图的url  转换成文件路劲
+     *
+     * @param thumbnailUrl 相对形式的url  api/ 卡头
+     * @return
+     */
+    public String convertThumbnailUrlToPath(String thumbnailUrl) {
+        return thumbnailUrl.replace(FileUtils.DOWNLOAD_PRODUCT_PATH, productFilePath).replace(FileUtils.URL_PATH_SEPARATOR, FileUtils.SEPARATOR);
 
 
     }
@@ -571,7 +585,7 @@ public class ProductService extends AbstractService implements InitializingBean,
             quotationXKItemRepository.updatePhotoByProductId(product.thumbnail, product.url, product.id);
             quotationXKItemRepository.updatePhoto2ByProductId(product.thumbnail, product.url, product.id);
             orderItemRepository.updateUrlByProductInfo(product.thumbnail, product.url, product.name, product.pVersion);
-           // workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
+            // workFlowMessageRepository.updateUrlByProductId(product.thumbnail, product.url, product.id);
         }
 
 
@@ -828,25 +842,16 @@ public class ProductService extends AbstractService implements InitializingBean,
     public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail)
 
     {
-      return  saveProductDetail(user,productDetail,true);
+        return saveProductDetail(user, productDetail, true);
 
     }
 
 
-
-
-
     @Transactional(rollbackFor = Throwable.class)
-    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail,boolean checkUpdateTime)
-    {
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail, boolean checkUpdateTime) {
 
 
-
-
-
-        ProductDetail oldDetail= ObjectUtils.deepCopyWidthJson( findProductDetailById(productDetail.product.id),ProductDetail.class);
-
-
+        ProductDetail oldDetail = ObjectUtils.deepCopyWidthJson(findProductDetailById(productDetail.product.id), ProductDetail.class);
 
 
         long productId = productDetail.product.id;
@@ -867,41 +872,35 @@ public class ProductService extends AbstractService implements InitializingBean,
         /**
          * 未生成id 添加记录
          */
-        if ( productRepository.exists(productId)) {
-           //找出旧的记录
+        if (productRepository.exists(productId)) {
+            //找出旧的记录
             Product oldData = productRepository.findOne(productId);
 
 
             //检查一致性  最近更新时间是否一致。
-            if (checkUpdateTime&&(oldData.lastUpdateTime != newProduct.lastUpdateTime)) {
+            if (checkUpdateTime && (oldData.lastUpdateTime != newProduct.lastUpdateTime)) {
                 return wrapError("货号：" + newProduct.name + ",版本号：" + newProduct.pVersion
                         + " 已经被改变，请刷新数据重新保存。");
             }
 
             //版本号被改变了
-            if (checkUpdateTime&&(!oldData.pVersion.equals(newProduct.pVersion))) {
+            if (checkUpdateTime && (!oldData.pVersion.equals(newProduct.pVersion))) {
                 //版本号被改变了。
                 //检查报价单
-                QuotationItem quotationItem=     quotationItemRepository.findFirstByProductIdEquals(oldData.id);
-                if(quotationItem!=null)
-                {
+                QuotationItem quotationItem = quotationItemRepository.findFirstByProductIdEquals(oldData.id);
+                if (quotationItem != null) {
                     return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
-                QuotationXKItem quotationXkItem=     quotationXKItemRepository.findFirstByProductIdEquals(oldData.id);
-                if(quotationXkItem!=null)
-                {
+                QuotationXKItem quotationXkItem = quotationXKItemRepository.findFirstByProductIdEquals(oldData.id);
+                if (quotationXkItem != null) {
                     return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
-                  quotationXkItem=     quotationXKItemRepository.findFirstByProductId2Equals(oldData.id);
-                if(quotationXkItem!=null)
-                {
-                    return wrapError("货号：" + oldData.getFullName()+ ", 不能修改版本号， 有报价单已经使用这款货 。");
+                quotationXkItem = quotationXKItemRepository.findFirstByProductId2Equals(oldData.id);
+                if (quotationXkItem != null) {
+                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
 
             }
-
-
-
 
 
             //如果产品名称修改  则修正缩略图
@@ -921,15 +920,11 @@ public class ProductService extends AbstractService implements InitializingBean,
         newProduct.lastUpdateTime = Calendar.getInstance().getTimeInMillis();
 
 
-
-
         //最新product 数据
         Product product = productRepository.save(newProduct);
 
 
         productId = product.id;
-
-
 
 
         if (productDetail.paints != null) {
@@ -1000,22 +995,13 @@ public class ProductService extends AbstractService implements InitializingBean,
 
         //更新修改记录
         //将此次修改记录插入历史修改记录表中。
-        OperationLog operationLog=updateProductLog(product, user);
+        OperationLog operationLog = updateProductLog(product, user);
 
         //将修改前的数据缓存起来
 
-        if(oldDetail!=null)
-        {
-            BackDataHelper.backProductModifyData(oldDetail,operationLog,productBackFilePath);
+        if (oldDetail != null) {
+            BackDataHelper.backProductModifyData(oldDetail, operationLog, productBackFilePath);
         }
-
-
-
-
-
-
-
-
 
 
         return returnFindProductDetailById(productId);
@@ -1446,53 +1432,41 @@ public class ProductService extends AbstractService implements InitializingBean,
     }
 
 
-
-
     @Transactional(rollbackFor = Throwable.class)
-    public  RemoteData<Void> restoreProductDetailFromModifyLog(User LoginUser,long operationLogId)
-    {
+    public RemoteData<Void> restoreProductDetailFromModifyLog(User LoginUser, long operationLogId) {
 
 
-         OperationLog operationLog=  operationLogRepository.findOne(operationLogId);
-        if(operationLog==null)
+        OperationLog operationLog = operationLogRepository.findOne(operationLogId);
+        if (operationLog == null)
 
             return wrapError("未找到该操作记录");
 
-        if (Product.class.getSimpleName().equals(operationLog.tableName))
-        {
+        if (Product.class.getSimpleName().equals(operationLog.tableName)) {
 
-            Product product=productRepository.findOne(operationLog.recordId);
-            if(product==null)
-            {
-                return    wrapError("未找到该关联的产品数据");
+            Product product = productRepository.findOne(operationLog.recordId);
+            if (product == null) {
+                return wrapError("未找到该关联的产品数据");
             }
 
-            ProductDetail productDetail=BackDataHelper.restoreProductModifyData(product.getFullName(),operationLogId,productBackFilePath);
+            ProductDetail productDetail = BackDataHelper.restoreProductModifyData(product.getFullName(), operationLogId, productBackFilePath);
 
 
-            if(productDetail==null)
+            if (productDetail == null)
                 return wrapError("恢复分析表全部数据记录失败");
 
 
-           RemoteData<ProductDetail> result= saveProductDetail(LoginUser,productDetail,false);
-            if(result.isSuccess())
-            {
+            RemoteData<ProductDetail> result = saveProductDetail(LoginUser, productDetail, false);
+            if (result.isSuccess()) {
                 return wrapData();
-            }else
-            {
+            } else {
                 return wrapError(result.message);
             }
 
 
-        }else
-        {
+        } else {
 
             return wrapError("该操作记录不支持恢复数据");
         }
-
-
-
-
 
 
     }

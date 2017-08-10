@@ -225,6 +225,8 @@ public class ErpOrderRepository  extends ErpRepository{
                     item.chk_dd=item.chk_dd.substring(0, 10);
                 }
             }
+
+
         }
     }
     /**

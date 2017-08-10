@@ -2,6 +2,7 @@ package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.model.AbsTableModel;
 import com.giants.hd.desktop.model.BaseTableModel;
+import com.giants.hd.desktop.model.CellConfig;
 import com.giants.hd.desktop.utils.Config;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.JTableUtils;
@@ -58,9 +59,9 @@ public class JHdTable extends JTable {
         super.setModel(dataModel);
 
 
-        if (dataModel instanceof AbsTableModel) {
+        if (dataModel instanceof CellConfig) {
 
-            AbsTableModel absTableModel = (AbsTableModel) dataModel;
+            CellConfig absTableModel = (CellConfig) dataModel;
             //配置行高
             int rowHeight = absTableModel.getRowHeight();
             if (rowHeight > 0) {

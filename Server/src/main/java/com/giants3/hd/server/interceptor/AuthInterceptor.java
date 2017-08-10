@@ -68,6 +68,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 long currentTime = Calendar.getInstance().getTimeInMillis();
                 if (currentTime - session.loginTime < VALIDATE_TIME) {
                     request.setAttribute(Constraints.ATTR_LOGIN_USER, session.user);
+                  //  request.setAttribute(Constraints.ATTR_LOGIN_SESSION, session);
                     return true;
                 }
 
@@ -78,8 +79,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             RemoteData<Void> data = new RemoteData<>();
             data.code = RemoteData.CODE_UNLOGIN;
             data.message = "用户未登录，或者登录超时失效";
-
-
             if (ConstantData.IS_CRYPT_JSON) {
 
                 response.getOutputStream().write(CryptUtils.encryptDES(GsonUtils.toJson(data).getBytes(GsonUtils.UTF_8), ConstantData.DES_KEY));

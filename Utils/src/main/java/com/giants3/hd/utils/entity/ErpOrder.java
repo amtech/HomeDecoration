@@ -91,4 +91,10 @@ public class ErpOrder {
     public String memo;
     public  String attaches;
 
+
+    /**
+     * 唛头文件的路径
+     */
+
+    public String maitouUrl;
 }

@@ -31,6 +31,7 @@ public class FileUtils {
     public static final String DOWNLOAD_ATTACH_PATH = DOWNLOAD_PATH + "attach/";
     public static final String DOWNLOAD_PRODUCT_PATH = DOWNLOAD_PATH + "product/";
     public static final String DOWNLOAD_ERP_PRODUCT_PHOTO = DOWNLOAD_PATH +"erpProduct/id_no/%s?upateTime=%s";
+    public static final String DOWNLOAD_ORDER_MAITOU = DOWNLOAD_PATH +"order/maitou?os_no=%s";
 
     public static final String DOWNLOAD_PRODUCT_THUMBNAIL = DOWNLOAD_PRODUCT_PATH + "thumbnail/";
     public static final String SEPARATOR = "/";
@@ -383,4 +384,19 @@ public class FileUtils {
 
     }
 
+    public static String getMaitouFileUrl(String os_no) {
+
+
+
+
+        return  String.format(DOWNLOAD_ORDER_MAITOU,os_no);
+    }
+
+    public static File getMaitouFilePath(String maitoufilepath,String os_no) {
+
+
+       return   new File(maitoufilepath+os_no+".xls");
+
+
+    }
 }

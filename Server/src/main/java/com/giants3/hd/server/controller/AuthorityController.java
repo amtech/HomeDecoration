@@ -5,8 +5,10 @@ import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.UserService;
+import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 权限
@@ -156,7 +155,13 @@ public class AuthorityController extends BaseController {
         } catch (Throwable t) {
         }
 
-        RemoteData<User> userRemoteData = doLogin2(userName, password, client, version, request.getRemoteAddr());
+        String device_token=params.get("device_token");
+        device_token= StringUtils.isEmpty(device_token)?"":device_token;
+        String  versionName=params.get("versionName");
+        versionName= StringUtils.isEmpty(versionName)?"":versionName;
+
+
+        RemoteData<User> userRemoteData = doLogin2(userName, password, client, version, request.getRemoteAddr(),device_token);
         RemoteData<AUser> result = RemoteDataParser.parse(userRemoteData, dataParser);
 
 
@@ -193,6 +198,12 @@ public class AuthorityController extends BaseController {
         return doLogin2(user.name, user.password, client, appVersion, request.getRemoteAddr());
     }
 
+    private RemoteData<User> doLogin2(String userName, String passwordMd5, String client, int version, String loginIp)
+    {
+
+
+       return doLogin2(userName,passwordMd5,client,version,loginIp,"" );
+    }
     /**
      * 登录逻辑
      *
@@ -203,7 +214,7 @@ public class AuthorityController extends BaseController {
      * @param loginIp
      * @return
      */
-    private RemoteData<User> doLogin2(String userName, String passwordMd5, String client, int version, String loginIp) {
+    private RemoteData<User> doLogin2(String userName, String passwordMd5, String client, int version, String loginIp,String device_token) {
 
 
         List<User> userList = userRepository.findByNameEquals(userName);
@@ -226,7 +237,8 @@ public class AuthorityController extends BaseController {
         findUser.password = "***";
 
         RemoteData<User> data = wrapData(findUser);
-        long loginTime = Calendar.getInstance().getTimeInMillis();
+        Date date=Calendar.getInstance().getTime();
+        long loginTime =date.getTime();
         data.token = DigestUtils.md5(findUser.toString() + loginTime);
         AppVersion appVersion = getAppVersion();
         if (version>0&& appVersion != null && appVersion.versionCode > version) {
@@ -241,11 +253,12 @@ public class AuthorityController extends BaseController {
         session.user
                 = findUser;
 
-
+        session.loginTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS.format(date);
         session.loginTime = loginTime;
         session.token = data.token;
         session.loginIp = loginIp;
-
+        session.client=client;
+        session.device_token=device_token;
         sessionRepository.save(session);
 
 
@@ -274,7 +287,8 @@ public class AuthorityController extends BaseController {
         findUser.password = "***";
 
         RemoteData<User> data = wrapData(findUser);
-        long loginTime = Calendar.getInstance().getTimeInMillis();
+       Date date= Calendar.getInstance().getTime();
+        long loginTime =date.getTime();
         data.token = DigestUtils.md5(findUser.toString() + loginTime);
 
 
@@ -286,6 +300,7 @@ public class AuthorityController extends BaseController {
 
 
         session.loginTime = loginTime;
+        session.loginTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM_SS.format(date);
         session.token = data.token;
         session.loginIp = request.getRemoteAddr();
 

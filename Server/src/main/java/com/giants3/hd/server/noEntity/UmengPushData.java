@@ -1,5 +1,7 @@
 package com.giants3.hd.server.noEntity;
 
+import com.giants3.hd.server.service.PushService;
+
 /**
  * Created by davidleen29 on 2017/7/21.
  */
@@ -9,11 +11,11 @@ public class UmengPushData {
     /**
      *  // 必填 应用唯一标识
      */
-    public String appkey;
+    public String appkey= PushService.UMENG_APP_KEY;
     /**
      * // 必填 时间戳，10位或者13位均可，时间戳有效期为10分钟
      */
-    public String timestamp;
+    public String timestamp= Integer.toString((int) (System.currentTimeMillis() / 1000));
     /**
      * // 必填 消息发送类型,其值可以为:
      unicast-单播
@@ -62,10 +64,17 @@ public class UmengPushData {
 
 
     public PushData payload;
+    /**
+     *  // 可选 发送消息描述，建议填写
+     */
+    public String description;
 
-    private class PushData {
+    public static class PushData {
 
 
+
+        public static final String TYPE_MESSAGE="message";
+        public static final String TYPE_NOTIFICATION="notification";
         /**
          *  // 必填 消息类型，值可以为:
          notification-通知，message-消息
@@ -86,7 +95,7 @@ public class UmengPushData {
     /**
      *   // 通知展现内容:
      */
-    private class Data {
+    public static  class Data {
 
         /**
          * // 必填 通知栏提示文字
@@ -116,5 +125,20 @@ public class UmengPushData {
          该字段要求以http或者https开头。
          */
         public String img;
+        /**
+         * 自定义内容
+         */
+        public String custom;
+
+
+        /**
+         *  // 点击"通知"的后续行为，默认为打开app。
+         "after_open": "xx" // 必填 值可以为:
+         "go_app": 打开应用
+         "go_url": 跳转到URL
+         "go_activity": 打开特定的activity
+         "go_custom": 用户自定义内容。
+         */
+        public String after_open;
     }
 }

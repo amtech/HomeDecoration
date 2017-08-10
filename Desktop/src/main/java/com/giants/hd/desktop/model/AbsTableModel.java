@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by davidleen29 on 2017/4/2.
  */
-public  abstract  class AbsTableModel<T> extends AbstractTableModel {
+public  abstract  class AbsTableModel<T> extends AbstractTableModel implements  CellConfig{
 
 
     private static final ImageIcon EMPTY_IMAGE_VALUE = new ImageIcon(new byte[0]);
@@ -120,16 +120,35 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel {
      * @param column
      * @return
      */
+
     public int getColumnWidth(int column)
     {
 
         return 50;
     }
+
+    public void setDatas(List<T> newDatas) {
+
+
+        this.datas.clear();
+
+        if (newDatas != null)
+            this.datas.addAll(newDatas);
+        adjustRowCount();
+
+        fireTableDataChanged();
+
+    }
+
+    protected   void adjustRowCount()
+    {}
+
     /**
      * 返回 设置的行高
      *
      * @return
      */
+    @Override
     public   int getRowHeight()
     {    return 0;}
 

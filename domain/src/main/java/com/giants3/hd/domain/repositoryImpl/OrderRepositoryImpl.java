@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -340,6 +341,48 @@ public class OrderRepositoryImpl  extends  BaseRepositoryImpl implements OrderRe
 
                 try {
                     RemoteData<OrderItemWorkFlow> remoteData= apiManager.cancelOrderWorkFlow(orderItemWorkFlowId);
+                    if(remoteData.isSuccess())
+                    {
+                        subscriber.onNext(remoteData);
+                        subscriber.onCompleted();
+
+                    }else
+                    {
+                        subscriber.onError(   HdException.create(remoteData.message));
+
+                    }
+
+                } catch (HdException e) {
+                    subscriber.onError(e);
+                }
+
+
+
+
+            }
+        });
+
+    }
+
+
+    /**
+     * 上传唛头文件
+     *
+     * @param os_no
+     * @param file
+     * @return
+     */
+    @Override
+    public Observable updateMaitouFile(final String os_no, final File file) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<String>>() {
+            @Override
+            public void call(Subscriber<? super RemoteData<String>> subscriber) {
+
+
+
+
+                try {
+                    RemoteData<String> remoteData= apiManager.updateMaitouFile(os_no,file);
                     if(remoteData.isSuccess())
                     {
                         subscriber.onNext(remoteData);

@@ -5,19 +5,43 @@ import com.giants3.hd.utils.interf.Valuable;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 材料分类  根据编码头四位进行区分
  */
-@Entity(name="T_MaterialClass")
-public class MaterialClass implements Serializable,Valuable {
+@Entity(name = "T_MaterialClass")
+public class MaterialClass implements Serializable, Valuable {
 
 
+    /**
+     * 所有板材类型的编码规则数组  编码头四位
+     */
+    public static final String[] CLASS_BANGLEI_MU = new String[]{"0601", "0602", "0604", "0607"};
+    public static final String[] CLASS_BANGLEI_TIE = new String[]{"0101", "0102", "0106"};
+    /**
+     * 所有板材类型的编码规则数组  编码头四位
+     */
+    public static final String[] CLASS_BANGLEI   ;
+    static
+    {
+        int muLength=CLASS_BANGLEI_MU.length;
+        int tieLength=CLASS_BANGLEI_TIE.length;
+
+
+        CLASS_BANGLEI=new String[muLength+tieLength];
+        for (int i = 0; i < muLength; i++) {
+            CLASS_BANGLEI[i]=CLASS_BANGLEI_MU[i];
+        }
+        for (int i = 0; i < tieLength; i++) {
+            CLASS_BANGLEI[muLength+i]=CLASS_BANGLEI_TIE[i];
+        }
+    }
     /**
      *
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     /**
      * 编码头四位（不含C）
@@ -47,20 +71,18 @@ public class MaterialClass implements Serializable,Valuable {
     public float wHeight;
 
 
-
     /**
      * 损耗率
      */
     @Basic
-    public float discount=0;
+    public float discount = 0;
 
 
     /**
      * 利用率  默认
      */
     @Basic
-    public float available=1;
-
+    public float available = 1;
 
 
     @Basic
@@ -77,9 +99,10 @@ public class MaterialClass implements Serializable,Valuable {
      */
     @Basic
     public String memo;
+
     @Override
     public String toString() {
-        return  "  ["+code+"]     "+name;
+        return "  [" + code + "]     " + name;
     }
 
 
@@ -118,6 +141,6 @@ public class MaterialClass implements Serializable,Valuable {
 
     @Override
     public boolean isEmpty() {
-        return StringUtils.isEmpty(code)&&StringUtils.isEmpty(name)  ;
+        return StringUtils.isEmpty(code) && StringUtils.isEmpty(name);
     }
 }

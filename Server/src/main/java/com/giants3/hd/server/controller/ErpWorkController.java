@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.service.ErpWorkService;
+import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,9 @@ public class ErpWorkController extends BaseController {
 
     @Autowired
     ErpWorkService erpWorkService;
+
+    @Autowired
+    UserService userService;
 
 
     /**
@@ -74,7 +79,23 @@ public class ErpWorkController extends BaseController {
     ) {
 
 
-        return erpWorkService.sendWorkFlowMessage(user, orderItemProcess, tranQty, areaId, memo);
+        final RemoteData<Void> remoteData = erpWorkService.sendWorkFlowMessage(user, orderItemProcess, tranQty, areaId, memo);
+
+
+
+        if(remoteData.isSuccess())
+        {
+
+
+            List<User> users=userService.list();
+
+
+            for()
+
+        }
+
+
+        return remoteData;
 
     }
 

@@ -7,4 +7,5 @@ public class Constraints {
 
 
     public static final String ATTR_LOGIN_USER="ATTR_LOGIN_USER";
+    public static final String ATTR_LOGIN_SESSION="ATTR_LOGIN_SESSION";
 }

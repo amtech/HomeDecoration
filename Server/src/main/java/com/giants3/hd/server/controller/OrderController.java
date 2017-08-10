@@ -284,7 +284,7 @@ public class OrderController extends BaseController {
     }
 
     /**
-     *  获取订单的流程配置
+     *  获取用户可工作的订单列表
      *
      *
      * @param
@@ -293,12 +293,12 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/searchOrderItems", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> searchOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
+    RemoteData<ErpOrderItem> searchUserWorkOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user
             , @RequestParam(value = "key" ) String key
             , @RequestParam(value = "pageIndex" ,defaultValue = "0") int pageIndex
             , @RequestParam(value = "pageSize",defaultValue = "30") int pageSize
     ) {
-        return erpService.searchOrderItems(user, key,pageIndex,pageSize);
+        return erpService.searchUserWorkOrderItems(user, key,pageIndex,pageSize);
 
 
 

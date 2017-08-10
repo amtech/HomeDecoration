@@ -6,11 +6,13 @@ import com.giants.hd.desktop.model.OrderItemTableModel;
 import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;
+import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.DateCellEditor;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TextAreaCellEditor;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.ErpOrder;
 import com.giants3.hd.utils.entity.ErpOrderItem;
@@ -23,7 +25,9 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -52,9 +56,10 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
     private JTextArea ta_youmai;
     private JTextArea ta_zuomai;
     private JButton btn_track;
+    private JButton upload;
+    private JLabel viewMaitou;
 
 
-    Point popupMenuLocation = new Point();
 
 
     private OrderItemTableModel orderItemTableModel;
@@ -106,6 +111,21 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
             }
         });
 
+
+        upload.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                File file= SwingFileUtils.getSelectedFile();
+
+                if(file!=null&&file.exists())
+                orderDetailPresenter.updateMaitouFile(file);
+
+
+
+            }
+        });
 
         orderItemList.addMouseListener(new MouseInputAdapter() {
 
@@ -247,6 +267,26 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
         orderItemList.getColumn(OrderItemTableModel.TITLE_GUAGOU).setCellEditor(textAreaCellEditorAndRenderer);
 
 
+
+        viewMaitou.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                if(e.getClickCount()==2)
+                {
+
+                    orderDetailPresenter.viewMaitou();
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -289,7 +329,7 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
 
         orderItemTableModel.setDatas(orderDetail.items);
 
-
+        viewMaitou.setVisible(!StringUtils.isEmpty(orderDetail.erpOrder.maitouUrl));
 
 //        //检查是否已经启动生产流程追踪
 //        boolean hasStartTrack = false;
@@ -318,6 +358,7 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
 
         btn_addPicture.setVisible(b);
         save.setVisible(b);
+        upload.setVisible(b);
 
     }
 
@@ -483,4 +524,6 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
         showDetail.setVisible(b);
 
     }
+
+
 }

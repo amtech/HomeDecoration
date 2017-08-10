@@ -23,8 +23,11 @@ public class Session implements Serializable{
     public  String token;
     @Basic
     public long loginTime;
+    public String loginTimeString;
     @Basic
     public String loginIp;
 
 
+    public String client;
+    public String device_token;
 }

@@ -6,6 +6,8 @@ import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
 import rx.Observable;
 
+import java.io.File;
+
 /**
  * Created by david on 2015/10/6.
  */
@@ -59,4 +61,12 @@ public interface OrderRepository {
      * @return
      */
     Observable cancelOrderWorkFlow(long orderItemWorkFlowId);
+
+    /**
+     * 上传唛头文件
+     * @param os_no
+     * @param file
+     * @return
+     */
+    Observable updateMaitouFile(String os_no, File file);
 }

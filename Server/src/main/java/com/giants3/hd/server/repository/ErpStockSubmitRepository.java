@@ -1,5 +1,6 @@
 package com.giants3.hd.server.repository;
 
+import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.utils.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.StockSubmit;
@@ -62,8 +63,7 @@ public class ErpStockSubmitRepository {
 
     // +  StockSubmitSql+ "  union     "
     //查询入库与缴库的产品数据
-    public static final String stockInAndSubmitSql = "  select * from (" + StockSubmitSql + "  union     " + stockInFromFactory + "   ) as a  inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO  inner join (select os_no, cus_no from mf_pos   where OS_ID=" + SO_UPPER + " ) as c on a.so_no = c.os_no  order by a.dd desc   ";
-
+    public static   String stockInAndSubmitSql ;
     //出销库单
     //  select * FROM  TF_PSS WHERE PS_ID='SA' AND WH='CP'
     public static final String stockOutTransportSql = " select * from (select os_no as so_no ,PRD_NO,PRD_NAME, PRD_MARK ,BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,  3 as type, ID_NO ,'' as dep  from TF_PSS WHERE  PS_ID=" + SA_UPPER + " AND WH=" + CP_UPPER + "  and  PRD_MARK like " + YF_LIKE_UPPPER + " and  ID_NO  is not null and ps_dd  >= :" + START_DATE + "  and ps_dd  <= :" + END_DATE + " ) as a   inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO order by a.dd desc ";
@@ -114,12 +114,18 @@ public class ErpStockSubmitRepository {
 
     public ErpStockSubmitRepository(EntityManager em) {
         this.em = em;
+
+
+
+        stockInAndSubmitSql= SqlScriptHelper.readScript("stockinandsubmit.sql");
     }
 
     /*
     *    查询出 进货与缴库 列表  日期参数格式 "2016-07-11"
      */
     public List<StockSubmit> getStockSubmitList(String startDate, String endData) {
+
+
 
 
         Query query = em.createNativeQuery(stockInAndSubmitSql)

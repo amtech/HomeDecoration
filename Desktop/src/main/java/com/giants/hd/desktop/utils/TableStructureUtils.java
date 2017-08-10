@@ -51,4 +51,7 @@ public class TableStructureUtils {
     public static List<TableField> getWorkFlowArranger() {
         return fromJson("workFlowArranger.json");
     }
+    public static List<TableField> getQuotationPictureModel() {
+        return fromJson("quotationPicture.json");
+    }
 }

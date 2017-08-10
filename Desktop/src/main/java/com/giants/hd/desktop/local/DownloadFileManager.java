@@ -3,6 +3,7 @@ package com.giants.hd.desktop.local;
 import com.giants.hd.desktop.utils.AccumulateMap;
 import com.giants3.hd.utils.StringUtils;
 import com.google.inject.Singleton;
+import de.greenrobot.common.io.FileUtils;
 import de.greenrobot.common.io.IoUtils;
 import org.apache.commons.collections.map.LRUMap;
 
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class DownloadFileManager {
 
     private static final String TAG="DownloadFileManager";
-    String localFilePath=LocalFileHelper.path+"/temp/files/";
+   public static  String localFilePath=LocalFileHelper.path+"/temp/files/";
     String localCachePath=LocalFileHelper.path+"/temp/";
 
     public static final int CACHE_MAX_SIZE=5000;
@@ -174,6 +175,14 @@ public class DownloadFileManager {
     }
 
 
+    private  static  void makeDir(String  absoluteFilePath)
+    { File newFile = new File(absoluteFilePath);
+        File parentFile = newFile.getParentFile();
+        if (!parentFile.exists())
+            parentFile.mkdirs();
+
+    }
+
     /**
      * 下载文件 由url 获取文件流 至文件中
      * @param remoteUrl
@@ -188,7 +197,7 @@ public class DownloadFileManager {
 
 
 
-
+        makeDir(filePath);
 
         InputStream is = null;
 
@@ -197,6 +206,7 @@ public class DownloadFileManager {
         BufferedInputStream bis = null;
         FileOutputStream fos = null;
         File newFile=new File(filePath);
+
 
             //打开URL通道
         try{

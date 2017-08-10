@@ -2129,4 +2129,19 @@ public class ApiManager {
         RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
         return remoteData;
     }
+
+    /**
+     * 上传订单唛头文件
+     * @param os_no
+     * @param file
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<String> updateMaitouFile(String os_no, File file) throws HdException {
+        String url = HttpUrl.uploadMaitouFile( os_no);
+        String result = client.uploadWidthStringReturned(url,file);
+        RemoteData<String> remoteData = invokeByReflect(result, String.class);
+        return remoteData;
+
+    }
 }

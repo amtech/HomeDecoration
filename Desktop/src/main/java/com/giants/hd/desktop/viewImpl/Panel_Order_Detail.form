@@ -384,6 +384,42 @@
               <text value="启动生产流程"/>
             </properties>
           </component>
+          <component id="bce27" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="唛头文件"/>
+            </properties>
+          </component>
+          <grid id="59210" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints>
+              <grid row="6" column="12" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="63ee7" class="javax.swing.JButton" binding="upload">
+                <constraints/>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="上传唛头文件"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="a47c1" class="javax.swing.JLabel" binding="viewMaitou">
+            <constraints>
+              <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <forms top="1" left="1" bottom="1" right="1" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/xls.png"/>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </grid>
       <scrollpane id="34bdb">

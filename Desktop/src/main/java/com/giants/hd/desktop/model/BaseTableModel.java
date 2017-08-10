@@ -157,18 +157,6 @@ public abstract class BaseTableModel<T> extends AbsTableModel<T> {
 
     }
 
-    public void setDatas(List<T> newDatas) {
-
-
-        this.datas.clear();
-
-        if (newDatas != null)
-            this.datas.addAll(newDatas);
-        adjustRowCount();
-
-        fireTableDataChanged();
-
-    }
 
     /**
      * 使用外部数据源  以便不同model可以共享数据

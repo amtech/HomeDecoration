@@ -2,9 +2,12 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.server.utils.*;
+import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.*;
+import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.entity.*;
 import com.giants3.hd.utils.noEntity.ErpOrderDetail;
 import com.giants3.hd.utils.noEntity.OrderReportItem;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +50,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     private UserService userService;
     @Autowired
     OrderItemRepository orderItemRepository;
-
 
 
     @Autowired
@@ -80,6 +83,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     //临时文件夹
     @Value("${tempfilepath}")
     private String tempFilePath;
+
+    //订单唛头文件夹
+    @Value("${maitoufilepath}")
+    private String maitoufilepath;
 
     //附件文件夹
     @Value("${attachfilepath}")
@@ -147,9 +154,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             }
 
             Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
-            if (order != null) {
+
                 attachData(erpOrder, order);
-            }
+
 
         }
 
@@ -177,9 +184,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         ErpOrder erpOrder = repository.findOrderByNO(os_no);
 
         Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
-        if (order != null) {
+
             attachData(erpOrder, order);
-        }
+
 
         User user = userRepository.findFirstByCodeEquals(erpOrder.sal_no);
         if (user != null) {
@@ -213,10 +220,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     /**
      * 查詢指定用戶可排厂的订单
-     *
+     * <p/>
      * 胚体加工的用户（第一个流程的用户） 返回所有未完成的订单
-     *
-     *
+     * <p/>
+     * <p/>
      * 其他流程的工作人员，返回当前流程关联的订单数据
      *
      * @param loginUser
@@ -226,84 +233,86 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * @return
      */
     @Transactional
-    public RemoteData<ErpOrderItem> searchOrderItems(User loginUser, String key, int pageIndex, int pageSize) {
+    public RemoteData<ErpOrderItem> searchUserWorkOrderItems(User loginUser, String key, int pageIndex, int pageSize) {
 
-        List<WorkFlowWorker> workFlowWorkers=  workFlowWorkerRepository.findByUserIdEquals(loginUser.id       );
-        if(workFlowWorkers==null||workFlowWorkers.size()==0) //当前用户不是排产人员
-        return wrapData();
+        List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEquals(loginUser.id);
+        if (workFlowWorkers == null || workFlowWorkers.size() == 0) //当前用户不是生产人员
+            return wrapData();
 
 
-        WorkFlowWorker firstStepWorker=workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowStepEquals(loginUser.id,ErpWorkFlow.FIRST_STEP);
-        List<ErpOrderItem > orderItems;
-        if(firstStepWorker==null)
-        {
+        WorkFlowWorker firstStepWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowStepEquals(loginUser.id, ErpWorkFlow.FIRST_STEP);
+        List<ErpOrderItem> orderItems;
+        if (firstStepWorker == null) {
 
             //      非第一道的用户
-              orderItems=   erpWorkService.searchHasStartWorkFlowUnCompleteOrderItems(key);
+            orderItems = erpWorkService.searchHasStartWorkFlowUnCompleteOrderItems(key);
 
 
+        } else {
+            orderItems = erpWorkService.searchUnCompleteOrderItems(key);
 
-        }else {
-            orderItems=  erpWorkService.searchUnCompleteOrderItems(key);
-
-            List<ErpOrderItem> result=new ArrayList<>();
+            List<ErpOrderItem> result = new ArrayList<>();
 
             //过滤  进行产品排产过滤  【0-5000】 铁件  【5000-9999】木剑
-            for(ErpOrderItem erpOrderItem:orderItems)
-            {
-                int prd_no_code=-1;
+            for (ErpOrderItem erpOrderItem : orderItems) {
+                int prd_no_code = -1;
 
-
-              if(  StringUtils.isChar(erpOrderItem.prd_no,2)) {
-                  try {
-                      //13A1221 形式   抽取字母后4位
-                      prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
-                  } catch (Throwable t) {
-                  }
-              }else if(StringUtils.isChar(erpOrderItem.prd_no,0))
-              {
-                  try {
-                      // A1221 形式   抽取字母后4位
-                      prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
-                  } catch (Throwable t) {
-                  }
-              }
-                if(prd_no_code==-1)
-                {result.add(erpOrderItem);
-
-                }else
-                if(prd_no_code>=0&&prd_no_code<=5000&&firstStepWorker.tie)
-                {
-                    result.add(erpOrderItem);
-                }else
-                if(prd_no_code>5000&&prd_no_code<=9999&&firstStepWorker.mu){
-
-                    result.add(erpOrderItem);
+                if (StringUtils.isChar(erpOrderItem.prd_no, 2)) {
+                    try {
+                        //13A1221 形式   抽取字母后4位
+                        prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
+                    } catch (Throwable t) {
+                    }
+                } else if (StringUtils.isChar(erpOrderItem.prd_no, 0)) {
+                    try {
+                        // A1221 形式   抽取字母后4位
+                        prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
+                    } catch (Throwable t) {
+                    }
                 }
 
+
+                boolean shouldAddItem = false;
+                if (prd_no_code == -1) {
+                    shouldAddItem = true;
+
+
+                } else if (prd_no_code >= 0 && prd_no_code <= 5000 && firstStepWorker.tie) {
+                    shouldAddItem = true;
+
+                } else if (prd_no_code > 5000 && prd_no_code <= 9999 && firstStepWorker.mu) {
+                    shouldAddItem = true;
+
+
+                }
+                if (shouldAddItem) {
+
+                    //查询当前item 在第一道的进度  100% 则也不显示
+                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, ErpWorkFlow.FIRST_STEP);
+
+                    if (report == null || report.percentage < 1)
+                        result.add(erpOrderItem);
+                }
 
 
             }
 
-            orderItems=result;
+            orderItems = result;
 
 
         }
 
 
-
-
         //第一流程人员  不进行筛选
-        if(firstStepWorker==null) {
+        if (firstStepWorker == null) {
             //流程过滤  如果当前流程已经完成100% 去除  ，如果上一流程未满100% 也去除
 
             List<ErpOrderItem> result = new ArrayList<>();
             for (ErpOrderItem erpOrderItem : orderItems) {
 
 
-
                 //遍历权限配置
-                for(WorkFlowWorker workFlowWorker:workFlowWorkers) {
+                for (WorkFlowWorker workFlowWorker : workFlowWorkers) {
 
                     ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, workFlowWorker.workFlowStep);
                     //如果当前流程已经完成100% 去除  ，
@@ -324,14 +333,13 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             }
 
 
-            orderItems=result;
+            orderItems = result;
         }
 //
 //
 
 
-
-        return wrapData(0,orderItems.size(),1,orderItems.size(),orderItems );
+        return wrapData(0, orderItems.size(), 1, orderItems.size(), orderItems);
 
     }
 
@@ -363,14 +371,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 item.packageInfo = product.packInfo;
 
 
-
-
-
-
-
             }
 
-            item.thumbnail=item.url= FileUtils.getErpProductPictureUrl(item.id_no,"");
+            item.thumbnail = item.url = FileUtils.getErpProductPictureUrl(item.id_no, "");
 
             // 附加数据
             OrderItem orderItem = orderItemRepository.findFirstByOsNoEqualsAndItmEquals(item.os_no, item.itm);
@@ -385,8 +388,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                     item.packageInfo = orderItem.packageInfo;
                 item.sendDate = orderItem.sendDate;
                 item.verifyDate = orderItem.verifyDate;
-
-
 
 
                 //绑定订单跟踪数据
@@ -503,6 +504,16 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      * @param erpOrder
      */
     private void attachData(ErpOrder erpOrder, Order order) {
+
+        if(erpOrder!=null) {
+
+            File filePath=FileUtils.getMaitouFilePath(maitoufilepath,erpOrder.os_no);
+
+            erpOrder.maitouUrl = filePath.exists()?FileUtils.getMaitouFileUrl(erpOrder.os_no):"";
+
+
+        }
+
         if (order == null || erpOrder == null) {
             return;
         }
@@ -515,6 +526,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         erpOrder.youmai = order.youmai;
         erpOrder.memo = order.memo;
         erpOrder.attaches = order.attaches;
+
 
 
     }
@@ -553,9 +565,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             }
 
             Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
-            if (order != null) {
+
                 attachData(erpOrder, order);
-            }
+
 
         }
         int totalCount = repository.getOrderCountByKeyAndCheckDate(key, dateStart, dateEnd);
@@ -597,9 +609,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
                     //读取
 
-                 String id_no= repository.findId_noByOrderItem( orderitem.osNo, orderitem.itm);
-                    orderReportItem.id_no=id_no;
-                    orderReportItem.thumbnail=orderReportItem.url= com.giants3.hd.server.utils.FileUtils.getErpProductPictureUrl(id_no,"");
+                    String id_no = repository.findId_noByOrderItem(orderitem.osNo, orderitem.itm);
+                    orderReportItem.id_no = id_no;
+                    orderReportItem.thumbnail = orderReportItem.url = com.giants3.hd.server.utils.FileUtils.getErpProductPictureUrl(id_no, "");
 
 
                     items.add(orderReportItem);
@@ -678,9 +690,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         productRepository.flush();
 
     }
-
-
-
 
 
     /**
@@ -810,8 +819,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
-
-
     /**
      * 获取生产流程表
      *
@@ -852,11 +859,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessage(User loginUser) {
 
 
+        List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndReceiveEquals(loginUser.id, true);
 
-
-        List<WorkFlowWorker> workFlowWorkers=workFlowWorkerRepository.findByUserIdEqualsAndReceiveEquals(loginUser.id,true);
-
-        if(!ArrayUtils.isNotEmpty(workFlowWorkers)) return wrapData();
+        if (!ArrayUtils.isNotEmpty(workFlowWorkers)) return wrapData();
 
         int size = workFlowWorkers.size();
         int[] flowSteps = new int[size];
@@ -866,8 +871,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         }
         int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_REWORK}; //WorkFlowMessage.STATE_RECEIVE,
         //读取未处理的 就是 receiverId=0
-        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepInAndReceiverIdEquals(state, flowSteps,0);
-
+        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepInAndReceiverIdEquals(state, flowSteps, 0);
 
 
         return wrapData(workFlowMessages);
@@ -876,15 +880,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     /**
      * 未处理的流程消息数量
+     *
      * @param loginUser
      * @return
      */
-    public int getUnHandleWorkFlowMessageCount(User loginUser)
-    {
+    public int getUnHandleWorkFlowMessageCount(User loginUser) {
 
 
-
-        RemoteData<WorkFlowMessage> remoteData=getUnHandleWorkFlowMessage(loginUser);
+        RemoteData<WorkFlowMessage> remoteData = getUnHandleWorkFlowMessage(loginUser);
 
 
         return remoteData.totalCount;
@@ -901,9 +904,9 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<WorkFlowMessage> getSendWorkFlowMessageList(User loginUser) {
 
 
-        List<WorkFlowWorker> workFlowWorkers=workFlowWorkerRepository.findByUserIdEqualsAndSendEquals(loginUser.id,true);
+        List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndSendEquals(loginUser.id, true);
 
-        if(!ArrayUtils.isNotEmpty(workFlowWorkers)) return wrapData();
+        if (!ArrayUtils.isNotEmpty(workFlowWorkers)) return wrapData();
 
 
         final int size = workFlowWorkers.size();
@@ -929,10 +932,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     }
 
 
-
-
-
-
     public RemoteData<OrderItem> searchOrderItem(String key, int pageIndex, int pageSize) {
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         String keyForSearch = "%" + key.trim() + "%";
@@ -948,7 +947,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<Void> cancelOrderWorkFlow(User loginUser, long orderItemWorkFlowId) {
 
 
-
         return wrapData();
 
 
@@ -958,17 +956,14 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     public RemoteData<WorkFlowMessage> getWorkFlowMessageByOrderItem(User user, String osNo, int itm) {
 
 
-        return wrapData(workFlowMessageRepository.findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(osNo,itm));
+        return wrapData(workFlowMessageRepository.findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(osNo, itm));
 
     }
 
     public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user) {
 
 
-
-
-
-        return wrapData(workFlowMessageRepository.findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(user.id,user.id));
+        return wrapData(workFlowMessageRepository.findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(user.id, user.id));
 
     }
 

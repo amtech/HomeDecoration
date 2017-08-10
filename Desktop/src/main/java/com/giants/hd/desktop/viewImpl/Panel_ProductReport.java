@@ -316,7 +316,7 @@ public class Panel_ProductReport extends BasePanel {
                 }
 
                 boolean withCopy = random_include.isSelected();
-                UseCaseFactory.getInstance().createProductByNameRandom(s, withCopy).execute(new Subscriber<java.util.List<Product>>() {
+                UseCaseFactory.getInstance().createProductByNameRandom(s, withCopy).execute(new Subscriber<RemoteData<Product>>() {
                     @Override
                     public void onCompleted() {
 
@@ -332,8 +332,10 @@ public class Panel_ProductReport extends BasePanel {
                     }
 
                     @Override
-                    public void onNext(java.util.List<Product> newProducts) {
+                    public void onNext(RemoteData<Product> remoteData) {
                         hideLoadingDialog();
+
+                        java.util.List<Product> newProducts = remoteData.datas;
                         if (newProducts.size() == 0) {
                             showMesssage("未查到产品记录");
 

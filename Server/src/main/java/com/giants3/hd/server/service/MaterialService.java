@@ -64,6 +64,11 @@ public class MaterialService extends AbstractService {
         erpPrdtRepository = new ErpPrdtRepository(manager);
     }
 
+    @Override
+    public void destroy() throws Exception {
+
+        manager.close();
+    }
 
     /**
      * 判断数据是否一致

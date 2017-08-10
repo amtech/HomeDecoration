@@ -82,4 +82,8 @@ public interface OrderDetailIPresenter extends IPresenter {
      * 启动生产流程跟踪
      */
     void startOrderTrack();
+
+    void updateMaitouFile(File file);
+
+    void viewMaitou();
 }

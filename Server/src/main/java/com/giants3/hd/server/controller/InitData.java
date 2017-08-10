@@ -1,6 +1,6 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.service.UserService;
+import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.entity.AppVersion;
 import com.giants3.hd.utils.entity.GlobalData;
 import com.giants3.hd.utils.entity.Module;
@@ -8,9 +8,6 @@ import com.giants3.hd.server.interf.TargetVersion;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.repository.WorkFlowRepository;
-import com.giants3.hd.server.service.GlobalDataService;
-import com.giants3.hd.server.service.TableRestoreService;
-import com.giants3.hd.server.service.WorkFlowService;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -46,6 +43,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     GlobalDataService globalDataService;
+
+    @Autowired
+    PushService pushService;
 
     @Autowired
     WorkFlowRepository workFlowRepository;
@@ -214,6 +214,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
         isStart = true;
 
+
+        pushService.sendBroadcastMessage();
 
         System.out.println("spring 容器初始化完毕================================================");
 

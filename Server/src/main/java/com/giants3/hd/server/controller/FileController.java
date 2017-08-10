@@ -45,6 +45,9 @@ public class FileController extends BaseController {
     //附件文件夹
     @Value("${attachfilepath}")
     private String attachfilepath;
+    //订单唛头文件夹
+    @Value("${maitoufilepath}")
+    private String maitoufilepath;
 
     @Value("${materialfilepath}")
     private String materialFilePath;
@@ -217,6 +220,8 @@ public class FileController extends BaseController {
     private RemoteData<Void> handleFileUpload(MultipartFile file, String newFilePath) {
 
 
+
+        FileUtils.makeDirs(newFilePath);
 
 
         try {
@@ -484,4 +489,52 @@ public class FileController extends BaseController {
             return wrapError("You failed to upload " + file.getName() + " because the file was empty.");
         }
     }
+     /**
+     * 嘜頭文件上传
+     *
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/uploadMaitou", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<String> handleMaitouUpload(@RequestParam("os_no") String os_no,@RequestParam("file") MultipartFile file) {
+
+
+
+
+
+        File maiTouFile =FileUtils.getMaitouFilePath(maitoufilepath,os_no);
+        if(maiTouFile.exists()) maiTouFile.delete();
+        if (!file.isEmpty()) {
+            RemoteData<Void> result = handleFileUpload(file,maiTouFile.getPath());
+
+            String url=FileUtils.getMaitouFileUrl(os_no);
+            if (result.isSuccess())
+                return wrapData(url);
+            return wrapError("上传失败");
+        } else {
+            return wrapError("You failed to upload " + file.getName() + " because the file was empty.");
+        }
+    }
+
+    /**
+     * 嘜頭文件上传
+     *
+     *
+     * @return
+     */
+    @RequestMapping(value = "/download/order/maitou", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    FileSystemResource downloadMaitouUpload(@RequestParam("os_no") String os_no ) {
+
+
+
+
+       return new FileSystemResource(maitoufilepath + os_no +".xls");
+
+
+    }
+
 }

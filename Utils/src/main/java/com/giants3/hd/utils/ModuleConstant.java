@@ -22,8 +22,20 @@ public class ModuleConstant {
     public static final String TITLE_PRODUCT_DELETE = "已删除产品";
     public static final String NAME_PRODUCT_REPORT = "ProductReport";
     public static final String TITLE_PRODUCT_REPORT = "产品报表";
+
+
+
+
     public static final String NAME_QUOTATION = "Quotation";
     public static final String TITLE_QUOTATION = "报价模块";
+
+
+    public static final String TITLE_QUTOTATION_PICTURE_EXPORT = "报价图片导出";
+    public static final String NAME_QUTOTATION_PICTURE_EXPORT  = "NAME_QUTOTATION_PICTURE_EXPORT";
+
+
+
+
     public static final String NAME_STOCK = "stockManager";
     public static final String TITLE_STOCK = "库存模块";
     public static final String NAME_STOCK_OUT = "stockOutList";
@@ -97,6 +109,8 @@ public class ModuleConstant {
     public static final String NAME_WORK_FLOW_MODULE  = "WORKFLOW_MODULE";
 
 
+
+
     public static final String TITLE_MODULE = "模块列表";
 
 
@@ -139,7 +153,7 @@ public class ModuleConstant {
             ,TITLE_ORDER_ITEM_FOR_ARRANGE
             ,TITLE_WORK_FLOW_ITEM_EVENT_CONFIG
 
-
+            ,TITLE_QUTOTATION_PICTURE_EXPORT
 
 
 
@@ -176,6 +190,9 @@ public class ModuleConstant {
             ,NAME_WORK_FLOW_ARRANGER
             ,NAME_ORDER_ITEM_FOR_ARRANGE
             ,NAME_WORK_FLOW_ITEM_EVENT_CONFIG
+
+
+            ,NAME_QUTOTATION_PICTURE_EXPORT
 
 
 

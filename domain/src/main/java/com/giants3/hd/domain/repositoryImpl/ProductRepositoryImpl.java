@@ -60,10 +60,10 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
     }
 
     @Override
-    public Observable<List<Product>> loadByProductNameRandom(final String productNames, final boolean withCopy) {
-        return Observable.create(new Observable.OnSubscribe<List<Product>>() {
+    public Observable<RemoteData<Product>> loadByProductNameRandom(final String productNames, final boolean withCopy) {
+        return Observable.create(new Observable.OnSubscribe<RemoteData<Product>>() {
             @Override
-            public void call(Subscriber<? super List<Product>> subscriber) {
+            public void call(Subscriber<? super RemoteData<Product>> subscriber) {
 
 
 
@@ -73,7 +73,7 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
 
                     if(remoteData.isSuccess())
                     {
-                        subscriber.onNext(remoteData.datas );
+                        subscriber.onNext(remoteData );
                         subscriber.onCompleted();
 
                     }else

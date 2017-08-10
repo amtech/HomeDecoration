@@ -1170,4 +1170,13 @@ public class HttpUrl {
     public static String deleteWorkFlowArea(long id) {
         return additionInfo(BaseUrl + "api/workFlow/deleteArea?id="+id);
     }
+
+
+
+
+
+    public static String uploadMaitouFile(String os_no) {
+
+        return additionInfo(BaseUrl + "api/file/uploadMaitou?os_no="+os_no);
+    }
 }

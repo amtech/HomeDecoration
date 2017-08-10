@@ -38,4 +38,20 @@ public class SwingFileUtils {
         return file;
 
     }
+
+
+    /**
+     *
+     *
+     * @return
+     */
+    public  static File getSelectedFile( )
+    {
+
+
+        return getSelectedFile(JFileChooser.FILES_ONLY);
+    }
+
+
+
 }

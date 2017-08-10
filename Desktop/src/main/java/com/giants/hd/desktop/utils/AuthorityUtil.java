@@ -630,4 +630,10 @@ public class AuthorityUtil {
     }
 
 
+    public boolean viewQuotationPictureExport() {
+
+
+        return isViewable(ModuleConstant.TITLE_QUTOTATION_PICTURE_EXPORT);
+
+    }
 }

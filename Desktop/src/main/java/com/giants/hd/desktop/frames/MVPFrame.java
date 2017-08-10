@@ -3,6 +3,7 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.mvp.IModel;
 import com.giants.hd.desktop.mvp.IViewer;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -42,6 +43,12 @@ public  abstract  class MVPFrame<V extends IViewer,M extends IModel> extends  Ba
     protected M getModel()
     {
         return model;
+    }
+
+    protected Window getWindow()
+    {
+
+        return SwingUtilities.getWindowAncestor(this);
     }
 
 }

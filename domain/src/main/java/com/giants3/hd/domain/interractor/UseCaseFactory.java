@@ -12,6 +12,7 @@ import rx.schedulers.Schedulers;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 
 /**
@@ -126,7 +127,7 @@ public class UseCaseFactory {
 
     public UseCase createProductByNameRandom(String productList, boolean withCopy) {
 
-        return new ProductRandomUseCase(Schedulers.newThread(), Schedulers.immediate(), productList, withCopy, productRepository);
+        return new ProductRandomUseCase(  productList, withCopy, productRepository);
     }
 
 
@@ -147,7 +148,7 @@ public class UseCaseFactory {
     }
 
     public UseCase createGetProductByPrdNo(String prdNo) {
-        return new GetProductByPrdNoUseCase(Schedulers.newThread(), Schedulers.immediate(), prdNo, productRepository);
+        return new GetProductByPrdNoUseCase(  prdNo, productRepository);
     }
 
 
@@ -572,5 +573,11 @@ public class UseCaseFactory {
 
     public UseCase createDeleteWorkFlowAreaUseCase(long id) {
         return  new DeleteWorkFlowAreaUseCase( id,workFlowRepository );
+    }
+
+    public UseCase updateMaitouFileUseCase(String os_no, File file) {
+
+
+        return  new UpdateMaitouFileUseCase( os_no,file,orderRepository );
     }
 }

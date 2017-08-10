@@ -7,7 +7,7 @@ import rx.Scheduler;
 /**随机查询货物信息    参数  表示 以逗号隔开的货号列表
  * Created by david on 2015/10/7.
  */
-public class ProductRandomUseCase extends UseCase {
+public class ProductRandomUseCase extends DefaultUseCase {
 
 
     private String productNames;
@@ -17,8 +17,8 @@ public class ProductRandomUseCase extends UseCase {
      */
     private boolean withCopy;
 
-    public ProductRandomUseCase(Scheduler threadExecutor, Scheduler postExecutionThread, String productNames,boolean withCopy, ProductRepository productRepository) {
-        super(threadExecutor, postExecutionThread);
+    public ProductRandomUseCase(  String productNames,boolean withCopy, ProductRepository productRepository) {
+        super( );
 
         this.withCopy=withCopy;
         this.productNames = productNames;
