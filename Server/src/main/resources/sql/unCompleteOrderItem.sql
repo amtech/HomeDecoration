@@ -12,7 +12,7 @@ b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
 
 select   os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt  from  tf_pos  where os_id='SO'
 --订单起止日期  降低查询范围
-and  os_dd >'2017-07-01' and (os_no like :os_no or prd_no like :prd_no)
+and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
  ) as  a
 left outer join
 (
