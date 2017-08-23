@@ -158,6 +158,16 @@ public class Material  implements Serializable {
 
 
 	/**
+	 * 副单位
+	 */
+	public String unit2;
+	/**
+	 * 副单价
+	 */
+	public float price2;
+
+
+	/**
 	 * 是否停用
 	 */
 	@Basic

@@ -4,6 +4,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.viewImpl.BasePanel;
 import com.giants.hd.desktop.viewImpl.Panel_Material_Detail;
 import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.RemoteData;
 import com.giants3.hd.utils.entity.Material;
@@ -68,7 +69,10 @@ public class MaterialDetailFrame extends BaseFrame implements BasePanel.PanelLis
 
          material_detail.getData(material);
 
-        if(oldMaterial==null||!oldMaterial.equals(material))
+
+        boolean  isChanged=   !  GsonUtils.toJson(oldMaterial).equals(GsonUtils.toJson(material));
+
+        if(isChanged)
         {
 
 
@@ -170,33 +174,7 @@ public class MaterialDetailFrame extends BaseFrame implements BasePanel.PanelLis
 
     }
 
-    @Override
-    public void close() {
 
-
-        material_detail.getData(material);
-
-        if(oldMaterial==null||!oldMaterial.equals(material)) {
-
-
-            int option=   JOptionPane.showConfirmDialog(MaterialDetailFrame.this,"数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
-
-            if (JOptionPane.OK_OPTION == option) {
-                //点击了确定按钮
-
-                MaterialDetailFrame.this.dispose();
-            }
-
-        }else
-        {
-            dispose();
-        }
-
-
-
-
-
-    }
 
     @Override
     public void verify() {
@@ -206,5 +184,18 @@ public class MaterialDetailFrame extends BaseFrame implements BasePanel.PanelLis
     @Override
     public void unVerify() {
 
+    }
+
+
+    /**
+     * 默认为false
+     *
+     * @return
+     */
+    @Override
+    public boolean hasModifyData() {
+        material_detail.getData(material);
+
+         return   !  GsonUtils.toJson(oldMaterial).equals(GsonUtils.toJson(material));
     }
 }

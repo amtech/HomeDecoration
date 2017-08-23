@@ -435,6 +435,18 @@ public class MaterialController extends BaseController {
 
 
 
+            //同步相关信息  副单位 单价
+
+            if(Float.compare(material.price2,oldData.price2)!=0 || !material.unit2.equals(oldData.unit2))
+            {
+                //更新所有的分析表的相关数据
+
+                productMaterialRepository.updateUnitPrice2ByMaterialId(material.unit2,material.price2,material.id);
+
+
+
+            }
+
 
 
 

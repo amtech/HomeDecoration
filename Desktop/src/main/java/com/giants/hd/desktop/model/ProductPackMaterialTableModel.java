@@ -16,25 +16,27 @@ import java.util.List;
  * 包装 输入表格 模型
  */
 
-public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMaterial> implements Materialable{
+public class ProductPackMaterialTableModel extends BaseTableModel<ProductMaterial> implements Materialable {
 
 
-      static final String COLUMN_AMOUNT = "amount";
+    static final String COLUMN_AMOUNT = "amount";
     static final String COLUMN_QTY = "quantity";
-    public static String[] columnNames = new String[]{"序号","  材料类别    ","  材质     ","  位置    ",   "  物料编码   ", "材料名称", "数量","长","宽","高","毛长", "毛宽", "毛高","配额","单位","利用率","类型","单价","金额","分件备注"};
-    public static int[] columnWidths = new int []{       40 ,   80,              60,             60,            100,        120,        40,  40,  40, 40,  40,    40,  40,   80,    40,    60,     40,     60,   80, ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{"序号", "  材料类别    ", "  材质     ", "  位置    ", "  物料编码   ", "材料名称", "数量", "长", "宽", "高", "毛长", "毛宽", "毛高", "配额", "单位", "利用率", "类型", "单价", "金额", "副单位", "副单价", "分件备注"};
+    public static int[] columnWidths = new int[]{40, 80, 60, 60, 100, 120, 40, 40, 40, 40, 40, 40, 40, 80, 40, 60, 40, 60, 80, 60, 60, ConstantData.MAX_COLUMN_WIDTH};
     private static final String PRICE = "price";
-    public static String[] fieldName = new String[]{ConstantData.COLUMN_INDEX,"packMaterialClass","packMaterialType","packMaterialPosition","materialCode", "materialName",COLUMN_QTY, "pLong", "pWidth", "pHeight","wLong","wWidth","wHeight","quota","unitName","available","type", PRICE,COLUMN_AMOUNT,"memo"};
-    public  static Class[] classes = new Class[]{Object.class,PackMaterialClass.class,PackMaterialType.class,PackMaterialPosition.class, Material.class, Material.class };
+    public static final String[] fieldName = new String[]{ConstantData.COLUMN_INDEX, "packMaterialClass", "packMaterialType", "packMaterialPosition", "materialCode", "materialName", COLUMN_QTY, "pLong", "pWidth", "pHeight", "wLong", "wWidth", "wHeight", "quota", "unitName", "available", "type", PRICE, COLUMN_AMOUNT, "unit2", "price2", "memo"};
 
-    public  static boolean[] editables = new boolean[]{false,true, true, true,  true, true, true, true, true, true,false,false,false , false, false, true, false,false,false,true };
+
+    public static Class[] classes = new Class[]{Object.class, PackMaterialClass.class, PackMaterialType.class, PackMaterialPosition.class, Material.class, Material.class};
+
+    public static boolean[] editables = new boolean[]{false, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, false, false, false, false, false, true};
 
     private Product product;
 
 
     @Inject
     public ProductPackMaterialTableModel() {
-        super(columnNames,fieldName,classes,ProductMaterial.class);
+        super(columnNames, fieldName, classes, ProductMaterial.class);
     }
 
 
@@ -42,11 +44,17 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
-
-   //     ProductMaterial productMaterial=getItem(rowIndex);
+        //     ProductMaterial productMaterial=getItem(rowIndex);
 //        //气泡袋类型  数量不可输入， 由系统自动生成
 //        if(COLUMN_QTY.equals(fieldName[columnIndex])&&productMaterial.getPackMaterialClass()!=null&&PackMaterialClass.CLASS_QIPAODAI.equalsIgnoreCase(productMaterial.getPackMaterialClass().name))
 //            return false;
+
+        ProductMaterial productMaterial = getItem(rowIndex);
+//        彩盒單價可以輸入
+        if (PRICE.equals(fieldName[columnIndex]) && productMaterial.getPackMaterialClass() != null && PackMaterialClass.CLASS_CAIHE.equalsIgnoreCase(productMaterial.getPackMaterialClass().name))
+            return true;
+
+
         return editables[columnIndex];
     }
 
@@ -55,24 +63,20 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public Object getValueAt(int rowIndex, int columnIndex) {
 
 
-
-        if(fieldName[columnIndex].equals(COLUMN_AMOUNT)||fieldName[columnIndex].equals(PRICE))
-        {
-            if(AuthorityUtil.getInstance().cannotViewProductPrice())
+        if (fieldName[columnIndex].equals(COLUMN_AMOUNT) || fieldName[columnIndex].equals(PRICE)) {
+            if (AuthorityUtil.getInstance().cannotViewProductPrice())
                 return "";
         }
 
 
-        Object value= super.getValueAt(rowIndex, columnIndex);
+        Object value = super.getValueAt(rowIndex, columnIndex);
 
 
-        if(fieldName[columnIndex].equals(COLUMN_AMOUNT)&&value instanceof Float&&product!=null )
-        {
+        if (fieldName[columnIndex].equals(COLUMN_AMOUNT) && value instanceof Float && product != null) {
 
-            if(product.packQuantity>0)
-            {
-                float floatValue=Float.valueOf(value.toString());
-                value= FloatHelper.scale(floatValue/product.packQuantity);
+            if (product.packQuantity > 0) {
+                float floatValue = Float.valueOf(value.toString());
+                value = FloatHelper.scale(floatValue / product.packQuantity);
             }
 //            else
 //            {
@@ -89,20 +93,17 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
 
-
         super.setValueAt(aValue, rowIndex, columnIndex);
 
-        ProductMaterial material=getItem(rowIndex);
-        float floatValue=0;
+        ProductMaterial material = getItem(rowIndex);
+        float floatValue = 0;
         try {
-            floatValue =   Float.valueOf(aValue.toString());
-        }catch (Throwable t)
-        {
+            floatValue = Float.valueOf(aValue.toString());
+        } catch (Throwable t) {
 
         }
 
-        switch (columnIndex)
-        {
+        switch (columnIndex) {
 
 
             case 1:
@@ -125,7 +126,6 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                 material.setPackMaterialPosition((PackMaterialPosition) aValue);
                 updateProduct();
                 break;
-
 
 
             case 6:
@@ -165,20 +165,24 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
                 break;
 
-            case 19:
-                //设置备注
-                material.setMemo( aValue.toString());
+            case 17:
+                material.setPrice(floatValue);
+                material.update();
+
                 break;
 
+            case 21:
+                //设置备注
+                material.setMemo(aValue.toString());
+                break;
 
 
         }
 
 
-
         //检查包装
 
-        if(material!=null&&material.getPackMaterialClass()!=null) {
+        if (material != null && material.getPackMaterialClass() != null) {
             switch (material.getPackMaterialClass().name) {
 
                 //如果是内盒
@@ -191,8 +195,8 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
 
                                 productMaterial.updateJiaodaiQuota(product, material);
-                                int relateIndex=datas.indexOf(productMaterial);
-                                fireTableRowsUpdated(relateIndex,relateIndex);
+                                int relateIndex = datas.indexOf(productMaterial);
+                                fireTableRowsUpdated(relateIndex, relateIndex);
                                 break;
                             }
 
@@ -209,14 +213,14 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
                     //找出内盒  更新胶带信息
-                    ProductMaterial foundNeihe=null;
+                    ProductMaterial foundNeihe = null;
                     for (ProductMaterial productMaterial : datas) {
 
                         PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_INSIDE_BOX)) {
 
-                                foundNeihe=productMaterial;
+                                foundNeihe = productMaterial;
 
                                 break;
 
@@ -232,22 +236,21 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                     break;
 
 
-
                 //外箱数据
                 case PackMaterialClass.CLASS_BOX:
 
 
                     //找出保丽隆
-                    ProductMaterial foundBaolilong=null;
+                    ProductMaterial foundBaolilong = null;
                     for (ProductMaterial productMaterial : datas) {
 
                         PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_TESHU_BAOLILONG)) {
-                                foundBaolilong=productMaterial;
+                                foundBaolilong = productMaterial;
                                 foundBaolilong.updateBAOLILONGQuota(product, material);
-                                int relateIndex=datas.indexOf(productMaterial);
-                                fireTableRowsUpdated(relateIndex,relateIndex);
+                                int relateIndex = datas.indexOf(productMaterial);
+                                fireTableRowsUpdated(relateIndex, relateIndex);
                                 break;
 
                             }
@@ -255,7 +258,6 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
                         }
 
                     }
-
 
 
                     break;
@@ -266,13 +268,13 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
 
                     //找出保丽隆
-                    ProductMaterial foundWaixiang=null;
+                    ProductMaterial foundWaixiang = null;
                     for (ProductMaterial productMaterial : datas) {
 
                         PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_BOX)) {
-                                foundWaixiang=productMaterial;
+                                foundWaixiang = productMaterial;
 
                                 break;
 
@@ -282,7 +284,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
                     }
 
-                    if(foundWaixiang!=null)
+                    if (foundWaixiang != null)
                         material.updateBAOLILONGQuota(product, foundWaixiang);
 
 
@@ -295,8 +297,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
         //保丽龙平板计算公式
 
-        fireTableRowsUpdated(rowIndex,rowIndex);
-
+        fireTableRowsUpdated(rowIndex, rowIndex);
 
 
     }
@@ -309,13 +310,11 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     }
 
     @Override
-    public void  setMaterial(Material material,int rowIndex)
-    {
+    public void setMaterial(Material material, int rowIndex) {
 
 
-        ProductMaterial productMaterial=getItem(rowIndex);
-        if(productMaterial!=null)
-        {
+        ProductMaterial productMaterial = getItem(rowIndex);
+        if (productMaterial != null) {
             productMaterial.updateMaterial(material);
         }
 
@@ -327,9 +326,9 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
     @Override
     public ProductMaterial addNewRow(int index) {
-        ProductMaterial p=     super.addNewRow(index);
+        ProductMaterial p = super.addNewRow(index);
 
-            p.id= -RandomUtils.nextInt();
+        p.id = -RandomUtils.nextInt();
         //包装的计算公式不一致  需要在本地标记类型id
         p.setFlowId(Flow.FLOW_PACK);
         return p;
@@ -344,7 +343,7 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
 
     @Override
     public int getRowHeight() {
-        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT*2/3;
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT * 2 / 3;
     }
 
 
@@ -357,84 +356,68 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
         //更新数据
 
 
-
         //胶带信息 与产品的包装类型相关
 
         //找出胶带
         int size = datas.size();
 
         //找出内盒数据
-        ProductMaterial neihe=null;
+        ProductMaterial neihe = null;
 
         //找出外箱数据
-        ProductMaterial waixiang=null;
+        ProductMaterial waixiang = null;
 
 
         //找出胶带
-        List<ProductMaterial> jiaodais=new ArrayList<>();
+        List<ProductMaterial> jiaodais = new ArrayList<>();
 
         //找出保丽隆
-        List<ProductMaterial> baolilongs=new ArrayList<>();
-
+        List<ProductMaterial> baolilongs = new ArrayList<>();
 
 
         for (int i = 0; i < size; i++) {
-            ProductMaterial material=datas.get(i);
+            ProductMaterial material = datas.get(i);
             PackMaterialClass packMaterialClass = material.getPackMaterialClass();
-            String packMaterialClassName=packMaterialClass==null?"":packMaterialClass.name;
-            if(!StringUtils.isEmpty(packMaterialClassName))
-            switch (packMaterialClassName)
-            {
+            String packMaterialClassName = packMaterialClass == null ? "" : packMaterialClass.name;
+            if (!StringUtils.isEmpty(packMaterialClassName))
+                switch (packMaterialClassName) {
 
 
-                case PackMaterialClass.CLASS_BOX:
-                    if(waixiang==null)
-                        waixiang=material;
-                    break;
-                case PackMaterialClass.CLASS_INSIDE_BOX:
-                    if(neihe==null)
-                    neihe=material;
-                break;
-                case PackMaterialClass.CLASS_JIAODAI:
+                    case PackMaterialClass.CLASS_BOX:
+                        if (waixiang == null)
+                            waixiang = material;
+                        break;
+                    case PackMaterialClass.CLASS_INSIDE_BOX:
+                        if (neihe == null)
+                            neihe = material;
+                        break;
+                    case PackMaterialClass.CLASS_JIAODAI:
 
-                    jiaodais.add(material);
-                    break;
+                        jiaodais.add(material);
+                        break;
 
-                case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+                    case PackMaterialClass.CLASS_TESHU_BAOLILONG:
 
-                    baolilongs.add(material);
-                    break;
+                        baolilongs.add(material);
+                        break;
 
-            }
-
-
-
-
-
+                }
 
 
         }
 
-        if(neihe!=null)
-            for(ProductMaterial jiaodai:jiaodais)
-              jiaodai.updateJiaodaiQuota(product,neihe);
+        if (neihe != null)
+            for (ProductMaterial jiaodai : jiaodais)
+                jiaodai.updateJiaodaiQuota(product, neihe);
 
 
-        if(waixiang!=null)
-            for(ProductMaterial baolilong:baolilongs)
-            {
+        if (waixiang != null)
+            for (ProductMaterial baolilong : baolilongs) {
                 baolilong.updateBAOLILONGQuota(product, waixiang);
             }
 
 
-
-
-
-
         //保丽龙的信息  跟产品的包装类型相关
-
-
-
 
 
         fireTableDataChanged();
@@ -444,10 +427,9 @@ public class ProductPackMaterialTableModel extends  BaseTableModel<ProductMateri
     @Override
     public void insertNewRows(List<ProductMaterial> insertDatas, int index) {
 
-        for(ProductMaterial material:insertDatas)
-        {
-            material.id=-1;
-            material.flowId=Flow.FLOW_PACK;
+        for (ProductMaterial material : insertDatas) {
+            material.id = -1;
+            material.flowId = Flow.FLOW_PACK;
         }
         super.insertNewRows(insertDatas, index);
     }

@@ -153,6 +153,23 @@ public class ProductMaterial implements Serializable, Summariable, Valuable {
     public String flowName;
 
 
+
+
+
+
+    /**
+     * 副单位
+     */
+    public String unit2;
+    /**
+     * 副单价
+     */
+    public float price2;
+
+
+
+
+
     /**
      * 材质类型选择
      */
@@ -408,6 +425,8 @@ public class ProductMaterial implements Serializable, Summariable, Valuable {
         available = material.available;
 
         unitName = material.unitName;
+        unit2 = material.unit2;
+        price2 = material.price2;
         type = material.typeId;
 
         mWidth = material.wWidth;
@@ -537,9 +556,10 @@ public class ProductMaterial implements Serializable, Summariable, Valuable {
 
                     case PackMaterialClass.CLASS_CAIHE:
                         // 彩盒计算
-                        newQuota = (pLong / 100 + pWidth / 100 * 4) * (pWidth / 100 + pHeight / 100 + 0.06f) * 2 * quantity;
+                      //  newQuota = (pLong / 100 + pWidth / 100 * 4) * (pWidth / 100 + pHeight / 100 + 0.06f) * 2 * quantity;
 
-
+                        //20170820 彩盒去除公司，並且單價可填寫
+                        newQuota =  quantity;
                         break;
                     case PackMaterialClass.CLASS_ZHANSHIHE:
 

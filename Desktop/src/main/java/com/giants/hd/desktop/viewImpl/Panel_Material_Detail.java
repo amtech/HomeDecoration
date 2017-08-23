@@ -18,7 +18,7 @@ import java.awt.event.*;
 /**
  * 材料详细
  */
-public class Panel_Material_Detail extends  BasePanel {
+public class Panel_Material_Detail extends BasePanel {
     private JTextField tf_code;
     private JTextField tf_name;
     private JComboBox<MaterialClass> cb_materialClass;
@@ -40,7 +40,8 @@ public class Panel_Material_Detail extends  BasePanel {
     private JTextField jtf_ingredientRatio;
     private JTextField jtf_discount;
     private JComboBox cb_outofservice;
-
+    private JFormattedTextField tf_price2;
+    private JTextField tf_unit2;
 
 
     private ItemListener materialClassListener;
@@ -48,8 +49,7 @@ public class Panel_Material_Detail extends  BasePanel {
 
 
     @Inject
-    public Panel_Material_Detail()
-    {
+    public Panel_Material_Detail() {
 
         init();
 
@@ -69,19 +69,17 @@ public class Panel_Material_Detail extends  BasePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if(listener!=null)
-                {
+                if (listener != null) {
                     listener.delete();
                 }
             }
         });
 
-        materialClassListener=new ItemListener() {
+        materialClassListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange()==ItemEvent.SELECTED)
-                {
-                    MaterialClass materialClass= (MaterialClass) e.getItem();
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    MaterialClass materialClass = (MaterialClass) e.getItem();
                     ftf_wLong.setValue(materialClass.wLong);
                     ftf_wHeight.setValue(materialClass.wHeight);
                     ftf_wWdith.setValue(materialClass.wWidth);
@@ -91,7 +89,6 @@ public class Panel_Material_Detail extends  BasePanel {
                 }
             }
         };
-
 
 
     }
@@ -104,22 +101,17 @@ public class Panel_Material_Detail extends  BasePanel {
     }
 
 
-
-    public void init()
-    {
+    public void init() {
 
 
+        // cb_materialClass.addItem();
 
-       // cb_materialClass.addItem();
 
-
-        for(MaterialClass materialClass: CacheManager.getInstance().bufferData.materialClasses)
-        {
+        for (MaterialClass materialClass : CacheManager.getInstance().bufferData.materialClasses) {
             cb_materialClass.addItem(materialClass);
         }
 
-        for(MaterialType materialType: CacheManager.getInstance().bufferData.materialTypes)
-        {
+        for (MaterialType materialType : CacheManager.getInstance().bufferData.materialTypes) {
             cb_materialType.addItem(materialType);
         }
 
@@ -131,38 +123,27 @@ public class Panel_Material_Detail extends  BasePanel {
         cb_outofservice.addItem("使用");
         cb_outofservice.addItem("停用");
 
-         lb_photo  .addMouseListener(new MouseInputAdapter() {
-             @Override
-             public void mouseClicked(MouseEvent e) {
-                 super.mouseClicked(e);
-                 if (e.getClickCount() >= 2) {
+        lb_photo.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getClickCount() >= 2) {
 
 
-                     if (data!=null) {
-                         ImageViewDialog.showMaterialDialog(getWindow(getRoot()),data.code, data.url);
-                     }
+                    if (data != null) {
+                        ImageViewDialog.showMaterialDialog(getWindow(getRoot()), data.code, data.url);
+                    }
 
-                 }
-             }
-    });
-
-
-
-
-
-
-
-
+                }
+            }
+        });
 
 
         //配置权限  是否修改  是否可以删除
 
-        boolean modifiable= AuthorityUtil.getInstance().editMaterial()||AuthorityUtil.getInstance().addMaterial();
+        boolean modifiable = AuthorityUtil.getInstance().editMaterial() || AuthorityUtil.getInstance().addMaterial();
 
         btn_save.setVisible(modifiable);
-
-
-
 
 
         btn_delete.setVisible(AuthorityUtil.getInstance().deleteMaterial());
@@ -171,14 +152,9 @@ public class Panel_Material_Detail extends  BasePanel {
     }
 
 
-
-
-
-
-
     public void setData(Material data) {
 
-        this.data=data;
+        this.data = data;
 
         cb_materialClass.removeItemListener(materialClassListener);
 
@@ -196,39 +172,36 @@ public class Panel_Material_Detail extends  BasePanel {
         ftf_available.setValue(new Float(data.getAvailable()));
         ftf_unitRatio.setValue(new Float(data.getUnitRatio()));
         jtf_discount.setText(String.valueOf(data.discount));
-        jtf_ingredientRatio.setText(data.ingredientRatio<=0?"":String.valueOf(data.ingredientRatio));
+        jtf_ingredientRatio.setText(data.ingredientRatio <= 0 ? "" : String.valueOf(data.ingredientRatio));
 
-        int selectedItem=0;
-        for(int i=0,count=cb_materialClass.getItemCount();i<count;i++)
-        {
 
-            if(cb_materialClass.getItemAt(i).code.equals(data.classId))
-            {
-                selectedItem=i;
+
+        tf_price2.setValue(new Float(data.price2));
+        tf_unit2.setText(data.unit2);
+
+        int selectedItem = 0;
+        for (int i = 0, count = cb_materialClass.getItemCount(); i < count; i++) {
+
+            if (cb_materialClass.getItemAt(i).code.equals(data.classId)) {
+                selectedItem = i;
                 break;
             }
         }
         cb_materialClass.setSelectedIndex(selectedItem);
 
 
+        selectedItem = 0;
+        for (int i = 0, count = cb_materialType.getItemCount(); i < count; i++) {
 
-        selectedItem=0;
-        for(int i=0,count=cb_materialType.getItemCount();i<count;i++)
-        {
-
-            if(data.typeId==cb_materialType.getItemAt(i).typeId)
-            {
-                selectedItem=i;
+            if (data.typeId == cb_materialType.getItemAt(i).typeId) {
+                selectedItem = i;
                 break;
             }
         }
         cb_materialType.setSelectedIndex(selectedItem);
 
 
-
-
-
-        cb_outofservice.setSelectedIndex(data.outOfService?1:0);
+        cb_outofservice.setSelectedIndex(data.outOfService ? 1 : 0);
 
 //        selectedItem=-1;
 //        for(int i=0,count=cb_equation.getItemCount();i<count;i++)
@@ -266,12 +239,12 @@ public class Panel_Material_Detail extends  BasePanel {
         data.setSpec(tf_spec.getText());
         data.setMemo(tf_memo.getText());
 
-        MaterialClass materialClass= (MaterialClass) cb_materialClass.getSelectedItem();
+        MaterialClass materialClass = (MaterialClass) cb_materialClass.getSelectedItem();
         data.setClassId(materialClass.code);
         data.setClassName(materialClass.name);
 
 
-        MaterialType materialType= (MaterialType) cb_materialType.getSelectedItem();
+        MaterialType materialType = (MaterialType) cb_materialType.getSelectedItem();
         data.setTypeId(materialType.typeId);
         data.setTypeName(materialType.typeName);
 
@@ -292,28 +265,31 @@ public class Panel_Material_Detail extends  BasePanel {
 
         data.setUnitRatio(Float.valueOf(ftf_unitRatio.getValue().toString()));
 
+
+        data.unit2 = tf_unit2.getText().trim();
+        try {
+            data.price2 = Float.valueOf(tf_price2.getValue().toString());
+        } catch (Throwable t) {
+
+        }
+
+
         try {
             data.ingredientRatio = Float.valueOf(jtf_ingredientRatio.getText());
-        }catch (Throwable t)
-        {
-            data.ingredientRatio=0;
+        } catch (Throwable t) {
+            data.ingredientRatio = 0;
         }
 
         try {
             data.discount = Float.valueOf(jtf_discount.getText());
-        }catch (Throwable t)
-        {
-            data.discount=0;
+        } catch (Throwable t) {
+            data.discount = 0;
         }
 
-        data.outOfService=cb_outofservice.getSelectedIndex()==0?false:true;
+        data.outOfService = cb_outofservice.getSelectedIndex() == 0 ? false : true;
 
     }
 
-    public boolean isModified(Material data) {
-
-        return false;
-    }
 
 
 

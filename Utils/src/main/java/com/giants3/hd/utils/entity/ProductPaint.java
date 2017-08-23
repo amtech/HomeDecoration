@@ -160,6 +160,20 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	public int materialType;
 
 
+
+
+//	/**
+//	 * 副单位
+//	 */
+//	public String unit2;
+//	/**
+//	 * 副单价
+//	 */
+//	public float price2;
+
+
+
+
 	public long getId() {
 		return id;
 	}

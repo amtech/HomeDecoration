@@ -1,31 +1,13 @@
 apply plugin: 'java'
 
 
-apply plugin: 'maven'
+apply from: 'publish.gradle'
 
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '1.0'
-def fat_appendix = '-all'
-//构建jar包依赖所对应的版本号。代码有更新修改，版本号往上加。
-def  jarVersion = '1.0.3'
-def  jarArtifactId= 'dataLib'
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-//create a single Jar with all dependencies
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-                'Implementation-Version': version
 
-    }
-    baseName = project.name + fat_appendix
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
 
 
 
@@ -41,38 +23,3 @@ dependencies {
 
 }
 
-
-////打包源代码
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
-    archives file: file('build/libs/'+project.name +fat_appendix +'-'+version+'.jar'), name:project.name , type: 'jar'
-}
-
-uploadArchives  {
-    repositories {
-        mavenDeployer {
-            snapshotRepository(url: LOCAL_MAVEN_SNAPSHOT_URL) {
-                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
-            }
-            repository(url: LOCAL_MAVEN_URL) {
-                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
-            }
-//            pom.version = jarVersion
-//            pom.artifactId = jarArtifactId
-//            pom.groupId = GROUP_ID
-            pom.project {
-
-                version jarVersion
-                artifactId jarArtifactId
-                groupId GROUP_ID
-                packaging TYPE
-                description DESCRIPTION
-            }
-        }
-    }
-}
