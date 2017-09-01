@@ -93,6 +93,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     private String attachfilepath;
 
 
+    ErpWorkRepository erpWorkRepository;
+
     @Autowired
     OrderAuthRepository orderAuthRepository;
 
@@ -110,7 +112,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         EntityManagerHelper helper = EntityManagerHelper.getErp();
         manager = helper.getEntityManager();
         repository = new ErpOrderRepository(manager);
-
+        erpWorkRepository = new ErpWorkRepository(manager);
     }
 
 
@@ -255,32 +257,69 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             //过滤  进行产品排产过滤  【0-5000】 铁件  【5000-9999】木剑
             for (ErpOrderItem erpOrderItem : orderItems) {
-                int prd_no_code = -1;
 
-                if (StringUtils.isChar(erpOrderItem.prd_no, 2)) {
-                    try {
-                        //13A1221 形式   抽取字母后4位
-                        prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
-                    } catch (Throwable t) {
+
+
+
+
+                boolean tie=false;
+                boolean mu=false;
+
+                //先從指令單中判斷鐵幕
+                List<ErpOrderItemProcess> processes = erpWorkRepository.findOrderItemProcesses(erpOrderItem.os_no, erpOrderItem.itm);
+                for(ErpOrderItemProcess erpOrderItemProcess:processes)
+                {
+                    if(erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AT"))
+                    {tie=true;}
+                    if(erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AM"))
+                    {mu=true;}
+                }
+
+
+
+                if(!tie&&!mu) {
+
+                    int prd_no_code = -1;
+
+                    if (StringUtils.isChar(erpOrderItem.prd_no, 2)) {
+                        try {
+                            //13A1221 形式   抽取字母后4位
+                            prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
+                        } catch (Throwable t) {
+                        }
+                    } else if (StringUtils.isChar(erpOrderItem.prd_no, 0)) {
+                        try {
+                            // A1221 形式   抽取字母后4位
+                            prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
+                        } catch (Throwable t) {
+                        }
                     }
-                } else if (StringUtils.isChar(erpOrderItem.prd_no, 0)) {
-                    try {
-                        // A1221 形式   抽取字母后4位
-                        prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
-                    } catch (Throwable t) {
+
+
+
+                    if (prd_no_code == -1) {
+                        tie = true;
+                        mu = true;
+
+
+                    }
+
+                    else if (prd_no_code >= 0 && prd_no_code <= 5000  ) {
+                        tie = true;
+
+                    } else if (prd_no_code > 5000 && prd_no_code <= 9999 ) {
+                        mu = true;
+
+
                     }
                 }
 
 
                 boolean shouldAddItem = false;
-                if (prd_no_code == -1) {
+                if (tie&& firstStepWorker.tie) {
                     shouldAddItem = true;
 
-
-                } else if (prd_no_code >= 0 && prd_no_code <= 5000 && firstStepWorker.tie) {
-                    shouldAddItem = true;
-
-                } else if (prd_no_code > 5000 && prd_no_code <= 9999 && firstStepWorker.mu) {
+                } else if (mu&& firstStepWorker.mu) {
                     shouldAddItem = true;
 
 

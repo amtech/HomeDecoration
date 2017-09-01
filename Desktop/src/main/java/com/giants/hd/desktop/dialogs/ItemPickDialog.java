@@ -22,6 +22,7 @@ public class ItemPickDialog<S> extends BaseDialog<List<S>> {
 
     private JHdTable jt;
     private JButton confirm;
+    private JButton select;
     private final List<S> items;
 
     public ItemPickDialog(Window window, String title, final List<S> items, AbsTableModel<S> tableModel) {
@@ -71,6 +72,15 @@ public class ItemPickDialog<S> extends BaseDialog<List<S>> {
                 close();
 
 
+
+            }
+        });
+
+        select.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                dataModel.selectAll();
 
             }
         });

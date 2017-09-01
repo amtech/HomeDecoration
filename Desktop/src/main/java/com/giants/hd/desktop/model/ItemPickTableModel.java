@@ -146,4 +146,15 @@ public     class ItemPickTableModel<T> extends AbstractTableModel implements Cel
     public int getColumnWidth(int column) {
         return absTableModel.getColumnWidth(column);
     }
+
+    public void selectAll() {
+
+
+        if(selectedState==null) return ;
+        for (int i = 0; i < selectedState.length; i++) {
+            selectedState[i]=true;
+        }
+
+        fireTableDataChanged();
+    }
 }
