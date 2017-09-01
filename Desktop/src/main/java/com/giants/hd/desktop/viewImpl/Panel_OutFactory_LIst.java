@@ -4,7 +4,7 @@ import com.giants.hd.desktop.model.OutFactoryModel;
 import com.giants.hd.desktop.mvp.presenter.OutFactoryIPresenter;
 import com.giants.hd.desktop.mvp.viewer.OutFactoryViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.OutFactory;
+import com.giants3.hd.entity.OutFactory;
 
 import javax.swing.*;
 import java.util.List;

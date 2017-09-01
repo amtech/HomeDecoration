@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
+import com.giants3.hd.entity.WorkFlowProduct;
 
 /**
  * 产品关联的生产流程 界面层接口

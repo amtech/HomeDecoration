@@ -1,10 +1,10 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.entity.StockXiaoku;
+import com.giants3.hd.entity_erp.ErpStockOut;
+import com.giants3.hd.noEntity.ErpStockOutDetail;
 import rx.Observable;
 
 /** 库存资源接口
@@ -14,7 +14,7 @@ public interface StockRepository {
 
 
     /**
-     * Get an {@link Observable} which will emit a List of {@link com.giants3.hd.utils.entity_erp.ErpOrder}.
+     * Get an {@link Observable} which will emit a List of {@link com.giants3.hd.entity_erp.ErpOrder}.
      * <p/>
      * 获取产品信息 根据 产品名称顺序取值
      */

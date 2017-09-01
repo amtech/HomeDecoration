@@ -5,8 +5,8 @@ import com.giants.hd.desktop.mvp.viewer.MaterialClassUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_MaterialClassUpdate;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.MaterialClass;
 import rx.Subscriber;
 
 import javax.swing.*;

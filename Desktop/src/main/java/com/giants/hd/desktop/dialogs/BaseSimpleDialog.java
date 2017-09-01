@@ -3,8 +3,8 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
 
 import javax.swing.*;
 import java.awt.*;

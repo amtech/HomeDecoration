@@ -1,7 +1,5 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.HdTaskLog;
 import rx.Observable;
 
 import java.io.File;

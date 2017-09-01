@@ -6,7 +6,7 @@ import com.giants3.hd.server.repository.QuotationItemRepository;
 import com.giants3.hd.server.repository.QuotationXKItemRepository;
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;

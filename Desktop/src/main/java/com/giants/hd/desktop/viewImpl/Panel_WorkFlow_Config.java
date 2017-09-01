@@ -8,11 +8,11 @@ import com.giants.hd.desktop.utils.TableStructureUtils;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowConfigViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.ProduceType;
+import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.entity.WorkFlow;
+import com.giants3.hd.entity.WorkFlowProduct;
+import com.giants3.hd.entity.WorkFlowSubType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.mvp.presenter;
 
-import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.entity.ErpOrderItem;
 
 /**
  * Created by davidleen29 on 2017/4/19.

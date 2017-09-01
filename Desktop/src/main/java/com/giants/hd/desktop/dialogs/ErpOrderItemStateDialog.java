@@ -4,9 +4,9 @@ import com.giants.hd.desktop.mvp.ErpOrderItemStateMVP;
 import com.giants.hd.desktop.mvp.model.ErpOrderItemProcessModel;
 import com.giants.hd.desktop.viewImpl.Panel_ErpOrderItemStatesList;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.ErpWorkFlowReport;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItemProcess;
+import com.giants3.hd.entity.ErpWorkFlowReport;
 import rx.Subscriber;
 
 import java.awt.*;

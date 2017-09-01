@@ -3,13 +3,12 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerUpdateIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlowWorkerUpdate;
-import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpWorkFlow;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.WorkFlowWorker;
 import rx.Subscriber;
 
 import java.awt.*;

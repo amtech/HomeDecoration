@@ -1,7 +1,6 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.OrderAuth;
-import com.giants3.hd.utils.entity.StockOutAuth;
+import com.giants3.hd.entity.OrderAuth;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

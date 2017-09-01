@@ -3,7 +3,7 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.model.HdTaskLogModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.entity.HdTaskLog;
+import com.giants3.hd.entity.HdTaskLog;
 import com.google.inject.Inject;
 
 import javax.swing.*;

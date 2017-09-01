@@ -6,9 +6,9 @@ import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialClass;
-import com.giants3.hd.utils.entity.MaterialType;
+import com.giants3.hd.entity.Material;
+import com.giants3.hd.entity.MaterialClass;
+import com.giants3.hd.entity.MaterialType;
 import com.google.inject.Inject;
 
 import javax.swing.*;

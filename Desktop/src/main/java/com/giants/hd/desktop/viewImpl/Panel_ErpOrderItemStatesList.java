@@ -4,9 +4,9 @@ import com.giants.hd.desktop.model.ErpOrderItemProcessTableModel;
 import com.giants.hd.desktop.model.ErpWorkFlowReportTableModel;
 import com.giants.hd.desktop.mvp.ErpOrderItemStateMVP;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.ErpWorkFlowReport;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItemProcess;
+import com.giants3.hd.entity.ErpWorkFlowReport;
 
 import javax.swing.*;
 

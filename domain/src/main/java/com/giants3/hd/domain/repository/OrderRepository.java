@@ -1,9 +1,9 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.OrderReportItem;
 import rx.Observable;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public interface OrderRepository {
 
 
     /**
-     * Get an {@link Observable} which will emit a List of {@link com.giants3.hd.utils.entity_erp.ErpOrder}.
+     * Get an {@link Observable} which will emit a List of {@link com.giants3.hd.entity_erp.ErpOrder}.
      * <p/>
      * 获取产品信息 根据 产品名称顺序取值
      */

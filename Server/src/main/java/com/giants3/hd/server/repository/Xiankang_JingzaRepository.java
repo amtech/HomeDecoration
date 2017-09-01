@@ -1,6 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity.Xiankang_Jingza;
+import com.giants3.hd.entity.Xiankang_Jingza;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

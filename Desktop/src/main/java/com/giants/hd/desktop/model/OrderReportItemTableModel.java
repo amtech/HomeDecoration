@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.noEntity.OrderReportItem;
 import com.google.inject.Inject;
 
 import javax.swing.*;

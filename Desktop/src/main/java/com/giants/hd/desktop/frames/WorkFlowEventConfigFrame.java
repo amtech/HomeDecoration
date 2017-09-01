@@ -7,12 +7,11 @@ import com.giants.hd.desktop.mvp.presenter.WorkFlowEventConfigIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowEventConfigViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow_Event_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.WorkFlowArea;
-import com.giants3.hd.utils.entity.WorkFlowArranger;
-import com.giants3.hd.utils.entity.WorkFlowEvent;
-import rx.Subscriber;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.WorkFlowArea;
+import com.giants3.hd.entity.WorkFlowArranger;
+import com.giants3.hd.entity.WorkFlowEvent;
 
 import javax.swing.*;
 import java.util.List;

@@ -1,10 +1,9 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.service.*;
-import com.giants3.hd.utils.entity.AppVersion;
-import com.giants3.hd.utils.entity.GlobalData;
-import com.giants3.hd.utils.entity.Module;
-import com.giants3.hd.server.interf.TargetVersion;
+import com.giants3.hd.entity.AppVersion;
+import com.giants3.hd.entity.GlobalData;
+import com.giants3.hd.entity.Module;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.repository.WorkFlowRepository;

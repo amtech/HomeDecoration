@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.exception.HdException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;

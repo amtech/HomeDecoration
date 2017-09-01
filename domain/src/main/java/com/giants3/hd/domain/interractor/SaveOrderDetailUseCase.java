@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.OrderRepository;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.ErpOrderDetail;
 import rx.Observable;
 import rx.Scheduler;
 

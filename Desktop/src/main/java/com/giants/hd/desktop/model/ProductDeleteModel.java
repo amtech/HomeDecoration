@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.ProductDelete;
+import com.giants3.hd.entity.ProductDelete;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

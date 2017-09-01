@@ -1,6 +1,6 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.User;
 import rx.Observable;
 
 import java.util.List;

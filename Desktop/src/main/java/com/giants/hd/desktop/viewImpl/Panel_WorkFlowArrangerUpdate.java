@@ -3,9 +3,9 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.mvp.presenter.WorkFlowArrangerUpdateIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowArrangerUpdateViewer;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowArranger;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.WorkFlow;
+import com.giants3.hd.entity.WorkFlowArranger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

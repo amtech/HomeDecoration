@@ -4,9 +4,9 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants.hd.desktop.reports.ReportFactory;
 import com.giants.hd.desktop.reports.excels.ExcelReportor;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

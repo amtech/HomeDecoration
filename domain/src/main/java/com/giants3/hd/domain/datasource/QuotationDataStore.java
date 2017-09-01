@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.datasource;
 
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.entity.Quotation;
+import com.giants3.hd.noEntity.QuotationDetail;
 import rx.Observable;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface QuotationDataStore {
     Observable<List<Quotation>> userEntityList();
 
     /**
-     * Get an {@link rx.Observable} which will emit a {@link com.giants3.hd.utils.noEntity.QuotationDetail} by its id.
+     * Get an {@link rx.Observable} which will emit a {@link com.giants3.hd.noEntity.QuotationDetail} by its id.
      *
      * @param quotationId The id to retrieve user data.
      */

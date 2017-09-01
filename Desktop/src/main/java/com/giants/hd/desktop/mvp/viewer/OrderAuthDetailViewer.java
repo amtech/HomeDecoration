@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.OrderAuth;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.OrderAuth;
+import com.giants3.hd.entity.User;
 
 import java.util.List;
 

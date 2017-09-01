@@ -13,12 +13,12 @@ import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.AppVersion;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.AppVersion;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.BufferData;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 

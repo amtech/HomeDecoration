@@ -5,9 +5,9 @@ import com.giants.hd.desktop.model.CustomerModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Customer;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Customer;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;

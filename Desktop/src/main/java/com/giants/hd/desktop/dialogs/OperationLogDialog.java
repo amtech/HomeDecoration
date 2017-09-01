@@ -6,11 +6,10 @@ import com.giants.hd.desktop.model.OperationLogModel;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.entity.OperationLog;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.entity.OperationLog;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;

@@ -2,12 +2,11 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.OrderRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
-import com.google.inject.Guice;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.OrderReportItem;
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;

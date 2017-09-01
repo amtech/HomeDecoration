@@ -6,7 +6,7 @@ import com.giants.hd.desktop.mvp.presenter.ZhilingdanIPresenter;
 import com.giants.hd.desktop.mvp.viewer.ZhilingdanViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.ZhilingdanCellRenderer;
-import com.giants3.hd.utils.entity_erp.Zhilingdan;
+import com.giants3.hd.entity_erp.Zhilingdan;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 

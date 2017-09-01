@@ -5,11 +5,8 @@ import com.giants.hd.desktop.mvp.viewer.WorkFlowViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.entity.ErpWorkFlow;
+import com.giants3.hd.entity.User;
 import rx.Subscriber;
 
 import javax.swing.*;

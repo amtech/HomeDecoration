@@ -4,9 +4,9 @@ import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ModuleModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Module;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Module;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;

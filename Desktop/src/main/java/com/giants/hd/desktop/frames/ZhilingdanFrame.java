@@ -4,9 +4,9 @@ import com.giants.hd.desktop.mvp.presenter.ZhilingdanIPresenter;
 import com.giants.hd.desktop.mvp.viewer.ZhilingdanViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Zhilingdan;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity_erp.Zhilingdan;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity_erp.Zhilingdan;
 import rx.Subscriber;
 
 import java.awt.*;

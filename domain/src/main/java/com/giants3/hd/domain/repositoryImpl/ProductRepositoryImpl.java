@@ -2,11 +2,11 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.ProductRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.exception.HdException;
 
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.ProductDetail;
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;

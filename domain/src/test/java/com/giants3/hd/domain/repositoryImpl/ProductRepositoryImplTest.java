@@ -1,6 +1,6 @@
 package com.giants3.hd.domain.repositoryImpl;
 
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 import org.junit.After;
 import org.junit.Before;
 import rx.Observable;

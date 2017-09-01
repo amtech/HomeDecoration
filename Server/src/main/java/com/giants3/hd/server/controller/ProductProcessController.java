@@ -2,8 +2,8 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.ProductProcessRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ProductProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

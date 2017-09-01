@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.FactoryRepository;
-import com.giants3.hd.utils.entity.OrderItemWorkFlow;
+import com.giants3.hd.entity.OrderItemWorkFlow;
 import rx.Observable;
 import rx.Scheduler;
 

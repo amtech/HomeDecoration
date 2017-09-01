@@ -11,9 +11,9 @@ import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 import rx.Subscriber;
 
 import javax.swing.*;

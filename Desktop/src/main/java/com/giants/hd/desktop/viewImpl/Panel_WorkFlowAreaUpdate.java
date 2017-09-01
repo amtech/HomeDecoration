@@ -1,19 +1,12 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.mvp.presenter.WorkFlowAreaUpdateIPresenter;
-import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerUpdateIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowAreaUpdateViewer;
-import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerUpdateViewer;
-import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlowArea;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.WorkFlowArea;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 /**
  * 流程节点人员改添加 删除

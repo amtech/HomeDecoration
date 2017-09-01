@@ -8,7 +8,7 @@ import com.giants3.hd.sae.entity.json.WxMixSend;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

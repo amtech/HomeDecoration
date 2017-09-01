@@ -5,10 +5,10 @@ import com.giants.hd.desktop.interf.PageListener;
 import com.giants.hd.desktop.model.OrderTableModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.ErpOrder;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.ErpOrder;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

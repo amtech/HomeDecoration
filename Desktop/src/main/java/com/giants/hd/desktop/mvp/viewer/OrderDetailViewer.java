@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.ErpOrderDetail;
 
 import java.util.List;
 

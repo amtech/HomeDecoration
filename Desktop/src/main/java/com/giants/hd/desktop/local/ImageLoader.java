@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.interf.Iconable;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Guice;
 import rx.Observable;

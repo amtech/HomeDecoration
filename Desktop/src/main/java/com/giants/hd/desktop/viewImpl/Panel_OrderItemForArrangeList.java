@@ -6,8 +6,8 @@ import com.giants.hd.desktop.mvp.presenter.OrderItemForArrangeListIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderItemForArrangeListViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

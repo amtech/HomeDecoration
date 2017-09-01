@@ -5,13 +5,10 @@ import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.entity.Customer;
-import com.giants3.hd.utils.entity.PackMaterialClass;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.CompanyPosition;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.CompanyPosition;
 import com.google.inject.Inject;
 
 import javax.swing.*;

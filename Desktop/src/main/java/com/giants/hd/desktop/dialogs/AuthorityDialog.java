@@ -6,9 +6,9 @@ import com.giants.hd.desktop.model.UserModel;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Authority;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Authority;
+import com.giants3.hd.entity.User;
 import com.google.inject.Inject;
 
 import javax.swing.*;

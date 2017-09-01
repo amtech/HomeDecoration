@@ -11,8 +11,8 @@ import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.StockOutDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.entity_erp.ErpStockOutItem;
+import com.giants3.hd.noEntity.ErpStockOutDetail;
 
 import javax.swing.*;
 import java.awt.*;

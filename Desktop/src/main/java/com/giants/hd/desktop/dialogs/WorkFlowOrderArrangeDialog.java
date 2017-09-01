@@ -6,8 +6,11 @@ import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderItemWorkFlow;
 import com.giants3.hd.domain.BaseSubscriber;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.noEntity.ConstantData;
+import com.giants3.hd.noEntity.ProduceType;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.*;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 import rx.Subscriber;
 
 import javax.swing.*;

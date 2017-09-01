@@ -1,21 +1,17 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.server.service.*;
-import com.giants3.hd.utils.entity.AppVersion;
-import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.entity.AppVersion;
+import com.giants3.hd.entity.Material;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import de.greenrobot.common.io.IoUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

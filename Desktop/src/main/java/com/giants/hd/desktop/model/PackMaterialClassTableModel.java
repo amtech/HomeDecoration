@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.PackMaterialClass;
-import com.giants3.hd.utils.entity.PackMaterialPosition;
-import com.giants3.hd.utils.entity.PackMaterialType;
+import com.giants3.hd.entity.PackMaterialClass;
+import com.giants3.hd.entity.PackMaterialPosition;
+import com.giants3.hd.entity.PackMaterialType;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.file.ImageUtils;

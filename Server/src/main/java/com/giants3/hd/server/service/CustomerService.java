@@ -1,9 +1,9 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.utils.entity.Customer;
+import com.giants3.hd.entity.Customer;
 
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

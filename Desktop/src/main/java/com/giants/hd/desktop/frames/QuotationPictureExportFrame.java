@@ -10,10 +10,10 @@ import com.giants.hd.desktop.utils.TableStructureUtils;
 import com.giants.hd.desktop.viewImpl.Panel_Quotation_Picture_Export;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 
 import javax.swing.*;
 import java.io.File;

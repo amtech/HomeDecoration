@@ -1,10 +1,10 @@
 package com.giants3.hd.domain.datasource;
 
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Quotation;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.QuotationDetail;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.Observable;

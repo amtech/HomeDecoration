@@ -6,8 +6,8 @@ import com.giants.hd.desktop.mvp.presenter.WorkFlowEventConfigIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowEventConfigViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.WorkFlowArea;
-import com.giants3.hd.utils.entity.WorkFlowEvent;
+import com.giants3.hd.entity.WorkFlowArea;
+import com.giants3.hd.entity.WorkFlowEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

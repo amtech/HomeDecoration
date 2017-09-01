@@ -1,7 +1,5 @@
 package com.giants3.hd.utils;
 
-import com.giants3.hd.utils.entity.ErpOrderItem;
-
 /**
  * 字符串的功能类。
  */

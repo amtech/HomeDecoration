@@ -7,9 +7,9 @@ import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ProductDelete;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ProductDelete;
+import com.giants3.hd.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

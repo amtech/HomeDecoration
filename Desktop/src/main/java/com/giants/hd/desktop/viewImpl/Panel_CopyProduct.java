@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.local;
 
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 
 import java.awt.*;
 

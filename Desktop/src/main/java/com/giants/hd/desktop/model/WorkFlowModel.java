@@ -1,9 +1,6 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
+import com.giants3.hd.entity.ErpWorkFlow;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

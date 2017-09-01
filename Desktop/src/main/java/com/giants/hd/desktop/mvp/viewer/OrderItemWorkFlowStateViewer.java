@@ -1,8 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
+import com.giants3.hd.entity.ErpOrderItemProcess;
 
 import java.util.List;
 

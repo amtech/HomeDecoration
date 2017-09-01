@@ -7,9 +7,9 @@ import com.giants.hd.desktop.model.QuotationDeleteModel;
 import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.QuotationDelete;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.QuotationDelete;
+import com.giants3.hd.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 
 import javax.swing.*;

@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.mvp;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.ErpWorkFlowReport;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItemProcess;
+import com.giants3.hd.entity.ErpWorkFlowReport;
 
 /**
  * Created by davidleen29 on 2017/5/13.

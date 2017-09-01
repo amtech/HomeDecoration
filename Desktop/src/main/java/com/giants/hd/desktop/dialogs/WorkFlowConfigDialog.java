@@ -7,11 +7,10 @@ import com.giants.hd.desktop.viewImpl.Panel_WorkFlow_Config;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.WorkFlow;
+import com.giants3.hd.entity.WorkFlowProduct;
+import com.giants3.hd.entity.WorkFlowSubType;
 import rx.Subscriber;
 
 import java.awt.*;

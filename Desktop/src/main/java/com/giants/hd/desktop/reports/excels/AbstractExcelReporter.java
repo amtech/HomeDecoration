@@ -3,7 +3,7 @@ package com.giants.hd.desktop.reports.excels;
 import com.giants.hd.desktop.local.ImageLoader;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.UnitUtils;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;

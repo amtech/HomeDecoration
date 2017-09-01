@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.MaterialRepository;
-import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.entity.MaterialClass;
 import rx.Observable;
 import rx.Scheduler;
 

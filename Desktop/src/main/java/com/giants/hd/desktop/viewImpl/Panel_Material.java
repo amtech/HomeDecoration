@@ -8,9 +8,9 @@ import com.giants.hd.desktop.model.MaterialTableModel;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Material;
+import com.giants3.hd.entity.MaterialClass;
 import com.google.inject.Inject;
 
 import javax.swing.*;

@@ -1,6 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.WorkFlowWorker;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

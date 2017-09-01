@@ -2,9 +2,9 @@ package com.giants3.hd.utils.quotation;
 
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.MaterialClass;
-import com.giants3.hd.utils.entity.ProductMaterial;
+import com.giants3.hd.entity.Material;
+import com.giants3.hd.entity.MaterialClass;
+import com.giants3.hd.entity.ProductMaterial;
 
 /**
  * 板材类材料配额 利用率计算

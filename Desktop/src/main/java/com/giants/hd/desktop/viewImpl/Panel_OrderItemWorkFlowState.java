@@ -4,8 +4,7 @@ import com.giants.hd.desktop.model.OrderItemWorkFlowStateModel;
 import com.giants.hd.desktop.mvp.presenter.OrderItemWorkFlowStateIPresenter;
 import com.giants.hd.desktop.mvp.viewer.OrderItemWorkFlowStateViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
+import com.giants3.hd.entity.ErpOrderItemProcess;
 
 import javax.swing.*;
 import java.util.List;

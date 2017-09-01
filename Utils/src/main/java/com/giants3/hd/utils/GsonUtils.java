@@ -1,10 +1,8 @@
 package com.giants3.hd.utils;
 
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonWriter;
-import com.sun.corba.se.impl.orbutil.ObjectWriter;
 
 import java.io.*;
 import java.lang.reflect.Type;

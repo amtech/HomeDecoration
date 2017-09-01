@@ -2,9 +2,9 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.service.CustomerService;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Customer;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Customer;
+import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

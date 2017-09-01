@@ -2,8 +2,8 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.utils.QRHelper;
 
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.noEntity.QRProduct;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.noEntity.QRProduct;
 
 import javax.swing.*;
 import java.awt.*;

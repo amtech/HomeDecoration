@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.noEntity.ConstantData;
 import com.giants3.crypt.CryptUtils;
 import com.google.gson.*;
 import org.apache.commons.io.IOUtils;

@@ -7,7 +7,7 @@ import com.giants3.hd.sae.entity.json.WxMixSend;
 import com.giants3.hd.utils.ConstantData;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Component;
 

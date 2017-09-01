@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.PageListener;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

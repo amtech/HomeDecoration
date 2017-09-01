@@ -1,9 +1,9 @@
 package com.giants3.hd.domain.api;
 
-import com.giants3.hd.utils.ConstantData;
+import com.giants3.hd.noEntity.ConstantData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.crypt.CryptUtils;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 
 import com.ning.http.client.*;
 import com.ning.http.client.multipart.FilePart;

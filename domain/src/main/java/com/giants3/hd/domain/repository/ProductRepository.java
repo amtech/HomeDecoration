@@ -1,9 +1,9 @@
 package com.giants3.hd.domain.repository;
 
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.noEntity.ProductDetail;
 import rx.Observable;
 
 import java.util.List;

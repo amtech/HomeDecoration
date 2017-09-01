@@ -1,6 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity_erp.Prdt;
+import com.giants3.hd.entity_erp.Prdt;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 

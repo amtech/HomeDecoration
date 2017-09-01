@@ -1,7 +1,6 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.HdTaskLog;
+import com.giants3.hd.entity.HdTaskLog;
 import rx.Observable;
 
 import java.util.List;

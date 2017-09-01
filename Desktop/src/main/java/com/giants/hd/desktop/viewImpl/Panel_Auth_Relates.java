@@ -6,10 +6,10 @@ import com.giants.hd.desktop.model.StockOutAuthModel;
 import com.giants.hd.desktop.mvp.presenter.AuthRelateDetailIPresenter;
 import com.giants.hd.desktop.mvp.viewer.AuthRelateDetailViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.OrderAuth;
-import com.giants3.hd.utils.entity.QuoteAuth;
-import com.giants3.hd.utils.entity.StockOutAuth;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.OrderAuth;
+import com.giants3.hd.entity.QuoteAuth;
+import com.giants3.hd.entity.StockOutAuth;
+import com.giants3.hd.entity.User;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

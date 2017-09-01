@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.entity.ProductProcess;
 
 /**
  * 工序相关接口 支持模型工序插入。

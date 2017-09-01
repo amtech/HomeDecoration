@@ -1,10 +1,9 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.ErpWorkFlow;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.WorkFlowWorker;
 
 import java.util.List;
 

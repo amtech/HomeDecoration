@@ -2,9 +2,9 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.UserRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Guice;
 import rx.Observable;
 import rx.Subscriber;

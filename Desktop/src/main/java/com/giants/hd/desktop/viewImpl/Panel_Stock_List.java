@@ -5,10 +5,10 @@ import com.giants.hd.desktop.model.StockOutTableModel;
 import com.giants.hd.desktop.mvp.presenter.StockListIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity_erp.ErpStockOut;
 import com.google.inject.Inject;
 
 import javax.swing.*;

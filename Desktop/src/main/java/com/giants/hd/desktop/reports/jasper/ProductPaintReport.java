@@ -1,15 +1,13 @@
 package com.giants.hd.desktop.reports.jasper;
 
-import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.entity.ProductPaint;
+import com.giants3.hd.entity.ProductPaint;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.entity.ErpOrder;
+import com.giants3.hd.entity.ErpOrderItem;
+import com.giants3.hd.noEntity.ProductDetail;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.InputStream;
 import java.util.ArrayList;

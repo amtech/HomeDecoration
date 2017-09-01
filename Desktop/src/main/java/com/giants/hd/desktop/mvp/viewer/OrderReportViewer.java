@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.noEntity.OrderReportItem;
 
 /**
  * 订单报表界面层接口

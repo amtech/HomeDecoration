@@ -2,7 +2,7 @@ package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.entity.MaterialClass;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

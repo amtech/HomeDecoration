@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.domain.repositoryImpl.QuotationRepositoryImpl;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.QuotationDetail;
 import rx.Observable;
 import rx.functions.Action1;
 

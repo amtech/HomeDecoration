@@ -1,7 +1,7 @@
 package com.giants3.hd.server.parser;
 
 import com.giants3.hd.appdata.AQuotation;
-import com.giants3.hd.utils.entity.Quotation;
+import com.giants3.hd.entity.Quotation;
 import org.springframework.stereotype.Component;
 
 /**  桌面端Quotation 转换成app AQuotation

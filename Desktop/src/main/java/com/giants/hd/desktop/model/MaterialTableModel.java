@@ -1,8 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants.hd.desktop.widget.ImageView;
-import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.entity.Material;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;

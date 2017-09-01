@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.utils;
 
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.entity.Authority;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.entity.Authority;
+import com.giants3.hd.entity.User;
 
 import java.util.List;
 

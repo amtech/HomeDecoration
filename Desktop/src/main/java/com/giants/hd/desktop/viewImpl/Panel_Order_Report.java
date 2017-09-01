@@ -9,10 +9,10 @@ import com.giants.hd.desktop.mvp.viewer.OrderReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.noEntity.OrderReportItem;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 

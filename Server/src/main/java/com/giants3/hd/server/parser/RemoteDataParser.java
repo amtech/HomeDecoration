@@ -1,6 +1,6 @@
 package com.giants3.hd.server.parser;
 
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 
 import java.util.ArrayList;
 import java.util.List;

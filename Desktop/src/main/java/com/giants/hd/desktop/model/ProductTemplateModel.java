@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.ProductDetail;
 import com.google.inject.Inject;
 
 /**

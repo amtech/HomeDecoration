@@ -6,7 +6,7 @@ import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.viewImpl.Panel_Page;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

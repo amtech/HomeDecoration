@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp;
 
 
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import rx.Subscriber;
 
 /**

@@ -1,7 +1,7 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
+import com.giants3.hd.entity_erp.ErpStockOut;
+import com.giants3.hd.entity_erp.ErpStockOutItem;
 import com.giants3.hd.utils.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;

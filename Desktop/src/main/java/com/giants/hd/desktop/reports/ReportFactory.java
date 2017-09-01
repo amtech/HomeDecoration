@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.reports;
 
 import com.giants.hd.desktop.reports.excels.ExcelReportor;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Singleton;
 
 /**

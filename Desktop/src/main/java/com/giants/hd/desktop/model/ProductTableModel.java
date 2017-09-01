@@ -3,9 +3,9 @@ package com.giants.hd.desktop.model;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.ModuleConstant;
+import com.giants3.hd.noEntity.ModuleConstant;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

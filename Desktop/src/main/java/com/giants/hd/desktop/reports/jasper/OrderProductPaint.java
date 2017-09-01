@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.reports.jasper;
 
-import com.giants3.hd.utils.entity.ProductPaint;
+import com.giants3.hd.entity.ProductPaint;
 
 
 /**订单产品输出报表

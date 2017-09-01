@@ -4,12 +4,12 @@ import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.entity.GlobalData;
-import com.giants3.hd.utils.entity.Material;
-import com.giants3.hd.utils.entity.ProductPaint;
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.entity.GlobalData;
+import com.giants3.hd.entity.Material;
+import com.giants3.hd.entity.ProductPaint;
+import com.giants3.hd.entity.ProductProcess;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.ProductPaintArrayList;
+import com.giants3.hd.noEntity.ProductPaintArrayList;
 import com.google.inject.Inject;
 
 import java.util.List;

@@ -1,8 +1,7 @@
 package com.giants3.hd.domain.repositoryImpl;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Guice;
 import rx.Observable;
 import rx.Subscriber;

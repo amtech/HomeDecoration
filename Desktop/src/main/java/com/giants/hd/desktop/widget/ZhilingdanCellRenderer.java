@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.widget;
 
 import com.giants.hd.desktop.model.ZhilingdanModel;
-import com.giants3.hd.utils.entity_erp.Zhilingdan;
+import com.giants3.hd.entity_erp.Zhilingdan;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

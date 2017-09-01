@@ -1,10 +1,10 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.utils.entity.Factory;
-import com.giants3.hd.utils.entity.OutFactory;
+import com.giants3.hd.entity.Factory;
+import com.giants3.hd.entity.OutFactory;
 import com.giants3.hd.server.service.FactoryService;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

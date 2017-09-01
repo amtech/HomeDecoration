@@ -5,13 +5,12 @@ import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_OrderWorkFlowReport;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItem;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItem;
 
 
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
+import com.giants3.hd.entity.ErpOrderItemProcess;
 import rx.Subscriber;
 
 import javax.swing.*;

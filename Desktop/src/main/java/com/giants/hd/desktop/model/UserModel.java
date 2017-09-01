@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.User;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.CompanyPosition;
+import com.giants3.hd.noEntity.CompanyPosition;
 import com.google.inject.Inject;
 
 import java.util.List;

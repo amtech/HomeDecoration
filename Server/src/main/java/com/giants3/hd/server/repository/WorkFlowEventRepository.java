@@ -1,7 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity.WorkFlowArranger;
-import com.giants3.hd.utils.entity.WorkFlowEvent;
+import com.giants3.hd.entity.WorkFlowEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

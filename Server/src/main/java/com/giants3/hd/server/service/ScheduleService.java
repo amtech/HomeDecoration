@@ -1,7 +1,7 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.HdTaskLog;
+import com.giants3.hd.entity.HdTask;
+import com.giants3.hd.entity.HdTaskLog;
 import com.giants3.hd.server.interf.Job;
 import com.giants3.hd.server.repository.QuotationRepository;
 import com.giants3.hd.server.repository.TaskLogRepository;

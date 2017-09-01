@@ -1,12 +1,8 @@
 package com.giants3.hd.domain.interractor;
 
-import com.giants3.hd.domain.repository.AuthRepository;
 import com.giants3.hd.domain.repository.WorkFlowRepository;
-import com.giants3.hd.utils.entity.OrderAuth;
 import rx.Observable;
 import rx.Scheduler;
-
-import java.util.List;
 
 /**
  * 用户启动订单跟踪

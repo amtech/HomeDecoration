@@ -5,9 +5,9 @@ import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Work_Flow_Worker;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.WorkFlowWorker;
 import rx.Subscriber;
 
 import javax.swing.*;

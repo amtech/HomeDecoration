@@ -6,9 +6,9 @@ import com.giants.hd.desktop.mvp.viewer.WorkFlowArrangerUpdateViewer;
 import com.giants.hd.desktop.viewImpl.Panel_WorkFlowArrangerUpdate;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlowArranger;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.WorkFlowArranger;
 import rx.Subscriber;
 
 import java.awt.*;

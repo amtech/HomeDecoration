@@ -1,9 +1,7 @@
 package com.giants3.hd.server.converter;
 
-import com.giants3.hd.utils.RemoteData;
 import com.google.gson.*;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 

@@ -2,9 +2,8 @@ package com.giants.hd.desktop.dialogs;
 
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
-import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 
 import javax.swing.*;

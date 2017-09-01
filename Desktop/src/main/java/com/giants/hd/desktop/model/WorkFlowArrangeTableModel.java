@@ -1,9 +1,5 @@
 package com.giants.hd.desktop.model;
 
-import com.giants.hd.desktop.utils.TableStructureUtils;
-import com.giants.hd.desktop.viewImpl.Panel_WorkFlow_Config;
-import com.giants3.hd.utils.entity.WorkFlowArrangeData;
-
 import java.util.List;
 
 /**

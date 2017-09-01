@@ -3,8 +3,8 @@ package com.giants.hd.desktop.dialogs;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.User;
 import com.google.inject.Inject;
 
 import javax.swing.*;

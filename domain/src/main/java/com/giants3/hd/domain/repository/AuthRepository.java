@@ -1,11 +1,9 @@
 package com.giants3.hd.domain.repository;
 
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.OrderAuth;
-import com.giants3.hd.utils.entity.QuoteAuth;
-import com.giants3.hd.utils.entity.StockOutAuth;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.OrderAuth;
+import com.giants3.hd.entity.QuoteAuth;
+import com.giants3.hd.entity.StockOutAuth;
 import rx.Observable;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.api;
 
-import com.giants3.hd.utils.ConstantData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.ConstantData;
+import com.giants3.hd.exception.HdException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

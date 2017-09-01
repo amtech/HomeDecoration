@@ -1,9 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.AuthRepository;
-import com.giants3.hd.domain.repository.StockRepository;
-import com.giants3.hd.utils.entity.StockOutAuth;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.entity.StockOutAuth;
 import rx.Observable;
 import rx.Scheduler;
 

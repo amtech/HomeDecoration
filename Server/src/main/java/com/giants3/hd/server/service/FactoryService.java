@@ -1,12 +1,12 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.utils.entity.Factory;
-import com.giants3.hd.utils.entity.OutFactory;
+import com.giants3.hd.entity.Factory;
+import com.giants3.hd.entity.OutFactory;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.FactoryRepository;
 import com.giants3.hd.server.repository.OutFactoryRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

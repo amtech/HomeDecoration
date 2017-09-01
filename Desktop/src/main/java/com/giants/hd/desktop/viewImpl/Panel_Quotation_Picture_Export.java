@@ -9,9 +9,8 @@ import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.utils.TableStructureUtils;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

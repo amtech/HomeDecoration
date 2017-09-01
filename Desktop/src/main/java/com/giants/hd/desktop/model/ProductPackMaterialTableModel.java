@@ -5,7 +5,7 @@ import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 

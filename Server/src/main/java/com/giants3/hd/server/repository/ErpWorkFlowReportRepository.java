@@ -1,7 +1,6 @@
 package com.giants3.hd.server.repository;
 
-import com.giants3.hd.utils.entity.ErpWorkFlowReport;
-import com.giants3.hd.utils.entity.WorkFlowEvent;
+import com.giants3.hd.entity.ErpWorkFlowReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

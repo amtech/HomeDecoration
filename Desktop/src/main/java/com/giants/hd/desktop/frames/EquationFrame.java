@@ -3,7 +3,7 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.mvp.presenter.EquationIPresenter;
 import com.giants.hd.desktop.mvp.viewer.EquationViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Equation;
-import com.giants3.hd.utils.ModuleConstant;
+import com.giants3.hd.noEntity.ModuleConstant;
 
 import javax.swing.*;
 import java.awt.*;

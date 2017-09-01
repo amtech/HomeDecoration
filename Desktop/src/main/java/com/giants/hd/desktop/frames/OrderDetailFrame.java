@@ -10,11 +10,12 @@ import com.giants.hd.desktop.viewImpl.Panel_Order_Detail;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.*;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.entity.ErpOrder;
+import com.giants3.hd.entity.ErpOrderItem;
+import com.giants3.hd.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.ProductDetail;
 import rx.Subscriber;
 
 import javax.swing.*;

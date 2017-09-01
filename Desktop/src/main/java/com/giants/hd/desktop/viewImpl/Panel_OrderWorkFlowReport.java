@@ -6,10 +6,9 @@ import com.giants.hd.desktop.model.OrderItemWorkFlowTableModel;
 import com.giants.hd.desktop.mvp.presenter.OrderWorkFlowReportIPresenter;
 import com.giants.hd.desktop.mvp.viewer.OrderWorkFlowReportViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.entity.ErpOrderItemProcess;
-import com.giants3.hd.utils.entity.OrderItemWorkFlowState;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrderItem;
+import com.giants3.hd.entity.ErpOrderItemProcess;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

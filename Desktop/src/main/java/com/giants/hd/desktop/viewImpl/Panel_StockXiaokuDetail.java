@@ -3,9 +3,9 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.model.StockInAndSubmitTableModel;
 import com.giants.hd.desktop.mvp.presenter.StockXiaokuDetailIPresenter;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.entity.StockXiaoku;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

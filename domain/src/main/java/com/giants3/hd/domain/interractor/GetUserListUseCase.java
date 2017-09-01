@@ -1,8 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.UserRepository;
-import com.giants3.hd.domain.repository.WorkFlowRepository;
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.User;
 import rx.Observable;
 import rx.Scheduler;
 

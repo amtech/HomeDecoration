@@ -3,10 +3,10 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.mvp.presenter.StockListIPresenter;
 import com.giants.hd.desktop.viewImpl.Panel_Stock_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
 
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.entity_erp.ErpStockOut;
 import rx.Subscriber;
 
 import javax.swing.*;

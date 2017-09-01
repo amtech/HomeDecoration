@@ -1,10 +1,10 @@
 package com.giants3.hd.server.utils;
 
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.QuotationDetail;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 
 import java.io.*;
 

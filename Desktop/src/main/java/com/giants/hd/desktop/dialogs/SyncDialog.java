@@ -5,7 +5,7 @@ import com.giants.hd.desktop.mvp.IViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Sync;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.google.inject.Inject;
 import rx.Subscriber;
 

@@ -1,6 +1,6 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.utils.entity.GlobalData;
+import com.giants3.hd.entity.GlobalData;
 import com.giants3.hd.server.repository.GlobalDataRepository;
 import com.giants3.hd.utils.DateFormats;
 import org.springframework.beans.factory.annotation.Autowired;

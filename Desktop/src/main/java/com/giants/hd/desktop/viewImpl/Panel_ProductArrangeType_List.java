@@ -8,7 +8,7 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.entity.WorkFlowSubType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

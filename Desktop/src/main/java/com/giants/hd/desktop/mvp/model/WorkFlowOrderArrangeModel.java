@@ -1,10 +1,9 @@
 package com.giants.hd.desktop.mvp.model;
 
 import com.giants.hd.desktop.mvp.IModel;
-import com.giants3.hd.domain.api.CacheManager;
-import com.giants3.hd.utils.ProduceType;
+import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;

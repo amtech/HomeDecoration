@@ -2,7 +2,7 @@ package com.giants.hd.desktop.mvp.presenter;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
 import com.giants.hd.desktop.mvp.IPresenter;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
+import com.giants3.hd.entity_erp.ErpStockOutItem;
 
 /**
  *

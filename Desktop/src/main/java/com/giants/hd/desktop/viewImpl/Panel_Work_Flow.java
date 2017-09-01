@@ -1,18 +1,13 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.WorkFlowModel;
-import com.giants.hd.desktop.model.WorkFlowSubTypeModel;
 import com.giants.hd.desktop.mvp.presenter.WorkFlowIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.ErpWorkFlow;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.entity.ErpWorkFlow;
+import com.giants3.hd.entity.User;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**

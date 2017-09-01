@@ -1,7 +1,7 @@
 package com.giants3.hd.server.utils;
 
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 import de.greenrobot.common.io.IoUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;

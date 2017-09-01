@@ -5,12 +5,12 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 
-import com.giants3.hd.utils.entity_erp.WorkFlowMaterial;
-import com.giants3.hd.utils.entity_erp.Zhilingdan;
+import com.giants3.hd.entity_erp.WorkFlowMaterial;
+import com.giants3.hd.entity_erp.Zhilingdan;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**

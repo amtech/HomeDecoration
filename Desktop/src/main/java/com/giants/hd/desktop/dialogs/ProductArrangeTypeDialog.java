@@ -5,8 +5,8 @@ import com.giants.hd.desktop.mvp.viewer.ProductArrangeTypeViewer;
 import com.giants.hd.desktop.viewImpl.Panel_ProductArrangeType_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.WorkFlowSubType;
 import rx.Subscriber;
 
 import java.awt.*;

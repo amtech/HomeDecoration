@@ -2,10 +2,9 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.HdTaskLogRepository;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.HdTaskLog;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.HdTaskLog;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;

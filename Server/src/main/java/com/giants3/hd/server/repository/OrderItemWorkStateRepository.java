@@ -1,12 +1,8 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.OrderItem;
-import com.giants3.hd.utils.entity.OrderItemWorkMemo;
-import com.giants3.hd.utils.entity.OrderItemWorkState;
+import com.giants3.hd.entity.OrderItemWorkState;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * 订单的生产状态

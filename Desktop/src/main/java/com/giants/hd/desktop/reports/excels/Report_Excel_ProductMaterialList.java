@@ -1,26 +1,13 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.local.ImageLoader;
-import com.giants.hd.desktop.reports.QuotationFile;
-import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.UnitUtils;
-import com.giants3.hd.utils.entity.ProductMaterial;
-import com.giants3.hd.utils.entity.QuotationItem;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.ProductDetail;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.entity.ProductMaterial;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.ProductDetail;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellUtil;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /** 产品材料清单导出

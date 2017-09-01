@@ -5,8 +5,7 @@ import com.giants3.hd.server.noEntity.UmengPushData;
 import com.giants3.hd.server.noEntity.UmengPushResult;
 
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.utils.exception.HdException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.giants3.hd.exception.HdException;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 

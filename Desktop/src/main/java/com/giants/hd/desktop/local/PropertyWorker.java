@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.local;
 
-import com.giants3.hd.utils.entity.AppVersion;
+import com.giants3.hd.entity.AppVersion;
 
 import java.io.*;
 import java.net.URL;

@@ -1,10 +1,9 @@
 package com.giants3.hd.server.repository;
 //
 
-import com.giants3.hd.utils.entity.OutFactory;
+import com.giants3.hd.entity.OutFactory;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import javax.persistence.EntityManager;

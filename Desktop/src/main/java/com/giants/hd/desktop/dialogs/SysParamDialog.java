@@ -5,9 +5,9 @@ import com.giants.hd.desktop.local.HdUIException;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.GlobalData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.GlobalData;
+import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
 
 import javax.swing.*;

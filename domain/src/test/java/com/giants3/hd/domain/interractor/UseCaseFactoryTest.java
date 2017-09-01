@@ -1,13 +1,11 @@
 package com.giants3.hd.domain.interractor;
 
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.ProductDetail;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Subscriber;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by david on 2016/3/30.

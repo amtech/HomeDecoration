@@ -2,10 +2,8 @@ package com.giants.hd.desktop.reports.excels;
 
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.OrderReportItem;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;

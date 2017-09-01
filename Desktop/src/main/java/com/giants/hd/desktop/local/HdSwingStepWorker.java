@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.local;
 
 import com.giants.hd.desktop.viewImpl.LoadingDialog;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.exception.HdException;
 
 import javax.swing.*;
 import java.awt.*;

@@ -2,8 +2,8 @@ package com.giants3.hd.utils.logic;
 
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.noEntity.ProductDetail;
 
 /**
  * 产品分析表 业务逻辑

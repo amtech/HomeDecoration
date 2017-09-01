@@ -1,9 +1,9 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.WorkFlow;
-import com.giants3.hd.utils.entity.WorkFlowProduct;
-import com.giants3.hd.utils.entity.WorkFlowSubType;
+import com.giants3.hd.entity.WorkFlow;
+import com.giants3.hd.entity.WorkFlowProduct;
+import com.giants3.hd.entity.WorkFlowSubType;
 
 import java.util.List;
 

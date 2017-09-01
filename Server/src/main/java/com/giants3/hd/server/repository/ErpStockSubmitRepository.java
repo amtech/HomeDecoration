@@ -1,10 +1,10 @@
 package com.giants3.hd.server.repository;
 
 import com.giants3.hd.server.utils.SqlScriptHelper;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
+import com.giants3.hd.entity_erp.ErpStockOut;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.entity.StockXiaoku;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;

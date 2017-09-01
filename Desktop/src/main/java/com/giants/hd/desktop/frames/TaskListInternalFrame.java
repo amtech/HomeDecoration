@@ -3,8 +3,8 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.dialogs.TaskLogDialog;
 import com.giants.hd.desktop.viewImpl.Panel_Tasks;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.entity.HdTask;
-import com.giants3.hd.utils.entity.HdTaskLog;
+import com.giants3.hd.entity.HdTask;
+import com.giants3.hd.entity.HdTaskLog;
 import rx.Subscriber;
 
 import javax.swing.*;

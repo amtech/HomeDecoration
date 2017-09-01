@@ -2,12 +2,12 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.service.WorkFlowService;
-import com.giants3.hd.utils.entity.*;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.noEntity.ErpOrderDetail;
+import com.giants3.hd.noEntity.OrderReportItem;
 import com.giants3.hd.server.service.ErpService;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

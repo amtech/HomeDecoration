@@ -5,7 +5,7 @@ import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerIPresenter;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerViewer;
 import com.giants.hd.desktop.widget.JHdTable;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.WorkFlowWorker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

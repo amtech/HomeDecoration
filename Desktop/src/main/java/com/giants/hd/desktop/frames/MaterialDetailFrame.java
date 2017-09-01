@@ -6,14 +6,12 @@ import com.giants.hd.desktop.viewImpl.Panel_Material_Detail;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.ObjectUtils;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.Material;
 import com.google.inject.Inject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * 材料详细面板

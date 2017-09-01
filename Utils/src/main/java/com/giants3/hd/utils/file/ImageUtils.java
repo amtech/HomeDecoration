@@ -1,7 +1,7 @@
 package com.giants3.hd.utils.file;
 
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.exception.HdException;
+import com.giants3.hd.exception.HdException;
 import de.greenrobot.common.io.IoUtils;
 
 import javax.imageio.ImageIO;

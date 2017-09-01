@@ -6,11 +6,11 @@ import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderReportViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Order_Report;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.noEntity.OrderReportItem;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.ErpOrder;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.OrderReportItem;
 import rx.Subscriber;
 
 import java.awt.*;

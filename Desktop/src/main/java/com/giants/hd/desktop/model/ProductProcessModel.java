@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.entity.ProductProcess;
 import com.giants3.hd.utils.file.ImageUtils;
 
 /**

@@ -3,10 +3,10 @@ package com.giants.hd.desktop.frames;
 import com.giants.hd.desktop.mvp.presenter.StockXiaokuIPresenter;
 import com.giants.hd.desktop.viewImpl.Panel_StockXiaoku_List;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.ModuleConstant;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.entity.StockXiaoku;
 import rx.Subscriber;
 
 import java.awt.*;

@@ -1,7 +1,7 @@
 package com.giants3.hd.server.controller;
 
-        import com.giants3.hd.utils.noEntity.FileInfo;
-        import com.giants3.hd.utils.RemoteData;
+        import com.giants3.hd.noEntity.FileInfo;
+        import com.giants3.hd.noEntity.RemoteData;
         import org.springframework.beans.factory.annotation.Value;
         import org.springframework.stereotype.Controller;
         import org.springframework.transaction.annotation.Transactional;

@@ -2,7 +2,7 @@ package com.giants.hd.desktop.reports.jasper.product_list_4;
 
 import com.giants.hd.desktop.reports.jasper.JRReport;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.entity.Product;
+import com.giants3.hd.entity.Product;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 

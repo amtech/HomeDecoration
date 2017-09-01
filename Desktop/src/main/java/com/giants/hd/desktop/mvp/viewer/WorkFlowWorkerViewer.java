@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.WorkFlowWorker;
 
 import java.util.List;
 

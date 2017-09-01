@@ -1,14 +1,14 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.entity_erp.ErpStockOut;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.entity_erp.ErpStockOut;
+import com.giants3.hd.noEntity.ErpStockOutDetail;
 import com.giants3.hd.server.service.StockService;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.RemoteData;
-import com.giants3.hd.utils.entity.StockSubmit;
-import com.giants3.hd.utils.entity.StockXiaoku;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.entity.StockSubmit;
+import com.giants3.hd.entity.StockXiaoku;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

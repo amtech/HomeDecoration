@@ -2,9 +2,9 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.server.repository.UserRepository;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 
-import com.giants3.hd.utils.entity.User;
+import com.giants3.hd.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

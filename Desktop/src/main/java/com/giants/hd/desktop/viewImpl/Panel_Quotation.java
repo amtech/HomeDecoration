@@ -10,11 +10,11 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
-import com.giants3.hd.utils.RemoteData;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.entity.User;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.entity.Quotation;
+import com.giants3.hd.entity.User;
+import com.giants3.hd.noEntity.QuotationDetail;
 import com.google.inject.Inject;
 import rx.Subscriber;
 

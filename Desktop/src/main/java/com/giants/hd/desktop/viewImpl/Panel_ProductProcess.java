@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.model.ProductProcessModel;
-import com.giants3.hd.utils.entity.ProductProcess;
+import com.giants3.hd.entity.ProductProcess;
 import com.google.inject.Inject;
 
 import javax.swing.*;

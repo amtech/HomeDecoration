@@ -1,7 +1,7 @@
 package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity.MaterialClass;
+import com.giants3.hd.entity.MaterialClass;
 
 /**
  * Created by davidleen29 on 2017/4/2.

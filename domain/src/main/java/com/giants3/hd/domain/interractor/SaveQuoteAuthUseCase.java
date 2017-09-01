@@ -1,7 +1,7 @@
 package com.giants3.hd.domain.interractor;
 
 import com.giants3.hd.domain.repository.AuthRepository;
-import com.giants3.hd.utils.entity.QuoteAuth;
+import com.giants3.hd.entity.QuoteAuth;
 import rx.Observable;
 import rx.Scheduler;
 

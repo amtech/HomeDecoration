@@ -1,6 +1,6 @@
 package com.giants3.hd.domain.api;
 
-import com.giants3.hd.utils.noEntity.BufferData;
+import com.giants3.hd.noEntity.BufferData;
 
 /**
  * Created by davidleen29 on 2015/8/8.

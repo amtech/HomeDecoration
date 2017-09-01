@@ -1,19 +1,12 @@
 package com.giants.hd.desktop.reports.excels;
 
-import com.giants.hd.desktop.local.ImageLoader;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.UnitUtils;
-import com.giants3.hd.utils.exception.HdException;
-import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
-import org.apache.poi.ss.usermodel.*;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.QuotationDetail;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**

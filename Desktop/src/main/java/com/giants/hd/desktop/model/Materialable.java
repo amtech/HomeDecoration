@@ -1,6 +1,6 @@
 package com.giants.hd.desktop.model;
 
-import com.giants3.hd.utils.entity.Material;
+import com.giants3.hd.entity.Material;
 
 /**
  * 材料相关的接口，  表格的基本元素是material

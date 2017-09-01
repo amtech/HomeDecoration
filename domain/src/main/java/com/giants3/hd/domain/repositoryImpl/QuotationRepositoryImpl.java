@@ -3,8 +3,8 @@ package com.giants3.hd.domain.repositoryImpl;
 import com.giants3.hd.domain.datasource.QuotationDataSourceImpl;
 import com.giants3.hd.domain.datasource.QuotationDataStore;
 import com.giants3.hd.domain.repository.QuotationRepository;
-import com.giants3.hd.utils.entity.Quotation;
-import com.giants3.hd.utils.noEntity.QuotationDetail;
+import com.giants3.hd.entity.Quotation;
+import com.giants3.hd.noEntity.QuotationDetail;
 import rx.Observable;
 
 import java.util.List;

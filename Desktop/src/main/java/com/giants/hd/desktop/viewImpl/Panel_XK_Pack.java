@@ -2,11 +2,11 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.interf.DataChangeListener;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.Pack;
-import com.giants3.hd.utils.entity.Product;
-import com.giants3.hd.utils.entity.ProductMaterial;
-import com.giants3.hd.utils.entity.Xiankang;
-import com.giants3.hd.utils.noEntity.ProductDetail;
+import com.giants3.hd.entity.Pack;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.entity.ProductMaterial;
+import com.giants3.hd.entity.Xiankang;
+import com.giants3.hd.noEntity.ProductDetail;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

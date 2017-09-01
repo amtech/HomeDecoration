@@ -11,9 +11,9 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.utils.ProduceType;
+import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.*;
+import com.giants3.hd.entity.*;
 
 import javax.swing.*;
 import java.awt.*;

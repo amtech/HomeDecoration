@@ -2,8 +2,8 @@ package com.giants.hd.desktop.mvp.viewer;
 
 import com.giants.hd.desktop.frames.StockOutDetailFrame;
 import com.giants.hd.desktop.mvp.IViewer;
-import com.giants3.hd.utils.entity_erp.ErpStockOutItem;
-import com.giants3.hd.utils.noEntity.ErpStockOutDetail;
+import com.giants3.hd.entity_erp.ErpStockOutItem;
+import com.giants3.hd.noEntity.ErpStockOutDetail;
 
 import java.util.List;
 import java.util.Set;

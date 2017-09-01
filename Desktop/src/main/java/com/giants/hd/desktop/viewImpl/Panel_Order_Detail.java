@@ -12,11 +12,10 @@ import com.giants.hd.desktop.widget.DateCellEditor;
 import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TextAreaCellEditor;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.entity.ErpOrder;
-import com.giants3.hd.utils.entity.ErpOrderItem;
-import com.giants3.hd.utils.noEntity.ErpOrderDetail;
+import com.giants3.hd.entity.ErpOrder;
+import com.giants3.hd.entity.ErpOrderItem;
+import com.giants3.hd.noEntity.ErpOrderDetail;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

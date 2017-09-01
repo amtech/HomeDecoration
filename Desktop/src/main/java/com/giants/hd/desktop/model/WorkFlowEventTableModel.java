@@ -1,8 +1,8 @@
 package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.utils.TableStructureUtils;
-import com.giants3.hd.utils.entity.WorkFlowEvent;
-import com.giants3.hd.utils.entity.WorkFlowWorker;
+import com.giants3.hd.entity.WorkFlowEvent;
+import com.giants3.hd.entity.WorkFlowWorker;
 
 /**
  * Created by davidleen29 on 2017/4/2.
