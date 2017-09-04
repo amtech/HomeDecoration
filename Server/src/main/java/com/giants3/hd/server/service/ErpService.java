@@ -326,10 +326,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
                 }
                 if (shouldAddItem) {
 
-                    //查询当前item 在第一道的进度  100% 则也不显示
-                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, ErpWorkFlow.FIRST_STEP);
-
-                    if (report == null || report.percentage < 1)
+//                    //查询当前item 在第一道的进度  100% 则也不显示
+//                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, ErpWorkFlow.FIRST_STEP);
+//
+//                    if (report == null || report.percentage < 1)
                         result.add(erpOrderItem);
                 }
 
@@ -343,7 +343,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
         //第一流程人员  不进行筛选
-        if (firstStepWorker == null) {
+      //  if (firstStepWorker == null) {
             //流程过滤  如果当前流程已经完成100% 去除  ，如果上一流程未满100% 也去除
 
             List<ErpOrderItem> result = new ArrayList<>();
@@ -373,7 +373,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
             orderItems = result;
-        }
+       // }
 //
 //
 

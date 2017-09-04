@@ -5,12 +5,7 @@ apply plugin: 'war'
 
 sourceCompatibility = 1.5
 
-ext {
-    gsonVersion="1.7.2"
 
-    okHttpVersion = '2.3.0'
-
-}
 repositories {
     mavenCentral()
 }

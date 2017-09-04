@@ -112,7 +112,7 @@ public class ErpWorkFlow {
         final int length = STEPS.length;
 
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 1; i < length; i++) {
             if(STEPS[i]==flowStep)
                 return STEPS[i-1];
         }

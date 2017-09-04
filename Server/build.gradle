@@ -20,9 +20,9 @@ repositories {
 dependencies {
 
 
-    compile project(":Utils")
+   // compile project(":Utils")
 
-
+    compile 'com.giants3:dataLib:1.0.9'
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
     runtime group: 'jstl', name: 'jstl', version: '1.2'
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
@@ -48,7 +48,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
   //compile group: 'log4j', name: 'log4j', version: '1.2.16'
 
-
+    compile "com.google.code.gson:gson:${gsonVersion}"
 
     compile 'io.reactivex:rxjava:1.0.14'
     compile group: 'com.ning', name: 'async-http-client', version: '1.9.21'
