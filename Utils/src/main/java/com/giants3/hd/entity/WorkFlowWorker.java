@@ -24,7 +24,8 @@ public class WorkFlowWorker implements Serializable {
     /**
      * 流程
      */
-    public String workFlowCode;    /**
+    public String workFlowCode;
+    /**
      * 流程
      */
     public int workFlowStep;
@@ -54,5 +55,8 @@ public class WorkFlowWorker implements Serializable {
 
 
 
+
+    public int produceType;
+    public String produceTypeName;
 
 }

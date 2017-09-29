@@ -9,7 +9,7 @@
 
         select ps.ps_no as no, ps.so_no,ps.itm,ps.PRD_NO,ps.PRD_NAME,ps.PRD_MARK,ps.BAT_NO,ps.CUS_OS_NO,ps.qty,ps.dd,ps.type,pos.id_no ,mps.dept from (select PRD_MARK as so_no ,itm,PRD_NO,PRD_NAME, PRD_MARK, BAT_NO,CUS_OS_NO,QTY ,ps_dd as dd ,2 as type ,ps_no from TF_PSS   WHERE  PS_ID= UPPER ('PC')  AND WH= UPPER ('CP')   and  PRD_MARK like  UPPER ('%YF%')   and ps_dd  >=:startDate  and ps_dd  <= :endDate ) as ps
 
-         inner join ( select os_no ,itm,prd_no,id_no,bat_no FROM  TF_POS where OS_ID= UPPER ('SO')  ) as pos  on ps.PRD_MARK=pos.os_no  and ps.prd_no=pos.prd_no and  ps.bat_no=pos.bat_no
+         inner join ( select os_no ,itm,prd_no,id_no,bat_no FROM  TF_POS where OS_ID= UPPER ('SO')  ) as pos  on ps.PRD_MARK=pos.os_no  and ps.prd_no=pos.prd_no  and  ps.bat_no=pos.bat_no
 
          inner join (select  cus_no  as dept ,ps_no from mf_pss  WHERE  PS_ID= UPPER ('PC')       and ps_dd  >= :startDate  and ps_dd  <= :endDate)    as  mps  on mps.ps_no= ps.ps_no
 

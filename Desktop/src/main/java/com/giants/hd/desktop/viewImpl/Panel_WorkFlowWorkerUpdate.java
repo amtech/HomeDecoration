@@ -2,14 +2,18 @@ package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerUpdateIPresenter;
 import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerUpdateViewer;
+import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.entity.ErpWorkFlow;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.WorkFlowWorker;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 /**
@@ -29,8 +33,11 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
     private JCheckBox mu;
     private JCheckBox pu;
     private JComboBox cb_user;
+    private JRadioButton rb_self;
+    private JRadioButton rb_purchase;
     private List<User> users;
-    private List<ErpWorkFlow> workFlows;
+//    private List<ErpWorkFlow> workFlows;
+    private WorkFlowWorker workFlowWorker;
 
 
     public Panel_WorkFlowWorkerUpdate(final WorkFlowWorkerUpdateIPresenter presenter) {
@@ -59,14 +66,65 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
             }
         });
 
+
+
+
+
+//        ButtonGroup buttonGroup=new ButtonGroup();
+//        buttonGroup.add(rb_self);
+//        buttonGroup.add(rb_purchase);
+
+
     }
+
+
+
+    ItemListener itemListener=new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+
+
+
+            workFlowWorker.produceType=ProduceType.SELF_MADE;
+
+
+            bindData(workFlowWorker);
+
+        }
+    };
+    ItemListener rb_purchaseitemListener=new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+
+
+
+
+            workFlowWorker.produceType=ProduceType.PURCHASE;
+
+            bindData(workFlowWorker);
+
+        }
+    };
+
+
+
     @Override
     public void bindWorkFlows(List<ErpWorkFlow> workFlows)
     {
-        this.workFlows = workFlows;
+        //this.workFlows = workFlows;
 
-        cb_workFlow.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(ErpWorkFlow.WorkFlows)));
 
+
+
+    }
+
+
+    private  void  setPeitiEnable(boolean enable)
+    {
+
+        tie.setEnabled(enable);
+        mu.setEnabled(enable);
+        pu.setEnabled(enable);
 
     }
 
@@ -81,6 +139,7 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
     }
     @Override
     public void bindData(WorkFlowWorker workFlowWorker) {
+        this.workFlowWorker = workFlowWorker;
 
 
         btn_delete.setVisible(workFlowWorker != null && workFlowWorker.id > 0);
@@ -98,6 +157,14 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
         if(selected!=null)
         cb_user.setSelectedItem(selected);
 
+
+
+
+        List<ErpWorkFlow> workFlows=workFlowWorker.produceType==ProduceType.PURCHASE?ErpWorkFlow.purchaseWorkFLows:ErpWorkFlow.WorkFlows;
+
+
+
+        cb_workFlow.setModel(new DefaultComboBoxModel(ArrayUtils.changeListToVector(workFlows)));
 
         ErpWorkFlow  selectedWorkFlow=null;
         for(ErpWorkFlow workFlow:workFlows)
@@ -120,7 +187,14 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
         pu.setSelected(workFlowWorker.pu);
 
 
-
+//
+         rb_purchase.removeItemListener(rb_purchaseitemListener);
+        rb_self.removeItemListener(itemListener);
+        rb_purchase.setSelected(workFlowWorker.produceType== ProduceType.PURCHASE);
+        rb_self.setSelected(workFlowWorker.produceType== ProduceType.SELF_MADE);
+        setPeitiEnable(rb_self.isSelected());
+         rb_purchase.addItemListener(rb_purchaseitemListener);
+        rb_self.addItemListener(itemListener);
 
 
     }
@@ -146,6 +220,8 @@ public class Panel_WorkFlowWorkerUpdate extends BasePanel implements WorkFlowWor
         workFlowWorker.tie=tie.isSelected();
         workFlowWorker.mu=mu.isSelected();
         workFlowWorker.pu=pu.isSelected();
+        workFlowWorker.produceType=rb_purchase.isSelected()?ProduceType.PURCHASE:ProduceType.SELF_MADE;
+        workFlowWorker.produceTypeName=rb_purchase.isSelected()?ProduceType.PURCHASE_NAME:ProduceType.SELF_MADE_NAME;
     }
 
     /**

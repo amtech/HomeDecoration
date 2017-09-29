@@ -6,14 +6,22 @@ package com.giants3.hd.noEntity;
  */
 public class ProduceType {
 
-    public static final int  NOT_SET=0;
+    public static final int  NOT_SET=-1;
     /**
      * 自制
      */
-    public  static final int SELF_MADE=1;
+    public  static final int SELF_MADE=0;
     /**
      * 外购
      */
-    public  static final int PURCHASE=2;
+    public  static final int PURCHASE=1;
+
+
+    public static  final String NOT_SET_NAME="未排厂";
+    public static  final String SELF_MADE_NAME="自制";
+    public static  final String PURCHASE_NAME="外购";
+
+
+
 
 }

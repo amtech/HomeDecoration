@@ -157,6 +157,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
     private AttachPanel pack_attaches;
 
     private JButton workFlow;
+    private JButton save2;
 
 
     /**
@@ -1591,7 +1592,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         /**
          * 保存功能
          */
-        bn_save.addActionListener(new ActionListener() {
+        final ActionListener l = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -1615,7 +1616,9 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
 
             }
-        });
+        };
+        bn_save.addActionListener(l);
+        save2.addActionListener(l);
 
 
         //添加附件
@@ -1833,6 +1836,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         boolean modifiable = AuthorityUtil.getInstance().editProduct() || AuthorityUtil.getInstance().addProduct();
 
         bn_save.setVisible(modifiable);
+        save2.setVisible(modifiable);
 
 
         btn_attach_add.setVisible(modifiable);

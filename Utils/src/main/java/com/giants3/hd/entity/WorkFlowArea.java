@@ -24,4 +24,9 @@ public class  WorkFlowArea {
     public String description;
 
 
+
+    @Override
+    public String toString() {
+        return code+name;
+    }
 }

@@ -29,12 +29,12 @@ public class ErpStockOutRepository {
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
      */
 
-    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,isnull(B.UP,0) as UP, isnull(B.QTY,0) as  QTY, isnull(B.AMT,0) as   AMT ,A.SO_ZXS,A.IDX_NAME,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,isnull(A.JZ1,0)as JZ1,isnull(A.MZ,0) as MZ  from TF_CK_Z A FULL JOIN TF_CK B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  where A.ck_no=:ck_no  order by B.itm ASC  ";
+    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,isnull(B.UP,0) as UP, isnull(B.QTY,0) as  QTY, isnull(B.AMT,0) as   AMT ,A.SO_ZXS,A.IDX_NAME,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,isnull(A.JZ1,0)as JZ1,isnull(A.MZ,0) as MZ ,A.HPGG  from TF_CK_Z A FULL JOIN TF_CK B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  where A.ck_no=:ck_no  order by B.itm ASC  ";
 
 
 
     //搜索基句
-    public static final String  STOCK_OUT_LIST=" select A.CK_NO,A.CK_DD,A.CUS_NO,A.sal_no,B.MDG,B.TDH,B.GSGX ,C.ADR2,C.TEL1,C.FAX from   MF_CK  A FULL  JOIN  MF_CK_Z B  on A.CK_ID=b.CK_ID  and a.ck_no=b.ck_no  LEFT JOIN CUST C on A.CUS_NO=c.CUS_NO  ";
+    public static final String  STOCK_OUT_LIST=" select A.CK_NO,A.CK_DD,A.CUS_NO,A.sal_no,B.MDG,B.TDH,B.GSGX, C.name,C.fp_name,C.ADR2,C.TEL1,C.FAX from   MF_CK  A FULL  JOIN  MF_CK_Z B  on A.CK_ID=b.CK_ID  and a.ck_no=b.ck_no  LEFT JOIN CUST C on A.CUS_NO=c.CUS_NO  ";
 
     //按日期排序
     public static final String STOCK_OUT_ORDER=" order by  A.ck_dd desc ";
@@ -77,7 +77,7 @@ public class ErpStockOutRepository {
                 .addScalar("khxg", StringType.INSTANCE)
                 .addScalar("idx_name", StringType.INSTANCE)
                 .addScalar("xgtj", FloatType.INSTANCE)
-               // .addScalar("zxgtj", FloatType.INSTANCE)
+                .addScalar("hpgg", StringType.INSTANCE)
                 .addScalar("jz1", FloatType.INSTANCE)
                 .addScalar("mz", FloatType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpStockOutItem.class))  .list();
@@ -155,6 +155,8 @@ public class ErpStockOutRepository {
                 .addScalar("mdg", StringType.INSTANCE)
                 .addScalar("tdh", StringType.INSTANCE)
                 .addScalar("gsgx", StringType.INSTANCE)
+                .addScalar("name", StringType.INSTANCE)
+                .addScalar("fp_name", StringType.INSTANCE)
                 .addScalar("adr2", StringType.INSTANCE)
                 .addScalar("tel1", StringType.INSTANCE)
                 .addScalar("sal_no", StringType.INSTANCE)

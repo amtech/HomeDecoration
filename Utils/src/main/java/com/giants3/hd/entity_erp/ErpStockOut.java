@@ -32,6 +32,16 @@ public class ErpStockOut   implements Serializable {
     public String fax;
 
 
+    /**
+     * 客户名称
+     */
+    public String  name;
+
+    /**
+     * 发票客户名称
+     */
+    public String fp_name;
+
     //本系统增加字段
 
     public String zhengmai;
@@ -40,4 +50,7 @@ public class ErpStockOut   implements Serializable {
     public String memo;
 
     public String attaches;
+
+
+
 }

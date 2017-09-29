@@ -132,4 +132,7 @@ public class ErpStockOutItem   implements Serializable{
      */
     public int stockOutQty;
 
+
+    public String  hpgg;
+
 }

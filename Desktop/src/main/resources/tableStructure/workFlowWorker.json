@@ -23,6 +23,12 @@
     "width": 80,
     "aClass": "S",
     "isCombineField": false
+  }, {
+    "columnName": "排厂类型",
+    "fileName": "produceTypeName",
+    "width": 80,
+    "aClass": "S",
+    "isCombineField": false
   },
 
   {

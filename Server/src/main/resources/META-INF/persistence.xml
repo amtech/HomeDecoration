@@ -15,7 +15,7 @@
 
 
         <class>com.giants3.hd.entity.ErpWorkFlowReport</class>
-        <class>com.giants3.hd.entity.ErpOrderItemWorkFlowState</class>
+
 
 
         <class>com.giants3.hd.entity.Flow</class>

@@ -32,4 +32,8 @@ public class ErpWorkFlowReport {
      * 当前流程的类型数量  铁 木
      */
     public int typeCount;
+
+
+    public  int produceType;
+    public  String produceTypeName;
 }

@@ -103,4 +103,10 @@ public class ErpOrderItemProcess {
     public int unSendQty;
     public int sendingQty;
     public int sentQty;
+
+
+    @Override
+    public String toString() {
+        return mrpNo;
+    }
 }

@@ -245,11 +245,8 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         WorkFlowWorker firstStepWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowStepEquals(loginUser.id, ErpWorkFlow.FIRST_STEP);
         List<ErpOrderItem> orderItems;
         if (firstStepWorker == null) {
-
             //      非第一道的用户
             orderItems = erpWorkService.searchHasStartWorkFlowUnCompleteOrderItems(key);
-
-
         } else {
             orderItems = erpWorkService.searchUnCompleteOrderItems(key);
 
@@ -834,27 +831,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         return wrapData();
 
-    }
-
-    /**
-     * 检查流程跟用户的关联
-     *
-     * @param userId
-     * @param workFlowId
-     * @return
-     */
-    private boolean checkWorkFlowAndUser(long userId, long workFlowId) {
-        boolean canOperate = false;
-        //验证流程
-        List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndWorkFlowCodeEquals(userId, "");
-        for (WorkFlowWorker workFlowWorker : workFlowWorkers) {
-            if (workFlowWorker.receive) {
-
-                canOperate = true;
-                break;
-            }
-        }
-        return canOperate;
     }
 
 

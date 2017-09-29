@@ -32,7 +32,7 @@ public class WorkFlowWorkerUpdateDialog extends BaseMVPDialog<WorkFlowWorker, Wo
         setMinimumSize(new Dimension(400, 400));
 
 
-        getViewer().bindWorkFlows(ErpWorkFlow.WorkFlows);
+//        getViewer().bindWorkFlows(ErpWorkFlow.WorkFlows);
 
 
         loadUsers();

@@ -240,7 +240,8 @@ public class UserService extends AbstractService implements InitializingBean, Di
         //清除password
         for(User user:users)
         {
-            user.password="";
+            user.password=null;
+            user.passwordMD5=null;
         }
     }
 

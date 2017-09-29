@@ -154,4 +154,13 @@ public class WorkFlowMessage {
     public static final String NAME_REWORK = "返工";
 
 
+    /**
+     * 客号
+     */
+    public String bat_no;
+
+    /**
+     * 客户代号
+     */
+    public String cus_no;
 }

@@ -204,16 +204,41 @@ public class AuthorityController extends BaseController {
 
        return doLogin2(userName,passwordMd5,client,version,loginIp,"" );
     }
+
+
     /**
-     * 登录逻辑
+     * 登录接口   密码加密
      *
-     * @param userName
-     * @param passwordMd5
-     * @param client
-     * @param version
-     * @param loginIp
+     * @param request
+     * @param userId
+     * @param appVersion
      * @return
      */
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<User> login(HttpServletRequest request,
+                           @RequestParam(value = "userId", required = false, defaultValue = "0") long userId,
+                           @RequestParam(value = "password", required = false, defaultValue = "") String password,
+                           @RequestParam(value = "appVersion", required = false, defaultValue = "0") int appVersion
+            , @RequestParam(value = "client", required = false, defaultValue = "DESKTOP") String client
+            , @RequestParam(value = "device_token", required = false, defaultValue = "") String device_token
+
+    ) {
+
+
+        User findUser=userRepository.findOne(userId);
+        if(findUser==null)
+            return wrapError("用户不存在");
+
+
+
+
+
+        return doLogin2(findUser, password, client, appVersion, request.getRemoteAddr(),device_token);
+    }
+
+
     private RemoteData<User> doLogin2(String userName, String passwordMd5, String client, int version, String loginIp,String device_token) {
 
 
@@ -227,6 +252,28 @@ public class AuthorityController extends BaseController {
 
         User findUser = userList.get(0);
 
+        return doLogin2(findUser,passwordMd5,client,version,loginIp,device_token);
+
+    }
+
+
+
+
+
+    /**
+     * 登录逻辑
+     *
+     * @param findUser
+     * @param passwordMd5
+     * @param client
+     * @param version
+     * @param loginIp
+     * @return
+     */
+    private RemoteData<User> doLogin2(User findUser  , String passwordMd5, String client, int version, String loginIp,String device_token) {
+
+
+
 
 
         if (! findUser.isCorrectPassword(passwordMd5)) {
@@ -234,7 +281,8 @@ public class AuthorityController extends BaseController {
         }
 
 
-        findUser.password = "***";
+        findUser.password = null;
+        findUser.passwordMD5=null;
 
         RemoteData<User> data = wrapData(findUser);
         Date date=Calendar.getInstance().getTime();
@@ -284,7 +332,8 @@ public class AuthorityController extends BaseController {
         }
 
 
-        findUser.password = "***";
+        findUser.password =null;
+        findUser.passwordMD5 =null;
 
         RemoteData<User> data = wrapData(findUser);
        Date date= Calendar.getInstance().getTime();

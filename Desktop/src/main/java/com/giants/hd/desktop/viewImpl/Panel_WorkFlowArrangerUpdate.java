@@ -89,6 +89,8 @@ public class Panel_WorkFlowArrangerUpdate extends BasePanel implements WorkFlowA
 
     }
 
+
+
     @Override
     public void bindUsers(List<User> users)
     {

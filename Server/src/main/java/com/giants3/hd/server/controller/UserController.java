@@ -161,7 +161,8 @@ public class UserController extends BaseController {
             return wrapError("未找到用户");
         }
         //关闭密码返回
-        user.password = "";
+        user.password = null;
+        user.passwordMD5 = null;
         BufferData bufferData = new BufferData();
         bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
         bufferData.customers = customerService.list();

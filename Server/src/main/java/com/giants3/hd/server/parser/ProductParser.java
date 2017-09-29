@@ -17,7 +17,6 @@ public class ProductParser implements DataParser<Product,AProduct> {
     @Override
     public AProduct parse(Product data) {
         AProduct aProduct=new AProduct();
-
         aProduct.name=data.name;
         aProduct.id=data.id;
         aProduct.pVersion=data.pVersion;

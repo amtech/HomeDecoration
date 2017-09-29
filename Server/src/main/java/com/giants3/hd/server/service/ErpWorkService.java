@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
@@ -201,98 +202,170 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 //    }
 
 
+    public RemoteData<ErpWorkFlowReport> findErpWorkFlowReport(String os_no, int itm)
+    {
+        ErpOrderItem erpOrderItem=erpWorkRepository.findOrderItem(os_no,itm);
+        if(erpOrderItem==null) return wrapError("未查找到订单货款:"+os_no+",item="+itm);
 
+
+        if(erpOrderItem.produceType== ProduceType.NOT_SET)
+        {
+            return wrapError("该订单未排厂");
+
+        }
+
+       return findErpWorkFlowReport( erpOrderItem );
+    }
 
     /**
      * 查找xxxx的进度报表
      */
-    public RemoteData<ErpWorkFlowReport> findErpWorkFlowReport(String os_no, int itm) {
+    public RemoteData<ErpWorkFlowReport> findErpWorkFlowReport(ErpOrderItem erpOrderItem ) {
+
 
 
         //查询本地数据库的报表记录
-        final List<ErpWorkFlowReport> byOsNoEqualsAndPrdNoEquals = erpWorkFlowReportRepository.findByOsNoEqualsAndItmEquals(os_no, itm);
+        final List<ErpWorkFlowReport> erpWorkFlowReports = erpWorkFlowReportRepository.findByOsNoEqualsAndItmEquals(erpOrderItem.os_no, erpOrderItem.itm);
+
+
 
 
         //本地不存在 查询erp。
-        if (ArrayUtils.isEmpty(byOsNoEqualsAndPrdNoEquals)) {
-
-            List<ErpOrderItemProcess> processes =    erpWorkRepository.findOrderItemProcesses(os_no, itm,true);
-
-            if (ArrayUtils.isEmpty(processes))
-                return wrapError("该订单未排厂");
-
-
-            //erp 排厂数据整合临时数据  已经排厂，未进行流程活动， 默认进度都是0，进行过流程活动了， 才保存在 ErpWorkFlowReport 表中。
-
-
-            //不以abcd开头的process 数据，就是成品数据
+        if (ArrayUtils.isEmpty(erpWorkFlowReports)) {
 
 
 
-            boolean  hasZuzhuang=false;
-            for(ErpOrderItemProcess process:processes)
-            {
-                if(process.mrpNo.startsWith(ErpWorkFlow.CODE_ZUZHUANG))
-                {hasZuzhuang=true;
-                    break;
+
+
+
+
+
+
+
+            //查詢是否排廠
+            if(erpOrderItem.produceType== ProduceType.SELF_MADE) {
+                //内厂的排厂数据处理
+
+                List<ErpOrderItemProcess> processes = erpWorkRepository.findOrderItemProcesses(erpOrderItem.os_no, erpOrderItem.itm, true);
+
+                if (ArrayUtils.isEmpty(processes))
+                    return wrapError("该订单未排厂");
+
+
+                //erp 排厂数据整合临时数据  已经排厂，未进行流程活动， 默认进度都是0，进行过流程活动了， 才保存在 ErpWorkFlowReport 表中。
+
+
+                //不以abcd开头的process 数据，就是成品数据
+
+
+                boolean hasZuzhuang = false;
+                for (ErpOrderItemProcess process : processes) {
+                    if (process.mrpNo.startsWith(ErpWorkFlow.CODE_ZUZHUANG)) {
+                        hasZuzhuang = true;
+                        break;
+
+                    }
 
                 }
+
+
+                for (ErpWorkFlow erpWorkFlow : ErpWorkFlow.WorkFlows) {
+
+
+                    //判断排厂中是否有当前流程
+                    boolean hasThisFlow = false;
+                    ErpOrderItemProcess findProcess = null;
+
+
+                    Set<String> typeSet = new HashSet<>();
+                    for (ErpOrderItemProcess process : processes) {
+
+
+                        if (process.mrpNo.startsWith(erpWorkFlow.code)) {
+                            findProcess = process;
+                            typeSet.add(process.mrpNo.substring(0, 2));// 取头两位
+
+                            hasThisFlow = true;
+
+                        }
+                    }
+
+                    if (!hasThisFlow) continue;
+                    ErpWorkFlowReport erpWorkFlowReport = new ErpWorkFlowReport();
+                    erpWorkFlowReport.workFlowCode = erpWorkFlow.code;
+
+                    //包装类型， 检查是否有组装
+                    if (ErpWorkFlow.CODE_BAOZHUANG.equals(erpWorkFlow.code)) {
+
+
+                        erpWorkFlowReport.workFlowName = (hasZuzhuang ? ErpWorkFlow.NAME_ZUZHUANG : "") + ErpWorkFlow.NAME_BAOZHUANG;
+                    } else {
+                        erpWorkFlowReport.workFlowName = erpWorkFlow.name;
+                    }
+
+                    erpWorkFlowReport.workFlowStep = erpWorkFlow.step;
+                    erpWorkFlowReport.osNo = erpOrderItem.os_no;
+                    erpWorkFlowReport.itm = erpOrderItem.itm;
+                    erpWorkFlowReport.prdNo = findProcess.prdNo;
+                    erpWorkFlowReport.pVersion = findProcess.pVersion;
+                    erpWorkFlowReport.typeCount = typeSet.size();
+                    erpWorkFlowReport.percentage = 0;
+
+                    erpWorkFlowReports.add(erpWorkFlowReport);
+                }
+
+
+            }else
+
+
+            //外购数据
+            if(erpOrderItem.produceType== ProduceType.PURCHASE)
+            {
+
+             for(ErpWorkFlow erpWorkFlow: ErpWorkFlow.purchaseWorkFLows)
+             {
+
+                 ErpWorkFlowReport erpWorkFlowReport = new ErpWorkFlowReport();
+                 erpWorkFlowReport.workFlowCode = erpWorkFlow.code;
+
+                 erpWorkFlowReport.workFlowStep = erpWorkFlow.step;
+                 erpWorkFlowReport.workFlowName = erpWorkFlow.name;
+                 erpWorkFlowReport.osNo = erpOrderItem.os_no;
+                 erpWorkFlowReport.itm = erpOrderItem.itm;
+                 erpWorkFlowReport.prdNo = erpOrderItem.prd_no;
+                 erpWorkFlowReport.pVersion =erpOrderItem.pVersion;
+                 erpWorkFlowReport.typeCount = 1;
+                 erpWorkFlowReport.percentage = 0;
+
+                 erpWorkFlowReports.add(erpWorkFlowReport);
+             }
+
+
+
 
             }
 
 
-            for (ErpWorkFlow erpWorkFlow : ErpWorkFlow.WorkFlows) {
 
 
-                //判断排厂中是否有当前流程
-                boolean hasThisFlow = false;
-                ErpOrderItemProcess findProcess = null;
+            for(ErpWorkFlowReport erpWorkFlow: erpWorkFlowReports)
+            {
+                erpWorkFlow.produceType=erpOrderItem.produceType;
+                erpWorkFlow.produceTypeName=erpOrderItem.produceTypeName;
 
-
-                Set<String> typeSet=new HashSet<>();
-                for (ErpOrderItemProcess process : processes) {
-
-
-                    if (process.mrpNo.startsWith(erpWorkFlow.code)) {
-                        findProcess = process;
-                        typeSet.add(process.mrpNo.substring(0,2));// 取头两位
-
-                        hasThisFlow = true;
-
-                    }
-                }
-
-                if (!hasThisFlow) continue;
-                ErpWorkFlowReport erpWorkFlowReport = new ErpWorkFlowReport();
-                erpWorkFlowReport.workFlowCode = erpWorkFlow.code;
-
-                //包装类型， 检查是否有组装
-                if(ErpWorkFlow.CODE_BAOZHUANG.equals(erpWorkFlow.code))
-                {
-
-
-                    erpWorkFlowReport.workFlowName = (hasZuzhuang?ErpWorkFlow.NAME_ZUZHUANG:"")+ErpWorkFlow.NAME_BAOZHUANG;
-                }else
-                {
-                    erpWorkFlowReport.workFlowName = erpWorkFlow.name;
-                }
-
-                erpWorkFlowReport.workFlowStep = erpWorkFlow.step;
-                erpWorkFlowReport.osNo = os_no;
-                erpWorkFlowReport.itm = itm;
-                erpWorkFlowReport.prdNo = findProcess.prdNo;
-                erpWorkFlowReport.pVersion = findProcess.pVersion;
-                erpWorkFlowReport.typeCount = typeSet.size();
-
-                erpWorkFlowReport.percentage = 0;
-                byOsNoEqualsAndPrdNoEquals.add(erpWorkFlowReport);
             }
 
 
         }
 
 
-        return wrapData(byOsNoEqualsAndPrdNoEquals);
+
+
+
+
+
+
+        return wrapData(erpWorkFlowReports);
     }
 
 
@@ -370,7 +443,72 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
     }
 
+    /**
+     * 外购 可用流程处理
+     * @param loginUser
+     * @param os_no
+     * @param itm
+     * @param flowStep
+     * @return
+     */
+    public RemoteData<ErpOrderItemProcess> getAvailablePurchaseOrderItemProcess(User loginUser,String os_no, int itm, int flowStep)
+    {
 
+
+
+        //外购 流程
+        //查找前一个流程
+        if(flowStep!=ErpWorkFlow.FIRST_STEP )  //第一道 不需要上一道100%完成
+        {
+            int previousStep=  ErpWorkFlow.findPurchasePrevious(flowStep);
+
+            final ErpWorkFlowReport erpWorkFlowReport = erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(os_no, itm, previousStep);
+            if(erpWorkFlowReport==null||erpWorkFlowReport.percentage<1)
+            {
+                return wrapError("上一道流程未交接完毕，不能发起交接");
+            }
+
+        }
+
+
+
+        List<ErpOrderItemProcess> orderItemProcesses=erpWorkRepository.findPurchaseOrderItemProcesses(os_no,itm);
+
+
+
+        for (ErpOrderItemProcess process:orderItemProcesses)
+        {
+
+            ErpOrderItemProcess localProcess = erpOrderItemProcessRepository.findFirstByMoNoEqualsAndMrpNoEquals(process.moNo,process.mrpNo);
+            if (localProcess != null)
+                attachData(process, localProcess);
+
+
+        }
+
+
+
+
+        //下一个节点
+        ErpWorkFlow nextFlow = flowStep== ErpWorkFlow.LAST_STEP?null:ErpWorkFlow.findPurchaseNext(flowStep);
+        ErpWorkFlow workFlow=ErpWorkFlow.findPurchaseByStep(flowStep);
+        for (ErpOrderItemProcess process:orderItemProcesses) {
+            process.currentWorkFlowCode = workFlow.code;
+            process.currentWorkFlowStep = workFlow.step;
+            process.currentWorkFlowName = workFlow.name;
+            process.unSendQty = process.qty;
+
+
+            process.nextWorkFlowCode = nextFlow == null ? "" : nextFlow.code;
+            process.nextWorkFlowStep = nextFlow == null ? 0 : nextFlow.step;
+            process.nextWorkFlowName = nextFlow == null ? "" : nextFlow.name;
+        }
+
+
+
+
+        return wrapData(orderItemProcesses);
+    }
     /**
      * 查找指定节点可发送的订单流程数据
      *
@@ -382,13 +520,14 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
     public RemoteData<ErpOrderItemProcess> getAvailableOrderItemProcess(User loginUser,String os_no, int itm, int flowStep) {
 
 
-        ErpWorkFlow workFlow = ErpWorkFlow.findByStep(flowStep);
 
 
-        WorkFlowWorker workFlowWorker=workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowStepEquals(loginUser.id,flowStep);
+        ErpOrderItem erpOrderItem=erpWorkRepository.findOrderItem(os_no,itm);
+        WorkFlowWorker workFlowWorker=workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowStepEquals(loginUser.id,erpOrderItem.produceType,flowStep);
 
+        if(workFlowWorker==null)
 
-
+            return wrapError("当前节点未配置工作人员");
 
         if(!workFlowWorker.send)
         {
@@ -396,6 +535,25 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         }
 
 
+
+
+        if(erpOrderItem.produceType==ProduceType.PURCHASE)
+        {
+
+
+            return getAvailablePurchaseOrderItemProcess(loginUser,os_no,itm,flowStep);
+        }
+
+
+        ErpWorkFlow workFlow = ErpWorkFlow.findByStep(flowStep);
+
+
+
+
+
+
+
+        //自制 流程
         //查找前一个流程
         if(flowStep!=ErpWorkFlow.FIRST_STEP&&flowStep!= ErpWorkFlow.SECOND_STEP)  //第一道第二道 都不需要上一道100%完成
         {
@@ -562,11 +720,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             return wrapError("提交数量超过当前流程数量");
         }
 
-
+        ErpOrderItem erpOrderItem=erpWorkRepository.findOrderItem(erpOrderItemProcess.osNo,erpOrderItemProcess.itm);
 
         //验证人员
 
-        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndSendEquals(user.id, erpOrderItemProcess.currentWorkFlowCode, true);
+        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowCodeEqualsAndSendEquals(user.id, erpOrderItem.produceType,erpOrderItemProcess.currentWorkFlowCode, true);
         if (workFlowWorker == null) {
             return wrapError("无权限在当前节点:" + erpOrderItemProcess.currentWorkFlowName + " 发送流程");
         }
@@ -640,11 +798,13 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         workFlowMessage.thumbnail = erpOrderItemProcess.photoThumb;
 
         workFlowMessage.factoryName = erpOrderItemProcess.jgh;
+        workFlowMessage.bat_no = erpOrderItem.bat_no;
+        workFlowMessage.cus_no = erpOrderItem.cus_no;
 
         workFlowMessage=  workFlowMessageRepository.save(workFlowMessage);
 
 
-        RemoteData<ErpWorkFlowReport> workFlowReports = findErpWorkFlowReport(erpOrderItemProcess.osNo, erpOrderItemProcess.itm);
+        RemoteData<ErpWorkFlowReport> workFlowReports = findErpWorkFlowReport(erpOrderItem);
 
         if (workFlowReports.isSuccess()) {
             erpWorkFlowReportRepository.save(workFlowReports.datas);
@@ -732,8 +892,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         }
 
 
+
+        ErpWorkFlowReport workFlowReport = erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(message.orderName, message.itm, message.fromFlowStep);
+
         //人员验证
-        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(loginUser.id, message.toFlowCode, true);
+        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowCodeEqualsAndReceiveEquals(loginUser.id,workFlowReport.produceType, message.toFlowCode, true);
         boolean canOperate = workFlowWorker != null;
 
         if (!canOperate) {
@@ -755,7 +918,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
         erpOrderItemProcessRepository.save(erpOrderItemProcess);
-        ErpWorkFlowReport workFlowReport = erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(message.orderName, message.itm, message.fromFlowStep);
+
 
 
         //更新生产进度
@@ -884,9 +1047,12 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             return wrapError("消息不存在：" + workFlowMsgId);
         }
 
+        ErpWorkFlowReport workFlowReport = erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(message.orderName, message.itm, message.fromFlowStep);
+
+
 
         //人员验证
-        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(loginUser.id, message.toFlowCode, true);
+        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowCodeEqualsAndReceiveEquals(loginUser.id,workFlowReport.produceType, message.toFlowCode, true);
         boolean canOperate = workFlowWorker != null;
 
         if (!canOperate) {

@@ -18,11 +18,14 @@ public interface WorkFlowWorkerRepository extends JpaRepository<WorkFlowWorker, 
      * @param workFlowCode
      * @return
      */
-      List<WorkFlowWorker>  findByUserIdEqualsAndWorkFlowCodeEquals(long userId,String  workFlowCode);
-       WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(long userId,String  workFlowCode,boolean canReceive);
+//      List<WorkFlowWorker>  findByUserIdEqualsAndWorkFlowCodeEquals(long userId,String  workFlowCode);
+     //  WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndReceiveEquals(long userId,String  workFlowCode,boolean canReceive);
+       WorkFlowWorker   findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowCodeEqualsAndReceiveEquals(long userId,int produceType,String  workFlowCode,boolean canReceive);
       List< WorkFlowWorker>   findByUserIdEqualsAndReceiveEquals(long userId, boolean canReceive);
      WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowCodeEqualsAndSendEquals(long userId,String  workFlowCode,boolean canSend);
+     WorkFlowWorker   findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowCodeEqualsAndSendEquals(long userId,int produceType,String  workFlowCode,boolean canSend);
      WorkFlowWorker   findFirstByUserIdEqualsAndWorkFlowStepEquals (long userId,int   workFlowStep );
+     WorkFlowWorker   findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowStepEquals (long userId,int produceType,int   workFlowStep );
      List<WorkFlowWorker>   findByUserIdEqualsAndWorkFlowStepEquals (long userId,int   workFlowStep );
 
     List<WorkFlowWorker> findByUserIdEqualsAndSendEquals(long userId, boolean canSend);

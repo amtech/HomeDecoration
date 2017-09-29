@@ -141,7 +141,8 @@ public class StockService extends AbstractService {
             item.pVersion = pVersion;
 
             item.thumbnail=  item.url = FileUtils.getErpProductPictureUrl(item.id_no,"");
-
+            item.specCm=StringUtils.convertInchStringToCmString(item.hpgg);
+            item.specInch=item.hpgg;
 
             //更新相关联的产品信息
             Product product = productRepository.findFirstByNameEqualsAndPVersionEquals(productCode, pVersion);
@@ -149,8 +150,7 @@ public class StockService extends AbstractService {
 
 
                 item.unit = product.pUnitName;
-                item.specCm=product.specCm;
-                item.specInch=product.spec;
+
             }
 
 
