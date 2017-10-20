@@ -1,6 +1,6 @@
 package com.giants3.hd.server.parser;
 
-import com.giants3.hd.appdata.AProduct;
+import com.giants3.hd.app.AProduct;
 import com.giants3.hd.entity.Product;
 import org.springframework.stereotype.Component;
 

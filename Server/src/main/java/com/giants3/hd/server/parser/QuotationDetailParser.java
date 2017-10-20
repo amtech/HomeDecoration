@@ -1,7 +1,6 @@
 package com.giants3.hd.server.parser;
 
-import com.giants3.hd.appdata.AQuotationDetail;
-import com.giants3.hd.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.app.QuotationDetail;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 //默认的 qualifier  为首字母小写的类名
-public class QuotationDetailParser implements DataParser<QuotationDetail, AQuotationDetail> {
+public class QuotationDetailParser implements DataParser<com.giants3.hd.noEntity.QuotationDetail, QuotationDetail> {
 
 
     @Override
-    public AQuotationDetail parse(QuotationDetail data) {
-        AQuotationDetail aQuotation = new AQuotationDetail();
+    public QuotationDetail parse(com.giants3.hd.noEntity.QuotationDetail data) {
+        QuotationDetail aQuotation = new QuotationDetail();
 
 
         return aQuotation;

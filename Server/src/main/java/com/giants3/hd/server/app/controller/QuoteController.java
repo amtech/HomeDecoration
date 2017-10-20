@@ -1,4 +1,4 @@
-package com.giants3.hd.server.app;
+package com.giants3.hd.server.app.controller;
 
 
 import com.giants3.hd.entity.*;

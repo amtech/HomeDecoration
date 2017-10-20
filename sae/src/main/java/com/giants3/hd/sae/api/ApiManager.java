@@ -1,7 +1,7 @@
 package com.giants3.hd.sae.api;
 
-import com.giants3.hd.appdata.AProduct;
-import com.giants3.hd.appdata.AUser;
+import com.giants3.hd.app.AProduct;
+import com.giants3.hd.app.AUser;
 import com.giants3.hd.sae.entity.WxToken;
 import com.giants3.hd.sae.entity.json.WxMixSend;
 import com.giants3.hd.utils.ConstantData;

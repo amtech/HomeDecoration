@@ -1,16 +1,13 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.noEntity.*;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
-import com.giants3.hd.noEntity.ConstantData;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.entity.*;
-import com.giants3.hd.noEntity.ErpOrderDetail;
-import com.giants3.hd.noEntity.OrderReportItem;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,74 +249,39 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             List<ErpOrderItem> result = new ArrayList<>();
 
-            //过滤  进行产品排产过滤  【0-5000】 铁件  【5000-9999】木剑
+            //过滤  进行产品排产过滤  【0-5000】 铁件  【5000-9999】木件
             for (ErpOrderItem erpOrderItem : orderItems) {
 
 
 
 
 
-                boolean tie=false;
-                boolean mu=false;
+
 
                 //先從指令單中判斷鐵幕
                 List<ErpOrderItemProcess> processes = erpWorkRepository.findOrderItemProcesses(erpOrderItem.os_no, erpOrderItem.itm);
-                for(ErpOrderItemProcess erpOrderItemProcess:processes)
-                {
-                    if(erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AT"))
-                    {tie=true;}
-                    if(erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AM"))
-                    {mu=true;}
-                }
+
+
+                ProductType productType=ErpWorkService.getProductTypeFromOrderItemProcess(processes);
 
 
 
-                if(!tie&&!mu) {
 
-                    int prd_no_code = -1;
-
-                    if (StringUtils.isChar(erpOrderItem.prd_no, 2)) {
-                        try {
-                            //13A1221 形式   抽取字母后4位
-                            prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(3, Math.min(7, erpOrderItem.prd_no.length())));
-                        } catch (Throwable t) {
-                        }
-                    } else if (StringUtils.isChar(erpOrderItem.prd_no, 0)) {
-                        try {
-                            // A1221 形式   抽取字母后4位
-                            prd_no_code = Integer.valueOf(erpOrderItem.prd_no.substring(1, Math.min(5, erpOrderItem.prd_no.length())));
-                        } catch (Throwable t) {
-                        }
-                    }
-
-
-
-                    if (prd_no_code == -1) {
-                        tie = true;
-                        mu = true;
-
-
-                    }
-
-                    else if (prd_no_code >= 0 && prd_no_code <= 5000  ) {
-                        tie = true;
-
-                    } else if (prd_no_code > 5000 && prd_no_code <= 9999 ) {
-                        mu = true;
-
-
-                    }
-                }
 
 
                 boolean shouldAddItem = false;
-                if (tie&& firstStepWorker.tie) {
+
+                if(productType.type==ProductType.TYPE_NONE)
+                {
+                    //无法确定类型  都可以应该返回
+                    shouldAddItem=true;
+
+                }else
+                if ((productType.type&ProductType.TYPE_TIE)==ProductType.TYPE_TIE&& firstStepWorker.tie) {
                     shouldAddItem = true;
 
-                } else if (mu&& firstStepWorker.mu) {
+                } else if ((productType.type&ProductType.TYPE_MU)==ProductType.TYPE_MU&& firstStepWorker.mu) {
                     shouldAddItem = true;
-
-
                 }
                 if (shouldAddItem) {
 

@@ -83,17 +83,6 @@ public class ErpWorkController extends BaseController {
 
 
 
-        if(remoteData.isSuccess())
-        {
-
-
-            List<User> users=userService.list();
-
-
-//            for()
-
-        }
-
 
         return remoteData;
 

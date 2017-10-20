@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.server.entity.ProductEquationUpdateTemp;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
@@ -127,6 +128,50 @@ public class ProductService extends AbstractService implements InitializingBean,
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         String likeValue = "%" + name.trim() + "%";
         Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue, likeValue, pageable);
+
+        List<Product> products = pageValue.getContent();
+
+
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+
+
+    }
+
+    public RemoteData<Product> searchProductListByViewType(String name,int viewType, int pageIndex, int pageSize) {
+
+
+
+
+        Page<Product> pageValue=null;
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        String likeValue = "%" + name.trim() + "%";
+        switch (viewType)
+        {
+
+
+
+            case ProductListViewType.VIEWTYPE_PEITI_UNSET:
+                pageValue =   productRepository.findByNameLikeAndConceptusCostEqualsOrderByNameAsc(likeValue, 0, pageable);
+                break;
+            case ProductListViewType.VIEWTYPE_ZUZHUANG_UNSET :
+                pageValue =   productRepository.findByNameLikeAndAssembleCostEqualsOrderByNameAsc(likeValue, 0, pageable);
+                break;
+            case ProductListViewType.VIEWTYPE_YOUQI_UNSETE:
+
+                pageValue =   productRepository.findByNameLikeAndPaintCostEqualsOrderByNameAsc(likeValue, 0, pageable);
+                break;
+            case ProductListViewType.VIEWTYPE_BAOZHUANG_UNSETE:
+                pageValue =   productRepository.findByNameLikeAndPackCostEqualsOrderByNameAsc(likeValue, 0, pageable);
+                break;
+
+
+
+        }
+
+
+        if(pageValue==null)
+            return wrapData();
+
 
         List<Product> products = pageValue.getContent();
 

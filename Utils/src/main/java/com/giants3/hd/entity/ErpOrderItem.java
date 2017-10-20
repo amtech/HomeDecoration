@@ -161,6 +161,12 @@ public class ErpOrderItem {
      */
     public String cus_no;
 
+    /**
+     *
+     * 生产厂家
+     */
+    public String factory;
+
 
 
     public String getOs_no() {

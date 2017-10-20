@@ -1,6 +1,6 @@
 package com.giants3.hd.server.parser;
 
-import com.giants3.hd.appdata.AUser;
+import com.giants3.hd.app.AUser;
 import com.giants3.hd.entity.User;
 import org.springframework.stereotype.Component;
 

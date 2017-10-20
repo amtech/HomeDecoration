@@ -1,7 +1,5 @@
 package com.giants3.hd.entity;
 
-import com.giants3.hd.noEntity.ProduceType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +34,10 @@ public class ErpWorkFlow {
     public static String[] NAMES = new String[]{"胚体加工", "白胚", "颜色", NAME_ZUZHUANG + NAME_BAOZHUANG, NAME_CHENGPIN};
     public static final int FIRST_STEP = 1000;
     public static final int LAST_STEP = 6000;
-    public static final int SECOND_STEP = 2000;
+    public static final int STEP_PEITI = 2000;
     public static final int STEP_CHENGPIN = LAST_STEP;
-    public static int[] STEPS = new int[]{FIRST_STEP, SECOND_STEP, 3000, 5000, LAST_STEP};
+    public static final int STEP_YANSE = 3000;
+    public static int[] STEPS = new int[]{FIRST_STEP, STEP_PEITI, STEP_YANSE, 5000, LAST_STEP};
 
 
     public ErpWorkFlow() {

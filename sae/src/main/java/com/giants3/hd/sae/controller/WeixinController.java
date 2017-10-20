@@ -1,7 +1,7 @@
 package com.giants3.hd.sae.controller;
 
 
-import com.giants3.hd.appdata.AProduct;
+import com.giants3.hd.app.AProduct;
 import com.giants3.hd.sae.entity.WxArticleList;
 import com.giants3.hd.sae.entity.WxArticleMsg;
 import com.giants3.hd.sae.entity.WxMixMsg;

@@ -1,28 +1,17 @@
-package com.giants3.hd.server.app;
+package com.giants3.hd.server.app.controller;
 
 
-import com.giants3.hd.appdata.AProduct;
+import com.giants3.hd.app.AProduct;
 import com.giants3.hd.entity.*;
-import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.controller.BaseController;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
-import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
-import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 
 /**

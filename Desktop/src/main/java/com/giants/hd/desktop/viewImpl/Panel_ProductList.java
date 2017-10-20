@@ -9,6 +9,8 @@ import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
+import com.giants3.hd.noEntity.ProductListViewType;
+import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.Product;
@@ -17,10 +19,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.swing.*;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.Vector;
 
 /**
  * 产品列表界面
@@ -34,12 +38,12 @@ public class Panel_ProductList extends BasePanel {
 
     private JPanel panel1;
     private JButton btn_search;
-    private JCheckBox sortAsc;
     private JLabel product_title;
     private JTextField productName;
     private JTable productTable;
     private JButton btn_add;
     private Panel_Page pagePanel;
+    private JComboBox cb_type;
 
 
     @Inject
@@ -49,6 +53,16 @@ public class Panel_ProductList extends BasePanel {
     public Panel_ProductList() {
         super();
 
+
+        Vector<String> vector=new Vector<>();
+        vector.add("    ");
+        vector.add("白胚未处理");
+        vector.add("组装未处理");
+        vector.add("油漆未处理");
+        vector.add("包装未处理");
+
+
+        cb_type.setModel(new DefaultComboBoxModel<String>(ProductListViewType.vector));
         //productTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         btn_search.addActionListener(new ActionListener() {
             @Override
@@ -150,7 +164,10 @@ public class Panel_ProductList extends BasePanel {
         pagePanel.setListener(new PageListener() {
             @Override
             public void onPageChanged(int pageIndex, int pageSize) {
-                searchProduct(productName.getText().trim(), pageIndex, pageSize);
+
+
+
+                searchProduct(productName.getText().trim(), cb_type.getSelectedIndex(),pageIndex, pageSize);
             }
         });
 
@@ -171,18 +188,22 @@ public class Panel_ProductList extends BasePanel {
 
     private void searchProduct(String productNameValue) {
 
-        searchProduct(productNameValue, 0, pagePanel.getPageSize());
+
+       int viewType= cb_type.getSelectedIndex();
+
+
+        searchProduct(productNameValue,viewType, 0, pagePanel.getPageSize());
 
     }
 
-    private void searchProduct(final String productNameValue, final int pageIndex, final int pageSize) {
+    private void searchProduct(final String productNameValue, final int viewType, final int pageIndex, final int pageSize) {
 
 
         new HdSwingWorker<Product, Object>(getWindow(getRoot())) {
             @Override
             protected RemoteData<Product> doInBackground() throws Exception {
 
-                return apiManager.readProductList(productNameValue, pageIndex, pageSize);
+                return apiManager.readProductList(productNameValue, viewType,pageIndex, pageSize);
 
             }
 

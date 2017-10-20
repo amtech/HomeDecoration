@@ -1,14 +1,21 @@
-package com.giants3.hd.appdata;
+package com.giants3.hd.entity.app;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
  * 移动端使用的数据 报价子项
  * Created by david on 2016/1/2.
  */
-public class AQuotationItem implements Serializable {
+@Entity(name="T_AppQuotationItem")
+public class QuotationItem implements Serializable {
 
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     public long id;
 
 
@@ -102,7 +109,16 @@ public class AQuotationItem implements Serializable {
     public long quotationId;
 
 
+    /**
+     * 项次
+     */
+    public int index;
+
+
     public String memo;
 
-
+    /**
+     * 原价
+     */
+    public float orignPrice;
 }

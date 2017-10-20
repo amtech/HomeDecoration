@@ -20,6 +20,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
 
     Page<Product> findByNameLikeOrPVersionLikeOrderByNameAsc(String proName,String pVersion, Pageable pageable);
+    Page<Product> findByNameLikeAndConceptusCostEqualsOrderByNameAsc(String proName, float value, Pageable pageable);
+    Page<Product> findByNameLikeAndAssembleCostEqualsOrderByNameAsc(String likeValue, float value, Pageable pageable);
+    Page<Product> findByNameLikeAndPaintCostEqualsOrderByNameAsc(String likeValue, float value, Pageable pageable);
+    Page<Product> findByNameLikeAndPackCostEqualsOrderByNameAsc(String likeValue, float value, Pageable pageable);
 
 
     /**
@@ -59,4 +63,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
      */
 
     List<Product> findByFactoryCodeEquals(String s);
+
+
 }

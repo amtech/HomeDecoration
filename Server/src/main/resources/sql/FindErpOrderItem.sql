@@ -7,6 +7,7 @@ b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
  0  as photoUpdateTime
 ,f.so_data
 ,g.cus_no
+,h.cus_no as factory
 ,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from (
 
 
@@ -61,7 +62,11 @@ select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,w
                             select os_no, cus_no   from  mf_pos where OS_ID='SO'   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
+              left outer join (
 
+                                    select os_no, cus_no   from  mf_pos where OS_ID='PO'   and  os_dd >'2017-01-01'
+
+                                    ) h  on  a.os_no=h.os_no
 
 order by a.os_no DESC
 

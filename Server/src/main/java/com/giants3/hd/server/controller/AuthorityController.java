@@ -1,6 +1,6 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.appdata.AUser;
+import com.giants3.hd.app.AUser;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;

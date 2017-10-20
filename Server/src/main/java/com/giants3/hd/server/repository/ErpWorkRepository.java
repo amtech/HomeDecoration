@@ -352,6 +352,7 @@ public class ErpWorkRepository extends ErpRepository {
                 .addScalar("so_zxs", IntegerType.INSTANCE)
                 .addScalar("so_data", StringType.INSTANCE)
                 .addScalar("cus_no", StringType.INSTANCE)
+                .addScalar("factory", StringType.INSTANCE)
                 .addScalar("os_dd", StringType.INSTANCE)
                 .addScalar("amt", FloatType.INSTANCE)
                 .addScalar("produceType", IntegerType.INSTANCE)

@@ -216,16 +216,26 @@ public class ApiManager {
      */
     public RemoteData<Product> readProductList(String productName, int pageIndex, int pageSize) throws HdException {
 
+       return readProductList(productName,0,pageIndex,pageSize);
 
-        String url = HttpUrl.loadProductList(productName, pageIndex, pageSize);
+
+    }
+    /**
+     * 读取产品列表
+     *
+     * @param productName
+     * @param pageIndex
+     * @param  viewType 查看类型 0 没有限制， 1 白胚未录入 2 组装未处理 3 油漆未处理 4 包装未处理。
+     * @param pageSize
+     * @return
+     * @throws HdException
+     */
+    public RemoteData<Product> readProductList(String productName, int viewType,int pageIndex, int pageSize) throws HdException {
+
+
+        String url = HttpUrl.loadProductList(productName,  viewType, pageIndex, pageSize);
 
         String result = client.postWithStringReturned(url, null);
-
-
-//        Type   generateType = new TypeToken<RemoteData<Product>>() {
-//        }.getType();
-//
-//        RemoteData<Product> productRemoteData = GsonUtils.fromJson(result, generateType);
 
         RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
         return productRemoteData;

@@ -1,8 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.appdata.AProduct;
+import com.giants3.hd.app.AProduct;
 import com.giants3.hd.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
@@ -88,11 +89,25 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<Product> search(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
-
+                         ,      @RequestParam(value = "viewType", required = false, defaultValue = "0") int viewType
     ) throws UnsupportedEncodingException {
 
 
-        return productService.searchProductList(prd_name, pageIndex, pageSize);
+
+        switch (viewType)
+        {
+            case ProductListViewType.VIEWTYPE_NONE:
+                return productService.searchProductList(prd_name, pageIndex, pageSize);
+
+
+         default:
+
+                return productService.searchProductListByViewType(prd_name,viewType,pageIndex,pageSize);
+
+
+        }
+
+
 
 
     }

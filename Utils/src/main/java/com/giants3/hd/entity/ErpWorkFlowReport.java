@@ -36,4 +36,9 @@ public class ErpWorkFlowReport {
 
     public  int produceType;
     public  String produceTypeName;
+
+
+
+    public int productType;
+    public String productTypeName;
 }
