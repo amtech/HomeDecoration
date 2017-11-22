@@ -1,9 +1,10 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.Customer;
-
-import com.giants3.hd.server.repository.*;
 import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.repository.CustomerRepository;
+import com.giants3.hd.server.repository.QuotationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by david on 2016/2/15.
  */
 @Service
-public class CustomerService extends AbstractService  {
+public class CustomerService extends AbstractService {
 
 
     @Autowired
@@ -26,8 +27,6 @@ public class CustomerService extends AbstractService  {
 
     @Autowired
     private QuotationRepository quotationRepository;
-
-
 
 
     /**
@@ -62,19 +61,16 @@ public class CustomerService extends AbstractService  {
 
         }
 
-        for(Customer customer: newCustomers)
-        {
+        for (Customer customer : newCustomers) {
 
 
-            Customer oldData=customerRepository.findFirstByCodeEquals(customer.code);
-            if(oldData==null)
-            {
-                customer.id=-1;
+            Customer oldData = customerRepository.findFirstByCodeEquals(customer.code);
+            if (oldData == null) {
+                customer.id = -1;
 
 
-            }else
-            {
-                customer.id=oldData.id;
+            } else {
+                customer.id = oldData.id;
 
             }
             customerRepository.save(customer);
@@ -83,14 +79,12 @@ public class CustomerService extends AbstractService  {
             /**
              *  删除不存在item   标记delete
              */
-            for(Customer deletedCustomer:removed)
-            {
+            for (Customer deletedCustomer : removed) {
 
-                if(quotationRepository.findFirstByCustomerIdEquals(deletedCustomer.id)!=null)
-                {
-                    throw HdException.create("不能删除客户【"+deletedCustomer.name+"】,目前有报价单关联着");
+                if (quotationRepository.findFirstByCustomerIdEquals(deletedCustomer.id) != null) {
+                    throw HdException.create("不能删除客户【" + deletedCustomer.name + "】,目前有报价单关联着");
                 }
-                customerRepository.delete(deletedCustomer );
+                customerRepository.delete(deletedCustomer);
 
 
             }
@@ -98,21 +92,19 @@ public class CustomerService extends AbstractService  {
         }
 
 
-        return  list();
+        return list();
     }
-
 
 
     /**
      * 查询用户列表
+     *
      * @return
      */
-    public List<Customer> list()
-    {
+    public List<Customer> list() {
 
-        return  customerRepository.findAll(new Sort("code")) ;
+        return customerRepository.findAll(new Sort("code"));
     }
-
 
 
     /**
@@ -130,6 +122,13 @@ public class CustomerService extends AbstractService  {
 
 
 
+    public RemoteData<Customer> add(String name, String code, String tel) {
 
 
+        Customer customer = new Customer(name, code, tel);
+
+        customer = customerRepository.save(customer);
+
+        return wrapData(customer);
+    }
 }

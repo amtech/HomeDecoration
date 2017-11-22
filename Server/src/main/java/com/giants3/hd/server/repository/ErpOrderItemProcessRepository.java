@@ -3,7 +3,9 @@ package com.giants3.hd.server.repository;
 
 import com.giants3.hd.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -24,7 +26,9 @@ public interface ErpOrderItemProcessRepository extends JpaRepository<ErpOrderIte
 //    List<ErpOrderItemProcess> findBySentQtyLessThanQty(    );
         @Query(" select p from T_ErpOrderItemProcess  p where  sentQty< qty")
     List<ErpOrderItemProcess> findUnCompleteProcesses(    );
-
+    @Modifying
+    @Query("delete T_ErpOrderItemProcess  p where   p.osNo=:os_no and p.itm=:itm   ")
+    int deleteByOsNoAndItm(@Param("os_no") String os_no, @Param("itm") int itm);
 
 
 //

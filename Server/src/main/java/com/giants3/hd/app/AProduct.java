@@ -58,4 +58,7 @@ public class AProduct implements Serializable {
 	public float price;
 	public String url;
 	public String thumbnail;
+
+	public String spec;
+	public String specCm;
 }

@@ -27,7 +27,16 @@ public class Customer implements Serializable ,Valuable{
     public String code;
     @Basic
     public String name;
+    public String tel;
 
+    public Customer()
+    {}
+
+    public Customer(String code, String name, String tel) {
+        this.code = code;
+        this.name = name;
+        this.tel = tel;
+    }
 
     @Override
     public String toString() {

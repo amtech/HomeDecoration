@@ -33,6 +33,14 @@ public class ProductParser implements DataParser<Product,AProduct> {
                 =data.url;
         aProduct.thumbnail
                 =data.thumbnail;
+        aProduct.memo
+                =data.memo;
+        aProduct.spec
+                =data.spec;
+
+        aProduct.specCm
+                =data.specCm;
+
         return aProduct;
     }
 }

@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.entity.*;
 import com.giants3.hd.noEntity.*;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
@@ -7,9 +8,6 @@ import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.entity.*;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -27,7 +25,7 @@ import java.util.List;
  * Created by david on 2016/2/15.
  */
 @Service
-public class ErpService extends AbstractService implements InitializingBean, DisposableBean {
+public class ErpService extends AbstractErpService {
 
 
     ErpOrderRepository repository;
@@ -35,7 +33,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     @Autowired
     ErpWorkService erpWorkService;
 
-    EntityManager manager;
+    @Autowired
+    ErpPrdtService erpPrdtService; ;
+
+
 
     @Autowired
     ProductRepository productRepository;
@@ -96,18 +97,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
     OrderAuthRepository orderAuthRepository;
 
 
-    @Override
-    public void destroy() throws Exception {
-        super.destroy();
 
-        manager.close();
-    }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-        EntityManagerHelper helper = EntityManagerHelper.getErp();
-        manager = helper.getEntityManager();
+    protected void onEntityManagerCreate(EntityManager manager) {
         repository = new ErpOrderRepository(manager);
         erpWorkRepository = new ErpWorkRepository(manager);
     }
@@ -154,7 +147,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
 
-                attachData(erpOrder, order);
+            attachData(erpOrder, order);
 
 
         }
@@ -184,7 +177,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
 
-            attachData(erpOrder, order);
+        attachData(erpOrder, order);
 
 
         User user = userRepository.findFirstByCodeEquals(erpOrder.sal_no);
@@ -253,34 +246,23 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
             for (ErpOrderItem erpOrderItem : orderItems) {
 
 
-
-
-
-
-
                 //先從指令單中判斷鐵幕
                 List<ErpOrderItemProcess> processes = erpWorkRepository.findOrderItemProcesses(erpOrderItem.os_no, erpOrderItem.itm);
 
 
-                ProductType productType=ErpWorkService.getProductTypeFromOrderItemProcess(processes);
-
-
-
-
+                ProductType productType =erpPrdtService.getProductTypeFromOrderItemProcess(processes);
 
 
                 boolean shouldAddItem = false;
 
-                if(productType.type==ProductType.TYPE_NONE)
-                {
+                if (productType.type == ProductType.TYPE_NONE) {
                     //无法确定类型  都可以应该返回
-                    shouldAddItem=true;
-
-                }else
-                if ((productType.type&ProductType.TYPE_TIE)==ProductType.TYPE_TIE&& firstStepWorker.tie) {
                     shouldAddItem = true;
 
-                } else if ((productType.type&ProductType.TYPE_MU)==ProductType.TYPE_MU&& firstStepWorker.mu) {
+                } else if ((productType.type & ProductType.TYPE_TIE) == ProductType.TYPE_TIE && firstStepWorker.tie) {
+                    shouldAddItem = true;
+
+                } else if ((productType.type & ProductType.TYPE_MU) == ProductType.TYPE_MU && firstStepWorker.mu) {
                     shouldAddItem = true;
                 }
                 if (shouldAddItem) {
@@ -289,7 +271,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 //                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, ErpWorkFlow.FIRST_STEP);
 //
 //                    if (report == null || report.percentage < 1)
-                        result.add(erpOrderItem);
+                    result.add(erpOrderItem);
                 }
 
 
@@ -302,37 +284,37 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
 
         //第一流程人员  不进行筛选
-      //  if (firstStepWorker == null) {
-            //流程过滤  如果当前流程已经完成100% 去除  ，如果上一流程未满100% 也去除
+        //  if (firstStepWorker == null) {
+        //流程过滤  如果当前流程已经完成100% 去除  ，如果上一流程未满100% 也去除
 
-            List<ErpOrderItem> result = new ArrayList<>();
-            for (ErpOrderItem erpOrderItem : orderItems) {
-
-
-                //遍历权限配置
-                for (WorkFlowWorker workFlowWorker : workFlowWorkers) {
-
-                    ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, workFlowWorker.workFlowStep);
-                    //如果当前流程已经完成100% 去除  ，
-                    if (report != null && report.percentage > 0.9999) continue;
-
-                    int previousStep = ErpWorkFlow.findPrevious(workFlowWorker.workFlowStep);
-                    //   上一道不受百分比控制 白胚加工
-                    if (previousStep != ErpWorkFlow.FIRST_STEP) {
-                        report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, previousStep);
-                        //如果上一流程未满100% 也去除//
-                        if (report == null || report.percentage < 1) continue;
-                    }
+        List<ErpOrderItem> result = new ArrayList<>();
+        for (ErpOrderItem erpOrderItem : orderItems) {
 
 
-                    result.add(erpOrderItem);
-                    break;
+            //遍历权限配置
+            for (WorkFlowWorker workFlowWorker : workFlowWorkers) {
+
+                ErpWorkFlowReport report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, workFlowWorker.workFlowStep);
+                //如果当前流程已经完成100% 去除  ，
+                if (report != null && report.percentage > 0.9999) continue;
+
+                int previousStep = ErpWorkFlow.findPrevious(workFlowWorker.workFlowStep);
+                //   上一道不受百分比控制 白胚加工
+                if (previousStep != ErpWorkFlow.FIRST_STEP) {
+                    report = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItem.os_no, erpOrderItem.itm, previousStep);
+                    //如果上一流程未满100% 也去除//
+                    if (report == null || report.percentage < 1) continue;
                 }
+
+
+                result.add(erpOrderItem);
+                break;
             }
+        }
 
 
-            orderItems = result;
-       // }
+        orderItems = result;
+        // }
 //
 //
 
@@ -503,11 +485,11 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
      */
     private void attachData(ErpOrder erpOrder, Order order) {
 
-        if(erpOrder!=null) {
+        if (erpOrder != null) {
 
-            File filePath=FileUtils.getMaitouFilePath(maitoufilepath,erpOrder.os_no);
+            File filePath = FileUtils.getMaitouFilePath(maitoufilepath, erpOrder.os_no);
 
-            erpOrder.maitouUrl = filePath.exists()?FileUtils.getMaitouFileUrl(erpOrder.os_no):"";
+            erpOrder.maitouUrl = filePath.exists() ? FileUtils.getMaitouFileUrl(erpOrder.os_no) : "";
 
 
         }
@@ -524,7 +506,6 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         erpOrder.youmai = order.youmai;
         erpOrder.memo = order.memo;
         erpOrder.attaches = order.attaches;
-
 
 
     }
@@ -564,7 +545,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
             Order order = orderRepository.findFirstByOsNoEquals(erpOrder.os_no);
 
-                attachData(erpOrder, order);
+            attachData(erpOrder, order);
 
 
         }
@@ -838,6 +819,7 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
         List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndReceiveEquals(loginUser.id, true);
 
+
         if (!ArrayUtils.isNotEmpty(workFlowWorkers)) return wrapData();
 
         int size = workFlowWorkers.size();
@@ -851,7 +833,61 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
         List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepInAndReceiverIdEquals(state, flowSteps, 0);
 
 
-        return wrapData(workFlowMessages);
+        List<WorkFlowMessage> result = new ArrayList<>();
+        for (WorkFlowMessage workFlowMessage : workFlowMessages) {
+
+
+            final int toFlowStep = workFlowMessage.toFlowStep;
+
+            boolean shouldAdd = false;
+            if (toFlowStep == ErpWorkFlow.STEP_PEITI || toFlowStep == ErpWorkFlow.STEP_YANSE) {
+                //颜色 白胚阶段 进行铁木权限细分
+                ErpWorkFlowReport workFlowReport = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(workFlowMessage.orderName, workFlowMessage.itm, toFlowStep);
+
+
+                ErpOrderItemProcess erpOrderItemProcess = erpOrderItemProcessRepository.findOne(workFlowMessage.orderItemProcessId);
+
+                if (erpOrderItemProcess == null) {
+                    shouldAdd = true;
+                } else {
+                    ProductType productType = erpPrdtService.getProductTypeFromOrderItemProcess(erpOrderItemProcess);
+
+                    if (workFlowReport == null || productType == null || productType == ProductType.NONE) {
+                        shouldAdd = true;
+                    } else {
+                        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowStepEquals(loginUser.id, workFlowReport.produceType, toFlowStep);
+
+
+                        if (workFlowWorker != null) {
+
+                            if ((productType.type & ProductType.TYPE_MU) == ProductType.TYPE_MU && workFlowWorker.mu) {
+                                shouldAdd = true;
+
+
+                            }
+
+                            if ((productType.type & ProductType.TYPE_TIE) == ProductType.TYPE_TIE && workFlowWorker.tie) {
+                                shouldAdd = true;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+                }else{
+                    //其他流程 不细分铁木权限
+                    shouldAdd = true;
+                }
+
+
+            if (shouldAdd) result.add(workFlowMessage);
+
+        }
+
+
+        return wrapData(result);
 
     }
 
@@ -937,10 +973,10 @@ public class ErpService extends AbstractService implements InitializingBean, Dis
 
     }
 
-    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user) {
+    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user,String key) {
 
 
-        return wrapData(workFlowMessageRepository.findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(user.id, user.id));
+        return wrapData(workFlowMessageRepository.findMyWorkFlowMessages(user.id, StringUtils.sqlLike(key)));
 
     }
 

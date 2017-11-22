@@ -1,6 +1,7 @@
 package com.giants3.hd.server.repository;
 
 import com.giants3.hd.entity.ErpOrderItem;
+import com.giants3.hd.entity_erp.SampleState;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
@@ -8,6 +9,7 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by davidleen29 on 2017/6/10.
@@ -38,6 +40,17 @@ public class ErpRepository {
                 .addScalar("so_data", StringType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpOrderItem.class));
         return hQuery;
+
+    }
+
+
+    protected  <T> List<T> listQuery(SQLQuery  query, Class<T> aclass)
+    {
+
+
+        return   query
+                .setResultTransformer(Transformers.aliasToBean(aclass)).list();
+
 
     }
 }

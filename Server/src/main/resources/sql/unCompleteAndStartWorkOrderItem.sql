@@ -13,16 +13,17 @@ select os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt from  tf_pos  wh
 --订单起止日期  降低查询范围
 and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
  ) as  a
-
  --生产方式判断
    left outer join
    (
-       select  distinct  0 as produceType, SO_NO,BAT_NO ,EST_ITM from  MF_MO
+      --排厂单
+      select  distinct  0 as produceType, SO_NO,EST_ITM from  MF_MO    where so_no like '%YF%' and so_no like :os_no
        union
-       select distinct 1 as produceType,SO_NO,BAT_NO ,EST_ITM from  tf_SQ
+       --外购单
+       select distinct 1 as produceType,OTH_NO as so_no,oth_itm1 as est_itm from  tf_POS   where  os_id='PO' and OTH_NO like '%YF%'  and OTH_NO like :os_no
 
-   ) as pdc on a.os_no=pdc.SO_NO and a.bat_no=pdc.BAT_NO and a.itm=pdc.EST_ITM
 
+   ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
  --与 unCompleteOrderItem sql语句区别在于 inner join
 inner   join

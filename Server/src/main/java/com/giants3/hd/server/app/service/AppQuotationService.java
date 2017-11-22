@@ -10,6 +10,8 @@ import com.giants3.hd.server.repository.AppQuotationItemRepository;
 import com.giants3.hd.server.repository.AppQuotationRepository;
 import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.service.AbstractService;
+import com.giants3.hd.server.utils.SqlScriptHelper;
+import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,8 +47,6 @@ public class AppQuotationService extends AbstractService {
 
         Quotation quotation = new Quotation();
         quotation = appQuotationRepository.save(quotation);
-
-
         QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.quotation = quotation;
         quotationDetail.items = new ArrayList<>();
@@ -68,7 +68,7 @@ public class AppQuotationService extends AbstractService {
 
         QuotationDetail quotationDetail = new QuotationDetail();
         Quotation quotation = appQuotationRepository.findOne(id);
-        List<QuotationItem> quotationItemList = appQuotationItemRepository.findByQuotationIdEqualsOrderByIndexAsc(id);
+        List<QuotationItem> quotationItemList = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(id);
         quotationDetail.quotation = quotation;
         quotationDetail.items = quotationItemList;
         return wrapData(quotationDetail);
@@ -90,7 +90,8 @@ public class AppQuotationService extends AbstractService {
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         Page<Quotation> pageValue;
-        pageValue = appQuotationRepository.findByCustomerLikeOrQNumberLikeOrderByQDateDesc("%" + searchValue + "%", "%" + searchValue + "%", pageable);
+        final String key = StringUtils.sqlLike(searchValue);
+        pageValue = appQuotationRepository.findByCustomerLikeOrQNumberLikeOrderByQDateDesc(key, key, pageable);
 
         List<Quotation> datas = pageValue.getContent();
 
@@ -102,21 +103,21 @@ public class AppQuotationService extends AbstractService {
     /**
      * 往报价单添加产品
      *
-     * @param quotatinId
+     * @param quotationId
+
      * @param productId
-     * @param index
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> addProduct(long quotationId, long productId ) {
+    public RemoteData<QuotationDetail> addItem(long quotationId, long productId ) {
 
-        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByIndexAsc(quotationId);
+        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
 
 
         QuotationItem quotationItem=new QuotationItem();
         quotationItem.quotationId=quotationId;
         bindProductToQuotationItem(quotationItem,productId);
-        quotationItem.index=quotationItems.size();
+        quotationItem.itm=quotationItems.size();
         quotationItem=  appQuotationItemRepository.save(quotationItem);
 
 
@@ -139,7 +140,7 @@ public class AppQuotationService extends AbstractService {
     @Transactional
     public RemoteData<QuotationDetail> updateProduct(long quotationId, int itemIndex,long productId ) {
 
-        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndIndexEquals(quotationId,itemIndex);
+        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId,itemIndex);
 
 
         bindProductToQuotationItem(quotationItem,productId);
@@ -167,31 +168,31 @@ public class AppQuotationService extends AbstractService {
         quotationItem.productName=product.name;
         quotationItem.pVersion=product.pVersion;
         quotationItem.price=product.price;
-        quotationItem.orignPrice=product.price;
+        quotationItem.priceOrigin=product.price;
 
 
     }
 
     /**
-     * 往报价单添加产品
+     * 往报价单删除产品
      *
      * @param quotationId
      * @param itemIndex
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> removeProduct(long quotationId, int itemIndex) {
+    public RemoteData<QuotationDetail> removeItem(long quotationId, int itemIndex) {
 
 
-        QuotationItem item = appQuotationItemRepository.findFirstByQuotationIdEqualsAndIndexEquals(quotationId, itemIndex);
+        QuotationItem item = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
         if (item != null) appQuotationItemRepository.delete(item);
 
 
-        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByIndexAsc(quotationId);
+        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
 
         int index = 1;
         for (QuotationItem aItem : quotationItems) {
-            aItem.index = index++;
+            aItem.itm = index++;
             appQuotationItemRepository.save(aItem);
 
         }
@@ -270,12 +271,12 @@ public class AppQuotationService extends AbstractService {
 
 
     /**
-     * 保存数据
-     * @param quotation
+     * 保存报价单（功能只是将临时报价单生产正式报价单）
+     * @param quotationId
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> save(Quotation quotation)
+    public RemoteData<QuotationDetail> save(long quotationId  )
 
     {
 
@@ -283,4 +284,24 @@ public class AppQuotationService extends AbstractService {
         return null;
 
     }
+
+
+
+    /**
+     * 打印报价单
+     * @param quotationId
+     * @return
+     */
+    @Transactional
+    public RemoteData<QuotationDetail> print(long quotationId  )
+    {
+
+
+
+
+        return null;
+
+    }
+
+
 }

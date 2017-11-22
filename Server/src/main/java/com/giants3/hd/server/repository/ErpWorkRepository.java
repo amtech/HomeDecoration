@@ -48,6 +48,7 @@ public class ErpWorkRepository extends ErpRepository {
     public String SQL_ORDER_ITEM_PROCESS_BY_ITM = "";
     public String SQL_ORDER_ITEM_PROCESS_PURCHASE_BY_ITM = "";
     public String SQL_ORDER_ITEM_UNCOMPLETE = "";
+    public String SQL_ORDER_ITEM_COMPLETE = "";
     public String SQL_ORDER_ITEM_HAS_START_AND_UNCOMPLETE = "";
 
 
@@ -66,6 +67,7 @@ public class ErpWorkRepository extends ErpRepository {
             SQL_ORDER_ITEM_PROCESS_PURCHASE_BY_ITM = SqlScriptHelper.readScript("orderItemProcess_purchase_itm.sql");
             SQL_ORDER_ITEM_BY_OS_ITM = SqlScriptHelper.readScript("FindErpOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_COMPLETE);
             SQL_ORDER_ITEM_UNCOMPLETE = SqlScriptHelper.readScript("unCompleteOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_COMPLETE);
+            SQL_ORDER_ITEM_COMPLETE = SqlScriptHelper.readScript("completeOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_COMPLETE);
             SQL_ORDER_ITEM_HAS_START_AND_UNCOMPLETE = SqlScriptHelper.readScript("unCompleteAndStartWorkOrderItem.sql").replace("VALUE_COMPLETE_STATE", "" + ErpWorkFlow.STATE_WORKING);
         }
     }
@@ -135,6 +137,23 @@ public class ErpWorkRepository extends ErpRepository {
                 .setParameter("os_no", os_no)
                 .setParameter("itm", itm);
         final List<ErpOrderItemProcess> orderItemProcesses = extractOrderItemProcessFromQuery(query);
+
+
+        /**
+         * 构建外购的生产流程数据
+         */
+        if(orderItemProcesses.size()>0) {
+            ErpOrderItemProcess process = orderItemProcesses.get(0);
+            orderItemProcesses.clear();
+            ErpOrderItemProcess first = ObjectUtils.deepCopyWidthJson(process, ErpOrderItemProcess.class);
+
+            first.mrpNo=ErpWorkFlow.FIRST_STEP_CODE+"-"+first.mrpNo;
+            orderItemProcesses.add(first);
+
+            ErpOrderItemProcess last = ObjectUtils.deepCopyWidthJson(process, ErpOrderItemProcess.class);
+            last.mrpNo=ErpWorkFlow.CODE_CHENGPIN+"-"+last.mrpNo;
+            orderItemProcesses.add(last);
+        }
 
 
         for (ErpOrderItemProcess process : orderItemProcesses) {
@@ -220,7 +239,7 @@ public class ErpWorkRepository extends ErpRepository {
 
                 int size = peitis.size();
                 List<ErpOrderItemProcess> yanses = new ArrayList<>();
-                if (size > 1) {
+                if (size > 1) {//胚体类型数超过1
                     for (int i = 0; i < size - 1; i++) {
                         yanses.add(ObjectUtils.deepCopyWidthJson(yanse, ErpOrderItemProcess.class));
                     }
@@ -233,8 +252,13 @@ public class ErpWorkRepository extends ErpRepository {
                     for (int i = 0; i < size; i++) {
                         ErpOrderItemProcess temp = yanses.get(i);
 
-                        String type = peitis.get(i).mrpNo.substring(1, 2);
-                        temp.mrpNo = temp.mrpNo.substring(0, 1) + type + temp.mrpNo.substring(1);
+                        final String mrpNo = peitis.get(i).mrpNo;
+                        String type = mrpNo.substring(1, 2);
+
+                        //名称不同， 表名 这个胚体 由不同的产品（合并货号）
+                       boolean sameName=temp.mrpNo.substring(1).trim().equals(mrpNo.substring(2).trim());
+
+                        temp.mrpNo = temp.mrpNo.substring(0, 1) + type + temp.mrpNo.substring(1)+(sameName?"": mrpNo.substring(2));
 
                     }
                     orders.addAll(yanses);
@@ -326,6 +350,22 @@ public class ErpWorkRepository extends ErpRepository {
 
 
     }
+    /**
+     * 查找已排产未出货的订单列表
+     *
+     * @param key
+     * @return
+     */
+    public List<ErpOrderItem> searchCompleteOrderItems(String key) {
+
+
+        return getOrderItemsFromSQL(SQL_ORDER_ITEM_COMPLETE, key);
+
+
+    }
+
+
+
 
 
 

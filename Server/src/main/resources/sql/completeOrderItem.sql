@@ -8,14 +8,23 @@ b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
 ,f.so_data
 ,g.cus_no
 ,h.cus_no as factory
-,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from (
+,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from
+
+
+
+ (
+--9 表示 订单生产中
+select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate<>0  and (osNo like :os_no or prdNo like :prd_no)
+
+) as b  inner join
+ (
 
 
 select   os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt  from  tf_pos  where os_id='SO'
 --订单起止日期  降低查询范围
 and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
  ) as  a
-
+    on a.os_no=b.osNo collate Chinese_PRC_90_CI_AI   and  a.itm=b.itm and b.workflowstate=VALUE_COMPLETE_STATE
  --生产方式判断
    left outer join
    (
@@ -29,12 +38,7 @@ and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
    ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
 
-left outer join
-(
---9 表示 订单生产中
-select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate<>0  and (osNo like :os_no or prdNo like :prd_no)
 
-) as b on a.os_no=b.osNo collate Chinese_PRC_90_CI_AI   and  a.itm=b.itm and b.workflowstate<>VALUE_COMPLETE_STATE
 
 -- left outer JOIN
 -- --图片抓取关闭图片修改日期的抓取， ERP 图片改动时候， 客户端是无法感知的。

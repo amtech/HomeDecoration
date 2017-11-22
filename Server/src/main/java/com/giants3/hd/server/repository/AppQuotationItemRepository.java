@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface AppQuotationItemRepository extends JpaRepository<QuotationItem, Long> {
 
-    List<QuotationItem> findByQuotationIdEqualsOrderByIndexAsc(long quotationId);
-    QuotationItem findFirstByQuotationIdEqualsAndIndexEquals (long quotationId,int index);
+    List<QuotationItem> findByQuotationIdEqualsOrderByItmAsc(long quotationId);
+    QuotationItem findFirstByQuotationIdEqualsAndItmEquals (long quotationId,int itm);
 
 
 }

@@ -178,9 +178,9 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/myWorkFlowMessage", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<WorkFlowMessage> myWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user  ) {
+    RemoteData<WorkFlowMessage> myWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "key",required = false,defaultValue = "") String key ) {
 
-        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user );
+        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user,key );
         return remoteData;
     }
 

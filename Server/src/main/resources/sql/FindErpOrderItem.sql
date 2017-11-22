@@ -19,11 +19,14 @@ and  os_dd >'2017-01-01' and (os_no = :os_no and itm= :itm)
  --生产方式判断
    left outer join
    (
-       select  distinct  0 as produceType, SO_NO,BAT_NO ,EST_ITM from  MF_MO
+       --排厂单
+      select  distinct  0 as produceType, SO_NO,EST_ITM from  MF_MO    where  so_no =  :os_no
        union
-       select distinct 1 as produceType,SO_NO,BAT_NO ,EST_ITM from  tf_SQ
+       --外购单
+       select distinct 1 as produceType,OTH_NO as so_no,oth_itm1 as est_itm from  tf_POS   where  os_id='PO' and   OTH_NO = :os_no
 
-   ) as pdc on a.os_no=pdc.SO_NO and a.bat_no=pdc.BAT_NO and a.itm=pdc.EST_ITM
+
+   ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
 
 left outer join

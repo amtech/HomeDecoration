@@ -7,10 +7,7 @@ import com.giants3.hd.entity.Customer;
 import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +46,17 @@ public class CustomerController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Customer> add(@RequestParam(value="name",required = false,defaultValue = "") String name
+                              ,@RequestParam(value="code",required = false,defaultValue = "") String code
+                              ,@RequestParam(value="tel",required = false,defaultValue = "") String tel
 
+    ) {
+
+
+       return      customerService.add(name,code,tel);
+
+    }
 }

@@ -10,12 +10,12 @@ import java.io.Serializable;
  * 移动端使用的数据 报价子项
  * Created by david on 2016/1/2.
  */
-@Entity(name="T_AppQuotationItem")
+@Entity(name = "T_AppQuotationItem")
 public class QuotationItem implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
 
@@ -35,8 +35,17 @@ public class QuotationItem implements Serializable {
 
     public String pVersion;
 
+    /**
+     * 箱数
+     */
 
     public int inBoxCount;
+
+
+    /**
+     * 数量
+     */
+    public int qty;
 
 
     /**
@@ -71,6 +80,12 @@ public class QuotationItem implements Serializable {
      */
 
     public float price;
+
+    /**
+     * 单价
+     */
+
+    public float priceOrigin;
 
 
     /**
@@ -112,13 +127,9 @@ public class QuotationItem implements Serializable {
     /**
      * 项次
      */
-    public int index;
+    public int itm;
 
 
     public String memo;
 
-    /**
-     * 原价
-     */
-    public float orignPrice;
 }

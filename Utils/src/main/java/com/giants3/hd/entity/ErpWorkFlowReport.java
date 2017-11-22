@@ -29,7 +29,7 @@ public class ErpWorkFlowReport {
 
 
     /**
-     * 当前流程的类型数量  铁 木
+     * 当前流程指令单类型数量
      */
     public int typeCount;
 

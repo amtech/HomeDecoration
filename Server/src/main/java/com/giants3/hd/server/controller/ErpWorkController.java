@@ -1,5 +1,9 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.entity_erp.SampleState;
+import com.giants3.hd.exception.HdException;
+import com.giants3.hd.server.repository.ErpSampleRepository;
+import com.giants3.hd.server.service.ErpSampleService;
 import com.giants3.hd.server.service.ErpWorkService;
 import com.giants3.hd.server.service.UserService;
 import com.giants3.hd.server.utils.Constraints;
@@ -28,6 +32,9 @@ public class ErpWorkController extends BaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ErpSampleService erpSampleService;
 
 
     /**
@@ -121,7 +128,7 @@ public class ErpWorkController extends BaseController {
     }
 
     /**
-     * 接收生产流程递交
+     *  查詢所有排產未完工
      *
      * @param
      * @return
@@ -136,6 +143,21 @@ public class ErpWorkController extends BaseController {
 
     }
 
+    /**
+     * 查詢所有已經完工
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/searchCompleteOrderItems", method = {RequestMethod.GET})
+    public
+    @ResponseBody
+    RemoteData<ErpOrderItem> searchCompleteOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key") String key) {
+
+
+        return wrapData(erpWorkService.searchCompleteOrderItems(key));
+
+    }
 
     /**
      * 查询订单货款的生产进度
@@ -239,5 +261,43 @@ public class ErpWorkController extends BaseController {
 
 
         return erpWorkService.getWorkFlowMaterials(osNo, itm, workFlowCode);
+    }
+
+
+    /**
+     * 查询样品的状态
+     *
+     * @return
+     */
+    @RequestMapping(value = "/findSampleState", method = RequestMethod.GET)
+    @ResponseBody
+    public RemoteData<SampleState> getSampleState(@RequestParam("prdNo") String prdNo, @RequestParam(value = "pVersion",required = false,defaultValue = "") String pVersion){
+
+        SampleState sampleState= erpSampleService.getSampleState(prdNo, pVersion);
+        if(sampleState==null) return wrapData();
+        return  wrapData(sampleState);
+    }
+
+
+
+    /**
+     * 查询样品的状态
+     *
+     * @return
+     */
+    @RequestMapping(value = "/clear", method = RequestMethod.GET)
+    @ResponseBody
+    public RemoteData<Void> clearWorkFlow(@RequestParam("osNO") String osNo, @RequestParam(value = "itm" ) int itm){
+
+        RemoteData<Void> result= null;
+        try {
+            result = erpWorkService.clearWorkFLow(osNo,itm);
+        } catch (HdException e) {
+            e.printStackTrace();
+
+            return wrapError(e.getMessage());
+        }
+
+        return  result;
     }
 }

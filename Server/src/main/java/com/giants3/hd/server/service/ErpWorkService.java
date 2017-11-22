@@ -3,17 +3,15 @@ package com.giants3.hd.server.service;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.WorkFlowMaterial;
 import com.giants3.hd.entity_erp.Zhilingdan;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.noEntity.ProductType;
 import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,13 +27,15 @@ import java.util.*;
  * Created by davidleen29 on 2017/3/9.
  */
 @Service
-public class ErpWorkService extends AbstractService implements InitializingBean, DisposableBean {
+public class ErpWorkService extends AbstractErpService {
 
-    EntityManager manager;
+
     ErpWorkRepository erpWorkRepository;
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    ErpPrdtService erpPrdtService;
 
     @Autowired
     WorkFlowMessageRepository workFlowMessageRepository;
@@ -53,6 +53,8 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
     private String workflowfilepath;
     @Value("${workflowfileurl}")
     private String workflowfileurl;
+
+
     @Autowired
     ErpWorkFlowReportRepository erpWorkFlowReportRepository;
 //    @Autowired
@@ -75,21 +77,13 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 //        }
 //    };;
 
-    @Override
-    public void destroy() throws Exception {
-
-
-        manager.close();
-    }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        EntityManagerHelper helper = EntityManagerHelper.getErp();
-        manager = helper.getEntityManager();
+    protected void onEntityManagerCreate(EntityManager manager) {
+
         erpWorkRepository = new ErpWorkRepository(manager);
         today = Calendar.getInstance().getTime();
     }
-
 
     public RemoteData<Zhilingdan> searchZhilingdan(String osName, String startDate, String endDate) {
 
@@ -256,7 +250,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
                 }
 
                 //从指令单集合中，判断排厂类型
-                ProductType productType = getProductTypeFromOrderItemProcess(processes);
+                ProductType productType = erpPrdtService.getProductTypeFromOrderItemProcess(processes);
                 for (ErpWorkFlow erpWorkFlow : ErpWorkFlow.WorkFlows) {
 
 
@@ -271,7 +265,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
                         if (process.mrpNo.startsWith(erpWorkFlow.code)) {
                             findProcess = process;
-                            typeSet.add(process.mrpNo.substring(0, 2));// 取头两位
+                            typeSet.add(process.mrpNo );
 
                             hasThisFlow = true;
 
@@ -366,6 +360,19 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
     }
 
+
+    /**
+     * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
+     */
+    public List<ErpOrderItem> searchCompleteOrderItems(String key) {
+
+
+        //配置 url
+        return getCompleteErpOrderItems(key);
+
+
+    }
+
     /**
      * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
      *
@@ -385,6 +392,21 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
     private List<ErpOrderItem> getErpOrderItems(String key) {
         //配置 url
         final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItems(key);
+
+
+        for (ErpOrderItem orderItem : erpWorkFlowOrderItems) {
+
+
+            orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no, String.valueOf(orderItem.photoUpdateTime));
+            orderItem.thumbnail = orderItem.url;
+        }
+
+        return erpWorkFlowOrderItems;
+    }
+
+private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
+        //配置 url
+        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchCompleteOrderItems(key);
 
 
         for (ErpOrderItem orderItem : erpWorkFlowOrderItems) {
@@ -462,7 +484,13 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         //下一个节点
         ErpWorkFlow nextFlow = flowStep == ErpWorkFlow.LAST_STEP ? null : ErpWorkFlow.findPurchaseNext(flowStep);
         ErpWorkFlow workFlow = ErpWorkFlow.findPurchaseByStep(flowStep);
+
+        List<ErpOrderItemProcess> result=new ArrayList<>();
         for (ErpOrderItemProcess process : orderItemProcesses) {
+
+            if(!process.mrpNo.startsWith(workFlow.code)) continue;
+
+
             process.currentWorkFlowCode = workFlow.code;
             process.currentWorkFlowStep = workFlow.step;
             process.currentWorkFlowName = workFlow.name;
@@ -472,10 +500,11 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
             process.nextWorkFlowCode = nextFlow == null ? "" : nextFlow.code;
             process.nextWorkFlowStep = nextFlow == null ? 0 : nextFlow.step;
             process.nextWorkFlowName = nextFlow == null ? "" : nextFlow.name;
+            result.add(process);
         }
 
 
-        return wrapData(orderItemProcesses);
+        return wrapData(result);
     }
 
     /**
@@ -643,7 +672,20 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
 
     @Transactional
-    public RemoteData<Void> sendWorkFlowMessage(User user, ErpOrderItemProcess erpOrderItemProcess, int tranQty, long areaId, String memo) {
+    public synchronized RemoteData<Void> sendWorkFlowMessage(User user, ErpOrderItemProcess erpOrderItemProcess, int tranQty, long areaId, String memo) {
+
+
+        //增加数据小验证
+
+        ErpOrderItemProcess findErpOrderitemProcess = erpOrderItemProcessRepository.findFirstByMoNoEqualsAndMrpNoEquals(erpOrderItemProcess.moNo, erpOrderItemProcess.mrpNo);
+        if (findErpOrderitemProcess != null && findErpOrderitemProcess.unSendQty > tranQty) {
+
+            return wrapError("当前流程数量已经有发送记录了。 现有未发送数量"+findErpOrderitemProcess.unSendQty+",不足以发送" + tranQty );
+        }
+
+        if (findErpOrderitemProcess != null) {
+            erpOrderItemProcess = findErpOrderitemProcess;
+        }
 
 
         WorkFlowArea workFlowArea = workFlowAreaRepository.findOne(areaId);
@@ -769,6 +811,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
 
         workFlowMessage.factoryName = erpOrderItemProcess.jgh;
         workFlowMessage.bat_no = erpOrderItem.bat_no;
+        workFlowMessage.cus_no = erpOrderItem.cus_no;
 
 
         workFlowMessage = workFlowMessageRepository.save(workFlowMessage);
@@ -830,7 +873,7 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
      * 如果该流程未配置审核人， 则自动通过审核。并使该订单进入下一个流程
      */
     @Transactional
-    public RemoteData<Void> receiveOrderItemWorkFlow(User loginUser, long messageId, MultipartFile[] files, String memo) {
+    public synchronized RemoteData<Void> receiveOrderItemWorkFlow(User loginUser, long messageId, MultipartFile[] files, String memo) {
 
 
         final int length = files.length;
@@ -842,6 +885,10 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
         WorkFlowMessage message = workFlowMessageRepository.findOne(messageId);
         if (message == null) {
             return wrapError("消息不存在：" + messageId);
+        }
+
+        if (message.state != WorkFlowMessage.STATE_SEND) {
+            return wrapError("异常，消息已经被处理：" + messageId);
         }
 
 
@@ -1115,83 +1162,34 @@ public class ErpWorkService extends AbstractService implements InitializingBean,
     }
 
 
-    /**
-     * 从指令单集合中，判断排厂类型
-     *
-     * @param processes
-     * @return
-     */
-
-    public static ProductType getProductTypeFromOrderItemProcess(List<ErpOrderItemProcess> processes) {
+    @Transactional(rollbackFor = {HdException.class})
+    public RemoteData<Void> clearWorkFLow(String osNo, int itm) throws HdException {
 
 
-        ProductType productType = null;
 
 
-        boolean tie = false;
-        boolean mu = false;
-        //指定单号含at am 开头，可直接判断铁木
-        for (ErpOrderItemProcess erpOrderItemProcess : processes) {
-            if (erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AT")) {
-                tie = true;
+        try {
+            int count = workFlowMessageRepository.deleteByOsNoAndItm(osNo, itm);
+            final int reportCount = erpWorkFlowReportRepository.deleteByOsNoAndItm(osNo, itm);
+            int stateCount = orderItemWorkStateRepository.deleteByOsNoAndItm(osNo, itm);
+            int processCount = erpOrderItemProcessRepository.deleteByOsNoAndItm(osNo, itm);
 
-            }
-            if (erpOrderItemProcess.mrpNo.toUpperCase().startsWith("AM")) {
-                mu = true;
-            }
+            return wrapMessageData("workFlowMessage delete "+count+","
+                    + "erpWorkFlowReport delete "+reportCount+","
+                    + "orderItemWorkState delete "+stateCount+","
+                    + "erpOrderItemProcess delete "+processCount
+
+            );
+        }catch (Throwable t)
+        {
+            t.printStackTrace();
+            throw HdException.create(t.getMessage());
         }
 
 
-        if (tie && mu) {
-            productType = ProductType.BOTH;
-        } else if (tie) {
-            productType = ProductType.TIE;
-        } else if (mu) productType = ProductType.MU;
 
 
-        //否则判断产品名字后四位数据  0-5000 铁  5000+ 木
-        if (productType == null && processes.size() > 0) {
-
-
-            String prd_no = processes.get(0).prdNo;
-            int prd_no_code = -1;
-
-            if (StringUtils.isChar(prd_no, 2)) {
-                try {
-                    //13A1221 形式   抽取字母后4位
-                    prd_no_code = Integer.valueOf(prd_no.substring(3, Math.min(7, prd_no.length())));
-                } catch (Throwable t) {
-                }
-            } else if (StringUtils.isChar(prd_no, 0)) {
-                try {
-                    // A1221 形式   抽取字母后4位
-                    prd_no_code = Integer.valueOf(prd_no.substring(1, Math.min(5, prd_no.length())));
-                } catch (Throwable t) {
-                }
-            }
-
-
-            if (prd_no_code != -1) {
-
-
-                if (prd_no_code >= 0 && prd_no_code <= 5000) {
-                    productType = ProductType.TIE;
-
-                } else if (prd_no_code > 5000 && prd_no_code <= 9999) {
-
-
-                    productType = ProductType.MU;
-                }
-            }
-        }
-
-
-        if (productType == null)
-            productType = ProductType.NONE;
-
-        return productType;
 
 
     }
-
 }

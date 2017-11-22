@@ -1,7 +1,10 @@
 package com.giants3.hd.server.repository;
 
 import com.giants3.hd.entity_erp.Prdt;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.EntityManager;
@@ -53,7 +56,7 @@ public   class ErpPrdtRepository    {
 // where e.prd_no = :prd_no   .setParameter(p,prd_no)
        // return em.createQuery("select  e  from PRDT e left join CST_STD  d fetch    e.prd_no = d.prd_no where e.prd_no=:prd_no ",Prdt.class) .setParameter("prd_no",prd_no).getResultList();
 //        Specification<Prdt> prdtSpecification=new Prdt
-//        getQuery()
+//        listQuery()
 //        TypedQuery query = em.createQuery("select a from Account a where a.customer = ?1", Account.class);
 //        query.setParameter(1, customer);
 
@@ -119,6 +122,19 @@ public   class ErpPrdtRepository    {
 
         return prdts;
 
+    }
+
+    /**
+     * 根据产品名称获取产品类型
+     * @param prdNo
+     * @return
+     */
+    public  String  findIdx1ByPrdno(String  prdNo)
+    {
+
+         Query query =   em.createNativeQuery(" SELECT  idx1  FROM [DB_YF01].[dbo].prdt where knd='2' and prd_no ='"+prdNo.trim()+"'").unwrap(SQLQuery.class) ;
+
+        return (String) (query .list().get(0));
     }
 
 }

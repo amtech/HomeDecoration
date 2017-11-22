@@ -26,6 +26,9 @@ public class WorkFlowMessage {
      * 接受流程id
      */
     public int toFlowStep;
+    /**
+     *
+     */
     public String toFlowName;
     public String toFlowCode;
 

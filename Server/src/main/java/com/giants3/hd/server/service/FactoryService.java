@@ -18,7 +18,7 @@ import java.util.List;
  * Created by davidleen29 on 2017/1/14.
  */
 @Service
-public class FactoryService extends AbstractService {
+public class FactoryService extends AbstractErpService {
 
 
     @Autowired
@@ -29,18 +29,13 @@ public class FactoryService extends AbstractService {
 
     private OutFactoryRepository outFactoryRepository;
 
-    @Override
-    public void destroy() throws Exception {
-        manager.close();
-    }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        EntityManagerHelper helper = EntityManagerHelper.getErp();
-        manager = helper.getEntityManager();
+    protected void onEntityManagerCreate(EntityManager manager) {
         outFactoryRepository = new OutFactoryRepository(manager);
 
     }
+
     /**
      * 获取最新的全局配置数据表
      *
