@@ -144,7 +144,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
 
 
         final List<User> users = userRepository.findByDeletedEqualsOrderByCode(false);
-        removePassword(users);
+
 
         return users;
     }
@@ -230,20 +230,11 @@ public class UserService extends AbstractService implements InitializingBean, Di
     public List<User> getSalesman() {
 
         final List<User> byIsSalesman = userRepository.findByIsSalesman(true);
-        removePassword(byIsSalesman);
+
         return byIsSalesman;
     }
 
 
-    private  void removePassword(List<User> users)
-    {
-        //清除password
-        for(User user:users)
-        {
-            user.password=null;
-            user.passwordMD5=null;
-        }
-    }
 
     /**
      * 修改密码

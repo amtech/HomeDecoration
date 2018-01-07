@@ -24,8 +24,6 @@ public class AUser   implements Serializable {
 
     public String chineseName;
 
-    public String password;
-
 
 
 

@@ -636,4 +636,9 @@ public class AuthorityUtil {
         return isViewable(ModuleConstant.NAME_QUTOTATION_PICTURE_EXPORT);
 
     }
+
+    public boolean viewWorkFlowLimit() {
+        return isViewable(ModuleConstant.NAME_WORK_FLOW_LIMIT);
+
+    }
 }

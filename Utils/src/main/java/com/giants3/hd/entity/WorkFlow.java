@@ -12,6 +12,7 @@ import java.util.List;
  * Created by davidleen29 on 2016/9/1.
  */
 @Entity(name = "T_WorkFlow")
+@Deprecated
 public class WorkFlow {
 
 

@@ -121,7 +121,6 @@ public class CustomerService extends AbstractService {
     }
 
 
-
     public RemoteData<Customer> add(String name, String code, String tel) {
 
 
@@ -130,5 +129,30 @@ public class CustomerService extends AbstractService {
         customer = customerRepository.save(customer);
 
         return wrapData(customer);
+    }
+
+    /**
+     * @param id
+     * @param name
+     * @param code
+     * @param tel
+     * @return
+     */
+    public RemoteData<Customer> modify(long id, String name, String code, String tel) {
+
+
+        return wrapData(customerRepository.findOne(id));
+    }
+
+
+    /**
+     * @param id
+
+     * @return
+     */
+    public RemoteData<Void> delete(long id) {
+
+        customerRepository.delete(id);
+        return wrapData();
     }
 }

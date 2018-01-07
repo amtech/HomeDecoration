@@ -133,6 +133,15 @@ public class ErpStockOutItem   implements Serializable{
     public int stockOutQty;
 
 
+    /**
+     * 货品规格
+     */
     public String  hpgg;
+
+
+    /**
+     * 海关编码
+     */
+    public String hsCode;
 
 }

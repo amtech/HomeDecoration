@@ -12,6 +12,7 @@ import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
+import de.greenrobot.common.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,13 @@ public class ErpWorkService extends AbstractErpService {
     ErpPrdtService erpPrdtService;
 
     @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Autowired
     WorkFlowMessageRepository workFlowMessageRepository;
+    @Autowired
+    WorkFlowTimeLimitRepository workFlowTimeLimitRepository;
+
 
     @Autowired
     ProductWorkMemoRepository productWorkMemoRepository;
@@ -265,7 +272,7 @@ public class ErpWorkService extends AbstractErpService {
 
                         if (process.mrpNo.startsWith(erpWorkFlow.code)) {
                             findProcess = process;
-                            typeSet.add(process.mrpNo );
+                            typeSet.add(process.mrpNo);
 
                             hasThisFlow = true;
 
@@ -349,26 +356,20 @@ public class ErpWorkService extends AbstractErpService {
 
 
     /**
-     * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
+     * 查找 ， 完成的订单款项
      */
-    public List<ErpOrderItem> searchUnCompleteOrderItems(String key) {
+    public RemoteData<ErpOrderItem> searchCompleteOrderItems(String key, int pageIndex, int pageSize) {
 
 
+        int count = erpWorkRepository.getCompleteOrderItemCount(key);
         //配置 url
-        return getErpOrderItems(key);
+        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchCompleteOrderItems(key, pageIndex, pageSize);
 
 
-    }
+        updatePhotoUrl(erpWorkFlowOrderItems);
 
 
-    /**
-     * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
-     */
-    public List<ErpOrderItem> searchCompleteOrderItems(String key) {
-
-
-        //配置 url
-        return getCompleteErpOrderItems(key);
+        return wrapData(pageIndex, pageSize, (count - 1) / pageSize + 1, count, erpWorkFlowOrderItems);
 
 
     }
@@ -376,47 +377,45 @@ public class ErpWorkService extends AbstractErpService {
     /**
      * 查找 ，并且未完成的订单款项  款项包含已下单，未启动流程
      *
-     * @param type 类型   下单未排  白胚未入  白胚  颜色  包装  产品库
+     * @param workFlowStep 下单未排  白胚未入  白胚  颜色  包装  产品库
+     * @param pageIndex
+     * @param pageSize
      */
-    public List<ErpOrderItem> searchUnCompleteOrderItems(String key, int type) {
+    public RemoteData<ErpOrderItem> searchUnCompleteOrderItems(String key, int workFlowStep, int pageIndex, int pageSize) {
+
+//配置 url
+        final List<ErpOrderItem> erpWorkFlowOrderItems;
+        int count;
+        if (workFlowStep == -1)//查詢全部
+        {
 
 
-        final List<ErpOrderItem> erpOrderItems = getErpOrderItems(key);
+            count = erpWorkRepository.getUnCompleteOrderItemCount(key);
+
+            erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItems(key, pageIndex, pageSize);
 
 
-        return erpOrderItems;
+        } else {
+            count = erpWorkRepository.getOrderItemCountOnWorkFlow(key, workFlowStep);
+            erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItemsOnWorkFlow(key, workFlowStep, pageIndex, pageSize);
+        }
+
+
+        updatePhotoUrl(erpWorkFlowOrderItems);
+
+
+        return wrapData(pageIndex, pageSize, (count - 1) / pageSize + 1, count, erpWorkFlowOrderItems);
 
 
     }
 
-    private List<ErpOrderItem> getErpOrderItems(String key) {
-        //配置 url
-        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchUnCompleteOrderItems(key);
-
-
+    private void updatePhotoUrl(List<ErpOrderItem> erpWorkFlowOrderItems) {
         for (ErpOrderItem orderItem : erpWorkFlowOrderItems) {
 
 
             orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no, String.valueOf(orderItem.photoUpdateTime));
             orderItem.thumbnail = orderItem.url;
         }
-
-        return erpWorkFlowOrderItems;
-    }
-
-private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
-        //配置 url
-        final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchCompleteOrderItems(key);
-
-
-        for (ErpOrderItem orderItem : erpWorkFlowOrderItems) {
-
-
-            orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no, String.valueOf(orderItem.photoUpdateTime));
-            orderItem.thumbnail = orderItem.url;
-        }
-
-        return erpWorkFlowOrderItems;
     }
 
 
@@ -430,12 +429,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
         final List<ErpOrderItem> erpWorkFlowOrderItems = erpWorkRepository.searchHasStartWorkFlowUnCompleteOrderItems(key);
 
 
-        for (ErpOrderItem orderItem : erpWorkFlowOrderItems) {
-
-
-            orderItem.url = FileUtils.getErpProductPictureUrl(orderItem.id_no, String.valueOf(orderItem.photoUpdateTime));
-            orderItem.thumbnail = orderItem.url;
-        }
+        updatePhotoUrl(erpWorkFlowOrderItems);
 
         return erpWorkFlowOrderItems;
 
@@ -485,10 +479,10 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
         ErpWorkFlow nextFlow = flowStep == ErpWorkFlow.LAST_STEP ? null : ErpWorkFlow.findPurchaseNext(flowStep);
         ErpWorkFlow workFlow = ErpWorkFlow.findPurchaseByStep(flowStep);
 
-        List<ErpOrderItemProcess> result=new ArrayList<>();
+        List<ErpOrderItemProcess> result = new ArrayList<>();
         for (ErpOrderItemProcess process : orderItemProcesses) {
 
-            if(!process.mrpNo.startsWith(workFlow.code)) continue;
+            if (!process.mrpNo.startsWith(workFlow.code)) continue;
 
 
             process.currentWorkFlowCode = workFlow.code;
@@ -680,7 +674,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
         ErpOrderItemProcess findErpOrderitemProcess = erpOrderItemProcessRepository.findFirstByMoNoEqualsAndMrpNoEquals(erpOrderItemProcess.moNo, erpOrderItemProcess.mrpNo);
         if (findErpOrderitemProcess != null && findErpOrderitemProcess.unSendQty > tranQty) {
 
-            return wrapError("当前流程数量已经有发送记录了。 现有未发送数量"+findErpOrderitemProcess.unSendQty+",不足以发送" + tranQty );
+            return wrapError("当前流程数量已经有发送记录了。 现有未发送数量" + findErpOrderitemProcess.unSendQty + ",不足以发送" + tranQty);
         }
 
         if (findErpOrderitemProcess != null) {
@@ -783,7 +777,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
         workFlowMessage.orderName = erpOrderItemProcess.osNo;
 
-        workFlowMessage.orderItemQty = erpOrderItemProcess.qty;
+        workFlowMessage.orderItemQty = erpOrderItemProcess.orderQty;
         workFlowMessage.transportQty = tranQty;
         workFlowMessage.sendMemo = memo == null ? "" : memo;
         workFlowMessage.area = workFlowArea == null ? "" : workFlowArea.name;
@@ -819,8 +813,27 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
         RemoteData<ErpWorkFlowReport> workFlowReports = findErpWorkFlowReport(erpOrderItem);
 
+
         if (workFlowReports.isSuccess()) {
+
+            WorkFlowTimeLimit.OrderItemType orderItemType = findOrderItemTypeForTimeLimit(erpOrderItemProcess, erpOrderItem);
+
+            WorkFlowTimeLimit timeLimit = workFlowTimeLimitRepository.findFirstByOrderItemTypeEquals(orderItemType.orderItemType);
+
+
+            for (ErpWorkFlowReport erpWorkFlowReport : workFlowReports.datas) {
+
+                erpWorkFlowReport.orderItemType = orderItemType.orderItemType;
+                erpWorkFlowReport.orderItemTypeName = orderItemType.orderItemTypeName;
+                erpWorkFlowReport.idx1 = orderItemType.idx1;
+                updateErpWorkFlowReport(erpWorkFlowReport, timeLimit);
+
+
+            }
+
+
             erpWorkFlowReportRepository.save(workFlowReports.datas);
+            erpWorkFlowReportRepository.flush();
         }
 
 
@@ -858,7 +871,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
                 //最后一个流程发出信息  标记出货   当进度达到1该货款生产结束
 
                 orderItem.workFlowState = ErpWorkFlow.STATE_COMPLETE;
-                orderItem.workFlowDescribe = "生产完成";
+                orderItem.workFlowDescribe = ErpWorkFlow.STATE_NAME_COMPLETE;
                 orderItemWorkStateRepository.save(orderItem);
             }
 
@@ -867,6 +880,295 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
 
     }
+
+
+    /**
+     * 更新流程报告的 生产进度状态数据
+     *
+     * @param erpWorkFlowReport
+     * @param workFlowTimeLimit
+     */
+    private  void updateErpWorkFlowReport(ErpWorkFlowReport erpWorkFlowReport, WorkFlowTimeLimit workFlowTimeLimit) {
+
+
+
+        String idx1=erpWorkFlowReport.idx1;
+        //铁木判定
+        boolean isMu=idx1.toLowerCase().startsWith("mj");
+        int alertDay=0;
+        int limitDay=0;
+        switch (erpWorkFlowReport.workFlowStep)
+        {
+            case ErpWorkFlow.FIRST_STEP:
+            case ErpWorkFlow.LAST_STEP:
+
+                erpWorkFlowReport.isOverDue=false;
+                erpWorkFlowReport.overDueDay=0;
+
+                break;
+
+            case ErpWorkFlow.STEP_PEITI:
+                if(isMu) {
+                    alertDay = workFlowTimeLimit.alert_mu_baipei;
+                    limitDay = workFlowTimeLimit.limit_mu_baipei;
+                }else
+                {
+                    alertDay = workFlowTimeLimit.alert_tie_baipei;
+                    limitDay = workFlowTimeLimit.limit_tie_baipei;
+                }
+                break;
+            case ErpWorkFlow.STEP_YANSE:
+
+                if(isMu) {
+                    alertDay = workFlowTimeLimit.alert_mu_yanse;
+                    limitDay = workFlowTimeLimit.limit_mu_yanse;
+                }else
+                {
+                    alertDay = workFlowTimeLimit.alert_tie_yanse;
+                    limitDay = workFlowTimeLimit.limit_tie_yanse;
+                }
+                break;
+            case ErpWorkFlow.STEP_BAOZHUANG:
+
+            {
+
+
+                  alertDay=workFlowTimeLimit.alert_baozhuang;
+                  limitDay=workFlowTimeLimit.limit_baozhuang;
+
+
+
+
+
+
+            }
+
+                break;
+
+
+
+        }
+        erpWorkFlowReport.limitDay=limitDay;
+        erpWorkFlowReport.alertDay=alertDay;
+
+
+        final long now = Calendar.getInstance().getTimeInMillis();
+
+
+        if(erpWorkFlowReport.startDate>0) {
+
+            long endDate = erpWorkFlowReport.endDate;
+            if (endDate <= 0) {
+                endDate = now;
+            }
+
+            int daybetween = DateUtils.getDayDifference( erpWorkFlowReport.startDate,endDate);
+            erpWorkFlowReport.isOverDue = daybetween > erpWorkFlowReport.limitDay;
+            erpWorkFlowReport.overDueDay = daybetween - erpWorkFlowReport.limitDay;
+        }else
+        {
+            erpWorkFlowReport.isOverDue = false;
+            erpWorkFlowReport.overDueDay =0;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+    /**
+     * 更新所有已完成产品的进度数据
+     */
+    @Transactional
+    public void updateCompleteWorkFlowReports() {
+        updateWorkFlowReports( ErpWorkFlow.STATE_COMPLETE);
+    }
+    /**
+     * 更新所有在产产品的进度数据
+     */
+    @Transactional
+    public void updateAllProducingWorkFlowReports()
+    {
+        updateWorkFlowReports( ErpWorkFlow.STATE_WORKING);
+    }
+    /**
+     * 更新产产品的进度数据
+     */
+    @Transactional
+    public void updateWorkFlowReports(int workFlowCompleteState)
+    {
+
+
+
+
+
+        List<OrderItemWorkState> orderItemWorkStates=orderItemWorkStateRepository.findByWorkFlowStateEquals(workFlowCompleteState);
+
+        for (OrderItemWorkState orderItemWorkState:orderItemWorkStates)
+        {
+
+            List<ErpWorkFlowReport> workFlowReports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(orderItemWorkState.osNo,orderItemWorkState.itm);
+
+            int totalLimit=0;
+            ErpWorkFlowReport currentReport=null;
+            for(ErpWorkFlowReport report:workFlowReports)
+            {
+
+                WorkFlowTimeLimit workFlowTimeLimit=workFlowTimeLimitRepository.findFirstByOrderItemTypeEquals(report.orderItemType);
+
+                if(workFlowTimeLimit==null) continue;
+
+                updateErpWorkFlowReport(report,workFlowTimeLimit);
+                if(report.percentage<1&&currentReport==null)
+                {
+                    currentReport=report;
+                }
+                totalLimit+=report.overDueDay;
+
+            }
+            if(currentReport==null)
+            {
+                currentReport=workFlowReports.get(workFlowReports.size()-1);
+            }
+
+            erpWorkFlowReportRepository.save(workFlowReports);
+            erpWorkFlowReportRepository.flush();
+//            orderItemWorkState.workFlowDescribe="xxxxxxxxxx";
+            orderItemWorkState.totalLimit=totalLimit;
+            orderItemWorkState.maxWorkFlowCode=currentReport.workFlowCode;
+            orderItemWorkState.maxWorkFlowName=currentReport.workFlowName;
+            orderItemWorkState.maxWorkFlowStep=currentReport.workFlowStep;
+            orderItemWorkState.currentOverDueDay=currentReport.overDueDay;
+            orderItemWorkState.totalLimit=totalLimit;
+            orderItemWorkStateRepository.saveAndFlush(orderItemWorkState);
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
+    /**
+     * 获取获取的排厂生产类型。
+     *
+     * @return
+     */
+    private WorkFlowTimeLimit.OrderItemType findOrderItemTypeForTimeLimit(ErpOrderItemProcess erpOrderItemProcess, ErpOrderItem orderItem) {
+
+
+        return WorkFlowTimeLimit.findOrderItemTypeForTimeLimit(erpOrderItemProcess.scsx, orderItem.cus_no, orderItem.idx1);
+
+    }
+
+
+    /**
+     * 调整所有报表数据的相关数值， 旧数据的调整
+     */
+    @Transactional
+    public void correctAllWorkFlowReportData()
+    {
+
+        List<OrderItemWorkState> workStates=orderItemWorkStateRepository.findAll();
+        for(OrderItemWorkState state:workStates)
+        {
+            List<ErpWorkFlowReport> reports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(state.osNo,state.itm);
+            if(reports.size()==0||reports.get(0).orderItemType>0)
+            {
+                continue;
+            }
+
+
+            List<ErpOrderItemProcess> processes=erpWorkRepository.findOrderItemProcesses(state.osNo,state.itm);
+            if(processes.size()==0||StringUtils.isEmpty(processes.get(0).scsx))
+                continue;
+
+
+
+            ErpOrderItem erpOrderItem = erpWorkRepository.findOrderItem(state.osNo, state.itm);
+
+
+            WorkFlowTimeLimit.OrderItemType orderItemType = findOrderItemTypeForTimeLimit(processes.get(0), erpOrderItem);
+
+
+            for (int i = 0; i < reports.size(); i++) {
+                ErpWorkFlowReport erpWorkFlowReport = reports.get(i);
+
+                erpWorkFlowReport.orderItemType = orderItemType.orderItemType;
+                erpWorkFlowReport.orderItemTypeName = orderItemType.orderItemTypeName;
+                erpWorkFlowReport.idx1 = orderItemType.idx1;
+
+
+                /**
+                 * 开始时间未生成
+                 */
+                if (erpWorkFlowReport.startDate <= 0 ) {
+
+                    if(i==0)
+                    {
+                        //第一道起始时间，以第一个发送消息为准
+                        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeAsc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+
+
+                        if (workFlowMessages.size() > 0) {
+                            erpWorkFlowReport.startDate = workFlowMessages.get(0).createTime;
+                            erpWorkFlowReport.startDateString = workFlowMessages.get(0).createTimeString;
+                        }
+
+                    }else {
+                        ErpWorkFlowReport previousReport = reports.get(i - 1);
+                        //前一节点已经完成的最后接收时间 即当前节点的开始时间
+                        if (previousReport.percentage >= 1) {
+
+                            List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+                            if (workFlowMessages.size() > 0) {
+                                erpWorkFlowReport.startDate = workFlowMessages.get(0).receiveTime;
+                                erpWorkFlowReport.startDateString = workFlowMessages.get(0).receiveTimeString;
+                            }
+                        }
+                    }
+
+                }
+                //当前节点已经完成  补充结束数据
+                if(erpWorkFlowReport.endDate<=0&&erpWorkFlowReport.percentage>=1 )
+                {
+
+                    List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+
+
+                    if (workFlowMessages.size() > 0) {
+                        erpWorkFlowReport.endDate = workFlowMessages.get(0).receiveTime;
+                        erpWorkFlowReport.endDateString = workFlowMessages.get(0).receiveTimeString;
+                    }
+                }
+
+
+            }
+
+
+            erpWorkFlowReportRepository.save(reports);
+            erpWorkFlowReportRepository.flush();
+
+        }
+
+
+
+    }
+
 
     /**
      * 接收产品订单的递交数据
@@ -921,7 +1223,31 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
         //更新生产进度
         workFlowReport.percentage += (float) message.transportQty / erpOrderItemProcess.orderQty / (workFlowReport.typeCount == 0 ? 1 : workFlowReport.typeCount);
-        erpWorkFlowReportRepository.save(workFlowReport);
+        workFlowReport = erpWorkFlowReportRepository.save(workFlowReport);
+
+
+        //当前流程完成处理
+        final long timeInMillis = Calendar.getInstance().getTimeInMillis();
+        if (Math.abs(workFlowReport.percentage - 1) < 0.00001) {
+
+            WorkFlowTimeLimit timeLimit = workFlowTimeLimitRepository.findFirstByOrderItemTypeEquals(workFlowReport.orderItemType);
+            //标记当前流程完成时间
+            workFlowReport.endDate = timeInMillis;
+            final String dateString = DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime());
+            workFlowReport.endDateString = dateString;
+            updateErpWorkFlowReport(workFlowReport,timeLimit);
+            workFlowReport = erpWorkFlowReportRepository.save(workFlowReport);
+            if (message.toFlowStep > 0) {
+                //标记下一道流程开始时间。（当前流程结束时间，即下一流程开始时间）
+                ErpWorkFlowReport nextWorkFlowReport = erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(message.orderName, message.itm, message.toFlowStep);
+
+
+                nextWorkFlowReport.startDate = timeInMillis;
+                nextWorkFlowReport.startDateString = dateString;
+                updateErpWorkFlowReport(nextWorkFlowReport,timeLimit);
+                nextWorkFlowReport = erpWorkFlowReportRepository.save(nextWorkFlowReport);
+            }
+        }
 
 
         handleOnMessage(message, files, memo);
@@ -931,7 +1257,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
             //无审核人 系统自动审核通过
             message.state = WorkFlowMessage.STATE_PASS;
-            message.checkTime = Calendar.getInstance().getTimeInMillis();
+            message.checkTime = timeInMillis;
             message.checkTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
             message.receiverId = loginUser.id;
@@ -941,7 +1267,7 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
         } else if (message.state == WorkFlowMessage.STATE_REWORK) {
             //返工 状态 自动通过。
             message.state = WorkFlowMessage.STATE_PASS;
-            message.receiveTime = Calendar.getInstance().getTimeInMillis();
+            message.receiveTime = timeInMillis;
             message.receiveTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
             message.receiverId = loginUser.id;
@@ -955,19 +1281,22 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
 
         if (orderItem != null) {
 
-
-            if (orderItem.maxWorkFlowStep < message.toFlowStep) {
+            if (Math.abs(workFlowReport.percentage - 1) < 0.00001) {
+                //当前流程结束 跳转 下一流程
                 orderItem.maxWorkFlowStep = message.toFlowStep;
                 orderItem.maxWorkFlowCode = message.toFlowCode;
                 orderItem.maxWorkFlowName = message.toFlowName;
                 orderItemWorkStateRepository.save(orderItem);
             }
 
+
         }
 
 
         return wrapData();
     }
+
+
 
 
     private void handleOnMessage(WorkFlowMessage message, MultipartFile[] files, String memo) {
@@ -1166,29 +1495,24 @@ private List<ErpOrderItem> getCompleteErpOrderItems(String key) {
     public RemoteData<Void> clearWorkFLow(String osNo, int itm) throws HdException {
 
 
-
-
         try {
             int count = workFlowMessageRepository.deleteByOsNoAndItm(osNo, itm);
             final int reportCount = erpWorkFlowReportRepository.deleteByOsNoAndItm(osNo, itm);
             int stateCount = orderItemWorkStateRepository.deleteByOsNoAndItm(osNo, itm);
             int processCount = erpOrderItemProcessRepository.deleteByOsNoAndItm(osNo, itm);
 
-            return wrapMessageData("workFlowMessage delete "+count+","
-                    + "erpWorkFlowReport delete "+reportCount+","
-                    + "orderItemWorkState delete "+stateCount+","
-                    + "erpOrderItemProcess delete "+processCount
+
+            return wrapMessageData("workFlowMessage delete " + count + ","
+                    + "erpWorkFlowReport delete " + reportCount + ","
+                    + "orderItemWorkState delete " + stateCount + ","
+                    + "erpOrderItemProcess delete " + processCount
+
 
             );
-        }catch (Throwable t)
-        {
+        } catch (Throwable t) {
             t.printStackTrace();
             throw HdException.create(t.getMessage());
         }
-
-
-
-
 
 
     }

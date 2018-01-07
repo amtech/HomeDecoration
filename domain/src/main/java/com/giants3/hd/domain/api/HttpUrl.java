@@ -73,8 +73,8 @@ public class HttpUrl {
     }
 
 
-    public static String loadProductList(String productName, int viewType,int pageIndex, int pageSize) {
-        return additionInfo(BaseUrl + "api/product/search?proName=" + productName + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize+"&viewType=" + viewType);
+    public static String loadProductList(String productName, int viewType, int pageIndex, int pageSize) {
+        return additionInfo(BaseUrl + "api/product/search?proName=" + productName + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&viewType=" + viewType);
     }
 
     public static String loadProductListByNameBetween(String startName, String endName, boolean withCopy) {
@@ -1148,13 +1148,17 @@ public class HttpUrl {
         return additionInfo(BaseUrl + "api/erpWork/findOrderItemProcess?os_no=" + osNo + "&prd_no=" + prdNo);
 
 
-    } public static String getErpOrderItemReport(String osNo, String prdNo) {
+    }
+
+    public static String getErpOrderItemReport(String osNo, String prdNo) {
 
 
         return additionInfo(BaseUrl + "api/erpWork/findOrderItemReport?os_no=" + osNo + "&prd_no=" + prdNo);
 
 
-    }public static String getWorkFlowArea( ) {
+    }
+
+    public static String getWorkFlowArea() {
 
 
         return additionInfo(BaseUrl + "api/workFlow/area");
@@ -1168,15 +1172,22 @@ public class HttpUrl {
     }
 
     public static String deleteWorkFlowArea(long id) {
-        return additionInfo(BaseUrl + "api/workFlow/deleteArea?id="+id);
+        return additionInfo(BaseUrl + "api/workFlow/deleteArea?id=" + id);
     }
-
-
-
 
 
     public static String uploadMaitouFile(String os_no) {
 
-        return additionInfo(BaseUrl + "api/file/uploadMaitou?os_no="+os_no);
+        return additionInfo(BaseUrl + "api/file/uploadMaitou?os_no=" + os_no);
+    }
+
+    public static String getWorkFlowLimit() {
+
+        return additionInfo(BaseUrl + "api/workFlow/limit");
+    }
+
+    public static String saveWorkFlowLimit(boolean updateCompletedOrderItem) {
+
+        return additionInfo(BaseUrl + "api/workFlow/saveLimit?updateCompletedOrderItem="+updateCompletedOrderItem);
     }
 }

@@ -1,49 +1,63 @@
-select a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no, a.up,isnull(d.ut,'') as ut,a.qty,a.amt , isnull(pdc.produceType,-1) as produceType,
+WITH query AS (
+   SELECT     ROW_NUMBER() OVER (ORDER BY a.os_no DESC) AS __rowindex__, a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt,
+b.workflowdescribe, isnull(b.workflowstate, 0) AS workflowstate, isnull(b.maxworkflowstep, 0) AS maxworkflowstep, isnull(b.maxworkflowname, '') AS maxworkflowname,
+isnull(b.maxworkflowcode, '') AS maxworkflowcode
+FROM         (SELECT     TOP 99999999 os_no, os_dd, itm, bat_no, prd_no, prd_name, id_no, up, qty, amt
+                       FROM          [DB_YF01].[dbo].tf_pos
+                       WHERE      os_id = upper('so') /*订单起止日期  降低查询范围*/ AND os_dd > '2017-01-01'
+                       ORDER BY os_no DESC, itm ASC) AS a LEFT OUTER JOIN
+                          (/*9 表示 订单生产中*/ SELECT osno, itm, workflowstate, maxworkflowstep, maxworkflowname, maxworkflowcode, workflowdescribe
+                            FROM          [yunfei].[dbo].[t_orderitemworkstate]
+                            WHERE      workflowstate <> 0) AS b ON a.os_no = b.osno COLLATE chinese_prc_90_ci_ai AND a.itm = b.itm
+WHERE     (b.workflowstate IS NULL OR
+                      b.workflowstate <> 99 )and ( a.os_no like :os_no or a.prd_no like :prd_no  )
+GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt, b.workflowdescribe, isnull(b.workflowstate, 0), isnull(b.maxworkflowstep, 0),
+                      isnull(b.maxworkflowname, ''), isnull(b.maxworkflowcode, '')
 
-b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
- isnull(b.maxWorkFlowStep,0 )  as maxWorkFlowStep , isnull(b.maxWorkFlowName,'') as maxWorkFlowName,
- isnull(b.maxWorkFlowCode,'' ) as maxWorkFlowCode  ,
---isnull(c.modify_dd,0) as photoUpdateTime
- 0  as photoUpdateTime
+)
+ 
+
+ SELECT a.*,isnull(d.ut,'')  as ut,
+ isnull(d.idx1,'') as idx1,
+   isnull(pdc.producetype,-1) as producetype,
+
+
+ isnull(c.modify_dd,0) as photoupdatetime
 ,f.so_data
 ,g.cus_no
-,h.cus_no as factory
-,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from (
-
-
-select   os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt  from  tf_pos  where os_id='SO'
---订单起止日期  降低查询范围
-and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
- ) as  a
-
+,k.cus_no as factory
+,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs
+  FROM (select   * from  query    WHERE __rowindex__ BETWEEN :firstRow AND  :lastRow      )  a
+ 
  --生产方式判断
-   left outer join
+  left outer join
    (
        --排厂单
-      select  distinct  0 as produceType, SO_NO,EST_ITM from  MF_MO    where so_no like '%YF%' and so_no like :os_no
+      select   0 as producetype, so_no,est_itm ,'' as po_no from  mf_mo    where so_no like upper('%yf%') and  ( so_no like :os_no or mrp_no like  :prd_no )
        union
        --外购单
-       select distinct 1 as produceType,OTH_NO as so_no,oth_itm1 as est_itm from  tf_POS   where  os_id='PO' and OTH_NO like '%YF%'  and OTH_NO like :os_no
+      select distinct 1 as producetype,oth_no as so_no,oth_itm1 as est_itm,os_no as po_no from  tf_pos   where  os_id=upper('po') and oth_no like upper('%yf%') and (OTH_NO like :os_no or prd_no like :prd_no )  and  os_dd >'2017-01-01'
 
 
-   ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
+   ) as pdc on a.os_no=pdc.so_no    and a.itm=pdc.est_itm
 
-left outer join
-(
---9 表示 订单生产中
-select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate<>0  and (osNo like :os_no or prdNo like :prd_no)
+  --厂商数据抓取
+  left outer join   (select os_no as po_no, cus_no   from  mf_pos where os_id=upper('po')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
 
-) as b on a.os_no=b.osNo collate Chinese_PRC_90_CI_AI   and  a.itm=b.itm and b.workflowstate<>VALUE_COMPLETE_STATE
+ 
 
--- left outer JOIN
--- --图片抓取关闭图片修改日期的抓取， ERP 图片改动时候， 客户端是无法感知的。
--- (select  bom_no,modify_dd from mf_bom) as c on a.id_no=c.bom_no
+ left outer join
+ --图片抓取关闭图片修改日期的抓取， erp 图片改动时候， 客户端是无法感知的。
+  (
+   -- select  bom_no, cast (modify_dd as timestamp ) as modify_dd from mf_bom where  prd_knd='2'
+    select  '' as bom_no,  0 as modify_dd
+  ) as c on a.id_no=c.bom_no
 
 
   left outer join  (
                             --单位抓取
-                            select prd_no, ut from  prdt where   knd='2'
+                            select prd_no,idx1, ut from  prdt where   knd='2'
 
                             ) d  on  a.prd_no=d.prd_no
 
@@ -56,23 +70,19 @@ select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,w
 
                                  -- 生产交期数据
               left outer join (
-                            select os_no, so_data ,itm from  tf_pos_z where OS_ID='SO'
+                            select os_no, so_data ,itm from  tf_pos_z where os_id=upper ('so')
 
                             ) f  on  a.os_no=f.os_no and a.itm=f.itm
 
              left outer join (
 
-                            select os_no, cus_no   from  mf_pos where OS_ID='SO'   and  os_dd >'2017-01-01'
+                            select os_no, cus_no   from  mf_pos where os_id=upper ('so')   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
 
-           left outer join (
-
-                                    select os_no, cus_no   from  mf_pos where OS_ID='PO'   and  os_dd >'2017-01-01'
-
-                                    ) h  on  a.os_no=h.os_no
-
-order by a.os_no DESC
 
 
-
+  order by a.__rowindex__
+ 
+ 
+  

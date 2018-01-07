@@ -2,16 +2,17 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.app.AProduct;
+import com.giants3.hd.entity.*;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.noEntity.ProductListViewType;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,11 +63,6 @@ public class ProductController extends BaseController {
     ProductService productService;
 
 
-
-
-
-
-
     @Autowired
     private QuotationItemRepository quotationItemRepository;
 
@@ -89,25 +85,21 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<Product> search(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name
             , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
-                         ,      @RequestParam(value = "viewType", required = false, defaultValue = "0") int viewType
+            , @RequestParam(value = "viewType", required = false, defaultValue = "0") int viewType
     ) throws UnsupportedEncodingException {
 
 
-
-        switch (viewType)
-        {
+        switch (viewType) {
             case ProductListViewType.VIEWTYPE_NONE:
                 return productService.searchProductList(prd_name, pageIndex, pageSize);
 
 
-         default:
+            default:
 
-                return productService.searchProductListByViewType(prd_name,viewType,pageIndex,pageSize);
+                return productService.searchProductListByViewType(prd_name, viewType, pageIndex, pageSize);
 
 
         }
-
-
 
 
     }
@@ -200,7 +192,6 @@ public class ProductController extends BaseController {
 
 
     }
-
 
 
     @RequestMapping(value = "/searchByName", method = {RequestMethod.GET, RequestMethod.POST})
@@ -351,15 +342,17 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<ProductDetail> saveProductDetail(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody ProductDetail productDetail) {
 
-        return productService.saveProductDetail(user,productDetail);
+        try {
+            return productService.saveProductDetail(user, productDetail);
+        } catch (HdException e) {
+
+
+            return wrapError(e.getMessage());
+        }
     }
 
 
-
-
-
-
-  /**
+    /**
      * 由操作纪录恢复产品分析表数据
      *
      * @param user
@@ -371,14 +364,14 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<Void> restoreFromModify(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody long operationLogId) {
 
-        return productService.restoreProductDetailFromModifyLog(user,operationLogId);
+        try {
+            return productService.restoreProductDetailFromModifyLog(user, operationLogId);
+        } catch (HdException e) {
+
+
+            return wrapError(e.getMessage());
+        }
     }
-
-
-
-
-
-
 
 
     /**
@@ -389,7 +382,6 @@ public class ProductController extends BaseController {
     protected Sort sortByLastNameAsc() {
         return new Sort(Sort.Direction.ASC, "name");
     }
-
 
 
     /**
@@ -404,20 +396,12 @@ public class ProductController extends BaseController {
     public
 
     @ResponseBody
-    RemoteData<ProductDetail> copyProduct(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("id") long productId, @RequestParam("name") String newProductName, @RequestParam("version") String version, @RequestParam(value="copyPicture",required = false,defaultValue ="true") boolean  copyPicture) {
+    RemoteData<ProductDetail> copyProduct(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("id") long productId, @RequestParam("name") String newProductName, @RequestParam("version") String version, @RequestParam(value = "copyPicture", required = false, defaultValue = "true") boolean copyPicture) {
 
 
-        return productService.copyProductDetail(user,productId,newProductName,version,copyPicture);
+        return productService.copyProductDetail(user, productId, newProductName, version, copyPicture);
 
     }
-
-
-
-
-
-
-
-
 
 
     /**
@@ -432,8 +416,7 @@ public class ProductController extends BaseController {
     RemoteData<Void> logicDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("id") long productId) {
 
 
-
-      return   productService.logicDelete(user,productId);
+        return productService.logicDelete(user, productId);
 
     }
 
@@ -452,13 +435,11 @@ public class ProductController extends BaseController {
     public RemoteData<Void> syncAllProductPhoto() {
 
 
-
-
         return productService.syncAllProductPhoto();
 
     }
 
-      /**
+    /**
      * 全局更新
      * <p/>
      * 这个操作非常耗时。
@@ -472,23 +453,19 @@ public class ProductController extends BaseController {
     public RemoteData<Void> syncRelateProductPicture() {
 
 
-        long  count=productService.getProductCount();
+        long count = productService.getProductCount();
         final int pageSize = 100;
         int pageCount = (int) ((count - 1) / pageSize + 1);
         for (int i = 0; i < pageCount; ++i) {
 
 
-             productService.syncRelateProductPicture(i,pageSize,pageCount);
+            productService.syncRelateProductPicture(i, pageSize, pageCount);
         }
 
 
-
-        return wrapMessageData(  "所有报价，订单，等关联的产品图片已经都是最新。");
+        return wrapMessageData("所有报价，订单，等关联的产品图片已经都是最新。");
 
     }
-
-
-
 
 
     @RequestMapping(value = "/searchDelete", method = RequestMethod.GET)
@@ -497,9 +474,7 @@ public class ProductController extends BaseController {
     RemoteData<ProductDelete> listDelete(@RequestParam(value = "proName", required = false, defaultValue = "") String prd_name, @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageCount) {
 
 
-
-        return productService.listDelete(prd_name,pageIndex,pageCount);
-
+        return productService.listDelete(prd_name, pageIndex, pageCount);
 
 
     }
@@ -511,7 +486,7 @@ public class ProductController extends BaseController {
     RemoteData<ProductDetail> detailDelete(@RequestParam(value = "id") long productDeleteId) {
 
 
-       return productService.detailDelete(productDeleteId);
+        return productService.detailDelete(productDeleteId);
 
     }
 
@@ -521,9 +496,7 @@ public class ProductController extends BaseController {
     RemoteData<ProductDetail> resumeDelete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "deleteProductId") long deleteProductId) {
 
 
-
-     return    productService.resumeDelete(user,deleteProductId);
-
+        return productService.resumeDelete(user, deleteProductId);
 
 
     }
@@ -550,64 +523,45 @@ public class ProductController extends BaseController {
         return wrapData(productMaterials);
 
     }
+
     /**
-     *  修复产品图片缩略图
+     * 修复产品图片缩略图
      *
      * @return
      */
     @RequestMapping(value = "/correctThumbnail", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Void> correctThumbnail( @RequestParam(value = "productId") long productId) {
+    RemoteData<Void> correctThumbnail(@RequestParam(value = "productId") long productId) {
 
 
-
-
-      return   productService.correctThumbnail(productId);
-
+        return productService.correctThumbnail(productId);
 
 
     }
 
 
     /**
-     *  产品公式调整
+     * 产品公式调整
      *
      * @return
      */
     @RequestMapping(value = "/adjustEquation", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Void> adjustEquation(  ) {
+    RemoteData<Void> adjustEquation() {
 
 
+        //  productService.remoteUpdateEquationTasks();
 
 
-            //  productService.remoteUpdateEquationTasks();
+        productService.startUpdateEquationTask();
 
 
-              productService.startUpdateEquationTask();
-
-
-
-
-
-
-
-
-
-
-
-        return   wrapData() ;
-
+        return wrapData();
 
 
     }
-
-
-
-
-
 
 
 }

@@ -297,14 +297,16 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends SimpleExcelReporter<
                 addNumber(writableSheet, xs, 3, row);
                 //数量
                 addNumber(writableSheet, outItem.stockOutQty, 4, row);
+
+                addString(writableSheet, outItem.hsCode, 6, row);
 //描述
-               // addString(writableSheet, outItem.describe, 5, row);
+               // addString(writableSheet, outItem.describe, 7, row);
                 //fob
 
-                addNumber(writableSheet, outItem.up, 7, row);
+                addNumber(writableSheet, outItem.up, 8, row);
 
                 //amount
-                addNumber(writableSheet, FloatHelper.scale(outItem.up * outItem.stockOutQty), 8, row);
+                addNumber(writableSheet, FloatHelper.scale(outItem.up * outItem.stockOutQty), 9, row);
 
 //                //Product size (inch)
 //                addString(writableSheet, outItem.specInch, 8, row);
@@ -330,7 +332,7 @@ public class Report_Excel_StockOut_Qingguan_Invoice extends SimpleExcelReporter<
         }
         addString(writableSheet, totalXs + " /CTNS", 3, row);
         addString(writableSheet, totalStockOutQty + " /PCS", 4, row);
-        addNumber(writableSheet, totalAmt, 8, row);
+        addNumber(writableSheet, totalAmt, 9, row);
 
     }
 

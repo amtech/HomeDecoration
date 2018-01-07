@@ -6,6 +6,7 @@ import com.giants3.hd.entity.*;
 import com.giants3.hd.entity.OutFactory;
 import com.giants3.hd.noEntity.ErpOrderDetail;
 import com.giants3.hd.noEntity.ErpStockOutDetail;
+
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
@@ -516,6 +517,15 @@ public class UseCaseFactory {
         return new GetWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,   workFlowRepository);
     }
 
+    public UseCase createGetWorkFlowLimitUseCase() {
+
+        return new GetWorkFlowLimitUseCase(    workFlowRepository);
+    }
+
+    public UseCase createSaveWorkFlowLimitUseCase(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem) {
+
+        return new SaveWorkFlowLimitUseCase( workFlowLimit,  updateCompletedOrderItem, workFlowRepository);
+    }
     public UseCase createDeleteWorkFlowWorkerUseCase(long workFlowWorkerId) {
 
 

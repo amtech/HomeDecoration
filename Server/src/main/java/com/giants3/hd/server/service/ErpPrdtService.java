@@ -61,7 +61,8 @@ public class ErpPrdtService extends AbstractErpService   {
     }
 
     /**
-     * 根据产品名称，判断生产类型  铁木。。。。
+     * 根据产品名称 idx  类别判断  mjxx tjxxx
+     *  铁木。。。。
      *
      * @param prd_no
      * @return

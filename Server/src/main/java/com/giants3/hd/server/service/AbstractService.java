@@ -4,6 +4,7 @@ import com.giants3.hd.noEntity.RemoteData;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -124,8 +125,14 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
 
     }
+
+
     /**
-     * 封装正常的返回结果。
+     *
+     * @param pageIndex 当前页码
+     * @param pageSize  一页大小
+     * @param pageCount 总页数
+     * @param totalCount 总记录数
      * @param datas
      * @param <T>
      * @return
@@ -133,6 +140,9 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
     public <T>        RemoteData<T> wrapData(int pageIndex,int pageSize,int pageCount,int totalCount,List<T> datas)
     {
+
+
+
 
         RemoteData<T> remoteData=new RemoteData<T>();
         remoteData.pageIndex=pageIndex;
@@ -148,6 +158,22 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
 
         remoteData.message="operation sucessed";
         return remoteData;
+
+
+    }
+
+
+
+    /**
+     * 封装正常的返回结果。
+     * @param <T>
+     * @return
+     */
+
+    public <T>        RemoteData<T> wrapData(int pageIndex,Page<T> page )
+    {
+
+        return   wrapData(pageIndex, page.getSize(), page.getTotalPages(), (int) page.getTotalElements(), page.getContent());
 
 
     }

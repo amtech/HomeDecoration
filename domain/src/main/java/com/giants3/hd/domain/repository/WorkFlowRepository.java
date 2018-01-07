@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.*;
+
 import rx.Observable;
 
 import java.util.List;
@@ -69,4 +70,7 @@ public interface WorkFlowRepository {
 
     Observable deleteWorkFlowArea(long id);
 
+    Observable getWorkFlowLimit();
+
+    Observable saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem);
 }

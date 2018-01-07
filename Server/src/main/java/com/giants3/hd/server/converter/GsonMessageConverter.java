@@ -30,7 +30,15 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
 
 
         public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-        private Gson _gson;
+    /**
+     * json 生产中过滤所有密码字段
+     */
+    private static final String PASSWORD = "password";
+    /**
+     * json 生产中过滤所有密码字段
+     */
+    private static final String PASSWORD_MD_5 = "passwordmd5";
+    private Gson _gson;
         private Type _type = null;
         private boolean _prefixJson = false;
     private static ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
@@ -52,6 +60,32 @@ public class GsonMessageConverter  extends AbstractHttpMessageConverter<Object>
         public GsonMessageConverter(boolean serializeNulls) {
             super(new MediaType("application", "json", DEFAULT_CHARSET));
             GsonBuilder builder=new GsonBuilder();
+            builder.addSerializationExclusionStrategy(new ExclusionStrategy(){
+                /**
+                 * @param f the field object that is under test
+                 * @return true if the field should be ignored; otherwise false
+                 */
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+
+
+                    final String fieldName = f.getName().toLowerCase();
+                    if(fieldName.equals(PASSWORD)|| fieldName.equals(PASSWORD_MD_5))
+
+                        return true;
+
+                    return false;
+                }
+
+                /**
+                 * @param clazz the class object that is under test
+                 * @return true if the class should be ignored; otherwise false
+                 */
+                @Override
+                public boolean shouldSkipClass(Class<?> clazz) {
+                    return false;
+                }
+            });
             if(serializeNulls)
                 builder.serializeNulls();
             builder.registerTypeAdapter(List.class,new ListTypeAdapter());

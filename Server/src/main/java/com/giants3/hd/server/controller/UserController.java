@@ -107,8 +107,16 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<User> list() {
+    RemoteData<User> list(
+
+            @RequestParam(value = "type",required = false,defaultValue = "-1") int userType
+    ) {
+
+        if(userType==-1)
+
         return wrapData(userService.list());
+
+        return wrapData(userService.getSalesman());
     }
 
 
@@ -140,6 +148,24 @@ public class UserController extends BaseController {
 
 
     }
+    /**
+     * 提供移动端  省略很多数据
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/getAppInitData", method = RequestMethod.GET)
+
+    public
+    @ResponseBody
+    RemoteData<BufferData> getAppInitData(@RequestParam(value = "userId") long userId) {
+
+
+        return getConfigData(userId,false);
+
+    }
+
+
 
 
     /**
@@ -155,30 +181,38 @@ public class UserController extends BaseController {
     RemoteData<BufferData> getInitData(@RequestParam(value = "userId") long userId) {
 
 
+        return getConfigData(userId,true);
+
+    }
+
+
+
+
+    private RemoteData<BufferData> getConfigData(long userId,boolean fromDesk)
+    {
+
         User user = userRepository.findOne(userId);
 
         if (user == null) {
             return wrapError("未找到用户");
         }
-        //关闭密码返回
-        user.password = null;
-        user.passwordMD5 = null;
-        BufferData bufferData = new BufferData();
-        bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
-        bufferData.customers = customerService.list();
 
-        bufferData.materialClasses = materialClassRepository.findAll();
+        BufferData bufferData = new BufferData();
+
+
         bufferData.packMaterialClasses = packMaterialClassRepository.findAll();
         bufferData.packMaterialPositions = packMaterialPositionRepository.findAll();
-
-        bufferData.materialTypes = materialTypeRepository.findAll();
         bufferData.packMaterialTypes = packMaterialTypeRepository.findAll();
-        bufferData.packs = packRepository.findAll();
-        bufferData.pClasses = productClassRepository.findAll();
 
 
-        bufferData.salesmans = userService.getSalesman();
-        ;
+
+
+
+
+
+
+
+
 
 
         QuoteAuth quoteAuth = quoteAuthRepository.findFirstByUser_IdEquals(user.id);
@@ -188,53 +222,76 @@ public class UserController extends BaseController {
         }
         bufferData.quoteAuth = quoteAuth;
 
-
-        bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas
-        ;
-
-
-        OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
-        if (orderAuth == null) {
-            orderAuth = new OrderAuth();
-            orderAuth.user = user;
-        }
-        bufferData.orderAuth = orderAuth;
-
-
-        StockOutAuth stockOutAuth = stockOutAuthRepository.findFirstByUser_IdEquals(user.id);
-        if (stockOutAuth == null) {
-            stockOutAuth = new StockOutAuth();
-            stockOutAuth.user = user;
-        }
-        bufferData.stockOutAuth = stockOutAuth;
+        bufferData.packs = packRepository.findAll();
 
 
         //读取第一条数据   总共就一条
         bufferData.globalData = globalDataService.findCurrentGlobalData();
-        bufferData.factories = factoryRepository.findAll();
-        List<ProductDetail> demos = new ArrayList<>();
-        ProductDetail productDetail = null;
-        RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);
-        if (result.isSuccess() && result.totalCount > 0) {
 
-            int size = result.datas.size();
-            for (int i = 0; i < size; i++) {
-                productDetail = productService.findProductDetailById(result.datas.get(i).id);
-                if (productDetail != null) {
-                    //擦除去记录信息
-                    productDetail = (ProductDetail) ObjectUtils.deepCopy(productDetail);
-                    productDetail.swipe();
-                    demos.add(productDetail);
+        if(fromDesk) {
+            bufferData.customers = customerService.list();
+
+            bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas ;
+
+
+            bufferData.materialClasses = materialClassRepository.findAll();
+            bufferData.materialTypes = materialTypeRepository.findAll();
+
+            bufferData.pClasses = productClassRepository.findAll();
+
+
+
+            bufferData.authorities = authorityRepository.findByUser_IdEquals(user.id);
+
+            bufferData.salesmans = userService.getSalesman();
+            ;
+
+            OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(user.id);
+            if (orderAuth == null) {
+                orderAuth = new OrderAuth();
+                orderAuth.user = user;
+            }
+            bufferData.orderAuth = orderAuth;
+
+
+            StockOutAuth stockOutAuth = stockOutAuthRepository.findFirstByUser_IdEquals(user.id);
+            if (stockOutAuth == null) {
+                stockOutAuth = new StockOutAuth();
+                stockOutAuth.user = user;
+            }
+            bufferData.stockOutAuth = stockOutAuth;
+
+
+
+
+            bufferData.factories = factoryRepository.findAll();
+
+
+            List<ProductDetail> demos = new ArrayList<>();
+            ProductDetail productDetail = null;
+            RemoteData<Product> result = productService.searchProductList(ConstantData.DEMO_PRODUCT_NAME, 0, 100);
+            if (result.isSuccess() && result.totalCount > 0) {
+
+                int size = result.datas.size();
+                for (int i = 0; i < size; i++) {
+                    productDetail = productService.findProductDetailById(result.datas.get(i).id);
+                    if (productDetail != null) {
+                        //擦除去记录信息
+                        productDetail = (ProductDetail) ObjectUtils.deepCopy(productDetail);
+                        productDetail.swipe();
+                        demos.add(productDetail);
+                    }
+
                 }
 
             }
+            bufferData.demos = demos;
 
         }
-        bufferData.demos = demos;
-
 
         //读取流程节点工作人员
         bufferData.workFlowWorkers = workFlowService.getWorkFlowWorkers(user.id);
+
 
 
         return wrapData(bufferData);

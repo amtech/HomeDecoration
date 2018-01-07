@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.server.entity.ProductEquationUpdateTemp;
 import com.giants3.hd.server.repository.*;
@@ -884,7 +885,7 @@ public class ProductService extends AbstractService implements InitializingBean,
      * @return
      */
     @Transactional(rollbackFor = Throwable.class)
-    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail)
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail) throws HdException
 
     {
         return saveProductDetail(user, productDetail, true);
@@ -893,10 +894,19 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
     @Transactional(rollbackFor = Throwable.class)
-    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail, boolean checkUpdateTime) {
+    public RemoteData<ProductDetail> saveProductDetail(User user, ProductDetail productDetail, boolean checkUpdateTime) throws HdException {
 
 
         ProductDetail oldDetail = ObjectUtils.deepCopyWidthJson(findProductDetailById(productDetail.product.id), ProductDetail.class);
+//将修改前的数据缓存起来
+        String productDetailBackPath="";
+        if (oldDetail != null) {
+            productDetailBackPath= BackDataHelper.backProductModifyData(oldDetail,  productBackFilePath);
+            if(StringUtils.isEmpty(productDetailBackPath)||!(new File(productDetailBackPath).exists()))
+            {
+                throw HdException.create("产品数据缓存出错");
+            }
+        }
 
 
         long productId = productDetail.product.id;
@@ -1045,7 +1055,7 @@ public class ProductService extends AbstractService implements InitializingBean,
         //将修改前的数据缓存起来
 
         if (oldDetail != null) {
-            BackDataHelper.backProductModifyData(oldDetail, operationLog, productBackFilePath);
+            BackDataHelper.productBackFileRenameTo(productDetailBackPath,oldDetail, operationLog, productBackFilePath);
         }
 
 
@@ -1169,9 +1179,14 @@ public class ProductService extends AbstractService implements InitializingBean,
         detail.product.id = 0;
         detail.product.xiankang.setId(0);
 
-        RemoteData<ProductDetail> result = saveProductDetail(user, detail);
+        RemoteData<ProductDetail> result = null;
+        try {
+            result = saveProductDetail(user, detail);
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
 
-        if (result.isSuccess()) {
+        if (result!=null&& result.isSuccess()) {
 
 
             ProductDetail newProductDetail = result.datas.get(0);
@@ -1478,7 +1493,7 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
     @Transactional(rollbackFor = Throwable.class)
-    public RemoteData<Void> restoreProductDetailFromModifyLog(User LoginUser, long operationLogId) {
+    public RemoteData<Void> restoreProductDetailFromModifyLog(User LoginUser, long operationLogId) throws HdException {
 
 
         OperationLog operationLog = operationLogRepository.findOne(operationLogId);

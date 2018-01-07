@@ -6,6 +6,7 @@ import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.Zhilingdan;
 import com.giants3.hd.exception.HdException;
+
 import com.google.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
@@ -517,6 +518,28 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             @Override
             public RemoteData<WorkFlowArea> call() throws HdException {
                 return apiManager.deleteWorkFlowArea(  id );
+            }
+        });
+    }
+
+    @Override
+    public Observable getWorkFlowLimit() {
+
+        return crateObservable(  new ApiCaller<WorkFlowTimeLimit>() {
+            @Override
+            public RemoteData<WorkFlowTimeLimit> call() throws HdException {
+                return apiManager.getWorkFlowLimit(    );
+            }
+        });
+
+    }
+
+    @Override
+    public Observable saveWorkFlowLimit(final List<WorkFlowTimeLimit> workFlowLimit, final boolean updateCompletedOrderItem) {
+        return crateObservable(  new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                return apiManager.saveWorkFlowLimit(    workFlowLimit,  updateCompletedOrderItem);
             }
         });
     }

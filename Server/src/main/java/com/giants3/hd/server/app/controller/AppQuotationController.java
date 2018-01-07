@@ -186,7 +186,7 @@ public class AppQuotationController extends BaseController {
 
 
     }    /**
-     * 删除报价单中产品
+     * 添加报价单中产品
      * @param quotationId
      * @return
      */
@@ -214,6 +214,58 @@ public class AppQuotationController extends BaseController {
 
 
         quotationService.print(quotationId);
+
+        return wrapData();
+
+
+
+
+
+    }
+
+
+    @RequestMapping(value = "/updateMemo", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateMemo(@RequestParam(value = "quotationId" ) long quotationId,@RequestParam(value = "memo" ) String  memo) {
+
+
+      return  quotationService.updateMemo(quotationId,memo);
+
+
+
+
+
+
+
+    }
+
+
+    @RequestMapping(value = "/updateCustomer", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateCustomer(@RequestParam(value = "quotationId" ) long quotationId,@RequestParam(value = "customerId" ) long  customerId) {
+
+
+        quotationService.updateCustomer(quotationId,customerId);
+
+        return wrapData();
+
+
+
+
+
+    }
+
+
+
+    @RequestMapping(value = "/updateSaleman", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateSaleman(@RequestParam(value = "quotationId" ) long quotationId,@RequestParam(value = "saleId" ) long  saleId) {
+
+
+        quotationService.updateSaleman(quotationId,saleId);
 
         return wrapData();
 

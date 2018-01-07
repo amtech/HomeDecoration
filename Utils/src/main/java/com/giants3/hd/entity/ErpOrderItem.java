@@ -9,7 +9,6 @@ package com.giants3.hd.entity;
 
 public class ErpOrderItem {
 
-
     /**
      * 订单款项编号
      */
@@ -343,6 +342,12 @@ public class ErpOrderItem {
     public int produceType;
 
     public String produceTypeName;
+
+
+    /**
+     * 生产产品的类型   铁件mjxx  xx表示某种具体分类。mj06 家具类  mj07 灯具类
+     */
+    public String idx1;
 
 
 

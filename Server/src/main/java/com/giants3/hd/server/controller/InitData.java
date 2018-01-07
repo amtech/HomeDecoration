@@ -1,12 +1,12 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.service.*;
 import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.GlobalData;
 import com.giants3.hd.entity.Module;
 import com.giants3.hd.server.repository.AppVersionRepository;
 import com.giants3.hd.server.repository.ModuleRepository;
 import com.giants3.hd.server.repository.WorkFlowRepository;
+import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -62,6 +62,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     TaskController taskController;
 
+    @Autowired
+    ErpWorkService erpWorkService;
+
     @Value("${appfilepath}")
     private String appFilePath;
     @Value("${serverVersion}")
@@ -73,7 +76,6 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
-
 
 
 //
@@ -193,8 +195,13 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
             workFlowService.initData();
 
 
-
             userService.adjustPasswordToMd5();
+
+
+            workFlowService.initWorkFlowLimit();
+
+            erpWorkService.correctAllWorkFlowReportData();
+            erpWorkService.updateAllProducingWorkFlowReports();
 
 
         }

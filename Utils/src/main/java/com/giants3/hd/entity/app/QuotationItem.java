@@ -62,6 +62,32 @@ public class QuotationItem implements Serializable {
     public String packageSize;
 
 
+
+    public float	boxLong;
+
+    public float boxWidth;
+
+    public float boxHeight	;
+
+    public float volumePerBox	;
+
+    public  float weightPerBox;
+
+    /**
+     * 金额
+     */
+    public  float amountSum;
+    /**
+     * 总体积
+     */
+    public float  volumeSum;
+    /**
+     * 总净重
+     */
+    public float weightSum;
+
+
+
     /**
      * 单位
      */

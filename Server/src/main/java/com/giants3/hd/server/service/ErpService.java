@@ -238,7 +238,7 @@ public class ErpService extends AbstractErpService {
             //      非第一道的用户
             orderItems = erpWorkService.searchHasStartWorkFlowUnCompleteOrderItems(key);
         } else {
-            orderItems = erpWorkService.searchUnCompleteOrderItems(key);
+            orderItems = erpWorkService.searchUnCompleteOrderItems(key,-1,0,0).datas;
 
             List<ErpOrderItem> result = new ArrayList<>();
 
@@ -973,10 +973,11 @@ public class ErpService extends AbstractErpService {
 
     }
 
-    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user,String key) {
+    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user,String key,int pageIndex, int pageSize) {
 
-
-        return wrapData(workFlowMessageRepository.findMyWorkFlowMessages(user.id, StringUtils.sqlLike(key)));
+        Pageable pageable=constructPageSpecification(pageIndex,pageSize,null);
+        final Page<WorkFlowMessage> page = workFlowMessageRepository.findMyWorkFlowMessages(user.id, StringUtils.sqlLike(key), pageable);
+        return wrapData(pageIndex,page);
 
     }
 

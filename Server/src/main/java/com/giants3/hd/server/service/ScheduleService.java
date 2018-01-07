@@ -27,6 +27,8 @@ public class ScheduleService extends AbstractService {
 
     @Autowired ErpService erpService;
 
+    @Autowired ErpWorkService erpWorkService;
+
     @Autowired
     TaskLogRepository taskLogRepository;
     @Autowired
@@ -88,7 +90,6 @@ public class ScheduleService extends AbstractService {
         taskLog.stateName="执行成功！";
         long time= System.currentTimeMillis();
         taskLog.executeTime=time;
-
         taskLog.executeTimeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(time));
         try {
             productService.updateAttachFiles();
@@ -97,6 +98,7 @@ public class ScheduleService extends AbstractService {
         {
             taskLog.stateName="执行失败！";
             taskLog.state=HdTaskLog.STATE_FAIL;
+            taskLog.errorMessage=t.getMessage();
         }
 
         //计算耗时， 以秒为单位
@@ -115,4 +117,63 @@ public class ScheduleService extends AbstractService {
 //      //  updateAttaches();
 //
 //    }
+
+    /**
+     * 每日4点执行 未完成货款的进度数据的更新
+     */
+    @Scheduled(cron =  "0 0 0 * * ?" )
+    public void updateOrderItemWorkFlowState() {
+
+        HdTask task=   taskRepository.findFirstByTaskNameEquals(HdTask.NAME_UPDATE_WORK_FLOW_STATE);
+        if(task==null)
+        {
+            task=new HdTask();
+            task.activateTime="每天凌晨四点";
+            task.activator="系统";
+            task.repeatCount=0;
+            task.memo="定时更新在产货款的进度状态";
+            task.startDate=System.currentTimeMillis();
+            task.dateString=DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(task.startDate));
+            task.taskName=HdTask.NAME_UPDATE_WORK_FLOW_STATE;
+            task.taskType=HdTask.TYPE_UPDATE_WORK_FLOW_STATE;
+            task.executeCount=1;
+            task=taskRepository.save(task);
+
+        }else
+        {
+            task.executeCount++;
+            task=taskRepository.save(task);
+        }
+
+
+
+
+        HdTaskLog taskLog=new HdTaskLog();
+        taskLog.taskTypeName=task.taskName;
+        taskLog.taskId=task.id;
+        taskLog.taskTypeName=task.taskName;
+        taskLog.state=HdTaskLog.STATE_SUCCESS;
+        taskLog.stateName="执行成功！";
+        long time= System.currentTimeMillis();
+        taskLog.executeTime=time;
+        taskLog.executeTimeString= DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(new Date(time));
+        try {
+            erpWorkService.updateAllProducingWorkFlowReports();
+
+        }catch (Throwable t)
+        {
+            taskLog.stateName="执行失败！";
+            taskLog.state=HdTaskLog.STATE_FAIL;
+            taskLog.errorMessage=t.getMessage();
+        }
+
+        //计算耗时， 以秒为单位
+        taskLog.timeSpend=(System.currentTimeMillis()-time)/1000;
+        taskLogRepository.save(taskLog);
+
+
+    }
+
+
+
 }

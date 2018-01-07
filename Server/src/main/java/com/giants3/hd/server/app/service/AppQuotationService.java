@@ -1,16 +1,15 @@
 package com.giants3.hd.server.app.service;
 
+import com.giants3.hd.entity.Customer;
 import com.giants3.hd.entity.Product;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
-import com.giants3.hd.server.repository.AppQuotationItemRepository;
-import com.giants3.hd.server.repository.AppQuotationRepository;
-import com.giants3.hd.server.repository.ProductRepository;
+import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.AbstractService;
-import com.giants3.hd.server.utils.SqlScriptHelper;
+import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -35,6 +35,10 @@ public class AppQuotationService extends AbstractService {
     private AppQuotationRepository appQuotationRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * 新建临时订单
@@ -46,6 +50,12 @@ public class AppQuotationService extends AbstractService {
 
 
         Quotation quotation = new Quotation();
+        quotation.qNumber="";
+        final Calendar instance = Calendar.getInstance();
+        quotation.qDate= DateFormats.FORMAT_YYYY_MM_DD.format(instance.getTime());
+        quotation.createTime= instance.getTimeInMillis();
+        quotation.saleId=user.id;
+        quotation.salesman=user.toString();
         quotation = appQuotationRepository.save(quotation);
         QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.quotation = quotation;
@@ -67,6 +77,7 @@ public class AppQuotationService extends AbstractService {
 
 
         QuotationDetail quotationDetail = new QuotationDetail();
+
         Quotation quotation = appQuotationRepository.findOne(id);
         List<QuotationItem> quotationItemList = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(id);
         quotationDetail.quotation = quotation;
@@ -91,7 +102,7 @@ public class AppQuotationService extends AbstractService {
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         Page<Quotation> pageValue;
         final String key = StringUtils.sqlLike(searchValue);
-        pageValue = appQuotationRepository.findByCustomerLikeOrQNumberLikeOrderByQDateDesc(key, key, pageable);
+        pageValue = appQuotationRepository.findByKey(key,  pageable);
 
         List<Quotation> datas = pageValue.getContent();
 
@@ -104,29 +115,39 @@ public class AppQuotationService extends AbstractService {
      * 往报价单添加产品
      *
      * @param quotationId
-
      * @param productId
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> addItem(long quotationId, long productId ) {
+    public RemoteData<QuotationDetail> addItem(long quotationId, long productId) {
+
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
 
         List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
 
 
-        QuotationItem quotationItem=new QuotationItem();
-        quotationItem.quotationId=quotationId;
-        bindProductToQuotationItem(quotationItem,productId);
-        quotationItem.itm=quotationItems.size();
-        quotationItem=  appQuotationItemRepository.save(quotationItem);
+        QuotationItem quotationItem = new QuotationItem();
+        quotationItem.quotationId = quotationId;
+        bindProductToQuotationItem(quotationItem, productId);
+        quotationItem.itm = quotationItems.size();
+        appQuotationItemRepository.saveAndFlush(quotationItem);
 
 
+        updateTotalMessage(quotation);
 
+        appQuotationRepository.save(quotation);
 
 
         return loadAQuotationDetail(quotationId);
     }
-
 
 
     /**
@@ -138,17 +159,32 @@ public class AppQuotationService extends AbstractService {
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> updateProduct(long quotationId, int itemIndex,long productId ) {
-
-        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId,itemIndex);
+    public RemoteData<QuotationDetail> updateProduct(long quotationId, int itemIndex, long productId) {
 
 
-        bindProductToQuotationItem(quotationItem,productId);
-
-        quotationItem=  appQuotationItemRepository.save(quotationItem);
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
 
 
+        if (quotation == null) {
 
+            return wrapError("报价单不存在");
+        }
+
+
+        QuotationItem item = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
+
+
+        if (item == null) return wrapError("未找到报价单明细项次：" + itemIndex);
+
+
+        bindProductToQuotationItem(item, productId);
+
+        appQuotationItemRepository.saveAndFlush(item);
+
+
+        updateTotalMessage(quotation);
+
+        appQuotationRepository.saveAndFlush(quotation);
 
 
         return loadAQuotationDetail(quotationId);
@@ -157,18 +193,25 @@ public class AppQuotationService extends AbstractService {
 
     /**
      * 重新绑定产品数据
+     *
      * @param quotationItem
      * @param productId
      */
-    private void bindProductToQuotationItem(QuotationItem quotationItem, long productId)
-    {
+    private void bindProductToQuotationItem(QuotationItem quotationItem, long productId) {
 
-        Product product=productRepository.findOne(productId);
-        quotationItem.productId=productId;
-        quotationItem.productName=product.name;
-        quotationItem.pVersion=product.pVersion;
-        quotationItem.price=product.price;
-        quotationItem.priceOrigin=product.price;
+        Product product = productRepository.findOne(productId);
+        quotationItem.productId = productId;
+        quotationItem.productName = product.name;
+        quotationItem.pVersion = product.pVersion;
+        quotationItem.price = product.price;
+        quotationItem.priceOrigin = product.price;
+        quotationItem.inBoxCount = product.insideBoxQuantity;
+        quotationItem.packQuantity = product.packQuantity;
+        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+        quotationItem.weight = product.weight;
+        quotationItem.weightSum = quotationItem.weight * quotationItem.qty;
+        quotationItem.volumePerBox = product.packVolume;
+        quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.qty;
 
 
     }
@@ -183,19 +226,34 @@ public class AppQuotationService extends AbstractService {
     @Transactional
     public RemoteData<QuotationDetail> removeItem(long quotationId, int itemIndex) {
 
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
 
         QuotationItem item = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
-        if (item != null) appQuotationItemRepository.delete(item);
 
+
+        if (item == null) return wrapError("未找到报价单明细项次：" + itemIndex);
+
+        appQuotationItemRepository.delete(item);
+        appQuotationItemRepository.flush();
 
         List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
 
         int index = 1;
         for (QuotationItem aItem : quotationItems) {
             aItem.itm = index++;
-            appQuotationItemRepository.save(aItem);
-
+            appQuotationItemRepository.saveAndFlush(aItem);
         }
+
+
+        updateTotalMessage(quotation);
+        appQuotationRepository.saveAndFlush(quotation);
 
 
         return loadAQuotationDetail(quotationId);
@@ -203,6 +261,30 @@ public class AppQuotationService extends AbstractService {
 
     }
 
+
+    /**
+     * 更新汇总数据
+     */
+    private void updateTotalMessage(Quotation quotation) {
+        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotation.id);
+
+        float totalAmount = 0;
+        float totalVolume = 0;
+        float totalWeight = 0;
+
+
+        for (QuotationItem aItem : quotationItems) {
+
+            totalAmount += aItem.amountSum;
+            totalVolume += aItem.volumeSum;
+            totalWeight += aItem.weightSum;
+
+        }
+        quotation.totalAmount = totalAmount;
+        quotation.totalVolume = totalVolume;
+        quotation.totalWeight = totalWeight;
+
+    }
 
     /**
      * 修改报价款项数量
@@ -214,6 +296,36 @@ public class AppQuotationService extends AbstractService {
      */
     @Transactional
     public RemoteData<QuotationDetail> updateItemQuantity(long quotationId, int itemIndex, int quantity) {
+
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+
+        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
+
+
+        if (quotationItem == null) return wrapError("未找到报价单明细项次：" + itemIndex);
+
+        quotationItem.qty = quantity;
+        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+        quotationItem.packQuantity = quotationItem.qty / quotationItem.inBoxCount;
+        quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.packQuantity;
+        quotationItem.weightSum = quotationItem.weight * quotationItem.qty;
+        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+        appQuotationItemRepository.saveAndFlush(quotationItem);
+
+
+        updateTotalMessage(quotation);
+        appQuotationRepository.save(quotation);
+
+
+        appQuotationRepository.flush();
 
 
         return loadAQuotationDetail(quotationId);
@@ -232,9 +344,34 @@ public class AppQuotationService extends AbstractService {
     public RemoteData<QuotationDetail> updateItemDiscount(long quotationId, int itemIndex, float discount) {
 
 
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+
+        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
+
+
+        if (quotationItem == null) return wrapError("未找到报价单明细项次：" + itemIndex);
+
+        quotationItem.price = quotationItem.priceOrigin * discount;
+        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+
+        appQuotationItemRepository.saveAndFlush(quotationItem);
+
+        updateTotalMessage(quotation);
+        appQuotationRepository.save(quotation);
+
+        appQuotationRepository.flush();
+
 
         return loadAQuotationDetail(quotationId);
     }
+
 
     /**
      * 针对报价单全打折
@@ -247,23 +384,36 @@ public class AppQuotationService extends AbstractService {
     public RemoteData<QuotationDetail> updateQuotationDiscount(long quotationId, float discount) {
 
 
-
-        return loadAQuotationDetail(quotationId);
-    }
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
 
 
-    /**
-     * 更新报价单基础信息
-     *
-     * @param quotation
+        if (quotation == null) {
 
-     * @return
-     */
-    @Transactional
-    public RemoteData<QuotationDetail> updateQuotation(long quotationId,Quotation quotation) {
+            return wrapError("报价单不存在");
+        }
 
 
+        List<QuotationItem> quotationItems = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
+        float totalAmount = 0;
+        for (QuotationItem item : quotationItems) {
 
+
+            item.price = item.priceOrigin * discount;
+            item.amountSum = item.price * item.qty;
+            totalAmount += item.amountSum;
+
+
+        }
+        appQuotationItemRepository.save(quotationItems);
+        appQuotationItemRepository.flush();
+
+
+        quotation.totalAmount = totalAmount;
+        appQuotationRepository.save(quotation);
+
+
+        appQuotationItemRepository.flush();
+        appQuotationRepository.flush();
 
 
         return loadAQuotationDetail(quotationId);
@@ -272,36 +422,136 @@ public class AppQuotationService extends AbstractService {
 
     /**
      * 保存报价单（功能只是将临时报价单生产正式报价单）
+     *
      * @param quotationId
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> save(long quotationId  )
+    public synchronized RemoteData<QuotationDetail> save(long quotationId)
 
     {
 
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
 
-        return null;
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+
+        if(!quotation.formal) {
+
+
+            //生成流水单号  日期—+流水单号
+            String today=DateFormats.FORMATYYYYMMDD.format(Calendar.getInstance().getTime());
+            String qNumber="";
+
+            Quotation maxQuotation= appQuotationRepository.findFirstByQNumberLikeOrderByQNumberDesc(StringUtils.sqlRightLike(qNumber));
+            if(maxQuotation==null||!today.equals(maxQuotation.qNumber.substring(0,8)))
+            {
+                qNumber=today+"00001";
+            }else
+            {
+                try {
+                    qNumber = today + (Integer.valueOf(maxQuotation.qNumber.substring(8)) + 1);
+                }catch (Throwable t){
+                    qNumber=today+"000001";
+                }
+            }
+
+            quotation.qNumber=qNumber;
+            quotation.formal = true;
+            quotation = appQuotationRepository.saveAndFlush(quotation);
+        }
+        return loadAQuotationDetail(quotationId);
+
 
     }
-
 
 
     /**
      * 打印报价单
+     *
      * @param quotationId
      * @return
      */
     @Transactional
-    public RemoteData<QuotationDetail> print(long quotationId  )
-    {
-
-
+    public RemoteData<QuotationDetail> print(long quotationId) {
 
 
         return null;
 
     }
 
+    @Transactional
+    public RemoteData<QuotationDetail> updateCustomer(long quotationId, long customerId) {
 
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+        Customer customer = customerRepository.findOne(customerId);
+        if (customer == null) {
+            return wrapError("客户不存在");
+        }
+
+
+        quotation.customerId = customerId;
+        quotation.customerCode = customer.code;
+        quotation.customerName = customer.name;
+        quotation = appQuotationRepository.save(quotation);
+        return loadAQuotationDetail(quotationId);
+
+    }
+
+    @Transactional
+    public RemoteData<QuotationDetail> updateMemo(long quotationId, String memo) {
+
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+        memo = memo == null ? "" : memo;
+        quotation.memo = memo;
+
+        quotation = appQuotationRepository.save(quotation);
+        return loadAQuotationDetail(quotationId);
+    }
+
+    @Transactional
+    public RemoteData<QuotationDetail> updateSaleman(long quotationId, long saleId) {
+
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+        User user = userRepository.findOne(saleId);
+        if (user == null) {
+            return wrapError("业务员不存在");
+        }
+
+
+        quotation.saleId = saleId;
+        quotation.salesman = user.toString();
+        quotation = appQuotationRepository.save(quotation);
+        return loadAQuotationDetail(quotationId);
+
+    }
 }

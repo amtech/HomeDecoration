@@ -1,5 +1,7 @@
 package com.giants3.hd.noEntity;
 
+import javax.swing.*;
+
 /**
  * 模块相关的常量数据
  * Created by davidleen29 on 2016/11/19.
@@ -128,6 +130,10 @@ public class ModuleConstant {
     public static final String NAME_WORK_FLOW_ITEM_EVENT_CONFIG  = "WORK_FLOW_ITEM_EVENT_CONFIG";
 
 
+    public static final String TITLE_WORK_FLOW_LIMIT = "工期设置";
+    public static final String NAME_WORK_FLOW_LIMIT = "WORK_FLOW_LIMIT";
+
+
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
             TITLE_PRODUCT_REPORT,
             TITLE_QUOTATION, TITLE_AUTHORITY, TITLE_SYNC_DATA, TITLE_PICTURE_UPLOAD, TITLE_MATERIAL_CLASS,
@@ -155,6 +161,7 @@ public class ModuleConstant {
 
             ,TITLE_QUTOTATION_PICTURE_EXPORT
 
+            ,TITLE_WORK_FLOW_LIMIT
 
 
 
@@ -193,6 +200,7 @@ public class ModuleConstant {
 
 
             ,NAME_QUTOTATION_PICTURE_EXPORT
+            ,NAME_WORK_FLOW_LIMIT
 
 
 

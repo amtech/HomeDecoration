@@ -15,6 +15,7 @@ public class ErpWorkFlow {
     public static final String CODE_ZUZHUANG = "B";
     //生产完成状态码
     public static final int STATE_COMPLETE = 99;
+    public static final String STATE_NAME_COMPLETE = "生产完成";
     //生产进行流程状态码
     public static final int STATE_WORKING = 9;
 
@@ -31,13 +32,16 @@ public class ErpWorkFlow {
     public static String NAME_ZUZHUANG = "组装";
     public static String NAME_BAOZHUANG = "包装";
     private static final String NAME_CHENGPIN = "成品仓";
-    public static String[] NAMES = new String[]{"胚体加工", "白胚", "颜色", NAME_ZUZHUANG + NAME_BAOZHUANG, NAME_CHENGPIN};
+    public  static final String NAME_BAIPEI = "白胚";
+    public static final String NAME_YANSE = "颜色";
+    public static String[] NAMES = new String[]{"胚体加工", NAME_BAIPEI, NAME_YANSE, NAME_ZUZHUANG + NAME_BAOZHUANG, NAME_CHENGPIN};
     public static final int FIRST_STEP = 1000;
     public static final int LAST_STEP = 6000;
     public static final int STEP_PEITI = 2000;
     public static final int STEP_CHENGPIN = LAST_STEP;
     public static final int STEP_YANSE = 3000;
-    public static int[] STEPS = new int[]{FIRST_STEP, STEP_PEITI, STEP_YANSE, 5000, LAST_STEP};
+    public static final int STEP_BAOZHUANG = 5000;
+    public static int[] STEPS = new int[]{FIRST_STEP, STEP_PEITI, STEP_YANSE, STEP_BAOZHUANG, LAST_STEP};
 
 
     public ErpWorkFlow() {

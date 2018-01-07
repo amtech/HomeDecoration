@@ -1,13 +1,12 @@
 package com.giants3.hd.domain.api;
 
-import com.giants3.hd.utils.DigestUtils;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.ErpStockOut;
 import com.giants3.hd.entity_erp.Zhilingdan;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.*;
+import com.giants3.hd.utils.DigestUtils;
+import com.giants3.hd.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -188,8 +187,15 @@ public class ApiManager {
         tokenMaps.put(ErpOrderItemProcess.class, new TypeToken<RemoteData<ErpOrderItemProcess>>() {
         }.getType());
         tokenMaps.put(ErpWorkFlowReport.class, new TypeToken<RemoteData<ErpWorkFlowReport>>() {
-        }.getType()); tokenMaps.put(WorkFlowArea.class, new TypeToken<RemoteData<WorkFlowArea>>() {
         }.getType());
+
+        tokenMaps.put(WorkFlowArea.class, new TypeToken<RemoteData<WorkFlowArea>>() {
+        }.getType());
+
+        tokenMaps.put(WorkFlowTimeLimit.class, new TypeToken<RemoteData<WorkFlowTimeLimit>>() {
+        }.getType());
+
+
     }
 
     @Inject
@@ -216,24 +222,25 @@ public class ApiManager {
      */
     public RemoteData<Product> readProductList(String productName, int pageIndex, int pageSize) throws HdException {
 
-       return readProductList(productName,0,pageIndex,pageSize);
+        return readProductList(productName, 0, pageIndex, pageSize);
 
 
     }
+
     /**
      * 读取产品列表
      *
      * @param productName
      * @param pageIndex
-     * @param  viewType 查看类型 0 没有限制， 1 白胚未录入 2 组装未处理 3 油漆未处理 4 包装未处理。
+     * @param viewType    查看类型 0 没有限制， 1 白胚未录入 2 组装未处理 3 油漆未处理 4 包装未处理。
      * @param pageSize
      * @return
      * @throws HdException
      */
-    public RemoteData<Product> readProductList(String productName, int viewType,int pageIndex, int pageSize) throws HdException {
+    public RemoteData<Product> readProductList(String productName, int viewType, int pageIndex, int pageSize) throws HdException {
 
 
-        String url = HttpUrl.loadProductList(productName,  viewType, pageIndex, pageSize);
+        String url = HttpUrl.loadProductList(productName, viewType, pageIndex, pageSize);
 
         String result = client.postWithStringReturned(url, null);
 
@@ -2118,8 +2125,10 @@ public class ApiManager {
         RemoteData<ErpWorkFlowReport> remoteData = invokeByReflect(result, ErpWorkFlowReport.class);
         return remoteData;
 
-    } public RemoteData<WorkFlowArea> getWorkFlowAreas( ) throws HdException {
-        String url = HttpUrl.getWorkFlowArea( );
+    }
+
+    public RemoteData<WorkFlowArea> getWorkFlowAreas() throws HdException {
+        String url = HttpUrl.getWorkFlowArea();
         String result = client.getWithStringReturned(url);
         RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
         return remoteData;
@@ -2127,14 +2136,14 @@ public class ApiManager {
     }
 
     public RemoteData<WorkFlowArea> saveWorkFlowArea(WorkFlowArea data) throws HdException {
-        String url = HttpUrl.saveWorkFlowArea( );
-        String result = client.postWithStringReturned(url,GsonUtils.toJson(data));
+        String url = HttpUrl.saveWorkFlowArea();
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(data));
         RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
         return remoteData;
     }
 
     public RemoteData<WorkFlowArea> deleteWorkFlowArea(long id) throws HdException {
-        String url = HttpUrl.deleteWorkFlowArea( id);
+        String url = HttpUrl.deleteWorkFlowArea(id);
         String result = client.getWithStringReturned(url);
         RemoteData<WorkFlowArea> remoteData = invokeByReflect(result, WorkFlowArea.class);
         return remoteData;
@@ -2142,16 +2151,31 @@ public class ApiManager {
 
     /**
      * 上传订单唛头文件
+     *
      * @param os_no
      * @param file
      * @return
      * @throws HdException
      */
     public RemoteData<String> updateMaitouFile(String os_no, File file) throws HdException {
-        String url = HttpUrl.uploadMaitouFile( os_no);
-        String result = client.uploadWidthStringReturned(url,file);
+        String url = HttpUrl.uploadMaitouFile(os_no);
+        String result = client.uploadWidthStringReturned(url, file);
         RemoteData<String> remoteData = invokeByReflect(result, String.class);
         return remoteData;
 
+    }
+
+    public RemoteData<WorkFlowTimeLimit> getWorkFlowLimit() throws HdException {
+        String url = HttpUrl.getWorkFlowLimit();
+        String result = client.getWithStringReturned(url);
+        RemoteData<WorkFlowTimeLimit> remoteData = invokeByReflect(result, WorkFlowTimeLimit.class);
+        return remoteData;
+    }
+
+    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem) throws HdException {
+        String url = HttpUrl.saveWorkFlowLimit(  updateCompletedOrderItem);
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(workFlowLimit));
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
     }
 }

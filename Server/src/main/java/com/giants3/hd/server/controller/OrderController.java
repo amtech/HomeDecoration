@@ -178,9 +178,13 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/myWorkFlowMessage", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<WorkFlowMessage> myWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "key",required = false,defaultValue = "") String key ) {
+    RemoteData<WorkFlowMessage> myWorkFlowMessage(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "key",required = false,defaultValue = "") String key
+            , @RequestParam(value = "pageIndex" ,defaultValue = "0") int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue = "30") int pageSize
 
-        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user,key );
+    ) {
+
+        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user,key ,pageIndex,pageSize);
         return remoteData;
     }
 

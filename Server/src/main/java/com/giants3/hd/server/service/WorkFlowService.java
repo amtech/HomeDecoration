@@ -1,12 +1,13 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.hd.server.repository.*;
-import com.giants3.hd.utils.*;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.CompanyPosition;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.WorkFlowMemoAuth;
+import com.giants3.hd.server.repository.*;
+import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -56,7 +57,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     OrderItemWorkFlowRepository orderItemWorkFlowRepository;
 
 
-
     @Autowired
     WorkFlowProductRepository workFlowProductRepository;
     @Autowired
@@ -79,6 +79,9 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     WorkFlowAreaRepository workFlowAreaRepository;
     @Autowired
     OrderItemWorkMemoRepository orderItemWorkMemoRepository;
+    @Autowired
+    WorkFlowTimeLimitRepository workFlowTimeLimitRepository;
+
 
     @Autowired
 
@@ -199,8 +202,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     }
 
 
-
-
     /**
      * 排厂自动发送流程信息
      */
@@ -212,8 +213,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
         OrderItemWorkFlow orderItemWorkFlow = orderItemWorkFlowRepository.findFirstByOrderItemIdEquals(orderItemId);
         return wrapData(orderItemWorkFlow);
     }
-
-
 
 
     /**
@@ -242,7 +241,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
     }
-
 
 
     public RemoteData<OrderItemWorkFlow> getOrderItemWorkFlow(long orderItemId) {
@@ -402,19 +400,18 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     public RemoteData<WorkFlowMemoAuth> checkWorkFlowMemo(User user, long orderItemWorkMemoId, boolean check) {
 
 
-        OrderItemWorkMemo orderItemWorkMemo=orderItemWorkMemoRepository.findOne(orderItemWorkMemoId);
-        if (orderItemWorkMemo==null)
+        OrderItemWorkMemo orderItemWorkMemo = orderItemWorkMemoRepository.findOne(orderItemWorkMemoId);
+        if (orderItemWorkMemo == null)
             return wrapError("备注信息未保存");
 
 
-        orderItemWorkMemo.checked=check;
+        orderItemWorkMemo.checked = check;
 
 
-            orderItemWorkMemo.lastCheckerId = user.id;
-            orderItemWorkMemo.lastCheckerName=user.toString();
-            orderItemWorkMemo.lastCheckTime=Calendar.getInstance().getTimeInMillis();
-            orderItemWorkMemo.lastCheckTimeString=DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
-
+        orderItemWorkMemo.lastCheckerId = user.id;
+        orderItemWorkMemo.lastCheckerName = user.toString();
+        orderItemWorkMemo.lastCheckTime = Calendar.getInstance().getTimeInMillis();
+        orderItemWorkMemo.lastCheckTimeString = DateFormats.FORMAT_YYYY_MM_DD_HH_MM.format(Calendar.getInstance().getTime());
 
 
         orderItemWorkMemoRepository.save(orderItemWorkMemo);
@@ -423,6 +420,61 @@ public class WorkFlowService extends AbstractService implements InitializingBean
         return wrapData();
 
 
+    }
 
+
+    public void initWorkFlowLimit() {
+
+        if (workFlowTimeLimitRepository.count() == 0) {
+
+            int orderTypeCount = WorkFlowTimeLimit.ORDER_ITEM_TYPES.length;
+            int workFlowCount = WorkFlowTimeLimit.COMBINED_WORK_FLOW_STEPS.length;
+            for (int i = 0; i < orderTypeCount; i++) {
+
+
+                WorkFlowTimeLimit workFlowTimeLimit = new WorkFlowTimeLimit();
+                workFlowTimeLimit.orderItemType = WorkFlowTimeLimit.ORDER_ITEM_TYPES[i];
+                workFlowTimeLimit.orderItemTypeName = WorkFlowTimeLimit.ORDER_ITEM_TYPE_NAMES[i];
+
+
+                workFlowTimeLimitRepository.save(workFlowTimeLimit);
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+    public List<WorkFlowTimeLimit> getWorkFlowLimit() {
+
+
+        return workFlowTimeLimitRepository.findAll();
+
+    }
+
+    /**
+     * 保存工期数据
+     *
+     * @param workFlowLimit
+     * @return
+     */
+    @Transactional
+    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit ) {
+
+
+        for (WorkFlowTimeLimit workFlowTimeLimit : workFlowLimit) {
+            if (workFlowTimeLimit.id <= 0) return wrapError("数据异常");
+
+        }
+
+
+        workFlowTimeLimitRepository.save(workFlowLimit);
+
+
+        return wrapData();
     }
 }

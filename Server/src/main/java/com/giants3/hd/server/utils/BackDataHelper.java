@@ -7,6 +7,7 @@ import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.exception.HdException;
 
 import java.io.*;
+import java.util.Calendar;
 
 /**
  * Created by davidleen29 on 2015/8/26.
@@ -141,15 +142,26 @@ public class BackDataHelper {
      * @param operationLog
      * @param fileDirectory
      */
-    public static void   backProductModifyData(ProductDetail productDetail, OperationLog operationLog,String fileDirectory)
+    public static void productBackFileRenameTo(String tempFile, ProductDetail productDetail, OperationLog operationLog, String fileDirectory)
     {
 
-        if(productDetail==null) return;
-        String filePath=fileDirectory+productDetail.product.getFullName()+File.separator+operationLog.id;
+      File file=  new File(tempFile);
+
+
+        String destPath=fileDirectory+productDetail.product.getFullName()+File.separator+operationLog.id;
+
+        file.renameTo(new File(destPath));
+
+
+    }
+
+    public static String backProductModifyData(ProductDetail productDetail,String fileDirectory)
+    {
+
+        String filePath=fileDirectory+productDetail.product.getFullName()+File.separator+ Calendar.getInstance().getTimeInMillis();
 
         back(productDetail,filePath);
-
-
+        return filePath;
 
 
     }

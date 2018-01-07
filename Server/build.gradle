@@ -56,5 +56,15 @@ dependencies {
 
    compile 'commons-codec:commons-codec:1.9'
 
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.springframework:spring-test:3.2.3.RELEASE'
+
+    testCompile 'org.hamcrest:hamcrest-core:${hamcrest.core.version}'
+    testCompile 'org.mockito:mockito-core:${mockito.core.version}'
+//    testCompile("org.springframework.boot:spring-boot-starter-test")
+//
+//
+
+
 
 }

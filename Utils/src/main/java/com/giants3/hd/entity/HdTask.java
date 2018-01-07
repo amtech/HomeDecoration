@@ -60,6 +60,9 @@ public class HdTask implements Serializable {
     public static final int TYPE_UPDATE_ATTACH=101;
     public static final String NAME_UPDATE_ATTACH="附件图片迁移";
 
+    public static final int TYPE_UPDATE_WORK_FLOW_STATE=102;
+    public static final String NAME_UPDATE_WORK_FLOW_STATE="在产货款状态更新";
+
 
 
 

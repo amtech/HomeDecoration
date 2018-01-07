@@ -333,21 +333,21 @@ public class Main extends BaseFrame {
             });
 
         }
-//        if (AuthorityUtil.getInstance().viewWorkFlowArranger()) {
-//            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_ARRANGER);
-//            menu.add(menuItem);
-//            menuItem.addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//
-//
-//                    WorkFlowArrangerFrame frame = new WorkFlowArrangerFrame();
-//                    addInterFrame(frame);
-//
-//                }
-//            });
-//
-//        }
+        if (AuthorityUtil.getInstance().viewWorkFlowLimit()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_LIMIT);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    WorkFlowLimitConfigFrame frame = new WorkFlowLimitConfigFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
+        }
         if (AuthorityUtil.getInstance().viewWorkFLowEventConfig()) {
 
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_WORK_FLOW_ITEM_EVENT_CONFIG);

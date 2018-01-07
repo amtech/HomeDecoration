@@ -136,10 +136,15 @@ public class ErpWorkController extends BaseController {
     @RequestMapping(value = "/searchUnCompleteOrderItems", method = {RequestMethod.GET})
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> searchUnCompleteOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key") String key) {
+    RemoteData<ErpOrderItem> searchUnCompleteOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key") String key
+
+            , @RequestParam(value = "workFlowStep" ,defaultValue = "-1",required = false) int workFlowStep
+            , @RequestParam(value = "pageIndex" ,defaultValue = "0",required = false) int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue = "20",required = false) int pageSize
+    ) {
 
 
-        return wrapData(erpWorkService.searchUnCompleteOrderItems(key));
+        return erpWorkService.searchUnCompleteOrderItems(key,workFlowStep,pageIndex,pageSize);
 
     }
 
@@ -152,10 +157,14 @@ public class ErpWorkController extends BaseController {
     @RequestMapping(value = "/searchCompleteOrderItems", method = {RequestMethod.GET})
     public
     @ResponseBody
-    RemoteData<ErpOrderItem> searchCompleteOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key") String key) {
+    RemoteData<ErpOrderItem> searchCompleteOrderItems(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "key",required = false) String key
+
+            , @RequestParam(value = "pageIndex" ,defaultValue = "0",required = false) int pageIndex
+            , @RequestParam(value = "pageSize",defaultValue = "20",required = false) int pageSize
+    ) {
 
 
-        return wrapData(erpWorkService.searchCompleteOrderItems(key));
+        return erpWorkService.searchCompleteOrderItems(key,pageIndex,pageSize);
 
     }
 

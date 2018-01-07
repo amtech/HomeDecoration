@@ -23,12 +23,15 @@ public class Customer implements Serializable ,Valuable{
 
 
 
-    @Basic
+
     public String code;
-    @Basic
+
     public String name;
     public String tel;
+    public String fax;
 
+    public String addr;
+    public   String nation;
     public Customer()
     {}
 
