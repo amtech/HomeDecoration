@@ -19,9 +19,7 @@ import org.hibernate.type.StringType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * 从第三方数据库  数据相关
@@ -169,6 +167,7 @@ public class ErpWorkRepository extends ErpRepository {
 
             String pVersion = StringUtils.spliteId_no(process.idNo)[1];
             process.pVersion = pVersion;
+            //派给外厂， 流程总数量就是单次process数量
             process.orderQty = process.qty;
             process.photoUrl = url;
             process.photoThumb = url;
@@ -285,10 +284,7 @@ public class ErpWorkRepository extends ErpRepository {
                     zuzhuangTemp.add(process);
                 }
 
-                if (process.mrpNo.startsWith(ErpWorkFlow.CODE_BAOZHUANG)) {
-                    //包装流程， qty单位以箱   x每个箱装数， 成为正确的排厂数量
-                    process.qty = process.qty * process.so_zxs;
-                }
+
             }
             orders.removeAll(zuzhuangTemp);
 
@@ -302,13 +298,7 @@ public class ErpWorkRepository extends ErpRepository {
 
             String url = com.giants3.hd.server.utils.FileUtils.getErpProductPictureUrl(chengping.idNo, "");
 
-            String pVersion = StringUtils.spliteId_no(chengping.idNo)[1];
-            for (ErpOrderItemProcess process : orders) {
-                process.pVersion = pVersion;
-                process.orderQty = chengping.qty;
-                process.photoUrl = url;
-                process.photoThumb = url;
-            }
+
 
 
             //需要组装数据 重新添加上。只有在配置流程名称时候需要
@@ -317,6 +307,57 @@ public class ErpWorkRepository extends ErpRepository {
                 orders.addAll(zuzhuangTemp);
 
             }
+
+
+
+            Set<String> typeSet = new HashSet<>();
+            int workflowQty;
+            for(ErpWorkFlow erpWorkFlow:ErpWorkFlow.WorkFlows) {
+
+                typeSet.clear();
+                workflowQty=0;
+                for (ErpOrderItemProcess process : orders) {
+
+
+                    if (process.mrpNo.startsWith(erpWorkFlow.code)) {
+
+                        typeSet.add(process.mrpNo);
+                        workflowQty+=process.qty;
+
+
+                    }
+                }
+
+
+
+                int typesetCount=typeSet.size();
+                if(typesetCount==0) typesetCount = 1;
+                workflowQty=workflowQty/typesetCount;
+                for (ErpOrderItemProcess process : orders) {
+
+
+                    if (process.mrpNo.startsWith(erpWorkFlow.code)) {
+
+
+                        process.orderQty=workflowQty;
+
+                    }
+                }
+
+
+            }
+
+
+
+            String pVersion = StringUtils.spliteId_no(chengping.idNo)[1];
+            for (ErpOrderItemProcess process : orders) {
+                process.pVersion = pVersion;
+
+                process.photoUrl = url;
+                process.photoThumb = url;
+            }
+
+
 
         }
         return orders;
@@ -428,7 +469,11 @@ public class ErpWorkRepository extends ErpRepository {
                 .addScalar("maxWorkFlowName", StringType.INSTANCE)
                 .addScalar("maxWorkFlowCode", StringType.INSTANCE)
                 .addScalar("workFlowDescribe", StringType.INSTANCE)
-                .addScalar("idx1", StringType.INSTANCE);
+                .addScalar("idx1", StringType.INSTANCE)
+                .addScalar("currentOverDueDay", IntegerType.INSTANCE)
+                .addScalar("totalLimit", IntegerType.INSTANCE)
+                .addScalar("currentLimitDay", IntegerType.INSTANCE)
+                .addScalar("currentAlertDay", IntegerType.INSTANCE);
         return
                 listQuery(sqlQuery, ErpOrderItem.class,pageIndex,pageSize);
 

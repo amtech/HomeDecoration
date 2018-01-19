@@ -55,6 +55,14 @@ public class OrderItemWorkState {
      * 预计流程总计提前或者 超期完成时间  负数表示提前  正数表示超期
      */
     public int totalLimit;
+    /**
+     * 当前流程期限
+     */
+    public int currentLimitDay;
+    /**
+     * 当前流程预警时间
+     */
+    public int currentAlertDay;
 
 
     /**

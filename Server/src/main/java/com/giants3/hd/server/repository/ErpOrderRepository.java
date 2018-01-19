@@ -65,11 +65,11 @@ public class ErpOrderRepository  extends ErpRepository{
     /**
      * 订单指定查询细项
      */
-    public static final String SQL_ORDER_ITEM  = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg, isnull(b.xgtj,0) as xgtj , isnull(b.zxgtj,0) as zxgtj  ,b.hpgg, c.so_data,isnull(d.ut,'') as ut  from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm " +
+    public static final String SQL_ORDER_ITEM  = "  select  a.* ,isnull(b.htxs,0) as htxs, isnull(b.so_zxs,0) as so_zxs   ,      b.khxg, isnull(b.xgtj,0) as xgtj , isnull(b.zxgtj,0) as zxgtj  ,b.hpgg, c.so_data,isnull(d.ut,'') as ut ,isnull(d.idx1,'') as idx1 from (  " + sql_item_1 + ") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm " +
             " left outer join (select os_no,so_data from mf_pos_z ) as c on a.os_no=c.os_no " +
 
 
-            " left outer join (select ut,prd_no from prdt where knd='2' "+ AND_WHERE_PRD_LIKE_STUB +") as d on d.prd_no=a.prd_no " +
+            " left outer join (select ut,prd_no,idx1 from prdt where knd='2' "+ AND_WHERE_PRD_LIKE_STUB +") as d on d.prd_no=a.prd_no " +
             " order by a.os_no DESC ,a.itm asc";
  /**
      * 订单指定查询细项

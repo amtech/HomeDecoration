@@ -48,6 +48,29 @@ public class WorkFlowTimeLimit {
 //     * 白胚(木)  白胚（tie） 颜色（木）  颜色（铁） 组装包装
 //     */
 //    public String combinedWorkFlowName;
+
+    /**
+     *  白胚加工(木) 流程限制時間
+     */
+    public int limit_mu_baipeijg;
+    /**
+     *  白胚加工(木) 流程预警時間
+     */
+    public int alert_mu_baipeijg;
+
+    /**
+     * 白胚加工（tie）流程限制時間
+     */
+    public int limit_tie_baipeijg;
+
+    /**
+     * 白胚加工（tie）流预警時間
+     */
+    public int alert_tie_baipeijg;
+
+
+
+
     /**
      *  白胚(木) 流程限制時間
      */
@@ -82,14 +105,23 @@ public class WorkFlowTimeLimit {
      */
     public int alert_tie_yanse;
     /**
-     * 组装包装 流程限制時間
+     * 组装包装 木件 流程限制時間
      */
     public int limit_baozhuang;
 
 /**
-     * 组装包装 流程预警時間
+     * 组装包装  木件  流程预警時間
      */
     public int  alert_baozhuang;
+    /**
+     * 组装包装 铁件 流程限制時間
+     */
+    public int limit_tie_baozhuang;
+
+/**
+     * 组装包装 铁件 流程预警時間
+     */
+    public int  alert_tie_baozhuang;
 
 
 

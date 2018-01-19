@@ -1,18 +1,22 @@
 WITH query AS (
    SELECT     ROW_NUMBER() OVER (ORDER BY a.os_no DESC) AS __rowindex__, a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt,
 b.workflowdescribe, isnull(b.workflowstate, 0) AS workflowstate, isnull(b.maxworkflowstep, 0) AS maxworkflowstep, isnull(b.maxworkflowname, '') AS maxworkflowname,
-isnull(b.maxworkflowcode, '') AS maxworkflowcode
+isnull(b.maxworkflowcode, '') AS maxworkflowcode,
+  isnull(b.currentOverDueDay,0) as currentOverDueDay
+ ,isnull(b.totalLimit,0) as totalLimit
+ ,isnull(b.currentLimitDay,0) as currentLimitDay
+ ,isnull(b.currentAlertDay,0) as currentAlertDay
 FROM         (SELECT     TOP 99999999 os_no, os_dd, itm, bat_no, prd_no, prd_name, id_no, up, qty, amt
                        FROM          [DB_YF01].[dbo].tf_pos
                        WHERE      os_id = upper('so') /*订单起止日期  降低查询范围*/ AND os_dd > '2017-01-01'
                        ORDER BY os_no DESC, itm ASC) AS a LEFT OUTER JOIN
-                          (/*9 表示 订单生产中*/ SELECT osno, itm, workflowstate, maxworkflowstep, maxworkflowname, maxworkflowcode, workflowdescribe
+                          (/*9 表示 订单生产中*/ SELECT osno, itm, workflowstate, maxworkflowstep, maxworkflowname, maxworkflowcode, workflowdescribe,currentOverDueDay,totalLimit,currentLimitDay,currentAlertDay
                             FROM          [yunfei].[dbo].[t_orderitemworkstate]
                             WHERE      workflowstate <> 0) AS b ON a.os_no = b.osno COLLATE chinese_prc_90_ci_ai AND a.itm = b.itm
 WHERE     (b.workflowstate IS NULL OR
                       b.workflowstate <> 99 )and ( a.os_no like :os_no or a.prd_no like :prd_no  )
 GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt, b.workflowdescribe, isnull(b.workflowstate, 0), isnull(b.maxworkflowstep, 0),
-                      isnull(b.maxworkflowname, ''), isnull(b.maxworkflowcode, '')
+                      isnull(b.maxworkflowname, ''), isnull(b.maxworkflowcode, ''),isnull(b.currentOverDueDay,0)   , isnull(b.totalLimit,0),isnull(b.currentLimitDay,0)   , isnull(b.currentAlertDay,0)
 
 )
  

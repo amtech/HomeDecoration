@@ -59,12 +59,12 @@ public class ErpOrderItemProcess {
      */
     public String idNo;
     /**
-     * 数量
+     * 数量  当前流程处理的数量
      */
     public int qty;
 
     /**
-     * 订单数量
+     * 流程总数据量。 当前流程的数量 可能大于成品订单数量
      */
     public int orderQty;
 

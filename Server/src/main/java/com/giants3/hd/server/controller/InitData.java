@@ -200,8 +200,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             workFlowService.initWorkFlowLimit();
 
-            erpWorkService.correctAllWorkFlowReportData();
-            erpWorkService.updateAllProducingWorkFlowReports();
+      //   erpWorkService.correctAllWorkFlowReportData();
+        //    erpWorkService.updateAllProducingWorkFlowReports();
 
 
         }

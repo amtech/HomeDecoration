@@ -121,7 +121,7 @@ public class ScheduleService extends AbstractService {
     /**
      * 每日4点执行 未完成货款的进度数据的更新
      */
-    @Scheduled(cron =  "0 0 0 * * ?" )
+    @Scheduled(cron =  "0 0 4 * * ?" )
     public void updateOrderItemWorkFlowState() {
 
         HdTask task=   taskRepository.findFirstByTaskNameEquals(HdTask.NAME_UPDATE_WORK_FLOW_STATE);

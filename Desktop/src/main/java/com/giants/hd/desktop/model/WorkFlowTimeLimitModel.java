@@ -9,10 +9,10 @@ import com.google.inject.Inject;
  */
 public class WorkFlowTimeLimitModel extends BaseTableModel<WorkFlowTimeLimit> {
 
-    public static String[] columnNames = new String[]{"订单货款类型", "白胚(木)期限", "预警", "白胚（铁）期限", "预警", "颜色（木）期限", "预警", "颜色（铁）期限", "预警", "包装期限", "预警"};
-    public static int[] columnWidth = new int[]{100, 100, 40, 100, 40, 100,40, 100, 40, 100, 40};
+    public static String[] columnNames = new String[]{"订单货款类型", "期限", "预警", "期限", "预警","期限", "预警", "期限", "预警", "期限", "预警", "期限", "预警", "期限", "预警", "期限", "预警"};
+    public static int[] columnWidth = new int[]{100, 40, 40, 40, 40, 40, 40, 40, 40, 40,40, 40, 40, 40, 40, 40, 40};
 
-    public static String[] fieldName = new String[]{"orderItemTypeName", "limit_mu_baipei", "alert_mu_baipei", "limit_tie_baipei", "alert_tie_baipei", "limit_mu_yanse", "alert_mu_yanse", "limit_tie_yanse", "alert_tie_yanse", "limit_baozhuang", "alert_baozhuang"};
+    public static String[] fieldName = new String[]{"orderItemTypeName", "limit_mu_baipeijg", "alert_mu_baipeijg", "limit_tie_baipeijg", "alert_tie_baipeijg","limit_mu_baipei", "alert_mu_baipei", "limit_tie_baipei", "alert_tie_baipei", "limit_mu_yanse", "alert_mu_yanse", "limit_tie_yanse", "alert_tie_yanse", "limit_baozhuang", "alert_baozhuang", "limit_tie_baozhuang", "alert_tie_baozhuang"};
 
     public static Class[] classes = new Class[]{Object.class, Object.class};
 
@@ -56,34 +56,52 @@ public class WorkFlowTimeLimitModel extends BaseTableModel<WorkFlowTimeLimit> {
 
         switch (columnIndex) {
             case 1:
-                limit.limit_mu_baipei = day;
+                limit.limit_mu_baipeijg = day;
                 break;
             case 2:
-                limit.alert_mu_baipei = day;
+                limit.alert_mu_baipeijg = day;
                 break;
             case 3:
-                limit.limit_tie_baipei = day;
+                limit.limit_tie_baipeijg = day;
                 break;
             case 4:
-                limit.alert_tie_baipei = day;
+                limit.alert_tie_baipeijg = day;
                 break;
             case 5:
-                limit.limit_mu_yanse = day;
+                limit.limit_mu_baipei = day;
                 break;
             case 6:
-                limit.alert_mu_yanse = day;
+                limit.alert_mu_baipei = day;
                 break;
             case 7:
-                limit.limit_tie_yanse = day;
+                limit.limit_tie_baipei = day;
                 break;
             case 8:
-                limit.alert_tie_yanse = day;
+                limit.alert_tie_baipei = day;
                 break;
             case 9:
-                limit.limit_baozhuang = day;
+                limit.limit_mu_yanse = day;
                 break;
             case 10:
+                limit.alert_mu_yanse = day;
+                break;
+            case 11:
+                limit.limit_tie_yanse = day;
+                break;
+            case 12:
+                limit.alert_tie_yanse = day;
+                break;
+            case 13:
+                limit.limit_baozhuang = day;
+                break;
+            case 14:
                 limit.alert_baozhuang = day;
+                break;
+            case 15:
+                limit.limit_tie_baozhuang = day;
+                break;
+            case 16:
+                limit.alert_tie_baozhuang = day;
                 break;
 
 

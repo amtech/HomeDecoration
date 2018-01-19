@@ -1,9 +1,18 @@
-select a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no, a.up,isnull(d.ut,'') as ut,a.qty,a.amt , isnull(pdc.produceType,-1) as produceType,
+select a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no,
+ a.up,isnull(d.ut,'') as ut,
+
+isnull(d.idx1,'') as idx1,
+ a.qty,a.amt , isnull(pdc.produceType,-1) as produceType,
 
 b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
  isnull(b.maxWorkFlowStep,0 )  as maxWorkFlowStep , isnull(b.maxWorkFlowName,'') as maxWorkFlowName,
  isnull(b.maxWorkFlowCode,'' ) as maxWorkFlowCode  ,
-  isnull(c.modify_dd,0 ) as photoUpdateTime
+  isnull(b.currentOverDueDay,0) as currentOverDueDay  ,
+ isnull(b.totalLimit,0) as totalLimit
+
+ ,isnull(b.currentLimitDay,0) as currentLimitDay
+ ,isnull(b.currentAlertDay,0) as currentAlertDay
+ , isnull(c.modify_dd,0 ) as photoUpdateTime
 ,f.so_data
 ,g.cus_no
 ,k.cus_no as factory
@@ -13,7 +22,7 @@ b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
 
  (
 --9 表示 订单生产中
-select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate<>VALUE_COMPLETE_STATE and   maxWorkFlowStep=:workFlowStep and (osNo like :os_no or prdNo like :prd_no)
+select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe ,currentOverDueDay,totalLimit ,currentLimitDay,currentAlertDay from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate<>VALUE_COMPLETE_STATE and   maxWorkFlowStep=:workFlowStep and (osNo like :os_no or prdNo like :prd_no)
 
 ) as b  inner join
  (
@@ -50,7 +59,7 @@ and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
 
       left outer join  (
                             --单位抓取
-                            select prd_no, ut from  prdt where   knd='2'
+                            select prd_no,idx1,  ut from  prdt where   knd='2'
 
                             ) d  on  a.prd_no=d.prd_no
 

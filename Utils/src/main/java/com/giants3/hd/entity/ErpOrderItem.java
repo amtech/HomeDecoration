@@ -352,4 +352,29 @@ public class ErpOrderItem {
 
 
 
+
+    /**
+     * 当前流程的超期时间
+     */
+    public int currentOverDueDay;
+
+    /**
+     * 当前流程的期限日期
+     */
+    public int currentLimitDay;
+    /**
+     * 当前流程的预警时间
+     */
+
+    public  int currentAlertDay;
+
+    /**
+     * 预计流程总计提前或者 超期完成时间  负数表示提前  正数表示超期
+     */
+    public int totalLimit;
+
+
+
+
+
 }

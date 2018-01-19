@@ -864,6 +864,11 @@ public class ErpWorkService extends AbstractErpService {
 
             //更新生产进度
             workFlowReport.percentage += (float) workFlowMessage.transportQty / erpOrderItemProcess.orderQty / (workFlowReport.typeCount == 0 ? 1 : workFlowReport.typeCount);
+            if(workFlowReport.percentage >= 1)
+            {
+                workFlowReport.endDate=  workFlowMessage.receiveTime  ;
+                workFlowReport.endDateString=   workFlowMessage.receiveTimeString ;
+            }
             workFlowReport = erpWorkFlowReportRepository.save(workFlowReport);
 
 
@@ -900,11 +905,22 @@ public class ErpWorkService extends AbstractErpService {
         switch (erpWorkFlowReport.workFlowStep)
         {
             case ErpWorkFlow.FIRST_STEP:
+                if(isMu) {
+                    alertDay = workFlowTimeLimit.alert_mu_baipeijg;
+                    limitDay = workFlowTimeLimit.limit_mu_baipeijg;
+                }else
+                {
+                    alertDay = workFlowTimeLimit.alert_tie_baipeijg;
+                    limitDay = workFlowTimeLimit.limit_tie_baipeijg;
+                }
+                break;
             case ErpWorkFlow.LAST_STEP:
 
                 erpWorkFlowReport.isOverDue=false;
                 erpWorkFlowReport.overDueDay=0;
 
+                alertDay = 0;
+                limitDay = 0;
                 break;
 
             case ErpWorkFlow.STEP_PEITI:
@@ -933,10 +949,16 @@ public class ErpWorkService extends AbstractErpService {
             {
 
 
-                  alertDay=workFlowTimeLimit.alert_baozhuang;
-                  limitDay=workFlowTimeLimit.limit_baozhuang;
 
 
+                if(isMu) {
+                    alertDay=workFlowTimeLimit.alert_baozhuang;
+                    limitDay=workFlowTimeLimit.limit_baozhuang;
+                }else
+                {
+                    alertDay=workFlowTimeLimit.alert_tie_baozhuang;
+                    limitDay=workFlowTimeLimit.limit_tie_baozhuang;
+                }
 
 
 
@@ -952,23 +974,30 @@ public class ErpWorkService extends AbstractErpService {
         erpWorkFlowReport.alertDay=alertDay;
 
 
-        final long now = Calendar.getInstance().getTimeInMillis();
+        if(limitDay>0) {
 
 
-        if(erpWorkFlowReport.startDate>0) {
+            if (erpWorkFlowReport.startDate > 0) {
+                final long now = Calendar.getInstance().getTimeInMillis();
 
-            long endDate = erpWorkFlowReport.endDate;
-            if (endDate <= 0) {
-                endDate = now;
+                long endDate = erpWorkFlowReport.endDate;
+                if (endDate == 0) {
+                    endDate = now;
+                }
+
+                int daybetween = DateUtils.getDayDifference(erpWorkFlowReport.startDate, endDate);
+                erpWorkFlowReport.isOverDue = daybetween > erpWorkFlowReport.limitDay;
+                erpWorkFlowReport.overDueDay = daybetween - erpWorkFlowReport.limitDay;
+            } else {
+                erpWorkFlowReport.isOverDue = false;
+                erpWorkFlowReport.overDueDay = 0;
             }
 
-            int daybetween = DateUtils.getDayDifference( erpWorkFlowReport.startDate,endDate);
-            erpWorkFlowReport.isOverDue = daybetween > erpWorkFlowReport.limitDay;
-            erpWorkFlowReport.overDueDay = daybetween - erpWorkFlowReport.limitDay;
         }else
         {
+
             erpWorkFlowReport.isOverDue = false;
-            erpWorkFlowReport.overDueDay =0;
+            erpWorkFlowReport.overDueDay = 0;
         }
 
 
@@ -1020,6 +1049,7 @@ public class ErpWorkService extends AbstractErpService {
 
             int totalLimit=0;
             ErpWorkFlowReport currentReport=null;
+            boolean  hasStart=false;
             for(ErpWorkFlowReport report:workFlowReports)
             {
 
@@ -1032,23 +1062,46 @@ public class ErpWorkService extends AbstractErpService {
                 {
                     currentReport=report;
                 }
+                if(!hasStart)
+                   hasStart=report.percentage>0;
                 totalLimit+=report.overDueDay;
 
             }
-            if(currentReport==null)
+            if(currentReport==null&&workFlowReports.size()>0)
             {
                 currentReport=workFlowReports.get(workFlowReports.size()-1);
             }
 
+            if(currentReport==null) continue;
+//            /**
+//             * 表示 所有流程未启动 未接收任何流程
+//             */
+//            if(!hasStart  )
+//            {
+//                //找到最早发起流程的消息记录 作为开始时间，进行计算
+//               List<WorkFlowMessage> workFlowMessages= workFlowMessageRepository.findByOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(orderItemWorkState.osNo,orderItemWorkState.itm);
+//                if(workFlowMessages.size()>0)
+//                {
+//                    WorkFlowMessage workFlowMessage=workFlowMessages.get(workFlowMessages.size()-1);
+//
+//                    int dayBetween=DateUtils.getDayDifference(workFlowMessage.createTime,Calendar.getInstance().getTimeInMillis());
+//
+//                    int totalLimit=workFlowTimeLimit.
+//
+//                }
+//
+//            }
+
             erpWorkFlowReportRepository.save(workFlowReports);
             erpWorkFlowReportRepository.flush();
-//            orderItemWorkState.workFlowDescribe="xxxxxxxxxx";
+
             orderItemWorkState.totalLimit=totalLimit;
             orderItemWorkState.maxWorkFlowCode=currentReport.workFlowCode;
             orderItemWorkState.maxWorkFlowName=currentReport.workFlowName;
             orderItemWorkState.maxWorkFlowStep=currentReport.workFlowStep;
             orderItemWorkState.currentOverDueDay=currentReport.overDueDay;
-            orderItemWorkState.totalLimit=totalLimit;
+            orderItemWorkState.currentLimitDay=currentReport.limitDay;
+            orderItemWorkState.currentAlertDay=currentReport.alertDay;
             orderItemWorkStateRepository.saveAndFlush(orderItemWorkState);
         }
 

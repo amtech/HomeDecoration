@@ -4,6 +4,7 @@ import com.giants.hd.desktop.interf.Iconable;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Guice;
+import de.greenrobot.common.io.IoUtils;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -56,9 +57,19 @@ public class ImageLoader {
 
                 try {
                     String fileName = manager.cacheFile(url);
+                    BufferedImage bufferedImage=null;
+                    InputStream in=null;
+                    try {
+                        in = new ByteArrayInputStream(ImageUtils.scale(fileName, (int) maxWidth, (int) maxHeight, true));
+                        bufferedImage = ImageIO.read(in);
 
-                    InputStream in = new ByteArrayInputStream(ImageUtils.scale(fileName, (int) maxWidth, (int) maxHeight, true));
-                    BufferedImage bufferedImage = ImageIO.read(in);
+                    }catch (Throwable t)
+                    {
+                        t.printStackTrace();
+                    }finally {
+                        IoUtils.safeClose(in);
+                    }
+
                     byte[] result = ImageUtils.scale(bufferedImage, (int) maxWidth, (int) maxHeight, false);
                     ImageIcon imageIcon = new ImageIcon(result);
 
