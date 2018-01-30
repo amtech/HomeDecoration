@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.entity_erp.SampleState;
+import com.giants3.hd.entity_erp.Sub_workflow_state;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.server.repository.ErpSampleRepository;
 import com.giants3.hd.server.service.ErpSampleService;
@@ -283,6 +284,22 @@ public class ErpWorkController extends BaseController {
     public RemoteData<SampleState> getSampleState(@RequestParam("prdNo") String prdNo, @RequestParam(value = "pVersion",required = false,defaultValue = "") String pVersion){
 
         SampleState sampleState= erpSampleService.getSampleState(prdNo, pVersion);
+        if(sampleState==null) return wrapData();
+        return  wrapData(sampleState);
+    }
+
+
+    /**
+     *  查询指定期间，流程已经结束，小工序未完工的单据。
+     */
+    @RequestMapping(value = "/searchErpSubWorkFlow", method = RequestMethod.GET)
+    @ResponseBody
+
+
+    public RemoteData<Sub_workflow_state>  searchErpSubWorkFlow(@RequestParam("key")  String key,@RequestParam("dateStart")   String  dateStart,@RequestParam("dateEnd")  String dateEnd)
+    {
+
+       List<Sub_workflow_state> sampleState= erpWorkService.searchErpSubWorkFlow(key,dateStart,dateEnd);
         if(sampleState==null) return wrapData();
         return  wrapData(sampleState);
     }

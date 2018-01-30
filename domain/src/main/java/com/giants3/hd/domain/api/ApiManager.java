@@ -2,6 +2,7 @@ package com.giants3.hd.domain.api;
 
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.ErpStockOut;
+import com.giants3.hd.entity_erp.Sub_workflow_state;
 import com.giants3.hd.entity_erp.Zhilingdan;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.*;
@@ -193,6 +194,8 @@ public class ApiManager {
         }.getType());
 
         tokenMaps.put(WorkFlowTimeLimit.class, new TypeToken<RemoteData<WorkFlowTimeLimit>>() {
+        }.getType());
+        tokenMaps.put(Sub_workflow_state.class, new TypeToken<RemoteData<Sub_workflow_state>>() {
         }.getType());
 
 
@@ -2172,8 +2175,15 @@ public class ApiManager {
         return remoteData;
     }
 
-    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem) throws HdException {
-        String url = HttpUrl.saveWorkFlowLimit(  updateCompletedOrderItem);
+    public RemoteData<Sub_workflow_state> searchErpSubWorkFlow(String key, String dateStart, String dateEnd) throws HdException {
+        String url = HttpUrl.searchErpSubWorkFlow(key, dateStart, dateEnd);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Sub_workflow_state> remoteData = invokeByReflect(result, Sub_workflow_state.class);
+        return remoteData;
+    }
+
+    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit, boolean updateCompletedOrderItem) throws HdException {
+        String url = HttpUrl.saveWorkFlowLimit(updateCompletedOrderItem);
         String result = client.postWithStringReturned(url, GsonUtils.toJson(workFlowLimit));
         RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
         return remoteData;

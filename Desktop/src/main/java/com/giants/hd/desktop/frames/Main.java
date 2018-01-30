@@ -347,6 +347,20 @@ public class Main extends BaseFrame {
                 }
             });
 
+        } if (AuthorityUtil.getInstance().viewSubWorkFlowList()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_SUB_WORK_FLOW);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    BaseInternalFrame frame = new SubWorkFlowListFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+
         }
         if (AuthorityUtil.getInstance().viewWorkFLowEventConfig()) {
 

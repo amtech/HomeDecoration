@@ -589,4 +589,8 @@ public class UseCaseFactory {
 
         return  new UpdateMaitouFileUseCase( os_no,file,orderRepository );
     }
+
+    public UseCase createGetSubWorkFlowListUseCase(String key, String dateStart,String dateEnd) {
+        return  new GetSubWorkFlowListUseCase(   key,   dateStart,dateEnd,workFlowRepository );
+    }
 }

@@ -1190,4 +1190,11 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/workFlow/saveLimit?updateCompletedOrderItem="+updateCompletedOrderItem);
     }
+
+
+
+    public static String searchErpSubWorkFlow(String key, String dateStart,String dateEnd) {
+
+        return additionInfo(BaseUrl + "api/erpWork/searchErpSubWorkFlow?key="+key+"&dateStart="+dateStart+"&dateEnd="+dateEnd);
+    }
 }

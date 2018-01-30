@@ -641,4 +641,8 @@ public class AuthorityUtil {
         return isViewable(ModuleConstant.NAME_WORK_FLOW_LIMIT);
 
     }
+
+    public boolean viewSubWorkFlowList() {
+        return isViewable(ModuleConstant.NAME_SUB_WORK_FLOW);
+    }
 }

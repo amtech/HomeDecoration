@@ -1,6 +1,7 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.*;
+import com.giants3.hd.entity_erp.Sub_workflow_state;
 import com.giants3.hd.entity_erp.WorkFlowMaterial;
 import com.giants3.hd.entity_erp.Zhilingdan;
 import com.giants3.hd.exception.HdException;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -711,22 +713,28 @@ public class ErpWorkService extends AbstractErpService {
         if (erpOrderItemProcess.currentWorkFlowStep == ErpWorkFlow.STEP_PEITI || erpOrderItemProcess.currentWorkFlowStep == ErpWorkFlow.STEP_YANSE) {
 
             String lastStepCode = erpOrderItemProcess.currentWorkFlowStep == ErpWorkFlow.STEP_PEITI ? ErpWorkFlow.FIRST_STEP_CODE : ErpWorkFlow.SECOND_STEP_CODE;
+            int lastStep = erpOrderItemProcess.currentWorkFlowStep == ErpWorkFlow.STEP_PEITI ? ErpWorkFlow.FIRST_STEP : ErpWorkFlow.STEP_PEITI;
 
 
-            //查找上一节mrp_no;
-            String lastStepMrpNo = lastStepCode + erpOrderItemProcess.mrpNo.substring(1);
 
-            //查找记录
-            ErpOrderItemProcess lastStepProcess = erpOrderItemProcessRepository.findFirstByOsNoEqualsAndItmEqualsAndMrpNoEquals(erpOrderItemProcess.osNo, erpOrderItemProcess.itm, lastStepMrpNo);
-            if (lastStepProcess == null) {
-                return wrapError("当前流程未接收到产品数量");
+
+
+            ErpWorkFlowReport erpWorkFlowReport=erpWorkFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(erpOrderItemProcess.osNo, erpOrderItemProcess.itm,lastStep );
+            if(erpWorkFlowReport.percentage<1) {
+                //查找上一节mrp_no;
+                String lastStepMrpNo = lastStepCode + erpOrderItemProcess.mrpNo.substring(1);
+                //查找记录
+                ErpOrderItemProcess lastStepProcess = erpOrderItemProcessRepository.findFirstByOsNoEqualsAndItmEqualsAndMrpNoEquals(erpOrderItemProcess.osNo, erpOrderItemProcess.itm, lastStepMrpNo);
+                if (lastStepProcess == null) {
+                    return wrapError("上一流程未完成！");
+                }
+                if (lastStepProcess.sentQty < tranQty) {
+
+
+                    return wrapError("当前流程产品数量:" + lastStepProcess.sentQty + ",不够发送" + tranQty);
+                }
+
             }
-            if (lastStepProcess.sentQty < tranQty) {
-
-
-                return wrapError("当前流程产品数量:" + lastStepProcess.sentQty + ",不够发送" + tranQty);
-            }
-
         }
 
 
@@ -1567,6 +1575,31 @@ public class ErpWorkService extends AbstractErpService {
             throw HdException.create(t.getMessage());
         }
 
+
+    }
+
+    /**
+     *  查询指定期间，流程已经结束，小工序未完工的单据。
+     */
+    public List<Sub_workflow_state>  searchErpSubWorkFlow(String key,String  dateStart,String dateEnd)
+    {
+
+        long startTime=0;
+
+        try {
+            startTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateStart).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long endTime=0;
+        try {
+            endTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateEnd).getTime()+24l*60*60*1000-1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return erpWorkRepository.searchErpSubWorkFlow(key,startTime,endTime);
 
     }
 }

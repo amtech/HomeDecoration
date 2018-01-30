@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.WorkFlowRepository;
+import com.giants3.hd.entity_erp.Sub_workflow_state;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.Zhilingdan;
@@ -540,6 +541,16 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             @Override
             public RemoteData<Void> call() throws HdException {
                 return apiManager.saveWorkFlowLimit(    workFlowLimit,  updateCompletedOrderItem);
+            }
+        });
+    }
+
+    @Override
+    public Observable getSubWorkFlowList(final String key, final String dateStart, final String dateEnd) {
+        return crateObservable(  new ApiCaller<Sub_workflow_state>() {
+            @Override
+            public RemoteData<Sub_workflow_state> call() throws HdException {
+                return apiManager.searchErpSubWorkFlow(    key,dateStart,dateEnd);
             }
         });
     }
