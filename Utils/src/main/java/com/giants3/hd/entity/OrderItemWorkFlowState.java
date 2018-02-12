@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * Created by davidleen29 on 2017/1/18.
  */
 
-@Entity(name="T_OrderItemWorkFlowState")
+
 public class OrderItemWorkFlowState {
 
     @Id

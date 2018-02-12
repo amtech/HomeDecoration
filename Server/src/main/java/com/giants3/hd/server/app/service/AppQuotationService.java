@@ -60,6 +60,10 @@ public class AppQuotationService extends AbstractService {
         QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.quotation = quotation;
         quotationDetail.items = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+
+            quotationDetail.items.add(new QuotationItem());
+        }
 
         return quotationDetail;
 
@@ -212,6 +216,8 @@ public class AppQuotationService extends AbstractService {
         quotationItem.weightSum = quotationItem.weight * quotationItem.qty;
         quotationItem.volumePerBox = product.packVolume;
         quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.qty;
+        quotationItem.thumbnail =product.thumbnail;
+        quotationItem.photoUrl = product.url;
 
 
     }
@@ -314,7 +320,7 @@ public class AppQuotationService extends AbstractService {
 
         quotationItem.qty = quantity;
         quotationItem.amountSum = quotationItem.price * quotationItem.qty;
-        quotationItem.packQuantity = quotationItem.qty / quotationItem.inBoxCount;
+        quotationItem.packQuantity = quotationItem.qty / (quotationItem.inBoxCount<=0?1:quotationItem.inBoxCount);
         quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.packQuantity;
         quotationItem.weightSum = quotationItem.weight * quotationItem.qty;
         quotationItem.amountSum = quotationItem.price * quotationItem.qty;
@@ -551,6 +557,41 @@ public class AppQuotationService extends AbstractService {
         quotation.saleId = saleId;
         quotation.salesman = user.toString();
         quotation = appQuotationRepository.save(quotation);
+        return loadAQuotationDetail(quotationId);
+
+    }
+
+
+
+
+    public RemoteData<QuotationDetail> updateItemPrice(long quotationId, int itemIndex, float price) {
+
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+
+
+        if (quotation == null) {
+
+            return wrapError("报价单不存在");
+        }
+
+
+        QuotationItem quotationItem = appQuotationItemRepository.findFirstByQuotationIdEqualsAndItmEquals(quotationId, itemIndex);
+
+
+        if (quotationItem == null) return wrapError("未找到报价单明细项次：" + itemIndex);
+
+        quotationItem.price = price;
+        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+
+        appQuotationItemRepository.saveAndFlush(quotationItem);
+
+        updateTotalMessage(quotation);
+        appQuotationRepository.save(quotation);
+
+        appQuotationRepository.flush();
+
+
         return loadAQuotationDetail(quotationId);
 
     }

@@ -173,8 +173,7 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(OrderItemWorkFlow.class, new TypeToken<RemoteData<OrderItemWorkFlow>>() {
         }.getType());
-        tokenMaps.put(OrderItemWorkFlowState.class, new TypeToken<RemoteData<OrderItemWorkFlowState>>() {
-        }.getType());
+
         tokenMaps.put(Zhilingdan.class, new TypeToken<RemoteData<Zhilingdan>>() {
         }.getType());
         tokenMaps.put(WorkFlowWorker.class, new TypeToken<RemoteData<WorkFlowWorker>>() {

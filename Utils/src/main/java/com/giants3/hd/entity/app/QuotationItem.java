@@ -158,4 +158,14 @@ public class QuotationItem implements Serializable {
 
     public String memo;
 
+
+    /**
+     * 缩略图
+     */
+    public String thumbnail;
+    /**
+     * 图片url
+     */
+    public String photoUrl;
+
 }

@@ -275,4 +275,20 @@ public class AppQuotationController extends BaseController {
 
     }
 
+
+
+    @RequestMapping(value = "/updateItemPrice", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateItemPrice(@RequestParam(value = "quotationId" ) long quotationId,@RequestParam(value = "itemIndex" ) int item, @RequestParam(value = "price" ) float price  ) {
+
+
+        return  quotationService.updateItemPrice(quotationId,item,price);
+
+
+
+
+
+
+    }
 }
