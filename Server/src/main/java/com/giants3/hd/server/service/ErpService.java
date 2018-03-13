@@ -806,17 +806,13 @@ public class ErpService extends AbstractErpService {
         return getWorkFlowList();
 
     }
-
-
     /**
      * 获取指定用户未处理的消息。
      *
      * @param loginUser
      * @return
      */
-    public RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessage(User loginUser) {
-
-
+    public RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessage1(User loginUser,String key) {
         List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEqualsAndReceiveEquals(loginUser.id, true);
 
 
@@ -830,64 +826,25 @@ public class ErpService extends AbstractErpService {
         }
         int[] state = new int[]{WorkFlowMessage.STATE_SEND, WorkFlowMessage.STATE_REWORK}; //WorkFlowMessage.STATE_RECEIVE,
         //读取未处理的 就是 receiverId=0
-        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByStateInAndToFlowStepInAndReceiverIdEquals(state, flowSteps, 0);
+        String keyLike=StringUtils.sqlLike(key);
+        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findMyUnHandleWorkFlowMessages2(state ,flowSteps,loginUser.id,keyLike);
+
+        return wrapData(workFlowMessages );
+
+    }
+
+    /**
+     * 获取指定用户未处理的消息。
+     *
+     * @param loginUser
+     * @return
+     */
+    public RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessage(User loginUser,String key) {
 
 
-        List<WorkFlowMessage> result = new ArrayList<>();
-        for (WorkFlowMessage workFlowMessage : workFlowMessages) {
+         return getUnHandleWorkFlowMessage1(loginUser,key);
 
 
-            final int toFlowStep = workFlowMessage.toFlowStep;
-
-            boolean shouldAdd = false;
-            if (toFlowStep == ErpWorkFlow.STEP_PEITI || toFlowStep == ErpWorkFlow.STEP_YANSE) {
-                //颜色 白胚阶段 进行铁木权限细分
-                ErpWorkFlowReport workFlowReport = workFlowReportRepository.findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(workFlowMessage.orderName, workFlowMessage.itm, toFlowStep);
-
-
-                ErpOrderItemProcess erpOrderItemProcess = erpOrderItemProcessRepository.findOne(workFlowMessage.orderItemProcessId);
-
-                if (erpOrderItemProcess == null) {
-                    shouldAdd = true;
-                } else {
-                    ProductType productType = erpPrdtService.getProductTypeFromOrderItemProcess(erpOrderItemProcess);
-
-                    if (workFlowReport == null || productType == null || productType == ProductType.NONE) {
-                        shouldAdd = true;
-                    } else {
-                        WorkFlowWorker workFlowWorker = workFlowWorkerRepository.findFirstByUserIdEqualsAndProduceTypeEqualsAndWorkFlowStepEquals(loginUser.id, workFlowReport.produceType, toFlowStep);
-
-
-                        if (workFlowWorker != null) {
-
-                            if ((productType.type & ProductType.TYPE_MU) == ProductType.TYPE_MU && workFlowWorker.mu) {
-                                shouldAdd = true;
-
-
-                            }
-
-                            if ((productType.type & ProductType.TYPE_TIE) == ProductType.TYPE_TIE && workFlowWorker.tie) {
-                                shouldAdd = true;
-
-                            }
-
-                        }
-
-                    }
-
-                }
-                }else{
-                    //其他流程 不细分铁木权限
-                    shouldAdd = true;
-                }
-
-
-            if (shouldAdd) result.add(workFlowMessage);
-
-        }
-
-
-        return wrapData(result);
 
     }
 
@@ -900,7 +857,7 @@ public class ErpService extends AbstractErpService {
     public int getUnHandleWorkFlowMessageCount(User loginUser) {
 
 
-        RemoteData<WorkFlowMessage> remoteData = getUnHandleWorkFlowMessage(loginUser);
+        RemoteData<WorkFlowMessage> remoteData = getUnHandleWorkFlowMessage1(loginUser,"");
 
 
         return remoteData.totalCount;

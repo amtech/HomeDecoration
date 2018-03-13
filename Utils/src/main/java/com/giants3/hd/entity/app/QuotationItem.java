@@ -168,4 +168,244 @@ public class QuotationItem implements Serializable {
      */
     public String photoUrl;
 
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getpVersion() {
+        return pVersion;
+    }
+
+    public void setpVersion(String pVersion) {
+        this.pVersion = pVersion;
+    }
+
+    public int getInBoxCount() {
+        return inBoxCount;
+    }
+
+    public void setInBoxCount(int inBoxCount) {
+        this.inBoxCount = inBoxCount;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public int getPackQuantity() {
+        return packQuantity;
+    }
+
+    public void setPackQuantity(int packQuantity) {
+        this.packQuantity = packQuantity;
+    }
+
+    public String getPackageSize() {
+        return packageSize;
+    }
+
+    public void setPackageSize(String packageSize) {
+        this.packageSize = packageSize;
+    }
+
+    public float getBoxLong() {
+        return boxLong;
+    }
+
+    public void setBoxLong(float boxLong) {
+        this.boxLong = boxLong;
+    }
+
+    public float getBoxWidth() {
+        return boxWidth;
+    }
+
+    public void setBoxWidth(float boxWidth) {
+        this.boxWidth = boxWidth;
+    }
+
+    public float getBoxHeight() {
+        return boxHeight;
+    }
+
+    public void setBoxHeight(float boxHeight) {
+        this.boxHeight = boxHeight;
+    }
+
+    public float getVolumePerBox() {
+        return volumePerBox;
+    }
+
+    public void setVolumePerBox(float volumePerBox) {
+        this.volumePerBox = volumePerBox;
+    }
+
+    public float getWeightPerBox() {
+        return weightPerBox;
+    }
+
+    public void setWeightPerBox(float weightPerBox) {
+        this.weightPerBox = weightPerBox;
+    }
+
+    public float getAmountSum() {
+        return amountSum;
+    }
+
+    public void setAmountSum(float amountSum) {
+        this.amountSum = amountSum;
+    }
+
+    public float getVolumeSum() {
+        return volumeSum;
+    }
+
+    public void setVolumeSum(float volumeSum) {
+        this.volumeSum = volumeSum;
+    }
+
+    public float getWeightSum() {
+        return weightSum;
+    }
+
+    public void setWeightSum(float weightSum) {
+        this.weightSum = weightSum;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public float getPriceOrigin() {
+        return priceOrigin;
+    }
+
+    public void setPriceOrigin(float priceOrigin) {
+        this.priceOrigin = priceOrigin;
+    }
+
+    public float getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(float volumeSize) {
+        this.volumeSize = volumeSize;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public String getConstitute() {
+        return constitute;
+    }
+
+    public void setConstitute(String constitute) {
+        this.constitute = constitute;
+    }
+
+    public String getMirrorSize() {
+        return mirrorSize;
+    }
+
+    public void setMirrorSize(String mirrorSize) {
+        this.mirrorSize = mirrorSize;
+    }
+
+    public long getQuotationId() {
+        return quotationId;
+    }
+
+    public void setQuotationId(long quotationId) {
+        this.quotationId = quotationId;
+    }
+
+    public int getItm() {
+        return itm;
+    }
+
+    public void setItm(int itm) {
+        this.itm = itm;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

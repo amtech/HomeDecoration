@@ -8,6 +8,8 @@ import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.crypt.CryptUtils;
 import com.giants3.hd.entity.Session;
+import com.giants3.hd.utils.UrlFormatter;
+import com.giants3.report.PictureUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -15,6 +17,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
@@ -43,7 +48,40 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 
         Logger.getLogger(TAG).info("AuthInterceptor");
+
+
         String url = request.getRequestURI();
+
+
+        //签名验证
+
+       if(! UrlFormatter.validateSign(request.getQueryString()))
+       {
+
+
+           writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL,"签名效验失败");
+
+           return false;
+
+       }
+
+//        request.getContextPath()
+//      String realPath=  request.getSession().getServletContext().getRealPath("");
+//
+//        url.substring(request.getpath)
+        String requestUrl=request.getRequestURL().toString();
+      int index=  requestUrl.indexOf(request.getServletPath());
+        String baseUrl="";
+        if(index!=-1)
+        {
+            baseUrl=requestUrl.substring(0,index);
+            PictureUrl.setBaseUrl(baseUrl);
+        }
+
+
+//        request.setAttribute(Constraints.ATTR_BASE_URL, baseUrl);
+
+
         HttpServletRequestWrapper wrapper;
         //非过滤的url
         if (ConstantData.FOR_TEST||url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(UN_INTERCEPT_FILE) || url.contains(WEIXIN))
@@ -76,22 +114,26 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
             //如果验证失败
             //返回到登录界面
-            RemoteData<Void> data = new RemoteData<>();
-            data.code = RemoteData.CODE_UNLOGIN;
-            data.message = "用户未登录，或者登录超时失效";
-            if (ConstantData.IS_CRYPT_JSON) {
-
-                response.getOutputStream().write(CryptUtils.encryptDES(GsonUtils.toJson(data).getBytes(GsonUtils.UTF_8), ConstantData.DES_KEY));
-            } else {
-
-                response.getOutputStream().write(GsonUtils.toJson(data).getBytes(GsonUtils.UTF_8));
-            }
+            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_UNLOGIN,"用户未登录，或者登录超时失效");
 
             return false;
 
 
         }
 
+    }
+
+    private void writeErrorMessage(OutputStream outputStream,int code, String message) throws IOException {
+        RemoteData<Void> data = new RemoteData<>();
+        data.code =code;
+        data.message = message;
+          byte[] bytes =null;
+        try {
+            bytes = GsonUtils.toJson(data).getBytes(GsonUtils.UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        outputStream.write(bytes);
     }
 
     @Override

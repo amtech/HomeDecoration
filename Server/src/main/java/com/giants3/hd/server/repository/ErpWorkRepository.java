@@ -414,7 +414,13 @@ public class ErpWorkRepository extends ErpRepository {
     public List<ErpOrderItem> searchCompleteOrderItems(String key, int pageIndex, int pageSize) {
 
 
-        return getOrderItemsFromSQL(SQL_ORDER_ITEM_COMPLETE, key, pageIndex, pageSize);
+        final String value = StringUtils.sqlLike(key);
+        Query query = em.createNativeQuery(SQL_ORDER_ITEM_COMPLETE)
+                .setParameter("os_no", value)
+                .setParameter("prd_no", value)
+        .setParameter("firstRow", pageIndex * pageSize)
+                .setParameter("lastRow", (pageIndex + 1) * pageSize - 1);
+        return getORderItemsFromSQL(query, 0, 0);
 
 
     }

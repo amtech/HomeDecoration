@@ -15,7 +15,13 @@ import java.util.List;
  * 流程传递处理信息
  */
 public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage, Long> {
+    /**
+     * 查询未设置produceType的消息记录
+     * @return
+     */
+    List<WorkFlowMessage> findByProduceTypeNameIsNull();
 
+    List<WorkFlowMessage> findByMrpTypeIsNullOrPrdTypeIsNull();
 
     List<WorkFlowMessage> findByStateInAndToFlowStepInAndReceiverIdEquals(int[] i, int[] flowSteps, long userId);
 
@@ -56,4 +62,32 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
 
 
     List<WorkFlowMessage> findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeAsc(int workFlowStep, String osNo, int itm);
+
+
+
+
+    /**
+     * ToFlowStep  (2000,3000) 白胚 与颜色阶段 要根据当前用户的铁木权限进行分配
+     * @param states
+     * @param workflowSteps
+     * @param userId
+     * @param key
+     * @return
+     */
+
+    @Query(value= " select  a.* from ( select * from  t_workflowmessage   where  state in :states and toFlowStep in :workflowSteps    and receiverId =0 and ( orderName like :key or productName like :key )  ) as a  \n" +
+            " \n" +
+            "left outer  join (select   UserId, mu,tie ,ProduceType,WorkFlowStep from T_WorkflowWorker where userId= :userId) e on  e.ProduceType=a.produceType and e.WorkFlowStep=a.toFlowStep \n" +
+            "\n" +
+            "where    ToFlowStep not in (2000,3000) \n" +
+            "  or (    not (((a.mrpType='T' or a.prdType='TJ') and e.tie=0) or ((a.mrpType='M' or a.prdType='MJ') and e.mu=0)  ) )   order by orderName desc ,itm   " ,nativeQuery = true
+
+    )
+
+
+
+    List<WorkFlowMessage> findMyUnHandleWorkFlowMessages2( @Param("states") int[]  states , @Param("workflowSteps") int[]  workflowSteps , @Param("userId") long  userId , @Param("key") String  key );
+
+
+
 }

@@ -27,7 +27,10 @@ import java.util.List;
 public class WorkFlowService extends AbstractService implements InitializingBean, DisposableBean {
 
     private static final Logger logger = Logger.getLogger(WorkFlowService.class);
-
+    @Autowired
+    ErpPrdtService erpPrdtService; ;
+    @Autowired
+    ErpWorkService erpWorkService; ;
     @Autowired
     ProductService productService;
 
@@ -476,5 +479,47 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         return wrapData();
+    }
+
+
+    /**
+     * 调整workflowmessage 的  mrpType prdType
+     */
+    public void adjustWorkFlowMessage() {
+
+
+        List<WorkFlowMessage> workFlowMessages=workFlowMessageRepository.findByMrpTypeIsNullOrPrdTypeIsNull();
+
+        for(WorkFlowMessage workFlowMessage:workFlowMessages)
+        {
+
+            try {
+                workFlowMessage.mrpType =StringUtils.isEmpty(workFlowMessage.mrpNo)?"": workFlowMessage.mrpNo.substring(1, 2);
+
+                final String idx1ByPrdno = erpPrdtService.findIdx1ByPrdno(workFlowMessage.productName);
+                workFlowMessage.prdType =StringUtils.isEmpty(idx1ByPrdno)?"": idx1ByPrdno.substring(0, 2);
+
+
+                workFlowMessageRepository.saveAndFlush(workFlowMessage);
+            }catch (Throwable t){t.printStackTrace();}
+        }
+
+
+          workFlowMessages=workFlowMessageRepository.findByProduceTypeNameIsNull();
+
+        for(WorkFlowMessage workFlowMessage:workFlowMessages)
+        {
+
+            ErpOrderItem erpOrderItem = erpWorkService.findOrderItem(workFlowMessage.orderName, workFlowMessage.itm);
+
+            try {
+                workFlowMessage.produceType =erpOrderItem.produceType;
+                workFlowMessage.produceTypeName =erpOrderItem.produceTypeName;
+                workFlowMessageRepository.saveAndFlush(workFlowMessage);
+            }catch (Throwable t){t.printStackTrace();}
+        }
+
+
+
     }
 }

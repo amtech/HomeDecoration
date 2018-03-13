@@ -14,7 +14,7 @@ public class ErpWorkFlow {
     public static final String SECOND_STEP_CODE = "A";
     public static final String CODE_ZUZHUANG = "B";
     //生产完成状态码
-    public static final int STATE_COMPLETE = 99;
+        public static final int STATE_COMPLETE = 99;
     public static final String STATE_NAME_COMPLETE = "生产完成";
     //生产进行流程状态码
     public static final int STATE_WORKING = 9;

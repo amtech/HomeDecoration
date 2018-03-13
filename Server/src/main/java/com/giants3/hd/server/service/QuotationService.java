@@ -23,7 +23,7 @@ import java.util.List;
  * Created by david on 2016/2/15.
  */
 @Service
-public class QuotationService extends AbstractService implements InitializingBean, DisposableBean {
+public class QuotationService extends AbstractService   {
 
 
     @Autowired
@@ -32,15 +32,7 @@ public class QuotationService extends AbstractService implements InitializingBea
     @Autowired
     QuoteAuthRepository quoteAuthRepository;
 
-    @Override
-    public void destroy() throws Exception {
 
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
 
 
     public RemoteData<Quotation> search(User loginUser, String searchValue, long salesmanId

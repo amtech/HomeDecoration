@@ -15,8 +15,8 @@ import org.springframework.data.repository.query.Param;
 public interface AppQuotationRepository extends JpaRepository<Quotation, Long> {
 
 
-    @Query(value = "select p from  T_AppQuotation  p where  (p.customerCode like :key or p.customerName=:key  or p.qNumber like :key  or p.salesman like :key )  order by p.qDate desc "
-            , countQuery = "select count(p.id) from  T_AppQuotation  p where  (p.customerCode like :key or p.customerName=:key  or p.qNumber like :key  or p.salesman like :key ) ")
+    @Query(value = "select p from  T_AppQuotation  p where  (p.customerCode like :key or p.customerName=:key  or p.qNumber like :key  or p.salesman like :key )  and p.formal=true order by p.qDate desc "
+            , countQuery = "select count(p.id) from  T_AppQuotation  p where  (p.customerCode like :key or p.customerName=:key  or p.qNumber like :key  or p.salesman like :key )  and p.formal=true ")
     Page<Quotation> findByKey(@Param("key") String key, Pageable pageable);
 
 

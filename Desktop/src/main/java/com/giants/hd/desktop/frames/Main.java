@@ -19,6 +19,7 @@ import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.BufferData;
+import com.giants3.report.PictureUrl;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 
@@ -74,8 +75,10 @@ public class Main extends BaseFrame {
         String baseUrl = PropertyWorker.readData("BaseUrl");
 
 
-        if (null != baseUrl)
+        if (null != baseUrl) {
             HttpUrl.iniBaseUrl(baseUrl);
+            PictureUrl.setBaseUrl(baseUrl);
+        }
 
 
         Config.DEBUG = false;

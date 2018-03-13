@@ -1,3 +1,14 @@
+with query as (
+
+   SELECT     ROW_NUMBER() OVER (ORDER BY  osNo DESC, itm ASC ) AS __rowindex__, osNo,itm from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate=VALUE_COMPLETE_STATE  and (osNo like :os_no or prdNo like :prd_no)
+
+
+   GROUP BY osNo, itm
+)
+
+
+
+
 select a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no, a.up,
 isnull(d.ut,'') as ut,
 isnull(d.idx1,'') as idx1,
@@ -16,13 +27,13 @@ b.workFlowDescribe, isnull(b.workflowState,0) as workflowState,
 ,k.cus_no as factory
 ,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from
 
-
+(select   * from  query    WHERE __rowindex__ BETWEEN :firstRow AND  :lastRow  ) as query inner join
 
  (
 --9 表示 订单生产中
 select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,workFlowDescribe ,currentOverDueDay,totalLimit ,currentLimitDay,currentAlertDay from  [yunfei].[dbo].[T_OrderItemWorkState] where workflowstate=VALUE_COMPLETE_STATE  and (osNo like :os_no or prdNo like :prd_no)
 
-) as b  inner join
+) as b   on query.osNo=b.osNo and query.itm=b.itm  inner join
  (
 
 
@@ -83,10 +94,11 @@ and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
 
 
 
+  order by query.__rowindex__
 
 
 
-order by a.os_no  DESC,a.itm   ASC
+
 
 
 

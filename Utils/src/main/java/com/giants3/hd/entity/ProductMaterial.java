@@ -582,7 +582,8 @@ public class ProductMaterial implements Serializable, Summariable, Valuable {
 
                     case PackMaterialClass.CLASS_QIPAODAI:
 
-                        newQuota = defaultCalculateQuota();
+                        //气泡袋双面  长宽高x2
+                        newQuota = defaultCalculateQuota()*2;
 
                         break;
 

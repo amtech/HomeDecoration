@@ -30,6 +30,7 @@ public class Quotation implements Serializable {
     public long customerId;
     public String customerCode;
     public String customerName;
+    public String customerAddress;
 
     /**
      * 货柜类型
@@ -65,7 +66,7 @@ public class Quotation implements Serializable {
      * 总体积
      */
     public float totalVolume;
-  /**
+   /**
      * 总金额
      */
     public float totalAmount;
@@ -85,5 +86,13 @@ public class Quotation implements Serializable {
      * 总净重
      */
     public float totalWeight;
+
+
+    /**
+     * 总款数
+     */
+
+    public int itemCount;
+
 
 }

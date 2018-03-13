@@ -10,6 +10,7 @@ import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.AbstractService;
 import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,6 +72,18 @@ public class AppQuotationService extends AbstractService {
     }
 
 
+    public  QuotationDetail getDetail(long quotationId)
+    {
+
+        QuotationDetail quotationDetail = new QuotationDetail();
+
+        Quotation quotation = appQuotationRepository.findOne(quotationId);
+        List<QuotationItem> quotationItemList = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationId);
+        quotationDetail.quotation = quotation;
+        quotationDetail.items = quotationItemList;
+        return quotationDetail;
+    }
+
     /**
      * 查询广交会报价单详情
      *
@@ -80,13 +93,8 @@ public class AppQuotationService extends AbstractService {
     public RemoteData<QuotationDetail> loadAQuotationDetail(long id) {
 
 
-        QuotationDetail quotationDetail = new QuotationDetail();
 
-        Quotation quotation = appQuotationRepository.findOne(id);
-        List<QuotationItem> quotationItemList = appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(id);
-        quotationDetail.quotation = quotation;
-        quotationDetail.items = quotationItemList;
-        return wrapData(quotationDetail);
+        return wrapData(getDetail(id));
 
     }
 
@@ -141,11 +149,13 @@ public class AppQuotationService extends AbstractService {
         QuotationItem quotationItem = new QuotationItem();
         quotationItem.quotationId = quotationId;
         bindProductToQuotationItem(quotationItem, productId);
-        quotationItem.itm = quotationItems.size();
+        final int sizeBeforAdd = quotationItems.size();
+        quotationItem.itm = sizeBeforAdd;
         appQuotationItemRepository.saveAndFlush(quotationItem);
 
 
         updateTotalMessage(quotation);
+        quotation.itemCount= sizeBeforAdd +1;
 
         appQuotationRepository.save(quotation);
 
@@ -218,6 +228,13 @@ public class AppQuotationService extends AbstractService {
         quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.qty;
         quotationItem.thumbnail =product.thumbnail;
         quotationItem.photoUrl = product.url;
+        quotationItem.unit = product.getpUnitName();
+        quotationItem.spec = product.getSpec();
+        quotationItem.boxLong = product.packLong;
+        quotationItem.boxWidth= product.packWidth;
+        quotationItem.boxHeight = product.packHeight;
+        quotationItem.weightPerBox = product.weight*product.insideBoxQuantity;
+        quotationItem.weight = product.weight ;
 
 
     }
@@ -259,6 +276,7 @@ public class AppQuotationService extends AbstractService {
 
 
         updateTotalMessage(quotation);
+        quotation.itemCount=quotationItems.size();
         appQuotationRepository.saveAndFlush(quotation);
 
 
@@ -286,7 +304,7 @@ public class AppQuotationService extends AbstractService {
             totalWeight += aItem.weightSum;
 
         }
-        quotation.totalAmount = totalAmount;
+        quotation.totalAmount = FloatHelper.scale( totalAmount,2) ;
         quotation.totalVolume = totalVolume;
         quotation.totalWeight = totalWeight;
 
@@ -364,8 +382,8 @@ public class AppQuotationService extends AbstractService {
 
         if (quotationItem == null) return wrapError("未找到报价单明细项次：" + itemIndex);
 
-        quotationItem.price = quotationItem.priceOrigin * discount;
-        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
+        quotationItem.price = FloatHelper.scale(quotationItem.priceOrigin * discount);
+        quotationItem.amountSum = FloatHelper.scale(quotationItem.price * quotationItem.qty);
 
         appQuotationItemRepository.saveAndFlush(quotationItem);
 
@@ -404,8 +422,8 @@ public class AppQuotationService extends AbstractService {
         for (QuotationItem item : quotationItems) {
 
 
-            item.price = item.priceOrigin * discount;
-            item.amountSum = item.price * item.qty;
+            item.price = FloatHelper.scale(item.priceOrigin * discount);
+            item.amountSum = FloatHelper.scale( item.price * item.qty);
             totalAmount += item.amountSum;
 
 
@@ -414,7 +432,7 @@ public class AppQuotationService extends AbstractService {
         appQuotationItemRepository.flush();
 
 
-        quotation.totalAmount = totalAmount;
+        quotation.totalAmount =FloatHelper.scale( totalAmount,2);
         appQuotationRepository.save(quotation);
 
 
@@ -455,7 +473,7 @@ public class AppQuotationService extends AbstractService {
             String qNumber="";
 
             Quotation maxQuotation= appQuotationRepository.findFirstByQNumberLikeOrderByQNumberDesc(StringUtils.sqlRightLike(qNumber));
-            if(maxQuotation==null||!today.equals(maxQuotation.qNumber.substring(0,8)))
+            if(maxQuotation==null||maxQuotation.qNumber.length()<8||!today.equals(maxQuotation.qNumber.substring(0,8)))
             {
                 qNumber=today+"00001";
             }else
@@ -512,6 +530,7 @@ public class AppQuotationService extends AbstractService {
         quotation.customerId = customerId;
         quotation.customerCode = customer.code;
         quotation.customerName = customer.name;
+        quotation.customerAddress = customer.addr;
         quotation = appQuotationRepository.save(quotation);
         return loadAQuotationDetail(quotationId);
 

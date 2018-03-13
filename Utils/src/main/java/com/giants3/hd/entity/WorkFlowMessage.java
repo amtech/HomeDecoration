@@ -166,4 +166,24 @@ public class WorkFlowMessage {
      * 客户代号
      */
     public String cus_no;
+
+    /**
+     * M J 其他
+     */
+    public String mrpType;
+
+
+    /**
+     * MJ  TJ 其他
+     */
+    public String prdType;
+
+
+
+    /**
+     * 设定好的产品生产类型 -1 未设定 0 自制 1  外购
+     */
+    public int produceType;
+
+    public String produceTypeName;
 }

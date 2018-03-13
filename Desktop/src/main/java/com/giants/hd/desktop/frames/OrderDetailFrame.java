@@ -2,7 +2,7 @@ package com.giants.hd.desktop.frames;
 
 import com.giants.hd.desktop.local.DownloadFileManager;
 import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
-import com.giants.hd.desktop.reports.jasper.ProductPaintReport;
+import com.giants3.report.jasper.ProductPaintReport;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;

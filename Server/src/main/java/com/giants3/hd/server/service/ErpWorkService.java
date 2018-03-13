@@ -807,6 +807,7 @@ public class ErpWorkService extends AbstractErpService {
         workFlowMessage.productName = erpOrderItemProcess.prdNo;
         workFlowMessage.itm = erpOrderItemProcess.itm;
         workFlowMessage.mrpNo = erpOrderItemProcess.mrpNo;
+
         workFlowMessage.pVersion = erpOrderItemProcess.pVersion;
         workFlowMessage.url = erpOrderItemProcess.photoUrl;
         workFlowMessage.thumbnail = erpOrderItemProcess.photoThumb;
@@ -815,6 +816,12 @@ public class ErpWorkService extends AbstractErpService {
         workFlowMessage.bat_no = erpOrderItem.bat_no;
         workFlowMessage.cus_no = erpOrderItem.cus_no;
 
+
+        workFlowMessage.produceType =  erpOrderItem.produceType;
+        workFlowMessage.produceTypeName =  erpOrderItem.produceTypeName;
+
+        workFlowMessage.mrpType =StringUtils.isEmpty(workFlowMessage.mrpNo)?"": workFlowMessage.mrpNo.substring(1, 2);
+        workFlowMessage.prdType  =StringUtils.isEmpty(erpOrderItem.idx1)?"": erpOrderItem.idx1.substring(0, 2);
 
         workFlowMessage = workFlowMessageRepository.save(workFlowMessage);
 
@@ -1600,6 +1607,12 @@ public class ErpWorkService extends AbstractErpService {
         }
 
         return erpWorkRepository.searchErpSubWorkFlow(key,startTime,endTime);
+
+    }
+
+    public ErpOrderItem findOrderItem(String orderName, int itm) {
+
+        return erpWorkRepository.findOrderItem(orderName, itm);
 
     }
 }

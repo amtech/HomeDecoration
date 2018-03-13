@@ -39,7 +39,7 @@
         <class>com.giants3.hd.entity.OrderItem</class>
         <class>com.giants3.hd.entity.OrderItemWorkFlow</class>
         <class>com.giants3.hd.entity.OrderItemWorkFlowEvent</class>
-        <class>com.giants3.hd.entity.OrderItemWorkFlowState</class>
+
         <class>com.giants3.hd.entity.OrderItemWorkMemo</class>
         <class>com.giants3.hd.entity.OrderItemWorkState</class>
 

@@ -9,6 +9,7 @@ import com.giants3.hd.server.repository.WorkFlowRepository;
 import com.giants3.hd.server.service.*;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.report.PictureUrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +55,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     TableRestoreService tableRestoreService;
     @Autowired
     UserService userService;
+
 //
 //    @Autowired
 //    TestXmlRepository testXmlRepository;
@@ -77,7 +79,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
 
+            final String applicationName = event.getApplicationContext().getApplicationName();
 
+            PictureUrl.setBaseUrl("http://127.0.0.1/"+applicationName+"/");
 //
 //            if(true)
 //            return;
@@ -199,6 +203,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
 
             workFlowService.initWorkFlowLimit();
+
+            workFlowService.adjustWorkFlowMessage();
 
       //   erpWorkService.correctAllWorkFlowReportData();
         //    erpWorkService.updateAllProducingWorkFlowReports();

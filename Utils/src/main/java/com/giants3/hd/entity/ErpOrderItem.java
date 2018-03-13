@@ -337,7 +337,7 @@ public class ErpOrderItem {
 
 
     /**
-     * 设定好的产品生产类型 0 未设定 1 自制  2 外购
+     * 设定好的产品生产类型 -1 未设定 0 自制  1 外购
      */
     public int produceType;
 

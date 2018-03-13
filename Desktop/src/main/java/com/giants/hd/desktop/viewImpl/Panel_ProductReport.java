@@ -4,7 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ProductTableModel;
-import com.giants.hd.desktop.reports.jasper.product_list_4.ProductList4Report;
+import com.giants3.report.jasper.product_list_4.ProductList4Report;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.utils.JTableUtils;

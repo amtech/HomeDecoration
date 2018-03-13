@@ -24,7 +24,6 @@ public class FactoryService extends AbstractErpService {
     @Autowired
     private FactoryRepository factoryRepository;
 
-    EntityManager manager;
 
 
     private OutFactoryRepository outFactoryRepository;

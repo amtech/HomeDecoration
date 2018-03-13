@@ -2,6 +2,7 @@ package com.giants3.hd.domain.api;
 
 import com.giants3.hd.noEntity.ConstantData;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.UrlFormatter;
 import com.ning.http.util.UTF8UrlEncoder;
 
 import java.net.URLEncoder;
@@ -42,31 +43,38 @@ public class HttpUrl {
 
     public static String additionInfo(String url) {
 
-        if (url.contains("?")) {
-            url += "&appVersion=" + versionCode;
-        } else {
-            url += "?appVersion=" + versionCode;
-        }
-
-        if (url.contains("?")) {
-            url += "&client=" + ConstantData.CLIENT_DESK;
-        } else {
-            url += "?client=" + ConstantData.CLIENT_DESK;
-        }
-
-        if (StringUtils.isEmpty(TOKEN)) {
-            return url;
-        }
-
-        if (url.contains("?")) {
-            url += "&token=" + TOKEN;
-        } else {
-            url += "?token=" + TOKEN;
-        }
 
 
-        return url;
+
+
+        UrlFormatter urlFormatter=new UrlFormatter(url).append ( "appVersion",versionCode)
+                .append ( "client", ConstantData.CLIENT_DESK)
+                .append( "token",TOKEN);
+
+
+        return urlFormatter.toUrl();
+
+
     }
+
+    public static String additionInfo(UrlFormatter urlFormatter) {
+
+
+
+        urlFormatter.append ( "appVersion",versionCode)
+      .append ( "client", ConstantData.CLIENT_DESK)
+        .append( "token",TOKEN);
+
+
+
+        return  urlFormatter.toUrl();
+
+
+    }
+
+
+
+
 
     public static void setVersionCode(int versionCode) {
         HttpUrl.versionCode = versionCode;
@@ -78,7 +86,11 @@ public class HttpUrl {
     }
 
     public static String loadProductListByNameBetween(String startName, String endName, boolean withCopy) {
-        return additionInfo(BaseUrl + "api/product/loadByNameBetween?startName=" + startName + "&endName=" + endName + "&withCopy=" + withCopy);
+
+        String apiUrl=BaseUrl + "api/product/loadByNameBetween";
+        UrlFormatter formatter=new UrlFormatter(apiUrl).append("startName",startName)
+         .append( "endName",endName) .append( "withCopy",withCopy);
+        return additionInfo(formatter);
     }
 
 
@@ -803,7 +815,12 @@ public class HttpUrl {
      * @return
      */
     public static String loadProductListByNameRandom(String prdName, boolean withCopy) {
-        return additionInfo(BaseUrl + "api/product/loadByNameRandom2?productNames=" + prdName + "&withCopy=" + withCopy);
+
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/product/loadByNameRandom2").append("productNames",prdName).append("withCopy",withCopy);
+
+
+
+        return additionInfo(urlFormatter);
     }
 
     /**

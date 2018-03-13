@@ -12,13 +12,12 @@ version = '1.0'
 tasks.withType(org.gradle.api.tasks.compile.JavaCompile) {
     options.encoding = 'UTF-8'
 }
-repositories {
-    mavenCentral()
-}
 
 
 dependencies {
 
+
+    compile project(":report")
 
     compile project(":Utils")
 
@@ -60,7 +59,7 @@ dependencies {
     testCompile 'org.springframework:spring-test:3.2.3.RELEASE'
 
     testCompile 'org.hamcrest:hamcrest-core:${hamcrest.core.version}'
-    testCompile 'org.mockito:mockito-core:${mockito.core.version}'
+    //testCompile 'org.mockito:mockito-core:${mockito.core.version}'
 //    testCompile("org.springframework.boot:spring-boot-starter-test")
 //
 //

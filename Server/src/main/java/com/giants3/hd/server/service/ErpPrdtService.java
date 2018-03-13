@@ -167,4 +167,9 @@ public class ErpPrdtService extends AbstractErpService   {
 
 
     }
+
+    public String findIdx1ByPrdno(String productName) {
+
+       return  erpPrdtRepository.findIdx1ByPrdno(productName);
+    }
 }
