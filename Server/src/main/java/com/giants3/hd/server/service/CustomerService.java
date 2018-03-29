@@ -155,4 +155,25 @@ public class CustomerService extends AbstractService {
         customerRepository.delete(id);
         return wrapData();
     }
+
+    public RemoteData<Customer> saveOne(Customer customer) {
+
+
+        Customer oldCustomer =customerRepository.findOne(customer.id);
+
+        if(oldCustomer==null)
+        {
+            customer=      customerRepository.saveAndFlush(customer);
+        }else {
+
+            //可能修改相关联的数据
+            customer = customerRepository.saveAndFlush(customer);
+        }
+
+
+
+
+
+        return wrapData(customer);
+    }
 }

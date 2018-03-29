@@ -196,6 +196,8 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(Sub_workflow_state.class, new TypeToken<RemoteData<Sub_workflow_state>>() {
         }.getType());
+        tokenMaps.put(Company.class, new TypeToken<RemoteData<Company>>() {
+        }.getType());
 
 
     }
@@ -2186,5 +2188,14 @@ public class ApiManager {
         String result = client.postWithStringReturned(url, GsonUtils.toJson(workFlowLimit));
         RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
         return remoteData;
+    }
+
+    public RemoteData<Company> updateCompany(Company company) throws HdException {
+
+        String url = HttpUrl.updateCompany( );
+        String result = client.postWithStringReturned(url, GsonUtils.toJson(company));
+        RemoteData<Company> remoteData = invokeByReflect(result, Company.class);
+        return remoteData;
+
     }
 }

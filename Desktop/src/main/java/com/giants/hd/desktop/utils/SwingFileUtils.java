@@ -1,5 +1,7 @@
 package com.giants.hd.desktop.utils;
 
+import com.giants.hd.desktop.filters.ExcelFileFilter;
+
 import javax.swing.*;
 import java.io.File;
 
@@ -22,19 +24,8 @@ public class SwingFileUtils {
     private static File getSelectedFile(int mode)
     {
 
+        final File file = FileChooserHelper.chooseFile(mode, false, null);
 
-
-        JFileChooser fileChooser = new JFileChooser(".");
-        //下面这句是去掉显示所有文件这个过滤器。
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setFileSelectionMode(mode);
-        int result = fileChooser.showOpenDialog(null);
-        File file=null;
-        if (result == JFileChooser.APPROVE_OPTION) {
-
-            file= fileChooser.getSelectedFile();
-
-        }
         return file;
 
     }

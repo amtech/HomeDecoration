@@ -1,7 +1,9 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.utils.FileChooserHelper;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -145,20 +147,10 @@ public abstract class UploadPictureDialog extends BaseDialog {
     private File getSelectedFile()
     {
 
-        JFileChooser fileChooser = new JFileChooser(".");
-        //下面这句是去掉显示所有文件这个过滤器。
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-//添加excel文件的过滤器
-        fileChooser.addChoosableFileFilter(new PictureFileFilter());
-        int result = fileChooser.showOpenDialog(null);
+        final File file = FileChooserHelper.chooseFile(JFileChooser.FILES_AND_DIRECTORIES, false,new PictureFileFilter());
 
-        if (result == JFileChooser.APPROVE_OPTION) {
 
-            return fileChooser.getSelectedFile();
-
-        }
-        return null;
+        return file;
 
     }
 

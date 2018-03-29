@@ -55,6 +55,6 @@ public class AppQuotationReport extends JRPdfReport {
 
     @Override
     public Map<String, Object> getParameters() {
-        return new ReportData(quotationDetail.quotation, Quotation.class);
+        return new CompanyReportData(null,quotationDetail.quotation, Quotation.class);
     }
 }

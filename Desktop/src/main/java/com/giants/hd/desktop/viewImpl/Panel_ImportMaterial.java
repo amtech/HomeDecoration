@@ -1,8 +1,10 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.filters.ExcelFileFilter;
+import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.reports.EXCEL_TYPE;
+import com.giants.hd.desktop.utils.FileChooserHelper;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.noEntity.RemoteData;
@@ -23,10 +25,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,18 +93,15 @@ public class Panel_ImportMaterial extends BasePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                final File file = FileChooserHelper.chooseFile(JFileChooser.FILES_ONLY, false, new ExcelFileFilter("xls"));
 
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-//添加excel文件的过滤器
-                fileChooser.addChoosableFileFilter(new ExcelFileFilter("xls"));
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
+
+
+                if (file != null) {
                 /*
                     获得你选择的文件绝对路径
                 */
-                    String path = fileChooser.getSelectedFile().getAbsolutePath();
+                    String path = file.getAbsolutePath();
                     jtf_file.setText(path);
 
                 }

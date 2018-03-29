@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-03-05T20:56:36 -->
+<!-- 2018-03-19T00:32:05 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18a1c476-76e7-46fc-8ea1-3ac6ae9dab9b">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="qNumber" class="java.lang.String"/>
@@ -103,7 +103,7 @@
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<textField>
-					<reportElement x="0" y="5" width="124" height="20" uuid="72ee6fe7-95dc-4338-a4e7-ba0e0a3d199c"/>
+					<reportElement x="0" y="5" width="140" height="20" uuid="72ee6fe7-95dc-4338-a4e7-ba0e0a3d199c"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Song"/>
 					</textElement>
@@ -117,7 +117,7 @@
 					<textFieldExpression><![CDATA["FAX:"+$P{fax}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="463" y="0" width="92" height="25" uuid="55163c5a-9304-4319-85e4-cf637a7550a4"/>
+					<reportElement x="400" y="0" width="155" height="25" uuid="55163c5a-9304-4319-85e4-cf637a7550a4"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Song"/>
 					</textElement>
@@ -180,12 +180,12 @@
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<staticText>
-					<reportElement x="59" y="-1" width="42" height="50" uuid="0df2f888-65da-42fb-9af6-d57ef7e1991d"/>
+					<reportElement x="82" y="-1" width="42" height="50" uuid="0df2f888-65da-42fb-9af6-d57ef7e1991d"/>
 					<box>
-						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Song"/>
@@ -193,12 +193,12 @@
 					<text><![CDATA[Item No.（货号）]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="130" y="-1" width="33" height="50" uuid="f449c811-41bb-45bf-a0ef-11d85b1295c4"/>
+					<reportElement x="170" y="-1" width="33" height="50" uuid="f449c811-41bb-45bf-a0ef-11d85b1295c4"/>
 					<box>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
-						<leftPen lineWidth="0.5" lineStyle="Solid"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Song"/>
@@ -206,12 +206,12 @@
 					<text><![CDATA[Unit(单位)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="186" y="0" width="91" height="50" uuid="e439f536-d9f9-4afe-ae86-7e339c9e4b2b"/>
+					<reportElement x="221" y="0" width="91" height="50" uuid="e439f536-d9f9-4afe-ae86-7e339c9e4b2b"/>
 					<box>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
-						<leftPen lineWidth="0.5" lineStyle="Solid"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Song"/>
@@ -221,10 +221,10 @@
 				<staticText>
 					<reportElement x="322" y="0" width="56" height="50" uuid="c87bb2e6-3123-4588-b53c-6645ddb76b73"/>
 					<box>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
-						<leftPen lineWidth="0.5" lineStyle="Solid"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Song"/>
@@ -238,10 +238,10 @@
 					<staticText>
 						<reportElement x="0" y="0" width="67" height="24" uuid="9f7a5ec7-ee55-4132-bc15-4fa9840aaf3e"/>
 						<box>
-							<topPen lineWidth="0.5" lineStyle="Solid"/>
-							<leftPen lineWidth="0.5" lineStyle="Solid"/>
-							<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-							<rightPen lineWidth="0.5" lineStyle="Solid"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
 							<font fontName="Song"/>
@@ -250,7 +250,15 @@
 					</staticText>
 					<staticText>
 						<reportElement x="0" y="24" width="67" height="24" uuid="4e7971f9-8953-4f0e-ba53-486efc9237b5"/>
-						<textElement textAlignment="Center"/>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Song"/>
+						</textElement>
 						<text><![CDATA[(包装规格)]]></text>
 					</staticText>
 				</frame>
@@ -261,10 +269,10 @@
 					<staticText>
 						<reportElement x="0" y="0" width="60" height="24" uuid="27c95f68-7ad3-4c5c-af10-09bb562e5b26"/>
 						<box>
-							<topPen lineWidth="0.5" lineStyle="Solid"/>
-							<leftPen lineWidth="0.5" lineStyle="Solid"/>
-							<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-							<rightPen lineWidth="0.5" lineStyle="Solid"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
 							<font fontName="Song"/>
@@ -273,7 +281,15 @@
 					</staticText>
 					<staticText>
 						<reportElement x="0" y="24" width="60" height="24" uuid="fd95f128-a478-4d19-a98b-8053995d322d"/>
-						<textElement textAlignment="Center"/>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Song"/>
+						</textElement>
 						<text><![CDATA[(体积)]]></text>
 					</staticText>
 				</frame>
@@ -292,25 +308,37 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" onErrorType="Blank">
 					<reportElement x="0" y="0" width="59" height="70" uuid="516f0cf7-d1f4-4401-a821-f915d77ae08e">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<imageExpression><![CDATA[$F{thumbnail}]]></imageExpression>
 				</image>
 				<frame>
 					<reportElement x="59" y="-1" width="491" height="41" uuid="a0f02a13-fb31-4044-bfce-e830acd8a606">
-						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 					</reportElement>
 					<textField isBlankWhenNull="true">
 						<reportElement positionType="Float" x="0" y="0" width="86" height="41" uuid="db3d3924-efa5-46e9-b595-a49a51b0cb00">
 							<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						</reportElement>
 						<box>
-							<topPen lineWidth="0.5"/>
-							<leftPen lineWidth="0.5"/>
-							<bottomPen lineWidth="0.5"/>
-							<rightPen lineWidth="0.5"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
 							<font fontName="Song"/>
@@ -318,11 +346,12 @@
 						<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="86" y="0" width="81" height="41" uuid="8a5266c0-cf6b-49a3-b2a9-52b6da504e13"/>
+						<reportElement x="111" y="0" width="33" height="41" uuid="8a5266c0-cf6b-49a3-b2a9-52b6da504e13"/>
 						<box>
-							<topPen lineWidth="0.5"/>
-							<bottomPen lineWidth="0.5"/>
-							<rightPen lineWidth="0.5"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
 							<font fontName="Song"/>
@@ -332,33 +361,67 @@
 					<textField isBlankWhenNull="true">
 						<reportElement x="167" y="0" width="81" height="41" uuid="90ac2840-f3e5-4cdb-9a95-9c9980df25c1"/>
 						<box>
-							<topPen lineWidth="0.5"/>
-							<bottomPen lineWidth="0.5"/>
-							<rightPen lineWidth="0.5"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
 							<font fontName="Song"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{spec}]]></textFieldExpression>
 					</textField>
-					<textField>
+					<textField isBlankWhenNull="true">
 						<reportElement x="248" y="0" width="81" height="41" uuid="b227d789-7f02-4739-a868-1df276c2acd3"/>
-						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Song"/>
+						</textElement>
 						<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="329" y="0" width="81" height="41" uuid="81061333-d4c8-4f5a-b081-e3b792b82a99"/>
-						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Song"/>
+						</textElement>
 						<textFieldExpression><![CDATA[$F{packageSize}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="410" y="0" width="81" height="41" uuid="bc60823a-5208-4361-884c-8144aed37c3b"/>
-						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Song"/>
+						</textElement>
 						<textFieldExpression><![CDATA[$F{volumeSize}]]></textFieldExpression>
 					</textField>
 				</frame>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="59" y="40" width="491" height="30" uuid="a0a4f990-996b-4b22-bdb5-c0bbf2fec2d2"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Song"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{memo}]]></textFieldExpression>
 				</textField>
 			</frame>

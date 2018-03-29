@@ -144,4 +144,10 @@ public class ErpStockOutItem   implements Serializable{
      */
     public String hsCode;
 
+
+    /**
+     * 镜子尺寸
+     */
+    public String jmcc;
+
 }

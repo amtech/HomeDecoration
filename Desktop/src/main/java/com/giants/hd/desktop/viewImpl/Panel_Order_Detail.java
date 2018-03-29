@@ -4,6 +4,7 @@ import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.filters.PictureFileFilter;
 import com.giants.hd.desktop.model.OrderItemTableModel;
 import com.giants.hd.desktop.mvp.presenter.OrderDetailIPresenter;
+import com.giants.hd.desktop.utils.FileChooserHelper;
 import com.giants.hd.desktop.utils.JTableUtils;
 import com.giants.hd.desktop.mvp.viewer.OrderDetailViewer;
 import com.giants.hd.desktop.utils.SwingFileUtils;
@@ -207,17 +208,11 @@ public class Panel_Order_Detail extends BasePanel implements OrderDetailViewer {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                final File[] files = FileChooserHelper.chooseFiles(JFileChooser.FILES_ONLY, false, new PictureFileFilter());
 
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setMultiSelectionEnabled(true);
-                fileChooser.addChoosableFileFilter(new PictureFileFilter());
-                int result = fileChooser.showOpenDialog(null);
 
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    orderDetailPresenter.addPictureClick(fileChooser.getSelectedFiles());
+                if (files != null) {
+                    orderDetailPresenter.addPictureClick(files);
                 }
 
 

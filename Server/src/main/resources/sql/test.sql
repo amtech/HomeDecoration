@@ -1,42 +1,46 @@
- WITH query AS (
-   SELECT     ROW_NUMBER() OVER (ORDER BY a.os_no DESC) AS __rowindex__, a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt,
-b.workflowdescribe, isnull(b.workflowstate, 0) AS workflowstate, isnull(b.maxworkflowstep, 0) AS maxworkflowstep, isnull(b.maxworkflowname, '') AS maxworkflowname,
-isnull(b.maxworkflowcode, '') AS maxworkflowcode
-FROM         (SELECT     TOP 99999999 os_no, os_dd, itm, bat_no, prd_no, prd_name, id_no, up, qty, amt
-                       FROM          [DB_YF01].[dbo].tf_pos
-                       WHERE      os_id = upper('so') /*订单起止日期  降低查询范围*/ AND os_dd > '2017-01-01'
-                       ORDER BY os_no DESC, itm ASC) AS a LEFT OUTER JOIN
-                          (/*9 表示 订单生产中*/ SELECT osno, itm, workflowstate, maxworkflowstep, maxworkflowname, maxworkflowcode, workflowdescribe
-                            FROM          [yunfei].[dbo].[t_orderitemworkstate]
-                            WHERE      workflowstate <> 0) AS b ON a.os_no = b.osno COLLATE chinese_prc_90_ci_ai AND a.itm = b.itm
-WHERE     (b.workflowstate IS NULL OR
-                      b.workflowstate <> 99 )and ( a.os_no '%%' or a.prd_no like '%%'  )
-GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up, a.qty, a.amt, b.workflowdescribe, isnull(b.workflowstate, 0), isnull(b.maxworkflowstep, 0),
-                      isnull(b.maxworkflowname, ''), isnull(b.maxworkflowcode, '')
+ WITH query AS (select ROW_NUMBER() OVER (order by a.os_no  desc,a.itm   asc) as __hibernate_row_nr__, a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no,
+ a.up,isnull(d.ut,'') as ut,
 
-)
+isnull(d.idx1,'') as idx1,
+ a.qty,a.amt , isnull(pdc.producetype,-1) as producetype,
 
+b.workflowdescribe, isnull(b.workflowstate,0) as workflowstate,
+ isnull(b.maxworkflowstep,0 )  as maxworkflowstep , isnull(b.maxworkflowname,'') as maxworkflowname,
+ isnull(b.maxworkflowcode,'' ) as maxworkflowcode  ,
+  isnull(b.currentoverdueday,0) as currentoverdueday  ,
+ isnull(b.totallimit,0) as totallimit
 
- SELECT a.*,isnull(d.ut,'')  as ut,
-
-   isnull(pdc.producetype,-1) as producetype,
-
-
- isnull(c.modify_dd,0) as photoupdatetime
+ ,isnull(b.currentlimitday,0) as currentlimitday
+ ,isnull(b.currentalertday,0) as currentalertday
+ , isnull(c.modify_dd,0 ) as photoupdatetime
 ,f.so_data
 ,g.cus_no
 ,k.cus_no as factory
-,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs
-  FROM (select   * from  query    WHERE __rowindex__ BETWEEN 0 AND  100      )  a
+,e.hpgg,e.khxg, isnull(e.so_zxs,0) as  so_zxs    from
 
+
+
+ (
+--9 表示 订单生产中
+select osno,itm,workflowstate,maxworkflowstep,maxworkflowname, maxworkflowcode,workflowdescribe ,currentoverdueday,totallimit ,currentlimitday,currentalertday from  [yunfei].[dbo].[t_orderitemworkstate] where workflowstate<>99 and   maxworkflowstep=? and (osno like ? or prdno like ?)
+
+) as b  inner join
+ (
+
+
+select   os_no,os_dd,itm,bat_no,prd_no,prd_name,id_no, up,qty,amt  from  tf_pos  where os_id= upper('so')
+--订单起止日期  降低查询范围
+and  os_dd >'2017-01-01' and (os_no like ? or prd_no like ?)
+ ) as  a
+    on a.os_no=b.osno collate chinese_prc_90_ci_ai   and  a.itm=b.itm
  --生产方式判断
-  left outer join
+   left outer join
    (
        --排厂单
-      select   0 as producetype, so_no,est_itm ,'' as po_no from  mf_mo    where so_no like upper('%yf%') and  ( so_no like '%%' or mrp_no like  '%%' )
+      select   0 as producetype, so_no,est_itm ,'' as po_no from  mf_mo    where so_no like upper('%yf%') and so_no like ?
        union
        --外购单
-      select distinct 1 as producetype,oth_no as so_no,oth_itm1 as est_itm,os_no as po_no from  tf_pos   where  os_id=upper('po') and oth_no like upper('%yf%') and (OTH_NO like '%%' or prd_no like '%%' )  and  os_dd >'2017-01-01'
+      select distinct 1 as producetype,oth_no as so_no,oth_itm1 as est_itm,os_no as po_no from  tf_pos   where  os_id=upper('po') and oth_no like upper('%yf%')  and oth_no like ? and  os_dd >'2017-01-01'
 
 
 
@@ -45,19 +49,17 @@ GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up,
   --厂商数据抓取
   left outer join   (select os_no as po_no, cus_no   from  mf_pos where os_id=upper('po')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
 
+  left outer join
+  --图片抓取关闭图片修改日期的抓取， erp 图片改动时候， 客户端是无法感知的。
+    (
+      select  bom_no,  0 as modify_dd from mf_bom where prd_knd='2'
+
+    ) as c on a.id_no=c.bom_no
 
 
- left outer join
- --图片抓取关闭图片修改日期的抓取， erp 图片改动时候， 客户端是无法感知的。
-  (
-   -- select  bom_no, cast (modify_dd as timestamp ) as modify_dd from mf_bom where  prd_knd='2'
-    select  '' as bom_no,  0 as modify_dd
-  ) as c on a.id_no=c.bom_no
-
-
-  left outer join  (
+      left outer join  (
                             --单位抓取
-                            select prd_no, ut from  prdt where   knd='2'
+                            select prd_no,idx1,  ut from  prdt where   knd='2'
 
                             ) d  on  a.prd_no=d.prd_no
 
@@ -70,16 +72,31 @@ GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up,
 
                                  -- 生产交期数据
               left outer join (
-                            select os_no, so_data ,itm from  tf_pos_z where os_id=upper ('so')
+                            select os_no, so_data ,itm from  tf_pos_z where os_id=upper('so')
 
                             ) f  on  a.os_no=f.os_no and a.itm=f.itm
 
              left outer join (
 
-                            select os_no, cus_no   from  mf_pos where os_id=upper ('so')   and  os_dd >'2017-01-01'
+                            select os_no, cus_no   from  mf_pos where os_id=upper('so')   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
 
 
 
-  order by a.__rowindex__
+
+
+
+ group by a.os_no,a.os_dd,a.itm,a.bat_no,a.prd_no,a.prd_name,a.id_no,
+ a.up,isnull(d.ut,''),
+
+isnull(d.idx1,''),
+ a.qty,a.amt , isnull(pdc.producetype,-1),
+
+b.workflowdescribe, isnull(b.workflowstate,0),
+ isnull(b.maxworkflowstep,0 ) , isnull(b.maxworkflowname,''),
+ isnull(b.maxworkflowcode,'' ),
+  isnull(b.currentoverdueday,0),
+ isnull(b.totallimit,0),isnull(b.currentlimitday,0),isnull(b.currentalertday,0), isnull(c.modify_dd,0 ),f.so_data
+,g.cus_no
+,k.cus_no,e.hpgg,e.khxg, isnull(e.so_zxs,0)) SELECT * FROM query WHERE __hibernate_row_nr__ BETWEEN ? AND ?

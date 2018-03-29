@@ -4,6 +4,7 @@ import com.giants3.hd.utils.DateFormats;
 
 import java.io.*;
 import java.util.Calendar;
+import java.util.Properties;
 
 /**
  *
@@ -12,6 +13,8 @@ import java.util.Calendar;
  */
 public class LocalFileHelper {
     public static final String path="localFile";
+
+    public static final String PROPERTY_FILE="KEY_VALUE.properties";
 
 
 
@@ -114,5 +117,65 @@ public class LocalFileHelper {
         }
     }
 
+
+
+    public static String read(String key)
+    {
+
+
+        //以包起始的地方开始   jar 根目录开始。
+        InputStream inputStream= null;
+        try {
+            inputStream = new FileInputStream(path+ File.separator+PROPERTY_FILE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(inputStream!=null) {
+
+
+            Properties props = new Properties();
+            try {
+
+                props.load(inputStream);
+                inputStream.close();
+                String value = props.getProperty(key);
+
+                return value;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            finally {
+                try{
+                    inputStream.close();
+                }catch (Throwable t)
+                {}
+            }
+        }
+        return "";
+    }
+
+    public static void write(String key, String value)
+    {
+
+        Properties prop = new Properties();
+        try {
+            final String config_path = path + File.separator + PROPERTY_FILE;
+            File file = new File(config_path);
+            if (!file.exists())
+                file.createNewFile();
+            InputStream fis = new FileInputStream(file);
+            prop.load(fis);
+            fis.close();// �?定要在修改�?�之前关闭fis
+            OutputStream fos = new FileOutputStream(config_path);
+            prop.setProperty(key, value);
+            prop.store(fos, "Update '" + key + "' value");
+            fos.close();
+        } catch (IOException e) {
+            System.err.println("Visit " + PROPERTY_FILE + " for updating "
+                    + value + " value error");
+        }
+
+    }
 
 }

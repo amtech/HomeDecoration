@@ -1060,34 +1060,65 @@ public class ErpWorkService extends AbstractErpService {
         for (OrderItemWorkState orderItemWorkState:orderItemWorkStates)
         {
 
-            List<ErpWorkFlowReport> workFlowReports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(orderItemWorkState.osNo,orderItemWorkState.itm);
+            adjustOrderItemWorkState(orderItemWorkState);
+        }
 
-            int totalLimit=0;
-            ErpWorkFlowReport currentReport=null;
-            boolean  hasStart=false;
-            for(ErpWorkFlowReport report:workFlowReports)
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    public void testAdjustOrderItemWorkState()
+    {
+
+        OrderItemWorkState orderItemWorkState=orderItemWorkStateRepository.findFirstByOsNoEqualsAndItmEquals("17YF018",11);
+
+        correctWorkFlowReportData(orderItemWorkState);
+        adjustOrderItemWorkState(orderItemWorkState);
+    }
+
+    private  void adjustOrderItemWorkState(OrderItemWorkState orderItemWorkState) {
+
+
+
+
+
+        List<ErpWorkFlowReport> workFlowReports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(orderItemWorkState.osNo,orderItemWorkState.itm);
+
+        int totalLimit=0;
+        ErpWorkFlowReport currentReport=null;
+        boolean  hasStart=false;
+        for(ErpWorkFlowReport report:workFlowReports)
+        {
+
+            WorkFlowTimeLimit workFlowTimeLimit=workFlowTimeLimitRepository.findFirstByOrderItemTypeEquals(report.orderItemType);
+
+            if(workFlowTimeLimit==null) continue;
+
+            updateErpWorkFlowReport(report,workFlowTimeLimit);
+            if(report.percentage<1&&currentReport==null)
             {
-
-                WorkFlowTimeLimit workFlowTimeLimit=workFlowTimeLimitRepository.findFirstByOrderItemTypeEquals(report.orderItemType);
-
-                if(workFlowTimeLimit==null) continue;
-
-                updateErpWorkFlowReport(report,workFlowTimeLimit);
-                if(report.percentage<1&&currentReport==null)
-                {
-                    currentReport=report;
-                }
-                if(!hasStart)
-                   hasStart=report.percentage>0;
-                totalLimit+=report.overDueDay;
-
+                currentReport=report;
             }
-            if(currentReport==null&&workFlowReports.size()>0)
-            {
-                currentReport=workFlowReports.get(workFlowReports.size()-1);
-            }
+            if(!hasStart)
+               hasStart=report.percentage>0;
+            totalLimit+=report.overDueDay;
 
-            if(currentReport==null) continue;
+        }
+        if(currentReport==null&&workFlowReports.size()>0)
+        {
+            currentReport=workFlowReports.get(workFlowReports.size()-1);
+        }
+
+        //if(currentReport==null) return;
 //            /**
 //             * 表示 所有流程未启动 未接收任何流程
 //             */
@@ -1107,28 +1138,19 @@ public class ErpWorkService extends AbstractErpService {
 //
 //            }
 
+        if(workFlowReports.size()>0) {
             erpWorkFlowReportRepository.save(workFlowReports);
             erpWorkFlowReportRepository.flush();
-
-            orderItemWorkState.totalLimit=totalLimit;
-            orderItemWorkState.maxWorkFlowCode=currentReport.workFlowCode;
-            orderItemWorkState.maxWorkFlowName=currentReport.workFlowName;
-            orderItemWorkState.maxWorkFlowStep=currentReport.workFlowStep;
-            orderItemWorkState.currentOverDueDay=currentReport.overDueDay;
-            orderItemWorkState.currentLimitDay=currentReport.limitDay;
-            orderItemWorkState.currentAlertDay=currentReport.alertDay;
-            orderItemWorkStateRepository.saveAndFlush(orderItemWorkState);
         }
 
-
-
-
-
-
-
-
-
-
+        orderItemWorkState.totalLimit=totalLimit;
+        orderItemWorkState.maxWorkFlowCode=currentReport==null?"":currentReport.workFlowCode;
+        orderItemWorkState.maxWorkFlowName=currentReport==null?"":currentReport.workFlowName;
+        orderItemWorkState.maxWorkFlowStep=currentReport==null?0:currentReport.workFlowStep;
+        orderItemWorkState.currentOverDueDay=currentReport==null?0:currentReport.overDueDay;
+        orderItemWorkState.currentLimitDay=currentReport==null?0:currentReport.limitDay;
+        orderItemWorkState.currentAlertDay=currentReport==null?0:currentReport.alertDay;
+        orderItemWorkStateRepository.saveAndFlush(orderItemWorkState);
     }
 
     /**
@@ -1154,87 +1176,90 @@ public class ErpWorkService extends AbstractErpService {
         List<OrderItemWorkState> workStates=orderItemWorkStateRepository.findAll();
         for(OrderItemWorkState state:workStates)
         {
-            List<ErpWorkFlowReport> reports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(state.osNo,state.itm);
-            if(reports.size()==0||reports.get(0).orderItemType>0)
-            {
-                continue;
-            }
-
-
-            List<ErpOrderItemProcess> processes=erpWorkRepository.findOrderItemProcesses(state.osNo,state.itm);
-            if(processes.size()==0||StringUtils.isEmpty(processes.get(0).scsx))
-                continue;
-
-
-
-            ErpOrderItem erpOrderItem = erpWorkRepository.findOrderItem(state.osNo, state.itm);
-
-
-            WorkFlowTimeLimit.OrderItemType orderItemType = findOrderItemTypeForTimeLimit(processes.get(0), erpOrderItem);
-
-
-            for (int i = 0; i < reports.size(); i++) {
-                ErpWorkFlowReport erpWorkFlowReport = reports.get(i);
-
-                erpWorkFlowReport.orderItemType = orderItemType.orderItemType;
-                erpWorkFlowReport.orderItemTypeName = orderItemType.orderItemTypeName;
-                erpWorkFlowReport.idx1 = orderItemType.idx1;
-
-
-                /**
-                 * 开始时间未生成
-                 */
-                if (erpWorkFlowReport.startDate <= 0 ) {
-
-                    if(i==0)
-                    {
-                        //第一道起始时间，以第一个发送消息为准
-                        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeAsc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
-
-
-                        if (workFlowMessages.size() > 0) {
-                            erpWorkFlowReport.startDate = workFlowMessages.get(0).createTime;
-                            erpWorkFlowReport.startDateString = workFlowMessages.get(0).createTimeString;
-                        }
-
-                    }else {
-                        ErpWorkFlowReport previousReport = reports.get(i - 1);
-                        //前一节点已经完成的最后接收时间 即当前节点的开始时间
-                        if (previousReport.percentage >= 1) {
-
-                            List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
-                            if (workFlowMessages.size() > 0) {
-                                erpWorkFlowReport.startDate = workFlowMessages.get(0).receiveTime;
-                                erpWorkFlowReport.startDateString = workFlowMessages.get(0).receiveTimeString;
-                            }
-                        }
-                    }
-
-                }
-                //当前节点已经完成  补充结束数据
-                if(erpWorkFlowReport.endDate<=0&&erpWorkFlowReport.percentage>=1 )
-                {
-
-                    List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
-
-
-                    if (workFlowMessages.size() > 0) {
-                        erpWorkFlowReport.endDate = workFlowMessages.get(0).receiveTime;
-                        erpWorkFlowReport.endDateString = workFlowMessages.get(0).receiveTimeString;
-                    }
-                }
-
-
-            }
-
-
-            erpWorkFlowReportRepository.save(reports);
-            erpWorkFlowReportRepository.flush();
+            correctWorkFlowReportData(state);
 
         }
 
 
 
+    }
+
+    private void correctWorkFlowReportData(OrderItemWorkState state) {
+        List<ErpWorkFlowReport> reports=erpWorkFlowReportRepository.findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(state.osNo,state.itm);
+        if(reports.size()==0||reports.get(0).orderItemType>0)
+        {
+            return;
+        }
+
+
+        List<ErpOrderItemProcess> processes=erpWorkRepository.findOrderItemProcesses(state.osNo,state.itm);
+        if(processes.size()==0)
+            return;
+
+
+        ErpOrderItem erpOrderItem = erpWorkRepository.findOrderItem(state.osNo, state.itm);
+
+
+        WorkFlowTimeLimit.OrderItemType orderItemType = findOrderItemTypeForTimeLimit(processes.get(0), erpOrderItem);
+
+
+        for (int i = 0; i < reports.size(); i++) {
+            ErpWorkFlowReport erpWorkFlowReport = reports.get(i);
+
+            erpWorkFlowReport.orderItemType = orderItemType.orderItemType;
+            erpWorkFlowReport.orderItemTypeName = orderItemType.orderItemTypeName;
+            erpWorkFlowReport.idx1 = orderItemType.idx1;
+
+
+            /**
+             * 开始时间未生成
+             */
+            if (erpWorkFlowReport.startDate <= 0 ) {
+
+                if(i==0)
+                {
+                    //第一道起始时间，以第一个发送消息为准
+                    List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeAsc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+
+
+                    if (workFlowMessages.size() > 0) {
+                        erpWorkFlowReport.startDate = workFlowMessages.get(0).createTime;
+                        erpWorkFlowReport.startDateString = workFlowMessages.get(0).createTimeString;
+                    }
+
+                }else {
+                    ErpWorkFlowReport previousReport = reports.get(i - 1);
+                    //前一节点已经完成的最后接收时间 即当前节点的开始时间
+                    if (previousReport.percentage >= 1) {
+
+                        List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+                        if (workFlowMessages.size() > 0) {
+                            erpWorkFlowReport.startDate = workFlowMessages.get(0).receiveTime;
+                            erpWorkFlowReport.startDateString = workFlowMessages.get(0).receiveTimeString;
+                        }
+                    }
+                }
+
+            }
+            //当前节点已经完成  补充结束数据
+            if(erpWorkFlowReport.endDate<=0&&erpWorkFlowReport.percentage>=1 )
+            {
+
+                List<WorkFlowMessage> workFlowMessages = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(erpWorkFlowReport.workFlowStep, erpWorkFlowReport.osNo, erpWorkFlowReport.itm);
+
+
+                if (workFlowMessages.size() > 0) {
+                    erpWorkFlowReport.endDate = workFlowMessages.get(0).receiveTime;
+                    erpWorkFlowReport.endDateString = workFlowMessages.get(0).receiveTimeString;
+                }
+            }
+
+
+        }
+
+
+        erpWorkFlowReportRepository.save(reports);
+        erpWorkFlowReportRepository.flush();
     }
 
 

@@ -24,15 +24,25 @@ public class UrlFormatter {
 
         if(value instanceof  String)
         {
-            try {
-                return url+param+ PARAM_EQUAL + URLEncoder.encode(value.toString(),"UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+
+                return url+param+ PARAM_EQUAL + encode(value.toString());
+
         }
         url+=param+ PARAM_EQUAL + value;
         return url;
 
+
+    }
+
+
+    public static String encode(String value)
+    {
+        try {
+            return  URLEncoder.encode(value.toString(),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return value;
+        }
 
     }
 

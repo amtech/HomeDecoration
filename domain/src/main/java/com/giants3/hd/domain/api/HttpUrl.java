@@ -1214,4 +1214,13 @@ public class HttpUrl {
 
         return additionInfo(BaseUrl + "api/erpWork/searchErpSubWorkFlow?key="+key+"&dateStart="+dateStart+"&dateEnd="+dateEnd);
     }
+
+    public static String updateCompany() {
+
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/setting/updateCompany") ;
+
+
+
+        return additionInfo(urlFormatter);
+    }
 }

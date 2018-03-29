@@ -56,30 +56,7 @@ public class PropertyWorker {
 
 	}
 
-	/**
-	 * 修改或添加键值对 如果key存在，修改 反之，添加
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	public static void writeData(String key, String value) {
-		Properties prop = new Properties();
-		try {
-			File file = new File(PROPERTY_FILE);
-			if (!file.exists())
-				file.createNewFile();
-			InputStream fis = new FileInputStream(file);
-			prop.load(fis);
-			fis.close();// �?定要在修改�?�之前关闭fis
-			OutputStream fos = new FileOutputStream(PROPERTY_FILE);
-			prop.setProperty(key, value);
-			prop.store(fos, "Update '" + key + "' value");
-			fos.close();
-		} catch (IOException e) {
-			System.err.println("Visit " + PROPERTY_FILE + " for updating "
-					+ value + " value error");
-		}
-	}
+
 
 
 	public static AppVersion getVersion()

@@ -645,4 +645,9 @@ public class AuthorityUtil {
     public boolean viewSubWorkFlowList() {
         return isViewable(ModuleConstant.NAME_SUB_WORK_FLOW);
     }
+
+    public boolean viewCompanyInfo() {
+
+        return isViewable(ModuleConstant.NAME_COMPANY_INFO);
+    }
 }

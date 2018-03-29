@@ -106,4 +106,6 @@ public interface StockOutDetailIPresenter extends IPresenter {
      * 导出清关发票
      */
     void exportQingguan();
+
+    void exportQingguan_xk();
 }

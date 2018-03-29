@@ -55,6 +55,8 @@ public class UseCaseFactory {
 
     @Inject
     FactoryRepository factoryRepository;
+    @Inject
+    SettingRepository settingRepository;
 
     private UseCaseFactory() {
 
@@ -62,6 +64,7 @@ public class UseCaseFactory {
         Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(),
                 new StockModule(), new FileModule(), new AuthModule()
                 ,new MaterialModule()
+                ,new SettingModule()
         ).injectMembers(this);
 
     }
@@ -592,5 +595,11 @@ public class UseCaseFactory {
 
     public UseCase createGetSubWorkFlowListUseCase(String key, String dateStart,String dateEnd) {
         return  new GetSubWorkFlowListUseCase(   key,   dateStart,dateEnd,workFlowRepository );
+    }
+
+    public UseCase createUpdateCompanyUseCase(Company company) {
+
+        return  new UpdateCompanyUseCase(   company,settingRepository );
+
     }
 }

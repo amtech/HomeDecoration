@@ -206,8 +206,14 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             workFlowService.adjustWorkFlowMessage();
 
-      //   erpWorkService.correctAllWorkFlowReportData();
-        //    erpWorkService.updateAllProducingWorkFlowReports();
+            //erpWorkService.correctAllWorkFlowReportData();
+//          erpWorkService.updateAllProducingWorkFlowReports();
+
+
+
+
+        //    erpWorkService.testAdjustOrderItemWorkState();
+
 
 
         }

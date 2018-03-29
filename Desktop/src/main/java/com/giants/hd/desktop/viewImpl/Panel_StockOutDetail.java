@@ -52,6 +52,7 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
     private JButton export_pack;
     private JTextField tf_guixing;
     private JButton export_qingguan;
+    private JButton export_qingguan_xk;
     private StockOutDetailIPresenter presenter;
 
     private StockOutItemTableModel tableModel;
@@ -307,6 +308,16 @@ public class Panel_StockOutDetail extends BasePanel implements StockOutDetailVie
 
 
                 presenter.exportQingguan();
+            }
+        });
+
+        export_qingguan_xk.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                presenter.exportQingguan_xk();
             }
         });
     }

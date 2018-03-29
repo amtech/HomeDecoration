@@ -1,9 +1,11 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.filters.ExcelFileFilter;
 import com.giants.hd.desktop.local.HdSwingWorker;
 import com.giants.hd.desktop.reports.QuotationFile;
 import com.giants.hd.desktop.reports.ReportFactory;
 import com.giants.hd.desktop.reports.excels.ExcelReportor;
+import com.giants.hd.desktop.utils.FileChooserHelper;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.noEntity.QuotationDetail;
@@ -13,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 
 /**
@@ -51,16 +54,19 @@ public class ExportQuotationDialog extends BaseDialog<QuotationDetail> {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
+
+                //选择excel 文件
+                final File file = FileChooserHelper.chooseFile(JFileChooser.DIRECTORIES_ONLY, false,null);
+
+
+
+
+                if (file != null) {
+
                 /*
                     获得你选择的文件绝对路径
                 */
-                    String path = fileChooser.getSelectedFile().getAbsolutePath();
+                    String path = file.getAbsolutePath();
                     jtf_path.setText(path);
                     lastSelectedPath=path;
                 }

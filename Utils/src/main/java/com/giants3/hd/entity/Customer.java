@@ -27,10 +27,14 @@ public class Customer implements Serializable ,Valuable{
     public String code;
 
     public String name;
+
     public String tel;
     public String fax;
+    public String email;
+
 
     public String addr;
+
     public   String nation;
     public Customer()
     {}

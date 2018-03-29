@@ -736,8 +736,8 @@ public class Product implements Serializable {
 	public void calculateTotalCost(GlobalData globalData)
 	{
 
-
-		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage);
+		//各道材料++修理工资+搬运工资
+		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage+ repairCost+banyunCost);
 
 
 
@@ -762,8 +762,8 @@ public class Product implements Serializable {
 		}
 
 
-		//计算成本价   (实际成本+修理工资)*（1+管理系数）
-		cost=FloatHelper.scale((productCost+repairCost+banyunCost)*(1+manageRatio));
+		//计算成本价   (实际成本)*（1+管理系数）
+		cost=FloatHelper.scale((productCost)*(1+manageRatio));
 
 
 

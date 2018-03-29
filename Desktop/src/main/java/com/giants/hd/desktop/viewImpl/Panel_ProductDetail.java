@@ -14,10 +14,7 @@ import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.mvp.presenter.ProductDetailIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
-import com.giants.hd.desktop.utils.AuthorityUtil;
-import com.giants.hd.desktop.utils.Config;
-import com.giants.hd.desktop.utils.HdSwingUtils;
-import com.giants.hd.desktop.utils.SwingFileUtils;
+import com.giants.hd.desktop.utils.*;
 import com.giants.hd.desktop.mvp.viewer.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
@@ -1625,46 +1622,40 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         btn_attach_add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.addChoosableFileFilter(new PictureFileFilter());
-                int result = fileChooser.showOpenDialog(null);
 
-                if (result == JFileChooser.APPROVE_OPTION) {
+                final File file = FileChooserHelper.chooseFile(JFileChooser.FILES_ONLY, false, new PictureFileFilter());
 
-                    final File file = fileChooser.getSelectedFile();
-                    //上传文件
-                    new HdSwingWorker<String, String>(getWindow(getRoot())) {
+                    if(file!=null) {
+                        //上传文件
+                        new HdSwingWorker<String, String>(getWindow(getRoot())) {
 
-                        @Override
-                        protected RemoteData<String> doInBackground() throws Exception {
+                            @Override
+                            protected RemoteData<String> doInBackground() throws Exception {
 
 
-                            return apiManager.uploadTempPicture(file);
+                                return apiManager.uploadTempPicture(file);
 
-
-                        }
-
-                        @Override
-                        public void onResult(RemoteData<String> data) {
-
-
-                            if (data.isSuccess()) {
-                                panel_attach.addUrl(data.datas.get(0));
-
-
-                            } else {
 
                             }
 
+                            @Override
+                            public void onResult(RemoteData<String> data) {
 
-                        }
-                    }.go();
+
+                                if (data.isSuccess()) {
+                                    panel_attach.addUrl(data.datas.get(0));
 
 
-                }
+                                } else {
+
+                                }
+
+
+                            }
+                        }.go();
+                    }
+
+
 
 
             }
@@ -1708,16 +1699,12 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
         btn_add_pack_image.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser(".");
-                //下面这句是去掉显示所有文件这个过滤器。
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setMultiSelectionEnabled(true);
-                fileChooser.addChoosableFileFilter(new PictureFileFilter());
-                int result = fileChooser.showOpenDialog(null);
 
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    presenter.addPackagePicture(fileChooser.getSelectedFiles());
+                final File[] files = FileChooserHelper.chooseFiles(JFileChooser.FILES_ONLY, false, new PictureFileFilter());
+
+
+                if (files !=null) {
+                    presenter.addPackagePicture(files);
                 }
 
             }

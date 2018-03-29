@@ -137,6 +137,11 @@ public class ModuleConstant {
     public static final String NAME_SUB_WORK_FLOW = "SUB_WORK_FLOW";
 
 
+
+    public static final String TITLE_COMPANY_INFO = "公司信息";
+    public static final String NAME_COMPANY_INFO = "COMPANY_INFO";
+
+
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
             TITLE_PRODUCT_REPORT,
             TITLE_QUOTATION, TITLE_AUTHORITY, TITLE_SYNC_DATA, TITLE_PICTURE_UPLOAD, TITLE_MATERIAL_CLASS,
@@ -166,6 +171,7 @@ public class ModuleConstant {
 
             ,TITLE_WORK_FLOW_LIMIT
             ,TITLE_SUB_WORK_FLOW
+            ,TITLE_COMPANY_INFO
 
 
 
@@ -206,6 +212,7 @@ public class ModuleConstant {
             ,NAME_QUTOTATION_PICTURE_EXPORT
             ,NAME_WORK_FLOW_LIMIT
             ,NAME_SUB_WORK_FLOW
+            ,NAME_COMPANY_INFO
 
 
 

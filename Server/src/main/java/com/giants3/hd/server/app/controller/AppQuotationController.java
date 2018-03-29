@@ -78,6 +78,16 @@ public class AppQuotationController extends BaseController {
 
 
     }
+  @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> delete(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "quotationId", defaultValue = "0") long quotationId) {
+
+
+        return quotationService.deleteQuotation(user,quotationId);
+
+
+    }
 
     /**
      * 保存报价单（功能只是将临时报价单生产正式报价单）
@@ -92,6 +102,22 @@ public class AppQuotationController extends BaseController {
 
 
         return quotationService.save(id);
+
+
+    }
+    /**
+     * 保存报价单（功能只是将临时报价单生产正式报价单）
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateField", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateField(@RequestParam(value = "quotationId" ) long id,@RequestParam(value = "field" ) String  field,@RequestParam(value = "data" ) String data) {
+
+
+        return quotationService.updateFieldValue(id,field,data);
 
 
     }
@@ -143,6 +169,22 @@ public class AppQuotationController extends BaseController {
 
 
         return quotationService.updateItemDiscount(quotationId, itemIndex, discount);
+
+
+    }
+ /**
+     * 修改报价单产品折扣
+     *
+     * @param quotationId
+     * @return
+     */
+    @RequestMapping(value = "/updateItemMemo", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> updateItemMemo(@RequestParam(value = "quotationId") long quotationId, @RequestParam(value = "itemIndex") int itemIndex, @RequestParam(value = "memo") String memo) {
+
+
+        return quotationService.updateItemMemo(quotationId, itemIndex, memo);
 
 
     }

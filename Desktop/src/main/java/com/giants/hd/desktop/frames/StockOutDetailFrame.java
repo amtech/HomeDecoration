@@ -4,6 +4,7 @@ import com.giants.hd.desktop.mvp.presenter.StockOutDetailIPresenter;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Invoice;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_List;
 import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_Qingguan_Invoice;
+import com.giants.hd.desktop.reports.excels.Report_Excel_StockOut_XK_Invoice;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.SwingFileUtils;
 import com.giants.hd.desktop.mvp.viewer.StockOutDetailViewer;
@@ -439,6 +440,38 @@ public class StockOutDetailFrame extends BaseFrame implements StockOutDetailIPre
 
         try {
             new Report_Excel_StockOut_Qingguan_Invoice().report(erpStockOutDetail, file.getAbsolutePath());
+            stockOutDetailViewer.showMesssage("导出成功");
+
+            return;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        } catch (HdException e1) {
+            e1.printStackTrace();
+            stockOutDetailViewer.showMesssage(e1.getMessage());
+
+        }
+
+
+    } /**
+     * 导出咸康清关发票
+     */
+    @Override
+    public void exportQingguan_xk() {
+
+        if (hasModifyData()) {
+
+            stockOutDetailViewer.showMesssage("请先保存数据");
+            return;
+        }
+
+        final File file = SwingFileUtils.getSelectedDirectory();
+        if (file == null) return;
+
+
+        try {
+            new Report_Excel_StockOut_XK_Invoice().report(erpStockOutDetail, file.getAbsolutePath());
             stockOutDetailViewer.showMesssage("导出成功");
 
             return;

@@ -113,6 +113,7 @@
 
         <class>com.giants3.hd.entity.app.QuotationItem</class>
         <class>com.giants3.hd.entity.app.Quotation</class>
+        <class>com.giants3.hd.entity.Company</class>
 
 
 <!--127.0.0.1-->

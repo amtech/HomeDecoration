@@ -42,6 +42,14 @@ public class CustomerController extends BaseController {
 
             return wrapError(e.getMessage());
         }
+    } @RequestMapping(value = "/saveOne", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<Customer> saveOne(@RequestBody Customer  customer ) {
+
+
+            return  customerService.saveOne(customer) ;
+
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)

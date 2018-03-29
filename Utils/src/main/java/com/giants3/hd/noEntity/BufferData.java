@@ -66,4 +66,5 @@ public class BufferData implements Serializable{
      * 流程相关权限（登录用户的）
      */
     public  List<WorkFlowWorker> workFlowWorkers;
+    public Company company;
 }

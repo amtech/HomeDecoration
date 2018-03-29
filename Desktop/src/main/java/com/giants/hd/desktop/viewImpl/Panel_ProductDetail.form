@@ -896,7 +896,7 @@
             </constraints>
             <properties>
               <editable value="false"/>
-              <toolTipText value="成本数值（不含包装）"/>
+              <toolTipText value="所有材料工资+搬运工资+修理工资"/>
             </properties>
           </component>
           <component id="166ae" class="javax.swing.JLabel">

@@ -59,6 +59,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private ProductClassRepository productClassRepository;
+      @Autowired
+    private SettingService settingService;
+
 
     @Autowired
     private MaterialClassRepository materialClassRepository;
@@ -238,6 +241,7 @@ public class UserController extends BaseController {
             bufferData.materialTypes = materialTypeRepository.findAll();
 
             bufferData.pClasses = productClassRepository.findAll();
+            bufferData.company = settingService.getCompany() ;
 
 
 

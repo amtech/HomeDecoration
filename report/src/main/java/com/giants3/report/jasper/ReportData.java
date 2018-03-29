@@ -11,7 +11,7 @@ public class ReportData<T> extends HashMap<String, Object> {
     public ReportData(T data, Class<T> tClass) {
         this.data = data;
         this.tClass = tClass;
-        init();
+
     }
 
     @Override
@@ -39,16 +39,5 @@ public class ReportData<T> extends HashMap<String, Object> {
         return super.containsKey(key);
     }
 
-
-    private  void init()
-    {
-
-        put("companyName","云飞公司");
-        put("companyEName","YUNFEI COMPANY");
-        put("companyEAddress","YUNFEI COMPANY NIUTOUSHANxxx");
-        put("tel","15659169570");
-        put("fax","156591");
-        put("email","lin09111@sina.com");
-    }
 
 }

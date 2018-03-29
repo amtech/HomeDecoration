@@ -724,6 +724,25 @@ public class Main extends BaseFrame {
 
         JMenuItem menuItem;
 
+        if (AuthorityUtil.getInstance().viewCompanyInfo()) {
+            menuItem = new JMenuItem(ModuleConstant.TITLE_COMPANY_INFO
+            );
+
+            menu.add(menuItem);
+
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    CompanyInfoDialog dialog = new CompanyInfoDialog(Main.this);
+                    dialog.setLocationRelativeTo(getRootPane());
+                    dialog.setVisible(true);
+                }
+            });
+        }
+
+
+
         if (AuthorityUtil.getInstance().viewMaterialClassList()) {
             menuItem = new JMenuItem("材质类型列表"
             );

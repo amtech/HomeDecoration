@@ -29,8 +29,10 @@ public class ErpStockOutRepository {
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
      */
 
-    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,isnull(B.UP,0) as UP, isnull(B.QTY,0) as  QTY, isnull(B.AMT,0) as   AMT ,A.SO_ZXS,A.IDX_NAME,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,isnull(A.JZ1,0)as JZ1,isnull(A.MZ,0) as MZ ,A.HPGG ,isnull(c.rem,'') as hsCode  from  (select * from TF_CK_Z  where  ck_no=:ck_no)  A FULL JOIN   (select * from TF_CK  where  ck_no=:ck_no) B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  " +
+    public static final String STOCK_OUT_ITEM_LIST = " select B.ck_no,B.itm, B.PRD_NO ,b.id_no,b.os_no,b.bat_no,B.CUS_OS_NO,isnull(B.UP,0) as UP, isnull(B.QTY,0) as  QTY, isnull(B.AMT,0) as   AMT ,A.SO_ZXS,A.IDX_NAME,A.XS,A.KHXG,A.XGTJ,A.ZXGTJ,isnull(A.JZ1,0)as JZ1,isnull(A.MZ,0) as MZ ,A.HPGG ,isnull(c.rem,'') as hsCode , isnull(m.jmcc,'') as jmcc   from  (select * from TF_CK_Z  where  ck_no=:ck_no)  A FULL JOIN   (select * from TF_CK  where  ck_no=:ck_no) B ON A.CK_NO=B.CK_NO AND A.ITM=B.ITM  " +
             "   left outer join ( select distinct prd_no,rem from  (select rem,idx_no from INDX  ) a inner join    ( select idx1,prd_no from prdt )b  on a.idx_no=b.idx1 where a.rem is  not null) c on b.prd_no=c.prd_no " +
+
+            " left outer join (select bom_no, jmcc from  MF_BOM_Z )  m on b.id_no=m.bom_no  "+
             "  order by B.itm ASC  ";
 
 
@@ -83,6 +85,7 @@ public class ErpStockOutRepository {
                 .addScalar("jz1", FloatType.INSTANCE)
                 .addScalar("mz", FloatType.INSTANCE)
                 .addScalar("hsCode", StringType.INSTANCE)
+                .addScalar("jmcc", StringType.INSTANCE)
                 .setResultTransformer(Transformers.aliasToBean(ErpStockOutItem.class))  .list();
 
 
