@@ -5,6 +5,7 @@ import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.CustomerRepository;
 import com.giants3.hd.server.repository.QuotationRepository;
+import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,7 @@ public class CustomerService extends AbstractService {
         }
 
 
-        return list();
+        return list("");
     }
 
 
@@ -101,9 +102,14 @@ public class CustomerService extends AbstractService {
      *
      * @return
      */
-    public List<Customer> list() {
+    public List<Customer> list(String key) {
 
-        return customerRepository.findAll(new Sort("code"));
+
+
+
+        String keyLike= StringUtils.sqlLike(key);
+       return  customerRepository.findByCodeLikeOrNameLikeOrderByNameDesc(keyLike,keyLike);
+
     }
 
 

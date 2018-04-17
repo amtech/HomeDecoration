@@ -18,12 +18,12 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
 
     List<Field> fields;
 
-    public BaseListTableModel(Class itemClass) {
+    public BaseListTableModel(Class<T> itemClass) {
         super(itemClass);
 
     }
 
-    public BaseListTableModel(Class itemClass, List<TableField> tableFields) {
+    public BaseListTableModel(Class<T> itemClass, List<TableField> tableFields) {
         super(itemClass);
         updateStructure(tableFields);
     }

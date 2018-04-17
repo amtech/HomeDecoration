@@ -498,8 +498,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
                 final String idx1ByPrdno = erpPrdtService.findIdx1ByPrdno(workFlowMessage.productName);
                 workFlowMessage.prdType =StringUtils.isEmpty(idx1ByPrdno)?"": idx1ByPrdno.substring(0, 2);
-
-
                 workFlowMessageRepository.saveAndFlush(workFlowMessage);
             }catch (Throwable t){t.printStackTrace();}
         }

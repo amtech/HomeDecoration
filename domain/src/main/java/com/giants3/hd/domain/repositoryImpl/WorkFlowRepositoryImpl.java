@@ -174,29 +174,14 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
     @Override
     public Observable<RemoteData<WorkFlowProduct>> saveWorkFlowProduct(final WorkFlowProduct workFlowProduct) {
 
-        return Observable.create(new Observable.OnSubscribe<RemoteData<WorkFlowProduct>>() {
+
+        return crateObservable(new ApiCaller<WorkFlowProduct>() {
             @Override
-            public void call(Subscriber<? super RemoteData<WorkFlowProduct>> subscriber) {
-
-
-                try {
-                    RemoteData<WorkFlowProduct> remoteData = apiManager.saveWorkFlowProduct(workFlowProduct);
-                    if (remoteData.isSuccess()) {
-                        subscriber.onNext(remoteData);
-                        subscriber.onCompleted();
-
-                    } else {
-                        subscriber.onError(HdException.create(remoteData.message));
-
-                    }
-
-                } catch (HdException e) {
-                    subscriber.onError(e);
-                }
-
-
+            public RemoteData<WorkFlowProduct> call() throws HdException {
+                return apiManager.saveWorkFlowProduct(workFlowProduct);
             }
         });
+
 
 
     }

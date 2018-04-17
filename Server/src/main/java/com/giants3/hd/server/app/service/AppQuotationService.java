@@ -51,7 +51,7 @@ public class AppQuotationService extends AbstractService {
 
 
         Quotation quotation = new Quotation();
-        quotation.qNumber = "";
+        quotation.qNumber= generateDefaultQuotationId();
         final Calendar instance = Calendar.getInstance();
         quotation.qDate = DateFormats.FORMAT_YYYY_MM_DD.format(instance.getTime());
         quotation.createTime = instance.getTimeInMillis();
@@ -466,22 +466,10 @@ public class AppQuotationService extends AbstractService {
         if (!quotation.formal) {
 
 
-            //生成流水单号  日期—+流水单号
-            String today = DateFormats.FORMATYYYYMMDD.format(Calendar.getInstance().getTime());
-            String qNumber = "";
 
-            Quotation maxQuotation = appQuotationRepository.findFirstByQNumberLikeOrderByQNumberDesc(StringUtils.sqlRightLike(qNumber));
-            if (maxQuotation == null || maxQuotation.qNumber.length() < 8 || !today.equals(maxQuotation.qNumber.substring(0, 8))) {
-                qNumber = today + "00001";
-            } else {
-                try {
-                    qNumber = today + (Integer.valueOf(maxQuotation.qNumber.substring(8)) + 1);
-                } catch (Throwable t) {
-                    qNumber = today + "000001";
-                }
-            }
 
-            quotation.qNumber = qNumber;
+          //  quotation.qNumber= generateDefaultQuotationId();
+
             quotation.formal = true;
             quotation = appQuotationRepository.saveAndFlush(quotation);
         }
@@ -490,6 +478,37 @@ public class AppQuotationService extends AbstractService {
 
     }
 
+
+    private String generateDefaultQuotationId()
+    {
+
+
+        //生成流水单号  日期—+流水单号
+        String today = DateFormats.FORMATYYYYMMDD.format(Calendar.getInstance().getTime());
+        String qNumber = "";
+
+        Quotation maxQuotation = appQuotationRepository.findFirstByQNumberLikeOrderByQNumberDesc(StringUtils.sqlRightLike(today));
+        if (maxQuotation == null || maxQuotation.qNumber.length() < 8 || !today.equals(maxQuotation.qNumber.substring(0, 8))) {
+            qNumber = today + "000001";
+        } else {
+            try {
+                final int integer = Integer.valueOf(maxQuotation.qNumber.substring(8));
+
+                for (int i =1; i <100000 ; i++) {
+                      qNumber=  today + String.valueOf(integer + 100000+i).substring(1);
+                    if(appQuotationRepository.findFirstByQNumberEquals(qNumber)==null)
+                    {break;}
+                }
+
+
+
+            } catch (Throwable t) {
+                qNumber = today + "000001";
+            }
+        }
+
+        return qNumber;
+    }
 
     /**
      * 打印报价单
@@ -675,7 +694,23 @@ public class AppQuotationService extends AbstractService {
 
                 quotation.memo = data;
                 break;
+
+            case "qNumber":
+
+
+                final Quotation findQuotation = appQuotationRepository.findFirstByQNumberEquals(data);
+                if(findQuotation!=null)
+                {
+
+                    return wrapError("报价单号重复，已经存在："+data+",的报价单");
+                }
+
+                quotation.qNumber = data;
+                break;
         }
+
+
+
 
 
         appQuotationRepository.saveAndFlush(quotation);

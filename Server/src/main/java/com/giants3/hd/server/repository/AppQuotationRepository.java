@@ -21,4 +21,5 @@ public interface AppQuotationRepository extends JpaRepository<Quotation, Long> {
 
 
     Quotation findFirstByQNumberLikeOrderByQNumberDesc(String key);
+    Quotation findFirstByQNumberEquals(String key);
 }

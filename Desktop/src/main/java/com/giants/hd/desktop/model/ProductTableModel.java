@@ -2,6 +2,7 @@ package com.giants.hd.desktop.model;
 
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.AuthorityUtil;
+import com.giants3.hd.noEntity.ProductAgent;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.noEntity.ModuleConstant;
 import com.giants3.hd.utils.StringUtils;
@@ -76,7 +77,7 @@ public class ProductTableModel extends BaseTableModel<Product> {
 
             case COLUMN_PACK_SPEC:
 
-                return product.insideBoxQuantity+"/"+product.packQuantity+"/"+product.packLong+"*"+product.packWidth+"*"+product.packHeight;
+                return ProductAgent.getProductFullPackageInfo(product)  ;
 
                 default:
             return super.getValueAt(rowIndex, columnIndex);

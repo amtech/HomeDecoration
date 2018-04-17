@@ -1,5 +1,6 @@
 package com.giants3.report.jasper.quotation;
 
+import com.giants3.hd.entity.Company;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.noEntity.app.QuotationDetail;
@@ -20,15 +21,15 @@ import java.util.Map;
 public class AppQuotationReport extends JRPdfReport {
 
 
-
-
+    private final Company company;
     private QuotationDetail quotationDetail;
     private String jrFilePath;
 
-    public AppQuotationReport(QuotationDetail quotationDetail,String jrFilePath,String destFilePath) {
+    public AppQuotationReport(Company company,QuotationDetail quotationDetail, String jrFilePath, String destFilePath) {
 
 
         super(destFilePath);
+        this.company = company;
         this.quotationDetail = quotationDetail;
         this.jrFilePath = jrFilePath;
     }

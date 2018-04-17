@@ -45,6 +45,10 @@ public  abstract  class JRReport implements Reportable {
 //        catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
+
+
+
     }
 
     protected abstract void reportJRType(JasperPrint jp);

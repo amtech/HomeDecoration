@@ -1,10 +1,12 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.entity.Company;
 import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.server.app.service.AppQuotationService;
 import com.giants3.hd.server.repository.AppQuotationRepository;
 //import com.giants3.report.jasper.quotation.AppQuotationReport;
+import com.giants3.hd.server.repository.CompanyRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.report.PictureUrl;
 import com.giants3.report.jasper.quotation.AppQuotationReport;
@@ -28,6 +30,8 @@ public class ReportService extends  AbstractService {
     private String tempFilePath;
     @Autowired
     private AppQuotationService quotationService;
+    @Autowired
+    private CompanyRepository companyRepository;
 
 
     /**
@@ -57,7 +61,9 @@ public class ReportService extends  AbstractService {
             item.thumbnail= PictureUrl.completeUrl(item.thumbnail);
         }
 
-       new AppQuotationReport(quotationDetail,path,destFilePath).report();
+
+        Company company=companyRepository.findAll().get(0);
+       new AppQuotationReport(company,quotationDetail,path,destFilePath).report();
 
 
         return destFilePath;

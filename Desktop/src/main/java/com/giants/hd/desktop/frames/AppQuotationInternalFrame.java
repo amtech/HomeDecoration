@@ -1,0 +1,107 @@
+package com.giants.hd.desktop.frames;
+
+import com.giants.hd.desktop.mvp.presenter.AppQuotationListPresenter;
+import com.giants.hd.desktop.mvp.presenter.WorkFlowWorkerIPresenter;
+import com.giants.hd.desktop.mvp.viewer.AppQuotationListViewer;
+import com.giants.hd.desktop.mvp.viewer.WorkFlowWorkerViewer;
+import com.giants.hd.desktop.viewImpl.Panel_AppQuotation_List;
+import com.giants.hd.desktop.viewImpl.Panel_Quotation;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.entity.WorkFlowWorker;
+import com.giants3.hd.entity.app.Quotation;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import rx.Subscriber;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * Created by david on 2015/11/23.
+ */
+public class AppQuotationInternalFrame  extends BaseMVPFrame<AppQuotationListViewer> implements AppQuotationListPresenter {
+    public AppQuotationInternalFrame() {
+        super(ModuleConstant.TITLE_APP_QUOTATION);
+
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                 search("",0,20);
+            }
+        });
+    }
+
+
+
+
+
+    @Override
+    protected AppQuotationListViewer createViewer() {
+        return new Panel_AppQuotation_List(this);
+    }
+
+    @Override
+    public void addOne() {
+
+
+
+
+    }
+
+    @Override
+    public void showOne(Quotation quotation) {
+
+        AppQuotationDetailFrame frame=new AppQuotationDetailFrame(quotation);
+        frame.showInMain();
+
+
+
+
+    }
+
+    @Override
+    public void search(String key, int pageIndex, int pageSize) {
+
+
+        UseCaseFactory.getInstance().createGetAppQuotationListUseCase(key,pageIndex,pageSize).execute(new Subscriber<RemoteData<Quotation>>() {
+            //            @Override
+            public void onCompleted() {
+                getViewer().hideLoadingDialog();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                getViewer().hideLoadingDialog();
+                getViewer().showMesssage(e.getMessage());
+            }
+
+
+            @Override
+            public void onNext(RemoteData<Quotation> workFlowRemoteData) {
+                getViewer().hideLoadingDialog();
+                if (workFlowRemoteData.isSuccess()) {
+
+
+                    getViewer().bindData(workFlowRemoteData);
+
+                } else
+
+                    getViewer().showMesssage(workFlowRemoteData.message);
+
+
+            }
+
+
+        });
+        getViewer().showLoadingDialog();
+
+
+
+
+
+    }
+
+
+}

@@ -12,24 +12,26 @@ import com.giants.hd.desktop.interf.Iconable;
 import com.giants.hd.desktop.local.*;
 import com.giants.hd.desktop.model.*;
 import com.giants.hd.desktop.mvp.presenter.ProductDetailIPresenter;
+import com.giants.hd.desktop.mvp.viewer.ProductDetailViewer;
 import com.giants.hd.desktop.reports.excels.Report_Excel_ProductMaterialList;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.*;
-import com.giants.hd.desktop.mvp.viewer.ProductDetailViewer;
 import com.giants.hd.desktop.widget.AttachPanel;
 import com.giants.hd.desktop.widget.TableMouseAdapter;
 import com.giants.hd.desktop.widget.TablePopMenu;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.noEntity.ModuleConstant;
-import com.giants3.hd.noEntity.ConstantData;
-import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.hd.utils.*;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.exception.HdException;
-import com.giants3.hd.utils.logic.ProductLogic;
+import com.giants3.hd.noEntity.ConstantData;
+import com.giants3.hd.noEntity.ModuleConstant;
 import com.giants3.hd.noEntity.ProductDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.ObjectUtils;
+import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.logic.ProductLogic;
 import com.google.inject.Inject;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -592,10 +594,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
             public void itemStateChanged(ItemEvent e) {
 
 
-
-
-                if(Config.DEBUG)
-                {
+                if (Config.DEBUG) {
 
                     Config.log("itemStateChanged..................");
                 }
@@ -1625,37 +1624,35 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                 final File file = FileChooserHelper.chooseFile(JFileChooser.FILES_ONLY, false, new PictureFileFilter());
 
-                    if(file!=null) {
-                        //上传文件
-                        new HdSwingWorker<String, String>(getWindow(getRoot())) {
+                if (file != null) {
+                    //上传文件
+                    new HdSwingWorker<String, String>(getWindow(getRoot())) {
 
-                            @Override
-                            protected RemoteData<String> doInBackground() throws Exception {
-
-
-                                return apiManager.uploadTempPicture(file);
+                        @Override
+                        protected RemoteData<String> doInBackground() throws Exception {
 
 
-                            }
-
-                            @Override
-                            public void onResult(RemoteData<String> data) {
+                            return apiManager.uploadTempPicture(file);
 
 
-                                if (data.isSuccess()) {
-                                    panel_attach.addUrl(data.datas.get(0));
+                        }
+
+                        @Override
+                        public void onResult(RemoteData<String> data) {
 
 
-                                } else {
+                            if (data.isSuccess()) {
+                                panel_attach.addUrl(data.datas.get(0));
 
-                                }
 
+                            } else {
 
                             }
-                        }.go();
-                    }
 
 
+                        }
+                    }.go();
+                }
 
 
             }
@@ -1703,7 +1700,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 final File[] files = FileChooserHelper.chooseFiles(JFileChooser.FILES_ONLY, false, new PictureFileFilter());
 
 
-                if (files !=null) {
+                if (files != null) {
                     presenter.addPackagePicture(files);
                 }
 

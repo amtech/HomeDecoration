@@ -41,7 +41,8 @@ public class AppQuotationController extends BaseController {
     @RequestMapping(value = "/search", method = {RequestMethod.GET})
     public
     @ResponseBody
-    RemoteData<Quotation> search(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "searchValue", required = false, defaultValue = "") String searchValue, @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
+        RemoteData<Quotation> search(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "" +
+            "", required = false, defaultValue = "") String searchValue, @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
 
     ) throws UnsupportedEncodingException {
 
@@ -71,7 +72,7 @@ public class AppQuotationController extends BaseController {
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<QuotationDetail> detail(@RequestParam(value = "id", defaultValue = "0") long id) {
+    RemoteData<QuotationDetail> detail(@RequestParam(value = "id",required = false,defaultValue = "0") long id,@RequestParam(value = "qNumber", required = false,defaultValue = "") String qNumber) {
 
 
         return quotationService.loadAQuotationDetail(id);

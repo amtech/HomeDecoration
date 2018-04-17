@@ -246,7 +246,7 @@ public class ImageViewDialog extends JDialog {
         String destUrl = HttpUrl.loadPicture(url);
 
 
-        showDialog(frame, url, title);
+        showDialog(frame, destUrl, title);
     }
 
     /**

@@ -1,60 +1,101 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.local.LocalFileHelper;
 import com.giants.hd.desktop.utils.QRHelper;
-
 import com.giants3.hd.entity.Product;
 import com.giants3.hd.noEntity.QRProduct;
+import com.giants3.hd.utils.FileUtils;
+import com.giants3.report.jasper.QrProductReport;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ProductQRDialog extends BaseDialog<Product> {
     private final Window window;
     private final Product product;
     private JPanel contentPane;
     private JLabel iv_qr;
+    private JButton a4Print;
+    private JButton barPrint;
+    BufferedImage scaledImg;
 
+    String qrLocalPath;
 
-
-    public ProductQRDialog(Window window,Product product) {
+    public ProductQRDialog(Window window,final Product product) {
         super(window, "二维码");
         this.window = window;
         this.product = product;
+
+        qrLocalPath= LocalFileHelper.path+"/qr/temp.png";
+
         setContentPane(contentPane);
 
 
-        QRProduct qrProduct=  generate(product);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                QRProduct qrProduct=  QRHelper.generate(product);
+
+
+                int qrSize=300;
+
+                  scaledImg = QRHelper.generateQRCode(qrProduct,qrSize, qrSize) ;
+                iv_qr.setIcon(new ImageIcon( scaledImg));
+
+
+            }
+        });
 
 
 
 
+        a4Print.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            //保存qrCode 到本地临时文件
+
+
+                try {
+                    FileUtils.makeDirs(qrLocalPath);
+                    ImageIO.write(scaledImg, "png",new File( qrLocalPath));
+                    new QrProductReport(product, qrLocalPath,"qrproducta4",3*6).report();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(ProductQRDialog.this,e1.getMessage());
+                }
 
 
 
-        iv_qr.setIcon(new ImageIcon( QRHelper.generateQRCode(qrProduct)));
 
-       ;
-
-
+            }
+        });
 
 
+        barPrint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    FileUtils.makeDirs(qrLocalPath);
+                    ImageIO.write(scaledImg, "png",new File( qrLocalPath));
+                    new QrProductReport(product, qrLocalPath,"qrproduct",1).report();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(ProductQRDialog.this,e1.getMessage());
+                }
+            }
+        });
+
+        setModal(false);
     }
 
-
-    private QRProduct generate(Product product)
-    {
-        QRProduct qrProduct=new QRProduct();
-
-
-            qrProduct.id=product.id;
-            qrProduct.name=product.name;
-
-            qrProduct.pVersion=product.pVersion;
-            qrProduct. unitName=product.pUnitName;
-            qrProduct.className=product.pClassName;
-            return qrProduct;
-
-    }
 
 
 

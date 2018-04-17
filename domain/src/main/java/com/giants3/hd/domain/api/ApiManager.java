@@ -198,6 +198,12 @@ public class ApiManager {
         }.getType());
         tokenMaps.put(Company.class, new TypeToken<RemoteData<Company>>() {
         }.getType());
+        tokenMaps.put(com.giants3.hd.entity.app.Quotation.class, new TypeToken<RemoteData<com.giants3.hd.entity.app.Quotation>>() {
+        }.getType());
+
+
+        tokenMaps.put(com.giants3.hd.noEntity.app.QuotationDetail.class, new TypeToken<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>>() {
+        }.getType());
 
 
     }
@@ -2192,10 +2198,25 @@ public class ApiManager {
 
     public RemoteData<Company> updateCompany(Company company) throws HdException {
 
-        String url = HttpUrl.updateCompany( );
+        String url = HttpUrl.updateCompany();
         String result = client.postWithStringReturned(url, GsonUtils.toJson(company));
         RemoteData<Company> remoteData = invokeByReflect(result, Company.class);
         return remoteData;
 
+    }
+
+    public RemoteData<com.giants3.hd.entity.app.Quotation> getAppQuotationList(String key, int pageIndex, int pageSize) throws HdException {
+
+        String url = HttpUrl.getAppQuotationList(key, pageIndex, pageSize);
+        String result = client.getWithStringReturned(url);
+        RemoteData<com.giants3.hd.entity.app.Quotation> remoteData = invokeByReflect(result, com.giants3.hd.entity.app.Quotation.class);
+        return remoteData;
+    }
+
+    public RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> getAppQuotationDetail(long quotationId, String qNumber) throws HdException {
+        String url = HttpUrl.getAppQuotationDetail(quotationId, qNumber);
+        String result = client.getWithStringReturned(url);
+        RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> remoteData = invokeByReflect(result, com.giants3.hd.noEntity.app.QuotationDetail.class);
+        return remoteData;
     }
 }

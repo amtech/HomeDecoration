@@ -26,9 +26,9 @@ public class CustomerController extends BaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<Customer> list() {
+    RemoteData<Customer> list(@RequestParam(value = "key", required = false, defaultValue = "") String key) {
 
-        return wrapData(customerService.list());
+        return wrapData(customerService.list(key));
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)

@@ -54,4 +54,11 @@ public class TableStructureUtils {
     public static List<TableField> getQuotationPictureModel() {
         return fromJson("quotationPicture.json");
     }
+    public static List<TableField> getAppQuotation() {
+        return fromJson("appQuotation.json");
+    }
+
+    public static List<TableField> getAppQuotationItem() {
+        return fromJson("appQuotationItem.json");
+    }
 }

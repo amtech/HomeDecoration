@@ -13,6 +13,7 @@ import rx.schedulers.Schedulers;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 
 /**
@@ -600,6 +601,16 @@ public class UseCaseFactory {
     public UseCase createUpdateCompanyUseCase(Company company) {
 
         return  new UpdateCompanyUseCase(   company,settingRepository );
+
+    }
+
+    public UseCase createGetAppQuotationListUseCase(String key, int pageIndex, int pageSize) {
+        return new GetAppQuotationListUseCase(  key,   pageIndex,   pageSize,quotationRepository);
+    }
+
+    public UseCase createGetAppQuotationDetailUseCase(long quotationId, String qNumber) {
+
+        return new GetAppQuotationDetailUseCase(  quotationId,   qNumber,quotationRepository);
 
     }
 }

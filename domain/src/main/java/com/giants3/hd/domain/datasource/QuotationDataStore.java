@@ -22,4 +22,6 @@ public interface QuotationDataStore {
      * @param quotationId The id to retrieve user data.
      */
     Observable<QuotationDetail> quotationDetail(final long quotationId);
+
+    Observable<com.giants3.hd.entity.app.Quotation> getAppQuotationList(String key, int pageIndex, int pageSize);
 }

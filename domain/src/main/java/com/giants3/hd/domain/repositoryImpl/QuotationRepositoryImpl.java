@@ -1,10 +1,14 @@
 package com.giants3.hd.domain.repositoryImpl;
 
+import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.datasource.QuotationDataSourceImpl;
 import com.giants3.hd.domain.datasource.QuotationDataStore;
 import com.giants3.hd.domain.repository.QuotationRepository;
 import com.giants3.hd.entity.Quotation;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.RemoteData;
+import com.google.inject.Inject;
 import rx.Observable;
 
 import java.util.List;
@@ -12,7 +16,10 @@ import java.util.List;
 /**
  * Created by david on 2015/9/14.
  */
-public class QuotationRepositoryImpl implements QuotationRepository {
+public class QuotationRepositoryImpl  extends  BaseRepositoryImpl implements QuotationRepository {
+    @Inject
+    ApiManager apiManager;
+
     public Observable<List<Quotation>> quotations() {
 
 
@@ -25,5 +32,28 @@ public class QuotationRepositoryImpl implements QuotationRepository {
         QuotationDataStore quotationDataStore=new QuotationDataSourceImpl();
 
         return quotationDataStore.quotationDetail(quotationId);
+    }
+
+
+    @Override
+    public Observable<RemoteData<com.giants3.hd.entity.app.Quotation>> getAppQuotationList(final String key, final int pageIndex, final int pageSize) {
+
+        return crateObservable(new ApiCaller<com.giants3.hd.entity.app.Quotation>() {
+            @Override
+            public RemoteData<com.giants3.hd.entity.app.Quotation> call() throws HdException {
+                return apiManager.getAppQuotationList(key,pageIndex,pageSize);
+            }
+        });
+
+    }
+
+    @Override
+    public Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> getAppQuotationDetail(final long quotationId, final String qNumber) {
+        return crateObservable(new ApiCaller<com.giants3.hd.noEntity.app.QuotationDetail>() {
+            @Override
+            public RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> call() throws HdException {
+                return apiManager.getAppQuotationDetail(quotationId,qNumber);
+            }
+        });
     }
 }

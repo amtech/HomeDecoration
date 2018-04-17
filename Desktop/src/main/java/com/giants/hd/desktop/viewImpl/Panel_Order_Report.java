@@ -99,7 +99,7 @@ public class Panel_Order_Report extends BasePanel implements OrderReportViewer {
 //                    {
 //
 //                        ErpOrderItem order= orderItemTableModel.getItem(row[0]);
-//                        orderReportPresenter.loadOrderDetail(order);
+//                        orderReportPresenter.loadDetail(order);
 //                    }
 
 

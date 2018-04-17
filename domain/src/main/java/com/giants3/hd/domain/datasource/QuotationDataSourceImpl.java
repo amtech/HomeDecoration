@@ -56,4 +56,9 @@ public class QuotationDataSourceImpl implements  QuotationDataStore{
         });
     }
 
+
+    @Override
+    public Observable<com.giants3.hd.entity.app.Quotation> getAppQuotationList(String key, int pageIndex, int pageSize) {
+        return null;
+    }
 }

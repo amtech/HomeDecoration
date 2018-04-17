@@ -168,7 +168,7 @@ public class WorkFlowMessage {
     public String cus_no;
 
     /**
-     * M J 其他
+     * M T 其他  制令单类型  AM AT 等等
      */
     public String mrpType;
 
@@ -177,6 +177,15 @@ public class WorkFlowMessage {
      * MJ  TJ 其他
      */
     public String prdType;
+
+
+//    /**
+//     *   mrpType='T' or (mrpType<>'M' and mrpType<>'T' and prdType='TJ')  铁件类型判断
+//     *mrpType='M' or (mrpType<>'M' and mrpType<>'T' and prdType='MJ')  木件类型判断
+//     * 优先判断mrpType，当mrpType 未设置（非M T） 时候 判断TJ MJ
+//     */
+//   public String  mrp_prd_typ;
+
 
 
 

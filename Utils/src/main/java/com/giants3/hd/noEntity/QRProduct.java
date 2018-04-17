@@ -17,6 +17,9 @@ public class QRProduct implements Serializable
     public String pVersion;
     public String unitName;
     public String className;
+    public String thumnail;
+
+
 
 
 

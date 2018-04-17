@@ -80,11 +80,13 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
             "left outer  join (select   UserId, mu,tie ,ProduceType,WorkFlowStep from T_WorkflowWorker where userId= :userId) e on  e.ProduceType=a.produceType and e.WorkFlowStep=a.toFlowStep \n" +
             "\n" +
             "where    ToFlowStep not in (2000,3000) \n" +
-            "  or (    not (((a.mrpType='T' or a.prdType='TJ') and e.tie=0) or ((a.mrpType='M' or a.prdType='MJ') and e.mu=0)  ) )   order by orderName desc ,itm   " ,nativeQuery = true
+            "  or (    not (((a.mrpType='T' or (a.mrpType<>'M' and a.mrpType<>'T' and a.prdType='TJ')) and e.tie=0) or ((a.mrpType='M' or   (a.mrpType<>'M' and a.mrpType<>'T' and a.prdType='MJ')) and e.mu=0)  ) )   order by orderName desc ,itm   " ,nativeQuery = true
 
     )
 
-
+    //a.mrpType='T' or (a.mrpType<>'M' and a.mrpType<>'T' and a.prdType='TJ')  铁件类型判断
+    //a.mrpType='M' or (a.mrpType<>'M' and a.mrpType<>'T' and a.prdType='MJ')  木件类型判断
+    //优先判断mrpType，当mrpType 未设置（非M T） 时候 判断TJ MJ
 
     List<WorkFlowMessage> findMyUnHandleWorkFlowMessages2( @Param("states") int[]  states , @Param("workflowSteps") int[]  workflowSteps , @Param("userId") long  userId , @Param("key") String  key );
 

@@ -13,7 +13,7 @@ public class WorkFlowEventTableModel extends  BaseListTableModel<WorkFlowEvent> 
 
 
     public WorkFlowEventTableModel( ) {
-        super(WorkFlowWorker.class, TableStructureUtils.getWorkFlowWorker());
+        super(WorkFlowEvent.class, TableStructureUtils.getWorkFlowWorker());
 
     }
 

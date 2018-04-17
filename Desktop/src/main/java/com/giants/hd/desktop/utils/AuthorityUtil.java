@@ -236,6 +236,13 @@ public class AuthorityUtil {
     }
 
 
+    public boolean viewAppQuotationList() {
+
+
+        return isViewable(ModuleConstant.NAME_APP_QUOTATION);
+
+    }
+
     /**
      * 查看出入库管理
      *

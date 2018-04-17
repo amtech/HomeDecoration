@@ -261,6 +261,8 @@ public class Main extends BaseFrame {
             menuBar.add(createQuotation());
 
 
+
+
         if (AuthorityUtil.getInstance().viewOrderMenu())
             menuBar.add(createOrder());
 
@@ -350,7 +352,8 @@ public class Main extends BaseFrame {
                 }
             });
 
-        } if (AuthorityUtil.getInstance().viewSubWorkFlowList()) {
+        }
+        if (AuthorityUtil.getInstance().viewSubWorkFlowList()) {
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_SUB_WORK_FLOW);
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
@@ -707,10 +710,34 @@ public class Main extends BaseFrame {
         }
 
 
+
+
+        if (AuthorityUtil.getInstance().viewAppQuotationList()) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_APP_QUOTATION
+            );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    AppQuotationInternalFrame quotationInternalFrame = new AppQuotationInternalFrame();
+                    addInterFrame(quotationInternalFrame);
+
+
+                }
+            });
+
+
+        }
+
         return menu;
 
 
     }
+
+
 
 
     /**
@@ -740,7 +767,6 @@ public class Main extends BaseFrame {
                 }
             });
         }
-
 
 
         if (AuthorityUtil.getInstance().viewMaterialClassList()) {

@@ -1223,4 +1223,24 @@ public class HttpUrl {
 
         return additionInfo(urlFormatter);
     }
+
+    public static String getAppQuotationList(String key, int pageIndex, int pageSize) {
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/app/quotation/search") ;
+        urlFormatter.append("searchValue",key);
+        urlFormatter.append("pageIndex",pageIndex);
+        urlFormatter.append("pageSize",pageSize);
+
+
+
+        return additionInfo(urlFormatter);
+    }
+
+    public static String getAppQuotationDetail(long quotationId, String qNumber) {
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/app/quotation/detail") ;
+        urlFormatter.append("id",quotationId);
+        urlFormatter.append("qNumber",qNumber);
+
+
+        return additionInfo(urlFormatter);
+    }
 }

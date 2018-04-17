@@ -53,7 +53,29 @@ public class FileUtils {
 
     }
 
+    /**
+     * 根據文件全路徑 構建文件夾
+     *
+     * @param absoluteFilePath
+     */
+    public static void makeDirs(String absoluteFilePath) {
+        File newFile = new File(absoluteFilePath);
+        File parentFile = newFile.getParentFile();
+        if (!parentFile.exists())
+            parentFile.mkdirs();
+//        int
+//                index = absoluteFilePath.lastIndexOf(FileUtils.SEPARATOR);
+//        if (index > -1) {
+//
+//            String directoryPath = absoluteFilePath.substring(0, index);
+//
+//            File file = new File(directoryPath);
+//            if (!file.exists()) {
+//                file.mkdirs();
+//            }
+//        }
 
+    }
 
     public static final String[] PICTURE_APPENDIX=new String[]{"jpg","JPEG","JPG"};
 
@@ -80,6 +102,21 @@ public class FileUtils {
 
         }
         return false;
+
+
+    }
+
+    public static void safeClose(InputStream inputStream) {
+
+        if(inputStream!=null)
+        {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
 
     }

@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.entity.Quotation;
 import com.giants3.hd.noEntity.QuotationDetail;
+import com.giants3.hd.noEntity.RemoteData;
 import rx.Observable;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface QuotationRepository {
      */
      Observable<QuotationDetail> detail(final long quotationId);
 
+    Observable<RemoteData<com.giants3.hd.entity.app.Quotation>> getAppQuotationList(String key, int pageIndex, int pageSize);
+
+    Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> getAppQuotationDetail(long quotationId, String qNumber);
 }

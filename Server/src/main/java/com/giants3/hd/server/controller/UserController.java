@@ -232,7 +232,7 @@ public class UserController extends BaseController {
         bufferData.globalData = globalDataService.findCurrentGlobalData();
 
         if(fromDesk) {
-            bufferData.customers = customerService.list();
+            bufferData.customers = customerService.list("");
 
             bufferData.workFlowSubTypes = workFlowService.getWorkFlowSubTypes().datas ;
 
