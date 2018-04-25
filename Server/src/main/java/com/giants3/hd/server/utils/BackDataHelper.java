@@ -1,6 +1,7 @@
 package com.giants3.hd.server.utils;
 
 import com.giants3.hd.entity.*;
+import com.giants3.hd.noEntity.ProductAgent;
 import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.noEntity.QuotationDetail;
 import com.giants3.hd.utils.GsonUtils;
@@ -148,7 +149,7 @@ public class BackDataHelper {
       File file=  new File(tempFile);
 
 
-        String destPath=fileDirectory+productDetail.product.getFullName()+File.separator+operationLog.id;
+        String destPath=fileDirectory+ ProductAgent.getFullName(productDetail.product)+File.separator+operationLog.id;
 
         file.renameTo(new File(destPath));
 
@@ -158,7 +159,7 @@ public class BackDataHelper {
     public static String backProductModifyData(ProductDetail productDetail,String fileDirectory)
     {
 
-        String filePath=fileDirectory+productDetail.product.getFullName()+File.separator+ Calendar.getInstance().getTimeInMillis();
+        String filePath=fileDirectory+ ProductAgent.getFullName(productDetail.product)+File.separator+ Calendar.getInstance().getTimeInMillis();
 
         back(productDetail,filePath);
         return filePath;

@@ -117,12 +117,12 @@ public class ProductController extends BaseController {
     public
     @ResponseBody
     RemoteData<AProduct> appSearch(@RequestParam(value = "name", required = false, defaultValue = "") String name
-            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
+            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,  @RequestParam(value = "withCopy", required = false) boolean withCopy
 
     ) throws UnsupportedEncodingException {
 
 
-        RemoteData<Product> productRemoteData = productService.searchProductList(name, pageIndex, pageSize);
+        RemoteData<Product> productRemoteData = productService.searchAppProductList(name, pageIndex, pageSize,withCopy);
         RemoteData<AProduct> result = RemoteDataParser.parse(productRemoteData, dataParser);
 
 

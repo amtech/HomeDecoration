@@ -1,5 +1,6 @@
 package com.giants3.hd.server.utils;
 
+import com.giants3.hd.noEntity.ProductAgent;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.entity.Product;
 import de.greenrobot.common.io.IoUtils;
@@ -312,7 +313,7 @@ public class FileUtils {
      *
      */
     public static String generateAttachFileName(Product product) {
-        return "PRODUCT_" + product.getFullName() + "-" + Calendar.getInstance().getTimeInMillis() + ".jpg";
+        return "PRODUCT_" + ProductAgent.getFullName(product) + "-" + Calendar.getInstance().getTimeInMillis() + ".jpg";
     }
 
     /**

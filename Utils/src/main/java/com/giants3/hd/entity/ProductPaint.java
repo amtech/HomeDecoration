@@ -1,6 +1,6 @@
 package com.giants3.hd.entity;
 
-import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.interf.Valuable;
 
@@ -269,62 +269,6 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 	}
 
 
-	/**
-	 * 更新材料数据
-	 * @param material
-	 */
-	public void updateMaterial(Material material, GlobalData globalData) {
-
-
-
-
-		this.materialCode=material.code;
-		this.materialName=material.name;
-		this.materialId=material.id;
-		this.materialPrice=material.price;
-
-
-		this.unitName=material.unitName;
-		this.materialType=material.typeId;
-		this.ingredientRatio=material.ingredientRatio;
-		 this.memo=material.memo;
-
-
-
-		updatePriceAndCostAndQuantity(globalData);
-
-
-
-
-
-	}
-
-
-
-
-
-
-
-
-
-
-	/**
-	 * 更新材料费用与配料费用
-	 */
-	public  void updatePriceAndCostAndQuantity(GlobalData globalData)
-	{
-
-		GlobalData configData=globalData;
-		price=FloatHelper.scale((materialPrice + configData.price_of_diluent * ingredientRatio)/(1+ingredientRatio),3);
-		cost=FloatHelper.scale(quantity*price);
-
-		//配料 即主成分用量
-		materialQuantity= FloatHelper.scale(quantity/(1+ingredientRatio),3) ;
-		ingredientQuantity=quantity-materialQuantity ;
-
-
-	}
-
 	@Override
 	public int getType() {
 		return materialType;
@@ -412,16 +356,5 @@ public class ProductPaint  implements Serializable,Summariable,Valuable {
 
 
 
-//	/**
-//	 * 设置配料材质
-//	 * @param material
-//	 */
-//	public void setIngredientMaterial(Material material) {
-//
-//
-//
-//		//price_of_diluent=material.price;
-//		updateCostAndQuantity();
-//
-//	}
+
 }

@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.server.controller.MaterialController;
 import com.giants3.hd.server.entity.*;
 import com.giants3.hd.entity_erp.Prdt;
@@ -226,7 +227,7 @@ public class MaterialService extends AbstractService {
                     ProductDetail productDetail = productService.findProductDetailById(productId);
                     if (productDetail != null) {
 
-                        productDetail.updateProductStatistics(globalData);
+                        ProductAnalytics.updateProductStatistics(productDetail, globalData);
                         productRepository.save(productDetail.product);
                         logger.info("productId:" + productId + " has Update!");
                     }

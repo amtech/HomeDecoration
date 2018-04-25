@@ -1,6 +1,7 @@
 package com.giants3.hd.server.controller;
 
 
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.server.entity.*;
 import com.giants3.hd.entity_erp.Prdt;
 import com.giants3.hd.server.interceptor.EntityManagerHelper;
@@ -602,7 +603,8 @@ public class MaterialController extends BaseController {
             productPaint.materialName=material.name;
             productPaint.materialPrice=material.price;
 
-            productPaint.updatePriceAndCostAndQuantity(globalData);
+            ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(productPaint, globalData);
+
 
             //更新
             productPaintRepository.save(productPaint);

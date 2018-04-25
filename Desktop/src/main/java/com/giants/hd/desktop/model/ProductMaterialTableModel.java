@@ -5,6 +5,7 @@ import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
 import com.giants3.hd.entity.Material;
 import com.giants3.hd.entity.ProductMaterial;
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
@@ -69,7 +70,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
 
 
                 material.setQuantity(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
@@ -80,7 +81,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
 
 
                 material.setpLong(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
             }
             break;
 
@@ -90,7 +91,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
             {
 
                 material.setpWidth(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
             }
             break;
 
@@ -99,7 +100,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
             {
 
                 material.setpHeight(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
             }
             break;
 
@@ -107,7 +108,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
                 //设置利用率
 
                 material.setAvailable(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
 
                 break;
@@ -133,7 +134,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
 
         ProductMaterial productMaterial = getItem(rowIndex);
         if (productMaterial != null) {
-            productMaterial.updateMaterial(material);
+            ProductAnalytics.updateMaterial(productMaterial, material);
         }
 
 

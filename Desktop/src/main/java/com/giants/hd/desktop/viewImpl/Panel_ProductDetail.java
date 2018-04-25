@@ -24,6 +24,7 @@ import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.exception.HdException;
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.noEntity.ConstantData;
 import com.giants3.hd.noEntity.ModuleConstant;
 import com.giants3.hd.noEntity.ProductDetail;
@@ -31,7 +32,6 @@ import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.utils.StringUtils;
-import com.giants3.hd.utils.logic.ProductLogic;
 import com.google.inject.Inject;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -374,7 +374,10 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 productDetail.paints = productPaintModel.getDatas();
                 productDetail.packMaterials = packMaterialTableModel.getDatas();
                 productDetail.packWages = packWageTableModel.getDatas();
-                ProductLogic.updateProductStatistics(productDetail, globalData);
+
+                ProductAnalytics.updateProduct(productDetail, globalData);
+
+
                 bindStatisticsValue(productDetail.product);
 
             }
@@ -692,7 +695,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                     float packLong = Float.valueOf(tf_long.getText().trim());
                     float packWidth = Float.valueOf(tf_width.getText().trim());
                     float packHeight = Float.valueOf(tf_height.getText().trim());
-                    productDetail.product.updatePackData(globalData, inboxCount, quantity, packLong, packWidth, packHeight);
+                    ProductAnalytics.updatePackData(productDetail.product, globalData, inboxCount, quantity, packLong, packWidth, packHeight);
 
                     tf_volume.setText(String.valueOf(productDetail.product.packVolume));
                     tf_gangza.setText(String.valueOf(productDetail.product.gangza));
@@ -743,7 +746,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 }
 
 
-                productDetail.product.updateCostOnForignFactory(globalData, productCost);
+                ProductAnalytics.updateCostOnForeignFactory(productDetail.product, globalData, productCost);
 
                 tf_fob.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.fob));
                 tf_price.setText(cannotViewProductPrice() ? "***" : String.valueOf(productDetail.product.price));
@@ -1963,7 +1966,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                                 productMaterial.setpHeight(pHeight);
 
 
-                                productMaterial.updateMaterial(material);
+                                ProductAnalytics.updateMaterial(productMaterial, material);
                                 //tableModel.fireTableDataChanged();
 
                                 break;
@@ -2028,7 +2031,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                             if (name.equals(material.name)) {
 
-                                productPaint.updateMaterial(material, globalData);
+                                ProductAnalytics.updateMaterial(productPaint, material, globalData);
 
 
                                 break;
@@ -2036,7 +2039,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                         }
 
-                        productPaint.updatePriceAndCostAndQuantity(globalData);
+                        ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(productPaint, globalData);
 
 
                     }

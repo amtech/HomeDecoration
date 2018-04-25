@@ -1,6 +1,7 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.ProductAgent;
 import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.server.entity.ProductEquationUpdateTemp;
 import com.giants3.hd.server.repository.*;
@@ -122,13 +123,37 @@ public class ProductService extends AbstractService implements InitializingBean,
     public void afterPropertiesSet() throws Exception {
         transactionTemplate = new TransactionTemplate(platformTransactionManager);
     }
+    public RemoteData<Product> searchProductList(String name, int pageIndex, int pageSize)
+    {
 
-
-    public RemoteData<Product> searchProductList(String name, int pageIndex, int pageSize) {
 
         Pageable pageable = constructPageSpecification(pageIndex, pageSize);
         String likeValue = "%" + name.trim() + "%";
-        Page<Product> pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue, likeValue, pageable);
+        Page<Product> pageValue;
+
+            pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameAsc(likeValue, likeValue, pageable);
+
+        List<Product> products = pageValue.getContent();
+
+
+        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+
+    }
+
+    public RemoteData<Product> searchAppProductList(String name, int pageIndex, int pageSize,boolean withCopy) {
+
+        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
+        String likeValue = "%" + name.trim() + "%";
+        Page<Product> pageValue;
+        if(!withCopy)
+        {
+            //查询原单，过滤掉有版本号的产品信息
+            pageValue=productRepository.findByKeyWithoutCopy(likeValue,pageable);
+
+
+        }else {
+              pageValue = productRepository.findByNameLikeOrPVersionLikeOrderByNameDesc(likeValue, likeValue, pageable);
+        }
 
         List<Product> products = pageValue.getContent();
 
@@ -494,7 +519,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                     }
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    logger.error("product:" + product.getFullName() + ",图片需要同步， 但是同步失败,原因：" + e.getMessage());
+                    logger.error("product:" + ProductAgent.getFullName(product) + ",图片需要同步， 但是同步失败,原因：" + e.getMessage());
                 }
 
 
@@ -944,15 +969,15 @@ public class ProductService extends AbstractService implements InitializingBean,
                 //检查报价单
                 QuotationItem quotationItem = quotationItemRepository.findFirstByProductIdEquals(oldData.id);
                 if (quotationItem != null) {
-                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
+                    return wrapError("货号：" + ProductAgent.getFullName(oldData) + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
                 QuotationXKItem quotationXkItem = quotationXKItemRepository.findFirstByProductIdEquals(oldData.id);
                 if (quotationXkItem != null) {
-                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
+                    return wrapError("货号：" + ProductAgent.getFullName(oldData) + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
                 quotationXkItem = quotationXKItemRepository.findFirstByProductId2Equals(oldData.id);
                 if (quotationXkItem != null) {
-                    return wrapError("货号：" + oldData.getFullName() + ", 不能修改版本号， 有报价单已经使用这款货 。");
+                    return wrapError("货号：" + ProductAgent.getFullName(oldData) + ", 不能修改版本号， 有报价单已经使用这款货 。");
                 }
 
             }
@@ -1360,13 +1385,13 @@ public class ProductService extends AbstractService implements InitializingBean,
     private void handleProductAttach(Product product) {
 
         boolean update = false;
-        String newAttaches = AttachFileUtils.getNewAttaches(product.attaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_ATTACH_PREFIX + product.getFullName());
+        String newAttaches = AttachFileUtils.getNewAttaches(product.attaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_ATTACH_PREFIX + ProductAgent.getFullName(product));
         if (!newAttaches.equals(product.attaches)) {
             product.attaches = newAttaches;
             update = true;
 
         }
-        newAttaches = AttachFileUtils.getNewAttaches(product.packAttaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_PACK_ATTACH_PREFIX + product.getFullName());
+        newAttaches = AttachFileUtils.getNewAttaches(product.packAttaches, attachfilepath, tempFilePath, AttachFileUtils.PRODUCT_PACK_ATTACH_PREFIX + ProductAgent.getFullName(product));
         if (!newAttaches.equals(product.packAttaches)) {
             product.packAttaches = newAttaches;
             update = true;
@@ -1508,7 +1533,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                 return wrapError("未找到该关联的产品数据");
             }
 
-            ProductDetail productDetail = BackDataHelper.restoreProductModifyData(product.getFullName(), operationLogId, productBackFilePath);
+            ProductDetail productDetail = BackDataHelper.restoreProductModifyData(ProductAgent.getFullName(product), operationLogId, productBackFilePath);
 
 
             if (productDetail == null)

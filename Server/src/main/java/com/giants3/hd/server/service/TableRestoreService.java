@@ -1,5 +1,6 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.server.interf.TargetVersion;
 import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.repository.QuotationItemRepository;
@@ -280,7 +281,7 @@ public class TableRestoreService extends AbstractService {
 
                 if (hasRestore) {
                     logger.info("out factory product  before upate  :"+product.name+",fob"+product.fob  );
-                    product.updateForeignFactoryRelate(globalData);
+                    ProductAnalytics.updateForeignFactoryRelate(product, globalData);
                     productRepository.save(product);
                     updateCount++;
 

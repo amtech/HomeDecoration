@@ -1,7 +1,6 @@
 package com.giants3.hd.entity;
 
 
-import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 
 import javax.persistence.*;
@@ -717,70 +716,6 @@ public class Product implements Serializable {
 		this.conceptusWage = conceptusWage;
 	}
 
-	/**
-	 * 更新油漆的汇总信息
-	 * @param paintCost
-	 * @param paintWage
-	 */
-	public void updatePaintData(float paintCost, float paintWage,GlobalData globalData) {
-
-		this.paintCost=FloatHelper.scale(paintCost);
-		this.paintWage=FloatHelper.scale(paintWage);
-		calculateTotalCost(globalData);
-	}
-
-
-	/**
-	 * 计算总成本
-	 */
-	public void calculateTotalCost(GlobalData globalData)
-	{
-
-		//各道材料++修理工资+搬运工资
-		productCost= FloatHelper.scale( paintCost+paintWage+assembleCost+assembleWage+conceptusCost+conceptusWage+packCost+packWage+ repairCost+banyunCost);
-
-
-
-		//计算体积
-		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
-
-
-		//计算修理工资
-		repairCost=FloatHelper.scale(packQuantity<=0?0:packVolume*globalData.repairPrice/packQuantity);
-
-       //计算搬运工资
-		banyunCost=FloatHelper.scale(packQuantity<=0?0:packVolume*globalData.priceOfBanyun/packQuantity);
-
-		 GlobalData configData= globalData ;
-
-
-		//获取管理系数  咸康跟普通不一致
-		float manageRatio=globalData.manageRatioNormal;
-		if(pack!=null&&pack.isXkPack())
-		{
-			manageRatio=globalData.manageRatioXK;
-		}
-
-
-		//计算成本价   (实际成本)*（1+管理系数）
-		cost=FloatHelper.scale((productCost)*(1+manageRatio));
-
-
-
-
-
-		price=FloatHelper.scale(cost/configData.cost_price_ratio);
-
-		if(packQuantity <=0)
-			fob=0;
-		else
-		//售价+海外运费
-		fob=FloatHelper.scale((price * (1 + configData.addition) + packVolume * configData.price_of_export / packQuantity)/configData.exportRate);
-
-
-
-	}
-
 
 	public String getSpecCm() {
 		return specCm;
@@ -914,101 +849,4 @@ public class Product implements Serializable {
 	}
 
 
-	/**
-	 * 更新包装相关数据 影响到volume值
-	 * @param inboxCount
-	 * @param quantity
-	 * @param packLong
-	 * @param packWidth
-	 * @param packHeight
-	 */
-	public void updatePackData(GlobalData globalData,int inboxCount, int quantity, float packLong, float packWidth, float packHeight) {
-
-
-
-		this.insideBoxQuantity=inboxCount;
-		this.packQuantity=quantity;
-		this.packLong=packLong;
-		this.packWidth=packWidth;
-		this.packHeight=packHeight;
-
-
-		//计算体积
-		packVolume= FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
-
-
-		//外厂才计算港杂
-		//计算出港杂      立方数* 出口运费/装箱数
-		gangza=calculateGangza(globalData);
-		updateCostOnForignFactory(globalData,productCost);
-
-
-	}
-
-
-	public void updateForeignFactoryRelate(GlobalData globalData)
-	{
-
-			calculateGangza(globalData);
-		updateCostOnForignFactory(globalData,productCost);
-
-	}
-
-
-	/**
-	 * 根据外厂实际成本值 港杂费用 更新到 成本价 出厂价，美金价格
-	 * @param productCost  实际成本
-	 *
-	 */
-	public void updateCostOnForignFactory(GlobalData globalData,float productCost ) {
-
-
-		this.productCost=productCost;
-
-
-//		计算外厂港杂
-
-//		calculateForeignGangza();
-//		this.gangza=gangza;
-
-
-
-
-
-
-
-		//更新成本价格
-		cost=FloatHelper.scale(productCost+gangza);
-
-
-
-
-		//更新出厂价格(加上管理费用  即 除以换算比率)外厂是管理费用
-		price=FloatHelper.scale(cost*(1+globalData.manageRatioForeign));
-
-
-		//更新美金价格
-		fob=FloatHelper.scale(price/globalData.exportRate);
-
-
-
-	}
-
-
-	private float calculateGangza(GlobalData globalData)
-	{
-
-		gangza=FloatHelper.scale(packQuantity>0?globalData.price_of_export*packVolume/packQuantity:0);
-		return gangza;
-	}
-
-
-	/**
-	 * 获取产品全名    当有pversion时候  用-连接
-	 * @return
-     */
-	public  String getFullName()
-	{
-		return name+ (StringUtils.isEmpty(pVersion)?"":("-"+pVersion));
-	}
 }

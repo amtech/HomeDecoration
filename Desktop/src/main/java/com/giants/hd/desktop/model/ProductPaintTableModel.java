@@ -8,10 +8,12 @@ import com.giants3.hd.entity.GlobalData;
 import com.giants3.hd.entity.Material;
 import com.giants3.hd.entity.ProductPaint;
 import com.giants3.hd.entity.ProductProcess;
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.utils.file.ImageUtils;
-import com.giants3.hd.noEntity.ProductPaintArrayList;
+
 import com.google.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
     @Inject
     public ProductPaintTableModel() {
-        super(new ProductPaintArrayList(),columnNames, fieldName, classes, ProductPaint.class);
+        super(new ArrayList<ProductPaint>(),columnNames, fieldName, classes, ProductPaint.class);
     }
 
 
@@ -104,8 +106,11 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
             case 6:
                 try {
                 item.ingredientRatio= Float.valueOf(aValue.toString());
-                item.updatePriceAndCostAndQuantity(globalData);
-                updateQuantityOfIngredient();
+
+                    ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(item, globalData);
+
+
+                    updateQuantityOfIngredient();
                 }catch (Throwable throwable)
                 {
                     throwable.printStackTrace();
@@ -118,7 +123,9 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
                 try {
                     item.quantity = Float.valueOf(aValue.toString());
 
-                    item.updatePriceAndCostAndQuantity(globalData);
+                    ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(item, globalData);
+
+
                     updateQuantityOfIngredient();
                 }catch (Throwable throwable)
                 {
@@ -149,14 +156,11 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
 
 
 
-        if(datas instanceof  ProductPaintArrayList)
-        {
 
-            ProductPaintArrayList list=(ProductPaintArrayList)datas;
-           int index= list.updateQuantityOfIngredient(globalData);
+           int index= ProductAnalytics.updateQuantityOfIngredient(datas, globalData);
             if(index>-1)
                 fireTableRowsUpdated(index, index);
-        }
+
 
 
 
@@ -171,30 +175,10 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         ProductPaint productPaint=getItem(rowIndex);
         if(productPaint!=null)
         {
-            productPaint.updateMaterial(material,globalData);
+            ProductAnalytics.updateMaterial(productPaint, material,globalData);
         }
 
 
-//        if(ProductProcess.XISHUA.equals(productPaint.processName))
-//
-//        {
-//
-//            //找出其他材料的稀释剂用量
-//
-//            float totalGrient=0;
-//            for(ProductPaint temp:datas)
-//            {
-//                totalGrient+=temp.ingredientQuantity;
-//            }
-//
-//            productPaint.quantity=totalGrient*0.1f;
-//
-//            productPaint.updatePriceAndCostAndQuantity();
-//
-//
-//
-//
-//        }
 
 
 

@@ -1,11 +1,13 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.GlobalDataService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.hd.noEntity.ProductPaintArrayList;
+
 import com.giants3.hd.entity.*;
+import com.giants3.hd.utils.FloatHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +52,7 @@ public class    ApplicationController extends  BaseController {
     @Transactional
     public
     @ResponseBody
-    RemoteData<GlobalData> findListByNames(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody GlobalData globalData) {
+    RemoteData<GlobalData> setGlobal(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody GlobalData globalData) {
 
         GlobalData oldData = globalDataService.find(globalData.id);
         if (oldData == null) {
@@ -78,8 +80,7 @@ public class    ApplicationController extends  BaseController {
             //判断是否材料相关的固定参数改变
             boolean materialRelateChanged =!oldData.isMaterialRelateEquals(globalData);
 
-            //临时缓存数据
-            ProductPaintArrayList list = new ProductPaintArrayList();
+
             //遍历所有产品数据
             int pageIndex = 0;
             int pageSize = 10;
@@ -98,7 +99,7 @@ public class    ApplicationController extends  BaseController {
 
                     //外厂数据 只需更新 成本值
                     if (isForeignProduct) {
-                        product.updateForeignFactoryRelate(globalData);
+                        ProductAnalytics.updateForeignFactoryRelate(product, globalData);
                     } else
 
                         //如果有跟油漆材料相关
@@ -108,14 +109,16 @@ public class    ApplicationController extends  BaseController {
                             List<ProductPaint> productPaints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(product.id);
 
                             //更新油漆材料中稀释剂用量
-                            list.clear();
-                            list.addAll(productPaints);
-                            list.updateQuantityOfIngredient(globalData);
-                            list.clear();
+
+                            ProductAnalytics.updateQuantityOfIngredient(productPaints, globalData);
+
 
                             //重新计算各油漆的单价 金额
                             for (ProductPaint paint : productPaints) {
-                                paint.updatePriceAndCostAndQuantity(globalData);
+
+                                ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(paint, globalData);
+
+
                             }
 
 
@@ -132,14 +135,15 @@ public class    ApplicationController extends  BaseController {
 
                             }
                             //更新产品油漆统计数据 自动联动更新全局数据。
-                            product.updatePaintData(paintCost, paintWage,
+                            ProductAnalytics.updatePaintData(product, paintCost, paintWage,
                                     globalData);
 
 
                         } else {
 
 
-                            product.calculateTotalCost(globalData);
+                            ProductAnalytics.updateProductInfoOnly(globalData,product);
+
 
 
                         }

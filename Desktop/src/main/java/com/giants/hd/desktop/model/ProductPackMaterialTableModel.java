@@ -3,6 +3,7 @@ package com.giants.hd.desktop.model;
 import com.giants.hd.desktop.local.ConstantData;
 import com.giants.hd.desktop.utils.AuthorityUtil;
 import com.giants.hd.desktop.utils.RandomUtils;
+import com.giants3.hd.logic.ProductAnalytics;
 import com.giants3.hd.utils.FloatHelper;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.entity.*;
@@ -108,8 +109,8 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
 
             case 1:
                 //设置包装材料大类型
-                material.setPackMaterialClass((PackMaterialClass) aValue);
-                material.update();
+                ProductAnalytics.setPackMaterialClass(material, (PackMaterialClass) aValue);
+                ProductAnalytics.update(material);
                 updateProduct();
                 break;
 
@@ -131,7 +132,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
             case 6:
                 //设置用量
                 material.setQuantity(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
@@ -139,7 +140,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
             case 7:
                 //设置长
                 material.setpLong(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
@@ -147,27 +148,27 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
             case 8:
                 //设置宽
                 material.setpWidth(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
             case 9:
                 //设置高
                 material.setpHeight(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
             case 15:
                 //设置高
                 material.setAvailable(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
             case 17:
                 material.setPrice(floatValue);
-                material.update();
+                ProductAnalytics.update(material);
 
                 break;
 
@@ -194,7 +195,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
 
-                                productMaterial.updateJiaodaiQuota(product, material);
+                                ProductAnalytics.updateJiaodaiQuota(productMaterial, product, material);
                                 int relateIndex = datas.indexOf(productMaterial);
                                 fireTableRowsUpdated(relateIndex, relateIndex);
                                 break;
@@ -230,7 +231,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
 
                     }
                     //找出内盒  更新胶带信息
-                    material.updateJiaodaiQuota(product, foundNeihe);
+                    ProductAnalytics.updateJiaodaiQuota(material, product, foundNeihe);
 
 
                     break;
@@ -248,7 +249,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
                         if (packMaterialClass != null) {
                             if (packMaterialClass.name.equals(PackMaterialClass.CLASS_TESHU_BAOLILONG)) {
                                 foundBaolilong = productMaterial;
-                                foundBaolilong.updateBAOLILONGQuota(product, material);
+                                ProductAnalytics.updateBAOLILONGQuota(foundBaolilong, product, material);
                                 int relateIndex = datas.indexOf(productMaterial);
                                 fireTableRowsUpdated(relateIndex, relateIndex);
                                 break;
@@ -285,7 +286,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
                     }
 
                     if (foundWaixiang != null)
-                        material.updateBAOLILONGQuota(product, foundWaixiang);
+                        ProductAnalytics.updateBAOLILONGQuota(material, product, foundWaixiang);
 
 
                     break;
@@ -315,7 +316,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
 
         ProductMaterial productMaterial = getItem(rowIndex);
         if (productMaterial != null) {
-            productMaterial.updateMaterial(material);
+            ProductAnalytics.updateMaterial(productMaterial, material);
         }
 
 
@@ -408,12 +409,12 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
 
         if (neihe != null)
             for (ProductMaterial jiaodai : jiaodais)
-                jiaodai.updateJiaodaiQuota(product, neihe);
+                ProductAnalytics.updateJiaodaiQuota(jiaodai, product, neihe);
 
 
         if (waixiang != null)
             for (ProductMaterial baolilong : baolilongs) {
-                baolilong.updateBAOLILONGQuota(product, waixiang);
+                ProductAnalytics.updateBAOLILONGQuota(baolilong, product, waixiang);
             }
 
 

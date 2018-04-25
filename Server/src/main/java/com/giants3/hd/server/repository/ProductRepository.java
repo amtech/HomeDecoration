@@ -17,8 +17,12 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
 
+    @Query(value = "select p from  T_Product  p where  p.name like :key  and (p.pVersion is null or p.pVersion='')   order by p.name desc "
+            , countQuery = "select count(p.id) from  T_Product  p where  p.name like :key  and (p.pVersion is null or p.pVersion='') "
+    )
+    Page<Product> findByKeyWithoutCopy(@Param("key") String key, Pageable pageable);
 
-
+    Page<Product> findByNameLikeOrPVersionLikeOrderByNameDesc(String proName,String pVersion, Pageable pageable);
     Page<Product> findByNameLikeOrPVersionLikeOrderByNameAsc(String proName,String pVersion, Pageable pageable);
     Page<Product> findByNameLikeAndConceptusCostEqualsOrderByNameAsc(String proName, float value, Pageable pageable);
     Page<Product> findByNameLikeAndAssembleCostEqualsOrderByNameAsc(String likeValue, float value, Pageable pageable);
