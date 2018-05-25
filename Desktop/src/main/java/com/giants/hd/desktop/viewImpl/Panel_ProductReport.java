@@ -1,9 +1,17 @@
 package com.giants.hd.desktop.viewImpl;
 
 import com.giants.hd.desktop.ImageViewDialog;
+import com.giants.hd.desktop.dialogs.ProductQRDialog;
 import com.giants.hd.desktop.local.HdSwingWorker;
+import com.giants.hd.desktop.local.LocalFileHelper;
+import com.giants.hd.desktop.local.SimpleSwingWorker;
 import com.giants.hd.desktop.model.BaseTableModel;
 import com.giants.hd.desktop.model.ProductTableModel;
+import com.giants.hd.desktop.utils.QRHelper;
+import com.giants3.hd.noEntity.QRProduct;
+import com.giants3.hd.utils.FileUtils;
+import com.giants3.report.jasper.ProductWithQR;
+import com.giants3.report.jasper.QrProductReport;
 import com.giants3.report.jasper.product_list_4.ProductList4Report;
 import com.giants.hd.desktop.reports.products.Excel_ProductReport;
 import com.giants.hd.desktop.utils.HdSwingUtils;
@@ -16,14 +24,18 @@ import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.entity.Product;
 import rx.Subscriber;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 产品报表界面
@@ -44,6 +56,8 @@ public class Panel_ProductReport extends BasePanel {
     private JButton btn_random_search;
     private JButton btn_report3;
     private JButton export4;
+    private JButton printQR;
+    private JButton printQRA4;
     ProductTableModel model;
 
 
@@ -368,6 +382,92 @@ public class Panel_ProductReport extends BasePanel {
         btn_random_search.addActionListener(randomSearchActionListener);
 
         tf_random.addActionListener(randomSearchActionListener);
+
+
+        printQR.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(products==null||products.size()==0)
+                {
+
+                    showMesssage("无记录打印");
+                    return;
+                }
+
+
+                printQR("qrproduct" );
+
+
+            }
+        });
+
+
+        printQRA4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(products==null||products.size()==0)
+                {
+
+                    showMesssage("无记录打印");
+                    return;
+                }
+
+
+                printQR("qrproducta4" );
+
+
+            }
+        });
+    }
+
+    private void printQR(final String qrFileName) {
+        new SimpleSwingWorker<java.util.List<ProductWithQR>, Void>(window,"正在处理。。。") {
+
+            @Override
+            protected java.util.List<ProductWithQR> doInBackground() throws Exception {
+
+                java.util.List<ProductWithQR> qrProducts=new ArrayList<>();
+                for (Product product:products)
+                {
+                    String  qrLocalPath= LocalFileHelper.path+"/qr/temp"+product.id+".png";
+                    FileUtils.makeDirs(qrLocalPath);
+                    QRProduct qrProduct=  QRHelper.generate(product);
+                    int qrSize=400;
+                    BufferedImage scaledImg = QRHelper.generateQRCode(qrProduct,qrSize, qrSize) ;
+                    try {
+                        ImageIO.write(scaledImg, "png",new File( qrLocalPath));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    ProductWithQR productWithQR=new ProductWithQR();
+                    productWithQR.product=product;
+                    productWithQR.qrFilePath=qrLocalPath;
+                    qrProducts.add(productWithQR);
+                }
+
+                return qrProducts;
+
+            }
+
+            @Override
+            public void onResult( java.util.List<ProductWithQR> data) {
+
+                try {
+
+
+
+
+                    new QrProductReport(data, qrFileName).report();
+                } catch (Throwable e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(Panel_ProductReport.this.getWindow(),e1.getMessage());
+                }
+
+
+            }
+        }.go();
     }
 
     /**

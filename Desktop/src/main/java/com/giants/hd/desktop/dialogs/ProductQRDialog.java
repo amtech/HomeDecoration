@@ -5,6 +5,7 @@ import com.giants.hd.desktop.utils.QRHelper;
 import com.giants3.hd.entity.Product;
 import com.giants3.hd.noEntity.QRProduct;
 import com.giants3.hd.utils.FileUtils;
+import com.giants3.report.jasper.ProductWithQR;
 import com.giants3.report.jasper.QrProductReport;
 
 import javax.imageio.ImageIO;
@@ -65,7 +66,10 @@ public class ProductQRDialog extends BaseDialog<Product> {
                 try {
                     FileUtils.makeDirs(qrLocalPath);
                     ImageIO.write(scaledImg, "png",new File( qrLocalPath));
-                    new QrProductReport(product, qrLocalPath,"qrproducta4",3*6).report();
+                    ProductWithQR productWithQR=new ProductWithQR();
+                    productWithQR.product=product;
+                    productWithQR.qrFilePath=qrLocalPath;
+                    new QrProductReport(productWithQR, "qrproducta4",3*6).report();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(ProductQRDialog.this,e1.getMessage());
@@ -85,7 +89,12 @@ public class ProductQRDialog extends BaseDialog<Product> {
                 try {
                     FileUtils.makeDirs(qrLocalPath);
                     ImageIO.write(scaledImg, "png",new File( qrLocalPath));
-                    new QrProductReport(product, qrLocalPath,"qrproduct",1).report();
+
+
+                    ProductWithQR productWithQR=new ProductWithQR();
+                    productWithQR.product=product;
+                    productWithQR.qrFilePath=qrLocalPath;
+                    new QrProductReport(productWithQR, "qrproduct",1).report();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(ProductQRDialog.this,e1.getMessage());

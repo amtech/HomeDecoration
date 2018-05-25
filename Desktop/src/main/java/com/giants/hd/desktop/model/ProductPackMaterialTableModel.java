@@ -316,7 +316,7 @@ public class ProductPackMaterialTableModel extends BaseTableModel<ProductMateria
 
         ProductMaterial productMaterial = getItem(rowIndex);
         if (productMaterial != null) {
-            ProductAnalytics.updateMaterial(productMaterial, material);
+            ProductAnalytics.setMaterialToProductPaint(productMaterial, material);
         }
 
 

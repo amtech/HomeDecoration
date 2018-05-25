@@ -22,6 +22,6 @@
 
        inner join  (select BOM_NO ,KHXG,SO_ZXS,XGTJ from MF_BOM_Z  where KHXG IS NOT NULL  )  as b on a.ID_NO=b.BOM_NO
 
-          inner join (select os_no, cus_no from mf_pos   where OS_ID= UPPER ('SO')  ) as c on a.so_no = c.os_no
+          inner join (select os_no, cus_no from V_mf_pos   where OS_ID= UPPER ('SO')  ) as c on a.so_no = c.os_no
 
           order by a.dd desc

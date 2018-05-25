@@ -31,27 +31,27 @@ public class ErpOrderRepository  extends ErpRepository{
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
      */
     //模糊查找  os_no like  ：os_no
-    public static final String SQL_ORDER_LIST_SEARCH = "select  a.os_dd, a.chk_dd ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd    ,  p.chk_dd ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO)  a  LEFT JOIN\n" +
+    public static final String SQL_ORDER_LIST_SEARCH = "select  a.os_dd, a.chk_dd ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd    ,  p.chk_dd ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO)  a  LEFT JOIN\n" +
             "  \n" +
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.os_dd DESC  ,a.os_no desc ";
     //模糊查找  os_no like  ：os_no
-    public static final String SQL_ORDER_LIST_SEARCH_WITH_SALES = "select  a.os_dd,a.chk_dd  ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd , p.chk_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+SALE_WHERE_CAUSE+ ")  a  LEFT JOIN\n" +
+    public static final String SQL_ORDER_LIST_SEARCH_WITH_SALES = "select  a.os_dd,a.chk_dd  ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd , p.chk_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+SALE_WHERE_CAUSE+ ")  a  LEFT JOIN\n" +
             "  \n" +
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.os_dd DESC  ,a.os_no desc ";
 
     //精确查找， os_no=  ：os_no
-    public static final String SQL_ORDER_LIST_FIND = "select  a.os_dd,a.chk_dd  ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd,  p.chk_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO = :OS_NO)  a  LEFT JOIN\n" +
+    public static final String SQL_ORDER_LIST_FIND = "select  a.os_dd,a.chk_dd  ,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,b.so_data from  (select p.os_dd,  p.chk_dd    ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO = :OS_NO)  a  LEFT JOIN\n" +
             "  \n" +
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO = :OS_NO )   b on a.os_no=b.os_no   order by a.os_dd DESC ,a.os_no desc ";
 
-    public static final String SQL_ORDER_LIST_COUNT = " select  count(p.os_no)  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO  ";
+    public static final String SQL_ORDER_LIST_COUNT = " select  count(p.os_no)  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO  ";
 
     public static final String CheckDateWhereCause = " and p.chk_dd> :chk_dd_start and p.chk_dd < :chk_dd_end ";
     /**
      * 根据验货日期关键字查询记录数
      */
     public static final String SQL_ORDER_LIST_COUNT_CHECK_DATE =SQL_ORDER_LIST_COUNT+ CheckDateWhereCause;
-    public static final String SQL_ORDER_LIST_COUNT_WITH_SALES = " select  count(p.os_no) as count  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO    "  +SALE_WHERE_CAUSE;
+    public static final String SQL_ORDER_LIST_COUNT_WITH_SALES = " select  count(p.os_no) as count  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO    "  +SALE_WHERE_CAUSE;
 
     public  static final String OR_WHERE_PRD_LIKE_STUB ="orxxxxxxxxx";
     public  static final String AND_WHERE_PRD_LIKE_STUB ="andxxxxxxxxx";
@@ -89,7 +89,7 @@ public class ErpOrderRepository  extends ErpRepository{
     public static final String SEARCH_COUNT_ORDER_ITEMS=(" select count(*) from ("+sql_item_1 +") a left outer join (" + sql_item_2 + ") b on a.os_no=b.os_no and a.itm=b.itm ").replace(OS_NO_CONDITION_EQUALS,OS_NO_CONDITION_LIKE).replace(OR_WHERE_PRD_LIKE_STUB, OR_WHERE_PRD_LIKE_SQL).replace(AND_WHERE_PRD_LIKE_STUB, AND_WHERE_PRD_LIKE_SQL);
 
     //模糊查找  os_no like  ：os_no  and  chk_dd in[]
-    public static final String SQL_ORDER_LIST_SEARCH_WITH_CHECK_DATE = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,a.chk_dd  ,b.so_data from  (select p.os_dd  ,p.chk_dd  ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+  CheckDateWhereCause+" )  a  LEFT JOIN\n" +
+    public static final String SQL_ORDER_LIST_SEARCH_WITH_CHECK_DATE = "select  a.os_dd,a.os_no,a.cus_no,a.cus_os_no , a.sal_no ,a.rem,a.est_dd,a.chk_dd  ,b.so_data from  (select p.os_dd  ,p.chk_dd  ,CAST(p.os_no AS varchar) as os_no ,CAST(p.cus_no AS varchar) as cus_no ,CAST(p.cus_os_no AS varchar) as  cus_os_no , CAST (p.sal_no as VARCHAR ) as sal_no , CAST(p.rem AS varchar(8000)) as rem ,p.est_dd  from  V_MF_POS p where p.OS_ID=:OS_ID and p.OS_NO like :OS_NO "+  CheckDateWhereCause+" )  a  LEFT JOIN\n" +
             "  \n" +
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.chk_dd DESC  ";
 

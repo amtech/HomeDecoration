@@ -175,7 +175,7 @@ public class ProductPaintTableModel extends BaseTableModel<ProductPaint> impleme
         ProductPaint productPaint=getItem(rowIndex);
         if(productPaint!=null)
         {
-            ProductAnalytics.updateMaterial(productPaint, material,globalData);
+            ProductAnalytics.setMaterialToProductPaint(productPaint, material,globalData);
         }
 
 

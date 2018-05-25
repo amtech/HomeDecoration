@@ -4,7 +4,7 @@ select  zhiling.mo_dd, zhiling.mo_no,zhiling.prd_no,zhiling.prd_name,zhiling.prd
            --制令单
         select b.mo_dd,a.mo_no,a.prd_no,a.prd_name,a.prd_mark,a.qty_rsv,b.so_no,b.mrp_no  ,b.mo_no_add from
                             (
-                              select  mo_dd, mo_no,  so_no, mrp_no ,mo_no_add from mf_mo       where   mo_dd >=:startdate and  mo_dd <= :enddate and so_no like :osname
+                              select  mo_dd, mo_no,  so_no, mrp_no ,mo_no_add from mf_mo           where bil_Id = upper('MP') and  mo_dd >=:startdate and  mo_dd <= :enddate and so_no like :osname
 
                             )  b inner join
                            (

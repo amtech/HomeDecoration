@@ -37,7 +37,7 @@ GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up,
   left outer join
    (
        --排厂单
-      select   0 as producetype, so_no,est_itm ,'' as po_no from  mf_mo    where so_no like upper('%yf%') and  ( so_no like :os_no or mrp_no like  :prd_no )
+      select   0 as producetype, so_no,est_itm ,'' as po_no from  mf_mo       where bil_Id = upper('MP') and so_no like upper('%yf%') and  ( so_no like :os_no or mrp_no like  :prd_no )
        union
        --外购单
       select distinct 1 as producetype,oth_no as so_no,oth_itm1 as est_itm,os_no as po_no from  tf_pos   where  os_id=upper('po') and oth_no like upper('%yf%') and (OTH_NO like :os_no or prd_no like :prd_no )  and  os_dd >'2017-01-01'
@@ -47,7 +47,7 @@ GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up,
    ) as pdc on a.os_no=pdc.so_no    and a.itm=pdc.est_itm
 
   --厂商数据抓取
-  left outer join   (select os_no as po_no, cus_no   from  mf_pos where os_id=upper('po')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
+  left outer join   (select os_no as po_no, cus_no   from  V_mf_pos where os_id=upper('po')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
 
  
 
@@ -80,7 +80,7 @@ GROUP BY a.os_no, a.os_dd, a.itm, a.bat_no, a.prd_no, a.prd_name, a.id_no, a.up,
 
              left outer join (
 
-                            select os_no, cus_no   from  mf_pos where os_id=upper ('so')   and  os_dd >'2017-01-01'
+                            select os_no, cus_no   from  V_mf_pos where os_id=upper ('so')   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
 

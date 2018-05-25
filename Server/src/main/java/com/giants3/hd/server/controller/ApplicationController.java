@@ -102,65 +102,56 @@ public class    ApplicationController extends  BaseController {
                         ProductAnalytics.updateForeignFactoryRelate(product, globalData);
                     } else
 
-                        //如果有跟油漆材料相关
+                        //如果有跟油漆材料相关 先统计油漆相关数据
                         if (materialRelateChanged) {
 
 
+
+
+
+
                             List<ProductPaint> productPaints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(product.id);
+                            ProductAnalytics.updateProductWithProductPaints(product,productPaints,globalData);
 
-                            //更新油漆材料中稀释剂用量
-
-                            ProductAnalytics.updateQuantityOfIngredient(productPaints, globalData);
-
-
-                            //重新计算各油漆的单价 金额
-                            for (ProductPaint paint : productPaints) {
-
-                                ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(paint, globalData);
-
-
-                            }
 
 
                             //更新油漆数据
                             productPaintRepository.save(productPaints);
                             productPaintRepository.flush();
 
-                            //汇总计算油漆单价 金额
-                            float paintWage = 0;
-                            float paintCost = 0;
-                            for (ProductPaint paint : productPaints) {
-                                paintWage += paint.processPrice;
-                                paintCost += paint.cost;
 
-                            }
                             //更新产品油漆统计数据 自动联动更新全局数据。
-                            ProductAnalytics.updatePaintData(product, paintCost, paintWage,
-                                    globalData);
 
 
-                        } else {
 
-
-                            ProductAnalytics.updateProductInfoOnly(globalData,product);
 
 
 
                         }
 
+                    //各道材料++修理工资+搬运工资
+                            ProductAnalytics.updateProductInfoOnly(globalData,product);
+
+
+
+
+
 
                     //保存全部数据
                     //重新保存数据
                     productRepository.save(product);
-                    productRepository.flush();
+
 
 
                     //增加历史操作记录
                     OperationLog operationLog = OperationLog.createForGloBalDataChange(product, user);
-                    operationLogRepository.saveAndFlush(operationLog);
+                    operationLogRepository.save(operationLog);
 
                 }
-
+                if(productPage.getSize()>0) {
+                    productRepository.flush();
+                    operationLogRepository.flush();
+                }
 
             } while (productPage.hasNext());
 

@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.model;
 
+import com.giants.hd.desktop.viewImpl.Panel_QuotationDetail;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.FloatHelper;
@@ -34,34 +35,37 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
 
 
     public static final String COLUMN_PRODUCT="productName";
-
+    public static final String COLUMN_COST_PRICE_RATIO = "cost_price_ratio";
     QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
-    public static String[] columnNames = new String[]{   "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
+    private Panel_QuotationDetail.QuotationXkCostPriceRatioChangeListener listener;
+
+    public static String[] columnNames = new String[]{  "成本利润比",  "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
                                                             ,                                                                            "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
     };
-    public static int[] columnWidths = new int []{       50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   300,
-                                                                                                                                    50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    300};
+    public static int[] columnWidths = new int []{   50,    50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   300,
+                                                                                                               50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    300};
 
     public static final String MEMO = "memo";
     public static final String MEMO2 = "memo2";
-    public static String[] fieldName = new String[]{ "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize", MEMO,
+    public static String[] fieldName = new String[]{  COLUMN_COST_PRICE_RATIO, "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize", MEMO,
 
                                                                                                                             "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,COLUMN_PRICE2, "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2", MEMO2};
 
 
 public  static Class[] classes = new Class[]{ };
 
-    public  static boolean[] editables = new boolean[]{ false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
+    public  static boolean[] editables = new boolean[]{ true,false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
 
                                                                                                                                   false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true };
 
 
 
     @Inject
-    public QuotationItemXKTableModel() {
+    public QuotationItemXKTableModel( Panel_QuotationDetail.QuotationXkCostPriceRatioChangeListener listener) {
         super(columnNames,fieldName,classes,QuotationXKItem.class);
+        this.listener = listener;
     }
 
 
@@ -69,7 +73,7 @@ public  static Class[] classes = new Class[]{ };
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
-        if(quoteAuth.fobEditable&&( fieldName[columnIndex].equals(COLUMN_PRICE) ||fieldName[columnIndex].equals(COLUMN_PRICE2)))
+        if(quoteAuth.fobEditable&&( fieldName[columnIndex].equals(COLUMN_COST_PRICE_RATIO)  ))
         {
 
                 return  true ;
@@ -113,7 +117,16 @@ public  static Class[] classes = new Class[]{ };
         {
             return "***";
         }
+        if (fieldName[columnIndex].equals(COLUMN_COST_PRICE_RATIO))
+        {
+            if (quoteAuth.fobVisible) {
+                if (item.cost_price_ratio > 0) return item.cost_price_ratio;
+                else
+                    return CacheManager.getInstance().bufferData.globalData.cost_price_ratio;
+            } else
 
+                return "***";
+        }
         return super.getValueAt(rowIndex, columnIndex);
     }
 
@@ -131,20 +144,35 @@ public  static Class[] classes = new Class[]{ };
         {
 
 
-            case 5:
 
-                quotationItem.price= FloatHelper.scale(Float.valueOf(aValue.toString()));
-                break;
+                case 0:
 
-            case 17:
+                    float newValue=0;
+                    try {
+                        newValue= FloatHelper.scale(Float.valueOf(aValue.toString()));
+                    }catch (Throwable t)
+                    {
+                        t.printStackTrace();
+                    }
 
-                quotationItem.price2=FloatHelper.scale(Float.valueOf(aValue.toString()));
-                break;
-            case 11:
+                    if(newValue!=0&&newValue!=quotationItem.cost_price_ratio) {
+                        if (listener != null) {
+
+                            listener.onChange(quotationItem, quotationItem.cost_price_ratio, newValue);
+                        }
+
+                        quotationItem.cost_price_ratio = newValue;
+                    }
+                    break;
+
+
+
+
+            case 12:
 
             quotationItem.memo=aValue.toString();
             break;
-            case 23:
+            case 24:
 
                 quotationItem.memo2=aValue.toString();
                 break;

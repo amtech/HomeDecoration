@@ -274,6 +274,17 @@ public class ProductController extends BaseController {
         Product product = productRepository.findOne(productId);
         return product;
     }
+ @RequestMapping(value = "/findByProductIds", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Product> findById(@RequestParam("id") String productId) {
+
+
+     String[] productIds=StringUtils.split(productId,StringUtils.STRING_SPLIT_COMMA);
+     List<Product> productList=productService.findProductById(productIds);
+
+        return wrapData(productList);
+    }
 
 
     /**

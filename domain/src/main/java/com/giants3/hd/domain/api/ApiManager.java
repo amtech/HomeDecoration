@@ -2219,4 +2219,12 @@ public class ApiManager {
         RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> remoteData = invokeByReflect(result, com.giants3.hd.noEntity.app.QuotationDetail.class);
         return remoteData;
     }
+
+    public RemoteData<Product> loadProductById(long[] productIds) throws HdException {
+
+        String url = HttpUrl.loadProductByIds(productIds);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
+        return productRemoteData;
+    }
 }

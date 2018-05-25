@@ -1243,4 +1243,9 @@ public class HttpUrl {
 
         return additionInfo(urlFormatter);
     }
+
+    public static String loadProductByIds(long[] productIds) {
+        ;
+        return additionInfo(BaseUrl + "api/product/findByProductIds?id=" + StringUtils.combine(productIds,StringUtils.STRING_SPLIT_COMMA));
+    }
 }

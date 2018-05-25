@@ -375,7 +375,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                 productDetail.packMaterials = packMaterialTableModel.getDatas();
                 productDetail.packWages = packWageTableModel.getDatas();
 
-                ProductAnalytics.updateProduct(productDetail, globalData);
+                ProductAnalytics.updateProductStatistics(productDetail, globalData);
 
 
                 bindStatisticsValue(productDetail.product);
@@ -1966,7 +1966,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
                                 productMaterial.setpHeight(pHeight);
 
 
-                                ProductAnalytics.updateMaterial(productMaterial, material);
+                                ProductAnalytics.setMaterialToProductPaint(productMaterial, material);
                                 //tableModel.fireTableDataChanged();
 
                                 break;
@@ -2031,7 +2031,7 @@ public class Panel_ProductDetail extends BasePanel implements ProductDetailViewe
 
                             if (name.equals(material.name)) {
 
-                                ProductAnalytics.updateMaterial(productPaint, material, globalData);
+                                ProductAnalytics.setMaterialToProductPaint(productPaint, material, globalData);
 
 
                                 break;

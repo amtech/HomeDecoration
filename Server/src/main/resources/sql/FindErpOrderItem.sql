@@ -27,7 +27,7 @@ and  os_dd >'2017-01-01' and (os_no = :os_no and itm= :itm)
   left outer join
    (
        --排厂单
-      select  distinct  0 as produceType, SO_NO,EST_ITM ,'' as po_no from  MF_MO    where so_no like upper('%YF%') and so_no like :os_no
+      select  distinct  0 as produceType, SO_NO,EST_ITM ,'' as po_no from  MF_MO    where    bil_Id = upper('MP') and  so_no like upper('%YF%') and so_no like :os_no
 
        union
        --外购单
@@ -38,7 +38,7 @@ and  os_dd >'2017-01-01' and (os_no = :os_no and itm= :itm)
    ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
   --厂商数据抓取
-  left outer join   (select os_no as po_no, cus_no   from  mf_pos where OS_ID=upper('PO')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
+  left outer join   (select os_no as po_no, cus_no   from  V_mf_pos where OS_ID=upper('PO')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
 
 left outer join
 (
@@ -77,7 +77,7 @@ select osNo,itm,workflowstate,maxWorkFlowStep,maxWorkFlowName, maxWorkFlowCode,w
 
              left outer join (
 
-                            select os_no, cus_no   from  mf_pos where OS_ID='SO'   and  os_dd >'2017-01-01'
+                            select os_no, cus_no   from  V_mf_pos where OS_ID='SO'   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
 

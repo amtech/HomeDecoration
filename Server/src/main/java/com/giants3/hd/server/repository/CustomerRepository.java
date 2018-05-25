@@ -15,6 +15,7 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 
     public Customer findFirstByCodeEquals(String code);
       List<Customer> findByCodeLikeOrNameLikeOrderByNameDesc(String codeLike,String nameLike);
+      List<Customer> findByCodeLikeOrNameLikeOrderByCodeAsc(String codeLike,String nameLike);
 
 
 }

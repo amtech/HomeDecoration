@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-04-15T22:26:39 -->
+<!-- 2018-05-13T17:20:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qrcode" columnCount="3" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="185" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bfda6e99-1a3b-45c8-b5c2-d4f3524ff91d">
 	<property name="com.jaspersoft.studio.unit." value="mm"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
@@ -46,8 +46,8 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textField>
-					<reportElement x="0" y="0" width="181" height="17" uuid="134901aa-88fd-43a1-bce1-1fd5a4f86146">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="101" y="31" width="80" height="39" uuid="134901aa-88fd-43a1-bce1-1fd5a4f86146">
 						<property name="com.jaspersoft.studio.unit.height" value="mm"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -55,26 +55,15 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement x="0" y="17" width="181" height="17" uuid="61d91e53-7c96-4ebf-8444-61be004b225b">
-						<property name="com.jaspersoft.studio.unit.height" value="mm"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Song"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{pack}]]></textFieldExpression>
-				</textField>
 				<image onErrorType="Blank">
-					<reportElement positionType="FixRelativeToBottom" x="20" y="34" width="85" height="85" uuid="3174c022-6c0d-46ff-b514-43aa0b67a310">
-						<property name="com.jaspersoft.studio.unit.y" value="mm"/>
-						<property name="com.jaspersoft.studio.unit.height" value="mm"/>
-						<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<reportElement positionType="FixRelativeToBottom" x="1" y="11" width="99" height="99" uuid="3174c022-6c0d-46ff-b514-43aa0b67a310">
+						<property name="com.jaspersoft.studio.unit.x" value="mm"/>
 					</reportElement>
 					<imageExpression><![CDATA[$F{url}]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="121" y="71" width="46" height="19" uuid="34961fee-e758-4c98-9d24-98223eb4214f"/>
-					<textElement>
+					<reportElement x="119" y="71" width="46" height="19" uuid="34961fee-e758-4c98-9d24-98223eb4214f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Song"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>

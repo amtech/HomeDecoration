@@ -155,6 +155,10 @@ public class UseCaseFactory {
         return new GetProductByPrdNoUseCase(  prdNo, productRepository);
     }
 
+    public UseCase createGetProductByIdUseCase(long... productId ) {
+        return new GetProductByIdUseCase(  productId, productRepository);
+    }
+
 
     /**
      * 读取出库列表case

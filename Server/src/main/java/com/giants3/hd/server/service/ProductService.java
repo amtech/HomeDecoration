@@ -8,6 +8,7 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -1439,6 +1440,17 @@ public class ProductService extends AbstractService implements InitializingBean,
     public Product findProductById(long productId) {
 
         return productRepository.findOne(productId);
+    }
+
+    public List<Product> findProductById(String[] productIds) {
+
+        long[] productIdArray= new long[productIds.length];
+        for (int i = 0; i < productIds.length; i++) {
+
+            productIdArray[i]= Long.parseLong(productIds[i]);
+        }
+
+        return productRepository.findByIdIn(productIdArray);
     }
 
     /**

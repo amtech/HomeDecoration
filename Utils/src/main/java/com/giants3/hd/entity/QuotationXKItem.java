@@ -68,6 +68,10 @@ public class QuotationXKItem implements Serializable,Valuable {
     @Basic
     public float cost;
 
+    /**
+     * 成本利润比值
+     */
+    public float cost_price_ratio;
 
     /**
      * 单价
@@ -268,75 +272,6 @@ public class QuotationXKItem implements Serializable,Valuable {
     public String photo2Url;
 
 
-
-
-    public void updateProduct(Product product) {
-
-
-
-
-
-        productId=product.id;
-       thumbnail=product.thumbnail;
-        photoUrl=product.url;
-        productName=product.name;
-        pVersion=product.pVersion;
-        inBoxCount=product.insideBoxQuantity;
-        packQuantity=product.packQuantity;
-        packageSize=StringUtils.combineNumberValue(product.packLong, product.packWidth, product.packHeight);
-
-
-        unit=product.pUnitName;
-        cost= FloatHelper.scale(product.cost);
-
-        //默认不带动fob
-        // price=0;
-        //price=FloatHelper.scale(product.fob);
-
-        volumeSize=FloatHelper.scale(product.getPackVolume(),3);
-        weight=FloatHelper.scale(product.weight);
-        spec=product.spec;
-        constitute=product.constitute;
-        mirrorSize=product.mirrorSize;
-        memo=product.memo;
-
-
-
-
-    }
-
-
-    public void updateProduct2(Product product) {
-
-
-        productId2=product==null?0:product.id;
-       thumbnail2=product==null?null:product.thumbnail;
-        photo2Url=product==null?"":product.url;
-
-        productName2=product==null?"":product.name;
-        pVersion2=product==null?"":product.pVersion;
-        inBoxCount2=product==null?0:product.insideBoxQuantity;
-        packQuantity2=product==null?0:product.packQuantity;
-        packageSize2=product==null?"":StringUtils.combineNumberValue(product.packLong, product.packWidth, product.packHeight);
-
-
-        unit2=product==null?"":product.pUnitName;
-        cost2=product==null?0:FloatHelper.scale(product.cost);
-
-        //默认不带动fob
-       // price2=0;
-       // price2=product==null?0:FloatHelper.scale(product.fob);
-
-        volumeSize2=product==null?0:FloatHelper.scale(product.getPackVolume());
-        weight2=product==null?0:FloatHelper.scale(product.weight);
-        spec2=product==null?"":product.spec;
-        constitute2=product==null?"":product.constitute;
-        mirrorSize2=product==null?"":product.mirrorSize;
-        memo2=product==null?"":product.memo;
-
-
-    }
-
     @Override
     public boolean isEmpty() {
         return productId<=0&&productId2<=0 ;
@@ -355,6 +290,7 @@ public class QuotationXKItem implements Serializable,Valuable {
         if (inBoxCount != item.inBoxCount) return false;
         if (packQuantity != item.packQuantity) return false;
         if (Float.compare(item.cost, cost) != 0) return false;
+        if (Float.compare(item.cost_price_ratio, cost_price_ratio) != 0) return false;
         if (Float.compare(item.price, price) != 0) return false;
         if (Float.compare(item.volumeSize, volumeSize) != 0) return false;
         if (Float.compare(item.weight, weight) != 0) return false;

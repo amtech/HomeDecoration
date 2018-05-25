@@ -4,7 +4,7 @@ SELECT A.TZ_NO ,A.MO_NO,C.SO_NO AS OS_NO,C.EST_ITM AS ITM,A.MRP_NO,D.workFlowNam
 INNER JOIN (SELECT ZC_NO ,NAME FROM ZC_NO) AS B  ON A.ZC_NO=B.ZC_NO
 
 
-INNER JOIN (SELECT MO_NO, SO_NO,EST_ITM FROM MF_MO)  AS C ON A.MO_NO =C.MO_NO
+INNER JOIN (SELECT MO_NO, SO_NO,EST_ITM FROM MF_MO where bil_Id = upper('MP'))  AS C ON A.MO_NO =C.MO_NO
 
 INNER JOIN (
     SELECT OSNO,ITM,prdNo as prd_no,workFlowName ,endDateString as completeDate FROM [yunfei].[dbo].[T_eRPWORKFLOWREPORT]
@@ -16,6 +16,6 @@ INNER JOIN (
 ON C.SO_NO=D.OSNO  collate Chinese_PRC_90_CI_AI  AND C.EST_ITM=D.ITM
 
 
-where ( b.NAME like  :para_name or b.ZC_NO LIKE  :para_name  or  c.SO_NO  like :para_name or  d.prd_no like :para_name  )  and TZ_NO NOT IN (SELECT TZ_NO FROM TF_WR)
+where (A.MRP_NO like :para_name or  b.NAME like  :para_name or b.ZC_NO LIKE  :para_name  or  c.SO_NO  like :para_name or  d.prd_no like :para_name  )  and TZ_NO NOT IN (SELECT TZ_NO FROM TF_WR)
 
 order by c.SO_NO DESC

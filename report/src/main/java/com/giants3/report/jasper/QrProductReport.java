@@ -1,6 +1,5 @@
 package com.giants3.report.jasper;
 
-import com.giants3.hd.entity.Product;
 import com.giants3.hd.noEntity.ProductAgent;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -9,6 +8,7 @@ import net.sf.jasperreports.engine.JRField;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,51 +17,72 @@ import java.util.Map;
 public class QrProductReport extends JRPreviewReport {
 
 
-    private Product product;
+
     private final String jasperFileName;
-    private final int count;
-    private String qrFilePath;
-
-    public QrProductReport(Product product,String qrFilePath,String jasperFileName,int count) {
-        this.qrFilePath = qrFilePath;
 
 
-        this.product = product;
+    List<ProductWithQR> list=null;
+
+    public QrProductReport(ProductWithQR product , String jasperFileName, int count) {
+
         this.jasperFileName = jasperFileName;
-        this.count = count;
-    }
 
-    @Override
-    public JRDataSource getDataSource() {
-        java.util.List<Product> list = new ArrayList<>();
 
-        //a4 一版 3*6
+        list = new ArrayList<>();
+
+        //a4
         for (int i = 0; i < count; i++) {
 
             list.add(product);
 
         }
 
+
+
+    }
+
+
+    public QrProductReport(List<ProductWithQR> products, String jasperFileName ) {
+
+
+
+
+        this.jasperFileName = jasperFileName;
+
+
+        list = products;
+
+
+
+    }
+
+    @Override
+    public JRDataSource getDataSource() {
+
+
         return new CustomBeanDataSource(list){
 
 
             @Override
-            public Object getFieldValue(JRField field) throws JRException {
+            public Object getFieldValue(Object bean,JRField field) throws JRException {
 
 
                 String propertiyName=super.getPropertyName(field);
+
+                ProductWithQR productWithQR = (ProductWithQR) bean;
             //    System.out.println(propertiyName);
+
                 switch (propertiyName)
                 {
                     case "unit":
-                        return product.getpUnitName();
+                        return productWithQR.product.getpUnitName();
                      case "pack":
-                        return ProductAgent.getProductFullPackageInfo(product);
+                        return ProductAgent.getProductFullPackageInfo(productWithQR.product);
                     case "name":
-                        return product.name;
+                        return productWithQR.product.name;
                     case "url":
 
-                        return qrFilePath;
+                        return productWithQR.qrFilePath;
 
 
                 }

@@ -108,7 +108,7 @@ public class CustomerService extends AbstractService {
 
 
         String keyLike= StringUtils.sqlLike(key);
-       return  customerRepository.findByCodeLikeOrNameLikeOrderByNameDesc(keyLike,keyLike);
+       return  customerRepository.findByCodeLikeOrNameLikeOrderByCodeAsc(keyLike,keyLike);
 
     }
 

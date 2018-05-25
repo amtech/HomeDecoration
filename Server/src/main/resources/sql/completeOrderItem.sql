@@ -57,7 +57,7 @@ and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
    ) as pdc on a.os_no=pdc.SO_NO    and a.itm=pdc.EST_ITM
 
   --厂商数据抓取
-  left outer join   (select os_no as po_no, cus_no   from  mf_pos where OS_ID=upper('PO')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
+  left outer join   (select os_no as po_no, cus_no   from  V_mf_pos where OS_ID=upper('PO')   and  os_dd >'2017-01-01') as k on pdc.po_no=k.po_no
 
   left outer JOIN
   --图片抓取关闭图片修改日期的抓取， ERP 图片改动时候， 客户端是无法感知的。
@@ -88,7 +88,7 @@ and  os_dd >'2017-01-01' and (os_no like :os_no or prd_no like :prd_no)
 
              left outer join (
 
-                            select os_no, cus_no   from  mf_pos where OS_ID=upper('SO')   and  os_dd >'2017-01-01'
+                            select os_no, cus_no   from  V_mf_pos where OS_ID=upper('SO')   and  os_dd >'2017-01-01'
 
                             ) g  on  a.os_no=g.os_no
 

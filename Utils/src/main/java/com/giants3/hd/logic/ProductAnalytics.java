@@ -3,9 +3,12 @@ package com.giants3.hd.logic;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.quotation.BoardQuotation;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -14,173 +17,6 @@ import java.util.logging.Logger;
 public class ProductAnalytics {
 
 
-
-
-
-    public static void updateProduct(ProductDetail productDetail, GlobalData globalData)
-    {
-
-
-        float paintWage = 0;
-        float paintCost = 0;
-        for (ProductPaint paint : productDetail.paints) {
-            paintWage += paint.processPrice;
-            paintCost += paint.cost  ;
-
-        }
-        final Product product = productDetail.product;
-        updatePaintData(product, paintCost, paintWage,
-                globalData);
-
-
-        //汇总计算白胚材料
-        float conceptusCost = 0;
-        for (ProductMaterial material : productDetail.conceptusMaterials) {
-            conceptusCost += material.getAmount();
-        }
-        product.conceptusCost = FloatHelper.scale(conceptusCost);
-        //汇总计算组白胚工资
-        float conceptusWage = 0;
-        for (ProductWage wage : productDetail.conceptusWages) {
-            conceptusWage += wage.getAmount();
-        }
-        product.conceptusWage = FloatHelper.scale(conceptusWage);
-
-
-        //汇总计算组装材料
-        float assembleCost = 0;
-        for (ProductMaterial material : productDetail.assembleMaterials) {
-            assembleCost += material.getAmount();
-        }
-        product.assembleCost = FloatHelper.scale(assembleCost);
-
-        //汇总计算组装工资
-        float assembleWage = 0;
-        for (ProductWage wage : productDetail.assembleWages) {
-            assembleWage += wage.getAmount();
-        }
-        product.assembleWage = FloatHelper.scale(assembleWage);
-
-        //汇总计算包装材料
-        float packCost = 0;
-        for (ProductMaterial material : productDetail.packMaterials) {
-
-
-
-
-
-            packCost += material.getAmount();
-
-
-            //如果包材是外箱  则更新产品外包装材料信息
-
-
-            if(material.getPackMaterialClass()!=null)
-            {
-
-                String className=material.getPackMaterialClass().getName();
-                if(className.equals(PackMaterialClass.CLASS_BOX))
-                {
-
-                    product.packLong=material.getpLong();
-                    product.packHeight=material.getpHeight();
-                    product.packWidth=material.getpWidth();
-
-                }
-                //取消数据联动
-//                else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
-//                {
-//                    product.insideBoxQuantity=(int)material.quantity;
-//                }
-            }
-
-
-
-
-        }
-
-
-
-
-        //计算包装成本  平摊箱数， 如无箱数 则默认1
-        product.packCost = FloatHelper.scale(product.packQuantity==0?packCost:packCost/ product.packQuantity);
-
-        //汇总计算包装工资
-        float packWage = 0;
-        for (ProductWage wage : productDetail.packWages) {
-            packWage += wage.getAmount();
-        }
-        //计算包装工资 平摊箱数， 如无箱数 则默认1
-        product.packWage = FloatHelper.scale(product.packQuantity==0?packWage:packWage/ product.packQuantity);
-
-
-
-
-
-        productDetail.summariables.clear();
-
-        productDetail.summariables.addAll(productDetail.conceptusMaterials);
-        productDetail.summariables.addAll(productDetail.assembleMaterials);
-        productDetail.summariables.addAll(productDetail.paints);
-        productDetail.summariables.addAll(productDetail.packMaterials);
-
-        //分类型统计数据
-        float cost1=0;
-        float cost7=0;
-        float cost8=0;
-        float cost5=0;
-        float cost6=0;
-        float cost4=0;
-        float cost11_15=0;
-        for(Summariable summariable:productDetail.summariables)
-        {
-            int type=summariable.getType();
-            float amount=summariable.getAmount();
-            switch (type)
-            {
-
-                case 1:
-                    cost1+=amount;
-                    break;
-                case 8:
-                    cost8+=amount;
-                    break;
-                case 5:
-                    cost5+=amount;
-                    break;
-                case 6:
-                    cost6+=amount;
-                    break;
-                case 7:
-                    cost7+=amount;
-                    break;
-
-                case 4:
-                    cost4+=amount;
-                    break;
-                case 11:case 12: case 13:case 14:case 15:
-                cost11_15+=amount;
-                break;
-
-
-            }
-
-        }
-        productDetail.summariables.clear();
-
-        product.cost1=FloatHelper.scale(cost1);
-        product.cost5=FloatHelper.scale(cost5);
-        product.cost6=FloatHelper.scale(cost6);
-        product.cost7=FloatHelper.scale(cost7);
-        product.cost8=FloatHelper.scale(cost8);
-        product.cost11_15=FloatHelper.scale(cost11_15);
-
-        //计算包装材料 平摊箱数， 如无箱数 则默认1
-        product.cost4=FloatHelper.scale(product.packQuantity==0?cost4:cost4/ product.packQuantity);
-        updateProductInfoOnly(globalData, product);
-
-
-    }
     /**
      * 重新计算总成本
      */
@@ -188,81 +24,72 @@ public class ProductAnalytics {
 
 
         //各道材料++修理工资+搬运工资
-        product.productCost= FloatHelper.scale( product.paintCost+ product.paintWage+ product.assembleCost+ product.assembleWage+ product.conceptusCost+ product.conceptusWage+ product.packCost+ product.packWage+ product.repairCost+ product.banyunCost);
+        product.productCost = FloatHelper.scale(product.paintCost + product.paintWage + product.assembleCost + product.assembleWage + product.conceptusCost + product.conceptusWage + product.packCost + product.packWage + product.repairCost + product.banyunCost);
 
 
         //计算体积
-        product.packVolume= FloatHelper.scale(product.packLong* product.packWidth* product.packHeight/1000000,3);
+        product.packVolume = FloatHelper.scale(product.packLong * product.packWidth * product.packHeight / 1000000, 3);
 
 
         //计算修理工资
-        product.repairCost=FloatHelper.scale(product.packQuantity<=0?0: product.packVolume* globalData.repairPrice/ product.packQuantity);
+        product.repairCost = FloatHelper.scale(product.packQuantity <= 0 ? 0 : product.packVolume * globalData.repairPrice / product.packQuantity);
 
         //计算搬运工资
-        product.banyunCost=FloatHelper.scale(product.packQuantity<=0?0: product.packVolume* globalData.priceOfBanyun/ product.packQuantity);
-
-        GlobalData configData= globalData;
+        product.banyunCost = FloatHelper.scale(product.packQuantity <= 0 ? 0 : product.packVolume * globalData.priceOfBanyun / product.packQuantity);
 
 
         //获取管理系数  咸康跟普通不一致
-        float manageRatio= globalData.manageRatioNormal;
-        if(product.pack!=null&& product.pack.isXkPack())
-        {
-            manageRatio= globalData.manageRatioXK;
+        float manageRatio = globalData.manageRatioNormal;
+        if (product.pack != null && product.pack.isXkPack()) {
+            manageRatio = globalData.manageRatioXK;
         }
 
 
         //计算成本价   (实际成本)*（1+管理系数）
-        product.cost=FloatHelper.scale((product.productCost)*(1+manageRatio));
+        product.cost = FloatHelper.scale((product.productCost) * (1 + manageRatio));
 
 
-        product.price=FloatHelper.scale(product.cost/configData.cost_price_ratio);
+        product.price=getPriceFromCost(product ,globalData);
 
-        if(product.packQuantity <=0)
-            product.fob=0;
-        else
-        //售价+海外运费
-        product.fob=FloatHelper.scale((product.price * (1 + configData.addition) + product.packVolume * configData.price_of_export / product.packQuantity)/configData.exportRate);
+        product.fob=getFobFromCost(product ,globalData);
+
+
+
     }
 
     /**
      * 更新材料费用与配料费用
      */
-    public static void updateProductPaintPriceAndCostAndQuantity(ProductPaint productPaint,GlobalData globalData)
-    {
-        GlobalData configData=globalData;
-        productPaint.price=FloatHelper.scale((productPaint.materialPrice + configData.price_of_diluent * productPaint.ingredientRatio)/(1+productPaint.ingredientRatio),3);
-        productPaint.cost=FloatHelper.scale(productPaint.quantity*productPaint.price);
+    public static void updateProductPaintPriceAndCostAndQuantity(ProductPaint productPaint, GlobalData globalData) {
+        productPaint.price = FloatHelper.scale((productPaint.materialPrice + globalData.price_of_diluent * productPaint.ingredientRatio) / (1 + productPaint.ingredientRatio), 3);
+        productPaint.cost = FloatHelper.scale(productPaint.quantity * productPaint.price);
 
         //配料 即主成分用量
-        productPaint.materialQuantity= FloatHelper.scale(productPaint.quantity/(1+productPaint.ingredientRatio),3) ;
-        productPaint.ingredientQuantity=productPaint.quantity-productPaint.materialQuantity ;
+        productPaint.materialQuantity = FloatHelper.scale(productPaint.quantity / (1 + productPaint.ingredientRatio), 3);
+        productPaint.ingredientQuantity = productPaint.quantity - productPaint.materialQuantity;
 
 
     }
 
     /**
      * 更新材料数据
+     *
      * @param productPaint
      * @param material
      */
-    public static void updateMaterial(ProductPaint productPaint, Material material, GlobalData globalData) {
+    public static void setMaterialToProductPaint(ProductPaint productPaint, Material material, GlobalData globalData) {
 
 
+        productPaint.materialCode = material.code;
+        productPaint.materialName = material.name;
+        productPaint.materialId = material.id;
+        productPaint.materialPrice = material.price;
 
 
-
-
-        productPaint.materialCode=material.code;
-        productPaint.materialName=material.name;
-        productPaint.materialId=material.id;
-        productPaint.materialPrice=material.price;
-
-
-        productPaint.unitName=material.unitName;
-        productPaint.materialType=material.typeId;
-        productPaint.ingredientRatio=material.ingredientRatio;
-         productPaint.memo=material.memo;
+        productPaint.unitName = material.unitName;
+        productPaint.materialType = material.typeId;
+        productPaint.ingredientRatio = material.ingredientRatio;
+        productPaint.memo = material.memo;
 
 
         updateProductPaintPriceAndCostAndQuantity(productPaint, globalData);
@@ -272,9 +99,10 @@ public class ProductAnalytics {
 
     /**
      * 默认计算公式  长*宽*高*数量、利用率
+     *
      * @param item
      */
-    public static float defaultCalculateQuota(ProductMaterial item) {
+    private static float defaultCalculateQuota(ProductMaterial item) {
 
         float newQuota = 0;
         //默认计算公式
@@ -297,10 +125,10 @@ public class ProductAnalytics {
 
     /**
      * 更新材料相关数据
+     *
      * @param productMaterial
      */
     public static void update(ProductMaterial productMaterial) {
-
 
         productMaterial.wLong = productMaterial.mLong + productMaterial.pLong;
         productMaterial.wHeight = productMaterial.mHeight + productMaterial.pHeight;
@@ -372,7 +200,7 @@ public class ProductAnalytics {
 
                     case PackMaterialClass.CLASS_CAIHE:
                         // 彩盒计算
-                      //  newQuota = (pLong / 100 + pWidth / 100 * 4) * (pWidth / 100 + pHeight / 100 + 0.06f) * 2 * quantity;
+                        //  newQuota = (pLong / 100 + pWidth / 100 * 4) * (pWidth / 100 + pHeight / 100 + 0.06f) * 2 * quantity;
 
                         //20170820 彩盒去除公司，並且單價可填寫
                         newQuota = productMaterial.quantity;
@@ -399,7 +227,7 @@ public class ProductAnalytics {
                     case PackMaterialClass.CLASS_QIPAODAI:
 
                         //气泡袋双面  长宽高x2
-                        newQuota = defaultCalculateQuota(productMaterial)*2;
+                        newQuota = defaultCalculateQuota(productMaterial) * 2;
 
                         break;
 
@@ -433,7 +261,7 @@ public class ProductAnalytics {
      * @param item
      * @param material
      */
-    public static void updateMaterial(ProductMaterial item, Material material) {
+    public static void setMaterialToProductPaint(ProductMaterial item, Material material) {
 
         item.materialCode = material.code;
         item.materialName = material.name;
@@ -677,32 +505,15 @@ public class ProductAnalytics {
     }
 
     /**
-     * 更新油漆的汇总信息
-     * @param product
-     * @param paintCost
-     * @param paintWage
-     */
-    public static void updatePaintData(Product product, float paintCost, float paintWage, GlobalData globalData) {
-
-        product.paintCost=FloatHelper.scale(paintCost);
-        product.paintWage=FloatHelper.scale(paintWage);
-
-        //各道材料++修理工资+搬运工资
-        updateProductInfoOnly(globalData, product);
-
-
-    }
-
-    /**
      * 根据外厂实际成本值 港杂费用 更新到 成本价 出厂价，美金价格
-     * @param product
-     * @param productCost  实际成本
      *
+     * @param product
+     * @param productCost 实际成本
      */
     public static void updateCostOnForeignFactory(Product product, GlobalData globalData, float productCost) {
 
 
-        product.productCost=productCost;
+        product.productCost = productCost;
 
 
 //		计算外厂港杂
@@ -711,30 +522,28 @@ public class ProductAnalytics {
 //		this.gangza=gangza;
 
 
-
-
-
-
-
         //更新成本价格
-        product.cost =FloatHelper.scale(productCost+ product.gangza);
-
-
+        product.cost = FloatHelper.scale(productCost + product.gangza);
 
 
         //更新出厂价格(加上管理费用  即 除以换算比率)外厂是管理费用
-        product.price =FloatHelper.scale(product.cost *(1+globalData.manageRatioForeign));
+        product.price = getPriceFromCost(product ,globalData);
+        product.fob = getFobFromCost(product ,globalData);
 
 
-        //更新美金价格
-        product.fob =FloatHelper.scale(product.price /globalData.exportRate);
 
 
 
     }
 
+
+
+
+
+
     /**
      * 更新包装相关数据 影响到volume值
+     *
      * @param product
      * @param inboxCount
      * @param quantity
@@ -745,22 +554,21 @@ public class ProductAnalytics {
     public static void updatePackData(Product product, GlobalData globalData, int inboxCount, int quantity, float packLong, float packWidth, float packHeight) {
 
 
-
-        product.insideBoxQuantity=inboxCount;
-        product.packQuantity=quantity;
-        product.packLong=packLong;
-        product.packWidth=packWidth;
-        product.packHeight=packHeight;
+        product.insideBoxQuantity = inboxCount;
+        product.packQuantity = quantity;
+        product.packLong = packLong;
+        product.packWidth = packWidth;
+        product.packHeight = packHeight;
 
 
         //计算体积
-        product.packVolume = FloatHelper.scale(packLong*packWidth*packHeight/1000000,3);
+        product.packVolume = FloatHelper.scale(packLong * packWidth * packHeight / 1000000, 3);
 
 
         //外厂才计算港杂
         //计算出港杂      立方数* 出口运费/装箱数
 
-        product.gangza=FloatHelper.scale(product.packQuantity>0? globalData.price_of_export* product.packVolume/ product.packQuantity:0);
+        product.gangza = FloatHelper.scale(product.packQuantity > 0 ? globalData.price_of_export * product.packVolume / product.packQuantity : 0);
 
         updateCostOnForeignFactory(product, globalData, product.productCost);
 
@@ -769,13 +577,13 @@ public class ProductAnalytics {
 
     /**
      * 计算外厂相关数据
+     *
      * @param product
      * @param globalData
      */
-    public static void updateForeignFactoryRelate(Product product, GlobalData globalData)
-    {
+    public static void updateForeignFactoryRelate(Product product, GlobalData globalData) {
 
-        product.gangza =FloatHelper.scale(product.packQuantity >0? globalData.price_of_export* product.packVolume / product.packQuantity :0);
+        product.gangza = FloatHelper.scale(product.packQuantity > 0 ? globalData.price_of_export * product.packVolume / product.packQuantity : 0);
         updateCostOnForeignFactory(product, globalData, product.productCost);
 
     }
@@ -783,38 +591,32 @@ public class ProductAnalytics {
     /**
      * 更新配料洗刷枪的费用的数据量值。
      *
-     * @return  更新记录所在位置index'
+     * @return 更新记录所在位置index'
      */
-    public static int updateQuantityOfIngredient(List<ProductPaint> productPaints, GlobalData globalData)
-    {
+    public static int updateQuantityOfIngredient(List<ProductPaint> productPaints, GlobalData globalData) {
 
 
-        ProductPaint ingredientPaint=null;
-        float totalIngredientQuantity=0;
-        for(ProductPaint paint: productPaints)
-        {
+        ProductPaint ingredientPaint = null;
+        float totalIngredientQuantity = 0;
+        for (ProductPaint paint : productPaints) {
 
-            if( paint.processName==null|| !paint.processName.contains(ProductProcess.XISHUA)  )
-            {
-                if(paint.materialId>0)
-                    totalIngredientQuantity+=paint.ingredientQuantity;
-            }else
-                ingredientPaint=paint;
+            if (paint.processName == null || !paint.processName.contains(ProductProcess.XISHUA)) {
+                if (paint.materialId > 0)
+                    totalIngredientQuantity += paint.ingredientQuantity;
+            } else
+                ingredientPaint = paint;
 
         }
 
-        if(ingredientPaint!=null)
-        {
+        if (ingredientPaint != null) {
 
 
-
-
-            ingredientPaint.quantity=FloatHelper.scale(totalIngredientQuantity *globalData.extra_ratio_of_diluent, 3);
+            ingredientPaint.quantity = FloatHelper.scale(totalIngredientQuantity * globalData.extra_ratio_of_diluent, 3);
 
             updateProductPaintPriceAndCostAndQuantity(ingredientPaint, globalData);
 
 
-            int index= productPaints.indexOf(ingredientPaint);
+            int index = productPaints.indexOf(ingredientPaint);
             return index;
             //fireTableRowsUpdated(flowStep, flowStep);
         }
@@ -826,26 +628,112 @@ public class ProductAnalytics {
     }
 
     /**
-     * 更新产品的统计数据
+     * 根据成本价计算出出厂价
+     * @param product
+     * @param globalData
+     * @return
      */
-    public static void updateProductStatistics(ProductDetail productDetail, GlobalData globalData)
+    public static float getPriceFromCost(Product product,GlobalData globalData)
+    {
+        return getPriceFromCost(product,globalData.cost_price_ratio,globalData.manageRatioForeign);
+
+    }
+    public static float getPriceFromCost(Product product,float  cost_price_ratio,float manageRatioForeign)
+    {
+        if(Factory.CODE_LOCAl.equals(product.factoryCode)) {
+            return FloatHelper.scale(product.cost / cost_price_ratio);
+        }else
+            return  FloatHelper.scale(product.cost * (1 + manageRatioForeign));
+    }
+
+    /**
+     * 根据成本价计算出fob价格
+     * @param product
+
+     * @param globalData
+     * @return
+     */
+    public static float getFobFromCost(Product product,GlobalData globalData)
     {
 
 
 
+      return   getFobFromCost(product,globalData.cost_price_ratio,globalData.manageRatioForeign,globalData.addition,globalData.price_of_export,globalData.exportRate);
 
-        float paintWage = 0;
-        float paintCost = 0;
 
-        final Product product = productDetail.product;
-        for (ProductPaint paint : productDetail.paints) {
-            paintWage += paint.processPrice;
-            paintCost += paint.cost  ;
+
+
+    }
+
+    /**
+     *
+     * @param product
+     * @param cost_price_ratio  成本利润比值。
+     * @param manageRatioForeign 外厂产品管理费用
+     * @param addition  附加值
+     * @param price_of_export  出口运费   元/M3
+     * @param exportRate  汇率比值
+     *
+
+     * @return
+     */
+    public static float getFobFromCost(Product product,  float cost_price_ratio,float  manageRatioForeign,float addition,float price_of_export,float exportRate )
+    {
+
+
+        float price=getPriceFromCost(product,cost_price_ratio,manageRatioForeign);
+        if(Objects.equals(product.factoryCode, Factory.CODE_LOCAl)) {
+
+                //售价+海外运费
+            final float ganza = product.packQuantity <= 0 ? 0 : product.packVolume * price_of_export / product.packQuantity;
+            return FloatHelper.scale((price * (1 + addition) + ganza) / exportRate);
+        }else
+        {
+            //更新美金价格
+            return  FloatHelper.scale(price / exportRate);
 
         }
 
-        updatePaintData(product, paintCost, paintWage,
-            globalData);
+
+
+    }
+    /**
+     * 更新产品的统计数据
+     */
+    public static void updateProductStatistics(ProductDetail productDetail, GlobalData globalData) {
+
+
+        updateProductFromMaterials(productDetail, globalData);
+        /**
+         * 重新计算总成本
+         */
+        updateProductInfoOnly(globalData, productDetail.product);
+
+
+    }
+
+    /**
+     * 从材料列表信息中 汇总产品相关的信息
+     *
+     * @param productDetail
+     * @param globalData
+     * @return
+     */
+    private static void updateProductFromMaterials(ProductDetail productDetail, GlobalData globalData) {
+
+
+        final Product product = productDetail.product;
+        float paintWage = 0;
+        float paintCost = 0;
+
+
+        for (ProductPaint paint : productDetail.paints) {
+            paintWage += paint.processPrice;
+            paintCost += paint.cost;
+
+        }
+        product.paintCost = FloatHelper.scale(paintCost);
+        product.paintWage = FloatHelper.scale(paintWage);
 
 
         //汇总计算白胚材料
@@ -881,44 +769,35 @@ public class ProductAnalytics {
         for (ProductMaterial material : productDetail.packMaterials) {
 
 
-
-
-
             packCost += material.getAmount();
 
 
             //如果包材是外箱  则更新产品外包装材料信息
 
 
-            if(material.getPackMaterialClass()!=null)
-            {
+            if (material.getPackMaterialClass() != null) {
 
-                String className=material.getPackMaterialClass().getName();
-                if(className.equals(PackMaterialClass.CLASS_BOX))
-                {
+                String className = material.getPackMaterialClass().getName();
+                if (className.equals(PackMaterialClass.CLASS_BOX)) {
 
-                    product.packLong=material.getpLong();
-                    product.packHeight=material.getpHeight();
-                    product.packWidth=material.getpWidth();
+                    product.packLong = material.getpLong();
+                    product.packHeight = material.getpHeight();
+                    product.packWidth = material.getpWidth();
 
-                }else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
-                {
-                    product.insideBoxQuantity=(int)material.quantity;
                 }
+                //取消关联
+//                else if(PackMaterialClass.CLASS_INSIDE_BOX.equals(className))
+//                {
+//                    product.insideBoxQuantity=(int)material.quantity;
+//                }
             }
-
-
-
-
 
 
         }
 
 
-
-
         //计算包装成本  平摊箱数， 如无箱数 则默认1
-        product.packCost = FloatHelper.scale(product.packQuantity==0?packCost:packCost/ product.packQuantity);
+        product.packCost = FloatHelper.scale(product.packQuantity == 0 ? packCost : packCost / product.packQuantity);
 
         //汇总计算包装工资
         float packWage = 0;
@@ -926,10 +805,7 @@ public class ProductAnalytics {
             packWage += wage.getAmount();
         }
         //计算包装工资 平摊箱数， 如无箱数 则默认1
-        product.packWage = FloatHelper.scale(product.packQuantity==0?packWage:packWage/ product.packQuantity);
-
-
-
+        product.packWage = FloatHelper.scale(product.packQuantity == 0 ? packWage : packWage / product.packQuantity);
 
 
         productDetail.summariables.clear();
@@ -940,41 +816,43 @@ public class ProductAnalytics {
         productDetail.summariables.addAll(productDetail.packMaterials);
 
         //分类型统计数据
-        float cost1=0;
-        float cost7=0;
-        float cost8=0;
-        float cost5=0;
-        float cost6=0;
-        float cost4=0;
-        float cost11_15=0;
-        for(Summariable summariable: productDetail.summariables)
-        {
-            int type=summariable.getType();
-            float amount=summariable.getAmount();
-            switch (type)
-            {
+        float cost1 = 0;
+        float cost7 = 0;
+        float cost8 = 0;
+        float cost5 = 0;
+        float cost6 = 0;
+        float cost4 = 0;
+        float cost11_15 = 0;
+        for (Summariable summariable : productDetail.summariables) {
+            int type = summariable.getType();
+            float amount = summariable.getAmount();
+            switch (type) {
 
                 case 1:
-                    cost1+=amount;
-                            break;
+                    cost1 += amount;
+                    break;
                 case 8:
-                    cost8+=amount;
+                    cost8 += amount;
                     break;
                 case 5:
-                    cost5+=amount;
+                    cost5 += amount;
                     break;
                 case 6:
-                    cost6+=amount;
+                    cost6 += amount;
                     break;
                 case 7:
-                    cost7+=amount;
+                    cost7 += amount;
                     break;
 
                 case 4:
-                    cost4+=amount;
+                    cost4 += amount;
                     break;
-                case 11:case 12: case 13:case 14:case 15:
-                    cost11_15+=amount;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                    cost11_15 += amount;
                     break;
 
 
@@ -983,15 +861,49 @@ public class ProductAnalytics {
         }
         productDetail.summariables.clear();
 
-        product.cost1=FloatHelper.scale(cost1);
-        product.cost5=FloatHelper.scale(cost5);
-        product.cost6=FloatHelper.scale(cost6);
-        product.cost7=FloatHelper.scale(cost7);
-        product.cost8=FloatHelper.scale(cost8);
-        product.cost11_15=FloatHelper.scale(cost11_15);
+        product.cost1 = FloatHelper.scale(cost1);
+        product.cost5 = FloatHelper.scale(cost5);
+        product.cost6 = FloatHelper.scale(cost6);
+        product.cost7 = FloatHelper.scale(cost7);
+        product.cost8 = FloatHelper.scale(cost8);
+        product.cost11_15 = FloatHelper.scale(cost11_15);
 
         //计算包装材料 平摊箱数， 如无箱数 则默认1
-        product.cost4=FloatHelper.scale(product.packQuantity==0?cost4:cost4/ product.packQuantity);
+        product.cost4 = FloatHelper.scale(product.packQuantity == 0 ? cost4 : cost4 / product.packQuantity);
+
+    }
+
+    /**
+     * 更新产品里面的油漆的所有公式，并汇总油漆数据到product
+     * @param product
+     * @param productPaints
+     */
+    public static void updateProductWithProductPaints(Product product, List<ProductPaint> productPaints,GlobalData globalData) {
+//更新油漆材料中稀释剂用量
+
+        ProductAnalytics.updateQuantityOfIngredient(productPaints, globalData);
+
+
+        //重新计算各油漆的单价 金额
+        for (ProductPaint paint : productPaints) {
+
+            ProductAnalytics.updateProductPaintPriceAndCostAndQuantity(paint, globalData);
+
+
+        }
+
+
+        //汇总计算油漆单价 金额
+        float paintWage = 0;
+        float paintCost = 0;
+        for (ProductPaint paint : productPaints) {
+            paintWage += paint.processPrice;
+            paintCost += paint.cost;
+
+        }
+        product.paintCost=FloatHelper.scale(paintCost);
+        product.paintWage=FloatHelper.scale(paintWage);
+    }
 
 
 
@@ -1001,13 +913,201 @@ public class ProductAnalytics {
 
 
 
-        /**
-         * 重新计算总成本
-         */
 
 
-        updateProductInfoOnly(globalData, product);
 
+
+
+
+    /**
+     * 更新相关产品包装数据
+     */
+    public static void updateProductPackRelateData(ProductDetail productDetail) {
+
+
+        //更新数据
+        List<ProductMaterial> datas = productDetail.packMaterials;
+
+
+        //胶带信息 与产品的包装类型相关
+
+        //找出胶带
+        int size = datas.size();
+
+        //找出内盒数据
+        ProductMaterial neihe = null;
+
+        //找出外箱数据
+        ProductMaterial waixiang = null;
+
+
+        //找出胶带
+        List<ProductMaterial> jiaodais = new ArrayList<>();
+
+        //找出保丽隆
+        List<ProductMaterial> baolilongs = new ArrayList<>();
+
+
+        for (int i = 0; i < size; i++) {
+            ProductMaterial material = datas.get(i);
+            PackMaterialClass packMaterialClass = material.getPackMaterialClass();
+            String packMaterialClassName = packMaterialClass == null ? "" : packMaterialClass.name;
+            if (!StringUtils.isEmpty(packMaterialClassName))
+                switch (packMaterialClassName) {
+
+
+                    case PackMaterialClass.CLASS_BOX:
+                        if (waixiang == null)
+                            waixiang = material;
+                        break;
+                    case PackMaterialClass.CLASS_INSIDE_BOX:
+                        if (neihe == null)
+                            neihe = material;
+                        break;
+                    case PackMaterialClass.CLASS_JIAODAI:
+
+                        jiaodais.add(material);
+                        break;
+
+                    case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+
+                        baolilongs.add(material);
+                        break;
+
+                }
+
+
+        }
+
+        if (neihe != null)
+            for (ProductMaterial jiaodai : jiaodais) {
+                updateJiaodaiQuota(jiaodai, productDetail.product, neihe);
+            }
+
+        if (waixiang != null)
+            for (ProductMaterial baolilong : baolilongs) {
+                updateBAOLILONGQuota(baolilong,productDetail.product,neihe);
+
+            }
+
+
+    }
+
+    /**
+     * 根据产品材料的包装大类别 ，调整相应的包装数据
+     */
+    public static void updatePackDataOnPackMaterialClass(List<ProductMaterial> packMaterials, Product product, ProductMaterial material) {
+
+
+        //检查包装
+
+        if (material != null && material.getPackMaterialClass() != null&&!StringUtils.isEmpty(material.getPackMaterialClass().name)) {
+            switch (material.getPackMaterialClass().name) {
+
+                //如果是内盒
+                //找出胶带 更新胶带信息
+                case PackMaterialClass.CLASS_INSIDE_BOX:
+
+                    for (ProductMaterial productMaterial : packMaterials) {
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_JIAODAI)) {
+
+                                updateJiaodaiQuota(productMaterial, product, material);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+
+
+                    break;
+
+
+                case PackMaterialClass.CLASS_JIAODAI:
+
+
+                    //找出内盒  更新胶带信息
+                    ProductMaterial foundNeihe = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_INSIDE_BOX)) {
+
+                                foundNeihe = productMaterial;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+                    //找出内盒  更新胶带信息
+                    updateJiaodaiQuota(material, product, foundNeihe);
+
+
+                    break;
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_BOX:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundBaolilong = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_TESHU_BAOLILONG)) {
+                                foundBaolilong = productMaterial;
+                                updateBAOLILONGQuota(foundBaolilong, product, material);
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+
+                    break;
+
+
+                //外箱数据
+                case PackMaterialClass.CLASS_TESHU_BAOLILONG:
+
+
+                    //找出保丽隆
+                    ProductMaterial foundWaixiang = null;
+                    for (ProductMaterial productMaterial : packMaterials) {
+
+                        PackMaterialClass packMaterialClass = productMaterial.getPackMaterialClass();
+                        if (packMaterialClass != null) {
+                            if (packMaterialClass.name.equals(PackMaterialClass.CLASS_BOX)) {
+                                foundWaixiang = productMaterial;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                    if (foundWaixiang != null)
+                        updateBAOLILONGQuota(material, product, foundWaixiang);
+
+
+                    break;
+
+            }
+
+        }
 
     }
 }

@@ -4,7 +4,7 @@
                                  select  mo_no, prd_no, prd_name,prd_mark,   isnull(qty_rsv,0) as qty_rsv,isnull(qty,0) as qty ,rem ,QTY_STD from tf_mo
                              ) a  inner join
                            (
-                              select  mo_dd, mo_no,  so_no, mrp_no ,mo_no_add,est_itm from mf_mo  where so_no =:os_no and mrp_no like :mrp_no  AND   est_itm=:itm
+                              select  mo_dd, mo_no,  so_no, mrp_no ,mo_no_add,est_itm from mf_mo  where   bil_Id = upper('MP') and so_no =:os_no and mrp_no like :mrp_no  AND   est_itm=:itm
 
                             )  b
                             on a.mo_no=b.mo_no

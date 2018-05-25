@@ -134,7 +134,7 @@ public class ProductMaterialTableModel extends BaseTableModel<ProductMaterial> i
 
         ProductMaterial productMaterial = getItem(rowIndex);
         if (productMaterial != null) {
-            ProductAnalytics.updateMaterial(productMaterial, material);
+            ProductAnalytics.setMaterialToProductPaint(productMaterial, material);
         }
 
 

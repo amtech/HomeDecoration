@@ -72,13 +72,16 @@ public class QuotationItem implements Serializable,Valuable {
     @Basic
     public float cost;
 
+    /**
+     * 成本利润比值
+     */
+    public float cost_price_ratio;
 
     /**
-     * 单价
+     * 单价（默认是fob值）可以通过修改成本利润比值调整
      */
     @Basic
     public float price;
-
 
 
     /**
@@ -135,35 +138,6 @@ public class QuotationItem implements Serializable,Valuable {
     @Basic
     public String photoUrl;
 
-    public void updateProduct(Product product) {
-
-
-        productId=product.id;
-        thumbnail=product.thumbnail;
-        photoUrl=product.url;
-        productName=product.name;
-        pVersion=product.pVersion;
-        inBoxCount=product.insideBoxQuantity;
-        packQuantity=product.packQuantity;
-        packageSize=StringUtils.combineNumberValue(product.packLong, product.packWidth, product.packHeight);
-
-
-        unit=product.pUnitName;
-        cost= FloatHelper.scale(product.cost);
-
-        //默认不带动fob
-       // price=0;
-        //price=FloatHelper.scale(product.fob);
-
-        volumeSize=product.getPackVolume();
-        weight=FloatHelper.scale(product.weight);
-        spec=product.spec;
-        constitute=product.constitute;
-        mirrorSize=product.mirrorSize;
-        memo=product.memo;
-
-
-    }
 
     @Override
     public boolean isEmpty() {
@@ -183,6 +157,7 @@ public class QuotationItem implements Serializable,Valuable {
         if (inBoxCount != item.inBoxCount) return false;
         if (packQuantity != item.packQuantity) return false;
         if (Float.compare(item.cost, cost) != 0) return false;
+        if (Float.compare(item.cost_price_ratio, cost_price_ratio) != 0) return false;
         if (Float.compare(item.price, price) != 0) return false;
         if (Float.compare(item.volumeSize, volumeSize) != 0) return false;
         if (Float.compare(item.weight, weight) != 0) return false;
