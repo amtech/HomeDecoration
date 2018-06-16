@@ -11,6 +11,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -64,8 +65,8 @@ public class UseCaseFactory {
 
         Guice.createInjector(new HdTaskModule(), new QuotationModule(), new OrderModule(), new ProductModule(),
                 new StockModule(), new FileModule(), new AuthModule()
-                ,new MaterialModule()
-                ,new SettingModule()
+                , new MaterialModule()
+                , new SettingModule()
         ).injectMembers(this);
 
     }
@@ -129,9 +130,19 @@ public class UseCaseFactory {
 
     }
 
+    public UseCase updateHdTaskStateUseCase(long taskId, int taskState) {
+
+        return new UpdateTaskStateUseCase(taskId, taskState, taskRepository);
+
+    }
+
+
+    public UseCase executeHdTaskUseCase(int taskType) {
+        return new ExecuteHdTaskUseCase(taskType, taskRepository);
+    }
     public UseCase createProductByNameRandom(String productList, boolean withCopy) {
 
-        return new ProductRandomUseCase(  productList, withCopy, productRepository);
+        return new ProductRandomUseCase(productList, withCopy, productRepository);
     }
 
 
@@ -145,18 +156,19 @@ public class UseCaseFactory {
 
         return new GetOrderItemListUseCase(Schedulers.newThread(), Schedulers.immediate(), os_no, orderRepository);
     }
-    public UseCase searchOrderItemListUseCase(String key,int pageIndex, int pageSize) {
+
+    public UseCase searchOrderItemListUseCase(String key, int pageIndex, int pageSize) {
 
 
-        return new SearchOrderItemListUseCase(Schedulers.newThread(), Schedulers.immediate(), key,  pageIndex,   pageSize, orderRepository);
+        return new SearchOrderItemListUseCase(Schedulers.newThread(), Schedulers.immediate(), key, pageIndex, pageSize, orderRepository);
     }
 
     public UseCase createGetProductByPrdNo(String prdNo) {
-        return new GetProductByPrdNoUseCase(  prdNo, productRepository);
+        return new GetProductByPrdNoUseCase(prdNo, productRepository);
     }
 
-    public UseCase createGetProductByIdUseCase(long... productId ) {
-        return new GetProductByIdUseCase(  productId, productRepository);
+    public UseCase createGetProductByIdUseCase(long... productId) {
+        return new GetProductByIdUseCase(productId, productRepository);
     }
 
 
@@ -401,7 +413,7 @@ public class UseCaseFactory {
 
     public UseCase createUnCompleteOrderWorkFlowReportUseCase() {
 
-        return new UnCompleteOrderWorkFlowReportUseCase( orderRepository);
+        return new UnCompleteOrderWorkFlowReportUseCase(orderRepository);
 
     }
 
@@ -485,136 +497,142 @@ public class UseCaseFactory {
     }
 
     public UseCase createSearchZhilingdanUseCase(String osName, String startDate, String endDate) {
-        return new SearchZhilingdanUseCase(Schedulers.newThread(), Schedulers.immediate(), osName,   startDate,   endDate, workFlowRepository);
+        return new SearchZhilingdanUseCase(Schedulers.newThread(), Schedulers.immediate(), osName, startDate, endDate, workFlowRepository);
     }
 
     /**
      * 公式改变时候， 进行产品表的数据同步。
+     *
      * @return
      */
     public UseCase createSynchronizeProductOnEquationUpdate() {
 
 
-        return new SynchronizeProductOnEquationUpdateUseCase(Schedulers.newThread(), Schedulers.immediate() ,   productRepository);
+        return new SynchronizeProductOnEquationUpdateUseCase(Schedulers.newThread(), Schedulers.immediate(), productRepository);
     }
 
     public UseCase createUpdateMaterialClassUseCase(MaterialClass materialClass) {
-        return new UpdateMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate() ,materialClass,   materialRepository);
+        return new UpdateMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate(), materialClass, materialRepository);
     }
 
     public UseCase createDeleteMaterialClassUseCase(long materialClassId) {
-        return new DeleteMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate() ,materialClassId,   materialRepository);
+        return new DeleteMaterialClassUseCase(Schedulers.newThread(), Schedulers.immediate(), materialClassId, materialRepository);
     }
 
     public UseCase createGetWorkFlowWorkerUseCase() {
 
-        return new GetWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() , workFlowRepository);
+        return new GetWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowRepository);
 
     }
 
     public UseCase createSaveWorkFlowWorkerUseCase(WorkFlowWorker workFlowWorker) {
-        return new UpdateWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowWorker,   workFlowRepository);
+        return new UpdateWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowWorker, workFlowRepository);
     }
 
     public UseCase createSaveWorkFlowArrangerUseCase(WorkFlowArranger workFlowArranger) {
-        return new UpdateWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowArranger,   workFlowRepository);
+        return new UpdateWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowArranger, workFlowRepository);
     }
 
     public UseCase createGetWorkFlowArrangerUseCase() {
 
-        return new GetWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,   workFlowRepository);
+        return new GetWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowRepository);
     }
 
     public UseCase createGetWorkFlowLimitUseCase() {
 
-        return new GetWorkFlowLimitUseCase(    workFlowRepository);
+        return new GetWorkFlowLimitUseCase(workFlowRepository);
     }
 
-    public UseCase createSaveWorkFlowLimitUseCase(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem) {
+    public UseCase createSaveWorkFlowLimitUseCase(List<WorkFlowTimeLimit> workFlowLimit, boolean updateCompletedOrderItem) {
 
-        return new SaveWorkFlowLimitUseCase( workFlowLimit,  updateCompletedOrderItem, workFlowRepository);
+        return new SaveWorkFlowLimitUseCase(workFlowLimit, updateCompletedOrderItem, workFlowRepository);
     }
+
     public UseCase createDeleteWorkFlowWorkerUseCase(long workFlowWorkerId) {
 
 
-        return new DeleteWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowWorkerId, workFlowRepository);
+        return new DeleteWorkFlowWorkerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowWorkerId, workFlowRepository);
 
     }
 
     public UseCase createDeleteWorkFlowArrangerUseCase(long workFlowArrangerId) {
-        return new DeleteWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate() ,workFlowArrangerId, workFlowRepository);
+        return new DeleteWorkFlowArrangerUseCase(Schedulers.newThread(), Schedulers.immediate(), workFlowArrangerId, workFlowRepository);
     }
 
 
     /**
      * 同步所有产品关联的图片
+     *
      * @return
      */
-    public UseCase createSyncRelateProductPictureUseCase()
-    {
+    public UseCase createSyncRelateProductPictureUseCase() {
 
-        return new  SyncRelateProductPictureUseCase(Schedulers.newThread(), Schedulers.immediate() , productRepository);
+        return new SyncRelateProductPictureUseCase(Schedulers.newThread(), Schedulers.immediate(), productRepository);
     }
 
     public UseCase CreateCancelOrderWorkFlowUseCase(long orderItemWorkFlowId) {
 
 
-        return  new CancelOrderWorkFlowUseCase(orderItemWorkFlowId, orderRepository );
+        return new CancelOrderWorkFlowUseCase(orderItemWorkFlowId, orderRepository);
     }
 
     public UseCase createGetWorkFlowEventListUseCase() {
 
-        return  new GetWorkFlowEventListUseCase( workFlowRepository );
+        return new GetWorkFlowEventListUseCase(workFlowRepository);
     }
 
     public UseCase createGetWorkFlowEvenWorkerListtUseCase() {
 
-        return  new GetWorkFlowEventWorkerListUseCase( workFlowRepository );
+        return new GetWorkFlowEventWorkerListUseCase(workFlowRepository);
     }
 
     public UseCase createGetErpOrderItemProcessUseCase(String osNo, String prdNo) {
-        return  new GetErpOrderItemProcessUseCase(osNo,prdNo, workFlowRepository );
-    } public UseCase createGetErpOrderItemReportUseCase(String osNo, String prdNo) {
-        return  new GetErpOrderItemReportUseCase(osNo,prdNo, workFlowRepository );
+        return new GetErpOrderItemProcessUseCase(osNo, prdNo, workFlowRepository);
+    }
+
+    public UseCase createGetErpOrderItemReportUseCase(String osNo, String prdNo) {
+        return new GetErpOrderItemReportUseCase(osNo, prdNo, workFlowRepository);
     }
 
     public UseCase createGetWorkFlowAreaListUseCase() {
 
-        return  new GetWorkFlowEventAreaListUseCase( workFlowRepository );
+        return new GetWorkFlowEventAreaListUseCase(workFlowRepository);
     }
 
     public UseCase createSaveWorkFlowAreaUseCase(WorkFlowArea data) {
-        return  new SaveWorkFlowAreaUseCase( data,workFlowRepository );
+        return new SaveWorkFlowAreaUseCase(data, workFlowRepository);
 
     }
 
     public UseCase createDeleteWorkFlowAreaUseCase(long id) {
-        return  new DeleteWorkFlowAreaUseCase( id,workFlowRepository );
+        return new DeleteWorkFlowAreaUseCase(id, workFlowRepository);
     }
 
     public UseCase updateMaitouFileUseCase(String os_no, File file) {
 
 
-        return  new UpdateMaitouFileUseCase( os_no,file,orderRepository );
+        return new UpdateMaitouFileUseCase(os_no, file, orderRepository);
     }
 
-    public UseCase createGetSubWorkFlowListUseCase(String key, String dateStart,String dateEnd) {
-        return  new GetSubWorkFlowListUseCase(   key,   dateStart,dateEnd,workFlowRepository );
+    public UseCase createGetSubWorkFlowListUseCase(String key, String dateStart, String dateEnd) {
+        return new GetSubWorkFlowListUseCase(key, dateStart, dateEnd, workFlowRepository);
     }
 
     public UseCase createUpdateCompanyUseCase(Company company) {
 
-        return  new UpdateCompanyUseCase(   company,settingRepository );
+        return new UpdateCompanyUseCase(company, settingRepository);
 
     }
 
     public UseCase createGetAppQuotationListUseCase(String key, int pageIndex, int pageSize) {
-        return new GetAppQuotationListUseCase(  key,   pageIndex,   pageSize,quotationRepository);
+        return new GetAppQuotationListUseCase(key, pageIndex, pageSize, quotationRepository);
     }
 
     public UseCase createGetAppQuotationDetailUseCase(long quotationId, String qNumber) {
 
-        return new GetAppQuotationDetailUseCase(  quotationId,   qNumber,quotationRepository);
+        return new GetAppQuotationDetailUseCase(quotationId, qNumber, quotationRepository);
 
     }
+
+
 }

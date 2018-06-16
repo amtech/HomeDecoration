@@ -1,11 +1,10 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity_erp.SampleState;
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import org.hibernate.SQLQuery;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.FloatType;
 import org.hibernate.type.StringType;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -15,16 +14,17 @@ import java.util.List;
  * Erp 样品管理
  * Created by davidleen29 on 2017/11/9.
  */
+@Repository
 public class ErpSampleRepository extends ErpRepository {
 
 
     private static String SQL_SAMPLE_STATES = "";
     private static String SQL_BEIBANG_STATES = "";
-    private EntityManager em;
 
-    public ErpSampleRepository(EntityManager em) {
 
-        this.em = em;
+    public ErpSampleRepository( ) {
+
+
         SQL_SAMPLE_STATES = SqlScriptHelper.readScript("search_sample_state.sql");
         SQL_BEIBANG_STATES = SqlScriptHelper.readScript("search_beibang_state.sql");
 
@@ -33,7 +33,7 @@ public class ErpSampleRepository extends ErpRepository {
 
     public List<SampleState> findByPrdNo(String prdNo, String pVersion) {
 
-        Query query = em.createNativeQuery(SQL_SAMPLE_STATES)
+        Query query = getEntityManager().createNativeQuery(SQL_SAMPLE_STATES)
                 .setParameter("prdNo", prdNo)
                 .setParameter("pVersion", pVersion)
 //                .setParameter("enddate", endDate)
@@ -50,7 +50,7 @@ public class ErpSampleRepository extends ErpRepository {
 
         String bomNo=prdNo+"->"+pVersion;
 
-        Query query = em.createNativeQuery(SQL_BEIBANG_STATES)
+        Query query = getEntityManager().createNativeQuery(SQL_BEIBANG_STATES)
                 .setParameter("bomNo", bomNo)
 
 

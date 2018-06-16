@@ -58,14 +58,16 @@ public class OperationLog implements Serializable{
     {
         return createForProduct(product,user,TYPE_RESUME);
     }
+    final static StringBuilder stringBuilder = new StringBuilder();
     private static  OperationLog createForProduct(Product product,User user,String operationType)
     {
 
 
-
+        stringBuilder.setLength(0);
        String tableName=Product.class.getSimpleName();
       long recordId=product.id;
-       String message="货号:"+product.getName()+ (StringUtils.isEmpty(product.getpVersion())?"":("-"+product.getpVersion()));
+
+        String message= stringBuilder.append("货号:").append(product.getName()).append(StringUtils.isEmpty(product.getpVersion()) ? "" : ("-" + product.getpVersion())).toString();
 
 
 
@@ -85,7 +87,8 @@ public class OperationLog implements Serializable{
 
         String tableName=Quotation.class.getSimpleName();
         long recordId=quotation.id;
-        String message="报价单号:"+ quotation.qNumber+",客户："+quotation.customerName+",业务员:"+quotation.salesman;
+        stringBuilder.setLength(0);
+        String message= stringBuilder.append("报价单号:").append(quotation.qNumber).append(",客户：").append(quotation.customerName).append(",业务员:").append(quotation.salesman).toString();
 
 
 

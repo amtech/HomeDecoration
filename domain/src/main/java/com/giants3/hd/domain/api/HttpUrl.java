@@ -1248,4 +1248,22 @@ public class HttpUrl {
         ;
         return additionInfo(BaseUrl + "api/product/findByProductIds?id=" + StringUtils.combine(productIds,StringUtils.STRING_SPLIT_COMMA));
     }
+
+    public static String updateTaskState(long taskId, int taskState) {
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/task/updateState") ;
+        urlFormatter.append("taskId",taskId);
+        urlFormatter.append("taskState",taskState);
+
+
+        return additionInfo(urlFormatter);
+
+    }
+
+    public static String executeHdTask(int taskType) {
+        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/task/execute") ;
+        urlFormatter.append("taskType",taskType);
+
+
+        return additionInfo(urlFormatter);
+    }
 }

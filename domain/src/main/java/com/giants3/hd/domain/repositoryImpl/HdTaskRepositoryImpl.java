@@ -6,6 +6,7 @@ import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.HdTask;
 import com.giants3.hd.exception.HdException;
 import com.google.inject.Inject;
+import javafx.geometry.VPos;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -97,5 +98,30 @@ public class HdTaskRepositoryImpl extends BaseRepositoryImpl implements HdTaskRe
 
             }
         });
+    }
+
+
+    @Override
+    public Observable<RemoteData<HdTask>> updateTaskState(final long taskId, final int taskState) {
+        return crateObservable(new ApiCaller<HdTask>() {
+            @Override
+            public RemoteData<HdTask> call() throws HdException {
+                RemoteData<HdTask>  result= apiManager.updateTaskState(taskId,taskState);
+                return result;
+            }
+        });
+
+
+    }@Override
+    public Observable<RemoteData<Void>> executeHdTask(  final int taskType) {
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                RemoteData<Void>  result= apiManager.executeHdTask(taskType);
+                return result;
+            }
+        });
+
+
     }
 }

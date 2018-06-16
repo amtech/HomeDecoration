@@ -5,6 +5,7 @@ import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,11 +22,10 @@ public class SettingService extends AbstractService {
 
 
     public Company getCompany() {
-        Company company;
+        Company company=null;
         List<Company> result = companyRepository.findAll();
         if (result == null || result.size() == 0) {
-            company = new Company();
-            company = companyRepository.save(company);
+
 
         } else {
             company = result.get(0);
@@ -34,6 +34,7 @@ public class SettingService extends AbstractService {
         return company;
     }
 
+    @Transactional
     public RemoteData<Company> update(Company company) {
 
 
@@ -42,6 +43,22 @@ public class SettingService extends AbstractService {
             wrapError("数据异常");
 
         return wrapData(companyRepository.save(company));
+
+
+    }
+
+
+
+    @Transactional
+    public void initCompany()
+    {
+
+        List<Company> result = companyRepository.findAll();
+        if (result == null || result.size() == 0) {
+            Company    company = new Company();
+              companyRepository.save(company);
+
+        }
 
 
     }

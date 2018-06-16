@@ -9,7 +9,7 @@ import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
-import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service.ProductRelateService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.Constraints;
 import com.giants3.hd.utils.StringUtils;
@@ -34,24 +34,6 @@ import java.util.Set;
 public class ProductController extends BaseController {
 
 
-    @Autowired
-    private ProductRepository productRepository;
-
-
-    @Autowired
-    private ProductMaterialRepository productMaterialRepository;
-    @Autowired
-    private ProductWageRepository productWageRepository;
-    @Autowired
-    private ProductPaintRepository productPaintRepository;
-
-    @Autowired
-    private ProductLogRepository productLogRepository;
-
-    @Autowired
-    private XiankangRepository xiankangRepository;
-    @Autowired
-    private OperationLogRepository operationLogRepository;
     @Value("${filepath}")
     private String productFilePath;
 
@@ -62,18 +44,9 @@ public class ProductController extends BaseController {
     @Autowired
     ProductService productService;
 
-
     @Autowired
-    private QuotationItemRepository quotationItemRepository;
+    ProductRelateService productRelateService;
 
-    @Autowired
-    private QuotationXKItemRepository quotationXKItemRepository;
-
-    @Autowired
-    private QuotationRepository quotationRepository;
-
-    //@PersistenceContext
-    //private EntityManager entityManager;
 
     @Autowired
     @Qualifier("productParser")
@@ -117,12 +90,12 @@ public class ProductController extends BaseController {
     public
     @ResponseBody
     RemoteData<AProduct> appSearch(@RequestParam(value = "name", required = false, defaultValue = "") String name
-            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,  @RequestParam(value = "withCopy", required = false) boolean withCopy
+            , @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize, @RequestParam(value = "withCopy", required = false) boolean withCopy
 
     ) throws UnsupportedEncodingException {
 
 
-        RemoteData<Product> productRemoteData = productService.searchAppProductList(name, pageIndex, pageSize,withCopy);
+        RemoteData<Product> productRemoteData = productService.searchAppProductList(name, pageIndex, pageSize, withCopy);
         RemoteData<AProduct> result = RemoteDataParser.parse(productRemoteData, dataParser);
 
 
@@ -141,7 +114,8 @@ public class ProductController extends BaseController {
     ) throws UnsupportedEncodingException {
 
 
-        List<Product> pageValue = productRepository.findByNameBetweenOrderByName(startName, endName);
+        List<Product> pageValue = productService.findByNameBetweenOrderByName(startName, endName);
+
         if (withCopy) {
             return wrapData(pageValue);
         }
@@ -203,7 +177,7 @@ public class ProductController extends BaseController {
     ) {
 
 
-        List<Product> pageValue = productRepository.findByNameEquals(prd_name);
+        List<Product> pageValue = productService.findByNameEquals(prd_name);
 
         int size = pageValue.size();
         for (int i = 0; i < size; i++) {
@@ -228,7 +202,7 @@ public class ProductController extends BaseController {
 
 
         Xiankang xiankang = null;
-        Product product = productRepository.findOne(productId);
+        Product product = productService.findProductById(productId);
         if (product != null) {
             xiankang = product.xiankang;
         }
@@ -255,7 +229,7 @@ public class ProductController extends BaseController {
 
         for (Long id : ids) {
 
-            Product product = productRepository.findOne(id);
+            Product product = productService.findProductById(id);
             if (product != null)
                 products.add(product);
         }
@@ -271,17 +245,19 @@ public class ProductController extends BaseController {
     @ResponseBody
     Product findProdcutById(@RequestParam("id") long productId) {
 
-        Product product = productRepository.findOne(productId);
-        return product;
+
+        return productService.findProductById(productId);
+
     }
- @RequestMapping(value = "/findByProductIds", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/findByProductIds", method = RequestMethod.GET)
     public
     @ResponseBody
     RemoteData<Product> findById(@RequestParam("id") String productId) {
 
 
-     String[] productIds=StringUtils.split(productId,StringUtils.STRING_SPLIT_COMMA);
-     List<Product> productList=productService.findProductById(productIds);
+        String[] productIds = StringUtils.split(productId, StringUtils.STRING_SPLIT_COMMA);
+        List<Product> productList = productService.findProductById(productIds);
 
         return wrapData(productList);
     }
@@ -523,8 +499,8 @@ public class ProductController extends BaseController {
     @ResponseBody
     RemoteData<ProductMaterial> listProductPackTemplate() {
 
+        List<ProductMaterial> productMaterials = productRelateService.findProductMaterialsByProductIdFlow(0, Flow.FLOW_PACK);
 
-        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEqualsAndFlowIdEquals(0, Flow.FLOW_PACK);
 
         if (productMaterials == null) {
             return wrapError("数据异常");

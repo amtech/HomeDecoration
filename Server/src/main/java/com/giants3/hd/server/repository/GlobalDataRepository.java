@@ -13,4 +13,11 @@ public interface GlobalDataRepository extends JpaRepository<GlobalData,Long> {
 
 
 
+
+
+
+      GlobalData findFirstByOrderByUpdateTimeDesc( );
+
+
+
 }

@@ -508,4 +508,20 @@ public class StringUtils {
         }
         return false;
     }
+
+    /**
+     * 是否选中的开头。
+     * @param source
+     * @param candidate
+     * @return
+     */
+    public static boolean startsWithAny(String source, String... candidate) {
+
+        if(source==null)return false;
+        for(String temp:candidate)
+        {
+            if(source.startsWith(temp)) return true;
+        }
+        return false;
+    }
 }

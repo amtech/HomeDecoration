@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity_erp.Prdt;
 import org.hibernate.Query;
@@ -6,6 +6,7 @@ import org.hibernate.SQLQuery;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
@@ -18,17 +19,17 @@ import java.util.List;
 *  从第三方数据库读取prdt 数据相关
 */
 
-
-public   class ErpPrdtRepository    {
-
-
+@Repository
+public   class ErpPrdtRepository  extends ErpRepository   {
 
 
 
-    private EntityManager em;
-    public   ErpPrdtRepository(EntityManager em) {
 
-        this.em=em;
+
+
+    public   ErpPrdtRepository( ) {
+
+
     }
 
 
@@ -38,7 +39,7 @@ public   class ErpPrdtRepository    {
     public   List<Prdt> findByPrd_noEquals(@Param("prd_no") String prd_no,Pageable pageable)
     {
 
-       CriteriaBuilder builder = em.getCriteriaBuilder();
+       CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 //
 //
 //        CriteriaQuery<Prdt> query = builder.createQuery(Prdt.class);
@@ -61,7 +62,7 @@ public   class ErpPrdtRepository    {
 //        query.setParameter(1, customer);
 
 
-     List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no  ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price , p.nouse_dd from (select * from  prdt  where prdt.knd='4') p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
+     List result=   getEntityManager().createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no  ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price , p.nouse_dd from (select * from  prdt  where prdt.knd='4') p inner join (select prd_no , up_std as price from CST_STD ) cs on p.prd_no=cs.prd_no  where p.prd_no = :prd_no " ).setParameter("prd_no",prd_no).getResultList();
      ///   return em.createQuery("select  e  from prdt e  ,(select f.prd_no,f.up_std from CST_STD f) d where e.prd_no=:prd_no ",Prdt.class) .setParameter("prd_no",prd_no).getResultList();
         return  convertToPojo(result);
 
@@ -80,7 +81,7 @@ public   class ErpPrdtRepository    {
 
 
 
-        List result=   em.createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price,p.nouse_dd from (select * from  prdt  where prdt.knd='4') p inner join ("+sql_find_distinct_cst_std+") cs on p.prd_no=cs.prd_no  " ).getResultList();
+        List result=   getEntityManager().createNativeQuery("select CAST(p.prd_no AS varchar) as prd_no ,CAST(p.name AS varchar) as name ,CAST(p.ut AS varchar) as ut ,CAST(p.spc AS varchar) as  spec ,CAST(p.rem AS varchar) as rem ,cs.price,p.nouse_dd from (select * from  prdt  where prdt.knd='4') p inner join ("+sql_find_distinct_cst_std+") cs on p.prd_no=cs.prd_no  " ).getResultList();
 
 
       return  convertToPojo(result);
@@ -132,7 +133,7 @@ public   class ErpPrdtRepository    {
     public  String  findIdx1ByPrdno(String  prdNo)
     {
 
-         Query query =   em.createNativeQuery(" SELECT  idx1  FROM [DB_YF01].[dbo].prdt where knd='2' and prd_no ='"+prdNo.trim()+"'").unwrap(SQLQuery.class) ;
+         Query query =   getEntityManager().createNativeQuery(" SELECT  idx1  FROM [DB_YF01].[dbo].prdt where knd='2' and prd_no ='"+prdNo.trim()+"'").unwrap(SQLQuery.class) ;
 
         return (String) (query .list().get(0));
     }

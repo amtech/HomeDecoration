@@ -40,8 +40,8 @@ public class FactoryController extends BaseController {
     RemoteData<Factory> save(@RequestBody List<Factory> factories) {
 
 
-        factoryService.save(factories);
-        return list();
+    return wrapData(    factoryService.save(factories));
+
     }
 
 
@@ -67,8 +67,7 @@ public class FactoryController extends BaseController {
     RemoteData<OutFactory> saveOutList(@RequestBody List<OutFactory> factories) {
 
 
-        factoryService.saveOutList(factories);
+       return  wrapData(factoryService.saveOutList(factories));
 
-        return factoryService.listOutFactory();
     }
 }

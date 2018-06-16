@@ -1,10 +1,9 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.UserRepository;
-import com.giants3.hd.noEntity.RemoteData;
-
 import com.giants3.hd.entity.User;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,61 +14,37 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
-* 产品类别
-*/
+ * 产品类别
+ */
 @Controller
 @RequestMapping("/salesman")
-public class SalesmanController extends BaseController{
+public class SalesmanController extends BaseController {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
 
-
-
-
-
-    @RequestMapping(value="/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<User> list( )   {
+    RemoteData<User> list() {
 
-        return  wrapData(userRepository.findByIsSalesman(true));
+
+        return userService.listSalesmans();
+
     }
 
 
-    @RequestMapping(value="/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public
     @ResponseBody
-    RemoteData<User> save(@RequestBody List<User> salesmans)   {
+    RemoteData<User> save(@RequestBody List<User> salesmans) {
 
 
-        for(User salesman : salesmans)
-        {
+        return userService.saveSalesmans(salesmans);
 
 
-            User oldData= userRepository.findFirstByCodeEqualsAndNameEquals(salesman.code,salesman.name);
-            if(oldData==null)
-            {
-                salesman.id=-1;
-
-
-            }else
-            {
-                salesman.id=oldData.id;
-
-
-
-            }
-            userRepository.save(salesman);
-
-
-
-        }
-
-
-        return  list();
     }
 
 }

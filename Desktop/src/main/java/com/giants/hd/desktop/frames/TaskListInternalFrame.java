@@ -5,6 +5,7 @@ import com.giants.hd.desktop.viewImpl.Panel_Tasks;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.entity.HdTask;
 import com.giants3.hd.entity.HdTaskLog;
+import com.giants3.hd.noEntity.RemoteData;
 import rx.Subscriber;
 
 import javax.swing.*;
@@ -200,6 +201,82 @@ public class TaskListInternalFrame extends BaseInternalFrame {
 
 
 
+        panel_tasks.showLoadingDialog();
+    }
+
+    public void pauseTask(long id) {
+
+        setTaskState(id,HdTask.STATE_PAUSED);
+    }
+
+    public void resumeTask(long id) {
+
+
+
+        setTaskState(id,HdTask.STATE_NORMAL);
+    }
+
+
+    private void setTaskState(long taskId,int taskState)
+    {
+
+
+        UseCaseFactory.getInstance().updateHdTaskStateUseCase(taskId,taskState).execute(new Subscriber<RemoteData<HdTask>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                panel_tasks.hideLoadingDialog();
+                panel_tasks.showMesssage(e.getMessage());
+
+            }
+
+            @Override
+            public void onNext(RemoteData<HdTask> tasks) {
+
+                panel_tasks.hideLoadingDialog();
+                panel_tasks.showMesssage("任务更新成功");
+                panel_tasks.setData(tasks.datas);
+
+
+
+            }
+        });
+        //显示dialog
+        panel_tasks.showLoadingDialog();
+    }
+
+    public void executeTask(int taskType) {
+        UseCaseFactory.getInstance().executeHdTaskUseCase(taskType).execute(new Subscriber<RemoteData<HdTask>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                panel_tasks.hideLoadingDialog();
+                panel_tasks.showMesssage(e.getMessage());
+
+            }
+
+            @Override
+            public void onNext(RemoteData<HdTask> tasks) {
+
+                panel_tasks.hideLoadingDialog();
+                panel_tasks.showMesssage("任务执行成功");
+                loadHdTask();
+
+
+
+            }
+        });
+        //显示dialog
         panel_tasks.showLoadingDialog();
     }
 }

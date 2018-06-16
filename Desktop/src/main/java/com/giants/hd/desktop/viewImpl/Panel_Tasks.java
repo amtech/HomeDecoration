@@ -27,6 +27,10 @@ public class Panel_Tasks  extends BasePanel{
     private JTextField memo;
     private JComboBox cb_repeat;
     private JSpinner timeSpinner;
+    private JPanel panel_task;
+    private JButton btn_pause;
+    private JButton btn_resume;
+    private JButton btn_execute;
     @Inject
     HdTaskModel taskModel;
 
@@ -45,6 +49,9 @@ public class Panel_Tasks  extends BasePanel{
     }
     public Panel_Tasks(final TaskListInternalFrame frame) {
         super();
+        panel_task.setVisible(false);
+
+
         this.frame = frame;
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setModel(taskModel);
@@ -215,8 +222,72 @@ public class Panel_Tasks  extends BasePanel{
             }
         });
 
+        btn_pause.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[]  modelRow= JTableUtils.getSelectedRowSOnModel(jtable);
+                if(modelRow.length==0)
+                {
+                    showMesssage("请选择一条任务进行暂停。");
+                    return;
+                }
+
+                HdTask item = taskModel.getItem(modelRow[0]);
+                if(item.id<=0) return ;
+                frame.pauseTask(item.id
+                );
+            }
+        });
+
+        btn_resume.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[]  modelRow= JTableUtils.getSelectedRowSOnModel(jtable);
+                if(modelRow.length==0)
+                {
+                    showMesssage("请选择一条任务进行恢复。");
+                    return;
+                }
+
+                HdTask item = taskModel.getItem(modelRow[0]);
+
+                if(item.id<=0) return ;
+
+                frame.resumeTask(item.id
+                );
+            }
+        });
+        btn_execute.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[]  modelRow= JTableUtils.getSelectedRowSOnModel(jtable);
+                if(modelRow.length==0)
+                {
+                    showMesssage("请选择一条任务进行执行。");
+                    return;
+                }
+
+                HdTask item = taskModel.getItem(modelRow[0]);
+
+                if(item.id<=0) return ;
+
+
+                int option = JOptionPane.showConfirmDialog(getWindow(),"立刻执行选中任务《《《"+item.taskName+"》》》吗?", " 提示", JOptionPane.OK_CANCEL_OPTION);
+
+                if (JOptionPane.OK_OPTION == option) {
+                    //点击了确定按钮
+                    frame.executeTask(item.taskType
+                    );
+                }
+
+            }
+        });
+
 
     }
+
+
+
 
 
     /**

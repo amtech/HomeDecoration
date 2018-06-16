@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity.ErpOrderItem;
 import org.hibernate.SQLQuery;
@@ -6,14 +6,34 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.List;
 
 /**
  * Created by davidleen29 on 2017/6/10.
  */
+@NoRepositoryBean
 public class ErpRepository {
+
+    @Autowired
+    @Qualifier("erpEntityManagerFactory")
+    private EntityManagerFactory entityManagerFactory;
+
+    private EntityManager entityManager;
+
+    protected EntityManager getEntityManager() {
+
+        if (entityManager == null) {
+            entityManager = entityManagerFactory.createEntityManager();
+        }
+        return entityManager;
+    }
     protected org.hibernate.Query getOrderItemListQuery(Query query) {
 
 

@@ -1,14 +1,11 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.ProductProcessRepository;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.ProductProcess;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.service.ProductRelateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -23,10 +20,7 @@ public class ProductProcessController extends BaseController {
 
 
     @Autowired
-    private ProductProcessRepository processRepository;
-
-
-
+    private ProductRelateService productRelateService;
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -34,8 +28,8 @@ public class ProductProcessController extends BaseController {
     @ResponseBody
     RemoteData<ProductProcess> list() {
 
+        return productRelateService.listProductProcesses();
 
-        return wrapData(processRepository.findAll());
     }
 
 
@@ -48,63 +42,22 @@ public class ProductProcessController extends BaseController {
     ) throws UnsupportedEncodingException {
 
 
-        Pageable pageable = constructPageSpecification(pageIndex, pageSize);
-        Page<ProductProcess> pageValue = processRepository.findByNameLikeOrCodeLike("%" + name + "%", "%" + name + "%", pageable);
-
-        List<ProductProcess> products = pageValue.getContent();
-        return wrapData(pageIndex, pageable.getPageSize(), pageValue.getTotalPages(), (int) pageValue.getTotalElements(), products);
+        return productRelateService.searchProductProcesses(name, pageIndex, pageSize);
 
 
     }
 
 
+    @RequestMapping(value = "/saveList", method = RequestMethod.POST)
 
-    @RequestMapping(value = "/saveList",method = RequestMethod.POST)
-    @Transactional
     public
     @ResponseBody
-    RemoteData<ProductProcess> saveList(@RequestBody List<ProductProcess> productProcesses )   {
-
-        for(ProductProcess process:productProcesses)
-        {
+    RemoteData<ProductProcess> saveList(@RequestBody List<ProductProcess> productProcesses) {
 
 
+        return productRelateService.saveProductProcessList(productProcesses);
 
-
-            ProductProcess oldData=processRepository.findOne(process.id);
-            if(oldData==null)
-            {
-                process.id=-1;
-
-
-                //如果是空数据  略过添加
-                if(process.isEmpty())
-                {
-                    continue;
-                }
-
-
-
-            }else
-            {
-
-
-
-
-                process.id=oldData.id;
-
-            }
-
-            processRepository.save(process);
-
-
-        }
-
-
-
-        return list();
     }
-
 
 
 }

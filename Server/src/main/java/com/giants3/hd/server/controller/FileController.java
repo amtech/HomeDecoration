@@ -1,13 +1,15 @@
 package com.giants3.hd.server.controller;
 
-import com.giants3.hd.server.service.*;
 import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.Material;
-import com.giants3.hd.server.repository.AppVersionRepository;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.service.AppService;
+import com.giants3.hd.server.service.ErpPhotoService;
+import com.giants3.hd.server.service.MaterialService;
+import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +58,8 @@ public class FileController extends BaseController {
     private String appFilePath;
 
     @Autowired
-    AppVersionRepository repository;
+    AppService appService;
+
     @Autowired
     ProductService productService;
 
@@ -385,7 +388,7 @@ public class FileController extends BaseController {
     public FileSystemResource getAppFile() {
 
 
-        AppVersion appVersion = repository.findFirstByAppNameLikeOrderByVersionCodeDescUpdateTimeDesc("%%");
+        AppVersion appVersion = appService.getLatestVersion();
 
 
         FileSystemResource resource = new FileSystemResource(appFilePath + appVersion.appName);

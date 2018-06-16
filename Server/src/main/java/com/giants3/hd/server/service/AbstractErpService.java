@@ -10,20 +10,17 @@ import javax.persistence.EntityManager;
 public class AbstractErpService extends AbstractService {
 
 
-    private EntityManager manager;
 
     @Override
     public void destroy() throws Exception {
         super.destroy();
-        manager.close();
+
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
-        EntityManagerHelper helper = EntityManagerHelper.getErp();
-        manager = helper.getEntityManager();
-        onEntityManagerCreate(manager);
+
 
     }
 

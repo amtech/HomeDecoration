@@ -2227,4 +2227,20 @@ public class ApiManager {
         RemoteData<Product> productRemoteData = invokeByReflect(result, Product.class);
         return productRemoteData;
     }
+
+    public RemoteData<HdTask> updateTaskState(long taskId, int taskState) throws HdException {
+        String url = HttpUrl.updateTaskState(taskId,taskState);
+        String result = client.getWithStringReturned(url);
+        RemoteData<HdTask> remoteData = invokeByReflect(result, HdTask.class);
+
+        return remoteData;
+    }
+
+    public RemoteData<Void> executeHdTask(int taskType) throws HdException {
+        String url = HttpUrl.executeHdTask(taskType);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+
+        return remoteData;
+    }
 }

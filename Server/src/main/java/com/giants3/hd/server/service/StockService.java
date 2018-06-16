@@ -1,21 +1,24 @@
 package com.giants3.hd.server.service;
 
-import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.hd.server.utils.*;
-import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.entity.*;
 import com.giants3.hd.entity_erp.ErpStockOut;
 import com.giants3.hd.entity_erp.ErpStockOutItem;
-import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.noEntity.ErpStockOutDetail;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.*;
-import com.giants3.hd.utils.*;
-import com.giants3.hd.entity.*;
+import com.giants3.hd.server.repository_erp.ErpStockOutRepository;
+import com.giants3.hd.server.repository_erp.ErpStockSubmitRepository;
+import com.giants3.hd.server.utils.AttachFileUtils;
+import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.utils.ArrayUtils;
+import com.giants3.hd.utils.FloatHelper;
+import com.giants3.hd.utils.GsonUtils;
+import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 /**
@@ -26,8 +29,8 @@ import java.util.*;
 public class StockService extends AbstractService {
 
 
-    EntityManager manager;
 
+    @Autowired
     ErpStockOutRepository repository;
 
 
@@ -58,19 +61,18 @@ public class StockService extends AbstractService {
     private String attachfilepath;
 
 
+    @Autowired
     ErpStockSubmitRepository erpStockSubmitRepository;
 
     @Override
     public void destroy() throws Exception {
-        manager.close();
+
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        EntityManagerHelper helper = EntityManagerHelper.getErp();
-        manager = helper.getEntityManager();
-        repository = new ErpStockOutRepository(manager);
-        erpStockSubmitRepository = new ErpStockSubmitRepository(manager);
+
+
     }
 
 

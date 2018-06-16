@@ -1,6 +1,7 @@
 package com.giants3.hd.domain.repository;
 
 import com.giants3.hd.entity.HdTask;
+import com.giants3.hd.noEntity.RemoteData;
 import rx.Observable;
 
 import java.util.List;
@@ -29,4 +30,8 @@ public interface HdTaskRepository {
      * @return
      */
     public  Observable<List<HdTask>> delete(long taskId);
+
+    Observable<RemoteData<HdTask>> updateTaskState(long taskId, int taskState);
+
+    Observable<RemoteData<Void>> executeHdTask(int taskType);
 }

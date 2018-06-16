@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity_erp.ErpStockOut;
 import com.giants3.hd.entity_erp.ErpStockOutItem;
@@ -8,6 +8,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -16,14 +17,15 @@ import java.util.List;
 /**
  * 从第三方数据库读取出库单数据相关
  */
-public class ErpStockOutRepository {
+@Repository
+public class ErpStockOutRepository extends ErpRepository {
 
 
     public static final String KEY_CK_NO = "ck_no";
     public static final String KEY_SAL_NO = "SAL_NO";
     public static final String CUS_NO = "cus_no";
     public static final String CK_NO = "ck_no";
-    private EntityManager em;
+
 
     /**
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
@@ -54,8 +56,8 @@ public class ErpStockOutRepository {
     public static final String STOCK_OUT_FIND=STOCK_OUT_LIST+" where A.CK_NO = :ck_no " +STOCK_OUT_ORDER;
 
 
-    public ErpStockOutRepository(EntityManager em) {
-        this.em = em;
+    public ErpStockOutRepository( ) {
+
     }
     /*
     *   查询出库单明细列表
@@ -63,7 +65,7 @@ public class ErpStockOutRepository {
     public List<ErpStockOutItem> stockOutItemsList(String ck_no ) {
 
 
-        Query query = em.createNativeQuery(STOCK_OUT_ITEM_LIST)
+        Query query = getEntityManager().createNativeQuery(STOCK_OUT_ITEM_LIST)
                .setParameter(KEY_CK_NO, ck_no) ;
         List<ErpStockOutItem> orders = query.unwrap(SQLQuery.class)
                 .addScalar("ck_no", StringType.INSTANCE)
@@ -125,7 +127,7 @@ public class ErpStockOutRepository {
     public int getRecordCountByKey(String key,List<String> saleNos) {
 
 
-        org.hibernate.Query      query =   em.createNativeQuery(STOCK_OUT_COUNT_WITH_SALE).unwrap(SQLQuery.class) ;
+        org.hibernate.Query      query =   getEntityManager().createNativeQuery(STOCK_OUT_COUNT_WITH_SALE).unwrap(SQLQuery.class) ;
 
         return (Integer) ( query.setParameter(CK_NO, "%" + key + '%').setParameter(CUS_NO, "%" + key + '%').setParameterList(KEY_SAL_NO,saleNos).list().get(0));
     }
@@ -154,7 +156,7 @@ public class ErpStockOutRepository {
 
     private org.hibernate.Query getStockOutListQuery(String sql)
     {
-        Query query = em.createNativeQuery(sql);
+        Query query = getEntityManager().createNativeQuery(sql);
      return    query.unwrap(SQLQuery.class).addScalar("ck_no", StringType.INSTANCE)
                 .addScalar("ck_dd", StringType.INSTANCE)
                 .addScalar("cus_no", StringType.INSTANCE)

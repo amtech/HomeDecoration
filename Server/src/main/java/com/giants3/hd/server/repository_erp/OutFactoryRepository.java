@@ -1,12 +1,16 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 //
 
 import com.giants3.hd.entity.OutFactory;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.StringType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -14,25 +18,27 @@ import java.util.List;
  * 加工户信息
  */
 
-public class OutFactoryRepository {
+@Repository
+public class OutFactoryRepository extends  ErpRepository {
 
 
     //查找所有的加工户信息
     private static final java.lang.String FIND_ALL = "select DEP,NAME from DEPT where MAKE_ID=3  order by dep asc";
 
-    private EntityManager manager;
-
-    public OutFactoryRepository(EntityManager manager) {
 
 
-        this.manager = manager;
-    }
+
+
+    public OutFactoryRepository()
+    {}
+
+
 
 
     public List<OutFactory> findAll() {
 
 
-        Query query = manager.createNativeQuery(FIND_ALL);
+        Query query =getEntityManager().createNativeQuery(FIND_ALL);
         List<OutFactory> orders = query.unwrap(SQLQuery.class)
                 .addScalar("dep", StringType.INSTANCE)
                 .addScalar("name", StringType.INSTANCE)

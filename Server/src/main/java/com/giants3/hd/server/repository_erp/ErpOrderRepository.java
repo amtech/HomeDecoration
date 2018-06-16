@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity.ErpOrder;
 import com.giants3.hd.entity.ErpOrderItem;
@@ -6,6 +6,7 @@ import com.giants3.hd.utils.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.*;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * 从第三方数据库读取erpOrder数据相关 订单
  */
+@Repository
 public class ErpOrderRepository  extends ErpRepository{
 
 
@@ -24,7 +26,7 @@ public class ErpOrderRepository  extends ErpRepository{
     private static final String KEY_SALE_NO = "SAL_NO";
     public static final String CHK_DD_START = "chk_dd_start";
     public static final String CHK_DD_END = "chk_dd_end";
-    private EntityManager em;
+
     //业务员查询条件从句
     public static final  String   SALE_WHERE_CAUSE=" and p.sal_no in ( :SAL_NO ) ";
     /**
@@ -94,8 +96,8 @@ public class ErpOrderRepository  extends ErpRepository{
             "(select pz.os_id,pz.os_no,pz.so_data from  MF_POS_Z pz where pz.OS_ID=:OS_ID and pz.OS_NO like :OS_NO )   b on a.os_no=b.os_no   order by a.chk_dd DESC  ";
 
 
-    public ErpOrderRepository(EntityManager em) {
-        this.em = em;
+    public ErpOrderRepository( ) {
+
     }
 
 
@@ -149,7 +151,7 @@ public class ErpOrderRepository  extends ErpRepository{
      * @return
      */
     public int getOrderCountByKey(String key) {
-        return (Integer) em.createNativeQuery(SQL_ORDER_LIST_COUNT).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%').getSingleResult();
+        return (Integer) getEntityManager().createNativeQuery(SQL_ORDER_LIST_COUNT).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%').getSingleResult();
     }
 
     /**
@@ -161,7 +163,7 @@ public class ErpOrderRepository  extends ErpRepository{
     public int getOrderCountByKey(String key,List<String> saleNos) {
 
 
-        org.hibernate.Query      query =   em.createNativeQuery(SQL_ORDER_LIST_COUNT_WITH_SALES).unwrap(SQLQuery.class) ;
+        org.hibernate.Query      query =   getEntityManager().createNativeQuery(SQL_ORDER_LIST_COUNT_WITH_SALES).unwrap(SQLQuery.class) ;
 
         return (Integer) (query.setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%').setParameterList(KEY_SALE_NO,saleNos).list().get(0));
     }
@@ -172,7 +174,7 @@ public class ErpOrderRepository  extends ErpRepository{
     {
 
 
-        Query query = em.createNativeQuery(sql) ;
+        Query query = getEntityManager().createNativeQuery(sql) ;
        return query.unwrap(SQLQuery.class).addScalar("os_dd", StringType.INSTANCE)
                 .addScalar("os_no", StringType.INSTANCE)
                 .addScalar("cus_no", StringType.INSTANCE)
@@ -238,7 +240,7 @@ public class ErpOrderRepository  extends ErpRepository{
     public List<ErpOrderItem> findItemsByOrderNo(String orderNo) {
 
 
-        final Query query = em.createNativeQuery(SQL_ORDER_ITEM_LIST).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, orderNo);
+        final Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_LIST).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, orderNo);
         List<ErpOrderItem> result = getOrderItemListQuery(query).list();
 
 
@@ -266,7 +268,7 @@ public class ErpOrderRepository  extends ErpRepository{
      */
     public List<ErpOrderItem> findItemsByOrderNoLike(String key,int pageIndex,int pageSize) {
         final String value = StringUtils.sqlLike(key);
-        Query  query=   em.createNativeQuery(
+        Query  query=   getEntityManager().createNativeQuery(
                 SEARCH_ORDER_ITEMS).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, value).setParameter(KEY_PRD_NO, value);
 
 
@@ -297,7 +299,7 @@ public class ErpOrderRepository  extends ErpRepository{
     {
 
         final String value = StringUtils.sqlLike(key);
-        return (Integer) em.createNativeQuery(SEARCH_COUNT_ORDER_ITEMS ).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, value).setParameter(KEY_PRD_NO, value)
+        return (Integer) getEntityManager().createNativeQuery(SEARCH_COUNT_ORDER_ITEMS ).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, value).setParameter(KEY_PRD_NO, value)
 
                 .getSingleResult();
     }
@@ -353,7 +355,7 @@ public class ErpOrderRepository  extends ErpRepository{
      * @return
      */
     public int getOrderCountByKeyAndCheckDate(String key,String dateStart,String dateEnd) {
-        return (Integer) em.createNativeQuery(SQL_ORDER_LIST_COUNT_CHECK_DATE).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%')
+        return (Integer) getEntityManager().createNativeQuery(SQL_ORDER_LIST_COUNT_CHECK_DATE).setParameter(OS_ID, KEY_ORDER).setParameter(KEY_OS_NO, "%" + key + '%')
                 .setParameter("chk_dd_start", dateStart).setParameter("chk_dd_end",dateEnd)
                 .getSingleResult();
     }
@@ -365,7 +367,7 @@ public class ErpOrderRepository  extends ErpRepository{
      * @return
      */
     public String  findId_noByOrderItem(String osNo, int itm) {
-        final Query query = em.createNativeQuery("select id_no from tf_pos where os_No =:"+KEY_OS_NO+" and itm=:"+KEY_ITM+" and os_id='SO'") .setParameter(KEY_OS_NO, osNo).setParameter(KEY_ITM,itm
+        final Query query = getEntityManager().createNativeQuery("select id_no from tf_pos where os_No =:"+KEY_OS_NO+" and itm=:"+KEY_ITM+" and os_id='SO'") .setParameter(KEY_OS_NO, osNo).setParameter(KEY_ITM,itm
         );
       return (String) query.getSingleResult() ;
 

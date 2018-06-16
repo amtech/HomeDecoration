@@ -5,10 +5,10 @@ import com.giants3.hd.noEntity.ProductAgent;
 import com.giants3.hd.noEntity.ProductListViewType;
 import com.giants3.hd.server.entity.ProductEquationUpdateTemp;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.repository_wrapper.ProductRepositoryWrapper;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.BackDataHelper;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ObjectUtils;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
@@ -103,6 +103,9 @@ public class ProductService extends AbstractService implements InitializingBean,
 
     //产品图片全部同步现场池
     ExecutorService executorService;
+
+    @Autowired
+    ProductRepositoryWrapper productWrapperRepository;
 
     @Autowired
     PlatformTransactionManager platformTransactionManager;
@@ -218,93 +221,9 @@ public class ProductService extends AbstractService implements InitializingBean,
     public ProductDetail findProductDetailById(long productId) {
 
 
-        //读取产品信息
-        Product product = productRepository.findOne(productId);
-        if (product == null) {
-            return null;
 
+        return productWrapperRepository.findProductDetailById(productId);
 
-        }
-
-        ProductDetail detail = new ProductDetail();
-
-
-        detail.product = product;
-
-        detail.productLog = productLogRepository.findFirstByProductIdEquals(productId);
-
-
-        //读取材料列表信息
-        List<ProductMaterial> productMaterials = productMaterialRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-
-        List<ProductMaterial> conceptusCost = new ArrayList<>();
-        List<ProductMaterial> assemblesCost = new ArrayList<>();
-        List<ProductMaterial> packCost = new ArrayList<>();
-
-
-        for (ProductMaterial productMaterial : productMaterials) {
-
-            switch ((int) productMaterial.flowId) {
-                case Flow.FLOW_CONCEPTUS:
-                    conceptusCost.add(productMaterial);
-                    break;
-
-                case Flow.FLOW_PAINT:
-
-                    break;
-
-                case Flow.FLOW_ASSEMBLE:
-                    assemblesCost.add(productMaterial);
-                    break;
-
-                case Flow.FLOW_PACK:
-                    packCost.add(productMaterial);
-                    break;
-            }
-
-        }
-        detail.conceptusMaterials = conceptusCost;
-        detail.assembleMaterials = assemblesCost;
-        detail.packMaterials = packCost;
-
-
-        //读取工资数据
-        List<ProductWage> productWages = productWageRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-        List<ProductWage> conceptusWage = new ArrayList<>();
-        List<ProductWage> assemblesWage = new ArrayList<>();
-        List<ProductWage> packWages = new ArrayList<>();
-        for (ProductWage productWage : productWages) {
-
-            switch ((int) productWage.flowId) {
-                case Flow.FLOW_CONCEPTUS:
-                    conceptusWage.add(productWage);
-                    break;
-
-                case Flow.FLOW_PAINT:
-
-                    break;
-
-                case Flow.FLOW_ASSEMBLE:
-                    assemblesWage.add(productWage);
-                    break;
-
-                case Flow.FLOW_PACK:
-                    packWages.add(productWage);
-                    break;
-            }
-
-        }
-
-
-        detail.conceptusWages = conceptusWage;
-        detail.assembleWages = assemblesWage;
-        detail.packWages = packWages;
-
-        //读取油漆列表信息
-        detail.paints = productPaintRepository.findByProductIdEqualsOrderByItemIndexAsc(productId);
-
-
-        return detail;
 
     }
 
@@ -1566,5 +1485,15 @@ public class ProductService extends AbstractService implements InitializingBean,
         }
 
 
+    }
+
+    public List<Product> findByNameBetweenOrderByName(String startName, String endName) {
+
+        List<Product> pageValue = productRepository.findByNameBetweenOrderByName(startName, endName);
+        return pageValue;
+    }
+
+    public List<Product> findByNameEquals(String prd_name) {
+      return   productRepository.findByNameEquals(prd_name);
     }
 }

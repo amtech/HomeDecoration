@@ -9,6 +9,7 @@ import com.giants3.hd.noEntity.ProduceType;
 import com.giants3.hd.noEntity.ProductType;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.repository_erp.ErpWorkRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.DateFormats;
@@ -32,7 +33,7 @@ import java.util.*;
 @Service
 public class ErpWorkService extends AbstractErpService {
 
-
+    @Autowired
     ErpWorkRepository erpWorkRepository;
 
     @Autowired
@@ -90,7 +91,7 @@ public class ErpWorkService extends AbstractErpService {
     @Override
     protected void onEntityManagerCreate(EntityManager manager) {
 
-        erpWorkRepository = new ErpWorkRepository(manager);
+
         today = Calendar.getInstance().getTime();
     }
 
@@ -1516,6 +1517,7 @@ public class ErpWorkService extends AbstractErpService {
         return wrapData(orderItemWorkMemoRepository.findByOsNoEqualsAndItmEquals(osNo, itm));
     }
 
+    @Transactional
     public RemoteData<Void> saveWorkMemo(User loginUser, int workFlowStep, String os_no, int itm, String orderItemWorkMemo, String prd_name, String pVersion, String productWorkMemo) {
 
 

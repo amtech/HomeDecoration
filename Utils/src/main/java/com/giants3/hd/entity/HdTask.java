@@ -63,7 +63,13 @@ public class HdTask implements Serializable {
     public static final int TYPE_UPDATE_WORK_FLOW_STATE=102;
     public static final String NAME_UPDATE_WORK_FLOW_STATE="在产货款状态更新";
 
+    /**
+     * 任务是否暂停
+     */
+    public int state;
 
 
 
+    public static final int STATE_NORMAL=0;
+    public static final int STATE_PAUSED=1;
 }

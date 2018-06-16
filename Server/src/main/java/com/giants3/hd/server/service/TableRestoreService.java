@@ -30,6 +30,7 @@ import java.util.*;
  * Created by davidleen29 on 2017/4/12.
  */
 @Service
+@Deprecated
 public class TableRestoreService extends AbstractService {
 
 

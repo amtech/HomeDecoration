@@ -377,12 +377,8 @@ public class WorkFlowController extends BaseController {
     ) {
 
 
-        RemoteData<Void> result = workFlowService.saveWorkFlowLimit(workFlowLimit);
-        erpWorkService.updateAllProducingWorkFlowReports();
+        RemoteData<Void> result = workFlowService.saveWorkFlowLimit(workFlowLimit,updateCompletedOrderItem);
 
-        if (updateCompletedOrderItem) {
-            erpWorkService.updateCompleteWorkFlowReports();
-        }
 
 
         return result;

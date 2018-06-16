@@ -466,7 +466,7 @@ public class WorkFlowService extends AbstractService implements InitializingBean
      * @return
      */
     @Transactional
-    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit ) {
+    public RemoteData<Void> saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem ) {
 
 
         for (WorkFlowTimeLimit workFlowTimeLimit : workFlowLimit) {
@@ -476,6 +476,12 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
         workFlowTimeLimitRepository.save(workFlowLimit);
+
+        erpWorkService.updateAllProducingWorkFlowReports();
+
+        if (updateCompletedOrderItem) {
+            erpWorkService.updateCompleteWorkFlowReports();
+        }
 
 
         return wrapData();

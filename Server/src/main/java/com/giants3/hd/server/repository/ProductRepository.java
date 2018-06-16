@@ -52,6 +52,12 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
      * @return
      */
     List<Product> findByNameEquals(String proName);
+/**
+     * 查找相同产品品名的货物
+     * @param proName
+     * @return
+     */
+    List<Product> findByNameLike(String proName);
 
 
     /**

@@ -1,7 +1,8 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity_erp.SampleState;
-import com.giants3.hd.server.repository.ErpSampleRepository;
+import com.giants3.hd.server.repository_erp.ErpSampleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -15,13 +16,14 @@ import java.util.List;
 public class ErpSampleService extends AbstractErpService {
 
 
+    @Autowired
     ErpSampleRepository erpSampleRepository;
 
 
     @Override
     protected void onEntityManagerCreate(EntityManager manager) {
 
-        erpSampleRepository = new ErpSampleRepository(manager);
+
     }
 
 

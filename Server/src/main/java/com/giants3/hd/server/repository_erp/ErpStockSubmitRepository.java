@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.entity_erp.ErpStockOut;
@@ -10,6 +10,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,7 +19,8 @@ import java.util.List;
 /**
  * 进货单里的数据是外厂到仓库的信息，缴库单的数据是车间到仓库的信息，销货单的数据是仓库到装柜的信息，
  */
-public class ErpStockSubmitRepository {
+@Repository
+public class ErpStockSubmitRepository  extends  ErpRepository{
 
 //进货单表身
 //    select * FROM  TF_PSS WHERE PS_ID='PC' AND WH='CP'
@@ -86,7 +88,6 @@ public class ErpStockSubmitRepository {
     public static final String CK_NO = "ck_no";
 
 
-    private EntityManager em;
 
     /**
      * AS varchar(8000)   在sqlserver 2000 中  最大的varchar 长度为8000 varchar(max) 会报错。
@@ -112,8 +113,8 @@ public class ErpStockSubmitRepository {
     public static final String STOCK_OUT_FIND = STOCK_OUT_LIST + " where A.CK_NO = :ck_no " + STOCK_OUT_ORDER;
 
 
-    public ErpStockSubmitRepository(EntityManager em) {
-        this.em = em;
+    public ErpStockSubmitRepository( ) {
+
 
 
 
@@ -128,7 +129,7 @@ public class ErpStockSubmitRepository {
 
 
 
-        Query query = em.createNativeQuery(stockInAndSubmitSql)
+        Query query = getEntityManager().createNativeQuery(stockInAndSubmitSql)
                 .setParameter(START_DATE, startDate)
                 .setParameter(END_DATE, endData);
         List<StockSubmit> orders = getStockSubmits(query);
@@ -210,7 +211,7 @@ public class ErpStockSubmitRepository {
     public List<StockSubmit> getStockXiaokuItemList(String key, String startDate, String endData) {
 
 
-        Query query = em.createNativeQuery(searchstockXiaokuItemSql)
+        Query query = getEntityManager().createNativeQuery(searchstockXiaokuItemSql)
                 .setParameter("ps_no", "%" + key.trim() + "%")
                 .setParameter(START_DATE, startDate)
                 .setParameter(END_DATE, endData);
@@ -231,7 +232,7 @@ public class ErpStockSubmitRepository {
     public List<StockSubmit> getStockXiaokuItemList(String ps_no) {
 
 
-        Query query = em.createNativeQuery(stockXiaokuItemSql)
+        Query query = getEntityManager().createNativeQuery(stockXiaokuItemSql)
                 .setParameter("ps_no", ps_no);
 
         List<StockSubmit> orders = getStockSubmits(query);
@@ -289,7 +290,7 @@ public class ErpStockSubmitRepository {
     public int getRecordCountByKey(String key, List<String> saleNos) {
 
 
-        org.hibernate.Query query = em.createNativeQuery(STOCK_OUT_COUNT_WITH_SALE).unwrap(SQLQuery.class);
+        org.hibernate.Query query = getEntityManager().createNativeQuery(STOCK_OUT_COUNT_WITH_SALE).unwrap(SQLQuery.class);
 
         return (Integer) (query.setParameter(CK_NO, "%" + key + '%').setParameter(CUS_NO, "%" + key + '%').setParameterList(KEY_SAL_NO, saleNos).list().get(0));
     }
@@ -314,7 +315,7 @@ public class ErpStockSubmitRepository {
 
 
     private org.hibernate.Query getStockOutListQuery(String sql) {
-        Query query = em.createNativeQuery(sql);
+        Query query = getEntityManager().createNativeQuery(sql);
         return query.unwrap(SQLQuery.class).addScalar("ck_no", StringType.INSTANCE)
                 .addScalar("ck_dd", StringType.INSTANCE)
                 .addScalar("cus_no", StringType.INSTANCE)
@@ -330,7 +331,7 @@ public class ErpStockSubmitRepository {
     }
 
     private org.hibernate.Query getStockXiaokuListQuery(String sql) {
-        Query query = em.createNativeQuery(sql);
+        Query query = getEntityManager().createNativeQuery(sql);
         return query.unwrap(SQLQuery.class).addScalar("ps_id", StringType.INSTANCE)
                 .addScalar("ps_no", StringType.INSTANCE)
                 .addScalar("tcgs", StringType.INSTANCE)
@@ -350,7 +351,7 @@ public class ErpStockSubmitRepository {
      * @return
      */
     public int getXiaokuRecordCount(String key) {
-        org.hibernate.Query query = em.createNativeQuery(stockXiaoKuRecordCountSql).unwrap(SQLQuery.class);
+        org.hibernate.Query query = getEntityManager().createNativeQuery(stockXiaoKuRecordCountSql).unwrap(SQLQuery.class);
 
         return (Integer) (query.setParameter("ps_no", "%" + key.trim() + "%").list().get(0));
     }

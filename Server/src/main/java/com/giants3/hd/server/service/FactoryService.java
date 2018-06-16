@@ -2,9 +2,8 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.Factory;
 import com.giants3.hd.entity.OutFactory;
-import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.FactoryRepository;
-import com.giants3.hd.server.repository.OutFactoryRepository;
+import com.giants3.hd.server.repository_erp.OutFactoryRepository;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.exception.HdException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,13 @@ public class FactoryService extends AbstractErpService {
 
 
 
+    @Autowired
     private OutFactoryRepository outFactoryRepository;
 
 
     @Override
     protected void onEntityManagerCreate(EntityManager manager) {
-        outFactoryRepository = new OutFactoryRepository(manager);
+
 
     }
 
@@ -65,7 +65,7 @@ public class FactoryService extends AbstractErpService {
      * @param factories
      */
     @Transactional
-    public void save(List<Factory> factories) {
+    public List<Factory> save(List<Factory> factories) {
 
 
         for (Factory factory : factories) {
@@ -85,6 +85,8 @@ public class FactoryService extends AbstractErpService {
 
 
         }
+
+        return factoryRepository.findAll();
     }
 
     /**
@@ -97,9 +99,11 @@ public class FactoryService extends AbstractErpService {
      * @return
      */
     @Transactional(rollbackFor = {HdException.class})
-    public void saveOutList(List<OutFactory> factories) {
+    public List<OutFactory> saveOutList(List<OutFactory> factories) {
 
         //加工户信息 来自erp，不做修改维护
+
+        return outFactoryRepository.findAll();
 
 
     }

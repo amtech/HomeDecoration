@@ -2,8 +2,9 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.*;
 import com.giants3.hd.noEntity.*;
-import com.giants3.hd.server.interceptor.EntityManagerHelper;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.repository_erp.ErpOrderRepository;
+import com.giants3.hd.server.repository_erp.ErpWorkRepository;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
@@ -27,7 +28,7 @@ import java.util.List;
 @Service
 public class ErpService extends AbstractErpService {
 
-
+    @Autowired
     ErpOrderRepository repository;
 
     @Autowired
@@ -90,7 +91,7 @@ public class ErpService extends AbstractErpService {
     @Value("${attachfilepath}")
     private String attachfilepath;
 
-
+    @Autowired
     ErpWorkRepository erpWorkRepository;
 
     @Autowired
@@ -101,8 +102,7 @@ public class ErpService extends AbstractErpService {
 
     @Override
     protected void onEntityManagerCreate(EntityManager manager) {
-        repository = new ErpOrderRepository(manager);
-        erpWorkRepository = new ErpWorkRepository(manager);
+
     }
 
 

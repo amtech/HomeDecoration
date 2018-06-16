@@ -2,10 +2,9 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.ErpOrderItemProcess;
 import com.giants3.hd.noEntity.ProductType;
-import com.giants3.hd.server.repository.ErpPrdtRepository;
+import com.giants3.hd.server.repository_erp.ErpPrdtRepository;
 import com.giants3.hd.utils.StringUtils;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -19,11 +18,13 @@ public class ErpPrdtService extends AbstractErpService   {
 
 
 
+    @Autowired
     ErpPrdtRepository erpPrdtRepository;
     @Override
+
     protected void onEntityManagerCreate(EntityManager manager) {
 
-        erpPrdtRepository=new ErpPrdtRepository(manager);
+       // erpPrdtRepository=new ErpPrdtRepository(manager);
     }
 
     /**

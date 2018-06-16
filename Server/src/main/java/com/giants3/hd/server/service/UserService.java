@@ -60,7 +60,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
      * @return
      */
     @Transactional(rollbackFor = {HdException.class})
-    public void saveUserList(List<User> newUsers) throws HdException {
+    public List<User> saveUserList(List<User> newUsers) throws HdException {
         List<User> oldUsers = userRepository.findAll();
 
         List<User> removed = new ArrayList<>();
@@ -114,6 +114,9 @@ public class UserService extends AbstractService implements InitializingBean, Di
             userRepository.save(user);
 
 
+
+
+
         }
 
 
@@ -128,8 +131,8 @@ public class UserService extends AbstractService implements InitializingBean, Di
 
 
         }
-
-
+        userRepository.flush();
+        return list();
 
     }
 
@@ -281,5 +284,80 @@ public class UserService extends AbstractService implements InitializingBean, Di
         {
             userRepository.save(updateUsers);
         }
+    }
+
+    @Transactional
+    public RemoteData<Void> updatePassword(String[] map) {
+
+        long userId = Long.valueOf(map[0]);
+        String oldPassword = map[1];
+        String newPassword = map[2];
+        User user = userRepository.findOne(userId);
+        if (user != null) {
+
+            if (user.password.equals(oldPassword)|| DigestUtils.md5(oldPassword).equalsIgnoreCase(user.passwordMD5)) {
+
+                user.password = newPassword;
+                user.passwordMD5= DigestUtils.md5(newPassword);
+                userRepository.save(user);
+                return wrapData();
+            } else {
+                return wrapError("旧密码错误");
+            }
+
+
+        } else {
+
+            return wrapError("要修改的员工不存在");
+        }
+    }
+    @Transactional
+    public void save(User user) {
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        userRepository.delete(userId);
+    }
+
+    public User findOne(long userId) {
+     return    userRepository.findOne(userId);
+    }
+
+    @Transactional
+    public RemoteData<User> saveSalesmans(List<User> salesmans) {
+
+        for(User salesman : salesmans)
+        {
+
+
+            User oldData= userRepository.findFirstByCodeEqualsAndNameEquals(salesman.code,salesman.name);
+            if(oldData==null)
+            {
+                salesman.id=-1;
+
+
+            }else
+            {
+                salesman.id=oldData.id;
+
+
+
+            }
+            userRepository.save(salesman);
+
+
+
+        }
+        return listSalesmans();
+    }
+
+    public RemoteData<User> listSalesmans() {
+
+
+
+        return  wrapData(userRepository.findByIsSalesman(true));
     }
 }

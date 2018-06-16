@@ -1,4 +1,4 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import com.giants3.hd.entity.ErpOrderItem;
 import com.giants3.hd.entity.ErpOrderItemProcess;
@@ -7,6 +7,7 @@ import com.giants3.hd.entity_erp.Sub_workflow_state;
 import com.giants3.hd.entity_erp.WorkFlowMaterial;
 import com.giants3.hd.entity_erp.Zhilingdan;
 import com.giants3.hd.noEntity.ProduceType;
+import com.giants3.hd.server.repository_erp.ErpRepository;
 import com.giants3.hd.server.utils.SqlScriptHelper;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.ObjectUtils;
@@ -17,6 +18,7 @@ import org.hibernate.type.FloatType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -28,6 +30,7 @@ import java.util.*;
  */
 
 
+@Repository
 public class ErpWorkRepository extends ErpRepository {
 
     //流程排序
@@ -58,11 +61,11 @@ public class ErpWorkRepository extends ErpRepository {
     public String SQL_SUB_WORK_FLOW_STATE = "";
 
 
-    private EntityManager em;
 
-    public ErpWorkRepository(EntityManager em) {
 
-        this.em = em;
+    public ErpWorkRepository( ) {
+
+
         if (StringUtils.isEmpty(SQL_ZHILINGDAN)) {
 
 
@@ -98,7 +101,7 @@ public class ErpWorkRepository extends ErpRepository {
     public List<Zhilingdan> searchZhilingdan(String osName, String startDate, String endDate) {
 
 
-        Query query = em.createNativeQuery(SQL_ZHILINGDAN)
+        Query query = getEntityManager().createNativeQuery(SQL_ZHILINGDAN)
                 .setParameter("osname", "%" + osName.trim() + "%")
                 .setParameter("startdate", startDate)
                 .setParameter("enddate", endDate);
@@ -143,7 +146,7 @@ public class ErpWorkRepository extends ErpRepository {
     public List<ErpOrderItemProcess> findPurchaseOrderItemProcesses(String os_no, int itm) {
 
 
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS_PURCHASE_BY_ITM)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_PROCESS_PURCHASE_BY_ITM)
 
                 .setParameter("os_no", os_no)
                 .setParameter("itm", itm);
@@ -206,7 +209,7 @@ public class ErpWorkRepository extends ErpRepository {
      */
     public List<ErpOrderItemProcess> findOrderItemProcesses(String os_no, int itm, boolean includeZuzhuang) {
 
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_PROCESS_BY_ITM)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_PROCESS_BY_ITM)
 
                 .setParameter("os_no", os_no)
                 .setParameter("itm", itm);
@@ -395,7 +398,7 @@ public class ErpWorkRepository extends ErpRepository {
 
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_UNCOMPLETE)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_UNCOMPLETE)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value)
                 .setParameter("firstRow", pageIndex * pageSize)
@@ -415,7 +418,7 @@ public class ErpWorkRepository extends ErpRepository {
 
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_COMPLETE)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_COMPLETE)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value)
         .setParameter("firstRow", pageIndex * pageSize)
@@ -433,7 +436,7 @@ public class ErpWorkRepository extends ErpRepository {
      */
     public int getCompleteOrderItemCount(String key) {
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_COUNT_ORDER_ITEM_COMPLETE)
+        Query query = getEntityManager().createNativeQuery(SQL_COUNT_ORDER_ITEM_COMPLETE)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value);
         return getCount(query);
@@ -486,7 +489,7 @@ public class ErpWorkRepository extends ErpRepository {
     public List<WorkFlowMaterial> searchWorkFlowMaterials(String osNo, int itm, String code) {
 
 
-        Query query = em.createNativeQuery(SQL_WORK_FLOW_MATERIAL)
+        Query query = getEntityManager().createNativeQuery(SQL_WORK_FLOW_MATERIAL)
                 .setParameter("os_no", osNo)
                 .setParameter("itm", itm)
                 .setParameter("mrp_no", StringUtils.sqlRightLike(code));
@@ -539,7 +542,7 @@ public class ErpWorkRepository extends ErpRepository {
     private List<ErpOrderItem> getOrderItemsFromSQL(String sql, String key, int pageIndex, int pageSieze) {
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(sql)
+        Query query = getEntityManager().createNativeQuery(sql)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value);
         final List<ErpOrderItem> oRderItemsFromSQL = getORderItemsFromSQL(query, pageIndex, pageSieze);
@@ -587,7 +590,7 @@ public class ErpWorkRepository extends ErpRepository {
     public ErpOrderItem findOrderItem(String os_no, int itm) {
 
 
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_BY_OS_ITM)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_BY_OS_ITM)
                 .setParameter("os_no", os_no)
                 .setParameter("itm", itm);
         final List<ErpOrderItem> oRderItemsFromSQL = getORderItemsFromSQL(query, 0, 0);
@@ -604,7 +607,7 @@ public class ErpWorkRepository extends ErpRepository {
     public int getUnCompleteOrderItemCount(String key) {
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_COUNT_ORDER_ITEM_UNCOMPLETE)
+        Query query = getEntityManager().createNativeQuery(SQL_COUNT_ORDER_ITEM_UNCOMPLETE)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value);
         return getCount(query);
@@ -622,7 +625,7 @@ public class ErpWorkRepository extends ErpRepository {
 
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_COUNT_ORDER_ITEM_ON_WORK_FLOW)
+        Query query = getEntityManager().createNativeQuery(SQL_COUNT_ORDER_ITEM_ON_WORK_FLOW)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value)
                 .setParameter("workFlowStep", workFlowStep);
@@ -635,7 +638,7 @@ public class ErpWorkRepository extends ErpRepository {
 
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_ORDER_ITEM_ON_WORK_FLOW)
+        Query query = getEntityManager().createNativeQuery(SQL_ORDER_ITEM_ON_WORK_FLOW)
                 .setParameter("os_no", value)
                 .setParameter("prd_no", value)
                 .setParameter("workFlowStep", workFlowStep);
@@ -660,7 +663,7 @@ public class ErpWorkRepository extends ErpRepository {
 
 
         final String value = StringUtils.sqlLike(key);
-        Query query = em.createNativeQuery(SQL_SUB_WORK_FLOW_STATE)
+        Query query = getEntityManager().createNativeQuery(SQL_SUB_WORK_FLOW_STATE)
                 .setParameter("para_name", value)
                 .setParameter("para_start", dateStart)
                 .setParameter("para_end", dateEnd);

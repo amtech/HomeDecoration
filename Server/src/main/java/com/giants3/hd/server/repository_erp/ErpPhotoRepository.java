@@ -1,8 +1,9 @@
-package com.giants3.hd.server.repository;
+package com.giants3.hd.server.repository_erp;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.BlobType;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -14,15 +15,15 @@ import java.util.List;
  * 数据库图片读取
  */
 
+@Repository
+public class ErpPhotoRepository  extends ErpRepository{
 
-public class ErpPhotoRepository {
 
 
-    private EntityManager em;
 
-    public ErpPhotoRepository(EntityManager em) {
+    public ErpPhotoRepository( ) {
 
-        this.em = em;
+
 
     }
 
@@ -30,7 +31,7 @@ public class ErpPhotoRepository {
     public byte[] findProductPhotoByIdNo(String name) {
 
 
-        Query query = em.createNativeQuery("select photo_bom as photo from mf_bom where bom_no=:name");
+        Query query = getEntityManager().createNativeQuery("select photo_bom as photo from mf_bom where bom_no=:name");
         query.setParameter("name", name);
         List<BlobWrapper> list = query.unwrap(SQLQuery.class)
                 .addScalar("photo", BlobType.INSTANCE).setResultTransformer(Transformers.aliasToBean(BlobWrapper.class)).list();

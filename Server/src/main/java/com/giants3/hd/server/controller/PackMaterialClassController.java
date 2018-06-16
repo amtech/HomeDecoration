@@ -1,12 +1,11 @@
 package com.giants3.hd.server.controller;
 
 
-import com.giants3.hd.server.repository.PackMaterialClassRepository;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.PackMaterialClass;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.service.MaterialRelateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,53 +14,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
-* 材料信息控制类。
-*/
- @Controller
+ * 材料信息控制类。
+ */
+@Controller
 @RequestMapping("/packMaterialClass")
 public class PackMaterialClassController extends BaseController {
 
     @Autowired
-    private PackMaterialClassRepository packMaterialClassRepository;
+    private MaterialRelateService materialRelateService;
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public
     @ResponseBody
-    RemoteData<PackMaterialClass> list( )   {
+    RemoteData<PackMaterialClass> list() {
 
-        return wrapData(packMaterialClassRepository.findAll());
+
+        return wrapData(materialRelateService.listPackMaterialClasses());
+
     }
 
 
+    @RequestMapping(value = "/saveList", method = RequestMethod.POST)
 
-
-    @RequestMapping(value = "/saveList",method = RequestMethod.POST)
-    @Transactional
     public
     @ResponseBody
-    RemoteData<PackMaterialClass> saveClassList(@RequestBody List<PackMaterialClass> materialClasses)   {
+    RemoteData<PackMaterialClass> saveClassList(@RequestBody List<PackMaterialClass> materialClasses) {
 
-        for(PackMaterialClass materialClass: materialClasses)
-        {
-
-
-            PackMaterialClass oldData=packMaterialClassRepository.findFirstByNameEquals(materialClass.name);
-            if(oldData==null)
-            {
-                materialClass.id=-1;
-
-
-            }else
-            {
-                materialClass.id=oldData.id;
-
-            }
-            packMaterialClassRepository.save(materialClass);
-
-        }
-
-        return list();
+        return materialRelateService.savePackMaterialClassList(materialClasses);
     }
 
 }
