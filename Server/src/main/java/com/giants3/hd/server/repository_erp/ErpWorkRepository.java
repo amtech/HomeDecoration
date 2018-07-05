@@ -662,7 +662,7 @@ public class ErpWorkRepository extends ErpRepository {
     public List<Sub_workflow_state> searchErpSubWorkFlow(String key, long dateStart, long dateEnd) {
 
 
-        final String value = StringUtils.sqlLike(key);
+        final String value =  StringUtils.sqlLike(key) ;
         Query query = getEntityManager().createNativeQuery(SQL_SUB_WORK_FLOW_STATE)
                 .setParameter("para_name", value)
                 .setParameter("para_start", dateStart)

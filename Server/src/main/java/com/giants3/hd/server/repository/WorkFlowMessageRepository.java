@@ -35,6 +35,8 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
     List<WorkFlowMessage> findByToFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(int flowStep, String os_no, int itm);
     List<WorkFlowMessage> findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByReceiveTimeDesc(int flowStep, String os_no, int itm);
 
+    List<WorkFlowMessage> findByFromFlowStepNotAndReceiverIdEqualsOrderByCreateTimeDesc(int flowStep, long receiverId);
+
 //    /**
 //     *  删除指定订单的流程消息
 //     * @param orderItemId

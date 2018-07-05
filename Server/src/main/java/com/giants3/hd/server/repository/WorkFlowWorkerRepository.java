@@ -29,4 +29,5 @@ public interface WorkFlowWorkerRepository extends JpaRepository<WorkFlowWorker, 
      List<WorkFlowWorker>   findByUserIdEqualsAndWorkFlowStepEquals (long userId,int   workFlowStep );
 
     List<WorkFlowWorker> findByUserIdEqualsAndSendEquals(long userId, boolean canSend);
+    List<WorkFlowWorker> findByWorkFlowStepEqualsAndProduceTypeEqualsAndReceiveEquals(int workFlowStep,int produceType, boolean canReceive);
 }

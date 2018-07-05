@@ -1,17 +1,23 @@
 package com.giants3.hd.server.service;
 
+import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.CompanyPosition;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.WorkFlowMemoAuth;
+import com.giants3.hd.noEntity.app.PushMessage;
 import com.giants3.hd.server.repository.*;
+import com.giants3.hd.server.service_third.MessagePushService;
+import com.giants3.hd.server.service_third.PushService;
 import com.giants3.hd.utils.DateFormats;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +41,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     ProductService productService;
 
     @Autowired
-    private UserRepository userRepository;
+    MessagePushService messagePushService;
+
 
     @Autowired
     private WorkFlowSubTypeRepository workFlowSubTypeRepository;
@@ -86,9 +93,6 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     WorkFlowTimeLimitRepository workFlowTimeLimitRepository;
 
 
-    @Autowired
-
-    ErpService erpService;
 
     @Override
     public void destroy() throws Exception {
@@ -400,6 +404,17 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
     }
 
+
+
+    public WorkFlowMessage findMessageById(long id)
+    {
+
+        final WorkFlowMessage one = workFlowMessageRepository.findOne(id);
+        return one;
+
+
+    }
+
     public RemoteData<WorkFlowMemoAuth> checkWorkFlowMemo(User user, long orderItemWorkMemoId, boolean check) {
 
 
@@ -526,4 +541,46 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
 
     }
+    /**
+     * 每天早上8点，遍历所有消息， 检查超过24小时的未处理测消息 并提醒。
+     */
+    @Scheduled(cron = "0 0 8 * * ?")
+//	@Scheduled(fixedDelay = 300)
+    public void alertUnHandleMessage() {
+
+
+
+        //查找所有未处理的非白配制作阶段的消息，
+        List<WorkFlowMessage> workFlowMessages=workFlowMessageRepository.findByFromFlowStepNotAndReceiverIdEqualsOrderByCreateTimeDesc(ErpWorkFlow.FIRST_STEP,0)  ;
+
+        //测试数据
+        String  combineTokens="AkzRgFtIxZUsuWHvYZTTtIzzLrJ9BC4XYXIvFN47eFSZ,AqNBFp1-NZwdQvWGiRdQCP4_q-4TddbU_P5xIqA1azmr,AqNBFp1-NZwdQvWGiRdQCP50nPRD47JPGFUvIxVMYhrY";
+        if(workFlowMessages.size()>0)
+            messagePushService.sendMessageToDevice(combineTokens,workFlowMessages.get(0));
+
+        for (WorkFlowMessage message:workFlowMessages)
+        {
+
+            //如果消息存在不超过24小时，不提醒
+            long time=Calendar.getInstance().getTimeInMillis();
+            if(time-message.createTime<24l*60*60*1000) continue;
+            messagePushService.pushMessage(message);
+
+
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
 }

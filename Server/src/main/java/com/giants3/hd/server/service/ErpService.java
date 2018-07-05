@@ -128,7 +128,7 @@ public class ErpService extends AbstractErpService {
             //查询所有
             OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
             if (orderAuth != null && !StringUtils.isEmpty(orderAuth.relatedSales)) {
-                salesNos = userService.extractUserCodes(loginUser.id, salesId, orderAuth.relatedSales);
+                salesNos = userService.findUserCodes(loginUser.id, salesId, orderAuth.relatedSales);
             }
 
 
@@ -224,7 +224,7 @@ public class ErpService extends AbstractErpService {
      * @param pageSize
      * @return
      */
-    @Transactional
+
     public RemoteData<ErpOrderItem> searchUserWorkOrderItems(User loginUser, String key, int pageIndex, int pageSize) {
 
         List<WorkFlowWorker> workFlowWorkers = workFlowWorkerRepository.findByUserIdEquals(loginUser.id);
@@ -568,7 +568,7 @@ public class ErpService extends AbstractErpService {
         //查询所有
         OrderAuth orderAuth = orderAuthRepository.findFirstByUser_IdEquals(loginUser.id);
         if (orderAuth != null && !StringUtils.isEmpty(orderAuth.relatedSales)) {
-            salesNos = userService.extractUserCodes(loginUser.id, salesId, orderAuth.relatedSales);
+            salesNos = userService.findUserCodes(loginUser.id, salesId, orderAuth.relatedSales);
         }
 
 
@@ -930,7 +930,7 @@ public class ErpService extends AbstractErpService {
 
     }
 
-    public RemoteData<WorkFlowMessage> myWorkFlowMessage(User user,String key,int pageIndex, int pageSize) {
+    public RemoteData<WorkFlowMessage> getMyWorkFlowMessage(User user, String key, int pageIndex, int pageSize) {
 
         Pageable pageable=constructPageSpecification(pageIndex,pageSize,null);
         final Page<WorkFlowMessage> page = workFlowMessageRepository.findMyWorkFlowMessages(user.id, StringUtils.sqlLike(key), pageable);

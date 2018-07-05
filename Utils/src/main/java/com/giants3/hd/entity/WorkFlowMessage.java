@@ -195,4 +195,6 @@ public class WorkFlowMessage {
     public int produceType;
 
     public String produceTypeName;
+
+
 }

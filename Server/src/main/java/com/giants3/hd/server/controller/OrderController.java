@@ -184,7 +184,7 @@ public class OrderController extends BaseController {
 
     ) {
 
-        RemoteData<WorkFlowMessage> remoteData = erpService.myWorkFlowMessage(user,key ,pageIndex,pageSize);
+        RemoteData<WorkFlowMessage> remoteData = erpService.getMyWorkFlowMessage(user,key ,pageIndex,pageSize);
         return remoteData;
     }
 

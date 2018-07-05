@@ -10,6 +10,7 @@ import com.giants3.hd.noEntity.ProductType;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.repository_erp.ErpWorkRepository;
+import com.giants3.hd.server.service_third.MessagePushService;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.ArrayUtils;
 import com.giants3.hd.utils.DateFormats;
@@ -67,6 +68,8 @@ public class ErpWorkService extends AbstractErpService {
 
     @Autowired
     ErpWorkFlowReportRepository erpWorkFlowReportRepository;
+    @Autowired
+    MessagePushService messagePushService;
 //    @Autowired
 //    OrderItemRepository orderItemRepository;
 
@@ -827,6 +830,19 @@ public class ErpWorkService extends AbstractErpService {
         workFlowMessage = workFlowMessageRepository.save(workFlowMessage);
 
 
+        if(workFlowMessage.fromFlowStep!=ErpWorkFlow.FIRST_STEP&&workFlowMessage.fromFlowStep!=ErpWorkFlow.LAST_STEP)
+        {
+
+            try{
+
+                messagePushService.pushMessage(workFlowMessage);
+            }catch (Throwable t)
+            {
+                logger.error(t.getMessage());
+            }
+        }
+
+
         RemoteData<ErpWorkFlowReport> workFlowReports = findErpWorkFlowReport(erpOrderItem);
 
 
@@ -851,6 +867,9 @@ public class ErpWorkService extends AbstractErpService {
             erpWorkFlowReportRepository.save(workFlowReports.datas);
             erpWorkFlowReportRepository.flush();
         }
+
+
+
 
 
         if (erpOrderItemProcess.currentWorkFlowStep == ErpWorkFlow.LAST_STEP) {
@@ -1615,6 +1634,7 @@ public class ErpWorkService extends AbstractErpService {
     /**
      *  查询指定期间，流程已经结束，小工序未完工的单据。
      */
+    @Transactional
     public List<Sub_workflow_state>  searchErpSubWorkFlow(String key,String  dateStart,String dateEnd)
     {
 

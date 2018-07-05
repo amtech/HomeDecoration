@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.entity.GlobalData;
 import com.giants3.hd.server.service.*;
+import com.giants3.hd.server.service_third.PushService;
 import com.giants3.report.PictureUrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +114,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
         isStart = true;
 
 
-        pushService.sendBroadcastMessage();
+     //   pushService.sendBroadcastMessage();
 
         System.out.println("spring 容器初始化完毕================================================");
 

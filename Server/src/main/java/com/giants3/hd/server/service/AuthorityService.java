@@ -394,4 +394,16 @@ public class AuthorityService extends AbstractService {
         }
         return newData;
     }
+
+
+    /**
+     * 查登录过的session数据
+     * @param token
+     * @return
+     */
+    @Transactional
+    public  Session checkSessionForToken(String token)
+    {
+        return sessionRepository.findFirstByTokenEquals(token);
+    }
 }

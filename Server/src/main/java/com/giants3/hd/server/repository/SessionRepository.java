@@ -16,4 +16,7 @@ public interface SessionRepository extends JpaRepository<Session,Long> {
 
 
     public  Session  findFirstByTokenEquals(String token);
+
+
+    Session findFirstByUserIdEqualsAndClientEqualsOrderByLoginTimeDesc(long userId,String client);
 }

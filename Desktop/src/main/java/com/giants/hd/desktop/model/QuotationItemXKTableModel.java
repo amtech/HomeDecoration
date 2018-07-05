@@ -35,37 +35,37 @@ public class QuotationItemXKTableModel extends  BaseTableModel<QuotationXKItem> 
 
 
     public static final String COLUMN_PRODUCT="productName";
-    public static final String COLUMN_COST_PRICE_RATIO = "cost_price_ratio";
-    QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
-    private Panel_QuotationDetail.QuotationXkCostPriceRatioChangeListener listener;
 
-    public static String[] columnNames = new String[]{  "成本利润比",  "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
+    QuoteAuth quoteAuth= CacheManager.getInstance().bufferData.quoteAuth;
+
+
+    public static String[] columnNames = new String[]{    "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
                                                             ,                                                                            "*内盒*","*每箱数*",                "客户箱规","单位","成本价", "FOB", "立方数","净重",       "货品规格","材质","镜面尺寸","备注"
 
     };
-    public static int[] columnWidths = new int []{   50,    50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   300,
+    public static int[] columnWidths = new int []{      50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,   300,
                                                                                                                50,       60,                       120,     40,    50  ,    50,     50,      50,          100,       120,     80,    300};
 
     public static final String MEMO = "memo";
     public static final String MEMO2 = "memo2";
-    public static String[] fieldName = new String[]{  COLUMN_COST_PRICE_RATIO, "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize", MEMO,
+    public static String[] fieldName = new String[]{    "inBoxCount", "packQuantity", "packageSize","unit",COLUMN_COST,COLUMN_PRICE, "volumeSize","weight",COLUMN_SPEC,   "constitute", "mirrorSize", MEMO,
 
                                                                                                                             "inBoxCount2", "packQuantity2", "packageSize2","unit2",COLUMN_COST2,COLUMN_PRICE2, "volumeSize2","weight2",COLUMN_SPEC2,   "constitute2", "mirrorSize2", MEMO2};
 
 
 public  static Class[] classes = new Class[]{ };
 
-    public  static boolean[] editables = new boolean[]{ true,false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
+    public  static boolean[] editables = new boolean[]{ false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true ,
 
                                                                                                                                   false,       false,             false,     false,false, false , false,         false,   false,    false,        false,       true };
 
 
 
     @Inject
-    public QuotationItemXKTableModel( Panel_QuotationDetail.QuotationXkCostPriceRatioChangeListener listener) {
+    public QuotationItemXKTableModel( ) {
         super(columnNames,fieldName,classes,QuotationXKItem.class);
-        this.listener = listener;
+
     }
 
 
@@ -73,11 +73,7 @@ public  static Class[] classes = new Class[]{ };
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
 
-        if(quoteAuth.fobEditable&&( fieldName[columnIndex].equals(COLUMN_COST_PRICE_RATIO)  ))
-        {
 
-                return  true ;
-        }
 
 
         //已经审核 不能修改
@@ -117,16 +113,7 @@ public  static Class[] classes = new Class[]{ };
         {
             return "***";
         }
-        if (fieldName[columnIndex].equals(COLUMN_COST_PRICE_RATIO))
-        {
-            if (quoteAuth.fobVisible) {
-                if (item.cost_price_ratio > 0) return item.cost_price_ratio;
-                else
-                    return CacheManager.getInstance().bufferData.globalData.cost_price_ratio;
-            } else
 
-                return "***";
-        }
         return super.getValueAt(rowIndex, columnIndex);
     }
 
@@ -145,34 +132,14 @@ public  static Class[] classes = new Class[]{ };
 
 
 
-                case 0:
-
-                    float newValue=0;
-                    try {
-                        newValue= FloatHelper.scale(Float.valueOf(aValue.toString()));
-                    }catch (Throwable t)
-                    {
-                        t.printStackTrace();
-                    }
-
-                    if(newValue!=0&&newValue!=quotationItem.cost_price_ratio) {
-                        if (listener != null) {
-
-                            listener.onChange(quotationItem, quotationItem.cost_price_ratio, newValue);
-                        }
-
-                        quotationItem.cost_price_ratio = newValue;
-                    }
-                    break;
 
 
 
-
-            case 12:
+            case 11:
 
             quotationItem.memo=aValue.toString();
             break;
-            case 24:
+            case 23:
 
                 quotationItem.memo2=aValue.toString();
                 break;

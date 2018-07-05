@@ -153,7 +153,11 @@ public class Panel_QuotationDetail extends BasePanel implements QuotationDetailV
 
             }
         });
-        xkModel = new QuotationItemXKTableModel(new QuotationXkCostPriceRatioChangeListener() {
+        xkModel = new QuotationItemXKTableModel();
+
+        fixColumnModel = new QuotationItemFixColumnTableModel();
+
+        fixColumnXkModel = new QuotationItemFixColumnXKTableModel(new QuotationXkCostPriceRatioChangeListener() {
             @Override
             public void onChange(final QuotationXKItem quotationItem, final float cost_price_ratio, final float newValue) {
 
@@ -200,10 +204,6 @@ public class Panel_QuotationDetail extends BasePanel implements QuotationDetailV
 
             }
         });
-
-        fixColumnModel = new QuotationItemFixColumnTableModel();
-
-        fixColumnXkModel = new QuotationItemFixColumnXKTableModel();
 
 
         //   tb.setModel(model);
@@ -906,11 +906,11 @@ public class Panel_QuotationDetail extends BasePanel implements QuotationDetailV
                 fixedTable.setModel(fixColumnXkModel);
                 TableColumnModel cm = tb.getColumnModel();
                 ColumnGroup g_name = new ColumnGroup("折叠包装");
-                int startIndex = 1;
+                int startIndex = 0;
                 for (int i = 0; i < 12; i++)
                     g_name.add(cm.getColumn(startIndex + i));
                 ColumnGroup g_lang = new ColumnGroup("加强包装");
-                startIndex = 13;
+                startIndex = 12;
                 for (int i = 0; i < 12; i++)
                     g_lang.add(cm.getColumn(startIndex + i));
 

@@ -359,6 +359,22 @@ public class WorkFlowController extends BaseController {
 
 
     }
+    /** 查询消息
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/findMessageById", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> findMessageById(
+            @RequestParam(value = "workFlowMessageId") long workFlowMessageId
+    ) {
+
+
+        return wrapData(workFlowService.findMessageById(workFlowMessageId));
+
+
+    }
 
 
     /**

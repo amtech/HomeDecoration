@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
  * 所有控制类的基类，提供共有方法。
  */
 
-public class BaseController {
+public class BaseController  {
 
     protected static final int NUMBER_OF_PERSONS_PER_PAGE = 20;
 

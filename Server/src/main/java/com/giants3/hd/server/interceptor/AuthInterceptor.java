@@ -1,13 +1,13 @@
 package com.giants3.hd.server.interceptor;
 
 
-import com.giants3.hd.server.repository.SessionRepository;
-import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.noEntity.ConstantData;
-import com.giants3.hd.utils.GsonUtils;
-import com.giants3.hd.noEntity.RemoteData;
-import com.giants3.crypt.CryptUtils;
 import com.giants3.hd.entity.Session;
+import com.giants3.hd.noEntity.ConstantData;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.repository.SessionRepository;
+import com.giants3.hd.server.service.AuthorityService;
+import com.giants3.hd.server.utils.Constraints;
+import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.UrlFormatter;
 import com.giants3.report.PictureUrl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     public long VALIDATE_TIME = 24l * 60 * 60 * 1000;
 
+
     @Autowired
-    SessionRepository sessionRepository;
+    AuthorityService authorityService;
 
+    @Autowired
 
+    private SessionRepository sessionRepository;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -55,26 +58,24 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         //签名验证
 
-       if(! UrlFormatter.validateSign(request.getQueryString()))
-       {
+        if (!UrlFormatter.validateSign(request.getQueryString())) {
 
 
-           writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL,"签名效验失败");
+            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL, "签名效验失败");
 
-           return false;
+            return false;
 
-       }
+        }
 
 //        request.getContextPath()
 //      String realPath=  request.getSession().getServletContext().getRealPath("");
 //
 //        url.substring(request.getpath)
-        String requestUrl=request.getRequestURL().toString();
-      int index=  requestUrl.indexOf(request.getServletPath());
-        String baseUrl="";
-        if(index!=-1)
-        {
-            baseUrl=requestUrl.substring(0,index);
+        String requestUrl = request.getRequestURL().toString();
+        int index = requestUrl.indexOf(request.getServletPath());
+        String baseUrl = "";
+        if (index != -1) {
+            baseUrl = requestUrl.substring(0, index);
             PictureUrl.setBaseUrl(baseUrl);
         }
 
@@ -84,29 +85,29 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         HttpServletRequestWrapper wrapper;
         //非过滤的url
-        if (ConstantData.FOR_TEST||url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(UN_INTERCEPT_FILE) || url.contains(WEIXIN))
+        if (ConstantData.FOR_TEST || url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(UN_INTERCEPT_FILE) || url.contains(WEIXIN))
             return true;
 
         else {
             String token = request.getParameter(TOKEN);
             String appVersion = request.getParameter("appVersion");
-              int
-                    integer=0;
+            int
+                    integer = 0;
             try {
                 integer = Integer.valueOf(appVersion).intValue();
-            }catch (Throwable t)
-            {
+            } catch (Throwable t) {
 
             }
-        //  ConstantData.IS_CRYPT_JSON = integer >= ConstantData.CRYPE_JSON_FROM_VERSION;
-            Session session = sessionRepository.findFirstByTokenEquals(token);
+            //  ConstantData.IS_CRYPT_JSON = integer >= ConstantData.CRYPE_JSON_FROM_VERSION;
+            Session session = authorityService.checkSessionForToken(token);
+            // Session session = sessionRepository.findFirstByTokenEquals(token);
 
             if (session != null) {
 
                 long currentTime = Calendar.getInstance().getTimeInMillis();
                 if (currentTime - session.loginTime < VALIDATE_TIME) {
                     request.setAttribute(Constraints.ATTR_LOGIN_USER, session.user);
-                  //  request.setAttribute(Constraints.ATTR_LOGIN_SESSION, session);
+                    //  request.setAttribute(Constraints.ATTR_LOGIN_SESSION, session);
                     return true;
                 }
 
@@ -114,7 +115,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
             //如果验证失败
             //返回到登录界面
-            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_UNLOGIN,"用户未登录，或者登录超时失效");
+            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_UNLOGIN, "用户未登录，或者登录超时失效");
 
             return false;
 
@@ -123,11 +124,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     }
 
-    private void writeErrorMessage(OutputStream outputStream,int code, String message) throws IOException {
+    private void writeErrorMessage(OutputStream outputStream, int code, String message) throws IOException {
         RemoteData<Void> data = new RemoteData<>();
-        data.code =code;
+        data.code = code;
         data.message = message;
-          byte[] bytes =null;
+        byte[] bytes = null;
         try {
             bytes = GsonUtils.toJson(data).getBytes(GsonUtils.UTF_8);
         } catch (UnsupportedEncodingException e) {

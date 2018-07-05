@@ -1,6 +1,6 @@
 package com.giants3.hd.server.noEntity;
 
-import com.giants3.hd.server.service.PushService;
+import com.giants3.hd.server.service_third.PushService;
 
 /**
  * Created by davidleen29 on 2017/7/21.

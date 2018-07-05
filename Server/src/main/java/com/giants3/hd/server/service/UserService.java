@@ -194,7 +194,7 @@ public class UserService extends AbstractService implements InitializingBean, Di
      * @param salesId
      * @return
      */
-    public   List<String>  extractUserCodes(long  loginUserId, long salesId,String relateSales)
+    public   List<String> findUserCodes(long  loginUserId, long salesId, String relateSales)
     {
 
         List<String > salesNos=new ArrayList<>();

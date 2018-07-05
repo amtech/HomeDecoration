@@ -1,9 +1,10 @@
-package com.giants3.hd.server.service;
+package com.giants3.hd.server.service_third;
 
 import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.server.noEntity.UmengPushData;
 import com.giants3.hd.server.noEntity.UmengPushResult;
 
+import com.giants3.hd.server.service.AbstractService;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.exception.HdException;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.io.UnsupportedEncodingException;
  * Created by davidleen29 on 2017/7/21.
  */
 @Service
-public class PushService  extends  AbstractService{
+public class PushService  extends AbstractService {
 
 
     public static final String UMENG_APP_KEY = "57a1e715e0f55a37b8004434";
@@ -123,7 +124,7 @@ public class PushService  extends  AbstractService{
 
 
     /**
-     * 发送 unicast
+     * 发送 广播  所有人都接收
      */
     public void  sendBroadcastMessage()
     {
@@ -139,6 +140,7 @@ public class PushService  extends  AbstractService{
         umengPushData.payload.body.text="测试文字描述";
         umengPushData.payload.body.after_open="go_app";
         umengPushData.description="测试列播通知-Android";
+
 
 
         UmengPushResult result= sendMessage(umengPushData);

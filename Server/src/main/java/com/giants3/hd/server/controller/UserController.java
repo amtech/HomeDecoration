@@ -141,7 +141,7 @@ public class UserController extends BaseController {
 
 
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<Void> updatePassword(@RequestBody String[] map) {

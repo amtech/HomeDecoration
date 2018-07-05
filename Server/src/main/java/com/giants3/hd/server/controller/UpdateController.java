@@ -30,7 +30,7 @@ public class UpdateController extends  BaseController{
      * @return
      */
     @RequestMapping(value = "/getNewAndroidApk", method = RequestMethod.GET)
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<FileInfo> getNewAndroidApk(@RequestParam(value = "appVersion") int appVersion) {

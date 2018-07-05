@@ -86,12 +86,12 @@
         <property name="targetDataSources">
             <map key-type="java.lang.String">
                 <entry key="WRITE" value-ref="masterDataSource"/>
-                <entry key="READ_0" value-ref="masterDataSource"/>
-                <entry key="READ_1" value-ref="masterDataSource"/><!-- 允许部分read到slave上 -->
+                <entry key="READ_0" value-ref="slaveDataSource"/>
+                <entry key="READ_1" value-ref="slaveDataSource"/><!-- 允许部分read到slave上 -->
                 <entry key="READ_3" value-ref="slaveDataSource"/><!-- 允许部分read到slave上 -->
             </map>
         </property>
-        <property name="defaultTargetDataSource" ref="masterDataSource"/><!-- or master -->
+        <property name="defaultTargetDataSource" ref="slaveDataSource"/><!-- or master -->
 
     </bean>
 
@@ -143,7 +143,7 @@
     </mvc:interceptors>
 
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" >
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
@@ -169,43 +169,59 @@
     </property>-->
     <!-- </bean>
  -->
-    <!--注释方式配置事务      -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <!-- 拦截器方式配置事物
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
+    <!--注释方式配置事务
+     <tx:annotation-driven transaction-manager="transactionManager"/>
+ -->
+    <!-- 拦截器方式配置事物  -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager"  >
         <tx:attributes>
-            <tx:method name="add*" rollback-for="java.lang.Exception"/>
-            <tx:method name="save*" rollback-for="java.lang.Exception"/>
-            <tx:method name="update*" rollback-for="java.lang.Exception"/>
-            <tx:method name="modify*" rollback-for="java.lang.Exception"/>
-            <tx:method name="edit*" rollback-for="java.lang.Exception"/>
-            <tx:method name="delete*" propagation="SUPPORTS" rollback-for="java.lang.Exception"/>
-            <tx:method name="remove*" rollback-for="java.lang.Exception"/>
-            <tx:method name="repair" rollback-for="java.lang.Exception"/>
-            <tx:method name="deleteAndRepair" propagation="SUPPORTS" rollback-for="java.lang.Exception"/>
-            <tx:method name="check*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
-            <tx:method name="count*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
 
-            <tx:method name="get*" propagation="SUPPORTS" rollback-for="java.lang.Exception" read-only="true"/>
-            <tx:method name="find*" propagation="REQUIRED" rollback-for="java.lang.Exception" read-only="true"/>
-            <tx:method name="load*" propagation="SUPPORTS" rollback-for="java.lang.Exception" read-only="true"/>
-            <tx:method name="search*" propagation="SUPPORTS" rollback-for="java.lang.Exception" read-only="true"/>
-            <tx:method name="datagrid*" propagation="SUPPORTS" rollback-for="java.lang.Exception" read-only="true" />
+            <!--
+         <tx:method name="add*"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="save*"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="update*"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="modify*"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="edit*"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="delete*" propagation="REQUIRES_NEW"  rollback-for="java.lang.Exception"/>
+           <tx:method name="remove*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="repair"  propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
 
-            <tx:method name="*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+              <tx:method name="check*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="do*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="cancel*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="clear*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="correct*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="receive*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="reject*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="send*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="send*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="syn*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="copy*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+           <tx:method name="logic*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+
+               <tx:method name="deleteAndRepair"  propagation="REQUIRES_NEW"   rollback-for="java.lang.Exception"/>
+              <tx:method name="count*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>-->
+
+            <tx:method name="get*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception" read-only="true"/>
+            <tx:method name="find*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception" read-only="true"/>
+            <tx:method name="load*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception" read-only="true"/>
+            <tx:method name="search*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception" read-only="true"/>
+            <tx:method name="list*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception" read-only="true"/>
+
+
+            <tx:method name="*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
         </tx:attributes>
     </tx:advice>
 
- -->
 
-    <!-- 那些类的哪些方法参与事务
+
+    <!-- 那些类的哪些方法参与事务 -->
    <aop:config>
-       <aop:pointcut id="allManagerMethod" expression="execution(* com.giants3.reader.server.service.*.*(..))"/>
+       <aop:pointcut id="allManagerMethod" expression="execution(* com.giants3.hd.server.service.*.*(..))"/>
        <aop:advisor pointcut-ref="allManagerMethod" advice-ref="transactionAdvice" order="3"/>
    </aop:config>
 
--->
+
 
 
     <!--aop 方式拦截service 方法， 进行数据库选择-->
@@ -213,7 +229,7 @@
     <bean id="aspectBean" class="com.giants3.hd.server.datasource.DataSourceAspect" ></bean>
 
     <aop:config>
-        <aop:aspect id="AopLog" ref="aspectBean" order="0">
+        <aop:aspect id="AopLog" ref="aspectBean" order="-1000">
 
             <aop:pointcut id="businessService"
                           expression="execution(* com.giants3.hd.server.service.*.*(..))"  />

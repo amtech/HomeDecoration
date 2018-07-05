@@ -93,7 +93,7 @@ public class StockService extends AbstractService {
         //查询所有
         StockOutAuth stockOutAuth = stockOutAuthRepository.findFirstByUser_IdEquals(loginUser.id);
         if (stockOutAuth != null && !StringUtils.isEmpty(stockOutAuth.relatedSales)) {
-            salesNos = userService.extractUserCodes(loginUser.id, salesId, stockOutAuth.relatedSales);
+            salesNos = userService.findUserCodes(loginUser.id, salesId, stockOutAuth.relatedSales);
         }
 
 

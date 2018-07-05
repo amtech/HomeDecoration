@@ -7,6 +7,7 @@ import com.giants3.hd.server.service.ScheduleService;
 import com.giants3.hd.server.service.TaskService;
 import com.giants3.hd.server.utils.Constraints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class TaskController extends BaseController {
      */
     @Deprecated  //关闭接口
     @RequestMapping(value = "/schedule", method = {RequestMethod.POST, RequestMethod.GET})
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<HdTask> scheduleTask(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestBody HdTask hdTask) {
@@ -98,7 +99,7 @@ public class TaskController extends BaseController {
     }
 
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
-    @Transactional
+
     public
     @ResponseBody
     RemoteData<HdTask> delete(@RequestParam(value = "id", required = true) long taskId) {
@@ -116,5 +117,7 @@ public class TaskController extends BaseController {
 
         return scheduleService.executeTask(taskType);
     }
+
+
 
 }
