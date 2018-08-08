@@ -15,5 +15,5 @@ public interface AppQuotationItemRepository extends JpaRepository<QuotationItem,
     List<QuotationItem> findByQuotationIdEqualsOrderByItmAsc(long quotationId);
     QuotationItem findFirstByQuotationIdEqualsAndItmEquals (long quotationId,int itm);
 
-
+    public int deleteByquotationIdEquals(long productId);
 }

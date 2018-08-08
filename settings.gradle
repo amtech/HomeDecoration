@@ -1,7 +1,6 @@
 rootProject.name = 'HomeDecoration'
 include ':Server',':Desktop'
 
-include ':Utils'
 include ':domain'
 //include  'common'
 include ':deskData'
@@ -10,3 +9,6 @@ include ':report'
 //include ':temp'
 //include 'FileService'
 //include ':SpringHibernateXmlDemo'
+
+include ':Resource'
+include ':Utils'

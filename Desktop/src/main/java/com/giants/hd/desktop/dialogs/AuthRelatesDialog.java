@@ -1,11 +1,13 @@
 package com.giants.hd.desktop.dialogs;
 
+import com.giants.hd.desktop.mvp.RemoteDataSubscriber;
 import com.giants.hd.desktop.mvp.presenter.AuthRelateDetailIPresenter;
 import com.giants.hd.desktop.mvp.viewer.AuthRelateDetailViewer;
 import com.giants.hd.desktop.viewImpl.Panel_Auth_Relates;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.interractor.UseCaseFactory;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.entity.OrderAuth;
@@ -37,6 +39,7 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
     private int selectedPane = 0;
 
     private List<QuoteAuth> quoteAuths;
+    private List<AppQuoteAuth> appQuoteAuths;
 
    private List<StockOutAuth> stockOutAuths;
 
@@ -54,6 +57,7 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
         loadQuoteAuth();
         loadStockOutAuth();
         loadOrderAuth();
+        loadAppQuoteAuth();
     }
 
     private void loadQuoteAuth() {
@@ -151,6 +155,33 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
 
     }
 
+    private void loadAppQuoteAuth() {
+
+        UseCaseFactory.getInstance().createGetAppQuoteAuthListCase().execute(new Subscriber<RemoteData<AppQuoteAuth>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(RemoteData<AppQuoteAuth> remoteData) {
+                if (remoteData.isSuccess()) {
+                    setAppQuoteAuthData(remoteData.datas);
+                }
+
+
+            }
+
+
+        });
+
+    }
+
     private void setOrderAuthData(List<OrderAuth> datas) {
 
         orderAuths = datas;
@@ -158,7 +189,11 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
 
     }
 
-    private void setQuoteAuthData(List<QuoteAuth> quoteAuth) {
+    private void setAppQuoteAuthData(List<AppQuoteAuth> quoteAuth) {
+        appQuoteAuths = quoteAuth;
+        viewer.showAppQuoteAuthList(quoteAuth);
+    }
+ private void setQuoteAuthData(List<QuoteAuth> quoteAuth) {
         quoteAuths = quoteAuth;
         viewer.showQuoteAuthList(quoteAuth);
     }
@@ -282,6 +317,10 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
                 break;
             case 2:
                 saveStockOutAuth();
+                break;
+
+            case 3:
+                saveAppQuoteAuth();
                 break;
         }
 
@@ -420,5 +459,42 @@ public class AuthRelatesDialog extends BaseDialog implements AuthRelateDetailIPr
         
         
         
+    }/**
+     *
+     */
+    private void saveAppQuoteAuth() {
+
+
+        if(appQuoteAuths==null)
+        {
+            viewer.showMesssage("数据异常"); return;
+        }
+
+
+        UseCaseFactory.getInstance().createSaveAppQuoteAuthCase(appQuoteAuths).execute(new RemoteDataSubscriber< AppQuoteAuth>(viewer) {
+
+
+
+            @Override
+            protected void handleRemoteData(RemoteData<AppQuoteAuth> data) {
+
+                if (data.isSuccess()) {
+                    viewer.showMesssage("保存成功");
+                    setAppQuoteAuthData(data.datas);
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+        viewer.showLoadingDialog();
+
+
+
     }
 }

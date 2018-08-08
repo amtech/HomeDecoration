@@ -16,10 +16,11 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url LOCAL_MAVEN_URL }
         jcenter()
         mavenCentral()
 
-        maven { url LOCAL_MAVEN_URL }
+
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
 }

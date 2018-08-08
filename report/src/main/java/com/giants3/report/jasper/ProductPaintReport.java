@@ -18,7 +18,7 @@ import java.util.Map;
  * 颜料清单报表
  * Created by david on 2016/3/13.
  */
-public class ProductPaintReport extends JRPreviewReport {
+public class ProductPaintReport extends JRReport {
 
 
     private final ProductDetail productDetail;

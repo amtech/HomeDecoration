@@ -243,10 +243,11 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public
     @ResponseBody
-    Product findProdcutById(@RequestParam("id") long productId) {
+    RemoteData<Product> findProdcutById(@RequestParam("id") long productId) {
 
 
-        return productService.findProductById(productId);
+        final RemoteData<Product> productRemoteData = wrapData(productService.findProductById(productId));
+        return productRemoteData;
 
     }
 

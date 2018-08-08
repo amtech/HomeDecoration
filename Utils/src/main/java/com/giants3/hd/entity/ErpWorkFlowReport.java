@@ -95,4 +95,10 @@ public class ErpWorkFlowReport {
      * 超期天数
      */
     public int overDueDay;
+
+
+    /**
+     * 已发送未接收数量
+     */
+    public int sendingQty;
 }

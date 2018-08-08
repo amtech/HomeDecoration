@@ -108,7 +108,7 @@ BasePanel implements IViewer {
 
     public boolean showConfirmMessage(String message) {
 
-        return showConfirmMessage(message, null);
+        return showConfirmMessage(message, "提示");
     }
 
     public boolean showConfirmMessage(String message, String title) {
@@ -129,11 +129,11 @@ BasePanel implements IViewer {
     public void showLoadingDialog(String hint) {
 
 
+
         //重複多次新建loading dialog 會導致程序一次， 先關閉
 
 //
         if (dialog == null) {
-
             final JComponent root =SwingUtilities.getRootPane( getRoot());
 
             System.out.println("root:"+root);
@@ -141,6 +141,7 @@ BasePanel implements IViewer {
             final Window window = getWindow(root);
 
             System.out.println("window:"+window);
+
             dialog = new LoadingDialog(window, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

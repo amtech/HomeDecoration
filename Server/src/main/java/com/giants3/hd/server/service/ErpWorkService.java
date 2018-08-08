@@ -899,6 +899,22 @@ public class ErpWorkService extends AbstractErpService {
 
             //更新生产进度
             workFlowReport.percentage += (float) workFlowMessage.transportQty / erpOrderItemProcess.orderQty / (workFlowReport.typeCount == 0 ? 1 : workFlowReport.typeCount);
+
+
+            //统计发送未处理数量
+            final List<WorkFlowMessage> currentWorkFlowMessage = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowReport.workFlowStep, workFlowReport.osNo, workFlowReport.itm);
+           int sendingQty=0;
+            for (WorkFlowMessage tem:currentWorkFlowMessage)
+            {
+                if(tem.receiverId==0)
+                {
+                    sendingQty+=tem.transportQty;
+                }
+            }
+
+            workFlowReport.sendingQty=sendingQty;
+
+
             if(workFlowReport.percentage >= 1)
             {
                 workFlowReport.endDate=  workFlowMessage.receiveTime  ;
@@ -1336,6 +1352,24 @@ public class ErpWorkService extends AbstractErpService {
 
         //更新生产进度
         workFlowReport.percentage += (float) message.transportQty / erpOrderItemProcess.orderQty / (workFlowReport.typeCount == 0 ? 1 : workFlowReport.typeCount);
+
+
+
+
+        //统计发送未处理数量
+        final List<WorkFlowMessage> currentWorkFlowMessage = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowReport.workFlowStep, workFlowReport.osNo, workFlowReport.itm);
+        int sendingQty=0;
+        for (WorkFlowMessage tem:currentWorkFlowMessage)
+        {
+            if(tem.receiverId==0)
+            {
+                sendingQty+=tem.transportQty;
+            }
+        }
+
+        workFlowReport.sendingQty=sendingQty;
+
+
         workFlowReport = erpWorkFlowReportRepository.save(workFlowReport);
 
 
@@ -1638,22 +1672,22 @@ public class ErpWorkService extends AbstractErpService {
     public List<Sub_workflow_state>  searchErpSubWorkFlow(String key,String  dateStart,String dateEnd)
     {
 
-        long startTime=0;
+//        long startTime=0;
+//
+//        try {
+//            startTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateStart).getTime();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        long endTime=0;
+//        try {
+//            endTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateEnd).getTime()+24l*60*60*1000-1;
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
-        try {
-            startTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateStart).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        long endTime=0;
-        try {
-            endTime=DateFormats.FORMAT_YYYY_MM_DD.parse(dateEnd).getTime()+24l*60*60*1000-1;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return erpWorkRepository.searchErpSubWorkFlow(key,startTime,endTime);
+        return erpWorkRepository.searchErpSubWorkFlow(key,dateStart,dateEnd);
 
     }
 
@@ -1661,5 +1695,31 @@ public class ErpWorkService extends AbstractErpService {
 
         return erpWorkRepository.findOrderItem(orderName, itm);
 
+    }
+
+
+
+
+    public void updateWorkFlowReportSendingQty()
+    {
+
+        List<ErpWorkFlowReport> reports=erpWorkFlowReportRepository.findByPercentageLessThanAndStartDateGreaterThan(1,0);
+
+
+        for(ErpWorkFlowReport workFlowReport:reports) {
+            //统计发送未处理数量
+            final List<WorkFlowMessage> currentWorkFlowMessage = workFlowMessageRepository.findByFromFlowStepEqualsAndOrderNameEqualsAndItmEqualsOrderByCreateTimeDesc(workFlowReport.workFlowStep, workFlowReport.osNo, workFlowReport.itm);
+            int sendingQty = 0;
+            for (WorkFlowMessage tem : currentWorkFlowMessage) {
+                if (tem.receiverId == 0) {
+                    sendingQty += tem.transportQty;
+                }
+            }
+
+            workFlowReport.sendingQty = sendingQty;
+            erpWorkFlowReportRepository.save(workFlowReport);
+            erpWorkFlowReportRepository.flush();
+
+        }
     }
 }

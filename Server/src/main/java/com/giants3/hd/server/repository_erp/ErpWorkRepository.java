@@ -659,7 +659,7 @@ public class ErpWorkRepository extends ErpRepository {
      * @param dateEnd
      * @return
      */
-    public List<Sub_workflow_state> searchErpSubWorkFlow(String key, long dateStart, long dateEnd) {
+    public List<Sub_workflow_state> searchErpSubWorkFlow(String key, String dateStart, String dateEnd) {
 
 
         final String value =  StringUtils.sqlLike(key) ;
@@ -684,6 +684,7 @@ public class ErpWorkRepository extends ErpRepository {
         final SQLQuery sqlQuery = query.unwrap(SQLQuery.class)
                 .addScalar("tz_no", StringType.INSTANCE)
                 .addScalar("mo_no", StringType.INSTANCE)
+                .addScalar("tz_dd", StringType.INSTANCE)
                 .addScalar("os_no", StringType.INSTANCE)
                 .addScalar("prd_no", StringType.INSTANCE)
                 .addScalar("mrp_no", StringType.INSTANCE)

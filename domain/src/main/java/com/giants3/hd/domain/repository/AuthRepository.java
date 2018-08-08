@@ -1,5 +1,6 @@
 package com.giants3.hd.domain.repository;
 
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.OrderAuth;
 import com.giants3.hd.entity.QuoteAuth;
@@ -55,5 +56,9 @@ public interface AuthRepository {
      * @return
      */
     Observable<RemoteData<StockOutAuth>>  saveStockOutAuthList(List<StockOutAuth> stockOutAuths);
+
+    Observable<RemoteData<AppQuoteAuth>> getAppQuoteAuthList();
+
+    Observable<RemoteData<AppQuoteAuth>> saveAppQuoteAuthList(List<AppQuoteAuth> auths);
 
 }

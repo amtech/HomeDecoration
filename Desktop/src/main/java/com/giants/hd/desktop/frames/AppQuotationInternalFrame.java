@@ -20,6 +20,23 @@ import java.awt.*;
  * Created by david on 2015/11/23.
  */
 public class AppQuotationInternalFrame  extends BaseMVPFrame<AppQuotationListViewer> implements AppQuotationListPresenter {
+
+    private FrameResultListener frameResultListener=   new FrameResultListener() {
+        @Override
+        public void onFrameResult(int requestCode, int resultCode, Object o) {
+            if(resultCode==RESULT_OK)
+            {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        getViewer().performSearch();
+                    }
+                });
+            }
+
+        }
+    };;
+
     public AppQuotationInternalFrame() {
         super(ModuleConstant.TITLE_APP_QUOTATION);
 
@@ -44,6 +61,10 @@ public class AppQuotationInternalFrame  extends BaseMVPFrame<AppQuotationListVie
     @Override
     public void addOne() {
 
+        AppQuotationDetailFrame frame=new AppQuotationDetailFrame( );
+        frame.setFrameResultListener(frameResultListener);
+        frame.showInMain();
+
 
 
 
@@ -52,7 +73,8 @@ public class AppQuotationInternalFrame  extends BaseMVPFrame<AppQuotationListVie
     @Override
     public void showOne(Quotation quotation) {
 
-        AppQuotationDetailFrame frame=new AppQuotationDetailFrame(quotation);
+        AppQuotationDetailFrame frame=new AppQuotationDetailFrame(quotation );
+        frame.setFrameResultListener(frameResultListener);
         frame.showInMain();
 
 

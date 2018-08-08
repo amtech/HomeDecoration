@@ -56,4 +56,58 @@ public class QuotationRepositoryImpl  extends  BaseRepositoryImpl implements Quo
             }
         });
     }
+
+
+    @Override
+    public Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> newQuotation() {
+        return crateObservable(new ApiCaller<com.giants3.hd.noEntity.app.QuotationDetail>() {
+            @Override
+            public RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> call() throws HdException {
+                return apiManager.newAppQuotation();
+            }
+        });
+    }
+
+
+    @Override
+    public Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> addProductToAppQuotation(final long quotationId, final long productId) {
+        return crateObservable(new ApiCaller<com.giants3.hd.noEntity.app.QuotationDetail>() {
+            @Override
+            public RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> call() throws HdException {
+                return apiManager.addProductToAppQuotation(quotationId,productId);
+            }
+        });
+    }
+
+    @Override
+    public Observable saveAppQuotation(final com.giants3.hd.noEntity.app.QuotationDetail quotationId) {
+        return crateObservable(new ApiCaller<com.giants3.hd.noEntity.app.QuotationDetail>() {
+            @Override
+            public RemoteData<com.giants3.hd.noEntity.app.QuotationDetail> call() throws HdException {
+                return apiManager.saveAppQuotation(quotationId);
+            }
+        });
+    }
+
+    @Override
+    public Observable deleteAppQuotation(final long quotationId) {
+
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                return apiManager.deleteAppQuotation(quotationId);
+            }
+        });
+    }
+
+
+    @Override
+    public Observable printQuotationToFile(final long quotationId, final String filePath) {
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                return apiManager.printQuotationToFile(quotationId,filePath);
+            }
+        });
+    }
 }

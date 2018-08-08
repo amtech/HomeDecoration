@@ -60,6 +60,7 @@
 
 
         <class>com.giants3.hd.entity.QuoteAuth</class>
+        <class>com.giants3.hd.entity.app.AppQuoteAuth</class>
 
 
         <class>com.giants3.hd.entity.Quotation</class>

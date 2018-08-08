@@ -363,6 +363,7 @@ public class Report_Excel_StockOut_XK_Invoice extends SimpleExcelReporter<ErpSto
                 addString(writableSheet, outItem.bat_no, 0, row);
                 addString(writableSheet, outItem.prd_no, 1, row);
                 addString(writableSheet, outItem.cus_os_no, 2, row);
+                addString(writableSheet, outItem.os_no, 3, row);
                 addString(writableSheet, outItem.unit, 4, row);
 
                 //addNumber(writableSheet, outItem.stockOutQty, 3, row);

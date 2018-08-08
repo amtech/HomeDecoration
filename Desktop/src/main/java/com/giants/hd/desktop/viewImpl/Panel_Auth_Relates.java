@@ -1,5 +1,6 @@
 package com.giants.hd.desktop.viewImpl;
 
+import com.giants.hd.desktop.model.AppQuoteAuthModel;
 import com.giants.hd.desktop.model.OrderAuthModel;
 import com.giants.hd.desktop.model.QuoteAuthModel;
 import com.giants.hd.desktop.model.StockOutAuthModel;
@@ -10,6 +11,7 @@ import com.giants3.hd.entity.OrderAuth;
 import com.giants3.hd.entity.QuoteAuth;
 import com.giants3.hd.entity.StockOutAuth;
 import com.giants3.hd.entity.User;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -30,7 +32,10 @@ public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailVie
     private JTabbedPane tabs;
     private JHdTable tb_stock;
     private JHdTable tb_order;
+    private JHdTable tb_app_quote;
 
+
+    AppQuoteAuthModel appQuoteAuthModel;
 
     QuoteAuthModel quoteAuthModel;
     OrderAuthModel orderAuthModel;
@@ -105,6 +110,11 @@ public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailVie
         stockOutAuthModel.setRowAdjustable(false);
         tb_stock.setModel(stockOutAuthModel);
 
+
+
+        appQuoteAuthModel = new AppQuoteAuthModel();
+        appQuoteAuthModel.setRowAdjustable(false);
+        tb_app_quote.setModel(appQuoteAuthModel);
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -240,6 +250,10 @@ public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailVie
                     :
 
                 tb_stock.setRowSelectionInterval(showRow, showRow);
+                break; case 3
+                    :
+
+                tb_app_quote.setRowSelectionInterval(showRow, showRow);
                 break;
         }
 
@@ -261,5 +275,10 @@ public class Panel_Auth_Relates extends BasePanel implements AuthRelateDetailVie
     @Override
     public void showStockOutRow(int showRow) {
         tb_stock.setRowSelectionInterval(showRow,showRow);
+    }
+
+    @Override
+    public void showAppQuoteAuthList(List<AppQuoteAuth> quoteAuth) {
+        appQuoteAuthModel.setDatas(quoteAuth);
     }
 }

@@ -45,6 +45,7 @@ public abstract class RemoteDataSubscriber<T> extends Subscriber<RemoteData<T>> 
             handleRemoteData(tRemoteData);
         } else {
 
+            if (viewer!= null)  ;
 
             viewer.showMesssage(tRemoteData.message);
 
@@ -54,6 +55,8 @@ public abstract class RemoteDataSubscriber<T> extends Subscriber<RemoteData<T>> 
         }
 
     }
+
+
 
     protected abstract void handleRemoteData(RemoteData<T> data);
 }

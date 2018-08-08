@@ -7,14 +7,15 @@ import com.giants3.hd.utils.StringUtils;
  */
 public class PictureUrl {
 
-    // public  static     String BaseUrl="http://192.168.10.198:8080/Server/";
-    private static String BaseUrl = "http://127.0.0.1:8080/";
+      public  static     String BaseUrl="http://fzyunfei.f3322.net:8079/Server/";
+
+    //private static String BaseUrl = "http://127.0.0.1:8080/";
     public static final String completeUrl(String url)
     {
 
 
         if(StringUtils.isEmpty(url)) return url;
-        if(url.startsWith("http://")) return url;
+        if(url.startsWith("http")) return url;
 
         return BaseUrl+url;
 
@@ -28,6 +29,6 @@ public class PictureUrl {
 
     public static final void  setBaseUrl(String barurl)
     {
-        BaseUrl=barurl;
+       BaseUrl=barurl;
     }
 }

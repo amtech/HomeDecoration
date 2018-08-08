@@ -40,8 +40,8 @@ dependencies {
     compile project(":domain")
     compile project(":report")
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  testCompile group: 'junit', name: 'junit', version: '4.11'
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
 
 
     compile group: 'com.jgoodies', name: 'forms', version: '1.2.1'
@@ -68,21 +68,10 @@ dependencies {
    compile 'com.google.zxing:core:3.2.0'
 
 
-
-
-
       //      { exclude group: "org.apache.poi" }
 
 
 
 
  }
-////打包
-//task exportExecutableJar(type: Jar) {
-//    from files(sourceSets.main.output.classesDir)
-//    from files(sourceSets.main.output.resourcesDir)
-//    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
-//    manifest {
-//        attributes 'Main-Class': 'com.giants.hd.desktop.frames.Main'
-//    }
-//}
+

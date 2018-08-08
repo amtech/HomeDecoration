@@ -118,6 +118,6 @@ public class User implements Serializable,Valuable {
     public  boolean  isCorrectPassword(String passwordMd5)
     {
 
-        return passwordMd5.equals(this.passwordMD5)|| passwordMd5.equals(DigestUtils.md5(this.password) );
+        return passwordMd5.equals(this.passwordMD5)||  (this.password!=null&& passwordMd5.equals(DigestUtils.md5(this.password)) );
     }
 }

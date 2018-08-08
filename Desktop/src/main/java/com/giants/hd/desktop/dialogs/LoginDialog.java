@@ -129,6 +129,28 @@ public class LoginDialog extends BaseDialog<User> {
 
 
                 cb_user.setSelectedIndex(selectIndex);
+
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        final User item = (User) cb_user.getSelectedItem();
+                        if("999".equals(item.code))
+                        {
+                            tf_password.setText("111");
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    login();
+                                }
+                            });
+                        }
+
+
+                    }
+                });
             }
 
         });

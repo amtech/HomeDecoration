@@ -20,6 +20,9 @@ public interface AppQuotationRepository extends JpaRepository<Quotation, Long> {
     Page<Quotation> findByKey(@Param("key") String key, Pageable pageable);
 
 
-    Quotation findFirstByQNumberLikeOrderByQNumberDesc(String key);
+    Quotation findFirstByQNumberLikeAndFormalIsTrueOrderByQNumberDesc(String key);
+
     Quotation findFirstByQNumberEquals(String key);
+    Quotation findFirstByQNumberEqualsAndFormalIsFalse(String key);
+    Quotation findFirstByQNumberEqualsAndFormalIsTrue(String key);
 }

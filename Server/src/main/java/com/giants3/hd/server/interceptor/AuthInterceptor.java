@@ -71,13 +71,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 //      String realPath=  request.getSession().getServletContext().getRealPath("");
 //
 //        url.substring(request.getpath)
-        String requestUrl = request.getRequestURL().toString();
-        int index = requestUrl.indexOf(request.getServletPath());
-        String baseUrl = "";
-        if (index != -1) {
-            baseUrl = requestUrl.substring(0, index);
-            PictureUrl.setBaseUrl(baseUrl);
-        }
+//        String requestUrl = request.getRequestURL().toString();
+//        int index = requestUrl.indexOf(request.getServletPath());
+//        String baseUrl = "";
+//        if (index != -1) {
+//            baseUrl = requestUrl.substring(0, index);
+//            PictureUrl.setBaseUrl(baseUrl);
+//        }
 
 
 //        request.setAttribute(Constraints.ATTR_BASE_URL, baseUrl);

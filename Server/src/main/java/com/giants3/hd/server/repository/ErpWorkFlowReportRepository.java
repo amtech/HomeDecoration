@@ -19,6 +19,7 @@ public interface ErpWorkFlowReportRepository extends JpaRepository<ErpWorkFlowRe
     List<ErpWorkFlowReport> findByOsNoEqualsAndPrdNoEqualsAndPVersionEquals(String os_no, String prd_no,String pVersion);
     List<ErpWorkFlowReport> findByOsNoEqualsAndItmEquals(String os_no,int itm);
     List<ErpWorkFlowReport> findByOsNoEqualsAndItmEqualsOrderByWorkFlowStepAsc(String os_no,int itm);
+    List<ErpWorkFlowReport> findByPercentageLessThanAndStartDateGreaterThan(float percentage,long createTime);
 
      ErpWorkFlowReport  findFirstByOsNoEqualsAndItmEqualsAndWorkFlowStepEquals(String osNo,int itm,int fromFlowStep);
 

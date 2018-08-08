@@ -385,6 +385,12 @@ public class Main extends BaseFrame {
 
 
         }
+
+
+
+
+
+
         if (AuthorityUtil.getInstance().viewZhilingdan()) {
 
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_ZHILINGDAN);
@@ -403,6 +409,24 @@ public class Main extends BaseFrame {
 
         }
 
+        if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_UNHANDLE_MESSAGE_REPORT))
+        {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_UNHANDLE_MESSAGE_REPORT);
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+
+
+
+                    WorkFlowMessageReportFrame frame = new WorkFlowMessageReportFrame();
+                    addInterFrame(frame);
+
+                }
+            });
+        }
 
         return menu;
 

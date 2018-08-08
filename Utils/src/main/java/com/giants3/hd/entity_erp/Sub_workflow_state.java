@@ -9,10 +9,19 @@ public class Sub_workflow_state {
      * 小工序单号
      */
     public String tz_no;
+
     /**
      * 制令单号
      */
     public String mo_no;
+
+
+    /**
+     * 工序单日期
+     */
+    public String tz_dd;
+
+
     public String os_no;
 
     /**

@@ -32,6 +32,7 @@ public class Panel_AppQuotation_List extends BasePanel  implements AppQuotationL
     private JTextField keys;
     private JHdTable orderTable;
     private Panel_Page pagePanel;
+    private JButton add;
 
     AppQuotationTableModel tableModel;
 
@@ -68,6 +69,15 @@ public class Panel_AppQuotation_List extends BasePanel  implements AppQuotationL
             }
         });
 
+        add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                presenter.addOne();
+            }
+        });
+
 
         orderTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -101,4 +111,13 @@ public class Panel_AppQuotation_List extends BasePanel  implements AppQuotationL
     }
 
 
+    @Override
+    public void performSearch() {
+
+
+
+        btn_search.doClick();
+
+
+    }
 }

@@ -2,6 +2,7 @@ package com.giants3.hd.server.service;
 
 import com.giants3.hd.app.AUser;
 import com.giants3.hd.entity.*;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.parser.DataParser;
 import com.giants3.hd.server.parser.RemoteDataParser;
@@ -30,6 +31,8 @@ public class AuthorityService extends AbstractService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+    @Autowired
+    private AppQuoteAuthRepository appQuoteAuthRepository;
 
     @Autowired
 
@@ -186,6 +189,14 @@ public class AuthorityService extends AbstractService {
     }
 
     public List<QuoteAuth> getQuoteAuths() {
+
+
+
+        return quoteAuthRepository.findAll();
+
+    }
+
+    public void initQuoteAuths() {
         List<User> users = userRepository.findByDeletedEqualsOrderByCode(false);
 
 
@@ -224,8 +235,60 @@ public class AuthorityService extends AbstractService {
 
         }
 
-        quoteAuths.addAll(tempQuoteAuthList);
-        return quoteAuths;
+        quoteAuthRepository.save(tempQuoteAuthList);
+
+
+
+    }
+
+
+    /**
+     * 初始化广交会报价单权限数据 ，每个用户都自动配给一个数据
+     * @return
+     */
+    public void initAppQuoteAuths() {
+        List<User> users = userRepository.findByDeletedEqualsOrderByCode(false);
+
+
+        List<AppQuoteAuth> quoteAuths = appQuoteAuthRepository.findAll();
+        //移除user 为delete 的权限配置
+        List<AppQuoteAuth> tempQuoteAuthList = new ArrayList<>();
+        for (AppQuoteAuth quoteAuth : quoteAuths) {
+            if (quoteAuth.user.deleted) tempQuoteAuthList.add(quoteAuth);
+        }
+        quoteAuths.removeAll(tempQuoteAuthList);
+
+
+        tempQuoteAuthList.clear();
+
+
+        int size = users.size();
+        for (int i = 0; i < size; i++) {
+
+            User user = users.get(i);
+            if (user.deleted) continue;
+            boolean found = false;
+            for (AppQuoteAuth quoteAuth : quoteAuths) {
+                if (user.id == quoteAuth.user.id) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                AppQuoteAuth authority = new AppQuoteAuth();
+                authority.user = user;
+                tempQuoteAuthList.add(authority);
+
+            }
+
+
+        }
+
+
+        appQuoteAuthRepository.save(tempQuoteAuthList);
+
+
     }
 
     @Transactional
@@ -405,5 +468,21 @@ public class AuthorityService extends AbstractService {
     public  Session checkSessionForToken(String token)
     {
         return sessionRepository.findFirstByTokenEquals(token);
+    }
+
+    public List<AppQuoteAuth> saveAppQuotes(List<AppQuoteAuth> authorities) {
+        List<AppQuoteAuth> newData = new ArrayList<>();
+
+        for (AppQuoteAuth authority : authorities) {
+
+            newData.add(appQuoteAuthRepository.save(authority));
+        }
+        return newData;
+
+    }
+
+    public List<AppQuoteAuth> getAppQuoteAuths() {
+
+        return appQuoteAuthRepository.findAll();
     }
 }

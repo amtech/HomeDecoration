@@ -81,12 +81,14 @@ public class MessagePushService extends AbstractService {
 
         List<String> tokens=new ArrayList<>();
 
+        List<String> workerString=new ArrayList<>();
         for(WorkFlowWorker workFlowWorker:selectWorkers)
         {
             Session session=      sessionRepository.findFirstByUserIdEqualsAndClientEqualsOrderByLoginTimeDesc(workFlowWorker.userId,"ANDROID" );
             if(session!=null&&!StringUtils.isEmpty(session.device_token))
             {
                 tokens.add(session.device_token);
+                workerString.add(workFlowWorker.userName);
             }
         }
 
@@ -96,7 +98,7 @@ public class MessagePushService extends AbstractService {
 
             combineTokens = StringUtils.combine(tokens,StringUtils.STRING_SPLIT_COMMA);
 
-            ;
+            logger.info("setting message"+message.orderName+message.productName+" to "+StringUtils.combine(workerString)+",deviceToken:"+combineTokens);
             sendMessageToDevice(combineTokens, message);
 
         }

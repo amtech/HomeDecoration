@@ -6,6 +6,7 @@ import com.giants3.hd.server.service_third.PushService;
 import com.giants3.report.PictureUrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     GlobalDataService globalDataService;
+
+    @Autowired
+    AuthorityService authorityService;
 
     @Autowired
     PushService pushService;
@@ -50,13 +54,17 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     MaterialService materialService;
+    @Value("${PICTURE_BASE_URL}")
+    private String PICTURE_BASE_URL;
 
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!isStart) {
 
             final String applicationName = event.getApplicationContext().getApplicationName();
 
-            PictureUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
+            //PictureUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
+            PictureUrl.setBaseUrl(PICTURE_BASE_URL);
+
 //
 //            if(true)
 //            return;
@@ -100,6 +108,11 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             scheduleService.initTask();
 
+
+             authorityService.initAppQuoteAuths();
+            authorityService.initQuoteAuths();
+
+//            erpWorkService.updateWorkFlowReportSendingQty();
             //erpWorkService.correctAllWorkFlowReportData();
 //          erpWorkService.updateAllProducingWorkFlowReports();
 

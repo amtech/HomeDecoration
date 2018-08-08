@@ -10,18 +10,18 @@ import java.util.List;
 /**
  * 客户路表格数据模型
  */
-public class CustomerModel extends  BaseTableModel<Customer> {
+public class CustomerModel extends BaseTableModel<Customer> {
 
-    public static String[] columnNames = new String[]{                         "编码 ",  "名称"  ,"" };
-    public static int[] columnWidth=new int[]{   100,        120 , ConstantData.MAX_COLUMN_WIDTH};
+    public static String[] columnNames = new String[]{"编码 ", "名称", "电话", "传真", "邮箱", "地址", "国家"};
+    public static int[] columnWidth = new int[]{80, 100, 100, 100, 140, 200, ConstantData.MAX_COLUMN_WIDTH};
 
-    public static String[] fieldName = new String[]{ "code", "name",  " "};
+    public static String[] fieldName = new String[]{"code", "name", "tel", "fax", "email", "addr", "nation"};
 
-    public  static Class[] classes = new Class[]{Object.class,Object.class, Object.class };
+    public static Class[] classes = new Class[]{Object.class, Object.class, Object.class};
 
 
     @Inject
-    public CustomerModel( ) {
+    public CustomerModel() {
         super(columnNames, fieldName, classes, Customer.class);
         setRowAdjustable(true);
     }
@@ -37,15 +37,30 @@ public class CustomerModel extends  BaseTableModel<Customer> {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
-        Customer customer=getItem(rowIndex);
-        String stringValue=String.valueOf(aValue);
-        switch (columnIndex)
-        {
+        Customer customer = getItem(rowIndex);
+        String stringValue = String.valueOf(aValue);
+        switch (columnIndex) {
             case 0:
-                customer.code=stringValue;
+                customer.code = stringValue;
                 break;
             case 1:
-                customer.name=stringValue;
+                customer.name = stringValue;
+                break;
+            case 2:
+                customer.tel = stringValue;
+
+                break;
+            case 3:
+                customer.fax = stringValue;
+                break;
+            case 4:
+                customer.email = stringValue;
+                break;
+            case 5:
+                customer.addr = stringValue;
+                break;
+            case 6:
+                customer.nation = stringValue;
                 break;
 
         }
@@ -56,16 +71,17 @@ public class CustomerModel extends  BaseTableModel<Customer> {
     public int[] getColumnWidth() {
         return columnWidth;
     }
+
     @Override
     public int getRowHeight() {
-        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT ;
+        return ImageUtils.MAX_MATERIAL_MINIATURE_HEIGHT;
     }
 
 
     @Override
     public void setDatas(List<Customer> newDatas) {
 
-        MiniRowCount=newDatas.size()+20;
+        MiniRowCount = newDatas.size() + 20;
         super.setDatas(newDatas);
     }
 }

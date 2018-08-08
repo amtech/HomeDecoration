@@ -2,6 +2,7 @@ package com.giants3.hd.domain.repositoryImpl;
 
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.repository.AuthRepository;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.OrderAuth;
 import com.giants3.hd.entity.QuoteAuth;
@@ -189,6 +190,28 @@ public class AuthRepositoryImpl extends  BaseRepositoryImpl implements AuthRepos
                 }
 
 
+            }
+        });
+    }
+
+    @Override
+    public Observable<RemoteData<AppQuoteAuth>> getAppQuoteAuthList() {
+        return crateObservable(new ApiCaller<AppQuoteAuth>() {
+            @Override
+            public RemoteData<AppQuoteAuth> call() throws HdException {
+                RemoteData<AppQuoteAuth>  result= apiManager.getAppQuoteAuthList();
+                return result;
+            }
+        });
+    }
+
+    @Override
+    public Observable<RemoteData<AppQuoteAuth>> saveAppQuoteAuthList(final List<AppQuoteAuth> auths) {
+        return crateObservable(new ApiCaller<AppQuoteAuth>() {
+            @Override
+            public RemoteData<AppQuoteAuth> call() throws HdException {
+                RemoteData<AppQuoteAuth>  result= apiManager.saveAppQuoteAuthList(auths);
+                return result;
             }
         });
     }

@@ -2,7 +2,6 @@ package com.giants3.report.jasper.product_list_4;
 
 import com.giants3.hd.entity.Product;
 import com.giants3.report.PictureUrl;
-import com.giants3.report.jasper.JRPreviewReport;
 import com.giants3.report.jasper.JRReport;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -17,7 +16,7 @@ import java.util.Map;
  * <p/>
  * Created by davidleen29 on 2017/3/17.
  */
-public class ProductList4Report extends JRPreviewReport {
+public class ProductList4Report extends JRReport {
 
 
     List<ProductList4Data> datas;

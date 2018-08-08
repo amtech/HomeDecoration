@@ -539,5 +539,17 @@ public class WorkFlowRepositoryImpl extends BaseRepositoryImpl implements WorkFl
             }
         });
     }
+
+    @Override
+    public Observable getUnHandleWorkFlowMessageReport(final int hourLimit) {
+
+
+        return crateObservable(  new ApiCaller<WorkFlowMessage>() {
+            @Override
+            public RemoteData<WorkFlowMessage> call() throws HdException {
+                return apiManager.getUnHandleWorkFlowMessageReport(   hourLimit);
+            }
+        });
+    }
 }
 

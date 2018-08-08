@@ -5,7 +5,7 @@ import com.giants3.hd.utils.file.ImageUtils;
 import com.google.inject.Inject;
 
 /**
- *  业务员表格数据模型
+ *  报价权限表格数据模型
  */
 public class QuoteAuthModel extends  BaseTableModel<QuoteAuth> {
 

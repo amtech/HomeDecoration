@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by davidleen29 on 2018/4/14.
  */
-public class QrProductReport extends JRPreviewReport {
+public class QrProductReport extends JRReport {
 
 
 

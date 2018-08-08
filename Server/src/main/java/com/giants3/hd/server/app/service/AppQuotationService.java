@@ -5,6 +5,7 @@ import com.giants3.hd.entity.Product;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
+import com.giants3.hd.logic.AppQuotationAnalytics;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.server.repository.*;
@@ -51,20 +52,21 @@ public class AppQuotationService extends AbstractService {
 
 
         Quotation quotation = new Quotation();
-        quotation.qNumber= generateDefaultQuotationId();
+        quotation.qNumber= generateDefaultQuotationId(user);
         final Calendar instance = Calendar.getInstance();
         quotation.qDate = DateFormats.FORMAT_YYYY_MM_DD.format(instance.getTime());
         quotation.createTime = instance.getTimeInMillis();
         quotation.saleId = user.id;
         quotation.salesman = user.toString();
+        quotation.email = user.email;
         quotation = appQuotationRepository.save(quotation);
         QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.quotation = quotation;
         quotationDetail.items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-
-            quotationDetail.items.add(new QuotationItem());
-        }
+//        for (int i = 0; i < 10; i++) {
+//
+//            quotationDetail.items.add(new QuotationItem());
+//        }
 
         return quotationDetail;
 
@@ -147,7 +149,8 @@ public class AppQuotationService extends AbstractService {
         QuotationItem quotationItem = new QuotationItem();
         quotationItem.quotationId = quotationId;
         quotationItem.qty = 1;
-        bindProductToQuotationItem(quotationItem, productId);
+        Product product = productRepository.findOne(productId);
+        AppQuotationAnalytics.bindProductToQuotationItem(quotationItem, product);
         final int sizeBeforAdd = quotationItems.size();
         quotationItem.itm = sizeBeforAdd + 1;
         appQuotationItemRepository.saveAndFlush(quotationItem);
@@ -189,8 +192,8 @@ public class AppQuotationService extends AbstractService {
 
         if (item == null) return wrapError("未找到报价单明细项次：" + itemIndex);
 
-
-        bindProductToQuotationItem(item, productId);
+        Product product=productRepository.findOne(productId);
+        AppQuotationAnalytics.bindProductToQuotationItem(item, product);
 
         appQuotationItemRepository.saveAndFlush(item);
 
@@ -203,40 +206,6 @@ public class AppQuotationService extends AbstractService {
         return loadAQuotationDetail(quotationId);
     }
 
-
-    /**
-     * 重新绑定产品数据
-     *
-     * @param quotationItem
-     * @param productId
-     */
-    private void bindProductToQuotationItem(QuotationItem quotationItem, long productId) {
-
-        Product product = productRepository.findOne(productId);
-        quotationItem.productId = productId;
-        quotationItem.productName = product.name;
-        quotationItem.pVersion = product.pVersion;
-        quotationItem.price = product.price;
-        quotationItem.priceOrigin = product.price;
-        quotationItem.inBoxCount = product.insideBoxQuantity;
-        quotationItem.packQuantity = product.packQuantity;
-        quotationItem.amountSum = quotationItem.price * quotationItem.qty;
-        quotationItem.weight = product.weight;
-        quotationItem.weightSum = quotationItem.weight * quotationItem.qty;
-        quotationItem.volumePerBox = product.packVolume;
-        quotationItem.volumeSum = quotationItem.volumePerBox * quotationItem.qty;
-        quotationItem.thumbnail = product.thumbnail;
-        quotationItem.photoUrl = product.url;
-        quotationItem.unit = product.getpUnitName();
-        quotationItem.spec = product.getSpec();
-        quotationItem.boxLong = product.packLong;
-        quotationItem.boxWidth = product.packWidth;
-        quotationItem.boxHeight = product.packHeight;
-        quotationItem.weightPerBox = product.weight * product.insideBoxQuantity;
-        quotationItem.weight = product.weight;
-
-
-    }
 
     /**
      * 往报价单删除产品
@@ -479,15 +448,17 @@ public class AppQuotationService extends AbstractService {
     }
 
 
-    private String generateDefaultQuotationId()
+    private String generateDefaultQuotationId(User user)
     {
 
 
         //生成流水单号  日期—+流水单号
         String today = DateFormats.FORMATYYYYMMDD.format(Calendar.getInstance().getTime());
+
+
         String qNumber = "";
 
-        Quotation maxQuotation = appQuotationRepository.findFirstByQNumberLikeOrderByQNumberDesc(StringUtils.sqlRightLike(today));
+        Quotation maxQuotation = appQuotationRepository.findFirstByQNumberLikeAndFormalIsTrueOrderByQNumberDesc(StringUtils.sqlRightLike(today));
         if (maxQuotation == null || maxQuotation.qNumber.length() < 8 || !today.equals(maxQuotation.qNumber.substring(0, 8))) {
             qNumber = today + "000001";
         } else {
@@ -542,10 +513,7 @@ public class AppQuotationService extends AbstractService {
         }
 
 
-        quotation.customerId = customerId;
-        quotation.customerCode = customer.code;
-        quotation.customerName = customer.name;
-        quotation.customerAddress = customer.addr;
+      AppQuotationAnalytics.setCustomerToQuotation(quotation,customer);
         quotation = appQuotationRepository.save(quotation);
         return loadAQuotationDetail(quotationId);
 
@@ -588,8 +556,9 @@ public class AppQuotationService extends AbstractService {
         }
 
 
-        quotation.saleId = saleId;
-        quotation.salesman = user.toString();
+        AppQuotationAnalytics.setSaleManToQuotation(quotation,user);
+
+
         quotation = appQuotationRepository.save(quotation);
         return loadAQuotationDetail(quotationId);
 
@@ -662,11 +631,17 @@ public class AppQuotationService extends AbstractService {
         }
 
 
-        if (quotation.saleId != user.id) {
+        if (quotation.saleId != user.id&&!user.isAdmin()) {
             return wrapError("无权删除报价单，当前用户不是创建者");
         }
 
         appQuotationRepository.delete(quotationId);
+
+        appQuotationItemRepository.deleteByquotationIdEquals(quotationId);
+
+
+        appQuotationRepository.flush();
+        appQuotationItemRepository.flush();
         return wrapData();
 
 
@@ -716,5 +691,97 @@ public class AppQuotationService extends AbstractService {
         appQuotationRepository.saveAndFlush(quotation);
         return  wrapData(getDetail(id));
 
+    }
+
+    public RemoteData<QuotationDetail> saveDetail(QuotationDetail quotationDetail) {
+
+
+
+
+
+
+
+
+        if(!quotationDetail.quotation.formal)
+        {
+
+
+          Quotation quotation=  appQuotationRepository.findFirstByQNumberEqualsAndFormalIsTrue(quotationDetail.quotation.qNumber);
+            if(quotation!=null)
+            {
+                //表示这个编号已经被占用
+
+                return wrapError("当前报价单号已经存在，请修改");
+            }
+
+            quotationDetail.quotation.formal=true;
+
+
+
+
+        }
+
+
+
+
+        //找出被移除的數據
+
+
+        List<QuotationItem> oldItems=appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotationDetail.quotation.id);
+
+        List<QuotationItem> removedItems=new ArrayList<>();
+
+        for(QuotationItem oldItem:oldItems)
+        {
+
+            boolean found=false;
+            for (
+                    QuotationItem newItem:quotationDetail.items                 )
+            {
+
+                if(oldItem.id==newItem.id)
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(!found)removedItems.add(oldItem);
+
+
+        }
+
+
+        if(removedItems.size()>0)
+        {
+
+            appQuotationItemRepository.delete(removedItems);
+            appQuotationItemRepository.flush();
+        }
+
+
+        //校正itm值，设置 quotationId，
+        int newItm=0;
+        for (QuotationItem item:quotationDetail.items)
+        {
+
+            item.quotationId=quotationDetail.quotation.id;
+            item.itm=newItm++;
+
+        }
+
+
+         appQuotationItemRepository.save(quotationDetail.items);
+        appQuotationRepository.save(quotationDetail.quotation);
+
+        appQuotationItemRepository.flush();
+        appQuotationRepository.flush();
+
+
+
+
+
+
+        return loadAQuotationDetail(quotationDetail.quotation.id);
     }
 }

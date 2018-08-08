@@ -9,7 +9,11 @@ isnull(b.maxworkflowcode, '') AS maxworkflowcode,
 FROM         (SELECT     TOP 99999999 os_no, os_dd, itm, bat_no, prd_no, prd_name, id_no, up, qty, amt
                        FROM          [DB_YF01].[dbo].tf_pos
                        WHERE      os_id = upper('so') /*订单起止日期  降低查询范围*/ AND os_dd > '2017-01-01'
-                       ORDER BY os_no DESC, itm ASC) AS a LEFT OUTER JOIN
+                       ORDER BY os_no DESC, itm ASC) AS a
+                       --关联上所有已经审核订单，有CLS_Date 值表示已经审核。
+                        inner join (select os_no    from  [DB_YF01].[dbo].MF_POS  where CLS_DATE is not  null ) AS aa on a.os_no=aa.os_no
+
+                        LEFT OUTER JOIN
                           (/*9 表示 订单生产中*/ SELECT osno, itm, workflowstate, maxworkflowstep, maxworkflowname, maxworkflowcode, workflowdescribe,currentOverDueDay,totalLimit,currentLimitDay,currentAlertDay
                             FROM          [yunfei].[dbo].[t_orderitemworkstate]
                             WHERE      workflowstate <> 0) AS b ON a.os_no = b.osno COLLATE chinese_prc_90_ci_ai AND a.itm = b.itm

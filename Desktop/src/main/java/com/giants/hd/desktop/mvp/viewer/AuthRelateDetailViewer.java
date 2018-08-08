@@ -1,5 +1,9 @@
 package com.giants.hd.desktop.mvp.viewer;
 
+import com.giants3.hd.entity.app.AppQuoteAuth;
+
+import java.util.List;
+
 /**
  *
  *   权限明细类界面展示曾
@@ -13,4 +17,6 @@ public interface AuthRelateDetailViewer extends  OrderAuthDetailViewer,StockOutA
     void showOrderRow(int showRow);
 
     void showStockOutRow(int showRow);
+
+    void showAppQuoteAuthList(List<AppQuoteAuth> quoteAuth);
 }

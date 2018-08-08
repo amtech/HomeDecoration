@@ -11,9 +11,14 @@ import java.awt.*;
 public abstract class BaseInternalFrame extends JInternalFrame  implements IPresenter {
 
 
+
+    private int frameResult=0;
+
     static int openFrameCount = 0;
     static final int xOffset = 30, yOffset = 30;
 
+
+    private FrameResultListener frameResultListener;
     public static final int SCREEN_WIDTH;
     public static final int SCREEN_HEIGHT;
     static {
@@ -42,6 +47,7 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements IPres
 
         //Set the window's location.
         setLocation(xOffset*openFrameCount, yOffset*openFrameCount);
+
     }
 
 
@@ -52,6 +58,14 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements IPres
     @Override
     public void close() {
 
+        dispose();
+    }
+
+    @Override
+    public void dispose() {
+
+
+        super.dispose();
     }
 
     @Override
@@ -69,5 +83,48 @@ public abstract class BaseInternalFrame extends JInternalFrame  implements IPres
             }
         });
 
+    }
+
+
+    @Override
+    public void doDefaultCloseAction() {
+
+        if (hasModifyData()) {
+
+            int option = JOptionPane.showConfirmDialog(BaseInternalFrame.this, "数据有改动，确定关闭窗口？", " 提示", JOptionPane.OK_CANCEL_OPTION);
+
+            if (JOptionPane.OK_OPTION == option) {
+                //点击了确定按钮
+                super.doDefaultCloseAction();
+                doOnResult();
+            }
+
+        } else {
+            super.doDefaultCloseAction();
+            doOnResult();
+        }
+
+    }
+
+    private void doOnResult()
+    {
+        if(frameResultListener!=null)
+        {
+
+
+            frameResultListener.onFrameResult(0,frameResult,null);
+        }
+    }
+
+    /**
+     *  设置frame返回结果
+     * @param frameResult
+     */
+    public void setFrameResult(int frameResult) {
+        this.frameResult = frameResult;
+    }
+
+    public void setFrameResultListener(FrameResultListener frameResultListener) {
+        this.frameResultListener = frameResultListener;
     }
 }

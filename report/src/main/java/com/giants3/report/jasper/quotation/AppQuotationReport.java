@@ -4,10 +4,10 @@ import com.giants3.hd.entity.Company;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.noEntity.app.QuotationDetail;
-import com.giants3.report.jasper.CustomBeanDataSource;
-import com.giants3.report.jasper.JRPdfReport;
-import com.giants3.report.jasper.ReportData;
+import com.giants3.report.JRReporter;
+import com.giants3.report.jasper.*;
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JasperPrint;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,21 +18,30 @@ import java.util.Map;
 /**
  * Created by davidleen29 on 2018/2/17.
  */
-public class AppQuotationReport extends JRPdfReport {
+public abstract class AppQuotationReport extends JRReport {
 
 
     private final Company company;
     private QuotationDetail quotationDetail;
-    private String jrFilePath;
+    private InputStream jrReportFileStream;
 
-    public AppQuotationReport(Company company,QuotationDetail quotationDetail, String jrFilePath, String destFilePath) {
+    /**
+     *
+     * @param reporter
+     * @param company
+     * @param quotationDetail
+     * @param jrReportFileStream 報表模板文件输入流
+     */
+    public AppQuotationReport(JRReporter reporter,Company company, QuotationDetail quotationDetail,InputStream jrReportFileStream) {
 
 
-        super(destFilePath);
+        super(reporter);
         this.company = company;
         this.quotationDetail = quotationDetail;
-        this.jrFilePath = jrFilePath;
+        this.jrReportFileStream = jrReportFileStream;
     }
+
+
 
     @Override
     public JRDataSource getDataSource() {
@@ -46,16 +55,16 @@ public class AppQuotationReport extends JRPdfReport {
     public InputStream getReportFile() {
 
 
-        try {
-            return new FileInputStream(jrFilePath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return  null;
-        }
+
+          return
+                  jrReportFileStream;
+
     }
 
     @Override
     public Map<String, Object> getParameters() {
-        return new CompanyReportData(null,quotationDetail.quotation, Quotation.class);
+        return new CompanyReportData(company,quotationDetail.quotation, Quotation.class);
     }
+
+
 }

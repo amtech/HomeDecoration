@@ -73,7 +73,7 @@ public class AuthorityUtil {
      * @param moduleName
      * @return
      */
-    private boolean isViewable(String moduleName) {
+    public boolean isViewable(String moduleName) {
         if (isAdmin())
             return true;
         for (Authority authority : getAuthority()) {

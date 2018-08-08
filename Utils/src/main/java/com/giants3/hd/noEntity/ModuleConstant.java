@@ -138,12 +138,25 @@ public class ModuleConstant {
 
 
 
+
+
     public static final String TITLE_COMPANY_INFO = "公司信息";
     public static final String NAME_COMPANY_INFO = "COMPANY_INFO";
 
 
     public static final String TITLE_APP_QUOTATION = "广交会报价";
     public static final String NAME_APP_QUOTATION = "APP_QUOTATION";
+
+
+
+
+
+
+
+    public static final String TITLE_UNHANDLE_MESSAGE_REPORT = "未处理消息报表";
+    public static final String NAME_UNHANDLE_MESSAGE_REPORT = "UNHANDLE_MESSAGE_REPORT";
+
+
 
 
     public static String[] TITLES = new String[]{TITLE_MATERIAL, TITLE_PRODUCT, TITLE_PRODUCT_PICTURE, TITLE_MATERIAL_PICTURE,
@@ -177,6 +190,7 @@ public class ModuleConstant {
             ,TITLE_SUB_WORK_FLOW
             ,TITLE_COMPANY_INFO
             ,TITLE_APP_QUOTATION
+            ,TITLE_UNHANDLE_MESSAGE_REPORT
 
 
 
@@ -219,6 +233,7 @@ public class ModuleConstant {
             ,NAME_SUB_WORK_FLOW
             ,NAME_COMPANY_INFO
             ,NAME_APP_QUOTATION
+            ,NAME_UNHANDLE_MESSAGE_REPORT
 
 
 

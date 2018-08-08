@@ -4,9 +4,11 @@ import com.giants3.hd.domain.module.*;
 import com.giants3.hd.domain.repository.*;
 import com.giants3.hd.entity.*;
 import com.giants3.hd.entity.OutFactory;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.ErpOrderDetail;
 import com.giants3.hd.noEntity.ErpStockOutDetail;
 
+import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import rx.schedulers.Schedulers;
@@ -14,6 +16,7 @@ import rx.schedulers.Schedulers;
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
 
@@ -635,4 +638,52 @@ public class UseCaseFactory {
     }
 
 
+    public UseCase createGetUnHandleWorkFlowMessageReportUseCase(int hourLimit) {
+
+
+        return new GetUnHandleWorkFlowMessageReportUseCase(  hourLimit, workFlowRepository);
+
+    }
+
+    public UseCase createSaveAppQuoteAuthCase(List<AppQuoteAuth> appQuoteAuths) {
+
+        return new SaveAppQuoteAuthUseCase(  appQuoteAuths , authRepository);
+    }
+
+    /**
+     * 读取广交会报价权限
+     *
+     * @return
+     */
+    public UseCase createGetAppQuoteAuthListCase() {
+
+        return new GetAppQuoteAuthListCase(  authRepository);
+    }
+
+    public UseCase createNewAppQuotationDetailUseCase() {
+
+      return   new NewAppQuotationUseCase(  quotationRepository);
+    }
+
+
+    public UseCase createAddProductToAppQuotationUseCase(long quotationId, long productId) {
+
+      return   new AddProductToAppQuotationUseCase(    quotationId,   productId,quotationRepository);
+    }
+
+    public UseCase createSaveAppQuotationUseCase(QuotationDetail quotationDetail) {
+        return   new SaveAppQuotationUseCase(    quotationDetail,   quotationRepository);
+    } public UseCase createDeleteAppQuotationUseCase(long quotationId) {
+        return   new DeleteAppQuotationUseCase(    quotationId,   quotationRepository);
+    }
+
+    /**
+     *
+     * @param quotationId 报价单id
+     * @param filePath  打印文件存放路径。
+     * @return
+     */
+    public UseCase createPrintAppQuotationUseCase(long quotationId, String filePath) {
+        return   new PrintAppQuotationUseCase(    quotationId,  filePath, quotationRepository);
+    }
 }

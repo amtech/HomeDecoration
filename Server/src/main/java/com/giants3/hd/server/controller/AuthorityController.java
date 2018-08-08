@@ -2,6 +2,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.app.AUser;
 import com.giants3.hd.entity.*;
+import com.giants3.hd.entity.app.AppQuoteAuth;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.service.AuthorityService;
 import com.giants3.hd.utils.StringUtils;
@@ -256,5 +257,28 @@ public class AuthorityController extends BaseController {
 
         return wrapData(newData);
     }
+    @RequestMapping(value = "/saveAppQuoteList", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<AppQuoteAuth> saveAppQuoteList(@RequestBody List<AppQuoteAuth> authorities) {
 
+
+        List<AppQuoteAuth> newData = authorityService.saveAppQuotes(authorities);
+
+
+        return wrapData(newData);
+    }
+
+
+    @RequestMapping(value = "/appQuoteAuthList", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<AppQuoteAuth> getAppQuoteAuthList() {
+
+
+        List<AppQuoteAuth> quoteAuths = authorityService.getAppQuoteAuths();
+
+
+        return wrapData(quoteAuths);
+    }
 }

@@ -107,7 +107,7 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="showSql" value="true"/>
-                <property name="generateDdl" value="false"/>
+                <property name="generateDdl" value="true"/>
                 <property name="database" value="SQL_SERVER"/>
                 <property name="databasePlatform" value="org.hibernate.dialect.SQLServer2008Dialect"/>
             </bean>
@@ -217,7 +217,7 @@
 
     <!-- 那些类的哪些方法参与事务 -->
    <aop:config>
-       <aop:pointcut id="allManagerMethod" expression="execution(* com.giants3.hd.server.service.*.*(..))"/>
+       <aop:pointcut id="allManagerMethod" expression="execution(* com.giants3.hd.server.service.*.*(..))||execution(* com.giants3.hd.server.app.service.*.*(..))"/>
        <aop:advisor pointcut-ref="allManagerMethod" advice-ref="transactionAdvice" order="3"/>
    </aop:config>
 
@@ -232,7 +232,7 @@
         <aop:aspect id="AopLog" ref="aspectBean" order="-1000">
 
             <aop:pointcut id="businessService"
-                          expression="execution(* com.giants3.hd.server.service.*.*(..))"  />
+                          expression="execution(* com.giants3.hd.server.service.*.*(..))||execution(* com.giants3.hd.server.app.service.*.*(..))"  />
 
 
 

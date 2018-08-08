@@ -17,4 +17,6 @@ public interface AppQuotationListViewer extends IViewer {
 
     public void bindData(RemoteData<Quotation> datas);
 
+    void performSearch();
+
 }

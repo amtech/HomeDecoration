@@ -105,6 +105,21 @@ public class AppQuotationController extends BaseController {
         return quotationService.save(id);
 
 
+    } /**
+     * 保存报价单（功能只是将临时报价单生产正式报价单）
+     *
+     * @param quotationDetail
+     * @return
+     */
+    @RequestMapping(value = "/saveDetail", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> save(@RequestBody QuotationDetail quotationDetail) {
+
+
+        return quotationService.saveDetail(quotationDetail);
+
+
     }
     /**
      * 保存报价单（功能只是将临时报价单生产正式报价单）

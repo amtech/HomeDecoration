@@ -560,7 +560,8 @@ public class WorkFlowService extends AbstractService implements InitializingBean
 
         for (WorkFlowMessage message:workFlowMessages)
         {
-
+            //异常数据
+            if(message.receiveTime!=0||!StringUtils.isEmpty(message.receiveTimeString)) continue;
             //如果消息存在不超过24小时，不提醒
             long time=Calendar.getInstance().getTimeInMillis();
             if(time-message.createTime<24l*60*60*1000) continue;
@@ -577,10 +578,31 @@ public class WorkFlowService extends AbstractService implements InitializingBean
     }
 
 
+    /**
+     *
+     * @param hourLimit 未处理的最少时长。小时为单位
+     * @return
+     */
+    public List<WorkFlowMessage> getUnHandleWorkFlowMessageReport(int hourLimit) {
+
+        //查找所有未处理的非白配制作阶段的消息，
+        List<WorkFlowMessage> workFlowMessages=workFlowMessageRepository.findByFromFlowStepNotAndReceiverIdEqualsOrderByCreateTimeDesc(ErpWorkFlow.FIRST_STEP,0)  ;
 
 
+        List<WorkFlowMessage> result=new ArrayList<>();
+        long time = Calendar.getInstance().getTimeInMillis();
+        for (WorkFlowMessage message:workFlowMessages) {
+
+            //异常数据
+            if(message.receiveTime!=0||!StringUtils.isEmpty(message.receiveTimeString)) continue;
+            //未超过时限
+            if (time - message.createTime < hourLimit * 60l * 60 * 1000) continue;
+
+            result.add(message);
+        }
 
 
+        return result;
 
-
+    }
 }

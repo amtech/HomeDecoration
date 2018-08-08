@@ -44,12 +44,9 @@ public class HttpUrl {
     public static String additionInfo(String url) {
 
 
-
-
-
-        UrlFormatter urlFormatter=new UrlFormatter(url).append ( "appVersion",versionCode)
-                .append ( "client", ConstantData.CLIENT_DESK)
-                .append( "token",TOKEN);
+        UrlFormatter urlFormatter = new UrlFormatter(url).append("appVersion", versionCode)
+                .append("client", ConstantData.CLIENT_DESK)
+                .append("token", TOKEN);
 
 
         return urlFormatter.toUrl();
@@ -60,20 +57,15 @@ public class HttpUrl {
     public static String additionInfo(UrlFormatter urlFormatter) {
 
 
-
-        urlFormatter.append ( "appVersion",versionCode)
-      .append ( "client", ConstantData.CLIENT_DESK)
-        .append( "token",TOKEN);
-
+        urlFormatter.append("appVersion", versionCode)
+                .append("client", ConstantData.CLIENT_DESK)
+                .append("token", TOKEN);
 
 
-        return  urlFormatter.toUrl();
+        return urlFormatter.toUrl();
 
 
     }
-
-
-
 
 
     public static void setVersionCode(int versionCode) {
@@ -87,9 +79,9 @@ public class HttpUrl {
 
     public static String loadProductListByNameBetween(String startName, String endName, boolean withCopy) {
 
-        String apiUrl=BaseUrl + "api/product/loadByNameBetween";
-        UrlFormatter formatter=new UrlFormatter(apiUrl).append("startName",startName)
-         .append( "endName",endName) .append( "withCopy",withCopy);
+        String apiUrl = BaseUrl + "api/product/loadByNameBetween";
+        UrlFormatter formatter = new UrlFormatter(apiUrl).append("startName", startName)
+                .append("endName", endName).append("withCopy", withCopy);
         return additionInfo(formatter);
     }
 
@@ -192,6 +184,8 @@ public class HttpUrl {
      * @return
      */
     public static String loadProductPicture(String productUrl) {
+        if(productUrl.startsWith("http://"))
+            return productUrl;
         String url = BaseUrl + productUrl;
         return url;
     }
@@ -203,6 +197,9 @@ public class HttpUrl {
      * @return
      */
     public static String loadPicture(String relativeUrl) {
+
+        if(relativeUrl.startsWith("http://"))
+            return relativeUrl;
         String url = BaseUrl + relativeUrl;
         return url;
     }
@@ -816,8 +813,7 @@ public class HttpUrl {
      */
     public static String loadProductListByNameRandom(String prdName, boolean withCopy) {
 
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/product/loadByNameRandom2").append("productNames",prdName).append("withCopy",withCopy);
-
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/product/loadByNameRandom2").append("productNames", prdName).append("withCopy", withCopy);
 
 
         return additionInfo(urlFormatter);
@@ -1205,40 +1201,37 @@ public class HttpUrl {
 
     public static String saveWorkFlowLimit(boolean updateCompletedOrderItem) {
 
-        return additionInfo(BaseUrl + "api/workFlow/saveLimit?updateCompletedOrderItem="+updateCompletedOrderItem);
+        return additionInfo(BaseUrl + "api/workFlow/saveLimit?updateCompletedOrderItem=" + updateCompletedOrderItem);
     }
 
 
+    public static String searchErpSubWorkFlow(String key, String dateStart, String dateEnd) {
 
-    public static String searchErpSubWorkFlow(String key, String dateStart,String dateEnd) {
-
-        return additionInfo(BaseUrl + "api/erpWork/searchErpSubWorkFlow?key="+key+"&dateStart="+dateStart+"&dateEnd="+dateEnd);
+        return additionInfo(BaseUrl + "api/erpWork/searchErpSubWorkFlow?key=" + key + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd);
     }
 
     public static String updateCompany() {
 
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/setting/updateCompany") ;
-
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/setting/updateCompany");
 
 
         return additionInfo(urlFormatter);
     }
 
     public static String getAppQuotationList(String key, int pageIndex, int pageSize) {
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/app/quotation/search") ;
-        urlFormatter.append("searchValue",key);
-        urlFormatter.append("pageIndex",pageIndex);
-        urlFormatter.append("pageSize",pageSize);
-
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/app/quotation/search");
+        urlFormatter.append("searchValue", key);
+        urlFormatter.append("pageIndex", pageIndex);
+        urlFormatter.append("pageSize", pageSize);
 
 
         return additionInfo(urlFormatter);
     }
 
     public static String getAppQuotationDetail(long quotationId, String qNumber) {
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/app/quotation/detail") ;
-        urlFormatter.append("id",quotationId);
-        urlFormatter.append("qNumber",qNumber);
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/app/quotation/detail");
+        urlFormatter.append("id", quotationId);
+        urlFormatter.append("qNumber", qNumber);
 
 
         return additionInfo(urlFormatter);
@@ -1246,13 +1239,13 @@ public class HttpUrl {
 
     public static String loadProductByIds(long[] productIds) {
         ;
-        return additionInfo(BaseUrl + "api/product/findByProductIds?id=" + StringUtils.combine(productIds,StringUtils.STRING_SPLIT_COMMA));
+        return additionInfo(BaseUrl + "api/product/findByProductIds?id=" + StringUtils.combine(productIds, StringUtils.STRING_SPLIT_COMMA));
     }
 
     public static String updateTaskState(long taskId, int taskState) {
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/task/updateState") ;
-        urlFormatter.append("taskId",taskId);
-        urlFormatter.append("taskState",taskState);
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/task/updateState");
+        urlFormatter.append("taskId", taskId);
+        urlFormatter.append("taskState", taskState);
 
 
         return additionInfo(urlFormatter);
@@ -1260,10 +1253,70 @@ public class HttpUrl {
     }
 
     public static String executeHdTask(int taskType) {
-        UrlFormatter urlFormatter=new UrlFormatter(BaseUrl + "api/task/execute") ;
-        urlFormatter.append("taskType",taskType);
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/task/execute");
+        urlFormatter.append("taskType", taskType);
 
 
+        return additionInfo(urlFormatter);
+    }
+
+    public static String getUnHandleWorkFlowMessageReport(int hourLimit) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/workFlow/getUnHandleWorkFlowMessageReport");
+        urlFormatter.append("hourLimit", hourLimit);
+
+
+        return additionInfo(urlFormatter);
+
+    }
+
+    public static String saveAppQuoteAuthList() {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/authority/saveAppQuoteList");
+
+        return additionInfo(urlFormatter);
+
+
+    }
+
+    public static String getAppQuoteAuthList() {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/authority/appQuoteAuthList");
+
+
+        return additionInfo(urlFormatter);
+
+    }
+
+    public static String createTempAppQuotation() {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "api/app/quotation/create");
+
+
+        return additionInfo(urlFormatter);
+    }
+
+    public static String addProductToQuotation(long quotationId, long productId) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/addItem");
+
+        urlFormatter.append("quotationId", quotationId);
+        urlFormatter.append("productId", productId);
+
+        return additionInfo(urlFormatter);
+    }
+
+    public static String saveAppQuotation( ) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/saveDetail");
+
+
+        return additionInfo(urlFormatter);
+    }
+
+    public static String deleteAppQuotation(long quotationId) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/delete");
+        urlFormatter.append("quotationId",quotationId);
+        return additionInfo(urlFormatter);
+    }
+
+    public static String printQuotation(long quotationId) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/print");
+        urlFormatter.append("quotationId",quotationId);
         return additionInfo(urlFormatter);
     }
 }

@@ -29,4 +29,13 @@ public interface QuotationRepository {
     Observable<RemoteData<com.giants3.hd.entity.app.Quotation>> getAppQuotationList(String key, int pageIndex, int pageSize);
 
     Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> getAppQuotationDetail(long quotationId, String qNumber);
+
+    Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> newQuotation();
+    Observable<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>> addProductToAppQuotation(long quotationId,long productId);
+
+    Observable saveAppQuotation(com.giants3.hd.noEntity.app.QuotationDetail quotationDetail);
+
+    Observable deleteAppQuotation(long quotationId);
+
+    Observable printQuotationToFile(long quotationId, String filePath);
 }

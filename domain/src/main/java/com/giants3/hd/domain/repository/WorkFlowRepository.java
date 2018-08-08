@@ -75,4 +75,6 @@ public interface WorkFlowRepository {
     Observable saveWorkFlowLimit(List<WorkFlowTimeLimit> workFlowLimit,boolean updateCompletedOrderItem);
 
     Observable getSubWorkFlowList(String key, String dateStart, String dateEnd);
+
+    Observable getUnHandleWorkFlowMessageReport(int hourLimit);
 }

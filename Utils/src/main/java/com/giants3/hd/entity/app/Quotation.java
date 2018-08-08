@@ -94,5 +94,8 @@ public class Quotation implements Serializable {
 
     public int itemCount;
 
-
+    /**
+     * 业务员email
+     */
+    public String email;
 }

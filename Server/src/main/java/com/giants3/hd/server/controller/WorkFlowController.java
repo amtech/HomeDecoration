@@ -402,4 +402,24 @@ public class WorkFlowController extends BaseController {
     }
 
 
+
+
+    /** 查询未处理消息报表
+     * @param hourLimit  多少小时未处理
+     * @return
+     */
+    @RequestMapping(value = "/getUnHandleWorkFlowMessageReport", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<WorkFlowMessage> getUnHandleWorkFlowMessageReport(
+            @RequestParam(value = "hourLimit",required = false,defaultValue = "0" ) int hourLimit
+    ) {
+
+
+        return wrapData(workFlowService.getUnHandleWorkFlowMessageReport(hourLimit));
+
+
+    }
+
+
 }
