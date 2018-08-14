@@ -12,6 +12,7 @@ import com.giants3.hd.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.internal.MoreTypes;
 import de.greenrobot.common.io.IoUtils;
 
 import java.io.File;
@@ -31,188 +32,10 @@ import java.util.Set;
 public class ApiManager {
 
 
-    /**
-     * json 解析 配型配对对应的集合表
-     * <p/>
-     * Product ---->  RemoteData<Product>
-     */
-    public Map<Class<?>, Type> tokenMaps;
 
 
     @Inject
     public ApiManager() {
-        tokenMaps = new HashMap<>();
-        tokenMaps.put(Void.class, new TypeToken<RemoteData<Void>>() {
-        }.getType());
-
-        tokenMaps.put(String.class, new TypeToken<RemoteData<String>>() {
-        }.getType());
-
-        tokenMaps.put(Product.class, new TypeToken<RemoteData<Product>>() {
-        }.getType());
-        tokenMaps.put(ProductDelete.class, new TypeToken<RemoteData<ProductDelete>>() {
-        }.getType());
-        tokenMaps.put(ProductDetail.class, new TypeToken<RemoteData<ProductDetail>>() {
-        }.getType());
-
-        tokenMaps.put(PClass.class, new TypeToken<RemoteData<PClass>>() {
-        }.getType());
-
-        tokenMaps.put(Customer.class, new TypeToken<RemoteData<Customer>>() {
-        }.getType());
-
-        tokenMaps.put(User.class, new TypeToken<RemoteData<User>>() {
-        }.getType());
-
-        tokenMaps.put(Module.class, new TypeToken<RemoteData<Module>>() {
-        }.getType());
-
-
-        tokenMaps.put(Material.class, new TypeToken<RemoteData<Material>>() {
-        }.getType());
-
-
-        tokenMaps.put(ProductMaterial.class, new TypeToken<RemoteData<ProductMaterial>>() {
-        }.getType());
-
-        tokenMaps.put(MaterialClass.class, new TypeToken<RemoteData<MaterialClass>>() {
-        }.getType());
-
-        tokenMaps.put(MaterialType.class, new TypeToken<RemoteData<MaterialType>>() {
-        }.getType());
-
-
-        tokenMaps.put(PackMaterialType.class, new TypeToken<RemoteData<PackMaterialType>>() {
-        }.getType());
-
-
-        tokenMaps.put(ProductProcess.class, new TypeToken<RemoteData<ProductProcess>>() {
-        }.getType());
-
-        tokenMaps.put(PackMaterialClass.class, new TypeToken<RemoteData<PackMaterialClass>>() {
-        }.getType());
-
-        tokenMaps.put(PackMaterialPosition.class, new TypeToken<RemoteData<PackMaterialPosition>>() {
-        }.getType());
-
-
-        tokenMaps.put(Pack.class, new TypeToken<RemoteData<Pack>>() {
-        }.getType());
-
-
-        tokenMaps.put(Authority.class, new TypeToken<RemoteData<Authority>>() {
-        }.getType());
-
-        tokenMaps.put(QuoteAuth.class, new TypeToken<RemoteData<QuoteAuth>>() {
-        }.getType());
-        tokenMaps.put(StockOutAuth.class, new TypeToken<RemoteData<StockOutAuth>>() {
-        }.getType());
-        tokenMaps.put(OrderAuth.class, new TypeToken<RemoteData<OrderAuth>>() {
-        }.getType());
-
-
-        tokenMaps.put(OperationLog.class, new TypeToken<RemoteData<OperationLog>>() {
-        }.getType());
-
-        tokenMaps.put(Quotation.class, new TypeToken<RemoteData<Quotation>>() {
-        }.getType());
-
-        tokenMaps.put(QuotationDelete.class, new TypeToken<RemoteData<QuotationDelete>>() {
-        }.getType());
-
-        tokenMaps.put(QuotationDetail.class, new TypeToken<RemoteData<QuotationDetail>>() {
-        }.getType());
-
-        tokenMaps.put(GlobalData.class, new TypeToken<RemoteData<GlobalData>>() {
-        }.getType());
-
-
-        tokenMaps.put(Xiankang.class, new TypeToken<RemoteData<Xiankang>>() {
-        }.getType());
-
-        tokenMaps.put(ProductProcess.class, new TypeToken<RemoteData<ProductProcess>>() {
-        }.getType());
-
-        tokenMaps.put(ProductPaint.class, new TypeToken<RemoteData<ProductPaint>>() {
-        }.getType());
-
-
-        tokenMaps.put(HdTask.class, new TypeToken<RemoteData<HdTask>>() {
-        }.getType());
-
-        tokenMaps.put(HdTaskLog.class, new TypeToken<RemoteData<HdTaskLog>>() {
-        }.getType());
-
-
-        tokenMaps.put(BufferData.class, new TypeToken<RemoteData<BufferData>>() {
-        }.getType());
-
-        tokenMaps.put(AppVersion.class, new TypeToken<RemoteData<AppVersion>>() {
-        }.getType());
-        tokenMaps.put(ErpOrder.class, new TypeToken<RemoteData<ErpOrder>>() {
-        }.getType());
-
-        tokenMaps.put(ErpOrderItem.class, new TypeToken<RemoteData<ErpOrderItem>>() {
-        }.getType());
-        tokenMaps.put(ErpOrderDetail.class, new TypeToken<RemoteData<ErpOrderDetail>>() {
-        }.getType());
-        tokenMaps.put(ErpStockOut.class, new TypeToken<RemoteData<ErpStockOut>>() {
-        }.getType());
-        tokenMaps.put(ErpStockOutDetail.class, new TypeToken<RemoteData<ErpStockOutDetail>>() {
-        }.getType());
-
-        tokenMaps.put(OrderReportItem.class, new TypeToken<RemoteData<OrderReportItem>>() {
-        }.getType());
-        tokenMaps.put(WorkFlow.class, new TypeToken<RemoteData<WorkFlow>>() {
-        }.getType());
-        tokenMaps.put(StockSubmit.class, new TypeToken<RemoteData<StockSubmit>>() {
-        }.getType());
-
-        tokenMaps.put(StockXiaoku.class, new TypeToken<RemoteData<StockXiaoku>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowSubType.class, new TypeToken<RemoteData<WorkFlowSubType>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowProduct.class, new TypeToken<RemoteData<WorkFlowProduct>>() {
-        }.getType());
-        tokenMaps.put(OutFactory.class, new TypeToken<RemoteData<OutFactory>>() {
-        }.getType());
-        tokenMaps.put(OrderItemWorkFlow.class, new TypeToken<RemoteData<OrderItemWorkFlow>>() {
-        }.getType());
-
-        tokenMaps.put(Zhilingdan.class, new TypeToken<RemoteData<Zhilingdan>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowWorker.class, new TypeToken<RemoteData<WorkFlowWorker>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowArranger.class, new TypeToken<RemoteData<WorkFlowArranger>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowEvent.class, new TypeToken<RemoteData<WorkFlowEvent>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowEventWorker.class, new TypeToken<RemoteData<WorkFlowEventWorker>>() {
-        }.getType());
-        tokenMaps.put(ErpOrderItemProcess.class, new TypeToken<RemoteData<ErpOrderItemProcess>>() {
-        }.getType());
-        tokenMaps.put(ErpWorkFlowReport.class, new TypeToken<RemoteData<ErpWorkFlowReport>>() {
-        }.getType());
-
-        tokenMaps.put(WorkFlowArea.class, new TypeToken<RemoteData<WorkFlowArea>>() {
-        }.getType());
-
-        tokenMaps.put(WorkFlowTimeLimit.class, new TypeToken<RemoteData<WorkFlowTimeLimit>>() {
-        }.getType());
-        tokenMaps.put(Sub_workflow_state.class, new TypeToken<RemoteData<Sub_workflow_state>>() {
-        }.getType());
-        tokenMaps.put(Company.class, new TypeToken<RemoteData<Company>>() {
-        }.getType());
-        tokenMaps.put(com.giants3.hd.entity.app.Quotation.class, new TypeToken<RemoteData<com.giants3.hd.entity.app.Quotation>>() {
-        }.getType());
-
-
-        tokenMaps.put(com.giants3.hd.noEntity.app.QuotationDetail.class, new TypeToken<RemoteData<com.giants3.hd.noEntity.app.QuotationDetail>>() {
-        }.getType());
-        tokenMaps.put(WorkFlowMessage.class, new TypeToken<RemoteData<WorkFlowMessage>>() {
-        }.getType());
-        tokenMaps.put(AppQuoteAuth.class, new TypeToken<RemoteData<AppQuoteAuth>>() {
-        }.getType());
 
 
     }
@@ -222,10 +45,16 @@ public class ApiManager {
 
     public <T> RemoteData<T> invokeByReflect(String result, Class<T> aClass) {
 
-        Type generateType = tokenMaps.get(aClass);
+         Type generateType;
+       // generateType = tokenMaps.get(aClass);
+//        generateType=new TypeToken<RemoteData<T>>() {
+//        }.getType();
+        //gson 解析类型处理。
+//        generateType=  new MoreTypes.ParameterizedTypeImpl(null,RemoteData.class,new Type[]{aClass});
+        generateType=  new RemoteDateParameterizedType( aClass);
+       ;
 
-
-        RemoteData<T> remoteData = GsonUtils.fromJson(result, generateType);
+        RemoteData<T> remoteData = GsonUtils.fromJson(result,generateType);
         return remoteData;
     }
 
