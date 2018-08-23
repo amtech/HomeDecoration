@@ -67,7 +67,13 @@ public class JHdTable extends JTable {
             if (rowHeight > 0) {
                 setRowHeight(rowHeight);
             }
+
+            int[] columnWidths = absTableModel.getColumnWidth();
+            JTableUtils.setJTableColumnsWidth(this, columnWidths);
+
         }
+
+
 
 
         if (dataModel instanceof BaseTableModel) {
@@ -75,9 +81,6 @@ public class JHdTable extends JTable {
 
             //配置定制列宽
             BaseTableModel baseTableModel = (BaseTableModel) dataModel;
-            int[] columnWidths = baseTableModel.getColumnWidth();
-            JTableUtils.setJTableColumnsWidth(this, columnWidths);
-
             //配置多行文本展示。
             int[] multiLineTextColumnIndexes = baseTableModel.getMultiLineColumns();
 

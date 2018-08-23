@@ -686,4 +686,16 @@ public class UseCaseFactory {
     public UseCase createPrintAppQuotationUseCase(long quotationId, String filePath) {
         return   new PrintAppQuotationUseCase(    quotationId,  filePath, quotationRepository);
     }
+
+    public UseCase createSyncAppQuotationUseCase(String urlHead,String startDate,String endDate) {
+
+        return   new SyncAppQuotationUseCase(    urlHead,startDate,endDate,   quotationRepository);
+
+    }
+
+    public UseCase createSyncProductPictureUseCase(String remoteResource,String filterKey) {
+
+
+        return   new SyncProductPictureUseCase(  remoteResource,   filterKey,  fileRepository);
+    }
 }

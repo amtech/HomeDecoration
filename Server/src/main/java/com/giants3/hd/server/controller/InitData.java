@@ -62,7 +62,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             final String applicationName = event.getApplicationContext().getApplicationName();
 
-            //PictureUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
+//            PictureUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
             PictureUrl.setBaseUrl(PICTURE_BASE_URL);
 
 //

@@ -110,4 +110,14 @@ public class QuotationRepositoryImpl  extends  BaseRepositoryImpl implements Quo
             }
         });
     }
+
+    @Override
+    public Observable syncAppQuotation(final String urlHead, final String startDate, final String endDate) {
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                return apiManager.syncAppQuotation(urlHead,startDate,endDate);
+            }
+        });
+    }
 }

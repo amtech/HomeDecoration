@@ -130,7 +130,9 @@
               <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <enabled value="true"/>
+            </properties>
           </component>
           <grid id="c5019" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
             <constraints>

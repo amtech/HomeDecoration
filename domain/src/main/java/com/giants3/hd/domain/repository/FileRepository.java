@@ -1,5 +1,6 @@
 package com.giants3.hd.domain.repository;
 
+import com.giants3.hd.noEntity.RemoteData;
 import rx.Observable;
 
 import java.io.File;
@@ -21,5 +22,5 @@ public interface FileRepository {
     public Observable<List<String>> uploadTempFile(File[] file );
 
 
-
+    Observable<RemoteData<Void>> syncProductPicture(String remoteResource,String filterKey);
 }

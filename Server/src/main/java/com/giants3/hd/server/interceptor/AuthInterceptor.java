@@ -7,6 +7,7 @@ import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.SessionRepository;
 import com.giants3.hd.server.service.AuthorityService;
 import com.giants3.hd.server.utils.Constraints;
+import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.UrlFormatter;
 import com.giants3.report.PictureUrl;
@@ -61,7 +62,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (!UrlFormatter.validateSign(request.getQueryString())) {
 
 
-            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL, "签名效验失败");
+            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL, "sign verify fail");
 
             return false;
 
@@ -87,9 +88,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         //非过滤的url
         if (ConstantData.FOR_TEST || url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(UN_INTERCEPT_FILE) || url.contains(WEIXIN))
             return true;
-
+        else
+            if(url.contains("app/quotation/findDetails"))
+            {
+                return true;
+            }
         else {
             String token = request.getParameter(TOKEN);
+
             String appVersion = request.getParameter("appVersion");
             int
                     integer = 0;

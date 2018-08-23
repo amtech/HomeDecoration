@@ -1,5 +1,6 @@
 package com.giants3.hd.utils.file;
 
+import com.giants3.hd.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.exception.HdException;
 import de.greenrobot.common.io.IoUtils;
@@ -49,6 +50,42 @@ public class ImageUtils {
     public static final byte[] scaleProduct(String path) throws HdException {
 
         return scale(path, MAX_PRODUCT_THUMBNAIL_WIDTH, MAX_PRODUCT_THUMBNAIL_HEIGHT);
+
+
+    }
+    public static boolean scalePicture(String picturePath,String destPicturePath )
+    {
+       return scalePicture(picturePath,destPicturePath,"jpg");
+    }
+    public static boolean scalePicture(String picturePath,String destPicturePath,String destType)
+    {
+        //構建縮略路径 保证文件夹存在
+        FileUtils.makeDirs(destPicturePath);
+        boolean result=false;
+        byte[] bytes =null ;
+        try {
+            bytes = scaleProduct(picturePath);
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+        if (bytes != null) {
+            InputStream in = new ByteArrayInputStream(bytes);
+            BufferedImage bufferedImage = null;
+            try {
+                bufferedImage = ImageIO.read(in);
+
+            in.close();
+            final FileOutputStream output = new FileOutputStream(destPicturePath);
+            ImageIO.write(bufferedImage, destType, output);
+            output.flush();
+            output.close();
+                result=true;
+            } catch (Throwable  e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
 
 
     }

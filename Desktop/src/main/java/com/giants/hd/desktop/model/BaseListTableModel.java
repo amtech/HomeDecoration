@@ -18,6 +18,8 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
 
     List<Field> fields;
 
+    int[] columnWidth;
+
     public BaseListTableModel(Class<T> itemClass) {
         super(itemClass);
 
@@ -51,8 +53,11 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
      * 重置每一个关联的Field 对象
      */
     private void resetField() {
-        fields = new ArrayList<>();
 
+
+        columnWidth=new int[tableFields.size()];
+        fields = new ArrayList<>();
+        int i=0;
         for (TableField tableField : tableFields) {
             Field field = null;
             try {
@@ -63,6 +68,7 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
 
             }
             fields.add(field);
+            columnWidth[i++]=tableField.width;
         }
 
 
@@ -94,6 +100,14 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
 
     }
 
+
+    @Override
+    public int[] getColumnWidth() {
+
+
+        return columnWidth;
+
+    }
 
     @Override
     public int getColumnCount() {

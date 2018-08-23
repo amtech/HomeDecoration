@@ -11,6 +11,7 @@ import com.ning.http.client.multipart.FilePart;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
@@ -62,6 +63,32 @@ public class Client {
 
 
         return result;
+
+    }
+
+
+
+    public InputStream openInputStream(String url) throws HdException {
+        Logger.getLogger(TAG).info(url);
+
+        InputStream result = get(url, new AsyncCompletionHandler<InputStream>() {
+            @Override
+            public InputStream onCompleted(Response response) throws Exception {
+
+                InputStream result = response.getResponseBodyAsStream();
+
+
+                return result;
+
+
+            }
+        });
+
+
+
+
+        return result;
+
 
     }
 

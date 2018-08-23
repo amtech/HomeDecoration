@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * 广交会报价单
  * Created by davidleen29 on 2017/9/17.
@@ -23,6 +25,10 @@ public interface AppQuotationRepository extends JpaRepository<Quotation, Long> {
     Quotation findFirstByQNumberLikeAndFormalIsTrueOrderByQNumberDesc(String key);
 
     Quotation findFirstByQNumberEquals(String key);
+
     Quotation findFirstByQNumberEqualsAndFormalIsFalse(String key);
     Quotation findFirstByQNumberEqualsAndFormalIsTrue(String key);
+    Page<Quotation> findByQDateGreaterThanEqualAndQDateLessThanEqualAndFormalIsTrueOrderByQDateAsc(String startDate,String endDate,Pageable pageable);
+    Page<Quotation> findByQDateBetweenAndFormalIsTrueOrderByQDateAsc(String startDate,String endDate,Pageable pageable);
+    List<Quotation> findByQDateBetweenAndFormalIsTrueOrderByQDateAsc(String startDate, String endDate );
 }

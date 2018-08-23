@@ -754,6 +754,24 @@ public class Main extends BaseFrame {
             });
 
 
+        }   if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_APP_QUOTATION_SYNC)) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_APP_QUOTATION_SYNC
+            );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    AppQuotationSyncFrame frame = new AppQuotationSyncFrame();
+                    addInterFrame(frame);
+
+
+                }
+            });
+
+
         }
 
         return menu;

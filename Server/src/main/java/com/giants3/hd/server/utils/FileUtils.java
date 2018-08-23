@@ -383,6 +383,31 @@ public class FileUtils {
             IoUtils.safeClose(inputStream);
         }
 
+    }/**
+     * @param inputStream
+     * @param newFilePath
+     */
+    public static void copy(InputStream inputStream, String newFilePath) throws IOException {
+
+
+
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            FileUtils.makeDirs(newFilePath);
+            fileOutputStream = new FileOutputStream(newFilePath);
+
+            IOUtils.copy(inputStream, fileOutputStream);
+
+
+            fileOutputStream.flush();
+        } catch (Throwable  e) {
+            throw e;
+        }finally {
+            IoUtils.safeClose(fileOutputStream);
+            IoUtils.safeClose(inputStream);
+        }
+
     }
 
     public static String getMaitouFileUrl(String os_no) {
@@ -397,6 +422,19 @@ public class FileUtils {
 
 
        return   new File(maitoufilepath+os_no+".xls");
+
+
+    }
+
+    /**
+     * 缩略图的url  转换成文件路劲
+     *
+     * @param productFilePath
+     * @param thumbnailUrl 相对形式的url  api/ 卡头
+     * @return
+     */
+    public static String convertThumbnailUrlToPath(String productFilePath, String thumbnailUrl) {
+        return thumbnailUrl.replace(DOWNLOAD_PRODUCT_PATH, productFilePath).replace(URL_PATH_SEPARATOR, SEPARATOR);
 
 
     }

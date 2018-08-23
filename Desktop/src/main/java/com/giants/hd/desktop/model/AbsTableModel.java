@@ -128,6 +128,12 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel implements  
         return 50;
     }
 
+
+    @Override
+    public int[] getColumnWidth() {
+        return null;
+    }
+
     public void setDatas(List<T> newDatas) {
 
 

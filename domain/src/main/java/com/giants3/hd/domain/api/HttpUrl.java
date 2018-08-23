@@ -198,6 +198,7 @@ public class HttpUrl {
      */
     public static String loadPicture(String relativeUrl) {
 
+        if(relativeUrl==null)return "";
         if(relativeUrl.startsWith("http://"))
             return relativeUrl;
         String url = BaseUrl + relativeUrl;
@@ -1317,6 +1318,21 @@ public class HttpUrl {
     public static String printQuotation(long quotationId) {
         UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/print");
         urlFormatter.append("quotationId",quotationId);
+        return additionInfo(urlFormatter);
+    }
+
+    public static String syncAppQuotation(String urlHead, String startDate, String endDate) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/sync");
+        urlFormatter.append("urlHead", urlHead);
+        urlFormatter.append("startDate",startDate);
+        urlFormatter.append("endDate",endDate);
+        return additionInfo(urlFormatter);
+    }
+
+    public static String syncProductPicture(String remoteResource,String filterKey) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/file/syncProductPicture");
+        urlFormatter.append("remoteUrlHead", remoteResource);
+        urlFormatter.append("filterKey", filterKey);
         return additionInfo(urlFormatter);
     }
 }

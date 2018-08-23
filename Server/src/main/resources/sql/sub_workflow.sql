@@ -27,7 +27,7 @@ ON C.SO_NO=D.OSNO  collate Chinese_PRC_90_CI_AI  AND C.EST_ITM=D.ITM and A.MRP_N
 where (A.MRP_NO like :para_name or  b.NAME like  :para_name or A.ZC_NO LIKE  :para_name  or  c.SO_NO  like :para_name or  d.prd_no like :para_name     )
 
 
----------------------------这里额外增加判断 如果A07A09 ，只要胚体加工（1000） 有完成，就显示。
-and (D.PERCENTAGE>=1 or ((A.ZC_NO=upper('A07') or  A.ZC_NO=upper('A09')) and     exists(  SELECT id FROM [yunfei].[dbo].[T_eRPWORKFLOWREPORT] b where  b.WORKFLOWSTEP=1000 and b.percentage>=1 and c.SO_NO=b.osNo collate Chinese_PRC_90_CI_AI  and C.EST_ITM=b.itm)   ) )
+---------------------------这里额外增加判断 如果A07A09 ，只要胚体加工（1000） 有交接（>0），就显示。
+and (D.PERCENTAGE>=1 or ((A.ZC_NO=upper('A07') or  A.ZC_NO=upper('A09')) and     exists(  SELECT id FROM [yunfei].[dbo].[T_eRPWORKFLOWREPORT] b where  b.WORKFLOWSTEP=1000 and b.percentage>0 and c.SO_NO=b.osNo collate Chinese_PRC_90_CI_AI  and C.EST_ITM=b.itm)   ) )
 
 order by C.SO_NO DESC , C.EST_ITM ASC

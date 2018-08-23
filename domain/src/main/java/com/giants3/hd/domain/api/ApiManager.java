@@ -2163,4 +2163,19 @@ public class ApiManager {
         return remoteData;
 
     }
+
+    public RemoteData<Void> syncAppQuotation(String urlHead, String startDate, String endDate) throws HdException {
+        String url = HttpUrl.syncAppQuotation(urlHead,startDate,endDate);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
+    }
+
+    public RemoteData<Void> syncProductPicture(String remoteResource,String filterKey) throws HdException {
+        String url = HttpUrl.syncProductPicture(remoteResource,filterKey);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
+
+    }
 }

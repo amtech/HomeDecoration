@@ -75,4 +75,9 @@ public class RemoteData<T> implements Serializable{
     public boolean isSuccess() {
         return code==CODE_SUCCESS;
     }
+
+    public boolean hasNext()
+    {
+        return pageIndex<pageCount-1;
+    }
 }

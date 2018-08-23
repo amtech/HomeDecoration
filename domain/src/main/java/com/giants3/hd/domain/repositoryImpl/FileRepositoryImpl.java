@@ -56,4 +56,18 @@ public class FileRepositoryImpl extends BaseRepositoryImpl implements FileReposi
             }
         });
     }
+
+    @Override
+    public Observable<RemoteData<Void>> syncProductPicture(final String remoteResource, final String filterKey) {
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+
+
+                return apiManager.syncProductPicture(remoteResource,  filterKey);
+
+
+            }
+        });
+    }
 }

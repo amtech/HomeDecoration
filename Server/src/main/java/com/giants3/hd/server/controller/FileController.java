@@ -1,7 +1,11 @@
 package com.giants3.hd.server.controller;
 
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.Material;
+import com.giants3.hd.entity.Product;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.service.AppService;
 import com.giants3.hd.server.service.ErpPhotoService;
@@ -9,8 +13,10 @@ import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
+import com.giants3.hd.server.utils.HttpUrl;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.utils.file.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -31,6 +37,7 @@ import java.util.Calendar;
 public class FileController extends BaseController {
 
 
+    public static final String JPG = "jpg";
     @Value("${filepath}")
     private String productFilePath;
 
@@ -239,7 +246,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/product/{name}/{pVersion}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductFile(@PathVariable String name, @PathVariable String pVersion, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getProductFile(@PathVariable String name, @PathVariable String pVersion, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
 
         FileSystemResource resource = new FileSystemResource(FileUtils.getProductPicturePath(productFilePath, name, pVersion, type));
@@ -253,7 +260,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/product/thumbnail/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductThumbnailFile(@PathVariable String name , @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getProductThumbnailFile(@PathVariable String name , @RequestParam(value = "type", defaultValue = JPG) String type) {
 
         if(StringUtils.isEmpty(name)) return null;
 
@@ -292,7 +299,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/product/{name}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getProductFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getProductFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
 
         return getProductFile(name, "", type);
@@ -302,7 +309,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/workflows/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getWorkFlowPicture(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getWorkFlowPicture(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
         return    new FileSystemResource(workflowfilepath +name+"."+type);
 
@@ -320,7 +327,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/temp/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getTempFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getTempFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
 
         FileSystemResource resource = new FileSystemResource(tempFilePath + name + "." + type);
@@ -339,7 +346,7 @@ public class FileController extends BaseController {
 
     @RequestMapping(value = "/download/attach/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getAttachFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getAttachFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
 
         FileSystemResource resource = new FileSystemResource(attachfilepath +  name.replace(AttachFileUtils.FILE_SEPARATOR,File.pathSeparator) + "." + type);
@@ -357,7 +364,7 @@ public class FileController extends BaseController {
     @RequestMapping(value = "/download/material/{code}/{updateTime}", method = RequestMethod.GET)
     @ResponseBody
 
-    public FileSystemResource getMaterialFile(@PathVariable String code, @RequestParam(value = "mClass", defaultValue = "") String mClass, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource getMaterialFile(@PathVariable String code, @RequestParam(value = "mClass", defaultValue = "") String mClass, @RequestParam(value = "type", defaultValue = JPG) String type) {
 
 
         FileSystemResource resource = new FileSystemResource(FileUtils.getMaterialPicturePath(materialFilePath, code, mClass, type));
@@ -532,6 +539,105 @@ public class FileController extends BaseController {
 
 
        return new FileSystemResource(maitoufilepath + os_no +".xls");
+
+
+    }
+
+    /**
+     * 同步另外服务器的产品图片到当前服务器
+     *
+     *
+     * @return
+     */
+    @RequestMapping(value = "/syncProductPicture", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> syncProductPicture(@RequestParam("remoteUrlHead") String remoteUrlHead,@RequestParam(value = "filterKey",required = false,defaultValue = "" ) String filterKey ) {
+
+
+
+
+
+        String searchKey=filterKey;
+
+          RemoteData<Product> productRemoteData = productService.searchProductList(searchKey, 0, 100);
+
+
+
+
+        int updateCount=0;
+        int thumbnailUpdateCount=0;
+
+
+
+        while (true){
+            for (Product product : productRemoteData.datas) {
+
+                final String productPicturePath = FileUtils.getProductPicturePath(productFilePath, product.name, product.pVersion, JPG);
+                FileSystemResource resource = new FileSystemResource(productPicturePath);
+                if (!resource.exists()) {
+
+                    if (!StringUtils.isEmpty(product.url)) {
+                        String url = remoteUrlHead + product.url;
+
+                        if (downloadUrlToFilePath(url, productPicturePath)) {
+                            updateCount++;
+
+                        }
+
+
+                    }
+
+                }
+
+                if(!StringUtils.isEmpty(product.thumbnail)) {
+                    String thumbNailFilePath = FileUtils.convertThumbnailUrlToPath(productFilePath, product.thumbnail);
+                    FileSystemResource thumbNailFileResource = new FileSystemResource(thumbNailFilePath);
+
+                    if (!thumbNailFileResource.exists()) {
+                        if (ImageUtils.scalePicture(productPicturePath, thumbNailFilePath)) {
+                            thumbnailUpdateCount++;
+                        }
+                    }
+
+                }
+
+            }
+            if(productRemoteData.hasNext()) {
+                productRemoteData = productService.searchProductList(searchKey, productRemoteData.pageIndex + 1, 100);
+            }else
+            {break;}
+        }
+
+
+        return wrapMessageData("共同步"+updateCount+"款产品图片,生成"+thumbnailUpdateCount+"个缩略图=="+remoteUrlHead);
+
+
+    }
+
+
+    private boolean downloadUrlToFilePath(String url, String filePath)
+    {
+        boolean result=false;
+        Client client = new Client();
+        InputStream inputStream = null;
+        try {
+            inputStream = client.openInputStream(url);
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+
+        if(inputStream!=null)
+        {
+            try {
+                FileUtils.copy(inputStream,filePath);
+                    result=true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
 
 
     }

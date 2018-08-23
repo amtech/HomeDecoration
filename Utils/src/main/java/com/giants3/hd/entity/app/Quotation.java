@@ -98,4 +98,9 @@ public class Quotation implements Serializable {
      * 业务员email
      */
     public String email;
+
+    /**
+     * 唯一标识，不同数据库同步用。
+     */
+    public String uuid;
 }

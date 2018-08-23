@@ -140,12 +140,7 @@ public class LoginDialog extends BaseDialog<User> {
                         if("999".equals(item.code))
                         {
                             tf_password.setText("111");
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    login();
-                                }
-                            });
+
                         }
 
 

@@ -3,6 +3,7 @@ package com.giants3.hd.server.app.controller;
 
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.app.Quotation;
+import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.server.app.service.AppQuotationService;
@@ -321,4 +322,36 @@ public class AppQuotationController extends BaseController {
 
 
     }
+    @RequestMapping(value = "/sync", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> updateItemPrice(@RequestParam(value = "urlHead") String urlHead, @RequestParam(value = "startDate") String startDate, @RequestParam(value = "endDate",required = false,defaultValue = "") String endDate) {
+
+
+        return quotationService.syncData(urlHead,startDate,endDate);
+
+
+    }
+
+    /**
+     * 查找报价详细信息列表
+     * @param startDate
+     * @param endDate
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "/findDetails", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<QuotationDetail> findDetails(@RequestParam(value = "startDate") String startDate, @RequestParam(value = "endDate",required = false,defaultValue = "") String endDate, @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex, @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
+
+
+        return quotationService.findDetails(startDate,endDate,pageIndex,pageSize);
+
+
+    }
+
+
+
 }

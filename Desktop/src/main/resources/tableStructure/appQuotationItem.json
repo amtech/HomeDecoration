@@ -5,13 +5,13 @@
     "width": 120,
     "aClass": "S"
   },
-
   {
     "columnName": "图片",
     "fileName": "thumbnail",
     "width": 80,
     "aClass": "iMG"
-  }, {
+  },
+  {
     "columnName": "数量",
     "fileName": "qty",
     "width": 80,
@@ -28,23 +28,25 @@
     "fileName": "priceOrigin",
     "width": 80,
     "aClass": "S"
-
   },
   {
     "columnName": "规格",
     "fileName": "spec",
-    "width": 80,
+    "width": 120,
     "aClass": "S"
   },
-
+  {
+    "columnName": "净重",
+    "fileName": "weight",
+    "width": 40,
+    "aClass": "S"
+  },
   {
     "columnName": "单位",
     "fileName": "unit",
-    "width": 60,
+    "width": 40,
     "aClass": "S"
-
   },
-
   {
     "columnName": "箱长",
     "fileName": "boxLong",
@@ -69,11 +71,10 @@
     "width": 60,
     "aClass": "S"
   },
-
   {
     "columnName": "备注",
     "fileName": "memo",
-    "width": 200,
+    "width": 9999,
     "aClass": "S"
   }
 ]

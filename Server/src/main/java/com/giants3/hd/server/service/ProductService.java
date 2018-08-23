@@ -406,7 +406,7 @@ public class ProductService extends AbstractService implements InitializingBean,
             //    String thumbnailPath = FileUtils.getProductThumbnailFilePath(productFilePath, product);
             //   boolean thumbnailFileExist = new File(thumbnailPath).exists();
 
-            String oldThumbnailFilePath =  convertThumbnailUrlToPath(product.thumbnail);
+            String oldThumbnailFilePath =  FileUtils.convertThumbnailUrlToPath(productFilePath, product.thumbnail);
             boolean oldThumbnailFileExist = new File(oldThumbnailFilePath).exists();
             //四种情况下 更新图片路径  1 图片已经被修改。  2  新图片路径与旧路径不一致  3 缩略图未生成 4 缩略图对应图片不存在
             if (lastPhotoUpdateTime != product.lastPhotoUpdateTime || !newUrl.equals(product.url) || StringUtils.isEmpty(product.thumbnail)||!oldThumbnailFileExist  ) {
@@ -417,9 +417,17 @@ public class ProductService extends AbstractService implements InitializingBean,
 
 
                 String thumbnailUrl = FileUtils.getProductThumbnailUrl(product);
-                String thumbnailPath =  convertThumbnailUrlToPath(thumbnailUrl);
-                //構建縮略路径 保证文件夹存在
-                FileUtils.makeDirs(thumbnailPath);
+                String thumbnailPath =  FileUtils.convertThumbnailUrlToPath(productFilePath, thumbnailUrl);
+
+                if(ImageUtils.scalePicture(filePath,thumbnailPath))
+                {
+                    product.thumbnail = thumbnailUrl;
+                }else
+                {
+                    logger.error("product:" + ProductAgent.getFullName(product) + ",图片缩略图需要同步， 但是同步失败,原因：原图地址:"+ filePath+",缩略图地址："+thumbnailPath );
+
+                }
+
                 try {
 
                     byte[] bytes = ImageUtils.scaleProduct(filePath);
@@ -439,7 +447,7 @@ public class ProductService extends AbstractService implements InitializingBean,
                     }
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    logger.error("product:" + ProductAgent.getFullName(product) + ",图片需要同步， 但是同步失败,原因：" + e.getMessage());
+
                 }
 
 
@@ -467,23 +475,11 @@ public class ProductService extends AbstractService implements InitializingBean,
      */
     private void clearThumbnailFile(String thumbnailUrl) {
         if (StringUtils.isEmpty(thumbnailUrl)) return;
-        String fileName = convertThumbnailUrlToPath(thumbnailUrl);
+        String fileName = FileUtils.convertThumbnailUrlToPath(productFilePath, thumbnailUrl);
 
         File file = new File(fileName);
         if (file.exists())
             file.delete();
-
-
-    }
-
-    /**
-     * 缩略图的url  转换成文件路劲
-     *
-     * @param thumbnailUrl 相对形式的url  api/ 卡头
-     * @return
-     */
-    public String convertThumbnailUrlToPath(String thumbnailUrl) {
-        return thumbnailUrl.replace(FileUtils.DOWNLOAD_PRODUCT_PATH, productFilePath).replace(FileUtils.URL_PATH_SEPARATOR, FileUtils.SEPARATOR);
 
 
     }

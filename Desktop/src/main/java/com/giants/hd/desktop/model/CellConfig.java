@@ -7,4 +7,5 @@ public interface CellConfig{
 
         int getRowHeight();
           int getColumnWidth(int column);
+    int[] getColumnWidth();
 }

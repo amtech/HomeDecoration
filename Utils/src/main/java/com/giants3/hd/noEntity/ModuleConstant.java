@@ -149,6 +149,11 @@ public class ModuleConstant {
 
 
 
+    public static final String TITLE_APP_QUOTATION_SYNC = "广交会报价同步";
+    public static final String NAME_APP_QUOTATION_SYNC = "APP_QUOTATION_SYNC";
+
+
+
 
 
 
@@ -191,6 +196,7 @@ public class ModuleConstant {
             ,TITLE_COMPANY_INFO
             ,TITLE_APP_QUOTATION
             ,TITLE_UNHANDLE_MESSAGE_REPORT
+            ,TITLE_APP_QUOTATION_SYNC
 
 
 
@@ -234,6 +240,7 @@ public class ModuleConstant {
             ,NAME_COMPANY_INFO
             ,NAME_APP_QUOTATION
             ,NAME_UNHANDLE_MESSAGE_REPORT
+            ,NAME_APP_QUOTATION_SYNC
 
 
 

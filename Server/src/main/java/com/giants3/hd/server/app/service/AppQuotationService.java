@@ -1,27 +1,33 @@
 package com.giants3.hd.server.app.service;
 
+import com.giants3.hd.domain.api.ApiManager;
+import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.entity.Customer;
 import com.giants3.hd.entity.Product;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
+import com.giants3.hd.exception.HdException;
 import com.giants3.hd.logic.AppQuotationAnalytics;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.AbstractService;
-import com.giants3.hd.utils.DateFormats;
-import com.giants3.hd.utils.FloatHelper;
-import com.giants3.hd.utils.StringUtils;
+import com.giants3.hd.server.utils.HttpUrl;
+import com.giants3.hd.utils.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 广交会报价单
@@ -59,6 +65,7 @@ public class AppQuotationService extends AbstractService {
         quotation.saleId = user.id;
         quotation.salesman = user.toString();
         quotation.email = user.email;
+        quotation.uuid= UUID.randomUUID().toString();
         quotation = appQuotationRepository.save(quotation);
         QuotationDetail quotationDetail = new QuotationDetail();
         quotationDetail.quotation = quotation;
@@ -673,7 +680,7 @@ public class AppQuotationService extends AbstractService {
             case "qNumber":
 
 
-                final Quotation findQuotation = appQuotationRepository.findFirstByQNumberEquals(data);
+                final Quotation findQuotation = appQuotationRepository.findFirstByQNumberEqualsAndFormalIsTrue(data);
                 if(findQuotation!=null)
                 {
 
@@ -783,5 +790,135 @@ public class AppQuotationService extends AbstractService {
 
 
         return loadAQuotationDetail(quotationDetail.quotation.id);
+    }
+
+
+    /**
+     * 同步数据库数据， 同步另外一个服务器数据到当前服务器来。
+     *
+     * @param urlHead  另外一个服务器ip地址
+     * @param startDate   开始的报价单日期
+     * @param endDate       结束的报价单日期
+     */
+    public  RemoteData<Void> syncData(String urlHead,String startDate, String endDate) {
+
+
+        int pageIndex = 0;
+        int pageSize = 20;
+        String url = HttpUrl.findAppQuotationDetails(urlHead, startDate, endDate, pageIndex, pageSize);
+
+        Client client = new Client();
+        String result = null;
+        try {
+            result = client.getWithStringReturned(url);
+        } catch (HdException e) {
+            e.printStackTrace();
+        }
+
+        RemoteData<QuotationDetail> remoteData = GsonUtils.fromJson(result, new TypeToken<RemoteData<QuotationDetail>>() {
+        }.getType());
+
+//        do{}while (remoteData.)
+        for (QuotationDetail detail : remoteData.datas)
+        {
+              Quotation newQuotation = detail.quotation;
+            final Quotation quotation = appQuotationRepository.findFirstByQNumberEqualsAndFormalIsTrue(newQuotation.qNumber);
+            if(quotation!=null)
+            {
+                //标识码一致，表示已经同步过一次 ，覆盖更新处理。
+                if(newQuotation.uuid!=null&&newQuotation.uuid.equals(quotation.uuid))
+                {
+                    newQuotation.id=quotation.id;
+                    for (QuotationItem item:detail.items)
+                    {
+                        item.quotationId=quotation.id;
+                    }
+                    appQuotationRepository.save(newQuotation);
+                    appQuotationItemRepository.save(detail.items);
+
+                }
+                else
+                {//未同步过
+                    newQuotation.id=0;
+
+                    int i=0;
+                    Quotation temp=null;
+                    //遍历 查出不重复的qnumber
+                    do {
+                          i++;
+                          temp = appQuotationRepository.findFirstByQNumberEqualsAndFormalIsTrue( quotation.qNumber+"_"+i);
+
+                    }while (temp!=null);
+
+                    //修改原有的报价单的单号，兼容处理
+                    quotation.qNumber=quotation.qNumber+"_"+i;
+
+                    appQuotationRepository.save(quotation);
+
+                    newQuotation=appQuotationRepository.save(newQuotation);
+                    for (QuotationItem item:detail.items)
+                    {
+                        item.quotationId=newQuotation.id;
+                        item.id=0;
+                    }
+                    appQuotationItemRepository.save(detail.items);
+                }
+
+
+            }else
+            {
+                newQuotation.id=0;
+                newQuotation=appQuotationRepository.save(newQuotation);
+                for (QuotationItem item:detail.items)
+                {
+                    item.quotationId=newQuotation.id;
+                    item.id=0;
+                }
+                appQuotationRepository.save(newQuotation);
+                appQuotationItemRepository.save(detail.items);
+
+
+
+            }
+            appQuotationRepository.flush();
+            appQuotationItemRepository.flush();
+        }
+
+
+
+
+
+        return wrapData();
+
+
+    }
+
+    /**
+     * 查询广交会报价单
+     * @param startDate
+     * @param endDate
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public RemoteData<QuotationDetail> findDetails(String startDate, String endDate, int pageIndex, int pageSize) {
+
+
+        final Pageable pageable = constructPageSpecification(pageIndex, pageSize,sortByParam(Sort.Direction.ASC,"qDate"));
+        Page<Quotation> quotations=appQuotationRepository.findByQDateGreaterThanEqualAndQDateLessThanEqualAndFormalIsTrueOrderByQDateAsc(startDate,endDate,pageable);
+
+        List<QuotationDetail> quotationDetails=new ArrayList<>();
+        for (Quotation quotation:quotations)
+        {
+            QuotationDetail quotationDetail=new QuotationDetail();
+            quotationDetail.quotation=quotation;
+            quotationDetail.items=appQuotationItemRepository.findByQuotationIdEqualsOrderByItmAsc(quotation.id);
+            quotationDetails.add(quotationDetail);
+        }
+
+
+        return wrapData(pageIndex,pageSize,quotations.getTotalPages(),(int)quotations.getTotalElements(),quotationDetails);
+
+
     }
 }

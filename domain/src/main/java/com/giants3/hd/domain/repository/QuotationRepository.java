@@ -38,4 +38,6 @@ public interface QuotationRepository {
     Observable deleteAppQuotation(long quotationId);
 
     Observable printQuotationToFile(long quotationId, String filePath);
+
+    Observable syncAppQuotation(String urlHead, String startDate, String endDate);
 }

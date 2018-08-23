@@ -263,6 +263,7 @@ public abstract class BaseTableModel<T> extends AbsTableModel<T> {
      *
      * @return
      */
+    @Override
     public int[] getColumnWidth() {
         return null;
     }

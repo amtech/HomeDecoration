@@ -12,6 +12,7 @@ public class ConstantData {
 
 
     public static final String DES_KEY = "d5b417051ca087f5a068f93b4769f654";
+    public static final Object CLIENT_SERVER = "SERVER";
 
 
     /**

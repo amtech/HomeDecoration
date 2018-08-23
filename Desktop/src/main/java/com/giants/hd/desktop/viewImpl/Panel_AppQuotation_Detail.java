@@ -224,6 +224,8 @@ public class Panel_AppQuotation_Detail extends BasePanel implements AppQuotation
                 salesmanItenListener
 
         );
+
+        cb_salesman.setEnabled(CacheManager.getInstance().bufferData.loginUser.isAdmin());
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
