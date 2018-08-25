@@ -568,7 +568,7 @@ public class FileController extends BaseController {
         int updateCount=0;
         int thumbnailUpdateCount=0;
 
-
+        ApiManager apiManager=new ApiManager();
 
         while (true){
             for (Product product : productRemoteData.datas) {
@@ -580,7 +580,7 @@ public class FileController extends BaseController {
                     if (!StringUtils.isEmpty(product.url)) {
                         String url = remoteUrlHead + product.url;
 
-                        if (downloadUrlToFilePath(url, productPicturePath)) {
+                        if (apiManager.downloadUrlToFilePath(url, productPicturePath)) {
                             updateCount++;
 
                         }
@@ -609,37 +609,12 @@ public class FileController extends BaseController {
             {break;}
         }
 
-
-        return wrapMessageData("共同步"+updateCount+"款产品图片,生成"+thumbnailUpdateCount+"个缩略图=="+remoteUrlHead);
-
-
-    }
-
-
-    private boolean downloadUrlToFilePath(String url, String filePath)
-    {
-        boolean result=false;
-        Client client = new Client();
-        InputStream inputStream = null;
-        try {
-            inputStream = client.openInputStream(url);
-        } catch (HdException e) {
-            e.printStackTrace();
-        }
-
-        if(inputStream!=null)
-        {
-            try {
-                FileUtils.copy(inputStream,filePath);
-                    result=true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return result;
+        apiManager.close();
+        return wrapMessageData("共检查"+productRemoteData.totalCount+"产品，同步"+updateCount+"款图片,生成"+thumbnailUpdateCount+"个缩略图=="+remoteUrlHead);
 
 
     }
+
+
 
 }
