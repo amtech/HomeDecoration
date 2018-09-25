@@ -5,9 +5,9 @@ import com.giants3.hd.utils.StringUtils;
 /**
  * Created by davidleen29 on 2018/2/17.
  */
-public class PictureUrl {
+public class ResourceUrl {
 
-      public  static     String BaseUrl="http://fzyunfei.f3322.net:8079/Server/";
+      private  static     String BaseUrl="http://fzyunfei.f3322.net:8079/Server/";
 
     //private static String BaseUrl = "http://127.0.0.1:8080/";
     public static final String completeUrl(String url)

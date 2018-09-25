@@ -29,7 +29,7 @@ public  abstract  class AbstractService implements InitializingBean, DisposableB
     }
     /**
      * 构造分页数据
-     * @param pageIndex
+     * @param pageIndex 从0开始
      * @param pageSize
      * @return
      */

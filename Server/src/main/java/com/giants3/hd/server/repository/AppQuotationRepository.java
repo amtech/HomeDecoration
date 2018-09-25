@@ -5,10 +5,12 @@ import com.giants3.hd.entity.app.Quotation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 广交会报价单
@@ -31,4 +33,9 @@ public interface AppQuotationRepository extends JpaRepository<Quotation, Long> {
     Page<Quotation> findByQDateGreaterThanEqualAndQDateLessThanEqualAndFormalIsTrueOrderByQDateAsc(String startDate,String endDate,Pageable pageable);
     Page<Quotation> findByQDateBetweenAndFormalIsTrueOrderByQDateAsc(String startDate,String endDate,Pageable pageable);
     List<Quotation> findByQDateBetweenAndFormalIsTrueOrderByQDateAsc(String startDate, String endDate );
+    @Modifying
+    @Query("update T_AppQuotation p set   p.customerId=:newCustomerId    WHERE p.customerId =   :oldCustomerId ")
+     void replaceCustomerId( @Param("newCustomerId") long newCustomerId,  @Param("oldCustomerId") long oldCustomerId);
+
+
 }

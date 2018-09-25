@@ -22,6 +22,10 @@ import java.util.List;
 public  abstract  class AbsTableModel<T> extends AbstractTableModel implements  CellConfig{
 
 
+
+
+
+
     private static final ImageIcon EMPTY_IMAGE_VALUE = new ImageIcon(new byte[0]);
     private static final ImageIcon LOADING_IMAGE_VALUE = new ImageIcon(AbsTableModel.class.getClassLoader().getResource("icons/loading.png"));
     protected List<T> datas;
@@ -209,34 +213,28 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel implements  
             obj=data;
             for(String field:fields)
             {
-                try {
-                    obj= obj.getClass().getField(field).get(obj);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
+                obj=getFieldData(obj,field);
             }
 
         }else {
 
             //单字段处理
             final Field field = getField(columnIndex);
-            if (field == null)
-                return null;
-
-
-
-            try {
-                obj = field.get(data);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }catch (Throwable t)
+            if (field != null) {
+                try {
+                    obj = field.get(data);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }else
             {
-                t.printStackTrace();
+                obj=getFieldData(data,currentFieldName);
+
             }
         }
-
+        if(obj  ==null) return null;
 
         //数字为0  显示空字符串
         if (obj instanceof Number) {
@@ -264,6 +262,25 @@ public  abstract  class AbsTableModel<T> extends AbstractTableModel implements  
     }
 
 
+    /**
+     * 从数据中读取指定字段的值
+     * @param data
+     * @param fieldName
+     * @return
+     */
+    protected Object getFieldData(Object data, String fieldName )
+    {
+        Object result = null;
+        try {
+            result=   data.getClass().getField(fieldName).get(data);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
 
 

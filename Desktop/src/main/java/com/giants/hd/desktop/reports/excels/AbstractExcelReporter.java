@@ -29,11 +29,8 @@ public abstract class AbstractExcelReporter<T> {
 
     }
 
-    public void report(T data, String fileOutputDirectory) throws IOException, HdException {
-
-
-    }
-
+    public   void report(T data, String fileOutputDirectory) throws IOException, HdException
+    {}
 
 
     /**
@@ -117,6 +114,15 @@ public abstract class AbstractExcelReporter<T> {
     protected void addString(Sheet sheet, String value, int column, int rowUpdate) {
         Cell cell = getRow(sheet,rowUpdate).getCell(column, Row.CREATE_NULL_AS_BLANK);
         cell.setCellValue(value);
+
+    }
+    protected void setColumnWidth(Sheet sheet,   int column, int width) {
+
+        try {
+            sheet.setColumnWidth(column,width);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

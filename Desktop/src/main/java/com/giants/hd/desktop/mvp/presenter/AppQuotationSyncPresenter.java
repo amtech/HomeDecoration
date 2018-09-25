@@ -13,4 +13,6 @@ public interface AppQuotationSyncPresenter extends IPresenter {
     void beginAsync(String urlHead, String startDate, String endDate);
 
     void beginAsyncPicture(String remoteResource,String filterKey);
+
+    void initData();
 }

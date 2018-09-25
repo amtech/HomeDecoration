@@ -14,6 +14,8 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
 
 
 
+    int rowHeight;
+
     List<TableField> tableFields;
 
     List<Field> fields;
@@ -63,7 +65,8 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
             try {
                 field = itemClass.getField(tableField.fileName);
 
-            } catch (NoSuchFieldException e) {
+            } catch (Throwable e) {
+                e.printStackTrace();
                 Logger.getLogger("TEST").info(tableField.fileName + " is not a field of class :" + itemClass);
 
             }
@@ -134,6 +137,11 @@ public class BaseListTableModel<T> extends AbsTableModel<T> {
     @Override
     public int getRowHeight() {
 
+        if(rowHeight>0) return rowHeight;
         return 50;
+    }
+    public void setRowHeight(int newRowHeight)
+    {
+        this.rowHeight=newRowHeight;
     }
 }

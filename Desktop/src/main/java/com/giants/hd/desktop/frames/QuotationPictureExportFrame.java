@@ -46,10 +46,10 @@ public class QuotationPictureExportFrame extends BaseMVPFrame<QuotationPictureEx
 
 
     @Override
-    public void searchProduct(String key) {
+    public void searchProduct(String key,boolean includeCopy) {
 
 
-        UseCaseFactory.getInstance().createProductByNameRandom(key, true).execute(new RemoteDataSubscriber<Product>(getViewer()) {
+        UseCaseFactory.getInstance().createProductByNameRandom(key, includeCopy).execute(new RemoteDataSubscriber<Product>(getViewer()) {
 
 
             @Override

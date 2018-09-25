@@ -61,4 +61,11 @@ public class TableStructureUtils {
     public static List<TableField> getAppQuotationItem() {
         return fromJson("appQuotationItem.json");
     }
+
+    public static List<TableField> getAppQuoteCountReport() {
+
+
+        return fromJson("appQuotationCountReport.json");
+
+    }
 }

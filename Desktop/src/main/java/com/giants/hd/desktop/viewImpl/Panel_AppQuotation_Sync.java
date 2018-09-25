@@ -24,6 +24,7 @@ public class Panel_AppQuotation_Sync extends BasePanel implements AppQuotationSy
     private JButton syncPicture;
     private JTextField remoteResourceText;
     private JTextField tf_filter;
+    private JButton btn_init;
 
 
     public Panel_AppQuotation_Sync(final AppQuotationSyncPresenter presenter) {
@@ -37,6 +38,14 @@ public class Panel_AppQuotation_Sync extends BasePanel implements AppQuotationSy
                 String ip= tf_url.getText().trim();
 
                 presenter.beginAsync(ip, startDate.getJFormattedTextField().getText(), endDate.getJFormattedTextField().getText());
+            }
+        }); btn_init.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                presenter.initData( );
             }
         });
 

@@ -2,8 +2,7 @@ package com.giants3.hd.server.controller;
 
 import com.giants3.hd.entity.GlobalData;
 import com.giants3.hd.server.service.*;
-import com.giants3.hd.server.service_third.PushService;
-import com.giants3.report.PictureUrl;
+import com.giants3.report.ResourceUrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +28,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     AuthorityService authorityService;
 
-    @Autowired
-    PushService pushService;
+
     @Autowired
     SettingService settingService;
 
@@ -41,6 +39,7 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
     TableRestoreService tableRestoreService;
     @Autowired
     UserService userService;
+
     @Autowired
     ScheduleService scheduleService;
 
@@ -62,8 +61,8 @@ public class InitData implements ApplicationListener<ContextRefreshedEvent> {
 
             final String applicationName = event.getApplicationContext().getApplicationName();
 
-//            PictureUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
-            PictureUrl.setBaseUrl(PICTURE_BASE_URL);
+//            ResourceUrl.setBaseUrl("http://127.0.0.1/" + applicationName + "/");
+            ResourceUrl.setBaseUrl(PICTURE_BASE_URL);
 
 //
 //            if(true)

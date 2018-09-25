@@ -1,6 +1,5 @@
 package com.giants3.hd.server.app.service;
 
-import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.entity.Customer;
 import com.giants3.hd.entity.Product;
@@ -15,7 +14,6 @@ import com.giants3.hd.server.repository.*;
 import com.giants3.hd.server.service.AbstractService;
 import com.giants3.hd.server.utils.HttpUrl;
 import com.giants3.hd.utils.*;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,10 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 广交会报价单
@@ -36,6 +31,9 @@ import java.util.UUID;
 @Service
 public class AppQuotationService extends AbstractService {
 
+
+    @Autowired
+    MapRepository mapRepository;
 
     @Autowired
     private AppQuotationItemRepository appQuotationItemRepository;
@@ -467,13 +465,13 @@ public class AppQuotationService extends AbstractService {
 
         Quotation maxQuotation = appQuotationRepository.findFirstByQNumberLikeAndFormalIsTrueOrderByQNumberDesc(StringUtils.sqlRightLike(today));
         if (maxQuotation == null || maxQuotation.qNumber.length() < 8 || !today.equals(maxQuotation.qNumber.substring(0, 8))) {
-            qNumber = today + "000001";
+            qNumber = today + "0001";
         } else {
             try {
                 final int integer = Integer.valueOf(maxQuotation.qNumber.substring(8));
 
-                for (int i =1; i <100000 ; i++) {
-                      qNumber=  today + String.valueOf(integer + 100000+i).substring(1);
+                for (int i =1; i <10000 ; i++) {
+                      qNumber=  today + String.valueOf(integer + 10000+i).substring(1);
                     if(appQuotationRepository.findFirstByQNumberEquals(qNumber)==null)
                     {break;}
                 }
@@ -803,17 +801,37 @@ public class AppQuotationService extends AbstractService {
     public  RemoteData<Void> syncData(String urlHead,String startDate, String endDate) {
 
 
+        try {
+            synchronizedAppQuotationFromRemote(urlHead, startDate, endDate);
+            synchronizedCustomerFromRemote(urlHead);
+            return wrapData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return wrapError(e.getMessage());
+        }
+
+
+
+
+
+    }
+
+    /**
+     * 同步报价数据
+     * @param urlHead
+     * @param startDate
+     * @param endDate
+     */
+    private void synchronizedAppQuotationFromRemote(String urlHead, String startDate, String endDate) throws HdException {
         int pageIndex = 0;
         int pageSize = 20;
         String url = HttpUrl.findAppQuotationDetails(urlHead, startDate, endDate, pageIndex, pageSize);
 
         Client client = new Client();
         String result = null;
-        try {
+
             result = client.getWithStringReturned(url);
-        } catch (HdException e) {
-            e.printStackTrace();
-        }
+
 
         RemoteData<QuotationDetail> remoteData = GsonUtils.fromJson(result, new TypeToken<RemoteData<QuotationDetail>>() {
         }.getType());
@@ -883,14 +901,54 @@ public class AppQuotationService extends AbstractService {
             appQuotationRepository.flush();
             appQuotationItemRepository.flush();
         }
+    }
+
+    /**
+     * 同步客户信息
+     * @param urlHead
+     */
+    private void synchronizedCustomerFromRemote(String urlHead ) throws HdException {
+
+        String url = HttpUrl.findCustomer(urlHead );
+
+        Client client = new Client();
+        String result = null;
+        result = client.getWithStringReturned(url);
+        RemoteData<Customer> remoteData = GsonUtils.fromJson(result, new TypeToken<RemoteData<Customer>>() {
+        }.getType());
+
+        List<Customer> datas = remoteData.datas;
+        final int size = datas.size();
+        for (int i = 0; i < size; i++) {
+            Customer customer = datas.get(i);
+            Customer oldCustomer = customerRepository.findFirstByCodeEquals(customer.code);
+            long currentCustomerId = customer.id;
+            if (oldCustomer == null) {
+                customer.id = 0;
+                Customer newCustomer = customerRepository.save(customer);
+                appQuotationRepository.replaceCustomerId(newCustomer.id, currentCustomerId);
+
+            } else {
+                if (!oldCustomer.equals(customer)) {
+
+                    customer.id = oldCustomer.id;
+                    customerRepository.save(customer);
+                    appQuotationRepository.replaceCustomerId(customer.id, currentCustomerId);
+                }
 
 
+            }
+
+            if((i+1)%20==0) {
+                appQuotationRepository.flush();
+                customerRepository.flush();
+            }
 
 
+        }
 
-        return wrapData();
-
-
+        appQuotationRepository.flush();
+        customerRepository.flush();
     }
 
     /**
@@ -918,6 +976,17 @@ public class AppQuotationService extends AbstractService {
 
 
         return wrapData(pageIndex,pageSize,quotations.getTotalPages(),(int)quotations.getTotalElements(),quotationDetails);
+
+
+    }
+
+    public RemoteData<Map> reportQuoteCount(String startDate, String endDate) {
+
+
+
+        List<Map> result=mapRepository.reportQuoteCount(startDate,endDate );
+
+        return wrapData(result);
 
 
     }

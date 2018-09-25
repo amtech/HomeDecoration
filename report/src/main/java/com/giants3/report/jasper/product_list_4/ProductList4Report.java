@@ -1,7 +1,7 @@
 package com.giants3.report.jasper.product_list_4;
 
 import com.giants3.hd.entity.Product;
-import com.giants3.report.PictureUrl;
+import com.giants3.report.ResourceUrl;
 import com.giants3.report.jasper.JRReport;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -32,13 +32,13 @@ public class ProductList4Report extends JRReport {
 
             int index = i;
 
-            data.url = PictureUrl.completeUrl(products.get(index).url);
+            data.url = ResourceUrl.completeUrl(products.get(index).url);
             data.name = products.get(index).name;
             data.unit = products.get(index).pUnitName;
 
             int index1 = i + 1;
             if (index1 < size) {
-                data.url1 = PictureUrl.completeUrl(products.get(index1).url);
+                data.url1 = ResourceUrl.completeUrl(products.get(index1).url);
                 data.name1 = products.get(index1).name;
                 data.unit1 = products.get(index1).pUnitName;
             }

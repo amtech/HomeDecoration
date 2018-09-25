@@ -122,7 +122,7 @@ public class Panel_Quotation_Picture_Export extends BasePanel implements Quotati
     private JTextField tf_key;
     private JButton search;
     private JButton export;
-
+    private JCheckBox includeCopy;
 
 
     private void startSearch()
@@ -132,7 +132,8 @@ public class Panel_Quotation_Picture_Export extends BasePanel implements Quotati
             showMesssage("请输入货号");
             return;
         }
-        presenter.searchProduct(key);
+
+        presenter.searchProduct(key,includeCopy.isSelected());
     }
     /**
      * 获取实际控件

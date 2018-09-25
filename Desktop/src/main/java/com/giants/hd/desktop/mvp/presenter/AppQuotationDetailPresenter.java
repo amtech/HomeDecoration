@@ -45,4 +45,8 @@ public interface AppQuotationDetailPresenter extends IPresenter {
     void updateItemPrice(int itemIndex, float newValue);
 
     void updateItemQty(int itemIndex, int newQty);
+
+    void updateItemMemo(int itemIndex, String newValue);
+
+    void viewProduct(long productId);
 }

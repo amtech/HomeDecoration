@@ -51,6 +51,7 @@ public class ApiManager {
 //        }.getType();
         //gson 解析类型处理。
 //        generateType=  new MoreTypes.ParameterizedTypeImpl(null,RemoteData.class,new Type[]{aClass});
+
         generateType=  new RemoteDateParameterizedType( aClass);
        ;
 
@@ -2176,6 +2177,24 @@ public class ApiManager {
         String result = client.getWithStringReturned(url);
         RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
         return remoteData;
+
+    }
+
+    public RemoteData<Void> initGjhData() throws HdException {
+        String url = HttpUrl.initGjhData( );
+        String result = client.getWithStringReturned(url);
+        RemoteData<Void> remoteData = invokeByReflect(result, Void.class);
+        return remoteData;
+
+    }
+
+    public RemoteData<Map> getAppQuoteCountReport(String startDate, String endDate) throws HdException {
+
+        String url = HttpUrl.getAppQuoteCountReport(startDate, endDate);
+        String result = client.getWithStringReturned(url);
+        RemoteData<Map> remoteData = invokeByReflect(result, Map.class);
+        return remoteData;
+
 
     }
 }

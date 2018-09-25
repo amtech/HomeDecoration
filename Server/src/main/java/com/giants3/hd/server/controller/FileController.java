@@ -1,19 +1,18 @@
 package com.giants3.hd.server.controller;
 
 import com.giants3.hd.domain.api.ApiManager;
-import com.giants3.hd.domain.api.Client;
 import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.Material;
 import com.giants3.hd.entity.Product;
-import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.NameCard;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.service.AppService;
 import com.giants3.hd.server.service.ErpPhotoService;
 import com.giants3.hd.server.service.MaterialService;
 import com.giants3.hd.server.service.ProductService;
+import com.giants3.hd.server.service_third.NameCardService;
 import com.giants3.hd.server.utils.AttachFileUtils;
 import com.giants3.hd.server.utils.FileUtils;
-import com.giants3.hd.server.utils.HttpUrl;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.StringUtils;
 import com.giants3.hd.utils.file.ImageUtils;
@@ -38,6 +37,8 @@ public class FileController extends BaseController {
 
 
     public static final String JPG = "jpg";
+    @Value("${rootpath}")
+    private String rootpath;
     @Value("${filepath}")
     private String productFilePath;
 
@@ -58,8 +59,8 @@ public class FileController extends BaseController {
     private String materialFilePath;
     @Value("${quotationfilepath}")
     private String quotationfilepath;
-    @Value("${workflowfilepath}")
-    private String workflowfilepath;
+
+
 
     @Value("${appfilepath}")
     private String appFilePath;
@@ -74,6 +75,8 @@ public class FileController extends BaseController {
     MaterialService materialService;
     @Autowired
     ErpPhotoService erpPhotoService;
+    @Autowired
+    NameCardService nameCardService;
 
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
@@ -307,34 +310,22 @@ public class FileController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/download/workflows/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/{category}/{name:.+}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getWorkFlowPicture(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
+    public FileSystemResource downloadCategoryFile(@PathVariable String category,@PathVariable(value = "name") String fileName ) {
 
-        return    new FileSystemResource(workflowfilepath +name+"."+type);
-
+//        switch (category)
+//        {
+//            case "workflows":
+//                return    new FileSystemResource(workflowfilepath +fileName);
+//            default:
+                return new FileSystemResource(rootpath+category+File.separator +fileName);
+//        }
 
     }
 
 
-    /**
-     * 读取临时文件
-     *
-     * @param name
-     * @param type
-     * @return
-     */
 
-    @RequestMapping(value = "/download/temp/{name}", method = RequestMethod.GET)
-    @ResponseBody
-    public FileSystemResource getTempFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = JPG) String type) {
-
-
-        FileSystemResource resource = new FileSystemResource(tempFilePath + name + "." + type);
-        //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
-
-        return resource;
-    }
 
     /**
      * 读取附件文件
@@ -616,5 +607,22 @@ public class FileController extends BaseController {
     }
 
 
+    /**
+     * 嘜頭文件上传
+     *
+     *
+     * @return
+     */
+    @RequestMapping(value = "/download/namecard/test", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<NameCard> tesNameCard(  ) {
 
+
+        String filePath="D:\\hd\\namecards\\2222.jpg";
+        return nameCardService.requestScanNameCard(filePath);
+
+
+
+    }
 }

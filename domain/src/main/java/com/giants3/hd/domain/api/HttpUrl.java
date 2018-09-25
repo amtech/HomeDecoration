@@ -1335,4 +1335,16 @@ public class HttpUrl {
         urlFormatter.append("filterKey", filterKey);
         return additionInfo(urlFormatter);
     }
+
+    public static String initGjhData() {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/gjh_init");
+        return additionInfo(urlFormatter);
+    }
+
+    public static String getAppQuoteCountReport(String startDate,String endDate) {
+        UrlFormatter urlFormatter = new UrlFormatter(BaseUrl + "/api/app/quotation/reportQuoteCount")
+                .append("startDate",startDate)
+                .append("endDate",endDate);
+        return additionInfo(urlFormatter);
+    }
 }

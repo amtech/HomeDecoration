@@ -1,17 +1,27 @@
 package com.giants3.hd.server.service;
 
 import com.giants3.hd.entity.Customer;
+import com.giants3.hd.entity.User;
 import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.NameCard;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.repository.CustomerRepository;
 import com.giants3.hd.server.repository.QuotationRepository;
+import com.giants3.hd.server.service_third.NameCardService;
+import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -21,6 +31,16 @@ import java.util.List;
 @Service
 public class CustomerService extends AbstractService {
 
+
+    public static final String CATEGORY="namecards";
+    @Value("${rootpath}")
+    private String rootpath;
+
+    @Value("${rootUrl}")
+    private String rootUrl;
+
+    @Autowired
+    NameCardService nameCardService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -181,5 +201,92 @@ public class CustomerService extends AbstractService {
 
 
         return wrapData(customer);
+    }
+
+    public RemoteData<String> newCustomerCode() {
+
+
+        String result="";
+        Pageable pageable=constructPageSpecification(0,1);
+
+      Page< Customer> customers= customerRepository.findFirstOrderByCodeDesc(pageable);
+        Customer customer=customers.getTotalElements()>0?customers.getContent().get(0):null;
+        if(customer==null)
+        {
+            result="1";
+
+        }else
+        {
+            int intValue=Integer.valueOf(customer.code);
+            result=String.valueOf(intValue+1);
+
+        }
+
+        return wrapData(result);
+
+    }
+
+    public RemoteData<NameCard> scanNameCard(User user, MultipartFile[] files) {
+
+        if(files==null||files.length!=1) return wrapError("名片文件数量有错:"+files==null?"null":String.valueOf(files.length));
+        MultipartFile file=files[0];
+
+
+
+
+            String fileName = Calendar.getInstance().getTimeInMillis() +"_"+   FileUtils.SUFFIX_JPG;
+            final String absoluteFilePath =FileUtils.combinePath(rootpath,CATEGORY,fileName)  ;
+            String url = null;
+            try {
+                FileUtils.copy(file, absoluteFilePath);
+                url = FileUtils.combineUrl(rootUrl,CATEGORY,fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+
+                logger.error(e.getMessage());
+                final RemoteData<NameCard> nameCardRemoteData = wrapError(e.getMessage());
+                final NameCard failCard = new NameCard();
+                failCard.pictureUrl=url;
+                nameCardRemoteData.datas.add(failCard);
+                return nameCardRemoteData;
+
+            }
+
+
+        final RemoteData<NameCard> nameCardRemoteData = nameCardService.requestScanNameCard(absoluteFilePath );
+
+        if(nameCardRemoteData.isSuccess())
+        {
+            nameCardRemoteData.datas.get(0).pictureUrl=url;
+        }
+
+
+
+
+
+        return nameCardRemoteData;
+//        final RemoteData<NameCard> nameCardRemoteData = wrapError("测试错误");
+//        final NameCard failCard = new NameCard();
+//        failCard.pictureUrl=url;
+//        nameCardRemoteData.datas.add(failCard);
+//        return nameCardRemoteData;
+
+
+
+    }
+
+    public RemoteData<NameCard> scanResourceUrl(User user, String resourceUrl) {
+
+
+        String absoluteFilePath= FileUtils.convertUrlToPath(rootpath,resourceUrl);
+        final RemoteData<NameCard> nameCardRemoteData = nameCardService.requestScanNameCard(absoluteFilePath );
+//
+        if(nameCardRemoteData.isSuccess())
+        {
+            nameCardRemoteData.datas.get(0).pictureUrl=resourceUrl;
+        }
+
+        return nameCardRemoteData;
+
     }
 }

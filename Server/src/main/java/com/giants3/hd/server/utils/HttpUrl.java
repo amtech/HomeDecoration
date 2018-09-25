@@ -39,5 +39,14 @@ public class HttpUrl {
         return HttpUrl.additionInfo(urlFormatter);
 
 
+    }public static String findCustomer(String urlHead) {
+
+
+
+
+        UrlFormatter urlFormatter = new UrlFormatter(urlHead+"/api/customer/list");
+        return HttpUrl.additionInfo(urlFormatter);
+
+
     }
 }

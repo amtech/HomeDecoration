@@ -422,6 +422,17 @@ public class StringUtils {
 
         return SQL_LIKE + s.trim();
 
+    } /**
+     * 数据库查询  模糊处理
+     *
+     * @param s
+     * @return
+     */
+    public static String sqlQuoteString(Object s) {
+
+
+        return "'" + s +"'";
+
     }
 
     /**

@@ -13,13 +13,13 @@ import com.giants.hd.desktop.widget.BackgroundPainter;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
-import com.giants3.hd.noEntity.ModuleConstant;
-import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.entity.AppVersion;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.noEntity.BufferData;
-import com.giants3.report.PictureUrl;
+import com.giants3.hd.noEntity.ModuleConstant;
+import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.report.ResourceUrl;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 
@@ -77,7 +77,7 @@ public class Main extends BaseFrame {
 
         if (null != baseUrl) {
             HttpUrl.iniBaseUrl(baseUrl);
-            PictureUrl.setBaseUrl(baseUrl);
+            ResourceUrl.setBaseUrl(baseUrl.replace("Server","Resource"));
         }
 
 
@@ -261,8 +261,6 @@ public class Main extends BaseFrame {
             menuBar.add(createQuotation());
 
 
-
-
         if (AuthorityUtil.getInstance().viewOrderMenu())
             menuBar.add(createOrder());
 
@@ -387,10 +385,6 @@ public class Main extends BaseFrame {
         }
 
 
-
-
-
-
         if (AuthorityUtil.getInstance().viewZhilingdan()) {
 
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_ZHILINGDAN);
@@ -409,16 +403,12 @@ public class Main extends BaseFrame {
 
         }
 
-        if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_UNHANDLE_MESSAGE_REPORT))
-        {
+        if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_UNHANDLE_MESSAGE_REPORT)) {
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_UNHANDLE_MESSAGE_REPORT);
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-
-
 
 
                     WorkFlowMessageReportFrame frame = new WorkFlowMessageReportFrame();
@@ -734,8 +724,6 @@ public class Main extends BaseFrame {
         }
 
 
-
-
         if (AuthorityUtil.getInstance().viewAppQuotationList()) {
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_APP_QUOTATION
             );
@@ -754,7 +742,8 @@ public class Main extends BaseFrame {
             });
 
 
-        }   if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_APP_QUOTATION_SYNC)) {
+        }
+        if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_APP_QUOTATION_SYNC)) {
             JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_APP_QUOTATION_SYNC
             );
 
@@ -773,13 +762,30 @@ public class Main extends BaseFrame {
 
 
         }
+        if (AuthorityUtil.getInstance().isViewable(ModuleConstant.NAME_APP_QUOTATION_REPORT)) {
+            JMenuItem menuItem = new JMenuItem(ModuleConstant.TITLE_APP_QUOTATION_REPORT
+            );
+
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    AppQuotationReportFrame frame = new AppQuotationReportFrame();
+                    addInterFrame(frame);
+
+
+                }
+            });
+
+
+        }
 
         return menu;
 
 
     }
-
-
 
 
     /**

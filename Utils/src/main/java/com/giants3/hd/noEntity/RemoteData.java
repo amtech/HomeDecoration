@@ -80,4 +80,18 @@ public class RemoteData<T> implements Serializable{
     {
         return pageIndex<pageCount-1;
     }
+
+    public RemoteData(RemoteData remoteData)
+    {
+
+        this.pageIndex=remoteData.pageIndex;
+        this.pageCount=remoteData.pageCount;
+        this.pageSize=remoteData.pageSize;
+        this.token=remoteData.token;
+        this.newVersionCode=remoteData.newVersionCode;
+        this.newVersionName=remoteData.newVersionName;
+        this.code=remoteData.code;
+        this.message=remoteData.message;
+        datas=new ArrayList<>();
+    }
 }

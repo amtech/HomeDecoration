@@ -7,7 +7,7 @@ import com.giants3.hd.server.app.service.AppQuotationService;
 import com.giants3.hd.server.repository.CompanyRepository;
 import com.giants3.hd.server.utils.FileUtils;
 import com.giants3.hd.utils.GsonUtils;
-import com.giants3.report.PictureUrl;
+import com.giants3.report.ResourceUrl;
 import com.giants3.report.jasper.quotation.AppQuotationPdfReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +64,7 @@ public class ReportService extends AbstractService {
 
 
         for (QuotationItem item : copy.items) {
-            item.thumbnail = PictureUrl.completeUrl(item.thumbnail);
+            item.thumbnail = ResourceUrl.completeUrl(item.thumbnail);
         }
 
 

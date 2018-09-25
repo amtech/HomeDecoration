@@ -10,6 +10,7 @@ import com.giants3.hd.server.app.service.AppQuotationService;
 import com.giants3.hd.server.controller.BaseController;
 import com.giants3.hd.server.repository.ProductRepository;
 import com.giants3.hd.server.service.ReportService;
+import com.giants3.hd.server.service.TableRestoreService;
 import com.giants3.hd.server.utils.Constraints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * 报价
@@ -28,11 +30,12 @@ public class AppQuotationController extends BaseController {
 
 
     @Autowired
+    private TableRestoreService tableRestoreService;
+    @Autowired
     private AppQuotationService quotationService;
     @Autowired
     private ReportService reportService;
-    @Autowired
-    private ProductRepository productRepository;
+
 
 
     @Value("${deleteQuotationFilePath}")
@@ -333,6 +336,21 @@ public class AppQuotationController extends BaseController {
 
     }
 
+
+    /**
+     * 区间报价次数统计
+     * @return
+     */
+    @RequestMapping(value = "/reportQuoteCount", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Map> reportQuoteCount(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user,@RequestParam(value = "startDate") String startDate, @RequestParam(value = "endDate",required = false,defaultValue = "") String endDate ) {
+
+
+        return quotationService.reportQuoteCount(startDate,endDate);
+
+    }
+
     /**
      * 查找报价详细信息列表
      * @param startDate
@@ -351,6 +369,32 @@ public class AppQuotationController extends BaseController {
 
 
     }
+    /**
+     * 初始化广交会相关数据
+     * @return
+     */
+    @RequestMapping(value = "/gjh_init", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<Void> gjh_init(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user ) {
+
+        if(!user.isAdmin())
+        {
+            return wrapError("非系统管理员，没有权限");
+        }
+
+        try {
+            tableRestoreService.restoreGJHTableData();
+            return wrapData();
+        } catch (Throwable  e) {
+            e.printStackTrace();
+            return wrapError(e.getMessage());
+        }
+
+
+    }
+
+
 
 
 

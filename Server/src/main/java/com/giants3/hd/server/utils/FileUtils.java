@@ -438,4 +438,21 @@ public class FileUtils {
 
 
     }
+
+    /**
+     * 合成路径
+     * @param prePath
+     * @param category
+     * @param fileName
+     */
+    public static String combinePath(String prePath, String category, String fileName) {
+        return  prePath+ File.separator+category +File.separator+ fileName;
+    } public static String combineUrl(String prePath, String category, String fileName) {
+        return  prePath+ "/"+category +"/"+ fileName;
+    }
+
+    public static String convertUrlToPath(String rootPath,String url)
+    {
+        return rootPath+url.replace(DOWNLOAD_PATH,"").replace("/",File.separator);
+    }
 }

@@ -7,6 +7,7 @@ import com.giants.hd.desktop.model.ProductTableModel;
 import com.giants.hd.desktop.mvp.RemoteDataSubscriber;
 import com.giants.hd.desktop.mvp.presenter.AppQuotationDetailPresenter;
 import com.giants.hd.desktop.mvp.viewer.AppQuotationDetailViewer;
+import com.giants.hd.desktop.utils.HdSwingUtils;
 import com.giants.hd.desktop.viewImpl.Panel_AppQuotation_Detail;
 import com.giants3.hd.domain.api.ApiManager;
 import com.giants3.hd.domain.api.CacheManager;
@@ -19,6 +20,8 @@ import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
 import com.giants3.hd.exception.HdException;
 import com.giants3.hd.logic.AppQuotationAnalytics;
+import com.giants3.hd.logic.QuotationAnalytics;
+import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import com.giants3.hd.utils.GsonUtils;
@@ -279,6 +282,12 @@ public class AppQuotationDetailFrame extends BaseMVPFrame<AppQuotationDetailView
     }
 
     @Override
+    public void updateItemMemo(int itemIndex, String newValue) {
+        AppQuotationAnalytics.updateQuotationItemMemo(quotationDetail, itemIndex, newValue);
+        getViewer().bindDetail(quotationDetail);
+    }
+
+    @Override
     public void deleteQuotation() {
         UseCaseFactory.getInstance().createDeleteAppQuotationUseCase(quotationDetail.quotation.id).execute(new RemoteDataSubscriber<Void>(getViewer()) {
 
@@ -334,7 +343,28 @@ public class AppQuotationDetailFrame extends BaseMVPFrame<AppQuotationDetailView
         return super.hasFocus();
     }
 
+    @Override
+    public void viewProduct(long productId) {
+        UseCaseFactory.getInstance().createGetProductDetailByIdUseCase(productId).execute(new RemoteDataSubscriber<ProductDetail>(getViewer()) {
+            @Override
+            protected void handleRemoteData(RemoteData<ProductDetail> data) {
 
+
+                if (data.isSuccess() && data.datas.size() > 0) {
+                    ProductDetail product = data.datas.get(0);
+                    HdSwingUtils.showDetailPanel( getWindow(),product);
+                }
+
+
+            }
+
+        });
+
+
+        getViewer().showLoadingDialog();
+
+
+    }
 }
 
 

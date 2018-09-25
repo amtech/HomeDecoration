@@ -38,4 +38,6 @@ public interface ProductRepository {
     Observable<RemoteData<Void>> syncRelateProductPicture();
 
     Observable<RemoteData<Product>> loadById(long[] productId);
+
+    Observable<RemoteData<ProductDetail>> loadDetailById(long productId);
 }

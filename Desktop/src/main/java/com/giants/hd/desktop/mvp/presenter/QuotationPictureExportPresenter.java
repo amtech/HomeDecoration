@@ -10,7 +10,7 @@ import java.io.File;
 public interface QuotationPictureExportPresenter extends IPresenter {
 
 
-    void searchProduct(String key);
+    void searchProduct(String key,boolean includeCopy);
 
     void exportPicture(File directory);
 

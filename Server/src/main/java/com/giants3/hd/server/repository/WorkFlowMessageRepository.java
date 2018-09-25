@@ -49,6 +49,15 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
 //    @Query("update T_WorkFlowMessage p set   p.url=:photoUrl , p.thumbnail=:thumbnail  WHERE p.productId =   :productId ")
 //    int updateUrlByProductId(@Param("thumbnail") String thumbnail, @Param("photoUrl") String url,@Param("productId")  long productId);
 
+//    /**
+//     * 查询处理超过指定时间的流程处理信息
+//     * @param overHour 超期时间。
+//     * @param pageable
+//     * @return
+//     */
+//    @Query("select  p from T_WorkFlowMessage  p WHERE p.productId =   :productId ")
+//    Page<WorkFlowMessage> findByHandleTimeOver(@Param("overHour") int  overHour,  Pageable pageable );
+
 
     List<WorkFlowMessage> findByReceiverIdEqualsOrSenderIdEqualsOrderByReceiveTimeDesc(long userId, long userId2);
 
@@ -92,6 +101,9 @@ public interface WorkFlowMessageRepository extends JpaRepository<WorkFlowMessage
     //优先判断mrpType，当mrpType 未设置（非M T） 时候 判断TJ MJ
 
     List<WorkFlowMessage> findMyUnHandleWorkFlowMessages2( @Param("states") int[]  states , @Param("workflowSteps") int[]  workflowSteps , @Param("userId") long  userId , @Param("key") String  key );
+
+
+
 
 
 

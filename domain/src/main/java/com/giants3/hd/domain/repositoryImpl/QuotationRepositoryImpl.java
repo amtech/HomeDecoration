@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import rx.Observable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by david on 2015/9/14.
@@ -117,6 +118,26 @@ public class QuotationRepositoryImpl  extends  BaseRepositoryImpl implements Quo
             @Override
             public RemoteData<Void> call() throws HdException {
                 return apiManager.syncAppQuotation(urlHead,startDate,endDate);
+            }
+        });
+    }
+
+    @Override
+    public Observable initGjhData() {
+        return crateObservable(new ApiCaller<Void>() {
+            @Override
+            public RemoteData<Void> call() throws HdException {
+                return apiManager.initGjhData();
+            }
+        });
+    }
+
+    @Override
+    public Observable getAppQuoteCountReport(final String startDate, final String endDate) {
+        return crateObservable(new ApiCaller<Map>() {
+            @Override
+            public RemoteData<Map> call() throws HdException {
+                return apiManager.getAppQuoteCountReport(startDate,endDate);
             }
         });
     }

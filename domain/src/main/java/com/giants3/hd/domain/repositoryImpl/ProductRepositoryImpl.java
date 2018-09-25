@@ -250,4 +250,20 @@ public class ProductRepositoryImpl extends BaseRepositoryImpl implements Product
             }
         });
     }
+
+    @Override
+    public Observable<RemoteData<ProductDetail>> loadDetailById(final long productId) {
+
+
+
+        return crateObservable(new ApiCaller<ProductDetail>() {
+            @Override
+            public RemoteData<ProductDetail> call() throws HdException {
+
+             return    apiManager.loadProductDetail(productId);
+
+
+            }
+        });
+    }
 }

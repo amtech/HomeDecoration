@@ -6,7 +6,7 @@ import com.giants3.hd.entity.ProductPaint;
 import com.giants3.hd.noEntity.ProductDetail;
 import com.giants3.hd.utils.DateFormats;
 import com.giants3.hd.utils.FloatHelper;
-import com.giants3.report.PictureUrl;
+import com.giants3.report.ResourceUrl;
 import net.sf.jasperreports.engine.JRDataSource;
 
 import java.io.InputStream;
@@ -70,7 +70,7 @@ public class ProductPaintReport extends JRReport {
         orderItemReportData.salary = FloatHelper.scale(productDetail.product.paintWage);
 
         orderItemReportData.reportDate = DateFormats.FORMAT_YYYY_MM_DD.format(Calendar.getInstance().getTime());
-        orderItemReportData.url = PictureUrl.completeUrl(orderItem.url);
+        orderItemReportData.url = ResourceUrl.completeUrl(orderItem.url);
         orderItemReportData.prdName = productDetail.product == null ? "test" : productDetail.product.name;
 
         return new ReportData(orderItemReportData,OrderItemReportData.class);

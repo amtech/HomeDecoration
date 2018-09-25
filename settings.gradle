@@ -12,3 +12,4 @@ include ':report'
 
 include ':Resource'
 include ':Utils'
+include ':NetWork'

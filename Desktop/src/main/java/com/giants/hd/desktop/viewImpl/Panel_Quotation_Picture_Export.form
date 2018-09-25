@@ -30,6 +30,12 @@
                   <toolTipText value="输入完整货号，可以逗号空格等分隔符进行多货号查询（不支持模糊查询）"/>
                 </properties>
               </component>
+              <component id="afbb5" class="javax.swing.JCheckBox" binding="includeCopy">
+                <constraints/>
+                <properties>
+                  <text value="包含翻单"/>
+                </properties>
+              </component>
               <component id="12bcf" class="javax.swing.JButton" binding="search">
                 <constraints/>
                 <properties>

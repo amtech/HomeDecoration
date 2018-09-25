@@ -72,8 +72,8 @@ public class UrlFormatter {
         final String str = SIGN + PARAM_EQUAL;
         int endIndex=queryString.indexOf(str);
 
-        if(endIndex==-1 ) return true;
 
+        if(endIndex<0) return false;
 
         String paramToSign=queryString.substring(0,endIndex-1);
         String signValue=queryString.substring(endIndex+str.length());

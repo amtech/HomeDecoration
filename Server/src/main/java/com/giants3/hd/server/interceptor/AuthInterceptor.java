@@ -4,13 +4,12 @@ package com.giants3.hd.server.interceptor;
 import com.giants3.hd.entity.Session;
 import com.giants3.hd.noEntity.ConstantData;
 import com.giants3.hd.noEntity.RemoteData;
+import com.giants3.hd.server.BootConfig;
 import com.giants3.hd.server.repository.SessionRepository;
 import com.giants3.hd.server.service.AuthorityService;
 import com.giants3.hd.server.utils.Constraints;
-import com.giants3.hd.utils.DigestUtils;
 import com.giants3.hd.utils.GsonUtils;
 import com.giants3.hd.utils.UrlFormatter;
-import com.giants3.report.PictureUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -42,11 +41,16 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 
     @Autowired
+    BootConfig bootConfig;
+
+    @Autowired
     AuthorityService authorityService;
 
     @Autowired
-
     private SessionRepository sessionRepository;
+
+
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -55,45 +59,32 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 
         String url = request.getRequestURI();
-
-
-        //签名验证
-
-        if (!UrlFormatter.validateSign(request.getQueryString())) {
-
-
-            writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL, "sign verify fail");
-
-            return false;
-
+        //文件下载 不验证参数
+        if( url.contains(UN_INTERCEPT_FILE))
+        {
+            return true;
         }
 
-//        request.getContextPath()
-//      String realPath=  request.getSession().getServletContext().getRealPath("");
-//
-//        url.substring(request.getpath)
-//        String requestUrl = request.getRequestURL().toString();
-//        int index = requestUrl.indexOf(request.getServletPath());
-//        String baseUrl = "";
-//        if (index != -1) {
-//            baseUrl = requestUrl.substring(0, index);
-//            PictureUrl.setBaseUrl(baseUrl);
-//        }
+        //签名验证
+        if(!bootConfig.isDebug()) {
+            if ( !UrlFormatter.validateSign(request.getQueryString())) {
+                writeErrorMessage(response.getOutputStream(), RemoteData.CODE_FAIL, "sign verify fail");
+                return false;
+            }
+        }
 
-
-//        request.setAttribute(Constraints.ATTR_BASE_URL, baseUrl);
 
 
         HttpServletRequestWrapper wrapper;
         //非过滤的url
-        if (ConstantData.FOR_TEST || url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(UN_INTERCEPT_FILE) || url.contains(WEIXIN))
+        if (ConstantData.FOR_TEST || url.contains(UN_INTERCEPT_LOGIN) || url.contains(UN_INTERCEPT_ALOGIN) || url.contains(UN_INTERCEPT_USERLIST) || url.contains(UNLOGIN) || url.contains(WEIXIN))
             return true;
         else
-            if(url.contains("app/quotation/findDetails"))
+            if(url.contains("app/quotation/findDetails")||url.contains("api/customer/list"))//特殊接口，用来服务器之间同步。
             {
                 return true;
             }
-        else {
+             else {
             String token = request.getParameter(TOKEN);
 
             String appVersion = request.getParameter("appVersion");

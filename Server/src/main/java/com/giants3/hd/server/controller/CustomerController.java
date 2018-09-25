@@ -2,12 +2,16 @@ package com.giants3.hd.server.controller;
 
 
 import com.giants3.hd.entity.Customer;
+import com.giants3.hd.entity.User;
 import com.giants3.hd.exception.HdException;
+import com.giants3.hd.noEntity.NameCard;
 import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.server.service.CustomerService;
+import com.giants3.hd.server.utils.Constraints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,6 +56,42 @@ public class CustomerController extends BaseController {
 
     }
 
+
+
+    /**
+     * 接收生产流程递交
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/scanNameCard", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    RemoteData<NameCard> scanNameCard(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam("image") MultipartFile[] files) {
+
+
+        return customerService.scanNameCard(user,  files );
+
+    }
+ /**
+     * 接收生产流程递交
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/scanResourceUrl", method = {RequestMethod.GET })
+    public
+    @ResponseBody
+    RemoteData<NameCard> scanResourceUrl(@ModelAttribute(Constraints.ATTR_LOGIN_USER) User user, @RequestParam(value = "resourceUrl" ) String resourceUrl) {
+
+
+        return customerService.scanResourceUrl(user,  resourceUrl );
+
+    }
+
+
+
+
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -93,6 +133,14 @@ public class CustomerController extends BaseController {
 
 
         return customerService.delete(id);
+
+    } @RequestMapping(value = "/newCustomerCode", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RemoteData<String> newCustomerCode(  ) {
+
+
+        return customerService.newCustomerCode( );
 
     }
 }

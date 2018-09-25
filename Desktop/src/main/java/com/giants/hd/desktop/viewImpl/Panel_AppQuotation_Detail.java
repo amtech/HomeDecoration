@@ -3,6 +3,7 @@ package com.giants.hd.desktop.viewImpl;
 import com.giants.hd.desktop.ImageViewDialog;
 import com.giants.hd.desktop.local.HdDateComponentFormatter;
 import com.giants.hd.desktop.model.AppQuotationItemTableModel;
+import com.giants.hd.desktop.mvp.RemoteDataSubscriber;
 import com.giants.hd.desktop.mvp.presenter.AppQuotationDetailPresenter;
 import com.giants.hd.desktop.mvp.viewer.AppQuotationDetailViewer;
 import com.giants.hd.desktop.utils.JTableUtils;
@@ -10,10 +11,14 @@ import com.giants.hd.desktop.widget.JHdTable;
 import com.giants.hd.desktop.widget.TableMenuAdapter;
 import com.giants3.hd.domain.api.CacheManager;
 import com.giants3.hd.domain.api.HttpUrl;
+import com.giants3.hd.domain.interractor.UseCaseFactory;
 import com.giants3.hd.entity.Customer;
+import com.giants3.hd.entity.Product;
 import com.giants3.hd.entity.User;
 import com.giants3.hd.entity.app.Quotation;
 import com.giants3.hd.entity.app.QuotationItem;
+import com.giants3.hd.logic.QuotationAnalytics;
+import com.giants3.hd.noEntity.RemoteData;
 import com.giants3.hd.noEntity.app.QuotationDetail;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -143,6 +148,11 @@ public class Panel_AppQuotation_Detail extends BasePanel implements AppQuotation
                 presenter.updateItemQty(itemIndex,newQty);
 
             }
+
+            @Override
+            public void onMemoChange(int itemIndex, String newValue) {
+                presenter.updateItemMemo(itemIndex,newValue);
+            }
         });
 
         table.setModel(tableModel);
@@ -180,8 +190,20 @@ public class Panel_AppQuotation_Detail extends BasePanel implements AppQuotation
 
                     int column = table.convertColumnIndexToModel(table.getSelectedColumn());
                     //单击第一列 显示原图
-                    if (column == 1) {
-                        ImageViewDialog.showDialog(getWindow(), HttpUrl.loadPicture(item.photoUrl), item.productName);
+
+                    switch (column) {
+                        case 1:
+                            ImageViewDialog.showDialog(getWindow(), HttpUrl.loadPicture(item.photoUrl), item.productName);
+                            break;
+                        case 0:
+
+                            presenter.viewProduct(item.productId);
+
+
+
+
+
+                            break;
                     }
 
 

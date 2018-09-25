@@ -40,4 +40,8 @@ public interface QuotationRepository {
     Observable printQuotationToFile(long quotationId, String filePath);
 
     Observable syncAppQuotation(String urlHead, String startDate, String endDate);
+
+    Observable initGjhData();
+
+    Observable getAppQuoteCountReport(String startDate, String endDate);
 }

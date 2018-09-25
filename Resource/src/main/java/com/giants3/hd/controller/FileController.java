@@ -14,6 +14,8 @@ import java.io.File;
 @Controller
 @RequestMapping("/file")
 public class FileController extends BaseController {
+    @Value("${rootpath}")
+    private String rootpath;
 
     @Value("${filepath}")
     private String productFilePath;
@@ -35,8 +37,7 @@ public class FileController extends BaseController {
     private String materialFilePath;
     @Value("${quotationfilepath}")
     private String quotationfilepath;
-    @Value("${workflowfilepath}")
-    private String workflowfilepath;
+
 
     @Value("${appfilepath}")
     private String appFilePath;
@@ -100,34 +101,15 @@ public class FileController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/download/workflows/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/{category}/{name:.+}", method = RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource getWorkFlowPicture(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
+    public FileSystemResource downloadCategoryFile(@PathVariable String category,@PathVariable(value = "name") String fileName ) {
 
-        return new FileSystemResource(workflowfilepath + name + "." + type);
 
+        return new FileSystemResource(rootpath+category+File.separator +fileName);
 
     }
 
-
-    /**
-     * 读取临时文件
-     *
-     * @param name
-     * @param type
-     * @return
-     */
-
-    @RequestMapping(value = "/download/temp/{name}", method = RequestMethod.GET)
-    @ResponseBody
-    public FileSystemResource getTempFile(@PathVariable String name, @RequestParam(value = "type", defaultValue = "jpg") String type) {
-
-
-        FileSystemResource resource = new FileSystemResource(tempFilePath + name + "." + type);
-        //  FileSystemResource resource= new FileSystemResource("F://products//lintw.jpg");
-
-        return resource;
-    }
 
     /**
      * 读取附件文件

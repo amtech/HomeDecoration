@@ -29,6 +29,8 @@ public class AppQuotationItemTableModel extends  BaseListTableModel<QuotationIte
             case "price":
             case "qty":
 
+            case "memo":
+
                 return true;
 
         }
@@ -53,6 +55,7 @@ public class AppQuotationItemTableModel extends  BaseListTableModel<QuotationIte
                 {
                     t.printStackTrace();
                 }
+                break;
             case "qty":
             {
 
@@ -64,6 +67,19 @@ public class AppQuotationItemTableModel extends  BaseListTableModel<QuotationIte
                     t.printStackTrace();
                 }
             }
+            break;
+            case "memo":
+            {
+
+                try {
+                    String   value = aValue.toString();
+                    listener.onMemoChange(rowIndex,value);
+                }catch (Throwable t)
+                {
+                    t.printStackTrace();
+                }
+            }
+            break;
 
 
 
@@ -83,5 +99,7 @@ public class AppQuotationItemTableModel extends  BaseListTableModel<QuotationIte
     {
         void onPriceChange(int itemIndex,float newValue);
         void onQtyChange(int itemIndex,int newQty);
+
+        void onMemoChange(int rowIndex, String newValue);
     }
 }

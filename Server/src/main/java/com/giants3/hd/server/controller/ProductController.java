@@ -332,7 +332,7 @@ public class ProductController extends BaseController {
 
         try {
             return productService.saveProductDetail(user, productDetail);
-        } catch (HdException e) {
+        } catch (Throwable e) {
 
 
             return wrapError(e.getMessage());

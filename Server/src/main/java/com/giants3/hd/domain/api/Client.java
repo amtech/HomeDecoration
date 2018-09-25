@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -33,7 +35,6 @@ public class Client {
     public Client() {//设置链接参数   默认超时时间6秒
         client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectTimeout(3000).setRequestTimeout(Integer.MAX_VALUE).setReadTimeout(Integer.MAX_VALUE).build());
     }
-
 
     MimetypesFileTypeMap mimetypesFileTypeMap;
 
@@ -166,6 +167,28 @@ public class Client {
 
     }
 
+
+    public String post(String url,Map<String,String> heads,String body) throws HdException {
+
+        AsyncHttpClient.BoundRequestBuilder builder;
+        builder = client.preparePost(url);
+        Set<String> set=heads.keySet();
+        for (String key:set)
+        {
+            builder.addHeader(key,heads.get(key));
+        }
+
+        builder.setBodyEncoding(BODY_ENCODING);
+        builder.setBody(body);
+       return execute(new AsyncCompletionHandler<String>() {
+            @Override
+            public String onCompleted(Response response) throws Exception {
+                return response.getResponseBody();
+            }
+        },builder);
+
+
+    }
 
     public <T> T get(String url, AsyncHandler<T> handler) throws HdException {
 

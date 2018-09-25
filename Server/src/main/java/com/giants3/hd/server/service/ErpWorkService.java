@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -34,6 +35,12 @@ import java.util.*;
 @Service
 public class ErpWorkService extends AbstractErpService {
 
+    public static final String CATEGORY="workflows";
+    @Value("${rootpath}")
+    private String rootpath;
+
+    @Value("${rootUrl}")
+    private String rootUrl;
     @Autowired
     ErpWorkRepository erpWorkRepository;
 
@@ -60,10 +67,8 @@ public class ErpWorkService extends AbstractErpService {
     OrderItemWorkMemoRepository orderItemWorkMemoRepository;
 
     private Date today;
-    @Value("${workflowfilepath}")
-    private String workflowfilepath;
-    @Value("${workflowfileurl}")
-    private String workflowfileurl;
+
+
 
 
     @Autowired
@@ -1464,11 +1469,11 @@ public class ErpWorkService extends AbstractErpService {
 
 
             String fileName = Calendar.getInstance().getTimeInMillis() + file.getName() + FileUtils.SUFFIX_JPG;
-            final String absoluteFilePath = workflowfilepath + fileName;
+            final String absoluteFilePath =  FileUtils.combinePath(rootpath,CATEGORY,fileName);
 
             try {
                 FileUtils.copy(file, absoluteFilePath);
-                urlPaths[i] = workflowfileurl + fileName;
+                urlPaths[i] = FileUtils.combineUrl(rootUrl,CATEGORY,fileName) ;
             } catch (IOException e) {
                 e.printStackTrace();
 

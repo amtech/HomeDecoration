@@ -173,6 +173,9 @@ public class UseCaseFactory {
     public UseCase createGetProductByIdUseCase(long... productId) {
         return new GetProductByIdUseCase(productId, productRepository);
     }
+ public UseCase createGetProductDetailByIdUseCase(long  productId) {
+        return new GetProductDetailByIdUseCase(productId, productRepository);
+    }
 
 
     /**
@@ -697,5 +700,16 @@ public class UseCaseFactory {
 
 
         return   new SyncProductPictureUseCase(  remoteResource,   filterKey,  fileRepository);
+    }
+
+    public UseCase createInitGjhDataUseCase() {
+
+        return   new InitGjhDataUseCase(    quotationRepository);
+    }
+
+    public UseCase createAppQuoteCountReportUseCase(String startDate, String endDate) {
+
+        return   new AppQuoteCountReportUseCase( startDate,endDate,   quotationRepository);
+
     }
 }

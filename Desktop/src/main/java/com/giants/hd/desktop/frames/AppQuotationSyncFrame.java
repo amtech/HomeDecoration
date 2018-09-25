@@ -80,4 +80,26 @@ public class AppQuotationSyncFrame extends BaseMVPFrame<AppQuotationSyncViewer> 
 
 
     }
+
+    @Override
+    public void initData() {
+        final UseCase useCase = UseCaseFactory.getInstance().createInitGjhDataUseCase( );
+
+        useCase.execute(new RemoteDataSubscriber<Void>(getViewer()) {
+            @Override
+            protected void handleRemoteData(RemoteData data) {
+
+                if (data.isSuccess()) {
+                    getViewer().showMesssage("初始化成功" + data.message);
+                } else {
+
+                    getViewer().showMesssage(data.message);
+                }
+
+            }
+
+        });
+
+        getViewer().showLoadingDialog();
+    }
 }
